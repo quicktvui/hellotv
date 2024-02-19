@@ -1,0 +1,29 @@
+.search_root {
+  width: 1920px;
+  height: 1080px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+.search_root_bg {
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  left: 0;top: 0;
+  background-color: transparent;
+}
+.search_scroll_view{
+  width: 1920px;
+  height: 1080px;
+  flex: 1;
+  background-color: transparent;
+}
+.scroll_view_content{
+  width: 3073px;
+  height: 1080px;
+  flex: 1;
+  background-color: transparent;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}

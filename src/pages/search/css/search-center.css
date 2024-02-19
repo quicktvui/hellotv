@@ -1,0 +1,126 @@
+.search_center{
+  width: 519px;
+  height: 1080px;
+  flex-direction: column;
+  background-color: transparent;
+}
+.search_center_view_bg{
+  width: 519px;
+  height: 1080px;
+  position: absolute;
+  left: 0;top: 0;
+  background-color: transparent;
+}
+.search_center_view_line{
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background-color: rgba(255, 255, 255, .1);
+}
+
+.search_center_view_top {
+  margin-top: 100px;
+  margin-left: 82px;
+  flex-direction: row;
+  align-items: center;
+}
+.search_center_view_title{
+  width: 200px;
+  height: 50px;
+  color: #fff;
+}
+.search_center_clear_history_btn {
+  width: 125px;
+  height: 50px;
+  background-color: rgba(255,255,255,0.1);
+  focus-background-color: rgba(255,255,255,1);
+  flex-direction: row;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
+  border-radius: 99px;
+  position: absolute;
+  right: 24px;
+}
+.search_center_clear_history_btn .clear_icon_image{
+  width: 22px;
+  height: 27px;
+  position: absolute;
+}
+.search_center_clear_history_btn .btn_text{
+  width: 60px;
+  height: 50px;
+  font-size: 26px;
+  margin-left: 6px;
+  color: rgba(255, 255, 255, .5);
+  focus-color: rgba(0, 0, 0, 1);
+}
+
+
+.search_center_view_list{
+  flex: 1;
+  margin-top: 28px;
+}
+.empty_text_box{
+  margin-left: 82px;
+  height: 100px;
+}
+.empty_text_box .empty_text{
+  font-size: 30px;
+  color: rgba(255,255,255,0.5);
+  width: 400px;
+  height: 40px;
+}
+.list_view{
+  width: 519px;
+  height: 800px;
+  background-color: transparent;
+}
+.search_center_item{
+  width: 519px;
+  height: 84px;
+  padding-left: 82px;
+  flex-direction: row;
+  align-items: center;
+  background-color: transparent;
+  focus-background-color: #f5f5f5;
+  border-radius: 8px;
+}
+
+.search_center_item_spot {
+  width: 6px;
+  height: 6px;
+  border-radius: 6px;
+  background-color: pink;
+  margin-right: 20px;
+  focus-background-color: black;
+  select-background-color: #FC1103;
+}
+.search_center_item_text{
+  margin-right: 28px;
+  width: 350px;
+  height: 84px;
+  background-color: transparent;
+}
+.search_center_item_text_normal{
+  width: 350px;
+  height: 84px;
+  color: rgba(255, 255, 255, .5);
+  position: absolute;
+  left: 0;
+}
+.search_center_item_text_select{
+  width: 350px;
+  height: 84px;
+  color: rgba(255, 255, 255, 1);
+  position: absolute;left: 0;
+}
+.search_center_item_text_focus{
+  width: 350px;
+  height: 84px;
+  color: rgba(0, 0, 0, 1);
+  position: absolute;
+  left: 0;
+}
