@@ -29,7 +29,7 @@
 #### 运行要求
 - node version >= 21.4.0
 - npm version >= 10.2.4
-- 安装 ./apk目录下apk包 (需要日志时使用debug包，否则使用release)</b> 其它配置说明请查看 <u>[配置运行环境](http://developer.extscreen.com/guide/) </u>
+- 安装 [./apk](./apk/)目录下apk包 (需要日志时使用debug包，否则使用release)</b> 其它配置说明请查看 <u>[配置运行环境](http://developer.extscreen.com/guide/) </u>
 #### 安装
 ```bash
 npm install --legacy-peer-deps
