@@ -216,6 +216,9 @@ export default defineComponent({
           mediaPlayerViewRef.value?.setSmallWindow()
         }
       }
+      if(state == 0 && y > 10){
+          albumDetailRef.value?.setAutofocus(false)
+      }
     }
 
     function onScroll(offsetX: number, scrollY: number) {
@@ -374,10 +377,12 @@ export default defineComponent({
 
     function onBackPressed(): boolean {
       if (mediaPlayerViewRef.value?.onBackPressed()) {
+          albumDetailRef.value?.setAutofocus(true)
         return true
       }
 
       if (waterfallScrollY > 0) {
+          albumDetailRef.value?.setAutofocus(true)
         waterfallRef.value?.scrollToTop()
         return true
       }

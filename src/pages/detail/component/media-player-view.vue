@@ -32,7 +32,7 @@
                :src="playerStatePaused"/>
 
           <!-- 播放进度 -->
-          <qt-row class="media-player-view-progress-root-css">
+          <qt-row class="media-player-view-progress-root-css" :autofocus="true">
 
             <qt-text class="media-player-view-progress-text-css"
                      :focusable="false"
@@ -48,7 +48,7 @@
               :onProgressChanged="onSeekBarChanged"
               @onSeekStop="onSeekBarSeekStop"
               @focus="onSeekbarFocusChanged"
-              :requestFocus="true"
+
               :focusable="true"/>
 
             <qt-text class="media-player-view-progress-text-css"
@@ -69,7 +69,7 @@
                     right: 'nextButton',
                     left: 'nextButton'
                  }"
-               :requestFocus="true">
+               >
             <qt-text class="media-player-view-next-text-css"
                      :duplicateParentState="true"
                      gravity="center"
@@ -470,7 +470,7 @@ export default defineComponent({
           isMenuShowing.value = true
           isProgressShowing.value = false
           mediaCollapseMediaListRef?.value?.show(true)
-          setCollapseOrderMenuFocused()
+          //setCollapseOrderMenuFocused()
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
           isMenuShowing.value = false
@@ -490,6 +490,7 @@ export default defineComponent({
     }
     function onNextButtonFocusChanged(e) {
       nextButtonFocused = e.isFocused
+        log.e(TAG, "onNextButtonFocusChanged nextButtonFocused"+nextButtonFocused)
     }
 
     function onSeekBarChanged(p) {
@@ -788,6 +789,7 @@ export default defineComponent({
           if(nextButtonFocused){
             if (!isPlayerViewStateMenu()) {
               setPlayerViewStateMenu()
+                nextButtonFocused = false
               return true
             }
           }

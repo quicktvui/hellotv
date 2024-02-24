@@ -148,6 +148,10 @@ export default defineComponent({
       mediaListRef.value?.release()
     }
 
+  function setAutofocus(enable:boolean){
+      placeholderRef.value?.setAutofocus(enable)
+  }
+
 
     return {
       sectionHeight,
@@ -169,7 +173,8 @@ export default defineComponent({
       scrollMediaListViewTo,
       setMediaListViewSelected,
       requestPlayerPlaceholderFocus,
-      release
+      release,
+        setAutofocus
     }
   },
 });
