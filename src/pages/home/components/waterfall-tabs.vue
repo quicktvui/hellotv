@@ -15,13 +15,14 @@
       </div>
       <qt-tabs
         ref="tabRef"
-        :tabContentResumeDelay="0"
+        :tabContentResumeDelay="200"
         :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
         tabNavBarClass="qt-tabs-waterfall-tab-css"
         tabPageClass="qt-tabs-waterfall-css"
         :triggerTask="tabsTriggerTask"
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"
+        :tabContentSwitchDelay='0'
         @onTabPageChanged="onTabPageChanged"
         @onTabMoveToTopStart="onTabMoveToTopStart"
         @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -71,7 +72,7 @@ import {
   QTTabPageState,
   QTWaterfallItem
 } from "@quicktvui/quicktvui3";
-import {ESLogLevel, useESLog, useESToast} from "@extscreen/es3-core";
+import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import {useLaunch} from "../../../tools/launch/useApi";
 import {useGlobalApi} from "../../../api/UseApi";
 import BuildConfig from "../../../build/BuildConfig";
@@ -119,6 +120,7 @@ export default defineComponent({
     const log = useESLog()
     const launch = useLaunch()
     const toast = useESToast()
+    const deviceManager = useESDevice()
     const globalApi = useGlobalApi()
     const tabRef = ref<QTITab>()
     //播放背景组件相关
