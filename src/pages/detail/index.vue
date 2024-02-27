@@ -128,7 +128,22 @@ export default defineComponent({
           media = m
           albumDetailRef.value?.initMedia(media)
           nextTick(() => {
-            waterfallRef.value?.setSectionList(buildSectionList(m))
+              let sections = buildSectionList(m)
+              //根据是否有选集，调整焦点滚动的距离
+              if(sections.length == 3){
+                  if(media.itemList.enable){
+                      sections[2].scrollOverride = {
+                          down:1000,
+                          up:-50
+                      }
+                  }else{
+                      sections[2].scrollOverride = {
+                          down:600,
+                          up:-100
+                      }
+                  }
+              }
+              waterfallRef.value?.setSectionList(sections)
             mediaPlayerViewRef.value?.play(media)
             getMediaRecommendation()
           })
@@ -250,7 +265,9 @@ export default defineComponent({
     }
 
     function onPlayerPlaceholderFocus(focused: boolean) {
-      waterfallRef.value?.scrollToTop()
+       if(focused){
+           waterfallRef.value?.scrollToTop()
+       }
     }
 
     function onIntroductionFocus(focused: boolean) {
