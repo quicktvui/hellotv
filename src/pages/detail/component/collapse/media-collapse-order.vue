@@ -7,6 +7,7 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-list-view
         ref="orderListViewRef" horizontal
+        :autofocusPosition='0'
         class="qt-collapse-item-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">

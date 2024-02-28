@@ -5,6 +5,7 @@
        @click="onClick"
        @focus="onFocus"
        name="placeholder"
+       :autofocus='autofocus'
        :focusable="true"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
@@ -36,6 +37,7 @@ export default defineComponent({
     const isMediaShowing = ref<boolean>(true)
     const isShowing = ref<boolean>(true)
     const toast = useESToast()
+    let autofocus = ref<boolean>(true)
     const placeholder = ref<ESFocusable>()
     const isMediaTypeFree = ref<boolean>(true);
 
@@ -59,13 +61,17 @@ export default defineComponent({
       media = m
       mediaImg.value = m.coverH
 
-      requestFocus()
+      // requestFocus()
     }
 
     function requestFocus(): void {
       if (placeholder.value) {
-        focus.requestFocusDirectly(placeholder.value!)
+        //focus.requestFocusDirectly(placeholder.value!)
       }
+    }
+
+    function setAutofocus(enable:boolean){
+        autofocus.value = enable
     }
 
     function showMediaInfo(value: boolean) {
@@ -96,7 +102,9 @@ export default defineComponent({
       onFocus,
       requestFocus,
       mediaAuthorization,
-      isMediaTypeFree
+      isMediaTypeFree,
+        autofocus,
+        setAutofocus,
     }
   },
 });

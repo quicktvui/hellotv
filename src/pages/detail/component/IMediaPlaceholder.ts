@@ -8,4 +8,5 @@ export interface IMediaPlaceholder {
   show(value: boolean): void
 
   requestFocus(): void
+  setAutofocus(value:boolean): void
 }
