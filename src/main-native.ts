@@ -1,5 +1,5 @@
 //--------------------router-----------------------
-import routes from "./routes.ts";
+import routes from "./routes";
 //--------------------ESApp-----------------------
 import {ESApp,} from '@extscreen/es3-vue';
 import application from './App.vue';
