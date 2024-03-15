@@ -11,6 +11,7 @@ export default {
   requestBaseUrl: 'http://cms.hmon.tv/es_single/api',
   //页面内容请求数量
   tabContentPageSize: 10,
-
+  // 默认源
+  defaultSourceUrl: 'https://gh-proxy.com/https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json'
 
 }

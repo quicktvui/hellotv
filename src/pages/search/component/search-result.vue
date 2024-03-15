@@ -32,7 +32,7 @@
         </qt-view>
       </template>
       <template v-slot:waterfall-item>
-        <search-result-long-item :type="666" focusScale="1.03" />
+        <search-result-long-item :type="666" :focusScale="1.03" />
       </template>
       <template #waterfall-list-item></template>
     </qt-tabs>

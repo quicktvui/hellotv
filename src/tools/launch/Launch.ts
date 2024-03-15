@@ -11,7 +11,7 @@ export interface Launch {
 
     init(...params: any[]): Promise<any>;
 
-    launch(item: QTWaterfallItem): void
+    launch(item:any): void
 }
 
 export function createLaunch(): Launch {

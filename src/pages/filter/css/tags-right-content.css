@@ -1,0 +1,90 @@
+
+.screen-right-qt-view-root-css{
+    width: 1580px;
+    height: 960px;
+    background-color: transparent;
+}
+
+.screen-right-scroll-root-css{
+    width: 1580px;
+    height: 960px;
+    background-color: transparent;
+}
+.screen-right-scroll-root-css .screen-right-qt-view-css{
+    width: 1580px;
+    height: 1600px;
+    background-color: transparent;
+    display: flex;
+}
+
+.screen-right-selected-tags{
+    position: absolute;
+    top: 0;
+    height: 100px;
+    width: 1560px;
+    left: 20px;
+    padding-left: 46px;
+    background-color: #252930;
+    align-items: center;
+    /*    #252930*/
+}
+.screen-right-selected-tags .screen-right-record-list{
+    height: 60px;
+    width: 1534px;
+    background-color: transparent;
+}
+.screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-content{
+    width: 1580px;
+    height: 960px;
+    background-color: transparent;
+}
+.screen-right-qt-view-root-css .screen-right-content-loading{
+    width: 1560px;
+    height: 960px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+.screen-right-qt-view-root-css .screen-right-content-empty{
+    width: 1560px;
+    height: 960px;
+    position: absolute;
+    left: 0;
+    top: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+}
+
+.screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-content .screen-right-content-more-loading{
+    width: 1420px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+}
+.screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-content .screen-right-content-no-more{
+    width: 1420px;
+    height: 100px;
+    font-size: 30px;
+    color: rgba(255,255,255,0.6);
+    display: flex;
+    text-align: center;
+    background-color: transparent;
+}
+
+.screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-filter-root{
+    width: 1580px;
+    background-color: transparent;
+}
+
+.screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-filter-root .screen-right-filter-line{
+    width: 1580px;
+    background-color: transparent;
+}
+
+

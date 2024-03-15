@@ -39,10 +39,7 @@ export interface Media {
 
   //分集的总数
   episodeCount: number
-<<<<<<< HEAD
-=======
 
   //付费类型
   feeType: string
->>>>>>> 3dca11d7994d00d5912e48c811b4802207e9a3c5
 }

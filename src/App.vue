@@ -5,8 +5,9 @@
 </template>
 
 <script lang="ts">
+import { ref } from 'vue'
 import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useES, useESDevelop, useESDevice, useESLog, useESRuntime} from "@extscreen/es3-core";
+import {ESLogLevel, useES, useESDevelop, useESDevice, useESLog, useESRuntime, ESNetworkInfo, useESNetwork } from "@extscreen/es3-core";
 import {ESPlayerLogLevel, useESPlayer, useESPlayerLog} from "@extscreen/es3-player";
 import {useGlobalApi, useMediaDataSource, useRequestManager} from "./api/UseApi";
 import {useUserManager} from "./tools/user/useApi";
@@ -37,6 +38,7 @@ export default defineComponent({
 
     function onESCreate(app, params) {
       initESLog()
+      network.addListener(connectivityChangeListener)
       return Promise.resolve()
         .then(() => request.init(es, develop, device, runtime, log))
         .then(() => globalApi.init(request))
@@ -50,11 +52,24 @@ export default defineComponent({
             screenHeight: device.getScreenHeight(),
           },
           device: {
-            deviceType: runtime.getRuntimeDeviceType() ?? ''
+            // deviceType: runtime.getRuntimeDeviceType() ?? ''
+            deviceType: 'ZLS58Gi4X' // 变相强制为硬解码
           }
         }))
     }
 
+    const network = useESNetwork()
+    const isNetworkConnected = ref<boolean>(true)
+    const connectivityChangeListener = {
+      onConnectivityChange(networkInfo: ESNetworkInfo | null) {
+        isNetworkConnected.value = network.isNetworkConnected()
+        if (isNetworkConnected.value) {
+          router.back()
+        } else {
+          router.push({ name: 'network' })
+        }
+      }
+    }
     function initESLog() {
       if (BuildConfig.debug) {
         log.setMinimumLoggingLevel(ESLogLevel.DEBUG)
