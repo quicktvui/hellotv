@@ -27,7 +27,7 @@
   <img-text-btn-view
       v-if="!$slots.btnItem"
       :icon-left="true"
-      text="box"
+      text="多级列表"
       :focusable="true"
       :textStyle="{ width: '120px', height:'60px',color:'#ffffff',focusColor:'#000000'}"
       style="width: 205px;height: 60px;margin-left: 10px;margin-right: 10px"
