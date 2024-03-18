@@ -8,5 +8,5 @@
 
 ```bash
 # 将当前目录下静态资源文件移动到构建目录
-~ mv src/pages/live/dist.zip dist/android/assets/
+~ cp src/pages/live/dist.zip dist/android/assets/
 ```
