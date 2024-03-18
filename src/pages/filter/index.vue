@@ -12,6 +12,7 @@
           ref="top_search_btn"
           icon="ic_top_search.png"
           focus-icon="ic_top_search_focus.png"
+          :nextFocusName="{ down: 'screen_left_tags' }"
           @click="onClick"/>
       </template>
     </top-btns-view>
@@ -24,6 +25,7 @@
       <img class="screen-left-title-img" v-else :src="title_img"/>
       <!-- 筛选列表-->
       <qt-list-view class="screen-left-tags-root-css" :padding="'0,0,0,20'" sid="screen_left_tags"
+                    name='screen_left_tags'
                     ref="leftTags" :clipChildren="false" :clipPadding="false"
                     @item-focused="leftTagsItemFocus" :blockFocusDirections="['left','down']">
         <!-- 纯文字标题-->
@@ -169,6 +171,7 @@ export default defineComponent({
         }
         if (curTagPosition !== e.position) {
           tags_content.value.loading = true
+          tags_content.value.empty = false
         }
         leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
         leftTagSwitchTimer = setTimeout(()=>{

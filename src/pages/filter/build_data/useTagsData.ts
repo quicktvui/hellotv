@@ -81,6 +81,8 @@ export function getDefaultTagSelectIndex(){
  * @param filterList
  */
 export function buildFiltersCondition(filterList:Array<any>,defaultFilter?:Array<string>,defaultFastTag?:string){
+  allFilterList = []
+  fastFilterList = []
   if (filterList && filterList.length > 0){
     filterList.forEach(f=>{
       let defaultSelectPosition = -1

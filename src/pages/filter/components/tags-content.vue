@@ -281,6 +281,9 @@ export default defineComponent({
       curPageNum = pageNum
       curType = type
       curTagPosition = position
+      if (curPageNum === 1) {
+        empty.value = false
+      }
       isFirstRequest = true
       if (type === 3) {//筛选
         //设置筛选条件
@@ -333,10 +336,7 @@ export default defineComponent({
         filterTriggerTask.value = []
         curTags = tagNames
         filterVisible.value = false
-        //左侧列表切换的时候 展示Loading 加载
-        if (curPageNum === 1) {
-          empty.value = false
-        }
+
         setScreenResultData(curPageNum, curType, curTags)
       }
     }

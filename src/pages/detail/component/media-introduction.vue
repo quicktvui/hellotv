@@ -206,7 +206,7 @@ export default defineComponent({
 
 .media-introduction-title-text-css {
   width: 814px;
-  height: 60px;
+  height: 64px;
   font-size: 54px;
   font-weight: 400;
   color: #FFFFFF;
