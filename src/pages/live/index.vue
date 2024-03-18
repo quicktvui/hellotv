@@ -56,6 +56,8 @@
                         <p class="tvbox-live-playinfo-program-text2">换源</p>
                         <img class="tvbox-live-playinfo-program-img" :src="icChange">
                         <p class="tvbox-live-playinfo-program-text2">换台</p>
+                        <img class="tvbox-live-playinfo-program-img tvbox-live-img-transform" :src="icChange">
+                        <p class="tvbox-live-playinfo-program-text2">线路</p>
                     </div>
 
                     <p class="tvbox-live-playinfo-program-lines">[线路{{ curMediaLine + 1 }}/{{ curMediaLines }}]</p>
@@ -392,8 +394,15 @@ function onKeyDown(event: ESKeyEvent) {
                 playNextMedia(true)
             }
             break
+        case 21: // 左
+            if (!showMenu.value) {
+                changeMediaSource(-1)
+            }
+            break
         case 22: // 右
-            if (showMenu.value && secondTabActive && !showThirdTab.value) {
+            if (!showMenu.value) {
+                changeMediaSource(1)
+            } else if (showMenu.value && secondTabActive && !showThirdTab.value) {
                 nextTick(() => {
                     showThirdTab.value = true
                     setTimeout(() => { thirdTabRef.value!.init(thirdTabList) }, 300)
@@ -434,7 +443,7 @@ function playPreviousMedia() {
         if (PreviousMedia) {
             curMedia.value = PreviousMedia
             curMediaLine.value = 0
-            curMediaLines.value = 0
+            curMediaLines.value = curMedia.value.mediaSourceList?.list.length || 1
             curProgram.value = {}
             nextProgram.value = {}
             showPlayinfo.value = true
@@ -457,7 +466,7 @@ function playNextMedia(immediately: boolean) {
         if (nextMeida) {
             curMedia.value = nextMeida
             curMediaLine.value = 0
-            curMediaLines.value = 0
+            curMediaLines.value = curMedia.value.mediaSourceList?.list.length || 1
             curProgram.value = {}
             nextProgram.value = {}
             showPlayinfo.value = true
@@ -479,6 +488,7 @@ function playNextMediaSource(immediately: boolean) {
             if (++curMediaLine.value >= curMediaLines.value) {
                 playerManager.value?.stop()
                 showLoadingError.value = true
+                --curMediaLine.value
                 return
             } else {
                 toast.showToast('播放失败，自动切换下一线路')
@@ -487,6 +497,25 @@ function playNextMediaSource(immediately: boolean) {
         }
         playNextMediaSource(true)
     }, 5000)
+}
+
+function changeMediaSource(dir: -1 | 1) {
+    if (curMediaLines.value == 1) {
+        return
+    }
+
+    showLoadingError.value = false
+    showPlayinfo.value = true
+    let index = curMediaLine.value + dir
+    if (index >= curMediaLines.value) {
+        curMediaLine.value = 0
+    } else if (index < 0) {
+        curMediaLine.value = curMediaLines.value - 1
+    } else {
+        curMediaLine.value = index
+    }
+    playerManager.value?.playMediaSourceByIndex(curMediaLine.value)
+    playNextMediaSource(false)
 }
 
 function onPlayerBufferStart() {
@@ -510,7 +539,7 @@ async function onPlayerPrepared() {
 
     curMedia.value = playerManager.value?.getPlayingMedia() as ESMediaItem
     curMediaLine.value = playerManager.value?.getPlayingMediaSourceIndex() || 0
-    curMediaLines.value = playerManager.value?.getPlayingMediaSourceList()?.list.length || 0
+    curMediaLines.value = playerManager.value?.getPlayingMediaSourceList()?.list.length || 1
 
     // 获取当前频道节目单
     let channel = liveSourceData.value[curMedia.value.categoryIndex].data[curMedia.value.channelIndex]
@@ -812,6 +841,10 @@ defineExpose({ onESCreate, onESPause, onESResume, onKeyDown, onBackPressed })
     margin-top: 4px;
     margin-left: 2px;
     margin-right: 2px;
+}
+
+.tvbox-live-img-transform {
+    transform: rotate(90deg);
 }
 
 .tvbox-live-playinfo-program-lines {
