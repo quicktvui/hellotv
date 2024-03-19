@@ -52,8 +52,7 @@ export default defineComponent({
             screenHeight: device.getScreenHeight(),
           },
           device: {
-            // deviceType: runtime.getRuntimeDeviceType() ?? ''
-            deviceType: 'ZLS58Gi4X' // 变相强制为硬解码
+            deviceType: runtime.getRuntimeDeviceType() ?? ''
           }
         }))
     }
