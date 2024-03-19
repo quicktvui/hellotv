@@ -8,35 +8,38 @@
                :clipChildren="false" :clipPadding="false">
 
         <!-- 筛选条件-->
-        <qt-list-view ref="screen_right_filters"
-                      name="screen_right_filters"
-                      class="screen-right-filter-root" :style="{height:filterHeight}"
-                      v-if="filterVisible"
-                      :triggerTask="hideSelectTask"
-                      :enableSelectOnFocus="false">
-          <qt-list-view ref="screen_right_filter_line"
-                        name="screen_right_filter_line"
-                        class="screen-right-filter-line"
-                        nextFocusLeftSID="screen_left_tags"
-                        flexStyle="${filterLineStyle}" :type="1" list="${list}"
-                        :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
-                        :enableSelectOnFocus="false"
-                        singleSelectPosition="${defaultSelectPosition}"
-                        :focusMemory="false" @item-click="onFilterClick"
-                        @item-focused="onFilterFocused"
-                        :blockFocusDirections="['right']">
-            <!-- 普通筛选条件-->
-            <tags-filter-item :type="11"/>
-            <!-- 快速筛选头部提示-->
-            <tags-filter-fast-item-left-tip :type="12"/>
-            <!-- 快速筛选-->
-            <tags-filter-fast-item :type="13" />
+        <qt-view style='min-height: 1px;width: 1580px;background-color: transparent'>
+          <qt-list-view ref="screen_right_filters"
+                        name="screen_right_filters"
+                        class="screen-right-filter-root" :style="{height:filterHeight}"
+                        v-if="filterVisible"
+                        :triggerTask="hideSelectTask"
+                        :enableSelectOnFocus="false">
+            <qt-list-view ref="screen_right_filter_line"
+                          name="screen_right_filter_line"
+                          class="screen-right-filter-line"
+                          nextFocusLeftSID="screen_left_tags"
+                          flexStyle="${filterLineStyle}" :type="1" list="${list}"
+                          :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
+                          :enableSelectOnFocus="false"
+                          singleSelectPosition="${defaultSelectPosition}"
+                          :focusMemory="false" @item-click="onFilterClick"
+                          @item-focused="onFilterFocused"
+                          :blockFocusDirections="['right']">
+              <!-- 普通筛选条件-->
+              <tags-filter-item :type="11"/>
+              <!-- 快速筛选头部提示-->
+              <tags-filter-fast-item-left-tip :type="12"/>
+              <!-- 快速筛选-->
+              <tags-filter-fast-item :type="13" />
+
+            </qt-list-view>
+            <!-- 横线-->
+            <tags-filter-fast-line :type="2"/>
 
           </qt-list-view>
-          <!-- 横线-->
-          <tags-filter-fast-line :type="2"/>
+        </qt-view>
 
-        </qt-list-view>
         <!-- 筛选结果-->
         <qt-grid-view class="screen-right-content"
                       :descendantFocusability="loading ? 2 : 1"
@@ -288,25 +291,14 @@ export default defineComponent({
       if (type === 3) {//筛选
         //设置筛选条件
         curTags = getCurScreenCondition()
+        if (isClick){
+          setFilterTriggerTask()
+          setRecordTip()
+        }
         if (!isLoadMore && !isClick) {
-          const length = getFilterLength()
-          const recordList: Array<QTListViewItem> = getCurRecordFilter()
-          screen_record_list.value?.init(recordList)
-          screen_record_list.value!.stopPage()
+          setRecordTip()
           setFilterHeight()
-          filterTriggerTask.value = (length > 1) ? [
-            getOffsetY() ? {
-              event: 'onFocusAcquired',
-              target: 'screen_right_selected_tags',
-              function: 'changeVisibility',
-              params: ['visible'],
-            } : {},
-            {
-              event: 'onFocusAcquired',
-              target: 'screen_right_scroll_content',
-              function: 'scrollToWithOptions',
-              params: [{x: 0, y: getScrollHeight(), duration: 300}],
-            }] : []
+          setFilterTriggerTask()
           filterVisible.value = true
         }
         let filterList: Array<QTListViewItem> = []
@@ -327,7 +319,6 @@ export default defineComponent({
         if (!isLoadMore && !isClick){
           if (focusList.length > 0 && focusList[0] === 3){
             focusList = []
-            //todo 记得需要qt-view 和 scroll-view 添加支持callUIFunction方法
             screen_right_selected_tags.value?.setVisibility(QTIViewVisibility.INVISIBLE)
             const y = getScrollHeight() * -1
             screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
@@ -339,6 +330,29 @@ export default defineComponent({
 
         setScreenResultData(curPageNum, curType, curTags)
       }
+    }
+
+    function setFilterTriggerTask() {
+      const length = getFilterLength()
+      filterTriggerTask.value = (length > 1) ? [
+        getOffsetY() ? {
+          event: 'onFocusAcquired',
+          target: 'screen_right_selected_tags',
+          function: 'changeVisibility',
+          params: ['visible'],
+        } : {},
+        {
+          event: 'onFocusAcquired',
+          target: 'screen_right_scroll_content',
+          function: 'scrollToWithOptions',
+          params: [{x: 0, y: getScrollHeight(), duration: 300}],
+        }] : []
+    }
+
+    function setRecordTip(){
+      const recordList: Array<QTListViewItem> = getCurRecordFilter()
+      screen_record_list.value?.init(recordList)
+      screen_record_list.value!.stopPage()
     }
 
     function setScreenResultData(pageNum: number, type: number, tagNames: string) {

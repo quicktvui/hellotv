@@ -272,6 +272,9 @@ function setCurRecordFilter(condition){
       const item:QTListViewItem = {
         type:14,
         recordFilterName:filter,
+        decoration:{
+          right:16
+        }
       }
       curRecord.push(item)
     })
