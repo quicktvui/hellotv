@@ -585,9 +585,7 @@ function onFocused(e: any) {
             case 1:
                 secondTabActive = false
                 showThirdTab.value = false
-                if (e.position != firstTabScrollPos.value) {
-                    secondTabScrollPos.value = e.item.firstChannelId - 1
-                }
+                secondTabScrollPos.value = e.item.firstChannelId - 1
                 break
             case 2:
                 secondTabActive = true
