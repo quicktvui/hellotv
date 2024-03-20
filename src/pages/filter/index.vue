@@ -1,5 +1,5 @@
 <template>
-  <div class="screen-root-css">
+  <div class="screen-root-css" ref='screen_root'>
 <!--    顶部按钮-->
     <top-btns-view :logo-right="true">
       <template #btnItem>
@@ -38,7 +38,7 @@
       </qt-list-view>
     </div>
     <!-- 右侧结果-->
-    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false"/>
+    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
   </div>
 
 </template>
@@ -63,6 +63,7 @@ import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTLi
 import TagsTextIconItem from "./components/tags-text-icon-item.vue";
 import TagsContent from "./components/tags-content.vue";
 import TagsImgItem from "./components/tags-img-item.vue";
+import { Native } from '@extscreen/es3-vue'
 
 export default defineComponent({
   name: "index",
@@ -72,11 +73,13 @@ export default defineComponent({
     const router = useESRouter()
     const globalApi = useGlobalApi()
     const leftTags = ref<QTIListView>()
+    const screen_root = ref()
+    const tags_content = ref()
     let title = ref("")
     let title_img = ref("")
     let leftTagSwitchTimer:any = -1
     let curTagPosition:number = -1
-    const tags_content = ref()
+
 
     let screenId:string = ""
     let defaultSelectTag:string = ""
@@ -108,6 +111,13 @@ export default defineComponent({
       }
 
       getTagsData()
+    }
+
+    function blockRootFocus(){
+      Native.callUIFunction(screen_root.value,"blockRootFocus",[])
+    }
+    function unBlockRootFocus(){
+      Native.callUIFunction(screen_root.value,"unBlockRootFocus",[])
     }
 
     function onESStart() {
@@ -154,6 +164,7 @@ export default defineComponent({
           const tags:Array<QTListViewItem> = buildTagsData(res,defaultSelectTag,defaultFilters,defaultFastTag)
           nextTick(()=>{
             leftTags.value!.init(tags)
+            tags_content.value.init()
             setTimeout(()=>{
               const defaultTagPosition = getDefaultTagSelectIndex()
               // leftTags.value!.setItemSelected(defaultTagPosition,true)
@@ -193,12 +204,13 @@ export default defineComponent({
               tags_content!.value.getScreenByTags(1,type,tagName,position,false,false)
               break;
           }
-        },400)
+        },300)
       }
     }
 
     function onBackPressed(){
       if (tags_content.value.screenItemContentFocus && tags_content.value.scrollY > 100){
+        blockRootFocus()
         tags_content.value.onScrollToTop()
         return
       }
@@ -217,12 +229,14 @@ export default defineComponent({
       onBackPressed,
       onClick,
       leftTagsItemFocus,
+      unBlockRootFocus,
 
       title,
       title_img,
       leftTags,
 
-      tags_content
+      tags_content,
+      screen_root
     }
   }
 })

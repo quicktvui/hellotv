@@ -1,11 +1,11 @@
 import {Tags} from "./impl/Tags";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import {
-  _filter_line_height, _filter_tag_gap, _filter_text_height,
+  _filter_line_height, _filter_record_height, _filter_tag_gap, _filter_text_height,
   buildFilterAdapter,
   buildTagContentsAdapter,
   buildTagsAdapter
-} from "./tags/TagsAdapter";
+} from './tags/TagsAdapter'
 import {TagContent} from "./impl/TagContent";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {FilterCondition} from "./impl/FilterCondition";
@@ -181,8 +181,10 @@ export function getFilterLength():number{
 }
 
 export function getFilterHeight(){
-  if (getFilterLength() > 0){
-    return getFilterLength() * _filter_text_height + (getFilterLength() - (isFastFilterListMore() ? 2 : 1)) * _filter_tag_gap + (isFastFilterListMore() ? _filter_line_height : 0)
+  const filterLength = getFilterLength()
+  if (filterLength > 0){
+    const isFastMore = isFastFilterListMore()
+    return filterLength * _filter_text_height + (filterLength - (isFastMore ? 2 : 1)) * _filter_tag_gap + (isFastMore ? _filter_line_height : 0)
   }
   return 0
 }
@@ -194,7 +196,7 @@ function isFastFilterListMore():boolean{
 export function getScrollHeight(){
   const filterHeight = getFilterHeight()
   if (isOffsetY){
-    return filterHeight > 100 ? (filterHeight -100) : filterHeight
+    return filterHeight > _filter_record_height ? (filterHeight - _filter_record_height) : filterHeight
   }else{
     return filterHeight
   }
@@ -272,6 +274,9 @@ function setCurRecordFilter(condition){
       const item:QTListViewItem = {
         type:14,
         recordFilterName:filter,
+        decoration:{
+          right:16
+        }
       }
       curRecord.push(item)
     })
