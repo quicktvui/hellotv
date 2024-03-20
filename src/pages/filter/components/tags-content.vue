@@ -13,7 +13,7 @@
                         name="screen_right_filters"
                         class="screen-right-filter-root" :style="{height:filterHeight}"
                         v-if="filterVisible"
-                        :triggerTask="hideSelectTask"
+                        :triggerTask="switchData(hideSelectTask)"
                         :enableSelectOnFocus="false">
             <qt-list-view ref="screen_right_filter_line"
                           name="screen_right_filter_line"
@@ -49,6 +49,7 @@
                       :blockFocusDirections="['right','down']"
                       :spanCount="5" :openPage="true" :preloadNo="10"
                       :focusable="false"
+                      :nextFocusName='{down:"screen_right_content"}'
                       nextFocusLeftSID="screen_left_tags"
                       :listenBoundEvent="true" :useDiff="true"
                       :listenHasFocusChange="true"
@@ -60,12 +61,12 @@
                       :padding="'50,10,50,20'">
           <tags-content-item :type="1"/>
           <!--        底部提示-->
-          <template #footer>
+          <template #footer  :focusable="false">
             <p class="screen-right-content-no-more" :type="1003">已经到底啦，按【返回键】回到顶部</p>
           </template>
           <!--分页加载 Loading-->
           <qt-view class="screen-right-content-more-loading" :type="1002" :focusable="false">
-            <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;"/>
+            <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
           </qt-view>
         </qt-grid-view>
 
@@ -142,6 +143,7 @@ export default defineComponent({
     TagsFilterItem,
     TagsContentItem
   },
+  emits:['unBlockFocus'],
   setup(props, context) {
     //工具变量
     const log = useESLog()
@@ -165,22 +167,10 @@ export default defineComponent({
     let curFilterParentPosition = -1
     let curFilterItemPosition = -1
     let focusList:Array<number> = []
+    let scrollHeight:number = 0
     //全局常量
     const emptyImg = ref("http://qcloudcdn.a311.ottcn.com/channelzero_image/web_static/extend_screen/public_images/ic_data_empty.png")
-    const hideSelectTask = [
-      {
-        event: 'onFocusAcquired',
-        target: 'screen_right_selected_tags',
-        function: 'changeVisibility',
-        params: ['invisible'],
-      },
-      {
-        event: 'onFocusAcquired',
-        target: 'screen_right_scroll_content',
-        function: 'scrollToWithOptions',
-        params: [{x: 0, y: getScrollHeight() * -1, duration: 300}],
-      },
-    ]
+
     //全局变量
     let filterHeight = ref(0)
     let filterVisible = ref(false)
@@ -189,6 +179,25 @@ export default defineComponent({
     let screenItemContentFocus = ref(false)
     let scrollY = ref(0)
     let filterTriggerTask = ref([])
+    let hideSelectTask = ref([])
+
+    function init(){
+      scrollHeight = getScrollHeight()
+      hideSelectTask.value = [
+        {
+          event: 'onFocusAcquired',
+          target: 'screen_right_selected_tags',
+          function: 'changeVisibility',
+          params: ['invisible'],
+        },
+        {
+          event: 'onFocusAcquired',
+          target: 'screen_right_scroll_content',
+          function: 'scrollToWithOptions',
+          params: [{x: 0, y: scrollHeight * -1, duration: 300}],
+        },
+      ]
+    }
 
     function setFilterHeight() {
       //单个列表的高度+间距
@@ -266,9 +275,22 @@ export default defineComponent({
 
     function onScrollToTop() {
       const delay = curType === 3 ? 400 : 200
-      screen_right_content.value?.scrollToTop()
+      if (curType === 3){
+        screen_right_content.value?.scrollToSelected(0,false)
+        const y = scrollHeight * -1
+        screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
+      }else{
+        screen_right_content.value?.scrollToTop()
+      }
+
       setTimeout(()=>{
-        screen_right_content.value?.setItemFocused(0)
+        context.emit("unBlockFocus")
+        if (curType === 3){
+          screen_right_filters.value?.setItemFocused(0)
+        }else{
+          screen_right_content.value?.setItemFocused(0)
+        }
+
       },delay)
       scrollY.value = 0
     }
@@ -289,8 +311,7 @@ export default defineComponent({
       }
       isFirstRequest = true
       if (type === 3) {//筛选
-        //设置筛选条件
-        curTags = getCurScreenCondition()
+        curTags = getCurScreenCondition() //设置筛选条件
         if (isClick){
           setFilterTriggerTask()
           setRecordTip()
@@ -320,7 +341,7 @@ export default defineComponent({
           if (focusList.length > 0 && focusList[0] === 3){
             focusList = []
             screen_right_selected_tags.value?.setVisibility(QTIViewVisibility.INVISIBLE)
-            const y = getScrollHeight() * -1
+            const y = scrollHeight * -1
             screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
           }
         }
@@ -345,7 +366,7 @@ export default defineComponent({
           event: 'onFocusAcquired',
           target: 'screen_right_scroll_content',
           function: 'scrollToWithOptions',
-          params: [{x: 0, y: getScrollHeight(), duration: 300}],
+          params: [{x: 0, y: scrollHeight, duration: 300}],
         }] : []
     }
 
@@ -406,6 +427,7 @@ export default defineComponent({
     }
 
     return {
+      init,
       getScreenByTags,
       loadMoreScreenContent,
       onScrollStateChanged,

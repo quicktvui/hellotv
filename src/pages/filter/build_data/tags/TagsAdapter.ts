@@ -15,6 +15,7 @@ export const _filter_text_height:number = 60
 export const _filter_line_top_gap:number = 30
 export const _filter_line_bottom_gap:number = 30
 export const _filter_tag_gap:number = 12
+export const _filter_record_height:number = 100
 
 export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
  const tagList:Array<QTListViewItem> = []
