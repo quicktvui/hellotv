@@ -35,7 +35,7 @@
 
             </qt-list-view>
             <!-- 横线-->
-            <tags-filter-fast-line :type="2"/>
+            <tags-filter-fast-line :type="2" :focusable="false"/>
 
           </qt-list-view>
         </qt-view>

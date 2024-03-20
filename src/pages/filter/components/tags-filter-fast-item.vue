@@ -6,7 +6,7 @@
              eventFocus
              :focusable="true">
         <qt-text class="filter-fast-item-text"
-                 :duplicateParentState="true"
+                 :duplicateParentState="true" :focusable="false"
                  :fontSize="30" gravity="center"
                  autoWidth text="${filterShowName}"/>
     </qt-view>
