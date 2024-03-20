@@ -135,7 +135,7 @@ import { useESToast, ESKeyEvent, useESLocalStorage } from '@extscreen/es3-core'
 import { useESRouter } from "@extscreen/es3-router"
 import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
-import { ESPlayerDecode, ESPlayerError } from '@extscreen/es3-player'
+import { ESPlayerDecode, ESPlayerError, ESPlayerPlayMode } from '@extscreen/es3-player'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { RouteParams, Lives, Category, Channel, Program } from './types'
 import LoadingError from '../../components/LoadingError.vue'
@@ -308,6 +308,7 @@ async function onESCreate(params: RouteParams) {
 
         playerManager.value?.initialize()
         // playerManager.value?.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE) // 目前不生效
+        playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ONCE)
         playerManager.value?.playMediaList({ index: 0, list: playerMediaList })
 
         // 续播逻辑
@@ -488,6 +489,7 @@ function playNextMediaSource(immediately: boolean) {
             if (++curMediaLine.value >= curMediaLines.value) {
                 playerManager.value?.stop()
                 showLoadingError.value = true
+                showPlayinfo.value = false
                 --curMediaLine.value
                 return
             } else {
