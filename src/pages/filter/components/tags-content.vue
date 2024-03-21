@@ -81,7 +81,7 @@
       <img style="width: 560px;height: 350px;" :src="emptyImg"/>
       <span :style="{fontSize: 30,color: 'rgba(255, 255, 255, 0.5)',marginTop: '26px'}">暂无数据</span>
     </qt-view>
-    <!-- tag筛选结果-->
+    <!-- tag筛选记录-->
     <qt-view class="screen-right-selected-tags" ref="screen_right_selected_tags"
              name="screen_right_selected_tags" :visible="false">
       <!-- 当前选中tags-->
@@ -273,6 +273,10 @@ export default defineComponent({
       }
     }
 
+    function clearContentFocus(){
+      screen_right_content.value?.clearFocus()
+    }
+
     function onScrollToTop() {
       const delay = curType === 3 ? 400 : 200
       if (curType === 3){
@@ -311,7 +315,7 @@ export default defineComponent({
       }
       isFirstRequest = true
       if (type === 3) {//筛选
-        curTags = getCurScreenCondition() //设置筛选条件
+        curTags = getCurScreenCondition() //获取筛选条件
         if (isClick){
           setFilterTriggerTask()
           setRecordTip()
@@ -437,6 +441,7 @@ export default defineComponent({
       onFilterFocused,
       onScrollToTop,
       switchData,
+      clearContentFocus,
 
       screen_right_content,
       screen_right_filters,

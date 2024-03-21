@@ -16,6 +16,10 @@
           @click="onClick"/>
       </template>
     </top-btns-view>
+
+    <!-- 右侧结果-->
+    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
+
     <!-- 左侧列表-->
     <div class="screen-left-root-css">
       <!-- 背景-->
@@ -37,8 +41,6 @@
 
       </qt-list-view>
     </div>
-    <!-- 右侧结果-->
-    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
   </div>
 
 </template>
@@ -86,6 +88,7 @@ export default defineComponent({
     let defaultFiltersStr:string = ""
     let defaultFilters:Array<string> = []
     let defaultFastTag:string = ""
+    let curType:number = -1
 
     function onESCreate(params) {
       screenId = params.screenId
@@ -197,6 +200,7 @@ export default defineComponent({
               curTagPosition = position
               const item = e.item
               const type = item.type
+              curType = type
               let tagName = getRootTag()+","+item.tagName
               if(type === 3){
                 tagName= ""
@@ -211,6 +215,9 @@ export default defineComponent({
     function onBackPressed(){
       if (tags_content.value.screenItemContentFocus && tags_content.value.scrollY > 100){
         blockRootFocus()
+        if (curType === 3){
+          tags_content.value.clearContentFocus()
+        }
         tags_content.value.onScrollToTop()
         return
       }

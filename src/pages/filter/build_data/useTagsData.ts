@@ -239,7 +239,7 @@ export function getRootTag(){
 export function getCurScreenCondition(){
   let condition = ""
   //快速筛选
-  const defaultFastSelectPosition = fastFilterList.defaultSelectPosition || -1
+  const defaultFastSelectPosition = fastFilterList.defaultSelectPosition ?? -1
   if (defaultFastSelectPosition > -1 && fastFilterList && fastFilterList.list && fastFilterList.list.length > defaultFastSelectPosition){
     condition += fastFilterList.list[defaultFastSelectPosition].filterTagName
   }
