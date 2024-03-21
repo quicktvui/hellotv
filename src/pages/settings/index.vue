@@ -44,8 +44,7 @@ function onBackPressed() {
             isBack = true
             toast.showToast('再按一次返回退出')
         } else {
-            // nativeRouter.back()
-          router.back()
+            nativeRouter.back()
         }
     }
 }
@@ -54,7 +53,7 @@ function onESDestroy() { closeHttpServer() }
 
 function createHttpServer(): Promise<HttpServer> {
     return new Promise((resolve, reject) => {
-        // 本地调试: adb push dist/android/assets/dist.zip /sdcard/Android/data/com.extscreen.runtime/cache/dist.zip
+        // 本地调试: adb push dist/android/assets/dist.zip /sdcard/Android/data/tv.eskit.debugger/cache/dist.zip
         // 传参改为: @assets/dist.zip
         Native.callNativeWithPromise('ESHttpServiceModule', 'startServerWithCode', 'assets/dist.zip')
             .then((response: HttpServer) => {
@@ -83,7 +82,7 @@ EventBus.$on('onHttpServerEvent', async (event: any) => {
     console.log('huan-onHttpServerEvent-content', content)
     switch (event.type) {
         case 'url':
-            if (content.startsWith('http://') || content.startsWith('https://')) {
+            if ((content.startsWith('http://') || content.startsWith('https://')) && content.replace('://', '#').split('/')[0].search(/[\u4e00-\u9fa5]/) < 0) {
                 closeHttpServer()
                 router.push({ name: 'live', params: { url: content }, replace: true })
             } else {
