@@ -270,8 +270,10 @@ async function onESCreate(params: RouteParams) {
         }
 
         let live = liveSourceList[0]
-        if (live.url.startsWith('./')) {
-            let suffix = liveSourceUrl.split('/').pop() || ''
+        let suffix = liveSourceUrl.split('/').pop() || ''
+        if (live.url.replace('://', '#').split('/')[0].search(/[\u4e00-\u9fa5]/) >= 0) { // 接口为中文域名
+            live.url = liveSourceUrl.replace(suffix, 'libs/tv/' + live.url.split('/').pop())
+        } else if (live.url.startsWith('./')) { // 接口为相对路径
             live.url = liveSourceUrl.replace(suffix, live.url)
         }
         liveSourceEpg = live.epg
