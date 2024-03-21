@@ -639,20 +639,21 @@ async function fetchWithRedirect(resource: string, options: any = {}) {
     }
 }
 
-// 获取直播源源配置
+// 获取直播源配置
 function getLiveSourceConfig(url: string): Promise<Lives> {
     console.log('huan-getLiveSourceConfig-url', url)
     return new Promise((resolve, reject) => {
-        fetch(url)
-            .then(response => {
-                if (response.status != 200) {
-                    console.log('huan-response', response)
-                    reject('请求失败！')
-                }
-                return response
-            })
+        fetchWithRedirect(url)
             .then(response => response.text())
-            .then(text => resolve(JSON.parse(text.match(/(?<=\"lives\":\s*)\[[\s\S]*?\]/)?.[0] || '[]')))
+            .then(text => {
+                let obj: Lives = []
+                try {
+                    obj = JSON.parse(text.match(/(?<=\"lives\":\s*)\[[\s\S]*?\]/)?.[0] || '[]')
+                } catch {
+                    obj = JSON.parse(text).lives
+                }
+                resolve(obj)
+            })
             .catch(error => reject(error))
     })
 }
