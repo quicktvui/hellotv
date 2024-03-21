@@ -48,6 +48,15 @@
     align-items: center;
     background-color: #252930;
 }
+
+.screen-right-qt-view-root-css .screen-right-filter-click-loading{
+    width: 1560px;
+    position: absolute;
+    left: 0;
+    justify-content: center;
+    align-items: center;
+    background-color: #252930;
+}
 .screen-right-qt-view-root-css .screen-right-content-empty{
     width: 1560px;
     height: 960px;
