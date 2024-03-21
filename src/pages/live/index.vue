@@ -5,9 +5,8 @@
 
         <!-- 资源播放 -->
         <ESPlayerManager ref="playerManager" :playerList="playerListRef" :initPlayerWindowType="2"
-            @onPlayerBufferStart="onPlayerBufferStart" @onPlayerPrepared="onPlayerPrepared"
-            @onPlayerPlaying="onPlayerPlaying" @onPlayerError="onPlayerError"
-            @onPlayerBufferEnd="onPlayerBufferEnd"/>
+            @onPlayerBufferStart="onPlayerBufferStart" @onPlayerBufferEnd="onPlayerBufferEnd"
+            @onPlayerPrepared="onPlayerPrepared" @onPlayerPlaying="onPlayerPlaying" @onPlayerError="onPlayerError" />
 
         <qt-loading-view v-show="showLoading" class="tvbox-live-loading" />
 
@@ -137,10 +136,10 @@ import { useESRouter } from "@extscreen/es3-router"
 import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
 import {
-  ESPlayerDecode,
-  ESPlayerError, ESPlayerOptionType,
-  ESPlayerPlayMode, useESPlayer,
-  useESPlayerDecodeManager
+    ESPlayerDecode,
+    ESPlayerError, ESPlayerOptionType,
+    ESPlayerPlayMode, useESPlayer,
+    useESPlayerDecodeManager
 } from '@extscreen/es3-player'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { RouteParams, Lives, Category, Channel, Program } from './types'
@@ -322,68 +321,67 @@ async function onESCreate(params: RouteParams) {
         decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_SOFTWARE)
 
         esPlayer.getPlayerConfiguration().options = [
-          // 使用硬解
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 4,
-            name: 'mediacodec-all-videos',
-            value: 1
-          },
-          // 起播加快
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 1,
-            name: 'analyzeduration',
-            value: 1000 * 50
-          },
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 1,
-            name: 'probesize',
-            value: 1024 * 10
-            // value: 1024 * 64
-          },
-          // 关闭buffer
-          // {
-          //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-          //   category: 4,
-          //   name: 'packet-buffering',
-          //   value: 0
-          // },
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 1,
-            name: 'multiple_requests',
-            value: 1
-          },
-          // {
-          //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-          //   category: 1,
-          //   name: 'infbuf',
-          //   value: 1
-          // },
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 1,
-            name: 'flush_packets',
-            value: 1
-          },
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 4,
-            name: 'last-high-water-mark-ms',
-            value: 3000
-          },
-          {
-            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
-            category: 1,
-            name: 'reconnect',
-            value: 1
-          },
-        ];
+            // 使用硬解
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 4,
+                name: 'mediacodec-all-videos',
+                value: 1
+            },
+            // 起播加快
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 1,
+                name: 'analyzeduration',
+                value: 1000 * 50
+            },
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 1,
+                name: 'probesize',
+                value: 1024 * 10
+                // value: 1024 * 64
+            },
+            // 关闭buffer
+            // {
+            //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            //   category: 4,
+            //   name: 'packet-buffering',
+            //   value: 0
+            // },
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 1,
+                name: 'multiple_requests',
+                value: 1
+            },
+            // {
+            //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            //   category: 1,
+            //   name: 'infbuf',
+            //   value: 1
+            // },
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 1,
+                name: 'flush_packets',
+                value: 1
+            },
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 4,
+                name: 'last-high-water-mark-ms',
+                value: 3000
+            },
+            {
+                type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+                category: 1,
+                name: 'reconnect',
+                value: 1
+            },
+        ]
 
         playerManager.value?.initialize()
-        // playerManager.value?.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE) // 目前不生效
         playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ONCE)
         playerManager.value?.playMediaList({ index: 0, list: playerMediaList })
 
@@ -602,13 +600,13 @@ function onPlayerBufferStart() {
 }
 
 function onPlayerBufferEnd() {
-  console.log('huan-onPlayerBufferEnd')
-  if (hadPlaying) {
-    clearTimeout(playTimer)
-    clearTimeout(playInfoTimer)
-    showLoading.value = false
-    playInfoTimer = setTimeout(() => { showPlayinfo.value = false }, 10000)
-  }
+    console.log('huan-onPlayerBufferEnd')
+    if (hadPlaying) {
+        clearTimeout(playTimer)
+        clearTimeout(playInfoTimer)
+        showLoading.value = false
+        playInfoTimer = setTimeout(() => { showPlayinfo.value = false }, 10000)
+    }
 }
 
 const curMedia = ref<ESMediaItem>({})
@@ -665,16 +663,7 @@ function onPlayerPlaying() {
 
 function onPlayerError(error: ESPlayerError) {
     console.log('huan-onPlayerError', error)
-    if (++curMediaLine.value >= curMediaLines.value) {
-      playerManager.value?.stop()
-      showLoadingError.value = true
-      showPlayinfo.value = false
-      --curMediaLine.value
-      return
-    } else {
-      toast.showToast('播放失败，自动切换下一线路')
-      playerManager.value?.playNextMediaSource()
-    }
+    playNextMediaSource(true)
 }
 
 let menuCloseTimer: any = -1
