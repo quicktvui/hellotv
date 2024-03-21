@@ -42,7 +42,7 @@ export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
 
 export function buildTagContentEnd():QTGridViewItem{
   const endList: QTGridViewItem = {
-    type:1003,
+    type:999
   }
   return endList
 }

@@ -18,7 +18,11 @@
     </qt-view>
     <!--    标题-->
    <qt-view class="screen-right-content-item-text-root" :duplicateParentState="true" :focusable="false">
-     <qt-text class="screen-right-content-item-text" :fontSize="30"
+     <qt-text class="screen-right-content-item-text-normal" :fontSize="30" :showOnState="['normal','selected']"
+              :ellipsizeMode="2" :lines="1" :duplicateParentState="true"
+              :paddingRect="[12,6,12,0]" text="${title}"
+              :focusable="false" :select="true"/>
+     <qt-text class="screen-right-content-item-text-focus" :fontSize="30" showOnState='focused'
               :ellipsizeMode="3" :lines="1" :duplicateParentState="true"
               :paddingRect="[12,6,12,0]" text="${title}"
               :focusable="false" :select="true"/>
