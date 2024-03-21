@@ -707,6 +707,7 @@ function getLiveSourceChannel(url: string): Promise<Category[]> {
 
                 // 合并各分类频道同源数据
                 let counter = 1
+                let delIdxs: number[] = []
                 categorys.forEach((item, index) => {
                     let tmp = <Channel[]>{}
                     item.data.sort((a, b) => {
@@ -727,8 +728,15 @@ function getLiveSourceChannel(url: string): Promise<Category[]> {
                         category.data.push(val)
                     }
 
-                    categorys.splice(index, 1, category)
+                    if (category.data.length == 0) {
+                        delIdxs.push(index)
+                    } else {
+                        categorys.splice(index, 1, category)
+                    }
                 })
+
+                // 移除空数据
+                delIdxs.map(index => categorys.splice(index, 1))
 
                 resolve(categorys)
             },)
