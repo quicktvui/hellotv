@@ -29,13 +29,13 @@
     "build": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android.js"
   },
   "dependencies": {
-    "@extscreen/es3-ad-player": "1.0.6",
+    "@extscreen/es3-ad-player": "1.0.9",
     "@extscreen/es3-component": "1.0.13",
     "@extscreen/es3-core": "1.0.2",
-    "@extscreen/es3-player": "1.0.6",
-    "@extscreen/es3-player-manager": "1.0.14",
+    "@extscreen/es3-player": "1.0.13",
+    "@extscreen/es3-player-manager": "1.0.19",
     "@extscreen/es3-router": "1.0.2",
-    "@extscreen/es3-video-player": "1.0.8",
+    "@extscreen/es3-video-player": "1.0.15",
     "@extscreen/es3-vue": "0.0.13",
     "@extscreen/es3-vue-style-parser": "0.0.8",
     "@quicktvui/quicktvui3": "1.0.92",

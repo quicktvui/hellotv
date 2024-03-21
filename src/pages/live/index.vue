@@ -6,7 +6,8 @@
         <!-- 资源播放 -->
         <ESPlayerManager ref="playerManager" :playerList="playerListRef" :initPlayerWindowType="2"
             @onPlayerBufferStart="onPlayerBufferStart" @onPlayerPrepared="onPlayerPrepared"
-            @onPlayerPlaying="onPlayerPlaying" @onPlayerError="onPlayerError" />
+            @onPlayerPlaying="onPlayerPlaying" @onPlayerError="onPlayerError"
+            @onPlayerBufferEnd="onPlayerBufferEnd"/>
 
         <qt-loading-view v-show="showLoading" class="tvbox-live-loading" />
 
@@ -135,7 +136,12 @@ import { useESToast, ESKeyEvent, useESLocalStorage } from '@extscreen/es3-core'
 import { useESRouter } from "@extscreen/es3-router"
 import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
-import { ESPlayerDecode, ESPlayerError, ESPlayerPlayMode } from '@extscreen/es3-player'
+import {
+  ESPlayerDecode,
+  ESPlayerError, ESPlayerOptionType,
+  ESPlayerPlayMode, useESPlayer,
+  useESPlayerDecodeManager
+} from '@extscreen/es3-player'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { RouteParams, Lives, Category, Channel, Program } from './types'
 import LoadingError from '../../components/LoadingError.vue'
@@ -155,6 +161,8 @@ let liveSourceEpg: string = ''
 let liveSourceData = ref<Category[]>([])
 // 直播源频道数
 let liveSourceChannelCount = 0
+// 标识是否已playing
+let hadPlaying: boolean = false
 
 async function initLiveSource(url: string) {
     await getLiveSourceChannel(url)
@@ -214,6 +222,8 @@ let today = now.getFullYear() + '-' + ('0' + (now.getMonth() + 1)).slice(-2) + '
 const toast = useESToast()
 const router = useESRouter()
 const localStore = useESLocalStorage()
+const decodeManager = useESPlayerDecodeManager()
+const esPlayer = useESPlayer()
 
 const deviceTime = ref()
 const showLoading = ref(false)
@@ -307,6 +317,70 @@ async function onESCreate(params: RouteParams) {
                 channelName: channel.name
             })
         }))
+
+        // decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE)
+        decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_SOFTWARE)
+
+        esPlayer.getPlayerConfiguration().options = [
+          // 使用硬解
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 4,
+            name: 'mediacodec-all-videos',
+            value: 1
+          },
+          // 起播加快
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 1,
+            name: 'analyzeduration',
+            value: 1000 * 50
+          },
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 1,
+            name: 'probesize',
+            value: 1024 * 10
+            // value: 1024 * 64
+          },
+          // 关闭buffer
+          // {
+          //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+          //   category: 4,
+          //   name: 'packet-buffering',
+          //   value: 0
+          // },
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 1,
+            name: 'multiple_requests',
+            value: 1
+          },
+          // {
+          //   type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+          //   category: 1,
+          //   name: 'infbuf',
+          //   value: 1
+          // },
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 1,
+            name: 'flush_packets',
+            value: 1
+          },
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 4,
+            name: 'last-high-water-mark-ms',
+            value: 3000
+          },
+          {
+            type: ESPlayerOptionType.ES_PLAYER_OPTION_TYPE_INT,
+            category: 1,
+            name: 'reconnect',
+            value: 1
+          },
+        ];
 
         playerManager.value?.initialize()
         // playerManager.value?.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE) // 目前不生效
@@ -527,6 +601,16 @@ function onPlayerBufferStart() {
     playNextMediaSource(false)
 }
 
+function onPlayerBufferEnd() {
+  console.log('huan-onPlayerBufferEnd')
+  if (hadPlaying) {
+    clearTimeout(playTimer)
+    clearTimeout(playInfoTimer)
+    showLoading.value = false
+    playInfoTimer = setTimeout(() => { showPlayinfo.value = false }, 10000)
+  }
+}
+
 const curMedia = ref<ESMediaItem>({})
 const curMediaLine = ref(0)
 const curMediaLines = ref(0)
@@ -534,6 +618,9 @@ const curProgram = ref<Program>({})
 const nextProgram = ref<Program>({})
 async function onPlayerPrepared() {
     console.log('huan-onPlayerPrepared')
+
+    hadPlaying = false
+
     clearTimeout(playTimer)
     clearTimeout(playInfoTimer)
     showPlayinfo.value = true
@@ -567,6 +654,9 @@ async function onPlayerPrepared() {
 
 function onPlayerPlaying() {
     console.log('huan-onPlayerPlaying')
+
+    hadPlaying = true
+
     clearTimeout(playTimer)
     clearTimeout(playInfoTimer)
     showLoading.value = false
@@ -575,6 +665,16 @@ function onPlayerPlaying() {
 
 function onPlayerError(error: ESPlayerError) {
     console.log('huan-onPlayerError', error)
+    if (++curMediaLine.value >= curMediaLines.value) {
+      playerManager.value?.stop()
+      showLoadingError.value = true
+      showPlayinfo.value = false
+      --curMediaLine.value
+      return
+    } else {
+      toast.showToast('播放失败，自动切换下一线路')
+      playerManager.value?.playNextMediaSource()
+    }
 }
 
 let menuCloseTimer: any = -1

@@ -170,7 +170,6 @@ export default defineComponent({
             tags_content.value.init()
             setTimeout(()=>{
               const defaultTagPosition = getDefaultTagSelectIndex()
-              // leftTags.value!.setItemSelected(defaultTagPosition,true)
               leftTags.value!.setItemFocused(defaultTagPosition)
             },300)
           })
