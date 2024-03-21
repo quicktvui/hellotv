@@ -19,6 +19,7 @@ import {
     filterContentUrl,
     filterEntryUrl,
     hotSearchUrl,
+    mediaDetailUrl,
     searchLongUrl,
     tabContentUrl,
     tabListUrl
@@ -61,22 +62,20 @@ export function createGlobalApi(): IGlobalApi {
         if (BuildConfig.useMockData) {
             return getMockTabContent(tabId, pageNo)
         }
-        return requestManager.post(tabContentUrl, {
-            'data': tabId,
-            'param': {
-                'isSupportPage': 1,
-                "pageNo": pageNo,
-                "pageSize": pageSize,
-            }
-        }).then((tabContent: any) => {
-            return buildO2MTabContentData(tabContent, pageNo, tabId)
-        })
+        return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}`)
+            .then((result: any) => {
+                return buildO2MTabContentData(result, pageNo, tabId)
+            })
     }
 
     function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
         const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
         const index = Number(tabId)
         return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo == 1, tabId))
+    }
+
+    function getTabContentDetail(tabId: string, ids: string, pageNo: number): Promise<any> {
+        return requestManager.cmsGet(mediaDetailUrl + `&t=${tabId}&ids=${ids}&pg=${pageNo}`)
     }
 
     function getTabBg(tabId): string {

@@ -2,11 +2,11 @@ import BuildConfig from "../build/BuildConfig";
 
 // Home请求url
 export const tabListUrl = BuildConfig.requestBaseUrl
-export const tabContentUrl = BuildConfig.requestBaseUrl + "/v3/zero/arrange/layoutByMenuCode"
+export const tabContentUrl = BuildConfig.requestBaseUrl + '?ac=list'
 export const tabGetPlayUrl = BuildConfig.requestBaseUrl + "/v1/zero/recommend/assetdetail/"
 
 // detail请求URL
-export const mediaDetailUrl = BuildConfig.requestBaseUrl + "/v2/zero/media/assetlong/meta/"
+export const mediaDetailUrl = BuildConfig.requestBaseUrl + '?ac=detail'
 export const mediaRecommendUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/recommend/"
 export const episodeListUrl = BuildConfig.requestBaseUrl + "/v2/zero/media/assetlong/episodeList/"
 export const episodePlayUrlUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/episode/playUrl/"
