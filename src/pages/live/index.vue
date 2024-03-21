@@ -317,9 +317,7 @@ async function onESCreate(params: RouteParams) {
             })
         }))
 
-        // decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE)
-        decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_SOFTWARE)
-
+        decodeManager.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE)
         esPlayer.getPlayerConfiguration().options = [
             // 使用硬解
             {
