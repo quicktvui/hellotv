@@ -556,21 +556,21 @@ function playNextMedia(immediately: boolean) {
 function playNextMediaSource(immediately: boolean) {
     clearTimeout(playTimer)
     showLoading.value = true
-    playTimer = setTimeout(() => {
-        if (immediately) {
-            if (++curMediaLine.value >= curMediaLines.value) {
-                playerManager.value?.stop()
-                showLoadingError.value = true
-                showPlayinfo.value = false
-                --curMediaLine.value
-                return
-            } else {
-                toast.showToast('播放失败，自动切换下一线路')
-                playerManager.value?.playNextMediaSource()
-            }
+
+    if (immediately) {
+        if (++curMediaLine.value >= curMediaLines.value) {
+            playerManager.value?.stop()
+            showLoadingError.value = true
+            showPlayinfo.value = false
+            --curMediaLine.value
+            return
+        } else {
+            toast.showToast('播放失败，自动切换下一线路')
+            playerManager.value?.playNextMediaSource()
         }
-        playNextMediaSource(true)
-    }, 5000)
+    }
+
+    playTimer = setTimeout(() => { playNextMediaSource(true) }, 5000)
 }
 
 function changeMediaSource(dir: -1 | 1) {
