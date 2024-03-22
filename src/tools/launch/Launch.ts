@@ -1,9 +1,9 @@
 //
-import {QTWaterfallItem} from "@quicktvui/quicktvui3";
-import {App} from "vue";
-import {LaunchKey} from "./useApi";
-import {ESNativeRouter, Router} from "@extscreen/es3-router";
-import {ESLog, ESLogLevel} from "@extscreen/es3-core";
+import { QTWaterfallItem } from "@quicktvui/quicktvui3";
+import { App } from "vue";
+import { LaunchKey } from "./useApi";
+import { ESNativeRouter, Router } from "@extscreen/es3-router";
+import { ESLog, ESLogLevel } from "@extscreen/es3-core";
 
 export interface Launch {
 
@@ -11,7 +11,7 @@ export interface Launch {
 
     init(...params: any[]): Promise<any>;
 
-    launch(item:any): void
+    launch(item: any): void
 }
 
 export function createLaunch(): Launch {
@@ -43,7 +43,7 @@ export function createLaunch(): Launch {
         const redirectType = data.redirectType;
         switch (redirectType) {
             //内部跳转
-            case 1:
+            case 1: case '1':
                 const argsStr = data.innerArgs;
                 const args = JSON.parse(argsStr)
                 if (log.isLoggable(ESLogLevel.DEBUG)) {

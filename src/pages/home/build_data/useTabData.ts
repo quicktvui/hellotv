@@ -24,115 +24,36 @@ export function buildO2MTabData(sourceData: Array<any>) {
 }
 
 export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabId: string) {
-    // const { firstPlateMarginTop, disableScrollOnFirstScreen } = getParameter(sourceData.parameter)
-    // const plates: Array<TabContentSection> = []
-    // sourceData.plates?.forEach((plateItem, plateIndex) => {
-    //     let plateType: string = '1'
-    //     switch (plateItem.plateType) {
-    //         //一行滚动
-    //         case "2":
-    //         case "3":
-    //             plateType = '2'
-    //             break;
-    //         default:
-    //             //普通板块类型
-    //             plateType = '1'
-    //             break
-    //     }
-
-    //     const tabSections: Array<TabSectionItem> = []
-    //     let isFocusScrollTarget: boolean = false
-    //     let isFirst: boolean = true
-    //     let isSwitchCellBg: string = '0'
-    //     plateItem.plateDetails?.forEach((sectionItem, sectionIndex) => {
-    //         const cellType: string = getSectionType(sectionItem.detailStyle, sectionItem?.config?.contentType)
-    //         if ((cellType === '10008' || cellType === '10009') && isFirst) {
-    //             isFocusScrollTarget = true
-    //             isFirst = false
-    //         }
-    //         if (plateIndex === 0) {
-    //             isSwitchCellBg = !!sectionItem.config?.focusScreenImage ? '1' : '0'
-    //         }
-    //         const playData: Array<TabPlayItem> = getPlayData(sectionItem.config?.community?.videoAssets, sectionItem.config)
-    //         let tabSectionItem: TabSectionItem = {
-    //             id: sectionItem.id,
-    //             posX: sectionItem.posX,
-    //             posY: sectionItem.posY,
-    //             width: sectionItem.width,
-    //             height: sectionItem.height,
-    //             cellType: cellType,
-    //             isBgPlayer: !!sectionItem.config?.focusScreenAssetId,
-    //             poster: sectionItem.config?.poster,
-    //             posterTitle: sectionItem.config?.posterTitle,
-    //             posterTitleStyle: sectionItem.config?.posterTitleStyle,
-    //             posterSubtitle: sectionItem.config?.posterSubtitle,
-    //             floatTitle: sectionItem.config?.floatTitle,
-    //             cornerContent: sectionItem.config?.cornerContent,
-    //             cornerColor: sectionItem.config?.cornerColor,
-    //             cornerGradient: sectionItem.config?.cornerGradient,
-    //             focusImage: sectionItem.config?.focusImage,
-    //             nonFocusImage: sectionItem.config?.nonFocusImage,
-    //             focusScreenImage: sectionItem.config?.focusScreenImage,
-    //             playLogoSwitch: sectionItem.config?.playLogoSwitch,
-    //             playData: playData,
-    //             redirectType: sectionItem.config?.redirectType,
-    //             action: sectionItem.config?.action,
-    //             innerArgs: sectionItem.config?.innerArgs
-    //         }
-    //         tabSections.push(tabSectionItem)
-    //     })
-
-    //     const tabContentSection: TabContentSection = {
-    //         id: plateItem.id,
-    //         plateName: plateItem.plateName,
-    //         showPlateName: plateItem.showPlateName,
-    //         plateType: plateType,
-    //         plateDetails: tabSections,
-    //         height: plateItem.height,
-    //         isSwitchCellBg: isSwitchCellBg,
-    //         timeAxisSwitch: plateItem.timeAxisSwitch,
-    //         isFocusScrollTarget: isFocusScrollTarget
-    //     }
-    //     plates.push(tabContentSection)
-    // })
-
-    // let tabContent: TabContent = {
-    //     id: sourceData.id,
-    //     firstPlateMarginTop: firstPlateMarginTop,
-    //     disableScrollOnFirstScreen: disableScrollOnFirstScreen,
-    //     plateCount: sourceData.plateCount,
-    //     plates: plates,
-    //     image: sourceData.image
-    // }
-
-    // TODO 请求详情补数据
-
+    const tabSections: TabSectionItem[] = []
     let x = 90
-    const tabSections: TabSectionItem[] = sourceData.list?.map((sectionItem, sectionIndex) => ({
-        id: '1557636856718708738',
-        posX: sectionIndex == 0 ? x : x += 252 + 36,
-        posY: 0,
-        width: 252,
-        height: 336,
-        cellType: 0,
-        isBgPlayer: false,
-        poster: 'http://qcloudimg.a311.ottcn.com/data_center/files/2023/01/31/ebde25ff-1f99-4f42-bef3-3046ee422adf.jpg',
-        posterTitle: sectionItem.vod_name,
-        posterTitleStyle: '1',
-        posterSubtitle: '',
-        floatTitle: '',
-        cornerContent: '',
-        cornerColor: '',
-        cornerGradient: '',
-        focusImage: '',
-        nonFocusImage: '',
-        focusScreenImage: '',
-        playLogoSwitch: '0',
-        playData: [],
-        redirectType: 1,
-        action: '',
-        innerArgs: ''
-    }))
+    sourceData.list?.map((sectionItem, sectionIndex) => {
+        let detail = sourceData.details[sectionItem.vod_id] || {}
+        tabSections.push({
+            id: sectionItem.vod_id,
+            posX: sectionIndex == 0 ? x : x += 252 + 36,
+            posY: 0,
+            width: 252,
+            height: 336,
+            cellType: 0,
+            isBgPlayer: false,
+            poster: detail.vod_pic,
+            posterTitle: detail.vod_name,
+            posterTitleStyle: '1',
+            posterSubtitle: detail.vod_sub,
+            floatTitle: '',
+            cornerContent: '',
+            cornerColor: '',
+            cornerGradient: '',
+            focusImage: '',
+            nonFocusImage: '',
+            focusScreenImage: '',
+            playLogoSwitch: '0',
+            playData: [],
+            redirectType: '1',
+            action: '',
+            innerArgs: getInnerArgs(detail.vod_id)
+        })
+    })
 
     const plates: TabContentSection[] = []
     for (let i = 0; i < tabSections.length / 6; i++) {
@@ -150,7 +71,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     }
 
     const tabContent: TabContent = {
-        id: '1557636231393988610',
+        id: tabId,
         firstPlateMarginTop: 0,
         disableScrollOnFirstScreen: false,
         plateCount: 1,
@@ -159,6 +80,18 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     }
 
     return buildTransferTabContentAdapter(tabContent, pageNo === 1, tabId)
+}
+
+function getInnerArgs(mediaId: number | string) {
+    return JSON.stringify({
+        params: {
+            mediaId: mediaId,
+            episodeId: 0,
+            episodeIndex: 0,
+            startPosition: 0
+        },
+        url: 'series_view'
+    })
 }
 
 function getParameter(parameter) {

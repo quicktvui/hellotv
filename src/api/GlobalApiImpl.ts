@@ -63,7 +63,15 @@ export function createGlobalApi(): IGlobalApi {
             return getMockTabContent(tabId, pageNo)
         }
         return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}`)
-            .then((result: any) => {
+            .then(async (result: any) => {
+
+                // 补充详情数据
+                let ids: string[] = []
+                result.list?.map((item: any) => ids.push(item.vod_id))
+                if (ids.length > 0) {
+                    result.details = await getTabContentDetails(ids.join(','), 1)
+                }
+
                 return buildO2MTabContentData(result, pageNo, tabId)
             })
     }
@@ -74,8 +82,13 @@ export function createGlobalApi(): IGlobalApi {
         return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo == 1, tabId))
     }
 
-    function getTabContentDetail(tabId: string, ids: string, pageNo: number): Promise<any> {
-        return requestManager.cmsGet(mediaDetailUrl + `&t=${tabId}&ids=${ids}&pg=${pageNo}`)
+    function getTabContentDetails(ids: string, pageNo: number): Promise<any> {
+        return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
+            .then((result: any) => {
+                let details = {}
+                result.list?.map((item: any) => details[item.vod_id] = item)
+                return details
+            })
     }
 
     function getTabBg(tabId): string {
