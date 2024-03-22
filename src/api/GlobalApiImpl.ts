@@ -76,7 +76,7 @@ export function createGlobalApi(): IGlobalApi {
   function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
     const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
     const index = Number(tabId)
-    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo == 1,tabId))
+    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId))
   }
 
   function getTabBg(tabId): string {
@@ -108,10 +108,10 @@ export function createGlobalApi(): IGlobalApi {
 
   function getSearchResultTabList(): Promise<Array<QTTabItem>> {
     //此处可更换接口请求数据
-    if (BuildConfig.useMockData) return Promise.resolve(buildSearchResultTabListData(searchResultTabList))
+    if (BuildConfig.useMockData) return Promise.resolve(buildSearchResultTabListData(searchResultTabList as Array<any>))
     return requestManager.post(tabContentUrl, {'data': ''})
-      .then((searchCenterList: any) => {
-        return buildSearchResultTabListData(searchResultTabList)
+      .then((searchCenterList: Array<any>) => {
+        return buildSearchResultTabListData(searchResultTabList as Array<any>)
       })
   }
 
