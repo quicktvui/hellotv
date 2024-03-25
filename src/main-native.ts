@@ -12,7 +12,7 @@ import { createESADPlayer } from "@extscreen/es3-ad-player";
 
 //--------------------components-----------------------
 const routerOptions = {
-    main: 'series_view',
+    main: 'home',
     error: 'error',
     limit: 5,
     routes: routes,

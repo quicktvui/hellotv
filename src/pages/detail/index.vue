@@ -133,7 +133,7 @@ export default defineComponent({
                         }
                         waterfallRef.value?.setSectionList(sections)
                         mediaPlayerViewRef.value?.play(media)
-                        // getMediaRecommendation()
+                        getMediaRecommendation()
                     })
                     //执行鉴权逻辑
                     // getMediaAuthorization()
@@ -165,7 +165,7 @@ export default defineComponent({
         }
 
         function getMediaRecommendation() {
-            mediaDataSource.getMediaRecommendation(mediaId)
+            mediaDataSource.getMediaRecommendation(mediaId, media.typeId)
                 .then((mediaList: Array<IMedia>) => {
                     const section = waterfallRef.value?.getSection(2)
                     if (section) {
@@ -198,7 +198,7 @@ export default defineComponent({
                     break
                 case 2:
                     router.push({
-                        name: 'detail',
+                        name: 'series_view',
                         params: {
                             mediaId: item.item.id
                         },

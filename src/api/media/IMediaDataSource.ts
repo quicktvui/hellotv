@@ -11,7 +11,7 @@ export interface IMediaDataSource {
 
     getMediaDetail(mediaId: string): Promise<IMedia | null | undefined>
 
-    getMediaRecommendation(mediaId: string): Promise<Array<IMedia>>
+    getMediaRecommendation(mediaId: string, tabId: string): Promise<Array<IMedia>>
 
     getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number, media?: IMedia): Promise<Array<IMedia>>
 

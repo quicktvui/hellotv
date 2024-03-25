@@ -13,6 +13,9 @@ import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
 export function buildO2MTabData(sourceData: Array<any>) {
     const tabs: Array<Tab> = []
     sourceData.forEach((item, index) => {
+        if (index < 4) {
+            return
+        }
         const tab: Tab = {
             menuCode: item.type_id,
             menuName: item.type_name,

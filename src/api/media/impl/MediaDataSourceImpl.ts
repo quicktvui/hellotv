@@ -28,9 +28,28 @@ export function createMediaDataSource(): IMediaDataSource {
             .then((result: any) => buildMedia(result.list[0]))
     }
 
-    function getMediaRecommendation(mediaId: string): Promise<Array<IMedia>> {
-        return requestManager.post(mediaRecommendUrl + mediaId, {})
-            .then((mediaList: Array<Media>) => buildMediaList(mediaList))
+    function getMediaDetails(ids: string, pageNo: number): Promise<any> {
+        return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
+            .then((result: any) => {
+                let details = {}
+                result.list?.map((item: any) => details[item.vod_id] = item)
+                return details
+            })
+    }
+
+    function getMediaRecommendation(mediaId: string, tabId: string): Promise<any> {
+        return requestManager.cmsGet(mediaRecommendUrl + `?ids=${mediaId}&t=${tabId}`)
+            .then(async (result: any) => {
+
+                // 补充详情数据
+                let ids: string[] = []
+                result.list?.map((item: any) => ids.push(item.vod_id))
+                if (ids.length > 0) {
+                    result.details = await getMediaDetails(ids.join(','), 1)
+                }
+
+                return buildMediaList(result.list, result.details)
+            })
     }
 
     function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number, media?: IMedia): Promise<Array<IMedia>> {

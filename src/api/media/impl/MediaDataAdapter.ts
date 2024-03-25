@@ -13,7 +13,7 @@ export function buildMedia(media: Media): IMedia {
         tags: media.vod_tag,
         //
         coverH: media.vod_pic,
-        coverV: '',
+        coverV: media.vod_pic,
         directors: media.vod_director,
 
         //
@@ -40,16 +40,21 @@ export function buildMedia(media: Media): IMedia {
         itemListCount: 1,
         // 权益类型
         authType: IMediaAuthType.MEDIA_AUTH_TYPE_FREE,
+        // 视频分类
+        typeId: media.type_id,
         // 播放地址
         playUrl: media.vod_play_url
     }
     return m
 }
 
-export function buildMediaList(mediaList: Array<Media>): Array<IMedia> {
+export function buildMediaList(mediaList: Array<Media>, mediaExt?: {}): Array<IMedia> {
     const medias: Array<IMedia> = []
     for (let i = 0; i < mediaList.length; i++) {
         const m = mediaList[i]
+        if (mediaExt) {
+            m.vod_pic = mediaExt[m.vod_id].vod_pic
+        }
         medias.push(buildMedia(m))
     }
     return medias
