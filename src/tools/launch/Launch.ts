@@ -55,7 +55,7 @@ export function createLaunch(): Launch {
                 });
                 break
             //外部跳转
-            case 2:
+            case 2: case '2':
                 break
             default:
                 break

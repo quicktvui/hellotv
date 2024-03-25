@@ -7,7 +7,7 @@
          :clipChildren="false"
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-media-series
-        ref="mediaSeriesRef"
+        ref="mediaSeriesListRef"
         class="qt-collapse-media-series-root-css"
         :clipChildren="false"
         @load-data="onLoadData"
@@ -53,10 +53,11 @@ export default defineComponent({
     const log = useESLog()
     let itemListId: string
     const isCollapseExpand = ref<boolean>(false)
-    const mediaSeriesRef = ref<QTIMediaSeries>()
+    const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
     let mediaListShowing: boolean = false
+    let selectedIndex = 0
 
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
@@ -65,7 +66,7 @@ export default defineComponent({
       }
       itemListId = media.itemList?.id ?? ''
       visible.value = media.itemList.enable
-      mediaSeriesRef.value?.setInitData(
+      mediaSeriesListRef.value?.setInitData(
         buildMediaSeriesType(media), //
         buildMediaSeriesGroup(media), //
         buildMediaSeriesStyleType(media), //
@@ -79,9 +80,14 @@ export default defineComponent({
     function setListData(page: number, dataList: Array<IMedia>) {
       const list = buildMediaSeriesList(dataList)
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------setListData---eee--->>>>', page, list)
+        log.d(TAG, '-----1--setListData---eee--->>>>', page, list)
       }
-      mediaSeriesRef.value?.setPageData(page, list)
+      nextTick(() => {
+        mediaSeriesListRef.value?.setPageData(page, list)
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, '---2----setListData---eee--->>>>', page, list)
+        }
+      })
     }
 
     //---------------------------------------------------------------------------
@@ -90,6 +96,11 @@ export default defineComponent({
         log.d(TAG, '-------onCollapseItemExpand---绿色---->>>>', value)
       }
       isCollapseExpand.value = value
+
+      if (value) {
+        setItemSelected(selectedIndex)
+        setItemFocused(selectedIndex)
+      }
     }
 
     function onFocus(e) {
@@ -97,10 +108,22 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
+      mediaSeriesListRef.value?.requestFocus(position)
     }
 
     function setItemSelected(position: number): void {
-      mediaSeriesRef.value?.setSelected(position)
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---选集---setItemSelected------>>>>', position)
+      }
+      selectedIndex = position
+      mediaSeriesListRef.value?.setSelected(position)
+    }
+
+    function scrollTo(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---选集---scrollTo------>>>>', position)
+      }
+      mediaSeriesListRef.value?.scrollTo(position)
     }
 
     function show(value: boolean) {
@@ -133,7 +156,7 @@ export default defineComponent({
     }
 
     return {
-      mediaSeriesRef,
+      mediaSeriesListRef,
       isCollapseExpand,
       onFocus,
       onCollapseItemExpand,

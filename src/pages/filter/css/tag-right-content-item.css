@@ -56,12 +56,20 @@
     focus-background-color: white;
 }
 
-.screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text{
+.screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-normal{
+    position: absolute;
     width: 260px;
     height: 54px;
     background-color: transparent;
     color: rgba(255, 255, 255, .7);
-    focus-color: black;
+    /*focus-color: black;*/
+}
+.screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-focus{
+    position: absolute;
+    width: 260px;
+    height: 54px;
+    background-color: transparent;
+    color: black;
 }
 
 

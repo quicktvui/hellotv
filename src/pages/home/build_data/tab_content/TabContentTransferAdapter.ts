@@ -7,20 +7,25 @@ import {
   buildQTTabContent,
   buildSectionData,
   buildSectionItem,
-  buildTabContentPlate,
+  buildTabContentPlate, tabPlateAllHeight,
   tabPlateTitleGap,
   tabPlateTitleHeightDefault
-} from "./TabContentAdapter";
+} from './TabContentAdapter'
 import {TabContent} from "./impl/TabContent";
 import {tabBackgroundUrls} from "../tab/TabAdapter";
+import BuildConfig from '../../../../build/BuildConfig'
 
 /**
  * 转换TabContent
  * @param tabId
  * @param tabContent
- * @param isFirstPage
+ * @param pageNo
  */
-export function buildTransferTabContentAdapter(tabContent:TabContent,isFirstPage:boolean=false,tabId:string):QTTabPageData{
+export function buildTransferTabContentAdapter(tabContent:TabContent,pageNo:number=1,tabId:string):QTTabPageData{
+  const isFirstPage = pageNo === 1
+  if (isFirstPage){
+    tabPlateAllHeight.delete(tabId)
+  }
   tabBackgroundUrls.set(tabId,tabContent.image)
   //定义板块总高度
   let plateHeightSum:number = 0
@@ -37,6 +42,9 @@ export function buildTransferTabContentAdapter(tabContent:TabContent,isFirstPage
       //获取板块高度
       let plateHeight:number = buildPlateHeight(plateItem)
       plateHeightSum += plateHeight
+      //存储板块高度
+      setCurTabPageNoPlateHeight(plateHeightSum,pageNo,tabId)
+
       const showPlateName = plateItem.showPlateName === '1'
       //section列表
       const tabSectionList:Array<QTWaterfallItem> = buildSectionList(plateItem)
@@ -49,13 +57,38 @@ export function buildTransferTabContentAdapter(tabContent:TabContent,isFirstPage
 
     })
   }
-  //如果是一次性返回的数据 则在这里直接判断添加是否添加结束section
-  if (plateHeightSum > 1080){
+  //获取当前请求到的所有数据条数
+  let isEndPage:boolean = false
+  const requestCount = (pageNo - 1) * BuildConfig.tabContentPageSize + plateSourceData.length
+  const allPlateHeight = getAllPlateHeightByTabId(tabId) + firstPlateMarginTop
+  if (allPlateHeight > 1080 && requestCount >= tabContent.plateCount){
+    isEndPage = true
     const endSection = buildEndSection('5');
     plateList.push(endSection)
+  }else{
+    isEndPage = plateList.length == 0
   }
   const tabPage: QTTabPageData = buildQTTabContent(disableScrollOnFirstScreen,plateList)
+  tabPage.isEndPage = isEndPage
   return tabPage
+}
+
+function setCurTabPageNoPlateHeight(plateHeightSum,pageNo,tabId){
+  const result = tabPlateAllHeight.get(tabId)
+  let tabIdPlateHeight = result ? result :{}
+  tabIdPlateHeight[pageNo] = plateHeightSum
+  tabPlateAllHeight.set(tabId,tabIdPlateHeight)
+}
+
+function getAllPlateHeightByTabId(tabId):number{
+  let plateH:any = tabPlateAllHeight.get(tabId)
+  let height:number = 0
+  if (plateH){
+    for (const valueHeight:number of Object.values(plateH)) {
+      height += valueHeight
+    }
+  }
+  return height
 }
 
 /**
