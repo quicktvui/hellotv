@@ -31,7 +31,7 @@ export function buildMediaItem(page: number, index: number, media: IMedia, media
         id: media.id,
         index: mediaIndex,
         title: media.title,
-        media: media,
+        playUrl: media.playUrl,
         interceptors: mediaItemInterceptors
     }
     return mediaItem

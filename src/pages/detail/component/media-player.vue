@@ -67,7 +67,6 @@ export default defineComponent({
                 list: [],
                 media: media
             }
-            console.log('huan-111', playList)
             playerManager.value?.initialize()
             playerManager.value?.playMediaList(playList)
         }

@@ -82,7 +82,7 @@ export default defineComponent({
         const onESCreate = (params) => {
             mediaId = params.mediaId
             if (!mediaId) {
-                mediaId = '53131'
+                mediaId = '1071'
             }
             if (log.isLoggable(ESLogLevel.DEBUG)) {
                 log.e(TAG, "-------onESCreate------详情页面---->>>>>", params)

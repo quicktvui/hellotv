@@ -8,6 +8,7 @@ import { ESMediaItem } from "@extscreen/es3-player-manager";
 import { IMediaDataSource } from "../../../api/media/IMediaDataSource";
 import { buildMediaSourceList } from "../adapter/PlayerDataAdapter";
 import { MEDIA_PLAYER_ERROR_AUTH } from "../component/IMediaPlayerErrors";
+import { IMediaUrl } from "src/api/media/IMediaUrl";
 
 /**
  * 播放媒资分集鉴权
@@ -60,7 +61,33 @@ export function createESPlayerMediaSourceListInterceptor(dataSource: IMediaDataS
 
     function intercept(...params: Array<any>): Promise<ESPlayerInterceptResult> {
         const mediaItem = params[0] as ESMediaItem
-        console.log('huan-中断', mediaItem) // TODO: 播放地址
+
+        // 有播放地址的情况
+        if (mediaItem.playUrl) {
+            console.log('huan-playUrl', mediaItem.playUrl)
+
+            let iMediaUrls: IMediaUrl[] = []
+            mediaItem.playUrl.split('#').map((item: string) => {
+                let t = item.split('$')
+                if (t.length == 2) {
+                    iMediaUrls.push({ definition: '2', playUrl: t[1] })
+                }
+            })
+            let mediaSourceList: ESMediaSourceList = {
+                index: 0,
+                list: buildMediaSourceList(iMediaUrls)
+            }
+            let result: ESPlayerInterceptResult = {
+                result: {
+                    mediaSourceList: mediaSourceList,
+                }
+            }
+
+            console.log('huan-result', result)
+
+            return Promise.resolve(result)
+        }
+
         return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
             dataSource.getMediaItemUrl(mediaItem.id + "")
                 .then((mediaUrlList) => {

@@ -36,8 +36,12 @@ export function buildMedia(media: Media): IMedia {
         },
         //
         itemListId: media.vod_id,
-        //分集的总数
-        itemListCount: 1
+        // 分集的总数
+        itemListCount: 1,
+        // 权益类型
+        authType: IMediaAuthType.MEDIA_AUTH_TYPE_FREE,
+        // 播放地址
+        playUrl: media.vod_play_url
     }
     return m
 }
