@@ -50,9 +50,25 @@ export function buildMediaSourceList(mediaList: Array<IMediaUrl>): Array<ESMedia
 }
 
 export function buildMediaSource(mediaUrl: IMediaUrl): ESMediaSource {
+  let definition = ESPlayerDefinition.ES_PLAYER_DEFINITION_UNKNOWN
+  switch (parseInt(mediaUrl.definition)) {
+    case 0:
+      definition = ESPlayerDefinition.ES_PLAYER_DEFINITION_SD
+      break
+    case 1:
+      definition = ESPlayerDefinition.ES_PLAYER_DEFINITION_HD
+      break
+    case 2:
+      definition = ESPlayerDefinition.ES_PLAYER_DEFINITION_FULL_HD
+      break
+    case 3:
+      definition = ESPlayerDefinition.ES_PLAYER_DEFINITION_FOURK
+      break
+  }
+
   let mediaSource: ESMediaSource = {
     uri: mediaUrl.playUrl,
-    definition: parseInt(mediaUrl.definition)
+    definition: definition
   }
   return mediaSource
 }

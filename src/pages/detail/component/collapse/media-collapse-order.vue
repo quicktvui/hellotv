@@ -39,9 +39,16 @@ export default defineComponent({
     const orderListViewRef = ref<QTIListView>()
 
     let itemDataList: Array<QTListViewItem>
+    let selectedIndex = 0
 
     function onCollapseItemExpand(value: boolean) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
+      }
       isCollapseExpand.value = value
+      if (value) {
+        setItemFocused(selectedIndex)
+      }
     }
 
     function onItemFocused(e) {
@@ -68,10 +75,15 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------setItemFocused---播放顺序---->>>>', position)
       }
+      selectedIndex = position
+      if (!isCollapseExpand.value) {
+        return
+      }
       orderListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {
+      selectedIndex = position
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------setItemSelected---播放顺序---->>>>', position)
       }
