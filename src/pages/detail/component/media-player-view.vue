@@ -816,6 +816,10 @@ export default defineComponent({
     }
 
     function onBackPressed(): boolean {
+      if (player.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+        return false
+      }
+
       if (isMediaAuthError.value &&
         player.getWindowType() == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
         player.setSmallWindow()
