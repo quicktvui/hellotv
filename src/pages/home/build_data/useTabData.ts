@@ -5,6 +5,7 @@ import { TabContentSection } from "./tab_content/impl/TabContentSection";
 import { buildTransferTabContentAdapter } from "./tab_content/TabContentTransferAdapter";
 import { TabSectionItem } from "./tab_content/impl/TabSectionItem";
 import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
+import { tabDecorationGap } from "./tab_content/TabContentAdapter";
 
 /**
  * 转换瀑布流TAB数据
@@ -28,15 +29,15 @@ export function buildO2MTabData(sourceData: Array<any>) {
 
 export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabId: string) {
     const tabSections: TabSectionItem[] = []
-    let x = 90
+    let x = tabDecorationGap
     sourceData.list?.map((sectionItem, sectionIndex) => {
         let detail = sourceData.details[sectionItem.vod_id] || {}
         tabSections.push({
             id: sectionItem.vod_id,
-            posX: sectionIndex == 0 ? x : x += 252 + 36,
+            posX: sectionIndex == 0 ? x : x += 270 + 36,
             posY: 0,
-            width: 252,
-            height: 336,
+            width: 270,
+            height: 377,
             cellType: 0,
             isBgPlayer: false,
             poster: detail.vod_pic,
@@ -66,7 +67,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
             showPlateName: '0',
             plateType: '2',
             plateDetails: tabSections.slice(i * 6, (i + 1) * 6),
-            height: 336 + 60,
+            height: 377 + 60,
             isSwitchCellBg: '0',
             timeAxisSwitch: '0',
             isFocusScrollTarget: false
@@ -82,7 +83,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
         image: ''
     }
 
-    return buildTransferTabContentAdapter(tabContent, pageNo === 1, tabId)
+    return buildTransferTabContentAdapter(tabContent, pageNo, tabId)
 }
 
 function getInnerArgs(mediaId: number | string) {

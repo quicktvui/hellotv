@@ -79,7 +79,7 @@ export function createGlobalApi(): IGlobalApi {
     function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
         const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
         const index = Number(tabId)
-        return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo == 1, tabId))
+        return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo, tabId))
     }
 
     function getTabContentDetails(ids: string, pageNo: number): Promise<any> {
