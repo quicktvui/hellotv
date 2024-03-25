@@ -1,45 +1,45 @@
-import {MediaItemList} from "./MediaItemList";
-
 export interface Media {
-  //
-  id: string
-  assetTitle: string
-  assetSubTitle: string
-  assetType: string
-  compositeScore: string
-
-  tags: string
-  categoryName: string
-  categorySubName: string
-  coverH: string
-  coverV: string
-  directors: string
-  actors: string
-  publishTime: string
-  language: string
-  licenceNum: string
-
-  //
-  description1: string
-  description2: string
-  description3: string
-
-  //
-  description: string
-
-  cornerContent: string
-  cornerColor: string
-  cornerGradient: string
-  doubanScore: string
-
-  //
-  dataItems?: Array<MediaItemList>
-  index: number,
-  playerType: number
-
-  //分集的总数
-  episodeCount: number
-
-  //付费类型
-  feeType: string
+    type_id: string
+    type_name: string
+    vod_actor: string
+    vod_area: string
+    vod_class: string
+    vod_color: string
+    vod_content: string
+    vod_director: string
+    vod_down: string
+    vod_down_from: string
+    vod_down_note: string
+    vod_down_server: string
+    vod_down_url: string
+    vod_duration: string
+    vod_enname: string
+    vod_hits: string
+    vod_hits_day: string
+    vod_hits_month: string
+    vod_hits_week: string
+    vod_id: string
+    vod_isend: number
+    vod_lang: string
+    vod_letter: string
+    vod_level: string
+    vod_lock: string
+    vod_name: string
+    vod_pic: string
+    vod_play_from: string
+    vod_play_note: string
+    vod_play_server: string
+    vod_play_url: string
+    vod_points_down: string
+    vod_points_play: string
+    vod_remarks: string
+    vod_score: string
+    vod_score_all: string
+    vod_score_num: string
+    vod_serial: string
+    vod_sub: string
+    vod_tag: string
+    vod_time: string
+    vod_up: string
+    vod_year: string
 }
