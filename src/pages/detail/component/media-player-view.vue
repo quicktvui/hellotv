@@ -117,6 +117,7 @@
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
           <media-collapse-media-list
+            v-if="mediaListVisible"
             ref="mediaCollapseMediaListRef"
             :nextFocusName="{
                     up:'mediaCollapseDefinition',
@@ -155,7 +156,7 @@ import {
 } from "@extscreen/es3-player";
 import {ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
-import {ref, markRaw, onMounted} from "vue";
+import { ref, markRaw, onMounted, nextTick } from 'vue'
 
 import playerStatePlaying from '../../../assets/ic_media_player_play.png'
 import playerStatePaused from '../../../assets/ic_media_player_pause.png'
@@ -225,6 +226,7 @@ export default defineComponent({
       eventbus.off('onMediaListItemLoad', onMediaListItemLoad)
     });
 
+    const mediaListVisible = ref<boolean>(true)
     const dataMap = new Map<number, Array<IMedia>>()
 
     function onMediaListItemLoad(page: number, mediaList: Array<IMedia>) {
@@ -266,25 +268,30 @@ export default defineComponent({
 
     //-------------------------------菜单-----------------------------------
     function initCollapseMenu() {
-      mediaCollapseRef.value?.init(buildCollapseMenu())
+      mediaCollapseRef.value?.init(buildCollapseMenu(mediaListVisible.value))
       mediaCollapseMenuInit = true;
     }
 
     //-------------------------------播放顺序-----------------------------------
     function initCollapseOrderMenu() {
-      if (playModeList) {
-        mediaCollapseOrderRef.value?.setListData(buildPlayModeList(playModeList))
-      }
-      setCollapseItemOrderSelected()
+      nextTick(() => {
+        if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
+          const data = buildPlayModeList(playModeList)
+          mediaCollapseOrderRef.value?.setListData(data)
+        }
+        setCollapseItemOrderSelected()
+      })
     }
 
     function setCollapseItemOrderSelected() {
-      if (playModeList) {
-        const index = getPlayModeIndex(playMode, playModeList)
-        if (index > -1) {
-          mediaCollapseOrderRef.value?.setItemSelected(index)
+      nextTick(() => {
+        if (playModeList) {
+          const index = getPlayModeIndex(playMode, playModeList)
+          if (index > -1) {
+            mediaCollapseOrderRef.value?.setItemSelected(index)
+          }
         }
-      }
+      })
     }
 
     function setCollapseOrderMenuFocused() {
@@ -687,8 +694,9 @@ export default defineComponent({
 
     function onPlayerPlayMediaListModeListChanged(modeList: Array<ESPlayerPlayMode>): void {
       playModeList = modeList
+      mediaListVisible.value = media.itemList.enable
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.e(TAG, "-------onPlayerPlayModeListChanged-------->>>>>", modeList)
+        log.d(TAG, '-----------onPlayerPlayMediaList------------->>>>', mediaListVisible.value, media.itemList.enable)
       }
       initCollapseOrderMenu()
     }
@@ -843,6 +851,7 @@ export default defineComponent({
     }
 
     return {
+      mediaListVisible,
       mediaPlayerLoadingRef,
       mediaTitle,
       isPlayerPlaying,

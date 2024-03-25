@@ -8,7 +8,7 @@
       <qt-list-view
         ref="orderListViewRef" horizontal
         :autofocusPosition='0'
-        class="qt-collapse-item-content-list"
+        class="qt-collapse-item-order-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
         <media-collapse-list-item type="1"/>
@@ -133,7 +133,7 @@ export default defineComponent({
   justify-content: center;
 }
 
-.qt-collapse-item-content-list {
+.qt-collapse-item-order-content-list {
   width: 1920px;
   height: 80px;
   background-color: transparent;
