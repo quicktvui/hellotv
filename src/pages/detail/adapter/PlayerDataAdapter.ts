@@ -1,19 +1,19 @@
-import { IMedia } from '../../../api/media/IMedia'
-import { ESMediaItem } from '@extscreen/es3-player-manager'
+import {IMedia} from "../../../api/media/IMedia";
+import {ESMediaItem} from "@extscreen/es3-player-manager";
 import {
   ESIPlayerInterceptor,
   ESMediaSource,
   ESPlayerDefinition,
   ESPlayerPlayMode, ESPlayerRate
-} from '@extscreen/es3-player'
-import { IMediaUrl } from '../../../api/media/IMediaUrl'
-import { QTCollapse, QTListViewItem } from '@quicktvui/quicktvui3'
-import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
+} from "@extscreen/es3-player";
+import {IMediaUrl} from "../../../api/media/IMediaUrl";
+import {QTCollapse, QTListViewItem} from "@quicktvui/quicktvui3";
+import {QTListViewItemDecoration} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration";
 
 
 //--------------------------------------播放器数据-------------------------------------------------
 export function buildMediaItemList(page: number, mediaList: Array<IMedia>, mediaItemInterceptors: Array<ESIPlayerInterceptor>): Array<ESMediaItem> {
-  const list = mediaList
+  const list = mediaList;
   const itemList: Array<ESMediaItem> = []
   if (list && list.length) {
     for (let i = 0; i < list.length; i++) {
@@ -94,7 +94,7 @@ export function buildCollapseMenu(mediaListVisible: boolean): QTCollapse {
     itemList.push({
       height: 300,
       collapseHeight: 240
-    })
+    },)
   }
 
   const collapse: QTCollapse = {
@@ -161,7 +161,7 @@ export function buildPlayMode(mode: ESPlayerPlayMode, index: number): QTListView
   return {
     iconStyle: {
       width: 0,
-      height: 0
+      height: 0,
     },
     type: 1,
     text: modeName,
@@ -231,7 +231,7 @@ export function buildDefinition(definition: ESPlayerDefinition, index: number): 
   return {
     iconStyle: {
       width: 0,
-      height: 0
+      height: 0,
     },
     type: 1,
     text: name,
@@ -279,7 +279,7 @@ export function buildPlayRate(rate: ESPlayerRate, index: number): QTListViewItem
   return {
     iconStyle: {
       width: 0,
-      height: 0
+      height: 0,
     },
     type: 1,
     text: name,
