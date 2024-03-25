@@ -231,7 +231,9 @@ export default defineComponent({
 
     function onMediaListItemLoad(page: number, mediaList: Array<IMedia>) {
       if (mediaCollapseMenuInit) {
-        mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+        nextTick(() => {
+          mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+        })
       } else {
         dataMap.set(page, mediaList)
       }
@@ -274,13 +276,15 @@ export default defineComponent({
 
     //-------------------------------播放顺序-----------------------------------
     function initCollapseOrderMenu() {
-      nextTick(() => {
-        if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
-          const data = buildPlayModeList(playModeList)
-          mediaCollapseOrderRef.value?.setListData(data)
-        }
-        setCollapseItemOrderSelected()
-      })
+      if (mediaCollapseMenuInit) {
+        nextTick(() => {
+          if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
+            const data = buildPlayModeList(playModeList)
+            mediaCollapseOrderRef.value?.setListData(data)
+          }
+          setCollapseItemOrderSelected()
+        })
+      }
     }
 
     function setCollapseItemOrderSelected() {
