@@ -38,11 +38,17 @@ export default defineComponent({
     const definitionListViewRef = ref<QTIListView>()
     let itemDataList: Array<QTListViewItem>
 
+    let selectedIndex = 0
+
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------onCollapseItemExpand---紫色---->>>>', value)
       }
       isCollapseExpand.value = value
+
+      if (value) {
+        setItemFocused(selectedIndex)
+      }
     }
 
     function onItemFocused(e) {
@@ -66,10 +72,15 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
+      selectedIndex = position
+      if (!isCollapseExpand.value) {
+        return
+      }
       definitionListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {
+      selectedIndex = position
       if (itemDataList) {
         for (let i = 0; i < itemDataList.length; i++) {
           const item = itemDataList[i]
