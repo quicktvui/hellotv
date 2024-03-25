@@ -69,7 +69,7 @@
                 <!-- 一级 -->
                 <qt-view class="menu-first-tab-bg">
                     <qt-list-view class="menu-first-tab" ref="firstTabRef" :autoscroll="[firstTabScrollPos, 432]"
-                        :skipRequestFocus="true" :singleSelectPosition="firstTabSelectPos" @item-focused="onFocused">
+                        :skipRequestFocus="true" :singleSelectPosition="firstTabSelectPos" @item-focused="onFocus">
                         <qt-view class="menu-first-tab-item" :type="1" :focusable="true" eventFocus>
                             <qt-view class="menu-first-tab-item-focus" duplicateParentState></qt-view>
                             <qt-text class="menu-first-tab-item-text" text="${label}" gravity="center"
@@ -82,8 +82,8 @@
                 <qt-view class="menu-second-tab-bg">
                     <qt-list-view class="menu-second-tab" ref="secondTabRef" :enableSelectOnFocus="false"
                         :autofocusPosition="secondTabFocusPos" :autoscroll="[secondTabScrollPos, 432]"
-                        :skipRequestFocus="true" :singleSelectPosition="secondTabSelectPos" @item-focused="onFocused"
-                        @item-click="onClick">
+                        :skipRequestFocus="true" :singleSelectPosition="secondTabSelectPos"
+                        :blockFocusDirections="['down']" @item-focused="onFocus" @item-click="onClick">
                         <qt-view class="menu-second-tab-item" :type="2" :focusable="true" eventFocus eventClick>
                             <qt-view class="menu-second-tab-item-focus" duplicateParentState></qt-view>
                             <play-mark showIf="${isActive==true}" class="menu-second-tab-item-img"
@@ -99,7 +99,7 @@
                 <!-- 三级 -->
                 <qt-view v-if="showThirdTab" class="menu-third-tab-bg">
                     <qt-list-view v-if="thirdTabList.length != 0" class="menu-third-tab" ref="thirdTabRef"
-                        @item-focused="onFocused">
+                        @item-focused="onFocus">
                         <qt-view class="menu-third-tab-item" :type="3" :focusable="true" eventFocus>
                             <qt-view class="menu-third-tab-item-focus" duplicateParentState></qt-view>
                             <qt-text class="menu-third-tab-item-top" text="${label}" :lines="1" :ellipsizeMode="4"
@@ -404,6 +404,7 @@ async function onESCreate(params: RouteParams) {
             category.data.map((channel, channelIndex) => {
                 secondTabData.push({
                     type: 2,
+                    decoration: { bottom: channel.id == liveSourceChannelCount ? 450 : 0 },
                     channelIndex: channelIndex,
                     channelId: channel.id,
                     channelName: channel.name,
@@ -665,13 +666,13 @@ function onPlayerError(error: ESPlayerError) {
 }
 
 let menuCloseTimer: any = -1
-let onFocuseTimer: any = -1
+let onFocusTimer: any = -1
 let secondTabActive = false
-function onFocused(e: any) {
+function onFocus(e: any) {
     console.log('huan-onFocused-e', e)
+    clearTimeout(menuCloseTimer)
+    clearTimeout(onFocusTimer)
     if (e.isFocused) {
-        clearTimeout(menuCloseTimer)
-        clearTimeout(onFocuseTimer)
         switch (e.item.type) {
             case 1:
                 secondTabActive = false
@@ -682,7 +683,7 @@ function onFocused(e: any) {
                 secondTabActive = true
                 firstTabScrollPos.value = e.item.categoryIndex
                 firstTabSelectPos.value = e.item.categoryIndex
-                onFocuseTimer = setTimeout(async () => {
+                onFocusTimer = setTimeout(async () => {
                     // 请求频道节目单数据
                     let channel = liveSourceData.value[e.item.categoryIndex].data[e.item.channelIndex]
                     if (!channel.programs) {
@@ -1173,7 +1174,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onKeyDown, onBackPressed })
     margin-right: 36px;
 }
 
-.tvbox-live-back {
+.tvbox-live-menu-back {
     position: absolute;
     bottom: 80px;
     right: 100px;
@@ -1182,13 +1183,13 @@ defineExpose({ onESCreate, onESPause, onESResume, onKeyDown, onBackPressed })
     justify-content: center;
 }
 
-.tvbox-live-back p {
+.tvbox-live-menu-back p {
     color: white;
     font-size: 36px;
     margin-bottom: 2px;
 }
 
-.tvbox-live-back img {
+.tvbox-live-menu-back img {
     width: 35px;
     height: 35px;
 }
