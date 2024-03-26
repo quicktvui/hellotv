@@ -87,6 +87,10 @@ export function createGlobalApi(): IGlobalApi {
     //***************************************************搜索相关***************
     function getHotSearch(keyword?: string): Promise<Array<QTListViewItem>> {
         if (BuildConfig.useMockData) return Promise.resolve(buildSearchCenterListData(searchCenterList))
+
+        return requestManager.cmsGet(hotSearchUrl + `&wd=${keyword}`)
+            .then((result: any) => buildSearchCenterListData(result.list))
+
         // 根据keyword字母搜索关键字 不传返回热门搜索
         return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: 1, pageSize: 20 } })
             .then((result: any) => {
@@ -112,6 +116,10 @@ export function createGlobalApi(): IGlobalApi {
             if (pageNo == 3) return Promise.resolve(buildSearchResultPageData(pageNo, [], title))
             else return Promise.resolve(buildSearchResultPageData(pageNo, searchResultPageData, title))
         }
+
+        return requestManager.cmsGet(tabContentUrl + `&wd=${keyword}&pg=${pageNo}`)
+            .then((result: any) => buildSearchResultPageData(pageNo, result.list))
+
         return requestManager.post(searchLongUrl, {
             "data": keyword,
             'param': {

@@ -18,7 +18,7 @@ export const filterEntryUrl = BuildConfig.requestBaseUrl + "/v2/zero/tag/search/
 export const filterContentUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/search/assetlongByTags"
 
 // search请求URL
-export const hotSearchUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/search/keyword"
+export const hotSearchUrl = BuildConfig.requestBaseUrl + '?ac=list'
 export const searchLongUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/search/assetlongByKeyword"
 export const searchBookUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/search/pictureBookByKeyword"
 export const searchShortUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/search/assetByKeyword"
