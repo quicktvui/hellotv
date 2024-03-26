@@ -29,12 +29,34 @@ export function buildSectionList(m: IMedia): Array<QTWaterfallSection> {
   let sectionList: Array<QTWaterfallSection> = [
     buildHeaderSection(),
     buildAlbumDetailSection(m),
-    buildRecommendationSection()
+    buildRecommendationSection(),
+    buildEndSection()
   ]
   return sectionList
 }
 
 //------------------------------------------------------------------------------------
+
+function buildEndSection(): QTWaterfallSection {
+  let endSection: QTWaterfallSection = {
+    _id: "6",
+    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
+    title: "已经到底啦，按【返回键】回到顶部",
+    titleStyle: {
+      width: 1920,
+      height: 200,
+      marginLeft: 90,
+      marginTop: 40,
+      marginBottom: 40
+    },
+    itemList: [],
+    style: {
+      width: 1920,
+      height: 200
+    }
+  }
+  return endSection
+}
 
 export function buildHeaderSection(): QTWaterfallSection {
   let section: QTWaterfallSection = {
@@ -103,7 +125,7 @@ export function buildRecommendationSection(): QTWaterfallSection {
     //这里控制一下列表的滚动
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
-      down : 0,up:0
+      down: 600, up: 0
     }
   }
   return section
