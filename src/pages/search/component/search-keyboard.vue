@@ -4,11 +4,13 @@
 
     <qt-view class="search_keyboard_input_root" :clipChildren="false">
       <qt-image :src="ic_search" class="search_keyboard_search_icon"/>
-      <qt-text class="search_keyboard_input_text" v-if="inputText && inputText.length > 0" :text="inputText"/>
-      <qt-text v-else  :focusable="false" text='<font>输入片名的</font><font color="#ffffff">首字母</font>或<font color="#ffffff">全拼</font>搜索' class="search_keyboard_input_placeholder_text"/>
+      <qt-text class="search_keyboard_input_text" v-if="inputText && inputText.length > 0" :text="inputText" :fontSize="28"/>
+      <qt-text v-else :fontSize="28" :focusable="false"
+               text='<font>输入片名的</font><font color="#ffffff">首字母</font>或<font color="#ffffff">全拼</font>搜索'
+               class="search_keyboard_input_placeholder_text"/>
     </qt-view>
     <qt-view class="search_keyboard_search_line" />
-    
+
     <!-- 清空，退格按钮-->
     <qt-view class="search_keyboard_input_option_btns" :clipChildren="false">
       <qt-view :focusable="true" :focusScale="1.1" @click="clearBtnClick" class="search_keyboard_option_btn">

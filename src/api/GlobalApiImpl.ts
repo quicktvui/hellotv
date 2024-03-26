@@ -143,7 +143,7 @@ export function createGlobalApi(): IGlobalApi {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": 20,
+      "pageSize": BuildConfig.screenPageSize,
     };
     const newParams = {...params, ...pageParams};
     return requestManager.post(filterContentUrl,{

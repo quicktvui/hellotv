@@ -1,14 +1,10 @@
 import {Tags} from "../impl/Tags";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import {ESListViewItemDecoration} from "@extscreen/es3-component";
-import {
-  tabDecorationGap,
-  tabDecorationGapLeft,
-  tabDecorationGapRight
-} from "../../../home/build_data/tab/TabAdapter";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {TagContent} from "../impl/TagContent";
 import {FilterConditionList} from "../impl/FilterConditionList";
+import BuildConfig from '../../../../build/BuildConfig'
 
 export const _filter_line_height:number = 61
 export const _filter_text_height:number = 60
@@ -42,7 +38,7 @@ export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
 
 export function buildTagContentEnd():QTGridViewItem{
   const endList: QTGridViewItem = {
-    type:999
+    type:1003
   }
   return endList
 }
@@ -72,7 +68,7 @@ export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:n
     tagContentList.push(gridItem)
   })
   //添加结束提示，首页小于 10条不加载结束提示
-  if ((tagContents.length < 20 && pageNum !== 1) || (pageNum === 1 && tagContents.length > 10 && tagContents.length < 20)){
+  if ((tagContents.length < BuildConfig.screenPageSize && pageNum !== 1) || (pageNum === 1 && tagContents.length > 10 && tagContents.length < BuildConfig.screenPageSize)){
     tagContentList.push(buildTagContentEnd())
   }
   return tagContentList
