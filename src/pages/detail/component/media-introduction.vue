@@ -1,103 +1,103 @@
 <template>
-    <qt-column class='media-introduction-root-css'>
-        <qt-column class='media-introduction-css'>
+    <qt-column class="media-introduction-root-css">
+        <qt-column class="media-introduction-css">
             <!-- 标题 -->
             <text-view
-                class='media-introduction-title-text-css'
-                :duplicateParentState='true'
-                :focusable='false'
-                :textSize='60'
-                :ellipsizeMode='2'
+                class="media-introduction-title-text-css"
+                :duplicateParentState="true"
+                :focusable="false"
+                :textSize="60"
+                :ellipsizeMode="2"
                 enablePostTask
-                postDelay='200'
-                :lines='1'
-                gravity='left'
-                :text='title' />
+                postDelay="200"
+                :lines="1"
+                gravity="left"
+                :text="title"/>
 
             <!-- 底部介绍 -->
             <qt-column
-                class='media-introduction-detail-root-css'
-                :enableFocusBorder='true'
-                :clipChildren='false'
-                :focusable='true'
-                @click='onClick'
-                @focus='onFocus'
+                class="media-introduction-detail-root-css"
+                :enableFocusBorder="true"
+                :clipChildren="false"
+                :focusable="true"
+                @click="onClick"
+                @focus="onFocus"
                 :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
-                :focusScale='1.05'>
+                :focusScale="1.05">
 
                 <!-- 第一行 -->
-                <qt-row :duplicateParentState='true'>
-                    <div class='media-introduction-detail-vip-css'
+                <qt-row :duplicateParentState="true">
+                    <div class="media-introduction-detail-vip-css"
                          :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
                         <text-view
-                            class='media-introduction-detail-vip-text-css'
-                            :duplicateParentState='true'
-                            :focusable='false'
-                            :textSize='24'
-                            :ellipsizeMode='2'
+                            class="media-introduction-detail-vip-text-css"
+                            :duplicateParentState="true"
+                            :focusable="false"
+                            :textSize="24"
+                            :ellipsizeMode="2"
                             enablePostTask
-                            postDelay='200'
-                            :lines='1'
-                            gravity='center'
-                            text='影视VIP' />
+                            postDelay="200"
+                            :lines="1"
+                            gravity="center"
+                            text="影视VIP"/>
                     </div>
 
-                    <div class='media-introduction-detail-score-css'
-                         v-if='showActors'>
+                    <div class="media-introduction-detail-score-css"
+                         v-if="score">
                         <text-view
-                            class='media-introduction-detail-score-text-css'
-                            :duplicateParentState='true'
-                            :focusable='false'
-                            :textSize='24'
-                            :ellipsizeMode='2'
+                            class="media-introduction-detail-score-text-css"
+                            :duplicateParentState="true"
+                            :focusable="false"
+                            :textSize="24"
+                            :ellipsizeMode="2"
                             enablePostTask
-                            postDelay='200'
-                            :lines='1'
-                            gravity='center'
-                            :text='score' />
+                            postDelay="200"
+                            :lines="1"
+                            gravity="center"
+                            :text="score"/>
                     </div>
 
                     <text-view
-                        class='media-introduction-detail-brief-text-css'
-                        :duplicateParentState='true'
-                        :focusable='false'
-                        :textSize='24'
-                        :ellipsizeMode='2'
+                        class="media-introduction-detail-brief-text-css"
+                        :duplicateParentState="true"
+                        :focusable="false"
+                        :textSize="24"
+                        :ellipsizeMode="2"
                         enablePostTask
-                        postDelay='200'
-                        :lines='1'
-                        gravity='left|center'
-                        :text='subtitle' />
+                        postDelay="200"
+                        :lines="1"
+                        gravity="left|center"
+                        :text="subtitle"/>
                 </qt-row>
 
                 <!-- 第二行 -->
-                <text-view v-if='actors'
-                           class='media-introduction-detail-actor-text-css'
-                           :duplicateParentState='true'
-                           :focusable='false'
-                           :textSize='24'
-                           :ellipsizeMode='2'
+                <text-view v-if="actors"
+                           class="media-introduction-detail-actor-text-css"
+                           :duplicateParentState="true"
+                           :focusable="false"
+                           :textSize="24"
+                           :ellipsizeMode="2"
                            enablePostTask
-                           postDelay='200'
-                           :lines='1'
-                           gravity='left|center'
-                           :text='actors' />
+                           postDelay="200"
+                           :lines="1"
+                           gravity="left|center"
+                           :text="actors"/>
 
                 <!-- 第三行 -->
                 <text-view
-                    :style='{height:introductionHeight}'
-                    class='media-introduction-detail-text-css'
-                    :duplicateParentState='true'
-                    :focusable='false'
-                    :textSize='24'
-                    :lineSpacing='6'
-                    :lineHeight='30'
-                    :ellipsizeMode='2'
+                    :style="{height:introductionHeight}"
+                    class="media-introduction-detail-text-css"
+                    :duplicateParentState="true"
+                    :focusable="false"
+                    :textSize="24"
+                    :lineSpacing="6"
+                    :lineHeight="30"
+                    :ellipsizeMode="2"
                     enablePostTask
-                    postDelay='200'
+                    postDelay="200"
                     :lines='introductionLine'
-                    gravity='left|center'
-                    :text='introduction' />
+                    gravity="left|center"
+                    :text="introduction"/>
             </qt-column>
         </qt-column>
     </qt-column>
