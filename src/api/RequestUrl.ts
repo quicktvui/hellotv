@@ -2,7 +2,7 @@ import BuildConfig from "../build/BuildConfig";
 
 // Home请求url
 export const tabListUrl = BuildConfig.requestBaseUrl
-export const tabContentUrl = BuildConfig.requestBaseUrl + '?ac=list'
+export const tabContentUrl = BuildConfig.requestBaseUrl + '?ac=videolist'
 export const tabGetPlayUrl = BuildConfig.requestBaseUrl + "/v1/zero/recommend/assetdetail/"
 
 // detail请求URL

@@ -14,36 +14,37 @@ import { tabDecorationGap } from "./tab_content/TabContentAdapter";
 export function buildO2MTabData(sourceData: Array<any>) {
     const tabs: Array<Tab> = []
     sourceData.forEach((item, index) => {
-        if (index < 4) {
-            return
+        switch (item.type_id) {
+            case '1': case '2': case '3': case '4': case '19': case '61':
+                break
+            default:
+                const tab: Tab = {
+                    menuCode: item.type_id,
+                    menuName: item.type_name,
+                    menuType: '0'
+                }
+                tabs.push(tab)
         }
-        const tab: Tab = {
-            menuCode: item.type_id,
-            menuName: item.type_name,
-            menuType: '0'
-        }
-        tabs.push(tab)
     })
     return buildTransferTabAdapter(tabs)
 }
 
 export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabId: string) {
-    const tabSections: TabSectionItem[] = []
+    let tabSections: TabSectionItem[] = []
     let x = tabDecorationGap
-    sourceData.list?.map((sectionItem, sectionIndex) => {
-        let detail = sourceData.details[sectionItem.vod_id] || {}
-        tabSections.push({
-            id: sectionItem.vod_id,
-            posX: sectionIndex == 0 ? x : x += 270 + 36,
+    sourceData.list?.map((item, index) => {
+        let tabSection = {
+            id: item.vod_id,
+            posX: index == 0 ? x : x += 270 + 36,
             posY: 0,
             width: 270,
             height: 377,
             cellType: 0,
             isBgPlayer: false,
-            poster: detail.vod_pic,
-            posterTitle: detail.vod_name,
+            poster: item.vod_pic,
+            posterTitle: item.vod_name,
             posterTitleStyle: '1',
-            posterSubtitle: detail.vod_sub,
+            posterSubtitle: item.vod_sub,
             floatTitle: '',
             cornerContent: '',
             cornerColor: '',
@@ -55,11 +56,12 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
             playData: [],
             redirectType: '1',
             action: '',
-            innerArgs: getInnerArgs(detail.vod_id)
-        })
+            innerArgs: getInnerArgs(item.vod_id)
+        }
+        tabSections.push(tabSection)
     })
 
-    const plates: TabContentSection[] = []
+    let plates: TabContentSection[] = []
     for (let i = 0; i < tabSections.length / 6; i++) {
         plates.push({
             id: `${i + 1}`,
@@ -74,7 +76,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
         })
     }
 
-    const tabContent: TabContent = {
+    let tabContent: TabContent = {
         id: tabId,
         firstPlateMarginTop: 0,
         disableScrollOnFirstScreen: false,

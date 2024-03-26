@@ -19,7 +19,6 @@ import {
     filterContentUrl,
     filterEntryUrl,
     hotSearchUrl,
-    mediaDetailUrl,
     searchLongUrl,
     tabContentUrl,
     tabListUrl
@@ -47,9 +46,7 @@ export function createGlobalApi(): IGlobalApi {
             return getMockTabList()
         }
         return requestManager.cmsGet(tabListUrl)
-            .then((result: any) => {
-                return buildO2MTabData(result.class)
-            })
+            .then((result: any) => buildO2MTabData(result.class))
     }
 
     function getMockTabList(): Promise<QTTab> {
@@ -63,32 +60,13 @@ export function createGlobalApi(): IGlobalApi {
             return getMockTabContent(tabId, pageNo)
         }
         return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}`)
-            .then(async (result: any) => {
-
-                // 补充详情数据
-                let ids: string[] = []
-                result.list?.map((item: any) => ids.push(item.vod_id))
-                if (ids.length > 0) {
-                    result.details = await getTabContentDetails(ids.join(','), 1)
-                }
-
-                return buildO2MTabContentData(result, pageNo, tabId)
-            })
+            .then(async (result: any) => buildO2MTabContentData(result, pageNo, tabId))
     }
 
     function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
         const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
         const index = Number(tabId)
         return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo, tabId))
-    }
-
-    function getTabContentDetails(ids: string, pageNo: number): Promise<any> {
-        return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
-            .then((result: any) => {
-                let details = {}
-                result.list?.map((item: any) => details[item.vod_id] = item)
-                return details
-            })
     }
 
     function getTabBg(tabId): string {
