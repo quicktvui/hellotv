@@ -55,7 +55,7 @@ export default defineComponent({
   ],
   setup(props, context) {
 
-    const authenticated = ref<boolean>(false)
+    const authenticated = ref<boolean>(true)
     const mediaAuthorization: Ref<IMediaAuthorization> =
       inject(mediaAuthorizationKey, {} as any)
     const eventbus = useESEventBus()
