@@ -16,8 +16,10 @@
 详情页
 ![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/detail.png)
 多级列表页
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/live_1.png)
-
+![image](doc/live1.png)
+![image](doc/live2.png)
+内容编辑页
+![image](doc/edit.png)
 <!-- [![Build Status](https://travis-ci.org/your-username/your-project.svg?branch=master)](https://travis-ci.org/your-username/your-project) -->
 <!-- [![npm version](https://badge.fury.io/js/your-package.svg)](https://badge.fury.io/js/your-package) -->
 
@@ -73,10 +75,15 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 - [x] 瀑布流首页
 - [x] 搜索页
 - [x] 媒资详情页
-- [ ] 筛选页(开发中)
+- [x] 筛选页(开发中)
+- [x] 直播列表页
+
+以上页面开发完成，正在debug中
+
+开发中
+- [ ] 内容编辑页
 
 计划中
-- [ ] 直播列表页
 - [ ] 短视频浏览
 
 ## 关于QuickTVUI
