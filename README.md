@@ -3,7 +3,7 @@
 [![vue version](https://img.shields.io/badge/vue-3.2-green.svg)](https://github.com/vuejs/core)
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
 
-基于 [QuickTVUI](http://quicktvui.com/) 专为快速打造安卓TV影视应用而开发的示例项目。
+基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 专为快速打造安卓TV影视应用而开发的示例项目。
 项目主要目的是让开发者通过对本项目的简单修改，实现一些TV端常见的功能页面，从而加速开发者开发TV类影视类应用。
 主要页面包括瀑布流首页、媒资列表、搜索、视频观看详情等，以下是一些页面效果：
 
@@ -16,8 +16,10 @@
 详情页
 ![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/detail.png)
 多级列表页
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/live_1.png)
-
+![image](doc/live1.png)
+![image](doc/live2.png)
+内容编辑页
+![image](doc/edit.png)
 <!-- [![Build Status](https://travis-ci.org/your-username/your-project.svg?branch=master)](https://travis-ci.org/your-username/your-project) -->
 <!-- [![npm version](https://badge.fury.io/js/your-package.svg)](https://badge.fury.io/js/your-package) -->
 
@@ -27,22 +29,41 @@
 
 
 ## 快速开始
-### 调试 
-#### 运行要求
-- node version >= 21.4.0
-- npm version >= 10.2.4
-- 安装 [./apk](./apk/)目录下apk包 (需要日志时使用debug包，否则使用release)</b> 其它配置说明请查看 <u>[配置运行环境](http://developer.extscreen.com/guide/) </u>
-#### 安装
+
+### 调试
+#### 1. 确认编译环境
+建议windows:
+- node version 16.20.2
+- npm version 8.10
+
+
+#### 2. 安装运行Runtime
+下载并安装 [运行环境](http://v3.quicktvui.com/zh/resource/runtime.html) (需要日志时使用debug包，否则使用release)</b>
+
+#### 3. 安装依赖
+进入项目录下
 ```bash
 npm install --legacy-peer-deps
 ```
-#### 启动项目
+#### 4. 编译调试
 ```bash
 npm run dev
 ```
-打开运行环境apk，查看效果
+#### 5. 打开运行Runtime apk，查看效果
+点击下图加载测试代码
+![image](https://github.com/quicktvui/hellotv/assets/11962446/4571fb02-b761-405e-bbc8-a6baaa6f8a4a)
+>> 注意这里电脑调试地址要改成你电脑本机ip
+```bash
+adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es ip 192.168.xx.xx(电脑IP地址)
+```
+关于adb等其它配置具体说明请查看 <u>[安装和环境配置]([http://developer.extscreen.com/guide/](http://v3.quicktvui.com/zh/guide/installation.html)) </u>
 
-### 源码修改
+
+最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
+
+
+最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
+## 源码修改
 接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
 通过对每个页面提供的接口进行数据替换，即可实现自己的业务逻辑。
 
@@ -55,10 +76,15 @@ npm run dev
 - [x] 瀑布流首页
 - [x] 搜索页
 - [x] 媒资详情页
-- [ ] 筛选页(开发中)
+- [x] 筛选页(开发中)
+- [x] 多级列表页
+
+以上页面开发完成，正在debug中
+
+开发中
+- [ ] 内容编辑页
 
 计划中
-- [ ] 直播列表页
 - [ ] 短视频浏览
 
 ## 关于QuickTVUI
@@ -67,7 +93,7 @@ QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快�
 - 开发便捷：内置了大量针对智能电视开发的UI组件，简单易用;
 - 快速更新：利用前端生态，实现免下载、免安装，方便快速迭代；
 - 接近原生的体验：采用react-native的形式,底层用native实现，保证接近原生的体验;
-- 前面兼容：已适配市面上大部分型号的智能电视、盒子、智能投影等，可免除开发者大量的适配工作;
+- 全面兼容：已适配市面上大部分型号的智能电视、盒子、智能投影等，可免除开发者大量的适配工作;
 
 
 <!-- ## 文档 -->

@@ -836,6 +836,11 @@ export default defineComponent({
                 nextButtonFocused = false
               return true
             }
+            return true
+          }
+          if (isPlayerViewStateDismiss()) {
+            setPlayerViewStateMenu()
+            return true
           }
           break
       }

@@ -210,7 +210,7 @@ export default defineComponent({
           break
         case 2:
           router.push({
-            name: 'detail',
+            name: 'series_view',
             params: {
               mediaId: item.item.id
             },
