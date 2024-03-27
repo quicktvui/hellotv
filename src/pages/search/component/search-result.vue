@@ -60,6 +60,7 @@ import searchResultLongItem from "./search-result-long-item.vue";
 import { useESToast } from "@extscreen/es3-core";
 import { buildTabPageEndData } from "../build_data/useSearchData";
 import {useGlobalApi} from "../../../api/UseApi";
+import SearchConfig from "../build_data/SearchConfig"
 
 export default defineComponent({
   name: "search_result",
@@ -94,7 +95,7 @@ export default defineComponent({
         target: 'search_scroll_view',
         function: 'scrollToWithOptions',
         params: [{
-          x: -1153,
+          x: SearchConfig.isShowCenterSearch ? (SearchConfig.leftWidth+SearchConfig.centerWidth)*-1 : SearchConfig.leftWidth*-1,
           y: 0,
           duration: 300,
         }],
@@ -104,7 +105,7 @@ export default defineComponent({
         target: 'search_scroll_view',
         function: 'scrollToWithOptions',
         params: [{
-          x: 1153,
+          x: SearchConfig.isShowCenterSearch ? (SearchConfig.leftWidth+SearchConfig.centerWidth) : SearchConfig.leftWidth,
           y: 0,
           duration: 300,
         }],
@@ -142,7 +143,6 @@ export default defineComponent({
     // qt-tabs 填充数据 回调
     const onTabPageLoadData = async (pageIndex: number, pageNo: number, useDiff: boolean) => {
       // 搜索数据
-      console.log(pageIndex, pageNo, '88888888888888888888')
       let tabPage = await appApi.getSearchResultPageData(pageNo, 18, '', '')
       if(tabPage.data[0].itemList.length > 0){
         if (pageNo == 0) tabRef.value?.setPageData(pageIndex, tabPage)
@@ -168,7 +168,7 @@ export default defineComponent({
     }
     const onTabPageScrollToEnd = () => { }
     const onTabPageScrollToStart = () => { }
-    const onTabPageItemClick = () => { }
+    const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) => { }
     const onTabPageItemFocused = () => { }
 
     const onTabPageScroll = () => { }

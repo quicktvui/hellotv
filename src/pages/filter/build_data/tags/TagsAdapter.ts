@@ -4,7 +4,7 @@ import {ESListViewItemDecoration} from "@extscreen/es3-component";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {TagContent} from "../impl/TagContent";
 import {FilterConditionList} from "../impl/FilterConditionList";
-import BuildConfig from '../../../../build/BuildConfig'
+import SearchConfig from "../../../search/build_data/SearchConfig"
 
 export const _filter_line_height:number = 61
 export const _filter_text_height:number = 60
@@ -68,7 +68,7 @@ export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:n
     tagContentList.push(gridItem)
   })
   //添加结束提示，首页小于 10条不加载结束提示
-  if ((tagContents.length < BuildConfig.screenPageSize && pageNum !== 1) || (pageNum === 1 && tagContents.length > 10 && tagContents.length < BuildConfig.screenPageSize)){
+  if ((tagContents.length < SearchConfig.screenPageSize && pageNum !== 1) || (pageNum === 1 && tagContents.length > 10 && tagContents.length < SearchConfig.screenPageSize)){
     tagContentList.push(buildTagContentEnd())
   }
   return tagContentList

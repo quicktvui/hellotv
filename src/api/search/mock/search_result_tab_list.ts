@@ -1,6 +1,5 @@
 export default [
   {
-    // text: `全部 (${this.longTotal > 99 ? '99+' : this.longTotal})`,
     text: `全部`,
     title: `全部`,
     titleSize: 40,
@@ -10,11 +9,9 @@ export default [
     count: 99,
     decoration: { left: 66 },
     pageIndex: 1,
-    // type: WaterfallConst.NAV_BAR_ITEM_TYPE_DEFAULT,
     type: 2,
   },
   {
-    // text: `影视综合 (${this.longTotal > 99 ? '99+' : this.longTotal})`,
     text: `影视综合 (99)`,
     title: `影视综合`,
     titleSize: 40,
@@ -23,11 +20,9 @@ export default [
     itemGap: 4,
     count: 99,
     pageIndex: 1,
-    // type: WaterfallConst.NAV_BAR_ITEM_TYPE_DEFAULT,
     type: 2,
   },
   {
-    // text: `小视频 (${this.shortTotal > 99 ? '99+' : this.shortTotal})`,
     text: `小视频 (99)`,
     title: `小视频`,
     titleSize: 40,
@@ -36,11 +31,9 @@ export default [
     itemGap: 4,
     count: 99,
     pageIndex: 1,
-    // type: WaterfallConst.NAV_BAR_ITEM_TYPE_DEFAULT,
     type: 2,
   },
   {
-    // text: `绘本 (${this.artTotal > 99 ? '99+' : this.artTotal})`,
     text: `绘本 (99)`,
     title: `绘本`,
     titleSize: 40,
@@ -49,7 +42,6 @@ export default [
     itemGap: 4,
     count: 99,
     pageIndex: 1,
-    // type: WaterfallConst.NAV_BAR_ITEM_TYPE_DEFAULT,
     type: 2,
   }
 ]
