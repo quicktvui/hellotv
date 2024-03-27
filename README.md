@@ -29,15 +29,13 @@
 
 
 ## 快速开始
+
 ### 调试
 #### 1. 确认编译环境
 建议windows:
 - node version 16.20.2
 - npm version 8.10
 
-mac
-- node version 17.0.1
-- npm version 8.10
 
 #### 2. 安装运行Runtime
 安装 [./apk](./apk/)目录下apk包 (需要日志时使用debug包，否则使用release)</b>
@@ -60,9 +58,12 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 ```
 关于adb等其它配置具体说明请查看 <u>[配置运行环境](http://developer.extscreen.com/guide/) </u>
 
+
 最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
 
-### 源码修改
+
+最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
+## 源码修改
 接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
 通过对每个页面提供的接口进行数据替换，即可实现自己的业务逻辑。
 
@@ -76,7 +77,7 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 - [x] 搜索页
 - [x] 媒资详情页
 - [x] 筛选页(开发中)
-- [x] 直播列表页
+- [x] 多级列表页
 
 以上页面开发完成，正在debug中
 
@@ -92,7 +93,7 @@ QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快�
 - 开发便捷：内置了大量针对智能电视开发的UI组件，简单易用;
 - 快速更新：利用前端生态，实现免下载、免安装，方便快速迭代；
 - 接近原生的体验：采用react-native的形式,底层用native实现，保证接近原生的体验;
-- 前面兼容：已适配市面上大部分型号的智能电视、盒子、智能投影等，可免除开发者大量的适配工作;
+- 全面兼容：已适配市面上大部分型号的智能电视、盒子、智能投影等，可免除开发者大量的适配工作;
 
 
 <!-- ## 文档 -->
