@@ -1,7 +1,5 @@
 <template>
   <div class="tab-icon-nav-item-root-css"
-       :type="2"
-       slot="navItem"
        eventFocus
        :focusable="true"
        autoWidth

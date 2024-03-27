@@ -11,7 +11,7 @@ export interface Launch {
 
     init(...params: any[]): Promise<any>;
 
-    launch(item: QTWaterfallItem): void
+    launch(item:any): void
 }
 
 export function createLaunch(): Launch {
@@ -43,7 +43,7 @@ export function createLaunch(): Launch {
         const redirectType = data.redirectType;
         switch (redirectType) {
             //内部跳转
-            case 1:
+          case 1: case '1':
                 const argsStr = data.innerArgs;
                 const args = JSON.parse(argsStr)
                 if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -55,7 +55,7 @@ export function createLaunch(): Launch {
                 });
                 break
             //外部跳转
-            case 2:
+            case 2: case '2':
                 break
             default:
                 break

@@ -7,10 +7,6 @@
       </template>
     </waterfall-tabs>
 
-
-
-
-
   </div>
 </template>
 

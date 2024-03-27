@@ -114,9 +114,7 @@ export function buildO2MTabContentData(sourceData:any,pageNo:number=1,tabId:stri
     plates:plates,
     image:sourceData.image
   }
-
-  return buildTransferTabContentAdapter(tabContent,pageNo === 1,tabId)
-
+  return buildTransferTabContentAdapter(tabContent,pageNo,tabId)
 }
 
 function getParameter(parameter){

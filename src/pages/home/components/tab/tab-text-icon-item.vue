@@ -4,8 +4,6 @@
     'tab-icon-nav-item-root-text-icon-left-css':textIconLeft,
     'tab-icon-nav-item-root-text-icon-right-css':textIconRight
   }]"
-       :type="3"
-       slot="navItem"
        eventFocus
        :focusable="true"
        autoWidth

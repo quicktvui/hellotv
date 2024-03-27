@@ -1,7 +1,7 @@
 //
 export interface Tab {
   //tab id
-  id: string
+  id?: string
   //tab 菜单code,用于获取对应tabContent数据
   menuCode: string
   //tab名称
@@ -9,23 +9,23 @@ export interface Tab {
   //tab类型 0：文字，1：图片
   menuType: string
   //tab默认选中
-  defaultHome: string
+  defaultHome?: string
   //tab默认图片
-  image: string
+  image?: string
   //tab焦点图片
-  focusImage: string
+  focusImage?: string
   //tab 选中图片
-  selectImage: string
+  selectImage?: string
   //tab图片宽
-  imageWidth: string
+  imageWidth?: string
   //tab图片高
-  imageHeight: string
+  imageHeight?: string
   //角标图片
-  cornerImage: string
+  cornerImage?: string
   //焦点角标图片
-  focusCornerImage: string
+  focusCornerImage?: string
   //背景图
-  backgroundImage: string
+  backgroundImage?: string
   //文字标题图标
   textIcon?:string
 }

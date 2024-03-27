@@ -24,7 +24,9 @@ export function buildTransferTabAdapter(tabs:Array<Tab>):QTTab{
   let defaultFocusIndex: number = 0
   const length = tabs.length
   tabs.map((tab,index)=>{
-    tabBackgroundUrls.set(tab.menuCode,tab.backgroundImage)
+    if (tab.backgroundImage != null) {
+      tabBackgroundUrls.set(tab.menuCode, tab.backgroundImage)
+    }
     //设置默认选中tab
     if (tab.defaultHome === '1'){
       defaultFocusIndex = index;

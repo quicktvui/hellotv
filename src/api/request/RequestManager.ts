@@ -26,6 +26,7 @@ export interface RequestManager {
   get(url: string, data: RequestData): Promise<any>
 
   updateUserParams(userInfo: RequestUserParams): void
+  getParams():any
 }
 
 //
@@ -125,6 +126,9 @@ export function createRequestManager(): RequestManager {
         nickname: userInfo.nickname
       }
     }
+  }
+  function getParams(){
+    return requestParams.param
   }
 
   function initRuntimeBaseParams(): RequestRuntimeParams {
@@ -246,6 +250,7 @@ export function createRequestManager(): RequestManager {
     init,
     post,
     get,
-    updateUserParams
+    updateUserParams,
+    getParams
   }
 }

@@ -1,0 +1,53 @@
+.filter-line-item-root{
+    height: 60px;
+    background-color: transparent;
+    focus-background-color: white;
+    select-background-color: rgba(255,255,255,0.2);
+    padding-left: 24px;
+    padding-right: 24px;
+    border-radius: 34px;
+}
+.filter-line-item-root .filter-line-item-text{
+    height: 60px;
+    color: rgba(255, 255, 255, .5);
+    focus-color:black;
+    select-color: white;
+    background-color: transparent;
+}
+
+/*************filter-fast-line*****************/
+.filter-fast-line-root{
+    background-color: rgba(255, 255, 255, .2);
+}
+
+/**************filter-fast-item****************/
+.filter-fast-item-root{
+    height: 60px;
+    background-color: rgba(255,255,255,0.1);
+    focus-background-color: white;
+    select-background-color: rgba(255,255,255,0.2);
+    padding-left: 24px;
+    padding-right: 24px;
+    border-radius: 34px;
+}
+.filter-fast-item-root .filter-fast-item-text{
+    height: 60px;
+    color: rgba(255, 255, 255, .5);
+    focus-color:black;
+    select-color: white;
+    background-color: transparent;
+}
+
+/***************filter-record-item**************/
+.filter-record-item-root{
+    height: 60px;
+    background-color: rgba(255,255,255,0.1);
+    padding-left: 24px;
+    padding-right: 24px;
+    border-radius: 34px;
+}
+.filter-record-item-root .filter-record-item-text{
+    height: 60px;
+    color: rgba(255, 255, 255, .5);
+    background-color: transparent;
+}
