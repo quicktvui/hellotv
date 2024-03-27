@@ -13,9 +13,9 @@ import { tabDecorationGap } from "./tab_content/TabContentAdapter";
  */
 export function buildO2MTabData(sourceData: Array<any>) {
     const tabs: Array<Tab> = []
-    sourceData.forEach((item, index) => {
+    sourceData.forEach(item => {
         switch (item.type_id) {
-            case '1': case '2': case '3': case '4': case '19': case '61':
+            case 1: case 2: case 3: case 4:
                 break
             default:
                 const tab: Tab = {
@@ -80,7 +80,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
         id: tabId,
         firstPlateMarginTop: 0,
         disableScrollOnFirstScreen: false,
-        plateCount: 1,
+        plateCount: sourceData.pagecount,
         plates: plates,
         image: ''
     }

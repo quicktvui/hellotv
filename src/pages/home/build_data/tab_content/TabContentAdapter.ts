@@ -287,6 +287,13 @@ export function buildQTTabContent(disableScrollOnFirstScreen: boolean = false, p
 //------------------------------------------横向滚动列表--------------------------------------------
 function buildHorizontalListSectionItemList(itemList: Array<QTWaterfallItem>, showPlateName: boolean = false): void {
     const top = showPlateName ? tabPlateTitleGap : 0
+    if (itemList.length === 1) {
+        itemList[0].decoration = {
+            left: tabDecorationGap,
+            right: 0,
+            top: top
+        }
+    }
     for (let i = 0; i < (itemList.length - 1); i++) {
         const item: QTWaterfallItem = itemList[i]
         const nextItem: QTWaterfallItem = itemList[i + 1]

@@ -59,7 +59,7 @@ export function createGlobalApi(): IGlobalApi {
         if (BuildConfig.useMockData) {
             return getMockTabContent(tabId, pageNo)
         }
-        return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}`)
+        return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}&pagesize=${pageSize * 6}`)
             .then(async (result: any) => buildO2MTabContentData(result, pageNo, tabId))
     }
 

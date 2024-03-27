@@ -61,16 +61,13 @@ export function buildTransferTabContentAdapter(tabContent: TabContent, pageNo: n
     let isEndPage: boolean = false
     const requestCount = (pageNo - 1) * BuildConfig.tabContentPageSize + plateSourceData.length
     const allPlateHeight = getAllPlateHeightByTabId(tabId) + firstPlateMarginTop
-    if (tabContent.plateCount) {
-        if (allPlateHeight > 1080 && requestCount >= tabContent.plateCount || 0) {
-            isEndPage = true
-            const endSection = buildEndSection('5');
-            plateList.push(endSection)
-        } else {
-            isEndPage = plateList.length == 0
-        }
-    } else {
+
+    if (allPlateHeight > 810 && requestCount >= tabContent.plateCount) {
         isEndPage = true
+        const endSection = buildEndSection('5');
+        plateList.push(endSection)
+    } else {
+        isEndPage = plateList.length == 0
     }
 
     const tabPage: QTTabPageData = buildQTTabContent(disableScrollOnFirstScreen, plateList)

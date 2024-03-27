@@ -8,9 +8,9 @@ export default {
     //ES包名
     packageName: 'es.tv.huan.hellotv',
     //域名
-    requestBaseUrl: 'https://api.1080zyku.com/inc/api_mac10.php',
+    requestBaseUrl: 'http://152.136.204.154/api.php/provide/vod',
     //页面内容请求数量
-    tabContentPageSize: 10,
+    tabContentPageSize: 3,
     // 默认源
     defaultSourceUrl: 'https://gh-proxy.com/https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json'
 }
