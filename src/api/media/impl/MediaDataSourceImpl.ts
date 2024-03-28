@@ -54,7 +54,18 @@ export function createMediaDataSource(): IMediaDataSource {
 
     function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number, media?: IMedia): Promise<Array<IMedia>> {
         if (media) {
-            return Promise.resolve([media])
+            let iMedias: IMedia[] = []
+            let list = media.playUrl.split('#').slice((++pageNo - 1) * pageSize, pageNo * pageSize)
+            list.map((url: string, index: number) => {
+                let _mediaStr = JSON.stringify(media)
+                let _mediaObj = JSON.parse(_mediaStr)
+                _mediaObj.id = index
+                _mediaObj.title = url.split('$')[0]
+                _mediaObj.playUrl = url
+                iMedias.push(_mediaObj)
+            })
+
+            return Promise.resolve(iMedias)
         }
 
         return requestManager.post(episodeListUrl + mediaItemListId, {

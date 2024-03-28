@@ -30,14 +30,14 @@ export function buildMedia(media: Media): IMedia {
         itemList: {
             id: media.vod_id,
             title: media.vod_name,
-            count: 1,
-            type: 1,
-            enable: false
+            count: media.vod_play_url.split('#').length,
+            type: 2,
+            enable: true
         },
         //
         itemListId: media.vod_id,
         // 分集的总数
-        itemListCount: 1,
+        itemListCount: media.vod_play_url.split('#').length,
         // 权益类型
         authType: IMediaAuthType.MEDIA_AUTH_TYPE_FREE,
         // 视频分类

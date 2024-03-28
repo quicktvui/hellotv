@@ -59,8 +59,6 @@ export default defineComponent({
         const visible = ref<boolean>(false)
         const iMedia = ref<IMedia>()
 
-        let itemListId: string
-
         onMounted(() => {
             eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
         });
@@ -69,14 +67,12 @@ export default defineComponent({
         });
 
         function onMediaSeriesLoadData(page: number) {
-            getMediaList(itemListId, page)
+            getMediaList(iMedia.value?.itemList.id || '', page)
         }
 
         function initMedia(media: IMedia) {
-            itemListId = media.itemList?.id ?? ''
-            visible.value = media.itemList.enable
             iMedia.value = media
-
+            visible.value = media.itemList.enable
             mediaSeriesRef.value?.setInitData(
                 buildMediaSeriesType(media), //
                 buildMediaSeriesGroup(media), //
@@ -116,7 +112,7 @@ export default defineComponent({
             if (log.isLoggable(ESLogLevel.DEBUG)) {
                 log.d(TAG, "-------onLoadData---------->>>>>", page)
             }
-            getMediaList(itemListId, page)
+            getMediaList(iMedia.value?.itemList.id || '', page)
         }
 
         function onItemFocused(event: QTMediaSeriesEvent) {
