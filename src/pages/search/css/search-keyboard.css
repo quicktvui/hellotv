@@ -65,18 +65,13 @@
   background-color: rgba(255,255,255,0.1);
   focus-background-color: rgba(255,255,255,1);
 }
-.search_keyboard_option_btn .clear_btn_icon{
-  width: 24px;
-  height: 30px;
-  position: absolute;
-}
+
 .search_keyboard_option_btn .delete_btn_icon{
   width: 32px;
   height: 32px;
   position: absolute;
 }
 .search_keyboard_option_btn .btn_text{
-  font-size: 30px;
   color: rgba(255, 255, 255, .5);
   focus-color: rgba(0, 0, 0, 1);
   margin-left: 10px;

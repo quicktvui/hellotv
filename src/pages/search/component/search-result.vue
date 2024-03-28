@@ -64,6 +64,7 @@ import { useESToast } from "@extscreen/es3-core";
 import { buildTabPageEndData } from "../build_data/useSearchData";
 import { useGlobalApi } from "../../../api/UseApi";
 import { useLaunch } from "src/tools/launch/useApi";
+import SearchConfig from "../build_data/SearchConfig"
 
 export default defineComponent({
     name: "search_result",
@@ -98,7 +99,7 @@ export default defineComponent({
                 target: 'search_scroll_view',
                 function: 'scrollToWithOptions',
                 params: [{
-                    x: -1153,
+                    x: SearchConfig.isShowCenterSearch ? (SearchConfig.leftWidth + SearchConfig.centerWidth) * -1 : SearchConfig.leftWidth * -1,
                     y: 0,
                     duration: 300,
                 }],
@@ -108,7 +109,7 @@ export default defineComponent({
                 target: 'search_scroll_view',
                 function: 'scrollToWithOptions',
                 params: [{
-                    x: 1153,
+                    x: SearchConfig.isShowCenterSearch ? (SearchConfig.leftWidth + SearchConfig.centerWidth) : SearchConfig.leftWidth,
                     y: 0,
                     duration: 300,
                 }],

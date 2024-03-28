@@ -16,11 +16,17 @@ import { defineComponent } from "@vue/runtime-core";
 import {
     ESIPlayerManager, ESMediaItem,
     ESMediaItemList,
-    ESPlayerManager
+    ESPlayerManager,
+    useESPlayerManagerPlayModeManager
 } from "@extscreen/es3-player-manager";
 import { markRaw, ref } from "vue";
 import { ESVideoPlayer } from "@extscreen/es3-video-player";
-import { ESPlayerInterceptError, ESPlayerInterceptResult, ESPlayerWindowType } from "@extscreen/es3-player";
+import {
+    ESPlayerInterceptError,
+    ESPlayerInterceptResult,
+    ESPlayerPlayMode,
+    ESPlayerWindowType
+} from "@extscreen/es3-player";
 import { IMedia } from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
 import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
@@ -50,6 +56,7 @@ export default defineComponent({
             markRaw(ESMediaPlayerSmallView),
         ]
         const playerViewListRef = ref(playerViewList)
+        const playModeManager = useESPlayerManagerPlayModeManager()
         const mediaDataSource = useMediaDataSource()
 
         const playerLeft = ref<number>(90)
@@ -68,6 +75,7 @@ export default defineComponent({
                 media: media
             }
             playerManager.value?.initialize()
+            playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ORDER)
             playerManager.value?.playMediaList(playList)
         }
 

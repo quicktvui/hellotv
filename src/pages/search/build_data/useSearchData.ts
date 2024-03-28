@@ -3,6 +3,7 @@ import {
     QTListViewItem,
     QTWaterfallSection, QTWaterfallSectionType
 } from "@quicktvui/quicktvui3";
+import { SearchCenter } from "./impl/SearchCenter"
 
 export function buildLongItemList(sectionId: string, grid: number): Array<QTWaterfallItem> {
     let data: Array<QTWaterfallItem> = []
@@ -70,10 +71,15 @@ export function buildTabPageEndData(): QTTabPageData {
 }
 
 // 构建 hotsearch 数据
-export function buildSearchCenterListData(data: Array<any>): Array<QTListViewItem> {
+export function buildSearchCenterListData(data: Array<any>, isHistoryList: boolean): SearchCenter {
+    let centerData: SearchCenter
     let list: Array<QTListViewItem> = []
     data.map(item => list.push({ text: item.vod_name, type: 1, decoration: { bottom: 12 } }))
-    return list
+    centerData = {
+        isHistoryList,
+        list
+    }
+    return centerData
 }
 
 // 构建搜索结果 tablist 数据

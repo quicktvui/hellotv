@@ -174,7 +174,7 @@ export default defineComponent({
 }
 
 .media-list-title-text-css {
-    width: 80px;
+    width: 180px;
     height: 60px;
     font-size: 40px;
     font-weight: 400;

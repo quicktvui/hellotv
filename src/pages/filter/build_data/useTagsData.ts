@@ -10,6 +10,7 @@ import {TagContent} from "./impl/TagContent";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {FilterCondition} from "./impl/FilterCondition";
 import {FilterConditionList} from "./impl/FilterConditionList";
+import SearchConfig from "../../search/build_data/SearchConfig"
 
 let defaultOffSetIndex = 0
 let defaultTagSelectIndex = 0
@@ -218,7 +219,7 @@ export function buildScreenContent(tagContents:Array<any>,pageNum?:number):Array
     }
     tagContentArray.push(tagContent)
   })
-  if (tagContents.length < 20){
+  if (tagContents.length < SearchConfig.screenPageSize){
     isEnd = true
   }
   return buildTagContentsAdapter(tagContentArray,pageNum)

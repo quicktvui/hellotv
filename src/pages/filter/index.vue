@@ -29,7 +29,7 @@
       <img class="screen-left-title-img" v-else :src="title_img"/>
       <!-- 筛选列表-->
       <qt-list-view class="screen-left-tags-root-css" :padding="'0,0,0,20'" sid="screen_left_tags"
-                    name='screen_left_tags'
+                    name='screen_left_tags' :autofocusPosition="defaultTagPosition"
                     ref="leftTags" :clipChildren="false" :clipPadding="false"
                     @item-focused="leftTagsItemFocus" :blockFocusDirections="['left','down']">
         <!-- 纯文字标题-->
@@ -72,24 +72,33 @@ export default defineComponent({
   components: {TagsImgItem, TagsContent, TagsTextIconItem, TagsTextItem, TopBtnsView, ImgTextBtnView},
   setup(props, context) {
     const log = useESLog()
+    //跳转
     const router = useESRouter()
+    //接口
     const globalApi = useGlobalApi()
+    //组件
     const leftTags = ref<QTIListView>()
     const screen_root = ref()
     const tags_content = ref()
+    //全局变量
     let title = ref("")
     let title_img = ref("")
+    let defaultTagPosition = ref(0)
+    //局部变量
     let leftTagSwitchTimer:any = -1
-    let curTagPosition:number = -1
-
-
-    let screenId:string = ""
-    let defaultSelectTag:string = ""
-    let defaultFiltersStr:string = ""
+    let curTagPosition:number = -1 //左侧列表当前 tag位置
+    //筛选接口参数
+    let screenId:string = ""  //筛选分类 ID
+    let defaultSelectTag:string = "" //默认选中左侧筛选 tag
+    let defaultFiltersStr:string = "" //默认选中筛选标签 tags
     let defaultFilters:Array<string> = []
-    let defaultFastTag:string = ""
-    let curType:number = -1
+    let defaultFastTag:string = "" //默认选中的快速标签
+    let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
 
+    /**
+     * 入口
+     * @param params 参数
+     */
     function onESCreate(params) {
       screenId = params.screenId
       defaultSelectTag = params.defaultSelectTag
@@ -116,35 +125,18 @@ export default defineComponent({
       getTagsData()
     }
 
+    /**
+     * 锁定焦点
+     */
     function blockRootFocus(){
       Native.callUIFunction(screen_root.value,"blockRootFocus",[])
     }
+
+    /**
+     * 解锁焦点
+     */
     function unBlockRootFocus(){
       Native.callUIFunction(screen_root.value,"unBlockRootFocus",[])
-    }
-
-    function onESStart() {
-
-    }
-
-    function onESRestart() {
-
-    }
-
-    function onESResume() {
-
-    }
-
-    function onESPause() {
-
-    }
-
-    function onESStop() {
-
-    }
-
-    function onESDestroy() {
-
     }
 
     function onClick(e){
@@ -154,24 +146,28 @@ export default defineComponent({
       });
     }
 
+    /**
+     * 获取左侧列表数据
+     */
     function getTagsData(){
       globalApi.getScreenLeftTags(screenId).then(res=>{
         if (res){
           const showType = res?.entryTag?.showType
-          if (showType === '2' || showType === 2){
+          if (showType === '2' || showType === 2){//图片标题
             title_img.value = res?.entryTag?.normalImage
-          }else{
+          }else{//文字标题
             title.value = res?.entryTag?.showName
           }
+          //设置根筛选条件---接口要求，根据具体接口处理
           setRootTag(res?.entryTag?.tagName)
           const tags:Array<QTListViewItem> = buildTagsData(res,defaultSelectTag,defaultFilters,defaultFastTag)
           nextTick(()=>{
+            //设置左侧列表数据
             leftTags.value!.init(tags)
+            //初始化筛选条件
             tags_content.value.init()
-            setTimeout(()=>{
-              const defaultTagPosition = getDefaultTagSelectIndex()
-              leftTags.value!.setItemFocused(defaultTagPosition)
-            },300)
+            //设置默认选中tag
+            defaultTagPosition.value = getDefaultTagSelectIndex()
           })
         }
       })
@@ -226,12 +222,6 @@ export default defineComponent({
 
     return {
       onESCreate,
-      onESStart,
-      onESResume,
-      onESPause,
-      onESStop,
-      onESRestart,
-      onESDestroy,
       onBackPressed,
       onClick,
       leftTagsItemFocus,
@@ -240,6 +230,7 @@ export default defineComponent({
       title,
       title_img,
       leftTags,
+      defaultTagPosition,
 
       tags_content,
       screen_root

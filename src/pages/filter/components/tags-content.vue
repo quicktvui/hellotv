@@ -47,7 +47,7 @@
                       ref="screen_right_content"
                       name="screen_right_content"
                       :blockFocusDirections="['right','down']"
-                      :spanCount="5" :openPage="true" :preloadNo="10"
+                      :spanCount="5" :openPage="true" :preloadNo="4"
                       :focusable="false"
                       :nextFocusName='{down:"screen_right_content"}'
                       nextFocusLeftSID="screen_left_tags"
@@ -61,8 +61,10 @@
                       :padding="'50,10,50,20'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
-          <p class="screen-right-content-no-more" :focusable="false" :type="999">已经到底啦，按【返回键】回到顶部</p>
-          <template #loading  :focusable="false">
+          <template #footer>
+            <p class="screen-right-content-no-more" :focusable="false" :type="1003">已经到底啦，按【返回键】回到顶部</p>
+          </template>
+          <template #loading>
             <!--分页加载 Loading-->
             <qt-view class="screen-right-content-more-loading" :type="1002" :focusable="false">
               <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>

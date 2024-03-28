@@ -33,6 +33,8 @@ import { buildSearchCenterListData, buildSearchResultTabListData, buildSearchRes
 import searchCenterList from "./search/mock/search_center_list";
 import searchResultTabList from "./search/mock/search_result_tab_list";
 import searchResultPageData from "./search/mock/search_result_page_data";
+import SearchConfig from "../pages/search/build_data/SearchConfig"
+import { SearchCenter } from "../pages/search/build_data/impl/SearchCenter"
 export function createGlobalApi(): IGlobalApi {
     let requestManager: RequestManager
     function init(...params: any[]): Promise<any> {
@@ -85,20 +87,25 @@ export function createGlobalApi(): IGlobalApi {
     }
 
     //***************************************************搜索相关***************
-    function getHotSearch(keyword?: string): Promise<Array<QTListViewItem>> {
-        if (BuildConfig.useMockData) return Promise.resolve(buildSearchCenterListData(searchCenterList))
-
-        return requestManager.cmsGet(hotSearchUrl + `&wd=${keyword}`)
-            .then((result: any) => buildSearchCenterListData(result.list))
-
+    function getHotSearch(pageNum: number, keyword?: string): Promise<SearchCenter> {
+        if (BuildConfig.useMockData) {
+            let list: Array<any> = []
+            if (searchCenterList.keywordList.length > 0) list = searchCenterList.keywordList
+            if (searchCenterList.historyList.length > 0) list = searchCenterList.historyList
+            return Promise.resolve(buildSearchCenterListData(list, searchCenterList.historyList.length > 0))
+        }
         // 根据keyword字母搜索关键字 不传返回热门搜索
-        return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: 1, pageSize: 20 } })
+        return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: pageNum, pageSize: SearchConfig.screenCenterPageSize } })
             .then((result: any) => {
                 let list: Array<any> = []
                 if (result.keywordList.length > 0) list = result.keywordList
                 if (result.historyList.length > 0) list = result.historyList
-                return buildSearchCenterListData(list)
+                return buildSearchCenterListData(list, result.historyList.length > 0)
             })
+    }
+
+    function clearHistory(): void {
+
     }
 
     function getSearchResultTabList(): Promise<Array<QTTabItem>> {
@@ -142,7 +149,7 @@ export function createGlobalApi(): IGlobalApi {
         const params = requestManager.getParams()
         const pageParams = {
             "pageNo": pageNum,
-            "pageSize": 20,
+            "pageSize": SearchConfig.screenPageSize,
         };
         const newParams = { ...params, ...pageParams };
         return requestManager.post(filterContentUrl, {
@@ -162,6 +169,7 @@ export function createGlobalApi(): IGlobalApi {
         getTabBg,
         getHomeBgVideoAssetsUrl,
         getHotSearch,
+        clearHistory,
         getSearchResultTabList,
         getSearchResultPageData,
         getScreenLeftTags,

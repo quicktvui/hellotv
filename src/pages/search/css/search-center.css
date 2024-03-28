@@ -1,14 +1,6 @@
 .search_center{
-  width: 519px;
   height: 1080px;
   flex-direction: column;
-  background-color: transparent;
-}
-.search_center_view_bg{
-  width: 519px;
-  height: 1080px;
-  position: absolute;
-  left: 0;top: 0;
   background-color: transparent;
 }
 .search_center_view_line{
@@ -22,14 +14,16 @@
 
 .search_center_view_top {
   margin-top: 100px;
-  margin-left: 82px;
+  padding-left: 82px;
   flex-direction: row;
   align-items: center;
+  background-color: transparent;
 }
 .search_center_view_title{
   width: 200px;
   height: 50px;
   color: #fff;
+  background-color: transparent;
 }
 .search_center_clear_history_btn {
   width: 125px;
@@ -44,15 +38,10 @@
   position: absolute;
   right: 24px;
 }
-.search_center_clear_history_btn .clear_icon_image{
-  width: 22px;
-  height: 27px;
-  position: absolute;
-}
-.search_center_clear_history_btn .btn_text{
+
+.search_center_clear_history_btn .btn_clear_text{
   width: 60px;
   height: 50px;
-  font-size: 26px;
   margin-left: 6px;
   color: rgba(255, 255, 255, .5);
   focus-color: rgba(0, 0, 0, 1);
@@ -62,6 +51,8 @@
 .search_center_view_list{
   flex: 1;
   margin-top: 28px;
+  height: 900px;
+  background-color: transparent;
 }
 .empty_text_box{
   margin-left: 82px;
@@ -74,12 +65,10 @@
   height: 40px;
 }
 .list_view{
-  width: 519px;
-  height: 800px;
+  height: 860px;
   background-color: transparent;
 }
 .search_center_item{
-  width: 519px;
   height: 84px;
   padding-left: 82px;
   flex-direction: row;
@@ -98,29 +87,14 @@
   focus-background-color: black;
   select-background-color: #FC1103;
 }
+
 .search_center_item_text{
   margin-right: 28px;
   width: 350px;
   height: 84px;
+  color: rgba(255, 255, 255, .5);
+  focus-color:rgba(0, 0, 0, 1);
+  select-color: rgba(255, 255, 255, 1);
   background-color: transparent;
 }
-.search_center_item_text_normal{
-  width: 350px;
-  height: 84px;
-  color: rgba(255, 255, 255, .5);
-  position: absolute;
-  left: 0;
-}
-.search_center_item_text_select{
-  width: 350px;
-  height: 84px;
-  color: rgba(255, 255, 255, 1);
-  position: absolute;left: 0;
-}
-.search_center_item_text_focus{
-  width: 350px;
-  height: 84px;
-  color: rgba(0, 0, 0, 1);
-  position: absolute;
-  left: 0;
-}
+
