@@ -165,7 +165,7 @@ export default defineComponent({
         }
 
         function getMediaRecommendation() {
-            mediaDataSource.getMediaRecommendation(mediaId, media.typeId)
+            mediaDataSource.getMediaRecommendation(media.typeId)
                 .then((mediaList: Array<IMedia>) => {
                     const section = waterfallRef.value?.getSection(2)
                     if (section) {

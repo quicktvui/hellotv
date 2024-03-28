@@ -7,7 +7,7 @@ export const tabGetPlayUrl = BuildConfig.requestBaseUrl + "/v1/zero/recommend/as
 
 // detail请求URL
 export const mediaDetailUrl = BuildConfig.requestBaseUrl + '?ac=detail'
-export const mediaRecommendUrl = BuildConfig.requestBaseUrl
+export const mediaRecommendUrl = BuildConfig.requestBaseUrl + '?ac=videolist'
 export const episodeListUrl = BuildConfig.requestBaseUrl + "/v2/zero/media/assetlong/episodeList/"
 export const episodePlayUrlUrl = BuildConfig.requestBaseUrl + "/v1/zero/media/assetlong/episode/playUrl/"
 export const mediaAuthUrl = BuildConfig.requestBaseUrl + "/v2/zero/paid/accountAuth/authAssetLong"

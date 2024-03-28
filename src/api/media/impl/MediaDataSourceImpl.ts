@@ -37,18 +37,15 @@ export function createMediaDataSource(): IMediaDataSource {
             })
     }
 
-    function getMediaRecommendation(mediaId: string, tabId: string): Promise<any> {
-        return requestManager.cmsGet(mediaRecommendUrl + `?ids=${mediaId}&t=${tabId}`)
-            .then(async (result: any) => {
-
-                // 补充详情数据
-                let ids: string[] = []
-                result.list?.map((item: any) => ids.push(item.vod_id))
-                if (ids.length > 0) {
-                    result.details = await getMediaDetails(ids.join(','), 1)
+    function getMediaRecommendation(tabId: string): Promise<any> {
+        return requestManager.cmsGet(mediaRecommendUrl + `&t=${tabId}&pagesize=100`)
+            .then((result: any) => {
+                let medias: Media[] = []
+                for (let i = 0; i < 12; i++) {
+                    const index = Math.floor(Math.random() * result.list?.length)
+                    medias.push(result.list[index])
                 }
-
-                return buildMediaList(result.list, result.details)
+                return buildMediaList(medias)
             })
     }
 

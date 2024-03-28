@@ -48,13 +48,10 @@ export function buildMedia(media: Media): IMedia {
     return m
 }
 
-export function buildMediaList(mediaList: Array<Media>, mediaExt?: {}): Array<IMedia> {
+export function buildMediaList(mediaList: Array<Media>): Array<IMedia> {
     const medias: Array<IMedia> = []
     for (let i = 0; i < mediaList.length; i++) {
         const m = mediaList[i]
-        if (mediaExt) {
-            m.vod_pic = mediaExt[m.vod_id].vod_pic
-        }
         medias.push(buildMedia(m))
     }
     return medias
