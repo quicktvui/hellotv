@@ -94,7 +94,7 @@ export default defineComponent({
     const onESDestroy = () => {}
 
     const onKeywordSelect = (keyword: string) => {
-     // selectKeyword.value = keyword;
+     selectKeyword.value = keyword;
       // searchLetter = searchLetter;
     }
     const onInputChange = (inputText: string) => {
