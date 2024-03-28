@@ -56,15 +56,15 @@ export function createMediaDataSource(): IMediaDataSource {
         if (media) {
             let iMedias: IMedia[] = []
             let list = media.playUrl.split('#').slice((++pageNo - 1) * pageSize, pageNo * pageSize)
-            list.map((url: string, index: number) => {
+            list.map((url: string) => {
                 let _mediaStr = JSON.stringify(media)
                 let _mediaObj = JSON.parse(_mediaStr)
-                _mediaObj.id = index
-                _mediaObj.title = url.split('$')[0]
+                let _title = url.split('$')[0]
+                _mediaObj.id = _title
+                _mediaObj.title = _title
                 _mediaObj.playUrl = url
                 iMedias.push(_mediaObj)
             })
-
             return Promise.resolve(iMedias)
         }
 
