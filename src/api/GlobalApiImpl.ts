@@ -35,6 +35,7 @@ import searchResultTabList from "./search/mock/search_result_tab_list";
 import searchResultPageData from "./search/mock/search_result_page_data";
 import SearchConfig from "../pages/search/build_data/SearchConfig"
 import { SearchCenter } from "../pages/search/build_data/impl/SearchCenter"
+import { IScreenDataTags } from "./filter/IScreenDataSource";
 export function createGlobalApi(): IGlobalApi {
     let requestManager: RequestManager
     function init(...params: any[]): Promise<any> {
@@ -140,12 +141,104 @@ export function createGlobalApi(): IGlobalApi {
     }
 
     /********************************筛选相关*****************************/
-    function getScreenLeftTags(screenId: string) {
+    async function getScreenLeftTags(screenId: string) {
+        let tabs = await getTabList()
+        let now = new Date()
+        let years: any = []
+        for (let i = 0; i < 10; i++) {
+            years.push({
+                tagName: now.getFullYear() - i,
+                showName: now.getFullYear() - i
+            })
+        }
+        return Promise.resolve({
+            entryTag: {
+                id: '',
+                tagName: '',
+                showName: '',
+                showType: '1'
+            },
+            tags: [],
+            status: 1,
+            filterList: [
+                {
+                    allName: '全部',
+                    tags: tabs.itemList.map(item => ({
+                        tagName: item._id,
+                        showName: item.text
+                    }))
+                },
+                {
+                    allName: '全部',
+                    tags: years
+                },
+                {
+                    allName: '全部',
+                    tags: [
+                        {
+                            tagName: 1,
+                            showName: '已完结'
+                        },
+                        {
+                            tagName: 0,
+                            showName: '未完结'
+                        }
+                    ]
+                },
+                {
+                    allName: '全部',
+                    tags: [
+                        {
+                            tagName: 24,
+                            showName: '24小时'
+                        },
+                        {
+                            tagName: 48,
+                            showName: '48小时'
+                        },
+                        {
+                            tagName: 72,
+                            showName: '72小时'
+                        }
+                    ]
+                },
+                {
+                    allName: '全部',
+                    tags: [
+                        {
+                            tagName: '1080zyk',
+                            showName: '1080zyk'
+                        }
+                    ]
+                }
+            ]
+        })
+
         const requestUrl = filterEntryUrl + screenId
         return requestManager.post(requestUrl, {})
     }
 
-    function getScreenContentByTags(tags, pageNum) {
+    async function getScreenContentByTags(pageNum: number, tags?: IScreenDataTags) {
+        let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${SearchConfig.screenPageSize}` + tags)
+        return Promise.resolve(result.list.map(item => ({
+            id: '',
+            assetTitle: item.vod_name,
+            doubanScore: item.vod_score,
+            coverV: item.vod_pic,
+            actionRedirect: {
+                redirectType: 1,
+                innerArgs: JSON.stringify({
+                    params: {
+                        mediaId: item.vod_id,
+                        episodeId: 0,
+                        episodeIndex: 0,
+                        startPosition: 0
+                    },
+                    url: 'series_view'
+                })
+            }
+        })))
+
         const params = requestManager.getParams()
         const pageParams = {
             "pageNo": pageNum,

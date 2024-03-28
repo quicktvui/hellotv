@@ -1,13 +1,13 @@
 
 .screen-right-content-item-root-css{
-    width: 260px;
-    height: 422px;
+    width: 270px;
+    height: 437px;
     background-color: transparent;
 }
 
 .screen-right-content-item-root-css .screen-right-content-item-img{
-    width: 260px;
-    height: 368px;
+    width: 270px;
+    height: 377px;
     border-radius: 8px;
     focus-border-color: white;
     focus-border-style: solid;
@@ -20,19 +20,20 @@
     z-index: 1000;
     top: 6px;
     right:6px;
-
 }
+
 .screen-right-content-item-root-css .screen-right-content-item-score-root{
     background-color: transparent;
     z-index: 1000;
-    width: 260px;
+    width: 270px;
     height: 65px;
     position: absolute;
     left: 0;
-    bottom: 54px;
+    bottom: 60px;
 }
+
 .screen-right-content-item-root-css .screen-right-content-item-score-root .screen-right-item-score{
-    width: 260px;
+    width: 270px;
     height: 32px;
     top: 28px;
     color: #FC5E1B;
@@ -42,11 +43,11 @@
 }
 
 .screen-right-content-item-root-css .screen-right-content-item-text-root{
-    width: 260px;
-    height: 54px;
+    width: 270px;
+    height: 60px;
     position: absolute;
     left: 0;
-    top: 368px;
+    top: 377px;
     z-index: 110;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -58,19 +59,17 @@
 
 .screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-normal{
     position: absolute;
-    width: 260px;
-    height: 54px;
+    width: 270px;
+    height: 60px;
     background-color: transparent;
     color: rgba(255, 255, 255, .7);
     /*focus-color: black;*/
 }
+
 .screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-focus{
     position: absolute;
-    width: 260px;
-    height: 54px;
+    width: 270px;
+    height: 60px;
     background-color: transparent;
     color: black;
 }
-
-
-

@@ -1,7 +1,5 @@
+export interface IScreenDataSource {
+    getScreenLeftTags(screenId: string): Promise<any>
 
-
-export interface IScreenDataSource{
-  getScreenLeftTags(screenId:string):Promise<any>
-
-  getScreenContentByTags(tags,pageNum):Promise<any>
+    getScreenContentByTags(pageNum: number, tags: string): Promise<any>
 }

@@ -62,13 +62,10 @@
 
 /***********************右侧内容**************************/
 .screen-right-root-css{
-    position: absolute;
-    width: 1580px;
+    width: 1800px;
     height: 960px;
     background-color: transparent;
-    top:120px;
-    left: 340px;
+    position: absolute;
+    top: 120px;
+    left: 60px;
 }
-
-
-
