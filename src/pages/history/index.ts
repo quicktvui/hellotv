@@ -31,11 +31,11 @@ export const getFilterList = (data: IHistoryFilterEntity[] = []) => {
     })
 }
 
-const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
+export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
     const { width, height, left } = aConfig
     return {
         _key: data.id,
-        type: 1004,
+        type: data.type||1001,
         assetTitle: data.h_modeName,//'今天',//i < 10 ? '今天' : (i < 20 ? '一周内' : '更早'),
         decoration: {
             left,
@@ -59,15 +59,37 @@ const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): QTPoste
     }
 }
 const imgSrc = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750'
+
+const contentWidth = 1570
+const left = 20
+const dWidth = 340
+const dHeight = 200
+const bottomNum = 120
 const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
     const { width, height, left } = aConfig
+    let subTitle = data.subTitle||''
+    try {
+        if(!subTitle && data.playCount){
+            subTitle = data.playCount
+            if(!isNaN(Number(data.playCount))){
+                subTitle = `观看至${data.playCount}集`
+            }
+            let progress = (((data.currentPlayTime||0)/(data.allTime||1)) * 100) + '%'
+            if(Number(data.currentPlayTime)<=0){
+                progress = '不足1%'
+            }
+            subTitle += ' ' + progress
+        }
+    } catch (error) {
+        
+    }
     return {
         _key: data.id,
         metaId: data.metaId,
         type: 10001,
         decoration: {
             left,
-            bottom: 120
+            bottom: bottomNum
         },
         title: {
             text: data.assetLongTitle,
@@ -77,14 +99,14 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             }
         },
         subTitle: {
-            text: `观看至1集 不足1%`,
+            text: subTitle,//`观看至1集 不足1%`,
             enable: true,
             style: {
                 width
             }
         },
         floatTitle: {
-            text: data.description1,
+            text: data.description1||'',
             enable: true,
             style: {
                 width,
@@ -167,14 +189,13 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
 //     }
 // }
 
-const contentWidth = 1570
-const left = 20
-const dWidth = 340
-const dHeight = 200
-export const getContentList = (dataList: any[] = [], splitNum = 4) => {
+export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight:number) => {
     const width = Math.floor(contentWidth / splitNum) - (left * 2);
     const ratio = width / dWidth
-    const height = Math.min(Math.floor(dHeight * ratio), 350)
+    const height = itemHeight || Math.min(Math.floor(dHeight * ratio), 350)
+    const rows = Math.ceil(dataList.length / splitNum)
+    const rowsHeight = height + bottomNum
+    const dataHeight = rows * rowsHeight
 
     // const categorys = ['今天', '一周内', '更早']
     const arr: Array<QTGridViewItem> = []
@@ -189,7 +210,7 @@ export const getContentList = (dataList: any[] = [], splitNum = 4) => {
         }
         arr.push(poster)
     }
-    return arr
+    return { arr, dataHeight }
 }
 
 // 对象深度合并

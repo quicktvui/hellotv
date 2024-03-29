@@ -14,10 +14,14 @@
         - 菜单样式{color:string, selectedColor:string}
     - menuList
         - 静态菜单数据
+    - emptyTxt?
+        - 空数据时的图片
     - emptyTxt
         - 空数据文案
     - contentColumn
         - 内容区列数
+    - contentItemHeight?
+        - 内容区列表海报的高度，不指定时自动根据宽度计算
 ## 在api/history/index.ts中重写baseApi方法，自定义获取数据的逻辑
     - getMenuList
         - 获取左侧动态菜单数据
