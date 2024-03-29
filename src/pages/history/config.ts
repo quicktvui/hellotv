@@ -24,7 +24,8 @@ export interface Iconfig {
         focused: { bgColor: string }
     };
     contentColumn?: number;
-    detailPageName?:string
+    detailPageName?:string;
+    contentItemHeight?:number
 }
 const configs:Iconfig = {
     layout: layouts.lt,
@@ -41,8 +42,9 @@ const configs:Iconfig = {
         { id: 2, name: '已购内容', type: menuListItemTypes.txt },
         { id: 3, name: '收藏专区', type: menuListItemTypes.txt },
     ],
-    emptyTxt: '还没有观看历史哦～',
+    emptyTxt: '暂无数据～',
     contentColumn: 4,
-    detailPageName: 'series_view'
+    detailPageName: 'series_view',
+    contentItemHeight: 0
 }
 export default configs
