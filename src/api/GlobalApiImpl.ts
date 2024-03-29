@@ -2,6 +2,10 @@ import { IGlobalApi } from "./IGlobalApi";
 import { RequestManager } from "./request/RequestManager";
 import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
 import { Tab } from "../pages/home/build_data/tab/impl/Tab";
+import { IGlobalApi } from "./IGlobalApi";
+import { RequestManager } from "./request/RequestManager";
+import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
+import { Tab } from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
 import {
     buildTransferTabAdapter,
@@ -14,6 +18,9 @@ import tabPage3MockJson from "./home/mock/home_page3";
 import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
 import { ESApp } from "@extscreen/es3-vue";
 import { GlobalApiKey } from "./UseApi";
+import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
+import { ESApp } from "@extscreen/es3-vue";
+import { GlobalApiKey } from "./UseApi";
 import BuildConfig from "../build/BuildConfig";
 import {
     filterContentUrl,
@@ -21,8 +28,11 @@ import {
     hotSearchUrl,
     searchLongUrl,
     tabContentUrl,
-    tabListUrl
+    tabListUrl,
+    urlSaveHistory, urlGetHistory, urlGetLongHistory, urlGetShortHistory, urlGetBookHistory
 } from "./RequestUrl";
+import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
+import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 

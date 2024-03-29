@@ -8,6 +8,7 @@ import web from './pages/web/index.vue'
 import live from './pages/live/index.vue'
 import settings from './pages/settings/index.vue'
 import networkError from './components/NetworkError.vue'
+import history from './pages/history/history_template.vue'
 
 const routes = [
   {
@@ -49,6 +50,9 @@ const routes = [
   },
   {
     name: 'network', path: '/network', component: networkError, type: ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
+  {
+    name: 'history', path: '/history', component: history
   }
 ]
 export default routes
