@@ -22,3 +22,10 @@
   export const searchBookUrl = BuildConfig.requestBaseUrl +"/v1/zero/media/assetlong/search/pictureBookByKeyword"
   export const searchShortUrl = BuildConfig.requestBaseUrl +"/v1/zero/media/search/assetByKeyword"
 
+// history url
+export const urlGetHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/listUnion'
+export const urlGetLongHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/list'///v1/zero/user/playHistory/get
+export const urlGetShortHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/listShort'
+export const urlGetBookHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/listPicture'
+export const urlSaveHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/save'
+export const urlSaveShortHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/saveShort'
