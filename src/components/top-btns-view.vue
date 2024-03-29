@@ -8,6 +8,10 @@
             style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_search_btn"
             ref="top_search_btn" icon="ic_top_search.png" focus-icon="ic_top_search_focus.png" @click="onClick"
             @focus="onFocus" />
+        <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="历史" :focusable="true"
+            style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_history_btn"
+            ref="top_search_btn" icon="ic_top_search.png" focus-icon="ic_top_search_focus.png" @click="onClick"
+            @focus="onFocus" />
         <!--  <img-text-btn-view-->
         <!--      v-if="!$slots.btnItem"-->
         <!--      :icon-left="true"-->
@@ -83,6 +87,11 @@ export default defineComponent({
                         name: 'live',
                         params: {}
                     });
+                case "top_history_btn":
+                    router.push({
+                        name: 'history',
+                        params: {}
+                    })
                     break;
             }
         }

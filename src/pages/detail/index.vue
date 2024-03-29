@@ -29,7 +29,7 @@
 <script lang="ts">
 
 import { defineComponent, } from '@vue/runtime-core';
-import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast } from "@extscreen/es3-core";
+import { ESKeyEvent, ESLogLevel, useESEventBus, useESLocalStorage, useESLog, useESToast } from "@extscreen/es3-core";
 import { nextTick, ref, provide } from "vue";
 import { IMedia } from "../../api/media/IMedia";
 import { QTIWaterfall, QTWaterfallItem } from "@quicktvui/quicktvui3";
@@ -46,7 +46,7 @@ import { ESMediaItem } from "@extscreen/es3-player-manager";
 import { IMediaAuthorization } from "../../api/media/IMediaAuthorization";
 import { mediaAuthorizationKey } from "./injectionSymbols";
 import { useMediaDataSource } from "../../api/UseApi";
-
+import { localHistory, historyKey } from 'src/api/history/store';
 
 const TAG = 'DetailPage'
 
@@ -61,6 +61,7 @@ export default defineComponent({
         const log = useESLog()
         const toast = useESToast()
         const router = useESRouter()
+        const localStore = useESLocalStorage()
         const mediaPlayerViewRef = ref<IMediaPlayer>()
         const descendantFocusability = ref<number>(1)
         const eventbus = useESEventBus()
@@ -91,6 +92,10 @@ export default defineComponent({
             initWaterfall()
             initEventBus()
             getMediaDetail()
+
+            setInterval(() => {
+                localStore.putString(historyKey, JSON.stringify(localHistory))
+            }, 1000)
         }
 
         function initWaterfall() {
@@ -101,10 +106,12 @@ export default defineComponent({
 
         function initEventBus() {
             eventbus.on('onMenuFullButtonClick', onMenuFullButtonClick)
+            eventbus.on('onMenuFavouriteButtonClick', onMenuFavouriteButtonClick)
         }
 
         function releaseEventBus() {
             eventbus.off('onMenuFullButtonClick', onMenuFullButtonClick)
+            eventbus.off('onMenuFavouriteButtonClick', onMenuFavouriteButtonClick)
         }
 
         function getMediaDetail() {
@@ -246,6 +253,10 @@ export default defineComponent({
         //-------------------------------------------------------------------------------
         function onMenuFullButtonClick() {
             mediaPlayerViewRef.value?.setFullWindow()
+        }
+
+        function onMenuFavouriteButtonClick() {
+            localHistory.fav[media.id] = media
         }
 
         function onPlayerPlaceholderClick() {

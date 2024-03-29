@@ -2,10 +2,6 @@ import { IGlobalApi } from "./IGlobalApi";
 import { RequestManager } from "./request/RequestManager";
 import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
 import { Tab } from "../pages/home/build_data/tab/impl/Tab";
-import { IGlobalApi } from "./IGlobalApi";
-import { RequestManager } from "./request/RequestManager";
-import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
-import { Tab } from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
 import {
     buildTransferTabAdapter,
@@ -15,9 +11,6 @@ import tabPage0MockJson from "./home/mock/home_page0";
 import tabPage1MockJson from "./home/mock/home_page1";
 import tabPage2MockJson from "./home/mock/home_page2";
 import tabPage3MockJson from "./home/mock/home_page3";
-import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
-import { ESApp } from "@extscreen/es3-vue";
-import { GlobalApiKey } from "./UseApi";
 import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
 import { ESApp } from "@extscreen/es3-vue";
 import { GlobalApiKey } from "./UseApi";
@@ -33,8 +26,6 @@ import {
 } from "./RequestUrl";
 import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
-import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
-import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 
 /*****
   ***************搜索 *********
@@ -45,7 +36,7 @@ import searchResultTabList from "./search/mock/search_result_tab_list";
 import searchResultPageData from "./search/mock/search_result_page_data";
 import SearchConfig from "../pages/search/build_data/SearchConfig"
 import { SearchCenter } from "../pages/search/build_data/impl/SearchCenter"
-import { IScreenDataTags } from "./filter/IScreenDataSource";
+
 export function createGlobalApi(): IGlobalApi {
     let requestManager: RequestManager
     function init(...params: any[]): Promise<any> {
@@ -228,7 +219,7 @@ export function createGlobalApi(): IGlobalApi {
         return requestManager.post(requestUrl, {})
     }
 
-    async function getScreenContentByTags(pageNum: number, tags?: IScreenDataTags) {
+    async function getScreenContentByTags(pageNum: number, tags?: string) {
         let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${SearchConfig.screenPageSize}` + tags)
         return Promise.resolve(result.list.map(item => ({
             id: '',

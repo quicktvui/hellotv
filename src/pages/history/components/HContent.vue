@@ -1,18 +1,16 @@
 <template>
     <div class="h_content" ref="hContentRef" :focusable="false">
-        <qt-grid-view 
-            v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef"
+        <qt-grid-view v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef"
             name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
             :spanCount="columns" :areaWidth="1570" :focusable="true" padding="0,0,0,0"
             :blockFocusDirections="['right', 'down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
-            :loadMore="loadMoreFn" @item-bind="onItemBind"
-        >
+            :loadMore="loadMoreFn" @item-bind="onItemBind">
             <qt-view type="1004" class="content_type" :focusable="false">
                 <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
                     class="content_type_name" text="${assetTitle}" />
             </qt-view>
             <!-- <HContentItem type="10001" /> -->
-            <qt-poster type="10001">
+            <qt-poster :type="10001">
                 <text-view class="history-subtitle" :focusable="false" :fontSize="24" :ellipsizeMode="2" :lines="1"
                     autoHeight gravity="left|top" :paddingRect="[16, 0, 0, 16]" flexStyle="${subTitle.style}"
                     text="${subTitle.text}" visibility="${subTitle}" />
@@ -39,7 +37,7 @@
             </qt-view> -->
         </qt-grid-view>
         <qt-view v-show="isShowScreenLoading" class="screen-right-content-loading" :clipChildren="false">
-            <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px"/>
+            <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" />
         </qt-view>
         <HistoryEmpty v-show="pageState === pageStates.empty" :msg="emptyTxt" :focusable="false" />
     </div>
@@ -62,7 +60,7 @@ type TblockFocusAsyncFn = (callback: () => Promise<any>) => void
 const blockFocusAsync = inject<TblockFocusAsyncFn>('blockFocusAsync')
 
 const props = withDefaults(defineProps<{
-    spanCount: number, detailPageName?:string, emptyTxt?:string
+    spanCount: number, detailPageName?: string, emptyTxt?: string
 }>(), {
     spanCount: 3
 })
@@ -83,22 +81,22 @@ let preCurrentMenu: any = null
 let preCurrentFilter: any = null
 let isFirst = true
 
-const onItemBind = ()=>{}
+const onItemBind = () => { }
 const onItemClick = (arg) => {
     if (isEdit.value) {
         const index = gridDataRec.findIndex(item => {
             return item._key === arg.item._key
         })
         gridDataRec.splice(index, 1)
-        api.deleteContent(preCurrentMenu, preCurrentFilter, arg.item.id)
+        api.deleteContent(preCurrentMenu, preCurrentFilter, arg.item.metaId)
         // toast.showLongToast(arg.item._key + '--' + arg.item.type)
     } else {
         // toast.showLongToast('go player'+arg.item.metaId)
-        if(props.detailPageName){
+        if (props.detailPageName) {
             router.push({
                 name: props.detailPageName, //'series_view',
                 params: {
-                mediaId: arg.item.metaId
+                    mediaId: arg.item.metaId
                 }
             });
         }
@@ -124,7 +122,7 @@ const loadMoreFn = (pageNo: number) => {
         api.getContentList(preCurrentMenu, preCurrentFilter, pageNo + 1).then(res => {
             if (res?.data?.length) {
                 gridDataRec.push(...getContentList(res.data, columns.value))
-                pageState.value = pageStates.ready
+                pageState.value = pageStates.noMore
             } else {
                 pageState.value = pageStates.noMore
                 // gridDataRec.push({ type: '1003' })
@@ -138,8 +136,8 @@ const loadMoreFn = (pageNo: number) => {
 
 // 首次加载数据
 const setData = async (currentMenu: any, currentFilter: any) => {
-    if(blockFocusAsync){
-        blockFocusAsync(async ()=>{
+    if (blockFocusAsync) {
+        blockFocusAsync(async () => {
             isFirst = true
             pageState.value = pageStates.init
             // gridDataRec!.splice(0)
@@ -157,7 +155,7 @@ const setData = async (currentMenu: any, currentFilter: any) => {
             preCurrentMenu = currentMenu
             preCurrentFilter = currentFilter
             isFirst = false
-            nextTick(()=>{
+            nextTick(() => {
                 isShowScreenLoading.value = false
             })
         })
@@ -264,7 +262,8 @@ defineExpose({
     justify-content: center;
     background-color: transparent;
 }
-.screen-right-content-loading{
+
+.screen-right-content-loading {
     width: 1570px;
     height: 880px;
     position: absolute;

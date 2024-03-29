@@ -24,9 +24,9 @@ export interface Iconfig {
         focused: { bgColor: string }
     };
     contentColumn?: number;
-    detailPageName?:string
+    detailPageName?: string
 }
-const configs:Iconfig = {
+const configs: Iconfig = {
     layout: layouts.lt,
     title: '全部记录',
     // titleImg: 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750',
@@ -37,9 +37,7 @@ const configs:Iconfig = {
     },
     menuList: [
         { id: 0, name: '观看历史', type: menuListItemTypes.txt },
-        { id: 1, name: '我的收藏', type: menuListItemTypes.txt },
-        { id: 2, name: '已购内容', type: menuListItemTypes.txt },
-        { id: 3, name: '收藏专区', type: menuListItemTypes.txt },
+        { id: 1, name: '我的收藏', type: menuListItemTypes.txt }
     ],
     emptyTxt: '还没有观看历史哦～',
     contentColumn: 4,

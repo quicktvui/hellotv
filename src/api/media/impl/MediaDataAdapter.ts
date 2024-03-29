@@ -40,8 +40,13 @@ export function buildMedia(media: Media): IMedia {
         itemListCount: media.vod_play_url.split('#').length,
         // 权益类型
         authType: IMediaAuthType.MEDIA_AUTH_TYPE_FREE,
+
         // 视频分类
         typeId: media.type_id,
+        // 视频分类名称
+        typeName: media.type_name,
+        // 播放索引
+        playIndex: 0,
         // 播放地址
         playUrl: media.vod_play_url
     }
