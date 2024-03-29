@@ -14,6 +14,7 @@ import {useUserManager} from "./tools/user/useApi";
 import BuildConfig from "./build/BuildConfig";
 import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
+import HistoryApi from './api/history/index'
 
 export default defineComponent({
   name: "App",
@@ -43,6 +44,7 @@ export default defineComponent({
         .then(() => request.init(es, develop, device, runtime, log))
         .then(() => globalApi.init(request))
         .then(() => mediaDataSource.init(request))
+        .then(() => HistoryApi.init(request))
         .then(() => userManager.init())
         .then(() => launch.init(log, router, nativeRouter))
         .then(() => playerManager.init({

@@ -302,7 +302,6 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onMediaListItemLoad---->>>>>" + page, data)
       }
-
       //全屏菜单数据
       eventbus.emit('onMediaListItemLoad', page, data)
       //
