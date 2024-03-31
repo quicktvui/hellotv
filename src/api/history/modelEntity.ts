@@ -13,22 +13,25 @@ export interface IHistoryFilterEntity {
 }
 export interface IHistoryContentEntity {
     assetId?: string
-    assetLongCoverH?: string//图片
+    assetLongCoverH: string//图片
     assetLongId?: string
     assetLongTitle: string//标题
+    subTitle?:string;//副标题，有副标题时取副标题，无副标题时取播放进度playCount+currentPlayTime/allTime
     assetType?: string
-    currentPlayTime?: string
-    description1: string//浮动标题
+    currentPlayTime?: number//当前播放时间-毫秒
+    allTime?: number//视频总时间
+    description1?: string//浮动标题
     id?: string
-    metaId?: string
+    metaId: string
     payType?: string
     platformId?: string
-    playCount?: string
+    playCount?: string//播放到第几集
     playTime?: string
     userId?: string
     // mark?: string//角标
     h_mode?: string//模式-列表项/分类
     h_modeName?: string
+    [k:string]: any
 }
 
 // Dto

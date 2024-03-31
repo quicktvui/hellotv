@@ -40,14 +40,12 @@ export class HistoryBaseApi implements Iapi {
     async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {
         return new Promise(resolve => {
             setTimeout(() => {
-                if (currentMenu.index === 0 && currentFilter.index === 0) {
-                    if (pageNum > 1) {
-                        resolve({})
-                    } else {
-                        resolve({ data: getTestContentList() })
-                    }
-                } else if (currentMenu.index === 0 && currentFilter.index === 1) {
-                    resolve({ data: getTestContentList(3) })
+                if (currentMenu?.index === 0 && currentFilter?.index === 0) {
+                    resolve({ data: getTestContentList(20) })
+                } else if (currentMenu?.index === 0 && currentFilter?.index === 1) {
+                    resolve({ data: getTestContentList(20) })
+                } else if (currentMenu?.index === 1) {
+                    resolve({ data: getTestContentList(20) })
                 } else {
                     resolve({})
                 }

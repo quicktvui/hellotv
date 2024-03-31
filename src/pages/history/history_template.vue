@@ -1,57 +1,25 @@
 <template>
-    <qt-view class="history" :class="['history_' + configs.layout]" ref="historyRootRef">
+    <qt-view class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef">
+        <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
         <HistoryMenu ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn" />
         <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn" />
-        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" />
+        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn"/>
         <HistoryContent 
             ref="HistoryContentRef" class="content" :spanCount="configs.contentColumn"
             :detailPageName="configs.detailPageName" :emptyTxt="configs.emptyTxt"
+            :pItemHeight="configs.contentItemHeight"
         />
-
-        <!-- <qt-row v-if="layout === layouts.lt">
-            <HistoryMenu ref="HistoryMenuRef" />
-            <qt-column>
-                <HTop ref="HTopRef" />
-                <HistoryTab ref="HistoryTabRef" />
-                <HistoryContent ref="HistoryContentRef" />
-            </qt-column>
-        </qt-row>
-        <qt-row v-if="layout === layouts.rt">
-            <qt-column>
-                <HTop ref="HTopRef" />
-                <HistoryTab ref="HistoryTabRef" />
-                <HistoryContent ref="HistoryContentRef" />
-            </qt-column>
-            <HistoryMenu ref="HistoryMenuRef" />
-        </qt-row>
-        <qt-row v-if="layout === layouts.lb">
-            <HistoryMenu ref="HistoryMenuRef" />
-            <qt-column>
-                <HTop ref="HTopRef" />
-                <HistoryContent ref="HistoryContentRef" />
-                <HistoryTab ref="HistoryTabRef" />
-            </qt-column>
-        </qt-row>
-        <qt-row v-if="layout === layouts.rb">
-            <qt-column>
-                <HTop ref="HTopRef" />
-                <HistoryContent ref="HistoryContentRef" />
-                <HistoryTab ref="HistoryTabRef" />
-            </qt-column>
-            <HistoryMenu ref="HistoryMenuRef" />
-        </qt-row> -->
     </qt-view>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, provide, ref } from 'vue';
+import { ref } from 'vue';
 import HistoryMenu from './components/HMenu.vue'
 import HistoryContent from './components/HContent.vue'
 import HistoryTab from './components/HTab.vue'
 import HTop from './components/HTop.vue'
 import { useESToast } from '@extscreen/es3-core';
-import { Native } from "@extscreen/es3-vue";
 import dConfig, { Iconfig } from './config'
 
 // const props = defineProps<Iconfig>();
@@ -63,17 +31,7 @@ const HistoryTabRef = ref()
 const HistoryMenuRef = ref()
 const HistoryContentRef = ref()
 const toast = useESToast()
-
-type Tcallback = () => Promise<any>
-const blockFocusAsync = (callback: Tcallback) => {
-    Native.callUIFunction(historyRootRef.value, 'blockRootFocus', []);//锁住焦点
-    callback().finally(() => {
-        nextTick(() => {
-            Native.callUIFunction(historyRootRef.value, 'unBlockRootFocus', []);//解开焦点
-        })
-    })
-}
-provide('blockFocusAsync', blockFocusAsync)
+const isShowFilter = ref(true)
 
 const emClearFn = () => {
     HistoryContentRef.value.clearData()//情况列表数据
@@ -86,6 +44,9 @@ const emChangeMenuFn = (index: number, item: any) => {
         if(!res){//如果没有筛选条件，则根据分类获取列表数据
             currentFilter = null
             HistoryContentRef.value.setData(currentMenu, currentFilter)
+            isShowFilter.value = false
+        } else {
+            isShowFilter.value = true
         }
     })
 }
@@ -150,6 +111,14 @@ defineExpose({
     left: 350px;
     top: 200px;
     z-index: 1;
+}
+.history_no_filter{
+    .tab{
+        display: none;
+    }
+    .content{
+        top: 100px;
+    }
 }
 
 .history_leftBootom {
