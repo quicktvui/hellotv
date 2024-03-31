@@ -237,6 +237,7 @@ export default defineComponent({
         }
 
         return {
+            // @ts-ignore
             progressTimer,
             playerLeft,
             playerTop,

@@ -127,7 +127,7 @@ import {
     getPlayModeIndex, getDefinitionIndex, getPlayRateIndex
 } from "../adapter/PlayerDataAdapter";
 import { IMedia } from "../../../api/media/IMedia";
-import { localHistory, historyKey } from '../../../api/history/store'
+import { localHistory } from '../../../api/history/store'
 import { IMediaCollapseMediaSeriesView } from "./collapse/IMediaCollapseMediaSeriesView";
 
 const TAG = 'MediaPlayerView'
@@ -579,9 +579,9 @@ export default defineComponent({
             seekBarRef.value?.setProgress(p);
             progress.value = s_to_hs(Math.floor(p / 1000))
 
-            // 播放进度
+            // 播放信息
+            localHistory.ply[media.id].playId = playingMediaItem.id
             localHistory.ply[media.id].progress = p
-            localHistory.ply[media.id].playIndex = playingMediaItem.index
         }
 
         function onPlayerDurationChanged(d: number): void {

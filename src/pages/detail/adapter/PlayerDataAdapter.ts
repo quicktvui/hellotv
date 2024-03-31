@@ -32,7 +32,11 @@ export function buildMediaItem(page: number, index: number, media: IMedia, media
         index: mediaIndex,
         title: media.title,
         playUrl: media.playUrl,
-        interceptors: mediaItemInterceptors
+        interceptors: mediaItemInterceptors,
+        position: {
+            support: media.id == media.playId,
+            position: media.playPosition
+        }
     }
     return mediaItem
 }

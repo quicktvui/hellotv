@@ -64,8 +64,6 @@ export function createESPlayerMediaSourceListInterceptor(dataSource: IMediaDataS
 
         // 有播放地址的情况
         if (mediaItem.playUrl) {
-            console.log('huan-playUrl', mediaItem.playUrl)
-
             let iMediaUrls: IMediaUrl[] = []
             mediaItem.playUrl.split('#').map((item: string) => {
                 let t = item.split('$')
@@ -82,9 +80,6 @@ export function createESPlayerMediaSourceListInterceptor(dataSource: IMediaDataS
                     mediaSourceList: mediaSourceList,
                 }
             }
-
-            console.log('huan-result', result)
-
             return Promise.resolve(result)
         }
 

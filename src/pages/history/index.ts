@@ -35,7 +35,7 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
     const { width, height, left } = aConfig
     return {
         _key: data.id,
-        type: data.type||1001,
+        type: data.type || 1001,
         assetTitle: data.h_modeName,//'今天',//i < 10 ? '今天' : (i < 20 ? '一周内' : '更早'),
         decoration: {
             left,
@@ -67,21 +67,21 @@ const dHeight = 200
 const bottomNum = 120
 const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
     const { width, height, left } = aConfig
-    let subTitle = data.subTitle||''
+    let subTitle = data.subTitle || ''
     try {
-        if(!subTitle && data.playCount){
+        if (!subTitle && data.playCount) {
             subTitle = data.playCount
-            if(!isNaN(Number(data.playCount))){
+            if (!isNaN(Number(data.playCount))) {
                 subTitle = `观看至${data.playCount}集`
             }
-            let progress = (((data.currentPlayTime||0)/(data.allTime||1)) * 100) + '%'
-            if(Number(data.currentPlayTime)<=0){
+            let progress = (((data.currentPlayTime || 0) / (data.allTime || 1)) * 100).toFixed(2) + '%'
+            if (Number(data.currentPlayTime) <= 0) {
                 progress = '不足1%'
             }
             subTitle += ' ' + progress
         }
     } catch (error) {
-        
+
     }
     return {
         _key: data.id,
@@ -106,7 +106,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             }
         },
         floatTitle: {
-            text: data.description1||'',
+            text: data.description1 || '',
             enable: true,
             style: {
                 width,
@@ -152,7 +152,9 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
                 width,
                 height: 120
             }
-        }
+        },
+        playId: data.playCount,
+        playPosition: data.currentPlayTime
     }
 }
 // const getContentItemConfig = (aConfig, data: IcontentItem): object => {
@@ -189,7 +191,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
 //     }
 // }
 
-export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight:number) => {
+export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight: number) => {
     const width = Math.floor(contentWidth / splitNum) - (left * 2);
     const ratio = width / dWidth
     const height = itemHeight || Math.min(Math.floor(dHeight * ratio), 350)
@@ -204,7 +206,7 @@ export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight:nu
         const isCategory = false//i % 10 === 0;
         let poster: any = null
         if (isCategory) {
-            poster = getContentCategoryConfig({ width, height, left }, {...dataItem,h_modeName:'今天'})
+            poster = getContentCategoryConfig({ width, height, left }, { ...dataItem, h_modeName: '今天' })
         } else {
             poster = getContentItemConfig({ width, height, left }, dataItem)
         }

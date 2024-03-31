@@ -70,6 +70,8 @@ export default defineComponent({
         //--------------------------------------------------------------------
         const mediaDataSource = useMediaDataSource()
         let mediaId: string
+        let playId: string
+        let playPosition: number
         let media: IMedia
         let isPaused = false
         let isStopped = false
@@ -82,6 +84,9 @@ export default defineComponent({
 
         const onESCreate = (params) => {
             mediaId = params.mediaId
+            playId = params.playId
+            playPosition = params.playPosition ?? 0
+
             if (!mediaId) {
                 mediaId = '7160'
             }
@@ -92,10 +97,6 @@ export default defineComponent({
             initWaterfall()
             initEventBus()
             getMediaDetail()
-
-            setInterval(() => {
-                localStore.putString(historyKey, JSON.stringify(localHistory))
-            }, 1000)
         }
 
         function initWaterfall() {
@@ -119,8 +120,11 @@ export default defineComponent({
                 log.d(TAG, "----1---getMediaDetail---------->>>>>", mediaId)
             }
             mediaDataSource.getMediaDetail(mediaId)
+                // @ts-ignore
                 .then((m: IMedia) => {
                     media = m
+                    media.playId = playId
+                    media.playPosition = playPosition
                     albumDetailRef.value?.initMedia(media)
                     nextTick(() => {
                         let sections = buildSectionList(m)
@@ -159,6 +163,7 @@ export default defineComponent({
 
         function getMediaAuthorization() {
             mediaDataSource.getMediaAuthorization(mediaId)
+                // @ts-ignore
                 .then((mediaAuthorization: IMediaAuthorization) => {
                     if (log.isLoggable(ESLogLevel.DEBUG)) {
                         log.d(TAG, "-------getMediaAuthorization----success------>>>>>", mediaAuthorization)
@@ -307,7 +312,7 @@ export default defineComponent({
             mediaPlayerViewRef.value?.addMediaItemList(page, data)
 
             if (page == 0) {
-                mediaPlayerViewRef.value?.playMediaItemByIndex(0)
+                mediaPlayerViewRef.value?.playMediaItemById(playId || data[0].id)
             }
         }
 
@@ -318,6 +323,7 @@ export default defineComponent({
                 log.d(TAG, "----onMediaListItemClicked---onPlayerPlayMedia---->>>>>" + playingIndex)
             }
             if (playingIndex >= 0) {
+                albumDetailRef.value?.scrollMediaListViewTo(playingIndex)
                 albumDetailRef.value?.setMediaListViewSelected(playingIndex)
             }
         }
@@ -366,6 +372,9 @@ export default defineComponent({
             }
             mediaPlayerViewRef.value?.stop()
             isStopped = true;
+
+            // 存储历史数据
+            localStore.putString(historyKey, JSON.stringify(localHistory))
         }
         const onESDestroy = () => {
             if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -407,6 +416,7 @@ export default defineComponent({
         }
 
         return {
+            // @ts-ignore
             mediaId,
             descendantFocusability,
             mediaPlayerViewRef,

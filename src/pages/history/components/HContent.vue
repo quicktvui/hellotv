@@ -16,7 +16,7 @@
                     autoHeight gravity="left|top" :paddingRect="[16, 0, 0, 16]" flexStyle="${subTitle.style}"
                     text="${subTitle.text}" visibility="${subTitle}" />
             </qt-poster>
-            <qt-poster type="10007" :focusable="false">
+            <qt-poster :type="10007" :focusable="false">
                 <text-view class="history-subtitle" :focusable="false" :fontSize="24" :ellipsizeMode="2" :lines="1"
                     autoHeight gravity="left|top" :paddingRect="[16, 0, 0, 16]" flexStyle="${subTitle.style}"
                     text="${subTitle.text}" visibility="${subTitle}" />
@@ -99,6 +99,7 @@ const onItemClick = (arg) => {
         })
         gridDataRec.splice(index, 1)
         api.deleteContent(preCurrentMenu, preCurrentFilter, arg.item.metaId)
+            .then(r => r && loadMoreFn(1))
         // toast.showLongToast(arg.item._key + '--' + arg.item.type)
     } else {
         // toast.showLongToast('go player'+arg.item.metaId)
@@ -106,7 +107,9 @@ const onItemClick = (arg) => {
             router.push({
                 name: props.detailPageName, //'series_view',
                 params: {
-                    mediaId: arg.item.metaId
+                    mediaId: arg.item.metaId,
+                    playId: arg.item.playId,
+                    playPosition: arg.item.playPosition || 0
                 }
             });
         }

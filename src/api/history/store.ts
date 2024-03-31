@@ -12,26 +12,28 @@ export let localHistory: History = {
     ply: {}, fav: {}
 }
 
-export let plyHistoryCategory = { 0: [] }
-export let favHistoryCategory = { 0: [] }
+export let plyHistoryCategory = {}
+export let favHistoryCategory = {}
 
 export function loadHistory(val: History) {
     localHistory = val
 }
 
-export function delPlyHistory(id: number): Boolean {
-    return delete (localHistory.ply[id])
+export function removeHistory(type: 'ply' | 'fav', id: number): boolean {
+    return delete (localHistory[type][id])
 }
 
-export function delFavHistory(id: number): Boolean {
-    return delete (localHistory.fav[id])
+export function resetHistory(type: 'ply' | 'fav') {
+    localHistory[type] = {}
 }
 
 export function historyToCategory(type: 'ply' | 'fav') {
     switch (type) {
         case 'ply':
+            plyHistoryCategory = { 0: [] }
             return handle(localHistory.ply, true)
         case 'fav':
+            favHistoryCategory = { 0: [] }
             return handle(localHistory.fav, false)
     }
 }

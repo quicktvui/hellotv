@@ -41,8 +41,8 @@ const configs: Iconfig = {
         { id: 1, name: '我的收藏', type: menuListItemTypes.txt }
     ],
     emptyTxt: '暂无数据～',
-    contentColumn: 4,
+    contentColumn: 5,
     detailPageName: 'series_view',
-    contentItemHeight: 0
+    contentItemHeight: 377 + 60
 }
 export default configs
