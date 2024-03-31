@@ -28,6 +28,7 @@
                 <!-- 第一行 -->
                 <qt-row :duplicateParentState="true">
                     <div class="media-introduction-detail-vip-css"
+                         v-if="!isMediaTypeFree"
                          :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
                         <text-view
                             class="media-introduction-detail-vip-text-css"
