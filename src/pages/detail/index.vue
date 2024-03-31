@@ -268,6 +268,7 @@ export default defineComponent({
        if(focused){
            waterfallRef.value?.scrollToTop()
        }
+       eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
 
     function onIntroductionFocus(focused: boolean) {
