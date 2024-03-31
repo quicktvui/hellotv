@@ -32,7 +32,7 @@
     "@extscreen/es3-ad-player": "1.0.9",
     "@extscreen/es3-component": "1.0.13",
     "@extscreen/es3-core": "1.0.2",
-    "@extscreen/es3-player": "1.0.13",
+    "@extscreen/es3-player": "1.0.15",
     "@extscreen/es3-player-manager": "1.0.19",
     "@extscreen/es3-router": "1.0.3",
     "@extscreen/es3-video-player": "1.0.15",

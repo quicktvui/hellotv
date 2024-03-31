@@ -143,7 +143,7 @@ export default defineComponent({
                       }
                   }
               }
-              waterfallRef.value?.setSectionList(sections)
+            waterfallRef.value?.setSectionList(sections)
             mediaPlayerViewRef.value?.play(media)
             getMediaRecommendation()
           })
