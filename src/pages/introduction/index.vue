@@ -10,6 +10,7 @@
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true" class="introduction-detail-subtitle-root-css">
         <div class="introduction-detail-vip-css"
+             v-if="isMediaTypeFree"
              :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
           <text-view
             class="introduction-detail-vip-text-css"
@@ -24,8 +25,7 @@
             text="影视VIP" />
         </div>
 
-        <div class="introduction-detail-score-css"
-             v-if="score">
+        <div class="introduction-detail-score-css" v-if="score">
           <text-view
             class="introduction-detail-score-text-css"
             :duplicateParentState="true"
@@ -77,6 +77,7 @@ import { IMedia } from "../../api/media/IMedia"
 import { ref } from "vue"
 import introductionBg from "../../assets/ic_introduction_bg.png"
 import { ESLogLevel, useESLog } from "@extscreen/es3-core"
+import { IMediaAuthType } from "../../api/media/IMediaAuthType"
 
 const TAG = "Introduction"
 
@@ -92,6 +93,7 @@ export default defineComponent({
     const subtitle = ref<string>("")
     const actors = ref<string>("")
     const introduction = ref<string>("")
+    const isMediaTypeFree = ref<boolean>(true)
 
     const onESCreate = (params) => {
       media = params
@@ -110,6 +112,8 @@ export default defineComponent({
       }
       actors.value = media.actors
       introduction.value = media.introduction
+
+      isMediaTypeFree.value = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_FREE
     }
     return {
       introductionBg,
