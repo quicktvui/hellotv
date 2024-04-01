@@ -404,7 +404,7 @@ async function onESCreate(params: RouteParams) {
             category.data.map((channel, channelIndex) => {
                 secondTabData.push({
                     type: 2,
-                    decoration: { bottom: channel.id == liveSourceChannelCount ? 450 : 0 },
+                    decoration: { bottom: channel.id == liveSourceChannelCount ? 0 : 0 },
                     channelIndex: channelIndex,
                     channelId: channel.id,
                     channelName: channel.name,

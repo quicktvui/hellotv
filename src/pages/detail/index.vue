@@ -143,7 +143,7 @@ export default defineComponent({
                       }
                   }
               }
-              waterfallRef.value?.setSectionList(sections)
+            waterfallRef.value?.setSectionList(sections)
             mediaPlayerViewRef.value?.play(media)
             getMediaRecommendation()
           })
@@ -268,6 +268,7 @@ export default defineComponent({
        if(focused){
            waterfallRef.value?.scrollToTop()
        }
+       eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
 
     function onIntroductionFocus(focused: boolean) {
