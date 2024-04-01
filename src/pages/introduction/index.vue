@@ -5,7 +5,17 @@
            :focusable="false"
            :enableFocusBorder="false"
            :src="introductionBg" />
-      <span class="introduction-detail-title-css">{{ title }}</span>
+      <text-view
+        class="introduction-detail-title-css"
+        :duplicateParentState="true"
+        :focusable="false"
+        :textSize="60"
+        :ellipsizeMode="2"
+        enablePostTask
+        postDelay="200"
+        typeface="bold"
+        :lines="2"
+        :text="title" />
 
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true" class="introduction-detail-subtitle-root-css">
@@ -152,7 +162,7 @@ export default defineComponent({
 
 .introduction-detail-title-css {
   width: 828px;
-  height: 65px;
+  height: 150px;
   font-size: 60px;
   font-weight: 400;
   color: white;
