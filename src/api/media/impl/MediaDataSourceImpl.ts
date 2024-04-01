@@ -23,33 +23,48 @@ export function createMediaDataSource(): IMediaDataSource {
     requestManager = params[0]
     return Promise.resolve()
   }
-    function getMediaDetail(mediaId: string): Promise<IMedia> {
-        return requestManager.cmsGet(mediaDetailUrl + `&ids=${mediaId}`)
-            .then((result: any) => buildMedia(result.list[0]))
+  function getMediaDetail(mediaId: string): Promise<IMedia> {
+    return requestManager.cmsGet(mediaDetailUrl + `&ids=${mediaId}`)
+      .then((result: any) => buildMedia(result.list[0]))
+  }
+
+  function getMediaDetails(ids: string, pageNo: number): Promise<any> {
+    return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
+      .then((result: any) => {
+        let details = {}
+        result.list?.map((item: any) => details[item.vod_id] = item)
+        return details
+      })
+  }
+
+  function getMediaRecommendation(tabId: string): Promise<any> {
+    return requestManager.cmsGet(mediaRecommendUrl + `&t=${tabId}&pagesize=100`)
+      .then((result: any) => {
+        let medias: Media[] = []
+        for (let i = 0; i < 12; i++) {
+          const index = Math.floor(Math.random() * result.list?.length)
+          medias.push(result.list[index])
+        }
+        return buildMediaList(medias)
+      })
+  }
+
+  function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number, media?: IMedia): Promise<Array<IMedia>> {
+    if (media) {
+      let iMedias: IMedia[] = []
+      let list = media.playUrl.split('#').slice((++pageNo - 1) * pageSize, pageNo * pageSize)
+      list.map((url: string) => {
+        let _mediaStr = JSON.stringify(media)
+        let _mediaObj = JSON.parse(_mediaStr)
+        let _title = url.split('$')[0]
+        _mediaObj.id = _title
+        _mediaObj.title = _title
+        _mediaObj.playUrl = url
+        iMedias.push(_mediaObj)
+      })
+      return Promise.resolve(iMedias)
     }
 
-    function getMediaDetails(ids: string, pageNo: number): Promise<any> {
-        return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
-            .then((result: any) => {
-                let details = {}
-                result.list?.map((item: any) => details[item.vod_id] = item)
-                return details
-            })
-    }
-
-    function getMediaRecommendation(tabId: string): Promise<any> {
-        return requestManager.cmsGet(mediaRecommendUrl + `&t=${tabId}&pagesize=100`)
-            .then((result: any) => {
-                let medias: Media[] = []
-                for (let i = 0; i < 12; i++) {
-                    const index = Math.floor(Math.random() * result.list?.length)
-                    medias.push(result.list[index])
-                }
-                return buildMediaList(medias)
-            })
-    }
-
-  function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number): Promise<Array<IMedia>> {
     return requestManager.post(episodeListUrl + mediaItemListId, {
       "action": "detail",
       "param": {
@@ -76,7 +91,7 @@ export function createMediaDataSource(): IMediaDataSource {
   }
 
   return {
-    install: function(app: ESApp) {
+    install: function (app: ESApp) {
       const instance = this
       app.provide(MediaDataSourceKey, instance)
     },
