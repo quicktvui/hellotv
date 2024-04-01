@@ -271,6 +271,5 @@ export const hw_deepMergeObj = (...objects) => {
 }
 
 // 内容区loading
-// menu无数据/一条数据时隐藏
-// 分类条件
+// 内容区，根据分类条件，展示分类-是否按时间分类
 // contentItem高度要根据imgHeight/titleheight/subTitleHeight计算
