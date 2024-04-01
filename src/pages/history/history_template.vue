@@ -44,11 +44,11 @@ const emChangeMenuFn = (index: number, item: any) => {
     HistoryTabRef.value.init(index, item).then(res=>{//切换菜单分类时，更新筛选条件
         if(!res){//如果没有筛选条件，则根据分类获取列表数据
             currentFilter = null
-            HistoryContentRef.value.setData(currentMenu, currentFilter)
             isShowFilter.value = false
         } else {
             isShowFilter.value = true
         }
+        HistoryContentRef.value.setData(currentMenu, currentFilter)
     })
 }
 const emSelectTabFn = (index: number, item: any) => {
@@ -78,6 +78,9 @@ defineExpose({
     },
     onKeyUp() {
         HTopRef.value?.onKeyUp()
+    },
+    onESRestart(){
+        HistoryContentRef.value.setData(currentMenu, currentFilter)
     }
 })
 </script>

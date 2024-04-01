@@ -266,8 +266,3 @@ export const hw_deepMergeObj = (...objects) => {
     }
     return result;
 }
-
-/**
- * 切换menu时没有更新数据
- * 详情页返回后需重新拉取数据
- */
