@@ -109,6 +109,7 @@ export default defineComponent({
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
       waterfallRef.value?.scrollToTop()
+      albumDetailRef.value?.setAutofocus(true)
     }
 
     function initEventBus() {
@@ -128,6 +129,7 @@ export default defineComponent({
           media = m
           albumDetailRef.value?.initMedia(media)
           nextTick(() => {
+            waterfallRef.value?.scrollToTop()
               let sections = buildSectionList(m)
               //根据是否有选集，调整焦点滚动的距离
               if(sections.length == 3){
