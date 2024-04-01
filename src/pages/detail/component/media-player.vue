@@ -86,7 +86,7 @@ export default defineComponent({
         media: media
       }
       playerManager.value?.initialize()
-      playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ORDER)
+      playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       playerManager.value?.playMediaList(playList)
     }
 
