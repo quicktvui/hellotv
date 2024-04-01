@@ -2,7 +2,7 @@
     <qt-view class="list_item" eventFocus :focusable="true"
         :clipChildren="false" :sateBackgroundPadding="[10, 10]" :focusScale="1.06">
         <qt-view class="list_item_bg" :duplicateParentState="true" showOnState="focused" :focusable="false"
-            :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6 }" />
+            :gradientBackground="focusedBg" />
 
         <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="normal">
             <img src="../../assets/ic_screen_normal.png" :focusable="false"/>
@@ -33,7 +33,8 @@ const props = withDefaults(defineProps<{
         normal: { color:string }
         focused: { color:string }
         selected: { color:string }
-    }
+    },
+    focusedBg?:any
 }>(),{
     custemStyle: ()=>{
         return {
@@ -41,6 +42,9 @@ const props = withDefaults(defineProps<{
             focused: { color: '#000' },
             selected: { color: '#fff' },
         }
+    },
+    focusedBg: ()=>{
+        return { colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6 }
     }
 })
 </script>

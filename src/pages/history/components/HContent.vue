@@ -1,18 +1,22 @@
 <template>
-  <div class="h_content" ref="hContentRef" :focusable="false" :nextFocusName="{ up: 'h_tab_name' }">
-    <qt-grid-view v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" name="content_grid_name"
-      @item-click="onItemClick" :clipChildren="false" :clipPadding="false" :spanCount="columns" :areaWidth="1570"
-      :focusable="true" padding="0,0,0,20" :pageSize="20" :blockFocusDirections="['right', 'down']" :openPage="true"
-      :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn" @item-bind="onItemBind">
+  <div class="h_content" ref="hContentRef" :focusable="false" :nextFocusName="{ up: 'h_tab_name' }" :height="pHeight"
+    :width="pWidth">
+    <qt-grid-view v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight"
+      :width="pWidth" name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
+      :spanCount="columns" :areaWidth="pWidth" :focusable="true" padding="0,0,0,20" :pageSize="20"
+      :blockFocusDirections="['right', 'down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
+      :loadMore="loadMoreFn" @item-bind="onItemBind">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
           class="content_type_name" text="${assetTitle}" />
       </qt-view>
       <!-- <HContentItem type="10001" /> qt-poster-->
-      <HContentPoster :type="10001"></HContentPoster>
-      <HContentPoster :type="10007" :focusable="false">
-        <qt-view class="history-item-cover" :focusable="true" flexStyle="${image.style}">
+      <!-- <HContentPoster :type="10001"></HContentPoster> -->
+      <HContentPoster :type="10001">
+        <!-- :focusable="false" -->
+        <qt-view showIf="${editMode==true}" class="history-item-cover" :focusable="false" :duplicateParentState="true"
+          flexStyle="${image.style}">
           <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="focused"
             flexStyle="${delete.style}"
             :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadius: 99, orientation: 6 }">
@@ -22,10 +26,11 @@
             :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }">
           </qt-view>
           <text-view class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}"
-            flexStyle="${delete.style}" :ellipsizeMode="2" text="删除" :focusable="false" />
+            flexStyle="${delete.style}" :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true" />
         </qt-view>
       </HContentPoster>
-      <p class="screen-right-content-no-more" :type="1003" :focusable="false">已经到底啦，按【返回键】回到顶部</p>
+      <p showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" :focusable="false">
+        已经到底啦，按【返回键】回到顶部</p>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
       <template v-slot:loading>
         <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
@@ -57,9 +62,10 @@ import HContentPoster from './HContentPoster/index.vue'
 import { IcurrentItemParams } from "src/api/history/baseApi";
 
 const props = withDefaults(defineProps<{
-  spanCount: number, detailPageName?: string, emptyTxt?: string, pHeight?: number, pItemHeight?: number
+  spanCount: number; detailPageName?: string; emptyTxt?: string; pHeight?: number; pItemHeight?: number;
+  pWidth?: number
 }>(), {
-  spanCount: 3, pHeight: 880, pItemHeight: 0
+  spanCount: 3, pHeight: 900, pItemHeight: 0, pWidth: 1570
 })
 const columns = computed(() => {
   return props.spanCount && props.spanCount > 0 ? props.spanCount : 4
@@ -79,6 +85,7 @@ let preCurrentFilter: any = null
 let isFirst = true
 let timeoutId: any = null
 let contentDataHeight = 0
+let initRowsHeight = 0
 let prePageNum = 0
 let contentLenth = 0
 
@@ -153,7 +160,7 @@ const loadMoreFn = (pageNo: number) => {
       // gridDataRec.pop()
       if (res?.data?.length) {
         gridDataRec.pop()
-        const { arr, dataHeight } = getContentList(res.data, columns.value, props.pItemHeight)
+        const { arr, dataHeight } = getContentList(res.data, columns.value, props.pItemHeight, props.pWidth)
         // @ts-ignore
         // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
         gridDataRec.push(...arr.concat([{ type: 101 }]))
@@ -163,7 +170,7 @@ const loadMoreFn = (pageNo: number) => {
       } else {
         pageState.value = pageStates.noMore
         if (contentDataHeight >= props.pHeight) {
-          gridDataRec.push(...[{ type: 1003 }])
+          gridDataRec.push(...[{ type: 1003, editMode: false }])
         }
         // gridViewRef.value!.stopPage()
         // setTimeout(()=>{
@@ -208,11 +215,12 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   const res = await getFirstContentListApi(currentMenu, currentFilter)
   if (apiId == res._apiId) {
     if (res?.data?.length) {
-      const { arr, dataHeight } = getContentList(res.data, columns.value, props.pItemHeight)
+      const { arr, dataHeight, rowsHeight } = getContentList(res.data, columns.value, props.pItemHeight, props.pWidth)
       gridDataRec = gridViewRef.value!.init(arr.concat([{ type: 101 }]))
       pageState.value = pageStates.ready
       contentDataHeight = dataHeight
       contentLenth = arr.length
+      initRowsHeight = rowsHeight
     } else {
       pageState.value = pageStates.empty
       gridDataRec!.splice(0)
@@ -225,7 +233,9 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
       isShowScreenLoading.value = false
     })
   }
+  return (res.data?.length || 0) > 0
 }
+
 defineExpose({
   setData,
   clearData() {
@@ -242,9 +252,9 @@ defineExpose({
             if (el.type) {
               el.editMode = boo
             }
-            if (el.type === 10001 || el.type === 10007) {
-              el.type = boo ? 10007 : 10001
-            }
+            // if(el.type === 10001 || el.type === 10007){
+            //     el.type = boo ? 10007 : 10001
+            // }
           })
           clearTimeout(timeoutId)
           timeoutId = setTimeout(() => {
@@ -258,8 +268,8 @@ defineExpose({
 </script>
 <style scoped>
 .h_content {
-  width: 1570px;
-  height: 900px;
+  /* width: 1570px; */
+  /* height: 900px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -267,8 +277,8 @@ defineExpose({
 }
 
 .grid_view {
-  width: 1570px;
-  height: 900px;
+  /* width: 1570px;
+    height: 900px; */
 }
 
 .content_type {
