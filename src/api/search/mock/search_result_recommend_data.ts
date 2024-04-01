@@ -3,6 +3,61 @@ export default {
   plateName: "",
   itemList: [
     {
+      id: "2696096180582080514",
+      title: "汽车帮帮队",
+      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/12/07/d9433537-7c05-45a9-8a30-43f54a209bc8.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      corner: "角标 19",
+      actionRedirect: {
+        redirectType: 1,
+        action: null,
+        innerArgs: "{\"params\":{\"mediaId\":\"1732644874034483202\"},\"url\":\"series_view\"}"
+      }
+    },
+    {
+      id: "2732308915363385345",
+      title: "汽车帮帮队2",
+      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/12/06/d585a142-f93b-47c7-8b37-1a36a9841395.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      corner: "角标 20",
+      actionRedirect: {
+        redirectType: 1,
+        action: null,
+        innerArgs: "{\"params\":{\"mediaId\":\"1732308915363385345\"},\"url\":\"series_view\"}"
+      }
+    },
+    {
+      id: "2686934415440863233",
+      title: "乐享汽车总动员",
+      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/08/03/669cbadd-4329-4e9f-abd6-424488eb6a04.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      corner: "角标 21",
+      actionRedirect: {
+        redirectType: 1,
+        action: null,
+        innerArgs: "{\"params\":{\"mediaId\":\"1686934415440863233\"},\"url\":\"series_view\"}"
+      }
+    },
+    {
+      id: "2603283947152035841",
+      title: "汽车旅馆疯劫案",
+      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/12/15/2dc0beae-76ce-45e7-adf3-a7d65736063a.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      corner: "角标 22",
+      actionRedirect: {
+        redirectType: 1,
+        action: null,
+        innerArgs: "{\"params\":{\"mediaId\":\"1603283947152035841\"},\"url\":\"series_view\"}"
+      }
+    },
+    {
+      id: "2686932651429847042",
+      title: "小汽车大火车隧道",
+      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/08/03/7097e1ca-d107-4ee5-9466-df810e2e040c.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      corner: "角标 23",
+      actionRedirect: {
+        redirectType: 1,
+        action: null,
+        innerArgs: "{\"params\":{\"mediaId\":\"1686932651429847042\"},\"url\":\"series_view\"}"
+      }
+    },
+    {
       id: "1696096180582080514",
       title: "汽车帮帮队",
       poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/12/07/d9433537-7c05-45a9-8a30-43f54a209bc8.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
@@ -145,60 +200,5 @@ export default {
         innerArgs: "{\"params\":{\"mediaId\":\"1648174738301214721\"},\"url\":\"series_view\"}"
       }
     },
-    {
-      id: "1468141435892203521",
-      title: "车神",
-      poster: "http://qcloudimg.a311.ottcn.com/project/tvq/qsj_img/2019/09/17/36f9defd4d5742cab423ae5605dd48b6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
-      corner: "角标 14",
-      actionRedirect: {
-        redirectType: 1,
-        action: null,
-        innerArgs: "{\"params\":{\"mediaId\":\"1468141435892203521\"},\"url\":\"series_view\"}"
-      }
-    },
-    {
-      id: "1413428423119863810",
-      title: "堵车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/02/21/f18f100f-cac4-4cba-959f-2c19150c52b5.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
-      corner: "角标 15",
-      actionRedirect: {
-        redirectType: 1,
-        action: null,
-        innerArgs: "{\"params\":{\"mediaId\":\"1413428423119863810\"},\"url\":\"series_view\"}"
-      }
-    },
-    {
-      id: "1413420906130178050",
-      title: "风车",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/52/099f6d528b-475b-457d-aefc-8ab128c71064.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
-      corner: "角标 16",
-      actionRedirect: {
-        redirectType: 1,
-        action: null,
-        innerArgs: "{\"params\":{\"mediaId\":\"1413420906130178050\"},\"url\":\"series_view\"}"
-      }
-    },
-    {
-      id: "1413412942342258690",
-      title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
-      corner: "角标 17",
-      actionRedirect: {
-        redirectType: 1,
-        action: null,
-        innerArgs: "{\"params\":{\"mediaId\":\"1413412942342258690\"},\"url\":\"series_view\"}"
-      }
-    },
-    {
-      id: "1413421114436091906",
-      title: "小米的星空",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
-      corner: "角标 18",
-      actionRedirect: {
-        redirectType: 1,
-        action: null,
-        innerArgs: "{\"params\":{\"mediaId\":\"1413421114436091906\"},\"url\":\"series_view\"}"
-      }
-    }
   ]
 }

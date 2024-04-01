@@ -1,28 +1,28 @@
-import { ESApp } from "@extscreen/es3-vue";
-import { RequestManager } from "../../request/RequestManager";
-import { MediaDataSourceKey } from "../../UseApi";
-import { IMediaDataSource } from "../IMediaDataSource";
-import { IMedia } from "../IMedia";
-import { buildMedia, buildMediaList } from "./MediaDataAdapter";
-import { Media } from "./Media";
-import { IMediaUrl } from "../IMediaUrl";
-import { IMediaAuthorization } from "../IMediaAuthorization";
+import { ESApp } from "@extscreen/es3-vue"
+import { RequestManager } from "../../request/RequestManager"
+import { MediaDataSourceKey } from "../../UseApi"
+import { IMediaDataSource } from "../IMediaDataSource"
+import { IMedia } from "../IMedia"
+import { buildMedia, buildMediaAuthorization, buildMediaList } from "./MediaDataAdapter"
+import { Media } from "./Media"
+import { IMediaUrl } from "../IMediaUrl"
+import { IMediaAuthorization } from "../IMediaAuthorization"
 import {
-    episodeAuthUrl,
-    episodeListUrl, episodePlayUrlUrl, mediaAuthUrl,
-    mediaDetailUrl,
-    mediaRecommendUrl
-} from "../../RequestUrl";
+  episodeAuthUrl,
+  episodeListUrl, episodePlayUrlUrl, mediaAuthUrl,
+  mediaDetailUrl,
+  mediaRecommendUrl
+} from "../../RequestUrl"
+import { MediaAuthorization } from "./MediaAuthorization"
 
 export function createMediaDataSource(): IMediaDataSource {
 
-    let requestManager: RequestManager
+  let requestManager: RequestManager
 
-    function init(...params: any[]): Promise<any> {
-        requestManager = params[0]
-        return Promise.resolve()
-    }
-
+  function init(...params: any[]): Promise<any> {
+    requestManager = params[0]
+    return Promise.resolve()
+  }
     function getMediaDetail(mediaId: string): Promise<IMedia> {
         return requestManager.cmsGet(mediaDetailUrl + `&ids=${mediaId}`)
             .then((result: any) => buildMedia(result.list[0]))
@@ -49,60 +49,45 @@ export function createMediaDataSource(): IMediaDataSource {
             })
     }
 
-    function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number, media?: IMedia): Promise<Array<IMedia>> {
-        if (media) {
-            let iMedias: IMedia[] = []
-            let list = media.playUrl.split('#').slice((++pageNo - 1) * pageSize, pageNo * pageSize)
-            list.map((url: string) => {
-                let _mediaStr = JSON.stringify(media)
-                let _mediaObj = JSON.parse(_mediaStr)
-                let _title = url.split('$')[0]
-                _mediaObj.id = _title
-                _mediaObj.title = _title
-                _mediaObj.playUrl = url
-                iMedias.push(_mediaObj)
-            })
-            return Promise.resolve(iMedias)
-        }
+  function getMediaItemList(mediaItemListId: string, pageNo: number, pageSize: number): Promise<Array<IMedia>> {
+    return requestManager.post(episodeListUrl + mediaItemListId, {
+      "action": "detail",
+      "param": {
+        "pageNo": Number(pageNo + 1),
+        "pageSize": pageSize
+      }
+    }).then((mediaList: Array<Media>) => buildMediaList(mediaList))
+  }
 
-        return requestManager.post(episodeListUrl + mediaItemListId, {
-            'action': 'detail',
-            'param': {
-                "pageNo": Number(pageNo + 1),
-                "pageSize": pageSize,
-            }
-        }).then((mediaList: Array<Media>) => buildMediaList(mediaList))
-    }
+  function getMediaItemUrl(mediaItemId: string): Promise<Array<IMediaUrl>> {
+    return requestManager.post(episodePlayUrlUrl + mediaItemId, {})
+  }
 
-    function getMediaItemUrl(mediaItemId: string): Promise<Array<IMediaUrl>> {
-        return requestManager.post(episodePlayUrlUrl + mediaItemId, {})
-    }
+  function getMediaAuthorization(mediaId: string): Promise<IMediaAuthorization | null | undefined> {
+    return requestManager.post(mediaAuthUrl, {
+      "data": mediaId
+    }).then((authorization: MediaAuthorization) => buildMediaAuthorization(authorization))
+  }
 
-    function getMediaAuthorization(mediaId: string): Promise<IMediaAuthorization | null | undefined> {
-        return requestManager.post(mediaAuthUrl, {
-            'data': mediaId
-        })
-    }
+  function getMediaItemAuthorization(mediaItemId: string): Promise<IMediaAuthorization | null | undefined> {
+    return requestManager.post(episodeAuthUrl, {
+      "data": mediaItemId
+    }).then((authorization: MediaAuthorization) => buildMediaAuthorization(authorization))
+  }
 
-    function getMediaItemAuthorization(mediaItemId: string): Promise<IMediaAuthorization | null | undefined> {
-        return requestManager.post(episodeAuthUrl, {
-            'data': mediaItemId
-        })
-    }
-
-    return {
-        install: function (app: ESApp) {
-            const instance = this
-            app.provide(MediaDataSourceKey, instance)
-        },
-        init,
-        getMediaDetail,
-        getMediaRecommendation,
-        getMediaItemList,
-        getMediaItemUrl,
-        getMediaAuthorization,
-        getMediaItemAuthorization
-    }
+  return {
+    install: function(app: ESApp) {
+      const instance = this
+      app.provide(MediaDataSourceKey, instance)
+    },
+    init,
+    getMediaDetail,
+    getMediaRecommendation,
+    getMediaItemList,
+    getMediaItemUrl,
+    getMediaAuthorization,
+    getMediaItemAuthorization
+  }
 }
 
 

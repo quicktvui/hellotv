@@ -1,28 +1,38 @@
 <template>
-    <qt-column class="album-detail-section-root" :style="{ height: sectionHeight }"
-        :scrollOverride="{ down: 0, up: -1080 }" :clipChildren="false" :clipPadding="false">
-        <!-- 简介-->
-        <media-introduction ref="introductionRef" @onIntroductionFocus="onIntroductionFocus" />
+  <qt-column class="album-detail-section-root"
+             :style="{height: sectionHeight}"
+             :scrollOverride="{down:0,up:-1080}"
+             :clipChildren="false"
+             :clipPadding="false">
+    <!-- 简介-->
+    <media-introduction
+      ref="introductionRef"
+      @onIntroductionFocus="onIntroductionFocus"/>
 
-        <!-- 菜单 -->
-        <media-menu ref="menuRef" :isCollected="isCollected" />
+    <!-- 菜单 -->
+    <media-menu ref="menuRef"/>
 
-        <!-- 播放器占位-->
-        <media-player-placeholder ref="placeholderRef" @onPlaceholderFocus="onPlayerPlaceholderFocus"
-            @onPlaceholderClick="onPlayerPlaceholderClick" />
+    <!-- 播放器占位-->
+    <media-player-placeholder
+      ref="placeholderRef"
+      @onPlaceholderFocus="onPlayerPlaceholderFocus"
+      @onPlaceholderClick="onPlayerPlaceholderClick"/>
 
-        <!-- 选集-->
-        <media-list ref="mediaListRef" @onMediaListItemLoad="onMediaListItemLoad"
-            @onMediaListItemFocused="onMediaListItemFocused" @onMediaListItemClicked="onMediaListItemClicked"
-            @onMediaListGroupItemClicked="onMediaListGroupItemClicked">
-        </media-list>
+    <!-- 选集-->
+    <media-list
+      ref="mediaListRef"
+      @onMediaListItemLoad="onMediaListItemLoad"
+      @onMediaListItemFocused="onMediaListItemFocused"
+      @onMediaListItemClicked="onMediaListItemClicked"
+      @onMediaListGroupItemClicked="onMediaListGroupItemClicked">
+    </media-list>
 
-    </qt-column>
+  </qt-column>
 </template>
 
 <script lang="ts">
 
-import { defineComponent } from "@vue/runtime-core";
+import {defineComponent} from "@vue/runtime-core";
 import media_introduction from '../component/media-introduction.vue'
 import media_menu from '../component/media-menu.vue'
 import media_list from '../component/media-list.vue'
@@ -39,147 +49,146 @@ import { localHistory } from "src/api/history/store";
 const TAG = 'AlbumDetail'
 
 export default defineComponent({
-    name: "album-detail-section",
-    emits: [
-        'onPlayerPlaceholderClick',
-        'onPlayerPlaceholderFocus',
-        'onMediaListItemFocused',
-        'onMediaListItemClicked',
-        'onMediaListGroupItemClicked',
-        'onIntroductionFocus',
-        'onMediaListItemLoad'
-    ],
-    components: {
-        'media-introduction': media_introduction,
-        'media-player-placeholder': media_player_placeholder,
-        'media-menu': media_menu,
-        'media-list': media_list
-    },
-    setup(props, context) {
-        const isCollected = ref(false)
-        const introductionRef = ref<IMediaIntroduction>()
-        const placeholderRef = ref<IMediaPlaceholder>()
-        const mediaListRef = ref<IMediaListView>()
-        const sectionHeight = ref<number>(550)
+  name: "album-detail-section",
+  emits: [
+    'onPlayerPlaceholderClick',
+    'onPlayerPlaceholderFocus',
+    'onMediaListItemFocused',
+    'onMediaListItemClicked',
+    'onMediaListGroupItemClicked',
+    'onIntroductionFocus',
+    'onMediaListItemLoad'
+  ],
+  components: {
+    'media-introduction': media_introduction,
+    'media-player-placeholder': media_player_placeholder,
+    'media-menu': media_menu,
+    'media-list': media_list
+  },
+  setup(props, context) {
+    const introductionRef = ref<IMediaIntroduction>()
+    const placeholderRef = ref<IMediaPlaceholder>()
+    const mediaListRef = ref<IMediaListView>()
+    const sectionHeight = ref<number>(550)
 
-        function initMedia(media: IMedia) {
-            console.log('----------initMedia---------->>>>', media)
-            isCollected.value = localHistory.fav[media.id] ? true : false
-            if (media.itemList.enable) {
-                switch (media.itemList.type) {
-                    case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_NUMBER://数字
-                        sectionHeight.value = 815
-                        break
-                    case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT://左图右文
-                        sectionHeight.value = 896
-                        break
-                    case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_TEXT://文本
-                        sectionHeight.value = 835
-                        break
-                    case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_TOP_DOWN://上图下文
-                        sectionHeight.value = 945
-                        break
-                }
-            } else {
-                sectionHeight.value = 550
-            }
-
-            introductionRef.value?.initMedia(media)
-            placeholderRef.value?.initMedia(media)
-            mediaListRef.value?.initMedia(media)
+    function initMedia(media: IMedia) {
+      // console.log('----------initMedia---------->>>>', media)
+      if (media.itemList.enable) {
+        switch (media.itemList.type) {
+          case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_NUMBER://数字
+            sectionHeight.value = 815
+            break
+          case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT://左图右文
+            sectionHeight.value = 896
+            break
+          case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_TEXT://文本
+            sectionHeight.value = 835
+            break
+          case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_TOP_DOWN://上图下文
+            sectionHeight.value = 945
+            break
         }
+      } else {
+        sectionHeight.value = 550
+      }
 
-        function onPlayerPlaceholderClick() {
-            context.emit('onPlayerPlaceholderClick')
-        }
+      introductionRef.value?.initMedia(media)
+      placeholderRef.value?.initMedia(media)
+      mediaListRef.value?.initMedia(media)
+    }
 
-        function onPlayerPlaceholderFocus(focused: boolean) {
-            context.emit('onPlayerPlaceholderFocus', focused)
-        }
+    function onPlayerPlaceholderClick() {
+      context.emit('onPlayerPlaceholderClick')
+    }
 
-        function onMediaListItemFocused(index) {
-            context.emit("onMediaListItemFocused", index)
-        }
+    function onPlayerPlaceholderFocus(focused: boolean) {
+      context.emit('onPlayerPlaceholderFocus', focused)
+    }
 
-        function onMediaListItemClicked(position: number, data: QTMediaSeries) {
-            context.emit("onMediaListItemClicked", position, data)
-        }
+    function onMediaListItemFocused(index) {
+      context.emit("onMediaListItemFocused", index)
+    }
 
-        function onMediaListGroupItemClicked(position: number) {
-            context.emit("onMediaListGroupItemClicked", position)
-        }
+    function onMediaListItemClicked(position: number, data: QTMediaSeries) {
+      context.emit("onMediaListItemClicked", position, data)
+    }
 
-        function onMediaListItemLoad(page: number, data: Array<IMedia>) {
-            context.emit("onMediaListItemLoad", page, data)
-        }
+    function onMediaListGroupItemClicked(position: number) {
+      context.emit("onMediaListGroupItemClicked", position)
+    }
 
-        function onIntroductionFocus(focused: boolean) {
-            context.emit("onIntroductionFocus", focused)
-        }
+    function onMediaListItemLoad(page: number, data: Array<IMedia>) {
+      context.emit("onMediaListItemLoad", page, data)
+    }
 
-        function show(value: boolean) {
-            placeholderRef.value?.show(value)
-        }
+    function onIntroductionFocus(focused: boolean) {
+      context.emit("onIntroductionFocus", focused)
+    }
 
-        function showPlaceholderMediaInfo(value: boolean) {
-            placeholderRef.value?.showMediaInfo(value)
-        }
+    function show(value: boolean) {
+      placeholderRef.value?.show(value)
+    }
 
-        function scrollMediaListViewTo(position: number): void {
-            mediaListRef.value?.scrollTo(position)
-        }
+    function showPlaceholderMediaInfo(value: boolean) {
+      placeholderRef.value?.showMediaInfo(value)
+    }
 
-        function setMediaListViewSelected(position: number): void {
-            mediaListRef.value?.setSelected(position)
-        }
+    function scrollMediaListViewTo(position: number): void {
+      mediaListRef.value?.scrollTo(position)
+    }
 
-        function requestPlayerPlaceholderFocus(): void {
-            placeholderRef.value?.requestFocus()
-        }
+    function setMediaListViewSelected(position: number): void {
+      mediaListRef.value?.setSelected(position)
+    }
 
-        function release(): void {
-            mediaListRef.value?.release()
-        }
+    function requestPlayerPlaceholderFocus(): void {
+      placeholderRef.value?.requestFocus()
+    }
 
-        function setAutofocus(enable: boolean) {
-            placeholderRef.value?.setAutofocus(enable)
-        }
+    function release(): void {
+      mediaListRef.value?.release()
+    }
 
-        return {
-            isCollected,
-            sectionHeight,
-            introductionRef,
-            placeholderRef,
-            mediaListRef,
-            show,
-            showPlaceholderMediaInfo,
-            initMedia,
-            onPlayerPlaceholderClick,
-            onPlayerPlaceholderFocus,
-            //
-            onMediaListItemFocused,
-            onMediaListItemClicked,
-            onMediaListGroupItemClicked,
-            onMediaListItemLoad,
-            //
-            onIntroductionFocus,
-            scrollMediaListViewTo,
-            setMediaListViewSelected,
-            requestPlayerPlaceholderFocus,
-            release,
-            setAutofocus
-        }
-    },
+  function setAutofocus(enable:boolean){
+      placeholderRef.value?.setAutofocus(enable)
+  }
+
+
+    return {
+      sectionHeight,
+      introductionRef,
+      placeholderRef,
+      mediaListRef,
+      show,
+      showPlaceholderMediaInfo,
+      initMedia,
+      onPlayerPlaceholderClick,
+      onPlayerPlaceholderFocus,
+      //
+      onMediaListItemFocused,
+      onMediaListItemClicked,
+      onMediaListGroupItemClicked,
+      onMediaListItemLoad,
+      //
+      onIntroductionFocus,
+      scrollMediaListViewTo,
+      setMediaListViewSelected,
+      requestPlayerPlaceholderFocus,
+      release,
+        setAutofocus
+    }
+  },
 });
 
 </script>
 <style scoped>
 .album-detail-section-root {
-    width: 1920px;
+  width: 1920px;
 }
 
 .album-detail-media-player-css {
-    background-color: transparent;
-    position: absolute;
+  background-color: transparent;
+  position: absolute;
 }
+
 </style>

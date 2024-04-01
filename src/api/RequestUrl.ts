@@ -1,4 +1,4 @@
-import BuildConfig from "../build/BuildConfig";
+  import BuildConfig from "../build/BuildConfig";
 
 // Home请求url
 export const tabListUrl = BuildConfig.requestBaseUrl

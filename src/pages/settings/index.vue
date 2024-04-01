@@ -26,7 +26,7 @@ const httpServer = ref<HttpServer>()
 const httpServerAddr = ref()
 
 function onESCreate(params: RouteParams) {
-    console.log('huan-onESCreate', params)
+    // console.log('huan-onESCreate', params)
     routeParams.value = params
     createHttpServer()
         .then(result => {
@@ -77,9 +77,9 @@ function closeHttpServer() {
 
 // 监听底层事件
 EventBus.$on('onHttpServerEvent', async (event: any) => {
-    console.log('huan-onHttpServerEvent', event)
+    // console.log('huan-onHttpServerEvent', event)
     let content = JSON.parse(event.content)
-    console.log('huan-onHttpServerEvent-content', content)
+    // console.log('huan-onHttpServerEvent-content', content)
     switch (event.type) {
         case 'url':
             if ((content.startsWith('http://') || content.startsWith('https://')) && content.replace('://', '#').split('/')[0].search(/[\u4e00-\u9fa5]/) < 0) {
@@ -92,7 +92,7 @@ EventBus.$on('onHttpServerEvent', async (event: any) => {
         case 'text':
             try {
                 let lives = JSON.parse(content.replace(/\+/g, '').match(/(?<=\"lives\":\s*)\[[\s\S]*?\]/)?.[0])
-                console.log('huan-onHttpServerEvent-lives', lives)
+                // console.log('huan-onHttpServerEvent-lives', lives)
                 if (typeof lives == 'object') {
                     closeHttpServer()
                     router.push({ name: 'live', params: { lives: JSON.stringify(lives) }, replace: true })
