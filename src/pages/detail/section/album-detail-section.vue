@@ -71,7 +71,7 @@ export default defineComponent({
     const sectionHeight = ref<number>(550)
 
     function initMedia(media: IMedia) {
-      console.log('----------initMedia---------->>>>', media)
+      // console.log('----------initMedia---------->>>>', media)
       if (media.itemList.enable) {
         switch (media.itemList.type) {
           case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_NUMBER://数字

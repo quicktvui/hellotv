@@ -13,7 +13,9 @@
           :blockFocusDirections="['up', 'down','left']"
           :nextFocusName="{right:'search_center_view'}"
           @inputChange="onInputChange"
-          @scroll-to-index="onNeedScrollTo"/>
+          @scroll-to-index="onNeedScrollTo"
+          :result-item-sid="isShowCenterSearch?'':curItemSid"
+          :default-item-sid="isShowCenterSearch?'':defaultItemSid"/>
         <!-- 搜索内容 -->
         <search-center
           v-if="isShowCenterSearch"
@@ -26,7 +28,9 @@
           @keyword-select="onKeywordSelect"
           @close-loading="closeLoading"
           :search-letter="searchLetter"
-          @scroll-to-index="onNeedScrollTo"/>
+          @scroll-to-index="onNeedScrollTo"
+          :result-item-sid="curItemSid"
+          :default-item-sid="defaultItemSid"/>
         <!-- 搜索结果 -->
         <search-result
           v-show="!loading"
@@ -34,9 +38,13 @@
           name="search_result_view"
           :blockFocusDirections="['up', 'down']"
           :keyword="selectKeyword"
+          :is-show-result-loading="showResultLoading"
           :show-is-full-screen="scrollState === 1"
           :nextFocusName="{left:'search_center_view',}"
-          @scroll-to-index="onNeedScrollTo"/>
+          @scroll-to-index="onNeedScrollTo"
+          @curItemSid="setItemSid"
+          @defaultTabItemSid="setDefaultTabItemSid"
+          @close-loading="closeLoading"/>
       </qt-view>
     </scroll-view>
     <qt-view v-if="loading" :style="{left:loadingLeft+'px',width:loadingWidth+'px'}" class="search_start_loading" :focusable="false"
@@ -54,6 +62,7 @@ import searchCenter from "./component/search-center.vue";
 import searchResult from "./component/search-result.vue";
 import {useESRouter, useESNativeRouter} from "@extscreen/es3-router";
 import SearchConfig from "./build_data/SearchConfig"
+import { ESKeyEvent } from "@extscreen/es3-core"
 
 export default defineComponent({
   name: "search",
@@ -75,55 +84,97 @@ export default defineComponent({
     const search_keyboard = ref()
     const search_center = ref()
     const search_result = ref()
+    const curItemSid = ref("")
+    const defaultItemSid = ref("")
     let selectKeyword = ref('')
     let searchLetter = ref('')
     let scrollState = ref(0)
+    let showResultLoading = ref(true)
     let loading = ref(false)
+    let curChildIndex = 0
+    //todo
+    let delayHandleFocusChange: any = -1
+    let selectKeyWordTimer:any = -1
     // 生命周期
     const onESCreate = (params) => {
-      search_keyboard.value!.initComponent()
-      if (SearchConfig.isShowCenterSearch){
-        search_center.value!.initComponent()
-      }else{
-        //todo 获取推荐数据
+      //无词条列表时，直接获取推荐列表
+      if (!SearchConfig.isShowCenterSearch){
+        search_result.value!.initTab(true)
       }
     }
     const onESStart = () => {}
     const onESResume = () => {}
     const onESStop = () => {}
-    const onESDestroy = () => {}
+    function onKeyDown(keyEvent: ESKeyEvent): boolean {
+      console.log("XRG===onkeydown---","-----------",curChildIndex)
+      if (curChildIndex !== 2){
+        console.log("XRG===执行","cancelAll")
+        search_result.value.cancelAll()
+      }
+      return false
+    }
+    const onESDestroy = () => {
+      delayHandleFocusChange && clearTimeout(delayHandleFocusChange)
+      selectKeyWordTimer && clearTimeout(selectKeyWordTimer)
+    }
 
-    const onKeywordSelect = (keyword: string) => {
-     selectKeyword.value = keyword;
-      // searchLetter = searchLetter;
+    const onKeywordSelect = (keyword: string,isShowResultLoading:boolean) => {
+      if (selectKeyword.value === keyword) {
+        showResultLoading.value = false
+        return
+      }
+      showResultLoading.value = isShowResultLoading
+      selectKeyWordTimer && clearTimeout(selectKeyWordTimer)
+      selectKeyWordTimer = setTimeout(()=>{
+        selectKeyword.value = keyword;
+      },500)
     }
     const onInputChange = (inputText: string) => {
       loading.value = true
-      if (isShowCenterSearch){
+      if (isShowCenterSearch.value){
         searchLetter.value = inputText;
       }else{
-
+        if (selectKeyword.value === inputText) {
+          showResultLoading.value = false
+          return
+        }
+        showResultLoading.value = false
+        selectKeyWordTimer && clearTimeout(selectKeyWordTimer)
+        selectKeyWordTimer = setTimeout(()=>{
+          selectKeyword.value = inputText;
+        },500)
       }
     }
     const closeLoading = ()=> {
-      setTimeout(()=>{loading.value = false},300)
-
+      setTimeout(()=>{loading.value = false},500)
     }
 
-    const onNeedScrollTo = (index: number) => {
-      if (index == 0) {
-        if (scrollState.value == 0) return;
-        scrollState.value = 0;
-      }
-      if (index == 2) {
-        if (scrollState.value == 1) return;
-        scrollState.value = 1;
-      }
+    const setItemSid = (sid) =>{
+      curItemSid.value = sid
+    }
+    const setDefaultTabItemSid = (defaultSid)=>{
+      defaultItemSid.value = defaultSid
+    }
+
+    const onNeedScrollTo = (index: number,delay:number) => {
+      curChildIndex = index
+      delayHandleFocusChange && clearTimeout(delayHandleFocusChange)
+      delayHandleFocusChange = setTimeout(()=>{
+        if (index == 0 || index == 1) {
+          if (scrollState.value == 0) return;
+          scrollState.value = 0;
+        }
+        if (index == 2) {
+          if (scrollState.value == 1) return;
+          scrollState.value = 1;
+        }
+      },delay)
+
     }
     //按键 返回
     const onBackPressed = () => {
       if (scrollState.value === 1){
-        onNeedScrollTo(0)
+        onNeedScrollTo(0,0)
         search_keyboard.value.requestDefaultFocus();
         return
       }else{
@@ -132,11 +183,11 @@ export default defineComponent({
       }
     }
     return {
-      search_root,search_scroll_view,scrollState,
+      search_root,search_scroll_view,scrollState,curItemSid,defaultItemSid,
       search_keyboard,onInputChange,
       search_center,onKeywordSelect,
-      search_result,selectKeyword,searchLetter,isShowCenterSearch,rootWidth,loading,loadingWidth,loadingLeft,
-      onNeedScrollTo,
+      search_result,selectKeyword,searchLetter,isShowCenterSearch,rootWidth,loading,loadingWidth,loadingLeft,showResultLoading,
+      onNeedScrollTo,setItemSid,setDefaultTabItemSid,onKeyDown,
       onESCreate, onESStart, onESResume, onESStop, onESDestroy, onBackPressed,closeLoading
     }
   }

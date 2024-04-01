@@ -52,9 +52,6 @@
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
         </template>
-        <!--      <template v-slot:waterfall-vue-section>-->
-        <!--        <page-mine/>-->
-        <!--      </template>-->
       </qt-tabs>
   </div>
 </template>
@@ -137,7 +134,7 @@ export default defineComponent({
     //背景图
     const wTabBg = ref()
     //tab
-    const tabContentBlockFocusDirections = ref(['down', 'left', 'right', 'top'])
+    const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     //
     function onESCreate(params) {
@@ -420,7 +417,6 @@ export default defineComponent({
       launch.launch(item)
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
-        log.e("TAG", '---------onTabPageItemFocused-------->>>>', sectionIndex, '---->>>', itemIndex+`,item:${JSON.stringify(item)}`)
       if (isFocused){
         if(bgPlayerType.value == CoveredPlayerType.TYPE_BG && sectionIndex === 0){
           if(recordPlayerData.pageIndex == pageIndex && recordPlayerData.itemIndex == itemIndex){
@@ -457,8 +453,6 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
-      // toast.showLongToast(scrollY + 'onTabPageScrollonTabPageScrollonTabPageScrollonTabPageScroll')
-      console.log(offsetX,scrollY,'onTabPageScrollonTabPageScrollonTabPageScrollonTabPageScroll')
       //如果有焦点播放需求时
       // if(Math.abs(scrollY) > 2) {
       //   bg_player.value?.showCoverImmediately(true)

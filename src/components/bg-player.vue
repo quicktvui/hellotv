@@ -391,7 +391,6 @@ export default defineComponent({
 
     }
     const onItemClick = (e) => {
-      console.log(e,'8888886898797456789465498794654687946')
     }
     const onItemFocus = (e) => {
       if(e.hasFocus && e.position != currentPlayIndex.value){

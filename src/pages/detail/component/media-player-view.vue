@@ -784,7 +784,7 @@ export default defineComponent({
     }
 
     function onPlayerWindowSizeChanged(width: number, height: number): void {
-      console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
+      // console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
       playerWidth.value = width
       playerHeight.value = height
     }

@@ -4,6 +4,7 @@ import {QTPosterTitle} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPoster
 import {QTPosterRipple} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterRipple";
 import {QTWaterfallFlexStyle} from "@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle";
 import {QTPosterCorner} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterCorner";
+import ic_water_play from "../../../../assets/ic_water_play.png"
 
 /**
  * 标题展示样式 titleStyle
@@ -173,10 +174,9 @@ export function buildPosterFloatTitle(tabContentItem: TabSectionItem): QTPosterT
 }
 
 export function buildPosterRipple(tabContentItem: TabSectionItem): QTPosterRipple {
-    const rippleSrc = 'file://assets/ic_water_play.png'
     return {
         enable: tabContentItem.playLogoSwitch == '1',
-        src: rippleSrc,
+        src: ic_water_play,
         style: {
             right: 0,
             bottom: 0,
