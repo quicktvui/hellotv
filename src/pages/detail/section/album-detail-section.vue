@@ -1,29 +1,19 @@
 <template>
-  <qt-column class="album-detail-section-root"
-             :style="{height: sectionHeight}"
-             :scrollOverride="{down:0,up:-1080}"
-             :clipChildren="false"
-             :clipPadding="false">
+  <qt-column class="album-detail-section-root" :style="{ height: sectionHeight }"
+    :scrollOverride="{ down: 0, up: -1080 }" :clipChildren="false" :clipPadding="false">
     <!-- 简介-->
-    <media-introduction
-      ref="introductionRef"
-      @onIntroductionFocus="onIntroductionFocus"/>
+    <media-introduction ref="introductionRef" @onIntroductionFocus="onIntroductionFocus" />
 
     <!-- 菜单 -->
-    <media-menu ref="menuRef"/>
+    <media-menu ref="menuRef" :isCollected="isCollected" />
 
     <!-- 播放器占位-->
-    <media-player-placeholder
-      ref="placeholderRef"
-      @onPlaceholderFocus="onPlayerPlaceholderFocus"
-      @onPlaceholderClick="onPlayerPlaceholderClick"/>
+    <media-player-placeholder ref="placeholderRef" @onPlaceholderFocus="onPlayerPlaceholderFocus"
+      @onPlaceholderClick="onPlayerPlaceholderClick" />
 
     <!-- 选集-->
-    <media-list
-      ref="mediaListRef"
-      @onMediaListItemLoad="onMediaListItemLoad"
-      @onMediaListItemFocused="onMediaListItemFocused"
-      @onMediaListItemClicked="onMediaListItemClicked"
+    <media-list ref="mediaListRef" @onMediaListItemLoad="onMediaListItemLoad"
+      @onMediaListItemFocused="onMediaListItemFocused" @onMediaListItemClicked="onMediaListItemClicked"
       @onMediaListGroupItemClicked="onMediaListGroupItemClicked">
     </media-list>
 
@@ -32,7 +22,7 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 import media_introduction from '../component/media-introduction.vue'
 import media_menu from '../component/media-menu.vue'
 import media_list from '../component/media-list.vue'
@@ -66,6 +56,7 @@ export default defineComponent({
     'media-list': media_list
   },
   setup(props, context) {
+    const isCollected = ref(false)
     const introductionRef = ref<IMediaIntroduction>()
     const placeholderRef = ref<IMediaPlaceholder>()
     const mediaListRef = ref<IMediaListView>()
@@ -73,6 +64,7 @@ export default defineComponent({
 
     function initMedia(media: IMedia) {
       // console.log('----------initMedia---------->>>>', media)
+      isCollected.value = localHistory.fav[media.id] ? true : false
       if (media.itemList.enable) {
         switch (media.itemList.type) {
           case IMediaItemListType.MEDIA_ITEM_LIST_TYPE_NUMBER://数字
@@ -149,12 +141,13 @@ export default defineComponent({
       mediaListRef.value?.release()
     }
 
-  function setAutofocus(enable:boolean){
+    function setAutofocus(enable: boolean) {
       placeholderRef.value?.setAutofocus(enable)
-  }
+    }
 
 
     return {
+      isCollected,
       sectionHeight,
       introductionRef,
       placeholderRef,
@@ -175,7 +168,7 @@ export default defineComponent({
       setMediaListViewSelected,
       requestPlayerPlaceholderFocus,
       release,
-        setAutofocus
+      setAutofocus
     }
   },
 });
@@ -190,5 +183,4 @@ export default defineComponent({
   background-color: transparent;
   position: absolute;
 }
-
 </style>

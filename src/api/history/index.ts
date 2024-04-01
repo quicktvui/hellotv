@@ -41,6 +41,7 @@ class HistoryApi extends HistoryBaseApi {
           description1: '',
           id: item.id,
           metaId: item.id,
+          playCount: item.playId || 0
         }))
         break
     }
