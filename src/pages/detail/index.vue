@@ -46,7 +46,7 @@ import { ESMediaItem } from "@extscreen/es3-player-manager";
 import { IMediaAuthorization } from "../../api/media/IMediaAuthorization";
 import { mediaAuthorizationKey } from "./injectionSymbols";
 import { useMediaDataSource } from "../../api/UseApi";
-import { localHistory, historyKey } from 'src/api/history/store';
+import { localHistory, historyKey, removeHistory } from 'src/api/history/store';
 
 const TAG = 'DetailPage'
 
@@ -260,8 +260,8 @@ export default defineComponent({
             mediaPlayerViewRef.value?.setFullWindow()
         }
 
-        function onMenuFavouriteButtonClick() {
-            localHistory.fav[media.id] = media
+        function onMenuFavouriteButtonClick(val: boolean) {
+            val ? localHistory.fav[media.id] = media : removeHistory('fav', Number(media.id))
         }
 
         function onPlayerPlaceholderClick() {
