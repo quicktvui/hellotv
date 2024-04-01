@@ -28,6 +28,8 @@ export interface IHistoryContentEntity {
     playCount?: string//播放到第几集
     playTime?: string
     userId?: string
+    playId?:string
+    playPosition?:number
     // mark?: string//角标
     h_mode?: string//模式-列表项/分类
     h_modeName?: string

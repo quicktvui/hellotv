@@ -110,7 +110,9 @@ const onItemClick = (arg) => {
             router.push({
                 name: props.detailPageName, //'series_view',
                 params: {
-                mediaId: arg.item.metaId
+                    mediaId: arg.item.metaId,
+                    playId: arg.item.playId,
+                    playPosition: arg.item.playPosition || 0
                 }
             });
         }
