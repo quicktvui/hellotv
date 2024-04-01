@@ -91,7 +91,7 @@
                     :duplicateParentState="true"
                     :focusable="false"
                     :textSize="24"
-                    :lineSpacing="6"
+                    :lineSpacing="8"
                     :lineHeight="30"
                     :ellipsizeMode="2"
                     enablePostTask
