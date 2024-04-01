@@ -482,7 +482,8 @@ export default defineComponent({
           mediaCollapseMediaListRef?.value?.show(false)
 
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.collapse()
+            mediaCollapseRef.value?.expandItem(0)
+            collapseItemIndex = 0
           }
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
@@ -496,16 +497,17 @@ export default defineComponent({
             initCollapseDefinitionMenu()
             initCollapseListMenu()
           }
-          setCollapseOrderMenuFocused()
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
+
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
           mediaCollapseMediaListRef?.value?.show(false)
 
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.collapse()
+            mediaCollapseRef.value?.expandItem(0)
+            collapseItemIndex = 0
           }
           break
       }
