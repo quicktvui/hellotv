@@ -36,7 +36,6 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
   return {
     _key: data.id,
     type: data.type || 1001,
-    type: data.type || 1001,
     assetTitle: data.h_modeName,//'今天',//i < 10 ? '今天' : (i < 20 ? '一周内' : '更早'),
     decoration: {
       left,
@@ -77,7 +76,6 @@ const dDeleteHeight = 68
 const dDeleteSize = 36
 const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
   const { width, height, left } = aConfig
-  let subTitle = data.subTitle || ''
   let subTitle = data.subTitle || ''
   try {
     if (!subTitle && data.playCount) {

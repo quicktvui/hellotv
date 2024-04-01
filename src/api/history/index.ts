@@ -27,6 +27,7 @@ class HistoryApi extends HistoryBaseApi {
           assetLongTitle: item.title || '',
           assetLongCoverH: item.coverH,
           description1: '',
+          id: item.id,
           metaId: item.id,
           playCount: item.playId || 0,
           currentPlayTime: item.progress,
@@ -38,6 +39,7 @@ class HistoryApi extends HistoryBaseApi {
           assetLongTitle: item.title || '',
           assetLongCoverH: item.coverH,
           description1: '',
+          id: item.id,
           metaId: item.id,
         }))
         break
@@ -51,6 +53,7 @@ class HistoryApi extends HistoryBaseApi {
   }
 
   async deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, id: number): Promise<boolean> {
+    console.log('huan-deleteContent', currentMenu.index, currentFilter.item.id, id)
     if (removeHistory(currentMenu.index == 0 ? 'ply' : 'fav', id)) {
       return await this.localStore.putString(historyKey, JSON.stringify(localHistory))
     }
