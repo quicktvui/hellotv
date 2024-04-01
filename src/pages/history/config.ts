@@ -8,7 +8,8 @@ export const menuListItemTypes = {
 }
 
 export interface Iconfig {
-    layout?: string;
+    layout: string;
+    detailPageName:string;
     title?: string;
     titleImg?: string;
     menuStyle?: {
@@ -24,7 +25,6 @@ export interface Iconfig {
         focused: { bgColor: string }
     };
     contentColumn?: number;
-    detailPageName?:string;
     contentItemHeight?:number
 }
 const configs:Iconfig = {

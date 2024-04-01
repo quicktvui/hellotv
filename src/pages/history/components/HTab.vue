@@ -1,7 +1,9 @@
 <template>
-    <div class="h_tab" v-show="isShow" :focusable="false" name="h_tab_name"
-        :nextFocusName="{ down: 'content_grid_name' }">
-        <qt-nav-bar ref="contentNavBar" class="hc-navbar" :requestFocus="true" :item-gap="10"
+    <div 
+        class="h_tab" v-show="isShow" :focusable="false" name="h_tab_name" :width="pWidth"
+        :nextFocusName="{ down: 'content_grid_name' }"
+    >
+        <qt-nav-bar ref="contentNavBar" class="hc-navbar" :requestFocus="true" :item-gap="10" :width="pWidth"
             @tab-select="onTabSelect"></qt-nav-bar>
     </div>
 </template>
@@ -17,6 +19,9 @@ import { useESToast } from '@extscreen/es3-core';
 import api from 'src/api/history/index.ts'
 import { Native } from "@extscreen/es3-vue";
 
+const props = defineProps<{
+    pWidth:number
+}>()
 const toast = useESToast()
 const contentNavBar = ref();
 
@@ -59,12 +64,13 @@ defineExpose({
 </script>
 <style scoped>
 .h_tab {
-    width: 1570px;
+    /* width: 1570px; */
     height: 100px;
+    /* background-color: pink; */
 }
 
 .hc-navbar {
-    width: 1540px;
+    /* width: 1540px; */
     height: 100px;
     margin-left: 30px;
 }

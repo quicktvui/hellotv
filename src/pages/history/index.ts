@@ -60,7 +60,7 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
 }
 const imgSrc = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750'
 
-const contentWidth = 1570
+const dContentWidth = 1570
 const left = 20
 const dWidth = 340
 const dHeight = 200
@@ -97,6 +97,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         metaId: data.metaId,
         playCount: data.playCount,
         currentPlayTime: data.currentPlayTime,
+        editMode:false,
         type: 10001,
         decoration: {
             left,
@@ -212,7 +213,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
 //     }
 // }
 
-export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight: number) => {
+export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight: number, contentWidth:number = dContentWidth) => {
     const width = Math.floor(contentWidth / splitNum) - (left * 2);
     const ratio = width / dWidth
     const height = itemHeight || Math.min(Math.floor(dHeight * ratio), 350)
@@ -247,7 +248,7 @@ export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight: n
         }
         arr.push(poster)
     }
-    return { arr, dataHeight }
+    return { arr, dataHeight, rowsHeight }
 }
 
 // 对象深度合并
@@ -268,3 +269,8 @@ export const hw_deepMergeObj = (...objects) => {
     }
     return result;
 }
+
+// 内容区loading
+// menu无数据/一条数据时隐藏
+// 分类条件
+// contentItem高度要根据imgHeight/titleheight/subTitleHeight计算

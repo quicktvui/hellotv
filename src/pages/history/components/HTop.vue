@@ -1,5 +1,5 @@
 <template>
-    <div class="h_top" :focusable="false">
+    <div class="h_top" :focusable="false" :width="pWidth">
         <div v-if="isEdit" class="top_edit" :focusable="false">
             <qt-text class="hc-top-txt2" text="按【返回键】退出" gravity="center" :focusable="false"></qt-text>
             <qt-button text="清空" size="mini" @click="clearContentFn" round class="hc-top-clear-btn" :focusScale="1"
@@ -15,6 +15,9 @@ import { useESToast, ESKeyEvent } from '@extscreen/es3-core';
 import { nextTick, ref } from 'vue';
 import { useESRouter } from '@extscreen/es3-router';
 
+const props = defineProps<{
+    pWidth:number, isLoaded:boolean
+}>()
 const toast = useESToast()
 const emits = defineEmits(['emClear', 'emEditStateChange'])
 const isEdit = ref(false)
@@ -34,6 +37,9 @@ const onBackPressed = () => {
     router.back()
 }
 const onKeyDown = (keyEvent: ESKeyEvent) => {
+    if(!props.isLoaded){
+        return//数据还没初始化
+    }
     switch (keyEvent.keyCode) {
         case 82: //菜单键按下
             isEdit.value = true
@@ -65,7 +71,8 @@ defineExpose({
 </script>
 <style scoped>
 .h_top {
-    width: 1570px;
+    /* width: 1570px; */
+    position: relative;
     /* background-color: pink; */
     height: 100px;
     display: flex;
@@ -74,15 +81,23 @@ defineExpose({
 }
 
 .hc-top-txt {
+    position: absolute;
+    right: 20px;
+    top: 0;
     width: 1500px;
-    height: 50px;
+    height: 100px;
     color: #666;
 }
 
 .top_edit {
+    position: absolute;
+    right: 20px;
+    top: 0;
     width: 1500px;
+    height: 100px;
     display: flex;
     flex-direction: row;
+    align-items: center;
     justify-content: flex-end;
 }
 

@@ -1,7 +1,8 @@
 <template>
-    <div class="h_menu" :focusable="false" :clipChildren="false" :nextFocusName="{
-        right: 'h_tab_name'
-    }" :blockFocusDirections="['left', 'down']">
+    <div 
+        v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
+        :nextFocusName="nextFocusName" :blockFocusDirections="blockFocusDirections"
+    >
         <qt-view class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible">
             <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
                 :focusable="false"></qt-text>
@@ -12,17 +13,17 @@
                 :requestFocus="true"
             >
                 <!-- 纯文字标题-->
-                <ListText type="1" :custemStyle="menuStyle" />
+                <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
                 <!-- 图片标题-->
                 <ListStateImg type="2" />
                 <!-- 带 Icon 文字标题-->
-                <ListIconText type="3" :custemStyle="menuStyle" />
+                <ListIconText type="3" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
             </qt-list-view>
         </qt-view>
     </div>
 </template>
 <script lang='ts' setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import {
     QTIListView
 } from '@quicktvui/quicktvui3';
@@ -34,6 +35,8 @@ import { IHistoryMenuEntity } from 'src/api/history/modelEntity';
 import { getMenuList } from '../index.ts';
 // @ts-ignore
 import api from 'src/api/history/index.ts'
+// @ts-ignore
+import { layouts } from '../config.ts'
 
 const props = defineProps<{
     menuStyle?: {
@@ -44,9 +47,12 @@ const props = defineProps<{
     title?: string;
     titleImg?: string;
     menuList?: IHistoryMenuEntity[]
+    layout:string
+    isFilter:boolean
 }>()
 
 const listRef = ref<QTIListView>();
+const isShow = ref(true)
 
 //导航切换时的回调，当前选中导航的info(e)
 const emits = defineEmits(['emChangeMenu'])
@@ -59,15 +65,39 @@ const onTabSelect = (arg: any) => {
     mPosition = arg.position
 };
 
+const nextFocusName = computed(()=>{
+    if(props.isFilter){
+        return { right: 'h_tab_name' }
+    }
+    return { right: 'content_grid_name' }
+})
+const blockFocusDirections = computed(()=>{
+    if(props.layout == layouts.rt || props.layout == layouts.rb){
+        return ['left', 'down']
+    }
+    return ['right', 'down']
+})
+const menuItemFocusedBg = computed(()=>{
+    if(props.layout == layouts.rt || props.layout == layouts.rb){
+        return { colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [8, 0, 0, 8], orientation: 6 }
+    }
+    return { colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6 }
+})
+
 defineExpose({
     async initData() {
         let list = await api.getMenuList()
         if (list.data?.length) {
             menuApiList = list.data
+            isShow.value = list.data.length>1
         } else if (props.menuList) {
             menuApiList = props.menuList
+            isShow.value = props.menuList.length>1
+        }else{
+            isShow.value = false
         }
         listRef.value?.init(getMenuList(menuApiList));
+        return isShow.value
     }
 })
 // id:tag.id,
@@ -83,9 +113,13 @@ defineExpose({
 .h_menu {
     width: 350px;
     height: 1080;
+    display: flex;
+    flex-direction: column;
     background-color: transparent;
 }
-
+.h_menu_rightTop,.h_menu_rightBootom{
+    justify-content: flex-end;
+}
 .h_menu_inner {
     width: 340px;
     height: 1080;

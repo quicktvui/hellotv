@@ -6,12 +6,15 @@
         <PosterContent :focusable="false" :duplicateParentState="true" :showOnState="['normal', 'selected']"/>
         <PosterFocusContent showOnState="focused" :focusable="false" :duplicateParentState="true"/>
             
-        <div flexStyle="${ripple.style}" class="qt-ui-poster-ripple-view-root-css" showOnState="focused"
+        <div
+            flexStyle="${ripple.style}" class="qt-ui-poster-ripple-view-root-css" showOnState="focused"
             :focusable="false" :clipChildren="false">
             <ripple-view class="qt-ui-ripple-view-css" :delayLoad="800" :focusable="false" :duplicateParentState="true"
-                :color="'#FF4E46'" isShowRipple="${ripple.enable}" rippleVisible="invisible" />
-            <img src="${ripple.src}" class="qt-ui-ripple-img-css" :focusable="false" :duplicateParentState="true"
-                showIf="${true}" :delayLoad="800" />
+                :color="'#FF4E46'" isShowRipple="${editMode==false}" rippleVisible="invisible" />
+            <img 
+                src="${ripple.src}" class="qt-ui-ripple-img-css" :focusable="false" :duplicateParentState="true"
+                showIf="${editMode==false}" :delayLoad="800" 
+            />
         </div>
         <slot />
     </item-frame>
