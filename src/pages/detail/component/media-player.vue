@@ -93,7 +93,7 @@ export default defineComponent({
     function addMediaItemList(page: number, mediaList: Array<IMedia>) {
       //播放器数据
       const mediaItemList = buildMediaItemList(page, mediaList, [
-        mediaItemAuthInterceptor,
+        // mediaItemAuthInterceptor,
         mediaSourceListInterceptor
       ])
       if (log.isLoggable(ESLogLevel.DEBUG)) {
