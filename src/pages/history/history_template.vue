@@ -1,5 +1,5 @@
 <template>
-    <qt-view class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef">
+    <qt-view class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false">
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
         <HistoryMenu ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn" />
@@ -9,6 +9,7 @@
             ref="HistoryContentRef" class="content" :spanCount="configs.contentColumn"
             :detailPageName="configs.detailPageName" :emptyTxt="configs.emptyTxt"
             :pItemHeight="configs.contentItemHeight"
+            @emContentClearAll="emContentClearAllFn"
         />
     </qt-view>
 </template>
@@ -62,6 +63,10 @@ const emEditStateChangeFn = (boo: boolean) => {
 
 function onESCreate(params) {
     HistoryMenuRef.value.initData()//初始化菜单数据
+}
+const emContentClearAllFn = ()=>{
+    HTopRef.value.setEdit(false)
+    HistoryTabRef.value.requestChildTabFocus()
 }
 defineExpose({
     onESCreate,

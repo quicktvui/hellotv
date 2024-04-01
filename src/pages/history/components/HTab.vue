@@ -15,9 +15,10 @@ import { getFilterList } from '../index.ts'
 import { useESToast } from '@extscreen/es3-core';
 // @ts-ignore
 import api from 'src/api/history/index.ts'
+import { Native } from "@extscreen/es3-vue";
 
 const toast = useESToast()
-const contentNavBar = ref<QTINavBar>();
+const contentNavBar = ref();
 
 const emits = defineEmits(['emSelectTab'])
 
@@ -48,6 +49,11 @@ defineExpose({
             contentNavBar.value?.init({ data: [] });
         }
         return isShow.value
+    },
+    requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦
+        // Native.callUIFunction(contentNavBar.value, "requestFocus", [])
+        // Native.callUIFunction(contentNavBar.value, "requestFocusDirectly", [])
+        contentNavBar.value.navList?.setItemFocused(tabPosition)
     }
 })
 </script>

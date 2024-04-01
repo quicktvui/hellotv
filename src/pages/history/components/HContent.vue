@@ -1,5 +1,5 @@
 <template>
-    <div class="h_content" ref="hContentRef" :focusable="false">
+    <div class="h_content" ref="hContentRef" :focusable="false" :nextFocusName="{ up: 'h_tab_name' }">
         <qt-grid-view 
             v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef"
             name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
@@ -12,34 +12,24 @@
                 <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
                     class="content_type_name" text="${assetTitle}" />
             </qt-view>
-            <!-- <HContentItem type="10001" /> -->
-            <qt-poster type="10001">
-                <text-view class="history-subtitle" :focusable="false" :fontSize="24" :ellipsizeMode="2" :lines="1"
-                    autoHeight gravity="left|top" :paddingRect="[16, 0, 0, 16]" flexStyle="${subTitle.style}"
-                    text="${subTitle.text}" visibility="${subTitle}" />
-            </qt-poster>
-            <qt-poster type="10007" :focusable="false">
-                <text-view class="history-subtitle" :focusable="false" :fontSize="24" :ellipsizeMode="2" :lines="1"
-                    autoHeight gravity="left|top" :paddingRect="[16, 0, 0, 16]" flexStyle="${subTitle.style}"
-                    text="${subTitle.text}" visibility="${subTitle}" />
-                <qt-view class="history-item-cover" :focusable="true" flexStyle="${style}">
-                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="focused"
+            <!-- <HContentItem type="10001" /> qt-poster-->
+            <HContentPoster :type="10001"></HContentPoster>
+            <HContentPoster :type="10007" :focusable="false">
+                <qt-view class="history-item-cover" :focusable="true" flexStyle="${image.style}">
+                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="focused" flexStyle="${delete.style}"
                         :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadius: 99, orientation: 6 }">
                     </qt-view>
-                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="normal"
+                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" :showOnState="['normal','selected']" flexStyle="${delete.style}"
                         :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }">
                     </qt-view>
-                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="selected"
-                        :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }">
-                    </qt-view>
-                    <text-view class="history-delete-btn" gravity="center" :fontSize="36"
+                    <text-view class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}" flexStyle="${delete.style}"
                         :ellipsizeMode="2" text="删除" :focusable="false"/>
                 </qt-view>
-            </qt-poster>
-            <p class="screen-right-content-no-more" type="1003" :focusable="false">已经到底啦，按【返回键】回到顶部</p>
+            </HContentPoster>
+            <p class="screen-right-content-no-more" :type="1003" :focusable="false">已经到底啦，按【返回键】回到顶部</p>
             <!--分页加载 Loading 1002  name="loading" type="1003" -->
             <template v-slot:loading>
-                <qt-view class="screen-right-content-more-loading" type="1002" name="loading" :focusable="false">
+                <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
                     <!-- <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false"/> -->
                 </qt-view>
             </template>
@@ -63,8 +53,8 @@ import { getContentList, getContentCategoryConfig } from '../index.ts'
 import api from '../../../api/history/index.ts'
 import HistoryEmpty from './HistoryEmpty.vue'
 import { useESRouter } from "@extscreen/es3-router";
-// import HContentItem from './HContentItem.vue'
-import { Native } from "@extscreen/es3-vue";
+import HContentPoster from './HContentPoster/index.vue'
+// import { Native } from "@extscreen/es3-vue";
 import { IcurrentItemParams } from "src/api/history/baseApi";
 
 const props = withDefaults(defineProps<{
@@ -91,15 +81,28 @@ let isFirst = true
 let timeoutId:any = null
 let contentDataHeight = 0
 let prePageNum = 0
+let contentLenth = 0
 
+const emits = defineEmits(['emContentClearAll'])
 const onItemBind = ()=>{}
 const onItemClick = (arg) => {
     if (isEdit.value) {
+        try {
+            api.deleteContent(preCurrentMenu, preCurrentFilter, arg.item.id)
+        } catch (error) {
+            
+        }
         const index = gridDataRec.findIndex(item => {
             return item._key === arg.item._key
         })
         gridDataRec.splice(index, 1)
-        api.deleteContent(preCurrentMenu, preCurrentFilter, arg.item.id)
+        contentLenth--
+        if(contentLenth<=0){
+            gridViewRef.value?.clearFocus()
+            gridDataRec!.splice(0)
+            isEdit.value = false
+            emits('emContentClearAll')
+        }
         // toast.showLongToast(arg.item._key + '--' + arg.item.type)
     } else {
         // toast.showLongToast('go player'+arg.item.metaId)
@@ -155,6 +158,7 @@ const loadMoreFn = (pageNo: number) => {
                 gridDataRec.push(...arr.concat([{type:101}]))
                 contentDataHeight = dataHeight
                 pageState.value = pageStates.ready
+                contentLenth += arr.length
             } else {
                 pageState.value = pageStates.noMore
                 if(contentDataHeight >= props.pHeight){
@@ -196,6 +200,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     gridDataRec!.splice(0)
     contentDataHeight = 0
     prePageNum = 0
+    contentLenth = 0
 
     const apiId = currentMenu?.index+'-'+currentFilter?.index
     isShowScreenLoading.value = true
@@ -206,6 +211,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
             gridDataRec = gridViewRef.value!.init(arr.concat([{type:101}]))
             pageState.value = pageStates.ready
             contentDataHeight = dataHeight
+            contentLenth = arr.length
         } else {
             pageState.value = pageStates.empty
             gridDataRec!.splice(0)
@@ -222,6 +228,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
 defineExpose({
     setData,
     clearData() {
+        isEdit.value = false
         gridDataRec!.splice(0)
         api.clearContent(preCurrentMenu, preCurrentFilter)
     },
@@ -274,16 +281,10 @@ defineExpose({
     height: 50px;
 }
 
-.history-subtitle {
-    color: #666;
-}
-
 .history-item-cover {
     position: absolute;
     left: 0;
     top: 0;
-    /* width: 340px; */
-    /* height: 200px; */
     display: flex;
     border-radius: 8px;
     flex-direction: row;
@@ -297,15 +298,13 @@ defineExpose({
 .history-delete-btn-focus {
     position: absolute;
     top: 0;
-    width: 176px;
-    height: 68px;
     background-color: transparent;
 }
 
 .history-delete-btn {
     color: red;
-    width: 100px;
-    height: 50px;
+    /* width: 100px;
+    height: 50px; */
 }
 
 .screen-right-content-no-more {
