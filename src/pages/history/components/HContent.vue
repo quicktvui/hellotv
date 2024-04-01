@@ -111,8 +111,8 @@ const onItemClick = (arg) => {
                 name: props.detailPageName, //'series_view',
                 params: {
                     mediaId: arg.item.metaId,
-                    playId: arg.item.playId,
-                    playPosition: arg.item.playPosition || 0
+                    playId: arg.item.playCount,//第几集
+                    playPosition: arg.item.currentPlayTime || 0//播放进度时间
                 }
             });
         }
