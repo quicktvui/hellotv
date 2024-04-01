@@ -29,8 +29,7 @@ export interface IHistoryContentEntity {
     playTime?: string
     userId?: string
     // mark?: string//角标
-    h_mode?: string//模式-列表项/分类
-    h_modeName?: string
+    h_modeName?: string//分类，如果传了此值，则会作为分类名称展示
     [k:string]: any
 }
 

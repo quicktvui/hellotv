@@ -73,9 +73,9 @@ const nextFocusName = computed(()=>{
 })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
-        return ['left', 'down']
+        return ['right', 'down']
     }
-    return ['right', 'down']
+    return ['left', 'down']
 })
 const menuItemFocusedBg = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){

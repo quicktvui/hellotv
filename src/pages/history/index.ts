@@ -64,7 +64,7 @@ const dContentWidth = 1570
 const left = 20
 const dWidth = 340
 const dHeight = 200
-const dBottomNum = 120
+const dBottomNum = 10
 const dTitleFontSize = 30
 const dFloatTitleFontSize = 24
 const dSubTitleFontSize = 24
@@ -74,8 +74,10 @@ const dTitlePaddingLeft = 16
 const dDeleteWidth = 176
 const dDeleteHeight = 68
 const dDeleteSize = 36
-const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
-    const { width, height, left } = aConfig
+const dSubTitleHeight = 50
+
+const getSubTitle = (data: IHistoryContentEntity) => {
+    if(!data) return ''
     let subTitle = data.subTitle || ''
     try {
         if (!subTitle && data.playCount) {
@@ -92,6 +94,11 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
     } catch (error) {
 
     }
+    return subTitle
+}
+const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
+    const { width, height, left } = aConfig
+    let subTitle = getSubTitle(data)
     return {
         _key: data.id,
         id: data.id,
@@ -103,7 +110,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         decoration: {
             left,
             top: 10,
-            bottom: 0
+            bottom: dBottomNum
         },
         focus: {
             scale: 1.01,
@@ -132,7 +139,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             enable: true,
             style: {
                 width,
-                height: aConfig.titleHeight,
+                height: aConfig.subTitleHeight,
                 fontSize: aConfig.subTitleSize,
             }
         },
@@ -168,7 +175,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         },
         style: {
             width,
-            height: aConfig.rowsHeight
+            height: aConfig.rowsHeight - dBottomNum
         },
         focusTitle: {
             text: data.assetLongTitle,
@@ -214,36 +221,44 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
 //     }
 // }
 
-export const getContentList = (dataList: any[] = [], splitNum = 4, itemHeight: number, contentWidth:number = dContentWidth) => {
+export const getContentList = (dataList: IHistoryContentEntity[] = [], splitNum = 4, itemHeight: number, contentWidth:number = dContentWidth) => {
     const width = Math.floor(contentWidth / splitNum) - (left * 2);
     const ratio = width / dWidth
+
     const height = itemHeight || Math.min(Math.floor(dHeight * ratio), 350)
-    const bottomNum = Math.ceil(dBottomNum * ratio)
+
+    let subTitleHeight = 0
+    if(getSubTitle(dataList[0])){
+        subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
+    }
+    
+    const titleHeight = Math.ceil(dTitleHeight * ratio)
+    const bottomNum = titleHeight + subTitleHeight + dBottomNum
     const rows = Math.ceil(dataList.length / splitNum)
     const rowsHeight = height + bottomNum
     const dataHeight = rows * rowsHeight
     let titleSize = Math.ceil(dTitleFontSize * ratio)
     let floatTitleSize = Math.ceil(dFloatTitleFontSize * ratio)
     let subTitleSize = Math.ceil(dSubTitleFontSize * ratio)
-    let titleHeight = Math.ceil(dTitleHeight * ratio)
     let titleMarginTop = Math.ceil(dTitleMarginTop * ratio)
     let titlePaddingLeft = Math.ceil(dTitlePaddingLeft * ratio)
     const deleteHeight = Math.ceil(dDeleteHeight * ratio)
     const deleteWidth = Math.ceil(dDeleteWidth * ratio)
     const deleteSize = Math.ceil(dDeleteSize * ratio)
+
     const configOption = { 
-        width, height, left, titleSize, floatTitleSize, subTitleSize, titleHeight, titleMarginTop, bottomNum, titlePaddingLeft,rowsHeight,
-        deleteHeight, deleteWidth, deleteSize
+        width, height, left, titleSize, floatTitleSize, subTitleSize, titleHeight, titleMarginTop, titlePaddingLeft,rowsHeight,
+        deleteHeight, deleteWidth, deleteSize, subTitleHeight
     }
 
     // const categorys = ['今天', '一周内', '更早']
     const arr: Array<QTGridViewItem> = []
     for (let i = 0; i < dataList.length; i++) {
         const dataItem = dataList[i]
-        const isCategory = false//i % 10 === 0;
+        const isCategory = !!dataItem.h_modeName//i % 10 === 0;
         let poster: any = null
         if (isCategory) {
-            poster = getContentCategoryConfig(configOption, { ...dataItem, h_modeName: '今天' })
+            poster = getContentCategoryConfig(configOption, dataItem)
         } else {
             poster = getContentItemConfig(configOption, dataItem)
         }
@@ -272,5 +287,4 @@ export const hw_deepMergeObj = (...objects) => {
 }
 
 // 内容区loading
-// 内容区，根据分类条件，展示分类-是否按时间分类
-// contentItem高度要根据imgHeight/titleheight/subTitleHeight计算
+// 内容区，展示分类-是否按时间分类
