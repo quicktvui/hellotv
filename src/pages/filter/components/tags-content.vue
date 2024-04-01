@@ -124,7 +124,7 @@ import {
   updateFastFilterCondition
 } from "../build_data/useTagsData";
 import {
-  QTGridView,
+  QTIGridView,
   QTGridViewItem,
   QTIListView,
   QTIView,
@@ -159,7 +159,7 @@ export default defineComponent({
     const launch = useLaunch()
     const toast = useESToast()
     //组件变量
-    const screen_right_content = ref<QTGridView>()
+    const screen_right_content = ref<QTIGridView>()
     const screen_right_filters = ref<QTIListView>()
     const screen_record_list = ref<QTIListView>()
     const screen_right_selected_tags = ref<QTIView>()

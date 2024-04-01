@@ -108,7 +108,6 @@ export default defineComponent({
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
       console.log("XRG===onkeydown---","-----------",curChildIndex)
       if (curChildIndex !== 2){
-        console.log("XRG===执行","cancelAll")
         search_result.value.cancelAll()
       }
       return false
@@ -178,7 +177,6 @@ export default defineComponent({
         search_keyboard.value.requestDefaultFocus();
         return
       }else{
-        // this.$refs.search_result_view.dealFocus()
         router.back()
       }
     }
