@@ -22,19 +22,13 @@ export interface Iapi {
 export class HistoryBaseApi implements Iapi {
   // @ts-ignore
   requestManager: RequestManager
+  localStore: ESLocalStorage
   init(...params: any[]): Promise<any> {
     this.requestManager = params[0]
+    this.localStore = params[1]
     return Promise.resolve()
   }
-  async getMenuList(): Promise<IHistoryMenuDto> {
-    return {}
-  }
-  async getFilterTabList(index: number, category?: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
-    if (index === 0 || index === 1) {
-      return { data: getTestFilterList() }
-    }
-    return {}
-  }
+
   async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {
     return new Promise(resolve => {
       setTimeout(() => {
