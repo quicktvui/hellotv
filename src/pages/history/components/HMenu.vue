@@ -53,11 +53,13 @@ const props = withDefaults(defineProps<{
     menuList?: IHistoryMenuEntity[]
     bgColor?:string[]
     focusedBg?:string[]
+    isNoMenu:boolean
     layout:string
     isFilter:boolean
 }>(), {
     focusedBg: ()=> ['#F5F5F5','#F5F5F5'],
     bgColor: ()=> ['#0CFFFFFF','#00FFFFFF'],
+    isNoMenu: false,
 })
 
 const listRef = ref<QTIListView>();
@@ -104,15 +106,16 @@ defineExpose({
         })
         if (list && list.data?.length) {
             menuApiList = list.data
-            isShow.value = list.data.length>1
+            isShow.value = list.data.length>0
         } else if (props.menuList) {
             menuApiList = props.menuList
-            isShow.value = props.menuList.length>1
+            isShow.value = props.menuList.length>0
         }else{
+            menuApiList = []
             isShow.value = false
         }
-        listRef.value?.init(getMenuList(menuApiList));
         if(isShow.value){
+            listRef.value?.init(getMenuList(menuApiList));
             onTabSelect({ position: 0 })
         }
         return isShow.value

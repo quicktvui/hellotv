@@ -22,6 +22,7 @@ export interface Iapi {
 export class HistoryBaseApi implements Iapi {
     // @ts-ignore
     requestManager: RequestManager
+    // @ts-ignore
     localStore: ESLocalStorage
     init(...params: any[]): Promise<any> {
         this.requestManager = params[0]
@@ -29,7 +30,7 @@ export class HistoryBaseApi implements Iapi {
         return Promise.resolve()
     }
     async getMenuList(): Promise<IHistoryMenuDto> {
-        return {}
+        return { }
     }
     async getFilterTabList(index: number, category?: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
         if (index === 0 || index === 1) {

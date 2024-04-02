@@ -1,6 +1,6 @@
 <template>
     <qt-view 
-        class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false"
+        class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter', isNoMenu?'history_no_menu':'']" ref="historyRootRef" :focusable="false"
         :gradientBackground="bgColor"
     >
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
@@ -48,6 +48,7 @@ const contentHeight = ref(dContentHeight)
 const dTabFilterHeight = 100
 const dContentWidth = 1570
 const contentWidth = ref(dContentWidth)
+const isNoMenu = ref(false)
 
 const bgColor = computed(()=>{
     if(configs.bgColor){
@@ -99,6 +100,7 @@ function onESCreate(params) {
             contentWidth.value = dContentWidth + dMenuWidth
             emChangeMenuFn()
         }
+        isNoMenu.value = !res
     })//初始化菜单数据
 }
 const emContentClearAllFn = ()=>{
@@ -239,6 +241,17 @@ defineExpose({
 .history_no_filter.history_rightTop{
     .content{
         top: 100px;
+    }
+}
+.history_no_menu{
+    .top {
+        left: 0;
+    }
+    .tab{
+        left: 0;
+    }
+    .content{
+        left: 0;
     }
 }
 </style>
