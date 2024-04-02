@@ -1,0 +1,24 @@
+buildscript {
+    dependencies {
+//        classpath "xxx"
+    }
+}
+
+plugins {
+    id 'com.android.application' version '7.1.3' apply false
+    id 'com.android.library' version '7.1.3' apply false
+}
+
+ext {
+    sdk_compileSdk = 31
+    sdk_minSdk = 17
+    sdk_targetSdk = 26
+}
+
+static def releaseTime() {
+    return new Date().format("yyyyMMddHHmmss", TimeZone.getTimeZone("Asia/Shanghai")).toString()
+}
+
+static def log(msg) {
+    println("----> $msg")
+}
