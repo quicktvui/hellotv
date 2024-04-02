@@ -281,14 +281,14 @@ export default defineComponent({
           ' eventName:' + eventName +
           ' params:', params
         )
-        //我
-        //bgPlayerActive.value = true
-        if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-          bg_player.value.delayShowPlayer(200)
-        }
-        bg_player?.value.resume()
-        bg_player?.value.requestDismissCover()
       }
+      //我
+      //bgPlayerActive.value = true
+      if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
+        bg_player.value.delayShowPlayer(200)
+      }
+      bg_player?.value.resume()
+      bg_player?.value.requestDismissCover()
     }
     function onTabPageScrollToEnd(pageIndex: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
