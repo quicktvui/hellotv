@@ -3,6 +3,7 @@ import { IHistoryMenuDto, IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEnt
 // import { ESApp } from "@extscreen/es3-vue";
 import { RequestManager } from "../request/RequestManager";
 import { getTestContentList, getTestFilterList } from "./mock";
+import { ESLocalStorage } from "@extscreen/es3-core";
 
 export interface IcurrentItemParams {
     index: number;
