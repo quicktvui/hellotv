@@ -36,8 +36,10 @@ import {
   ESPlayerInterceptError,
   ESPlayerInterceptResult,
   ESPlayerPlayMode,
-  ESPlayerWindowType
-} from "@extscreen/es3-player";
+  ESPlayerWindowType,
+  ESPlayerRate,
+  useESPlayerRateManager
+} from "@extscreen/es3-player"
 import {IMedia} from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
 import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
@@ -69,6 +71,7 @@ export default defineComponent({
     const playerViewListRef = ref(playerViewList)
     const playModeManager = useESPlayerManagerPlayModeManager()
     const mediaDataSource = useMediaDataSource()
+    const playerRateManager = useESPlayerRateManager()
 
     const playerLeft = ref<number>(90)
     const playerTop = ref<number>(135)
@@ -131,6 +134,10 @@ export default defineComponent({
 
     function resume() {
       playerManager.value?.resume()
+    }
+
+    function reset() {
+      playerRateManager.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)
     }
 
     function onPlayerInterceptSuccess(result: ESPlayerInterceptResult): void {
@@ -257,6 +264,7 @@ export default defineComponent({
       play,
       stop,
       release,
+      reset,
       resume,
       onPlayerPlaying,
       onPlayerPaused,

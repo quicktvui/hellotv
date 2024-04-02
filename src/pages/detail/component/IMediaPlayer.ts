@@ -26,6 +26,8 @@ export interface IMediaPlayer {
 
   resume()
 
+  reset()
+
   setFullWindow(): void
 
   onKeyDown(keyEvent: ESKeyEvent): boolean
