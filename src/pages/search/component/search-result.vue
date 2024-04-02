@@ -138,6 +138,7 @@ export default defineComponent({
 
     watch(() => props.keyword, (newVal, oldVal) => {
       if (newVal) {
+        isRecommendRequest = false
         recommendTitle.value = ""
         if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
         isLoading.value = true
