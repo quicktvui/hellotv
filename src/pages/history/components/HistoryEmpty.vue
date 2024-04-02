@@ -1,14 +1,15 @@
 <template>
     <div class="history_empty" :clipChildren="false">
         <div class="history_empty_content">
-            <img :style="{ width: imageWidth, height: imageHeight }" :src="defaultBgImg">
+            <img v-if="bigImg" :style="{ width: imageWidth, height: imageHeight }" :src="bigImg">
+            <img v-else :style="{ width: imageWidth, height: imageHeight }" :src="defaultBgImg">
             <span class="history_empty_txt" :style="{ fontSize: msgTextSize }">{{ msg }}</span>
         </div>
     </div>
 </template>
 
 <script lang="ts" setup>
-import defaultBgImg from "../../../assets/ic_media_player_placeholder.png"
+import defaultBgImg from "../../../assets/history_empty_bg.png"
 withDefaults(defineProps<{
     bigImg?: string, msg?: string,
     imageWidth?: string, imageHeight?: string, msgTextSize?: string

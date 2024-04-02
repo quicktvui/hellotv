@@ -1,12 +1,13 @@
 <template>
     <div 
-        class="h_content" ref="hContentRef" :focusable="false" :nextFocusName="{ up: 'h_tab_name' }" :height="pHeight" :width="pWidth"
+        class="h_content" ref="hContentRef" :focusable="false" :height="pHeight" :width="pWidth"
         :blockFocusDirections="rBlockFocusDirections"
     >
+        <!-- :nextFocusName="{ up: 'h_tab_name' }"  -->
         <qt-grid-view 
             v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight" :width="pWidth"
             name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
-            :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="true" padding="0,0,0,20" :pageSize="20"
+            :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
             :blockFocusDirections="['right', 'down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
             :loadMore="loadMoreFn" @item-bind="onItemBind"
         >
@@ -20,11 +21,18 @@
             <HContentPoster :type="10001" >
                 <!-- :focusable="false" -->
                 <qt-view showIf="${editMode==true}" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${image.style}">
-                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="focused" flexStyle="${delete.style}"
+                    <qt-view 
+                        :duplicateParentState="true" class="history-delete-btn-focus" 
+                        showOnState="focused" flexStyle="${delete.style}"
+                        :focusable="false"
                         :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadius: 99, orientation: 6 }">
                     </qt-view>
-                    <qt-view :duplicateParentState="true" class="history-delete-btn-focus" :showOnState="['normal','selected']" flexStyle="${delete.style}"
-                        :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }">
+                    <qt-view 
+                        :duplicateParentState="true" class="history-delete-btn-focus" 
+                        :showOnState="['normal','selected']" flexStyle="${delete.style}"
+                        :focusable="false"
+                        :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }"
+                    >
                     </qt-view>
                     <text-view class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}" flexStyle="${delete.style}"
                         :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true"/>
@@ -43,7 +51,7 @@
             <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false"/>
             <qt-text v-show="screenLoadingTxt" class="loading_txt" :text="screenLoadingTxt" gravity="center"></qt-text>
         </qt-view>
-        <HistoryEmpty v-show="pageState === pageStates.empty" :msg="emptyTxt" :focusable="false" />
+        <HistoryEmpty v-show="pageState === pageStates.empty" :msg="emptyTxt" :bigImg="pConfig.emptyImg" :focusable="false" />
     </div>
 </template>
 <script lang='ts' setup>
@@ -65,7 +73,7 @@ import { Iconfig } from "../config";
 
 const props = withDefaults(defineProps<{
     detailPageName?:string; emptyTxt?:string; pHeight?:number;
-    pWidth?:number; pConfig:Iconfig
+    pWidth?:number; pConfig:Iconfig, setDataCallBack:(boo:boolean)=>void
 }>(), {
     pHeight: 900, pWidth: 1570
 })
@@ -95,6 +103,7 @@ const emits = defineEmits(['emContentClearAll'])
 const onItemBind = ()=>{}
 const onItemClick = (arg) => {
     if (isEdit.value) {
+        if(isShowScreenLoading.value) return //正在删除，防止重复点击
         isShowScreenLoading.value = true
         screenLoadingTxt.value = '正在删除...'
         api.deleteContent(preCurrentMenu, preCurrentFilter, {
@@ -194,57 +203,53 @@ const loadMoreFn = (pageNo: number) => {
         })
     }
 }
-
-type Tcallback = () => Promise<any>
-const blockFocusAsync = (callback: Tcallback) => {
-    // Native.callUIFunction(hContentRef.value, 'blockRootFocus', []);
-    gridViewRef.value?.blockRootFocus()
-    callback().finally(() => {
-        nextTick(() => {
-            gridViewRef.value?.unBlockRootFocus()
-            // Native.callUIFunction(hContentRef.value, 'unBlockRootFocus', []);
-        })
-    })
-}
+// Native.callUIFunction(hContentRef.value, 'blockRootFocus', []);
+// Native.callUIFunction(hContentRef.value, 'unBlockRootFocus', []);
 // 首次加载数据
 const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams)=>{
     return api.getContentList(currentMenu, currentFilter, 1).then(res => {
         return { ...res, _apiId: currentMenu?.index+'-'+currentFilter?.index }
+    }).catch(()=>{
+        return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[] }
     })
 }
+let timeOutId:any = null
 const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
-    // blockFocusAsync(async ()=>{})
     isFirst = true
     pageState.value = pageStates.init
     gridDataRec!.splice(0)
     contentDataHeight = 0
     prePageNum = 0
     contentLenth = 0
-
-    const apiId = currentMenu?.index+'-'+currentFilter?.index
     isShowScreenLoading.value = true
-    const res = await getFirstContentListApi(currentMenu, currentFilter)
-    if(apiId == res._apiId){
-        if (res?.data?.length) {
-            const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
-            gridDataRec = gridViewRef.value!.init(arr.concat([{type:101}]))
-            pageState.value = pageStates.ready
-            contentDataHeight = dataHeight
-            contentLenth = arr.length
-            initRowsHeight = rowsHeight
-        } else {
-            pageState.value = pageStates.empty
-            gridDataRec!.splice(0)
-            // toast.showLongToast('暂无数据')
+
+    clearTimeout(timeOutId)
+    timeOutId = setTimeout(async () => {
+        const apiId = currentMenu?.index+'-'+currentFilter?.index
+        const res = await getFirstContentListApi(currentMenu, currentFilter)
+        if(apiId == res._apiId){
+            if (res?.data?.length) {
+                const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
+                gridDataRec = gridViewRef.value!.init(arr.concat([{type:101}]))
+                pageState.value = pageStates.ready
+                contentDataHeight = dataHeight
+                contentLenth = arr.length
+                initRowsHeight = rowsHeight
+            } else {
+                pageState.value = pageStates.empty
+                gridDataRec!.splice(0)
+                // toast.showLongToast('暂无数据')
+            }
+            preCurrentMenu = currentMenu
+            preCurrentFilter = currentFilter
+            isFirst = false
+            nextTick(()=>{
+                isShowScreenLoading.value = false
+            })
         }
-        preCurrentMenu = currentMenu
-        preCurrentFilter = currentFilter
-        isFirst = false
-        nextTick(()=>{
-            isShowScreenLoading.value = false
-        })
-    }
-    return (res.data?.length||0) > 0
+        props.setDataCallBack((res.data?.length||0) > 0)
+    }, 300);
+    
 }
 
 defineExpose({
@@ -252,7 +257,7 @@ defineExpose({
     clearData() {
         isEdit.value = false
         gridDataRec!.splice(0)
-        api.clearContent(preCurrentMenu, preCurrentFilter)
+        api.clearContent(preCurrentMenu, preCurrentFilter).catch(()=>{})
     },
     changeEditState(boo: boolean) {
         if (isEdit.value !== boo) {
@@ -263,19 +268,15 @@ defineExpose({
             }
             isEdit.value = boo
             if (gridDataRec) {
-                blockFocusAsync(async () => {
-                    gridDataRec.forEach((el) => {
-                        if (el.type) {
-                            el.editMode = boo
-                        }
-                        // if(el.type === 10001 || el.type === 10007){
-                        //     el.type = boo ? 10007 : 10001
-                        // }
-                    })
-                    clearTimeout(timeoutId)
-                    timeoutId = setTimeout(() => {
-                        gridViewRef.value!.setItemFocused(0)
-                    }, 500);
+                gridViewRef.value?.blockRootFocus()
+                gridDataRec.forEach((el) => {
+                    if (el.type) {
+                        el.editMode = boo
+                    }
+                })
+                nextTick(()=>{
+                    gridViewRef.value?.unBlockRootFocus()
+                    gridViewRef.value!.setItemFocused(0)
                 })
             }
         }

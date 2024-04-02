@@ -29,7 +29,7 @@ export class HistoryBaseApi implements Iapi {
         return {}
     }
     async getFilterTabList(index: number, category?: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
-        if (index === 0) {
+        if (index === 0 || index === 1) {
             return { data: getTestFilterList() }
         }
         return {}

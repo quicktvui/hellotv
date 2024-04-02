@@ -18,7 +18,7 @@ export interface Iconfig {
         selected: { color: string }
     };
     menuList?: IHistoryMenuEntity[];//优先从getMenuList方法中去数据，其次取属性menuList的数据
-    emptyImg?: string;
+    emptyImg?: string;// https://qcloudcdn-moss.cp47.ott.cibntv.net/channelzero_image/web_static/extend_screen/public_images/ic_history_empty.png
     emptyTxt?: string;
     contentStyle?: {
         normal: { bgColor: string }
@@ -27,6 +27,10 @@ export interface Iconfig {
     contentColumn: number;
     contentItemHeight?:number
     contentSpace?:number //内容区间距, 必须大于0，否则不生效，默认20
+    clearAllIsReset?:boolean //删除数据时，如果当前内容区全部删除后是否重新加载数据
+    bgColor?:string|object //整体背景色 #000000 整体渐变背景色 {colors:['#252930', '#252930']}
+    menuBgColor?:string[]//菜单背景色
+    menuFocusedItemBg?:string[]
 }
 const configs:Iconfig = {
     layout: layouts.lt,
@@ -47,6 +51,7 @@ const configs:Iconfig = {
     contentColumn: 4,
     detailPageName: 'series_view',
     contentItemHeight: 0,
-    contentSpace: 20
+    contentSpace: 20,
+    clearAllIsReset: true
 }
 export default configs

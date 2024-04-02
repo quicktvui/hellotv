@@ -1,27 +1,28 @@
 <template>
     <qt-view 
         class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false"
+        :gradientBackground="bgColor"
     >
-        <!-- :gradientBackground="{colors:['#2F3541', '#252930'], orientation: 0}" -->
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
         <HistoryMenu 
             ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
-            :isFilter="isShowFilter" :layout="configs.layout"
+            :isFilter="isShowFilter" :layout="configs.layout" :focusedBg="configs.menuFocusedItemBg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn"
+            :bgColor="configs.menuBgColor"
         />
         <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn" :pWidth="contentWidth" :isLoaded="isLoaded"/>
         <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth"/>
         <HistoryContent 
             ref="HistoryContentRef" class="content"
             :detailPageName="configs.detailPageName" :emptyTxt="configs.emptyTxt"
-            :pConfig="configs"
+            :pConfig="configs" :setDataCallBack="setDataCallBackFn"
             @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth"
         />
     </qt-view>
 </template>
 
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import HistoryMenu from './components/HMenu.vue'
 import HistoryContent from './components/HContent.vue'
 import HistoryTab from './components/HTab.vue'
@@ -48,39 +49,46 @@ const dTabFilterHeight = 100
 const dContentWidth = 1570
 const contentWidth = ref(dContentWidth)
 
+const bgColor = computed(()=>{
+    if(configs.bgColor){
+        return (typeof configs.bgColor == 'object') ? configs.bgColor : {colors:[configs.bgColor, configs.bgColor]}
+    }
+    return {colors:['#252930', '#252930']}
+})
 const emClearFn = () => {
     HistoryContentRef.value?.clearData()//情况列表数据
 }
 let currentMenu: any = { index: 0, item: {} }
 let currentFilter: any = { index: 0, item: {} }
-const emChangeMenuFn = (index: number = 0, item: any = {}) => {
+const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
     currentMenu = { index, item }
-    HistoryTabRef.value?.init(index, item).then(res=>{//切换菜单分类时，更新筛选条件
+    HistoryTabRef.value?.init(index, item, isReset).then(res=>{//切换菜单分类时，更新筛选条件
         if(!res){//如果没有筛选条件，则根据分类获取列表数据
-            currentFilter = { index: 0, item: {} }
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
+            HistoryContentRef.value?.setData(currentMenu, currentFilter)
         } else {
             isShowFilter.value = true
             contentHeight.value = dContentHeight
         }
         isLoaded.value = false
-        HistoryContentRef.value?.setData(currentMenu, currentFilter).then(res=>{
-            isLoaded.value = !!res
-        })
+        currentFilter = { index: 0, item: {} }
+    }).catch(()=>{
+        isShowFilter.value = false
     })
 }
 const emSelectTabFn = (index: number, item: any) => {
     currentFilter = { index, item }
     //切换筛选条件时，根据菜单分类和筛选条件两个指标，获取列表数据
     isLoaded.value = false
-    HistoryContentRef.value?.setData(currentMenu, currentFilter).then(res=>{
-        isLoaded.value = !!res
-    })
+    HistoryContentRef.value?.setData(currentMenu, currentFilter)
     HTopRef.value?.setEdit(false)
 }
 const emEditStateChangeFn = (boo: boolean) => {
     HistoryContentRef.value?.changeEditState(boo)//切换是否时编辑状态
+}
+const setDataCallBackFn = (boo)=>{
+    isLoaded.value = !!boo
 }
 
 function onESCreate(params) {
@@ -88,14 +96,18 @@ function onESCreate(params) {
         if(res){
             contentWidth.value = dContentWidth
         } else {
-            emChangeMenuFn()
             contentWidth.value = dContentWidth + dMenuWidth
+            emChangeMenuFn()
         }
     })//初始化菜单数据
 }
 const emContentClearAllFn = ()=>{
     HTopRef.value?.setEdit(false)
-    HistoryTabRef.value?.requestChildTabFocus()
+    if(configs.clearAllIsReset){
+        emChangeMenuFn(currentMenu.index, currentMenu.item, true)
+    } else {
+        HistoryTabRef.value?.requestChildTabFocus()
+    }
 }
 defineExpose({
     onESCreate,
@@ -110,9 +122,7 @@ defineExpose({
     },
     onESRestart(){
         isLoaded.value = false
-        HistoryContentRef.value?.setData(currentMenu, currentFilter).then(res=>{
-            isLoaded.value = !!res
-        })
+        HistoryContentRef.value?.setData(currentMenu, currentFilter)
     }
 })
 </script>
@@ -122,8 +132,8 @@ defineExpose({
     width: 1920px;
     height: 1080px;
     position: relative;
-    // background-color: transparent;
-    background-color: #252930;
+    background-color: transparent;
+    // background-color: #252930;
 }
 
 .menu {

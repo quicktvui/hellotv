@@ -1,14 +1,17 @@
 <template>
     <div 
-        class="h_tab" v-show="isShow" :focusable="false" name="h_tab_name" :width="pWidth"
-        :nextFocusName="{ down: 'content_grid_name' }"
+        class="h_tab" v-show="isShow" :focusable="false" name="h_tab_name" 
+        :width="pWidth"
     >
-        <qt-nav-bar ref="contentNavBar" class="hc-navbar" :requestFocus="true" :item-gap="10" :width="pWidth"
-            @tab-select="onTabSelect"></qt-nav-bar>
+        <!-- :requestFocus="true" -->
+        <qt-nav-bar 
+            ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
+            @tab-select="onTabSelect" :requestFocus="true"
+            :nextFocusName="{ down: 'content_grid_name' }"></qt-nav-bar>
     </div>
 </template>
 <script lang='ts' setup>
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import {
     QTINavBar
 } from '@quicktvui/quicktvui3';
@@ -30,6 +33,7 @@ const emits = defineEmits(['emSelectTab'])
 const isShow = ref(true)
 let filterList:any[] = []
 let tabPosition = -1
+let timeoutId:any = null
 const onTabSelect = (arg: any) => {
     if(!isShow.value) return
     if (tabPosition !== arg.position) {
@@ -39,19 +43,29 @@ const onTabSelect = (arg: any) => {
 };
 
 defineExpose({
-    async init(index:number = 0, category:any) {
-        let tabList = await api.getFilterTabList(index, category)
-        if (tabList.data?.length) {
+    async init(index:number = 0, category:any, isReset = false) {
+        tabPosition = -1
+        let tabList = await api.getFilterTabList(index, category).catch(()=>{
+            return null
+        })
+        if (tabList && tabList.data?.length) {
+            isShow.value = true
             contentNavBar.value?.init({
                 data: getFilterList(tabList.data),
             });
-            isShow.value = true
             filterList = tabList.data
+            if(isReset){
+                nextTick(()=>{
+                    contentNavBar.value.navList?.setItemFocused(0)
+                })
+            }
         } else {
-            isShow.value = false
             filterList = []
-            tabPosition = -1
             contentNavBar.value?.init({ data: [] });
+            isShow.value = false
+        }
+        if(isShow.value && filterList.length){
+            onTabSelect({ position: 0 })
         }
         return isShow.value
     },
