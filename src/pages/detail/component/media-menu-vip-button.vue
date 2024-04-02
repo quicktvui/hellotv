@@ -13,13 +13,13 @@
     <div class="menu-vip-button-item-img-root-css">
       <img class="menu-vip-button-item-img-css"
            :duplicateParentState="true"
+           v-show="focused"
            :focusable="false"
-           showOnState="focused"
            :src="vipFocused"/>
       <img class="menu-vip-button-item-img-css"
+           v-show="!focused"
            :duplicateParentState="true"
            :focusable="false"
-           showOnState="normal"
            :src="vipNormal"/>
     </div>
     <span class="menu-vip-button-item-text-css"
@@ -103,7 +103,6 @@ export default defineComponent({
   height: 30px;
   color: rgba(255, 255, 255, 0.6);
   focus-color: black;
-  select-color: black;
   align-self: center;
   font-size: 28px;
   text-align: center;
