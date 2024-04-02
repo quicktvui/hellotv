@@ -34,7 +34,7 @@ import {
 import ListText from '../../../components/htListStateItem/Text.vue'
 import ListIconText from '../../../components/htListStateItem/IconText.vue'
 import ListStateImg from '../../../components/htListStateItem/StateImg.vue'
-import { IHistoryMenuEntity } from 'src/api/history/modelEntity';
+import { IHistoryMenuEntity } from '../../../api/history/modelEntity';
 // @ts-ignore
 import { getMenuList } from '../index.ts';
 // @ts-ignore
