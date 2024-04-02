@@ -270,12 +270,13 @@ defineExpose({
     display: flex;
     justify-content: center;
     align-items: center;
-    /* background-color: black; */
+    background-color: transparent;
 }
 
 .grid_view {
     /* width: 1570px;
     height: 900px; */
+    background-color: transparent;
 }
 
 .content_type {
@@ -287,6 +288,7 @@ defineExpose({
 .content_type_name {
     width: 1500px;
     height: 50px;
+    background-color: transparent;
 }
 
 .history-item-cover {
@@ -313,6 +315,7 @@ defineExpose({
     color: red;
     /* width: 100px;
     height: 50px; */
+    background-color: transparent;
 }
 
 .screen-right-content-no-more {

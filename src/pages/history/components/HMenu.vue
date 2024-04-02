@@ -3,7 +3,10 @@
         v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
         :nextFocusName="nextFocusName" :blockFocusDirections="blockFocusDirections"
     >
-        <qt-view class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible">
+        <qt-view 
+            class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
+            :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"
+        >
             <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
                 :focusable="false"></qt-text>
             <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" />
@@ -124,23 +127,29 @@ defineExpose({
     width: 340px;
     height: 1080;
     position: absolute;
-    background-color: #434a50;
+    /* background-color: #434a50; */
+    background-color: transparent;
 }
 
 .menu-title {
-    height: 100px;
+    height: 60px;
+    line-height: 60px;
     font-size: 50px;
-    margin-left: 50px;
+    margin-top: 80px;
+    margin-left: 80px;
+    background-color: transparent;
 }
 
 .menu-title-image {
     width: 320px;
     height: 60px;
     margin: 10px;
+    background-color: transparent;
 }
 
 .menu_list {
     width: 340px;
     height: 900px;
+    background-color: transparent;
 }
 </style>

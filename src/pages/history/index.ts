@@ -62,8 +62,8 @@ const imgSrc = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=aut
 
 const dContentWidth = 1570
 const left = 20
-const dWidth = 340
-const dHeight = 200
+const dWidth = 330
+const dHeight = 186
 const dBottomNum = 10
 const dTitleFontSize = 30
 const dFloatTitleFontSize = 24

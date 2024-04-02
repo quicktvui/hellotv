@@ -38,7 +38,7 @@ const configs:Iconfig = {
     },
     menuList: [
         { id: 0, name: '观看历史', type: menuListItemTypes.txt },
-        { id: 1, name: '我的收藏', type: menuListItemTypes.txt },
+        { id: 1, name: '我的收藏', type: menuListItemTypes.icon },
         { id: 2, name: '已购内容', type: menuListItemTypes.txt },
         { id: 3, name: '收藏专区', type: menuListItemTypes.txt },
     ],

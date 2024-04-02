@@ -26,6 +26,7 @@ withDefaults(defineProps<{
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background-color: transparent;
 }
 
 .history_empty_content {
@@ -33,11 +34,13 @@ withDefaults(defineProps<{
     align-items: center;
     justify-content: center;
     flex-direction: column;
+    background-color: transparent;
 }
 
 .history_empty_txt {
     font-weight: 400;
     color: rgba(255, 255, 255, 0.5);
     margin-top: 26px;
+    background-color: transparent;
 }
 </style>

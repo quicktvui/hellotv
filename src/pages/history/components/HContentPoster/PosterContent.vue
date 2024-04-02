@@ -36,6 +36,7 @@
     top: 0;
     z-index: 10;
     border-radius: 8px;
+    background-color: transparent;
 }
 .qt-ui-poster-img-css {
     background-color: rgba(255, 255, 255, 0.1);

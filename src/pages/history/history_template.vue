@@ -1,5 +1,9 @@
 <template>
-    <qt-view class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false">
+    <qt-view 
+        class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false"
+        :gradientBackground="{colors:['#2F3541', '#252930'], orientation: 0}"
+    >
+        <!-- :gradientBackground="{colors:['#2F3541', '#252930'], orientation: 0}" -->
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
         <HistoryMenu 
             ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
@@ -119,7 +123,8 @@ defineExpose({
     width: 1920px;
     height: 1080px;
     position: relative;
-    background-color: #252930;
+    background-color: transparent;
+    // background-color: #2B303A;
 }
 
 .menu {
@@ -127,6 +132,7 @@ defineExpose({
     left: 0;
     top: 0;
     z-index: 10;
+    background-color: transparent;
 }
 
 .top {
@@ -134,6 +140,7 @@ defineExpose({
     left: 350px;
     top: 0;
     z-index: 9;
+    background-color: transparent;
 }
 
 .tab {
@@ -141,6 +148,7 @@ defineExpose({
     left: 350px;
     top: 100px;
     z-index: 8;
+    background-color: transparent;
 }
 
 .content {
@@ -148,6 +156,7 @@ defineExpose({
     left: 350px;
     top: 200px;
     z-index: 1;
+    background-color: transparent;
 }
 
 .history_leftBootom {

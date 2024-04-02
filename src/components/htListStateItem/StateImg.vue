@@ -21,8 +21,9 @@
 }
 .list_item_img img{
     position: absolute;
-    width: 300px;
+    width: 280px;
     height: 86px;
     align-self: center;
+    background-color: transparent;
 }
 </style>

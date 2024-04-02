@@ -66,12 +66,13 @@ defineExpose({
 .h_tab {
     /* width: 1570px; */
     height: 100px;
-    /* background-color: pink; */
+    background-color: transparent;
 }
 
 .hc-navbar {
     /* width: 1540px; */
     height: 100px;
     margin-left: 30px;
+    background-color: transparent;
 }
 </style>
