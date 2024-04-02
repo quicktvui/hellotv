@@ -106,7 +106,6 @@ export default defineComponent({
     const onESResume = () => {}
     const onESStop = () => {}
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
-      console.log("XRG===onkeydown---","-----------",curChildIndex)
       if (curChildIndex !== 2){
         search_result.value.cancelAll()
       }

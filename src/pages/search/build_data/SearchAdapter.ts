@@ -43,7 +43,6 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
-    console.log("XRG===开始添加结束提示判断",)
     if (section.itemList && section.itemList.length < SearchConfig.screenResultPageSize){
       let endSection:QTWaterfallSection = buildEndSection('5');
       tabPage =  {

@@ -5,7 +5,7 @@
            :nextFocusName="{ left: 'search_center_view_content_list' }">
 
     <qt-view class="search_result_title_root_top" :focusable="false" name="search_result_title_name"
-             v-show="(keyword || recommendTitle === '热门推荐' ) && isShowTopTip">
+             v-show="(keyword || recommendTitle ) && isShowTopTip">
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
                 :focusable="false" />
       <span class="search_result_view_title_result" v-if="keyword"
@@ -107,7 +107,7 @@ export default defineComponent({
     let isShowTopTip = ref(true)
     let isHasData = ref(false)
     let isLoading = ref(false)
-    let recommendTitle = ref("热门推荐")
+    let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
     let tabIndex0Sid:string = ""
@@ -152,22 +152,23 @@ export default defineComponent({
 
     watch(() => props.keyword, (newVal, oldVal) => {
       if (newVal) {
+        isRecommendRequest = false
         recommendTitle.value = ""
-        if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
-        isLoading.value = true
-        descendantFocusability.value = 2
-        delaySearchByKeyword = setTimeout(() => {
-          initTab(isRecommendRequest)
-          if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
-          closeLoadingTimer = setTimeout(() => {
-            isLoading.value = false
-            descendantFocusability.value = 1
-          }, 1000)
-        }, 600)
       }else{
         isRecommendRequest = true
-        recommendTitle.value = "热门推荐"
+        recommendTitle.value = "大家都在搜"
       }
+      if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
+      isLoading.value = true
+      descendantFocusability.value = 2
+      delaySearchByKeyword = setTimeout(() => {
+        initTab(isRecommendRequest)
+        if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
+        closeLoadingTimer = setTimeout(() => {
+          isLoading.value = false
+          descendantFocusability.value = 1
+        }, 1000)
+      }, 600)
       context.emit("close-loading")
     })
 
