@@ -16,7 +16,7 @@
 
     <media-player-loading-view
       ref="mediaPlayerLoadingRef"
-      :style="{width:playerWidth, height:playerHeight}"/>
+      :style="{width:playerWidth, height:playerHeight}" />
 
     <!-- 鉴权失败 -->
     <qt-column class="media-player-small-view-auth-css"
@@ -89,7 +89,7 @@ export default defineComponent({
     let playingMediaItem: ESMediaItem
 
     const isFullWindow = ref<boolean>(false)
-    const isFloatWindow = ref<boolean>(true)
+    const isFloatWindow = ref<boolean>(false)
     const showBottomTip = ref<boolean>(true)
     const viewState = ref<number>(1)
     const isTitleBarShowing = ref<boolean>(true)
@@ -247,6 +247,9 @@ export default defineComponent({
     }
 
     function onPlayerError(error: ESPlayerError): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-----------onPlayerError------------->>>>", error)
+      }
     }
 
     function onPlayerPlayMediaList(playList: ESMediaItemList): void {
