@@ -377,6 +377,7 @@ export default defineComponent({
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
       mediaPlayerViewRef.value?.release()
+      mediaPlayerViewRef.value?.reset()
       albumDetailRef.value?.release()
       releaseEventBus()
     }
