@@ -150,6 +150,7 @@ defineExpose({
 .menu_list {
     width: 340px;
     height: 900px;
+    margin-top: 35px;
     background-color: transparent;
 }
 </style>

@@ -56,12 +56,12 @@ class HistoryApi extends HistoryBaseApi {
         }
         return {}
     }
-    deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, id: string | number): void {
-        
-    }
-    clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): void {
-        
-    }
+    // async deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, item:IcurrentItemParams): Promise<boolean> {
+    //     return true
+    // }
+    // async clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): Promise<boolean> {
+    //     return true
+    // }
 }
 
 export default new HistoryApi()

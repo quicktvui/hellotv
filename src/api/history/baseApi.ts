@@ -6,14 +6,15 @@ import { getTestContentList, getTestFilterList } from "./mock";
 
 export interface IcurrentItemParams {
     index: number;
-    item: any
+    item: { id: string, [k:string]:any }
 }
+
 export interface Iapi {
     getMenuList(): Promise<IHistoryMenuDto>
     getFilterTabList(index: number, category: IHistoryMenuEntity): Promise<IHistoryFilterDto>
     getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto>
-    deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams,id:string|number):void
-    clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams):void
+    deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, item:IcurrentItemParams):Promise<boolean>
+    clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams):Promise<boolean>
 }
 
 // api基类默认是mock数据，可以在子类中根据业务重写对应的方法调用接口返回数据
@@ -48,11 +49,15 @@ export class HistoryBaseApi implements Iapi {
             }, 2000);
         })
     }
-    deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams,id: string | number): void {
-        
+    async deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, item:IcurrentItemParams): Promise<boolean> {
+        return new Promise(resolve => {
+            setTimeout(() => {
+                resolve(true)
+            }, 2000);
+        })
     }
-    clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): void {
-        
+    async clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): Promise<boolean> {
+        return true
     }
 };
 

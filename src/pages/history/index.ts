@@ -4,6 +4,7 @@ import {
     QTIListView, QTListViewItem, QTPoster, QTGridViewItem
 } from '@quicktvui/quicktvui3';
 import { IHistoryContentEntity, IHistoryFilterEntity, IHistoryMenuEntity } from 'src/api/history/modelEntity';
+import { Iconfig } from './config';
 
 export const getMenuList = (menuList: IHistoryMenuEntity[] = []) => {
     return menuList.map((item, index) => {
@@ -61,7 +62,7 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
 const imgSrc = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750'
 
 const dContentWidth = 1570
-const left = 20
+const dLeft = 20
 const dWidth = 330
 const dHeight = 186
 const dBottomNum = 10
@@ -110,10 +111,11 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         decoration: {
             left,
             top: 10,
+            right: left,
             bottom: dBottomNum
         },
         focus: {
-            scale: 1.01,
+            scale: 1.06,
             enable: true
         },
         delete: {
@@ -221,11 +223,12 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
 //     }
 // }
 
-export const getContentList = (dataList: IHistoryContentEntity[] = [], splitNum = 4, itemHeight: number, contentWidth:number = dContentWidth) => {
-    const width = Math.floor(contentWidth / splitNum) - (left * 2);
+export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWidth:number = dContentWidth, options:Iconfig) => {
+    const left = options.contentSpace&&options.contentSpace > 0 ? options.contentSpace : dLeft
+    const width = Math.floor((contentWidth - left) / options.contentColumn) - (left * 2);
     const ratio = width / dWidth
 
-    const height = itemHeight || Math.min(Math.floor(dHeight * ratio), 350)
+    const height = options.contentItemHeight || Math.min(Math.floor(dHeight * ratio), 350)
 
     let subTitleHeight = 0
     if(getSubTitle(dataList[0])){
@@ -234,7 +237,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], splitNum 
     
     const titleHeight = Math.ceil(dTitleHeight * ratio)
     const bottomNum = titleHeight + subTitleHeight + dBottomNum
-    const rows = Math.ceil(dataList.length / splitNum)
+    const rows = Math.ceil(dataList.length / options.contentColumn)
     const rowsHeight = height + bottomNum
     const dataHeight = rows * rowsHeight
     let titleSize = Math.ceil(dTitleFontSize * ratio)
@@ -286,5 +289,3 @@ export const hw_deepMergeObj = (...objects) => {
     return result;
 }
 
-// 内容区loading
-// 内容区，展示分类-是否按时间分类

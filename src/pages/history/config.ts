@@ -24,8 +24,9 @@ export interface Iconfig {
         normal: { bgColor: string }
         focused: { bgColor: string }
     };
-    contentColumn?: number;
+    contentColumn: number;
     contentItemHeight?:number
+    contentSpace?:number //内容区间距, 必须大于0，否则不生效，默认20
 }
 const configs:Iconfig = {
     layout: layouts.lt,
@@ -45,6 +46,7 @@ const configs:Iconfig = {
     emptyTxt: '暂无数据～',
     contentColumn: 4,
     detailPageName: 'series_view',
-    contentItemHeight: 0
+    contentItemHeight: 0,
+    contentSpace: 20
 }
 export default configs

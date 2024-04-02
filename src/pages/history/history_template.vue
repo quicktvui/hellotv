@@ -1,7 +1,6 @@
 <template>
     <qt-view 
         class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter']" ref="historyRootRef" :focusable="false"
-        :gradientBackground="{colors:['#2F3541', '#252930'], orientation: 0}"
     >
         <!-- :gradientBackground="{colors:['#2F3541', '#252930'], orientation: 0}" -->
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
@@ -13,9 +12,9 @@
         <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn" :pWidth="contentWidth" :isLoaded="isLoaded"/>
         <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth"/>
         <HistoryContent 
-            ref="HistoryContentRef" class="content" :spanCount="configs.contentColumn"
+            ref="HistoryContentRef" class="content"
             :detailPageName="configs.detailPageName" :emptyTxt="configs.emptyTxt"
-            :pItemHeight="configs.contentItemHeight"
+            :pConfig="configs"
             @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth"
         />
     </qt-view>
@@ -123,8 +122,8 @@ defineExpose({
     width: 1920px;
     height: 1080px;
     position: relative;
-    background-color: transparent;
-    // background-color: #2B303A;
+    // background-color: transparent;
+    background-color: #252930;
 }
 
 .menu {
