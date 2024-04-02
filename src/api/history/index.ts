@@ -1,6 +1,6 @@
 import { IMedia } from "../media/IMedia";
 import { HistoryBaseApi, IcurrentItemParams } from "./baseApi";
-import { IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEntity, IHistoryContentEntity } from "./modelEntity"
+import { IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEntity, IHistoryContentEntity, IHistoryMenuDto } from "./modelEntity"
 import { localHistory, historyKey, historyToCategory, plyHistoryCategory, favHistoryCategory, removeHistory, resetHistory } from "./store";
 
 class HistoryApi extends HistoryBaseApi {
@@ -10,9 +10,22 @@ class HistoryApi extends HistoryBaseApi {
     return Promise.resolve()
   }
 
-  // async getMenuList(): Promise<IHistoryMenuDto> {
-  //     return {}
-  // }
+  async getMenuList(): Promise<IHistoryMenuDto> {
+    return {
+      data: [
+        {
+          id: 0,
+          name: '观看历史',
+          type: 1//1文字，2图标+文字，3图片
+        },
+        {
+          id: 1,
+          name: '我的收藏',
+          type: 1//1文字，2图标+文字，3图片
+        }
+      ]
+    }
+  }
 
   async getFilterTabList(index: number, category: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
     return { data: historyToCategory(index == 0 ? 'ply' : 'fav') }
@@ -54,10 +67,20 @@ class HistoryApi extends HistoryBaseApi {
   }
 
   async deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, item: IcurrentItemParams): Promise<boolean> {
-    console.log('huan-deleteContent', currentMenu.index, currentFilter.item.id, item)
-    // if (removeHistory(currentMenu.index == 0 ? 'ply' : 'fav', id)) {
-    //   return await this.localStore.putString(historyKey, JSON.stringify(localHistory))
-    // }
+    console.log('huan-deleteContent', currentMenu, currentFilter, item)
+
+    switch (currentMenu.index) {
+      case 0: // 历史
+        delete plyHistoryCategory[currentFilter.item.id][item.index]
+        break
+      case 1: // 收藏
+        delete favHistoryCategory[currentFilter.item.id][item.index]
+        break
+    }
+
+    if (removeHistory(currentMenu.index == 0 ? 'ply' : 'fav', Number(item.item.id))) {
+      return await this.localStore.putString(historyKey, JSON.stringify(localHistory))
+    }
     return false
   }
 

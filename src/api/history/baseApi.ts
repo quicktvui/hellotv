@@ -28,7 +28,15 @@ export class HistoryBaseApi implements Iapi {
     this.localStore = params[1]
     return Promise.resolve()
   }
-
+  async getMenuList(): Promise<IHistoryMenuDto> {
+    return {}
+  }
+  async getFilterTabList(index: number, category?: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
+    if (index === 0 || index === 1) {
+      return { data: getTestFilterList() }
+    }
+    return {}
+  }
   async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {
     return new Promise(resolve => {
       setTimeout(() => {
@@ -53,6 +61,7 @@ export class HistoryBaseApi implements Iapi {
   }
   async clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): Promise<boolean> {
     return true
-  };
-}
+  }
+};
+
 export default new HistoryBaseApi()
