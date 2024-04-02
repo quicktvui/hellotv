@@ -59,12 +59,6 @@ export class HistoryBaseApi implements Iapi {
   }
   async clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): Promise<boolean> {
     return true
-    deleteContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, id: string | number): Promise < boolean > {
-      return Promise.resolve(false)
-    }
-    clearContent(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams): Promise < boolean > {
-      return Promise.resolve(false)
-    }
   };
-
+}
 export default new HistoryBaseApi()
