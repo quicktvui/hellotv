@@ -37,7 +37,7 @@
                eventClick
                eventFocus
                :clipChildren="false">
-        <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="center" :fontSize="40"
+        <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="center" :fontSize="40" :focusable="false"
                 class="search_keyboard_item_text" text="${text}" />
       </qt-view>
     </qt-grid-view>
@@ -97,6 +97,7 @@ export default defineComponent({
       })
     })
     const clearBtnClick = () => {
+      if (inputText.value === "")return
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = ""
       }
@@ -105,10 +106,12 @@ export default defineComponent({
     const childFocus = (e) => {
       if (e.child) {
         context.emit("scroll-to-index", 0, 100)
+        if (targetSid.value === props.defaultItemSid) return
         targetSid.value = props.defaultItemSid
       }
     }
     const deleteBtnClick = () => {
+      if (inputText.value === "")return
       let value = ""
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = inputText.value.slice(0, inputText.value.length - 1)

@@ -1,12 +1,12 @@
 <template>
   <qt-view class="search_center" :style="{width:centerWidth+'px'}" ref="search_center"
-           @childFocus="childFocus"
+           @childFocus="childFocus" :focusable="false"
            :gradientBackground="{ colors: ['#ff252930','#FF2F3541'] }">
     <!-- 垂直竖线-->
-    <qt-view class="search_center_view_line" />
+    <qt-view class="search_center_view_line" :focusable="false"/>
     <!--顶部提示-->
-    <qt-view class="search_center_view_top">
-      <qt-text class="search_center_view_title" :text="title" gravity="left" :fontSize="40" />
+    <qt-view class="search_center_view_top" :focusable="false">
+      <qt-text class="search_center_view_title" :text="title" gravity="left" :fontSize="40" :focusable="false"/>
       <search-btn v-if="title === '搜索历史'" @click="clearHistoryBtnClick"
                   :nextFocusNames="{ down: 'search_center_view_list' }"
                   searchBtnClass="search_center_clear_history_btn"

@@ -187,8 +187,8 @@ export default defineComponent({
     let empty = ref(false)
     let screenItemContentFocus = ref(false)
     let scrollY = ref(0)
-    let filterTriggerTask = ref([])
-    let hideSelectTask = ref([])
+    let filterTriggerTask = ref<Array<any>>([])
+    let hideSelectTask = ref<Array<any>>([])
 
     function init(){
       hideSelectTask.value = [
@@ -414,7 +414,7 @@ export default defineComponent({
             }
           }
           if (isTagContentEnd()) {
-            screen_right_content.value!.stopPage()
+            setTimeout(()=>{screen_right_content.value!.stopPage()},260)
           }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
@@ -430,7 +430,7 @@ export default defineComponent({
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {
-              screen_right_content.value!.stopPage()
+              setTimeout(()=>{screen_right_content.value!.stopPage()},260)
             }
           }
         }
