@@ -91,6 +91,7 @@
           class="media-player-collapse-css">
           <media-collapse-order
             ref="mediaCollapseOrderRef"
+            :blockFocusDirections="['left','right']"
             :nextFocusName="{
                     up:'mediaCollapseOrder',
                     down:'mediaCollapseSpeed'
@@ -100,6 +101,7 @@
             @onCollapseItemClicked="onCollapseItemOrderClicked"/>
           <media-collapse-speed
             ref="mediaCollapseSpeedRef"
+            :blockFocusDirections="['left','right']"
             :nextFocusName="{
                     up:'mediaCollapseOrder',
                     down:'mediaCollapseDefinition'
@@ -109,6 +111,7 @@
             @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
           <media-collapse-definition
             ref="mediaCollapseDefinitionRef"
+            :blockFocusDirections="['left','right']"
             :nextFocusName="{
                     up:'mediaCollapseSpeed',
                     down:'mediaCollapseMediaList'
@@ -119,6 +122,7 @@
           <media-collapse-media-list
             v-if="mediaListVisible"
             ref="mediaCollapseMediaListRef"
+            :blockFocusDirections="['left','right']"
             :nextFocusName="{
                     up:'mediaCollapseDefinition',
                     down:'mediaCollapseMediaList'
