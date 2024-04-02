@@ -192,25 +192,20 @@ export default defineComponent({
         .then((tabPage: QTTabPageData) => {
             if (tabPage.data.length > 0) {
               setTabPagePageNo(tabPageIndex, pageNo)
-              if (pageNo <= 1) {
-                if (log.isLoggable(ESLogLevel.DEBUG)) {
-                  log.d(TAG, '---------getTabContent-----setPageData--->>>>' +
-                    ' tabPageIndex:' + tabPageIndex +
-                    ' pageNo:' + pageNo +
-                    ' tabPage:', tabPage)
-                }
-                tabRef.value?.setPageData(tabPageIndex, tabPage)
-                tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-              } else {
-                // if (log.isLoggable(ESLogLevel.DEBUG)) {
-                //   log.d(TAG, '---------getTabContent-----addPageData--->>>>' +
-                //     ' tabPageIndex:' + tabPageIndex +
-                //     ' pageNo:' + pageNo +
-                //     ' tabPage:', tabPage)
-                // }
-                // tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
+              if (log.isLoggable(ESLogLevel.DEBUG)) {
+                log.d(TAG, '---------getTabContent-----pageNo--->>>>' + pageNo +
+                  ' tabPageIndex:' + tabPageIndex +
+                  ' pageNo:' + pageNo +
+                  ' tabPage:', tabPage)
               }
-            } else {
+              if (pageNo <= 1) {
+                tabRef.value?.setPageData(tabPageIndex, tabPage)
+              } else {
+                //todo 立朋哥记得来修改下  要不这里还得延时
+                setTimeout(()=>{ tabRef.value?.addPageData(tabPageIndex, tabPage, 0)},1000)
+              }
+            }
+            // else {
               // if (log.isLoggable(ESLogLevel.DEBUG)) {
               //   log.d(TAG, '---------getTabContent-----addPageData--->>>>' +
               //     ' tabPageIndex:' + tabPageIndex +
@@ -218,6 +213,9 @@ export default defineComponent({
               //     ' tabPage:', tabPage)
               // }
               // tabRef.value?.addPageData(tabPageIndex, buildTabPageEndData(), 0)
+              // tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+            // }
+            if (tabPage.isEndPage){
               tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
             }
           },

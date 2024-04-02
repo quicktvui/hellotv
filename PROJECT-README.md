@@ -19,17 +19,17 @@ src
 |   ├─launch
 ├─pages 视图
 |   ├─web
+|   ├─settings
 |   ├─search
 |   ├─introduction
+|   ├─live
 |   ├─home
 |   ├─filter
 |   ├─detail
 ├─components 公共组件
-|     ├─Content.vue
-|     ├─Filter.vue
 |     ├─Header.vue
-|     ├─ProListPage.vue
-|     ├─Sider.vue
+|     ├─LoadingError.vue
+|     ├─NetworkError.vue
 |     ├─bg-player.vue
 |     ├─img-text-btn-view.vue
 |     ├─qt-img-transition.vue
@@ -47,5 +47,6 @@ src
 |  ├─request 
 |  ├─media
 |  ├─home 首页api目录
+|  ├─filter 筛选 api目录
 ```
 

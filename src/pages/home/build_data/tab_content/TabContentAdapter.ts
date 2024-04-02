@@ -24,6 +24,7 @@ export const tabPlateTitleGap = 36
 export const tabPlateTitleSize = 50
 export const tabPlateTitleHeightDefault = 60
 export const tabContentTop = 230
+export const tabPlateAllHeight:Map<string,object> = new Map<string, object>()
 
 /**
  * build板块原始数据

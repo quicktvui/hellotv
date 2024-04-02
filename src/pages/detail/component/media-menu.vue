@@ -17,7 +17,7 @@
       :icon="favButtonNormal"
       text="收藏"
       :vip-focus-icon="favButtonVIPFocused"
-      @click="onFullButtonClick"/>
+      @click="onFavouriteButtonClick"/>
 
   </qt-row>
 </template>
@@ -55,7 +55,7 @@ export default defineComponent({
   ],
   setup(props, context) {
 
-    const authenticated = ref<boolean>(false)
+    const authenticated = ref<boolean>(true)
     const mediaAuthorization: Ref<IMediaAuthorization> =
       inject(mediaAuthorizationKey, {} as any)
     const eventbus = useESEventBus()
@@ -81,12 +81,18 @@ export default defineComponent({
       eventbus.emit('onMenuFullButtonClick')
     }
 
+    function onFavouriteButtonClick() {
+      eventbus.emit('onMenuFavouriteButtonClick')
+    }
+
+
     return {
       initMedia,
       fullButtonFocused,
       fullButtonNormal,
       fullButtonVIPFocused,
       onFullButtonClick,
+      onFavouriteButtonClick,
       favButtonFocused,
       favButtonNormal,
       authenticated,

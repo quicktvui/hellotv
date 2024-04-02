@@ -117,6 +117,7 @@
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
           <media-collapse-media-list
+            v-if="mediaListVisible"
             ref="mediaCollapseMediaListRef"
             :nextFocusName="{
                     up:'mediaCollapseDefinition',
@@ -155,7 +156,7 @@ import {
 } from "@extscreen/es3-player";
 import {ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
-import {ref, markRaw, onMounted} from "vue";
+import {ref, markRaw, onMounted, nextTick} from "vue";
 
 import playerStatePlaying from '../../../assets/ic_media_player_play.png'
 import playerStatePaused from '../../../assets/ic_media_player_pause.png'
@@ -225,11 +226,14 @@ export default defineComponent({
       eventbus.off('onMediaListItemLoad', onMediaListItemLoad)
     });
 
+    const mediaListVisible = ref<boolean>(true)
     const dataMap = new Map<number, Array<IMedia>>()
 
     function onMediaListItemLoad(page: number, mediaList: Array<IMedia>) {
       if (mediaCollapseMenuInit) {
-        mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+        nextTick(() => {
+          mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+        })
       } else {
         dataMap.set(page, mediaList)
       }
@@ -266,28 +270,36 @@ export default defineComponent({
 
     //-------------------------------菜单-----------------------------------
     function initCollapseMenu() {
-      mediaCollapseRef.value?.init(buildCollapseMenu())
+      mediaCollapseRef.value?.init(buildCollapseMenu(mediaListVisible.value))
       mediaCollapseMenuInit = true;
     }
 
     //-------------------------------播放顺序-----------------------------------
     function initCollapseOrderMenu() {
-      if (playModeList) {
-        mediaCollapseOrderRef.value?.setListData(buildPlayModeList(playModeList))
+      if (mediaCollapseMenuInit) {
+        nextTick(() => {
+          if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
+            const data = buildPlayModeList(playModeList)
+            mediaCollapseOrderRef.value?.setListData(data)
+          }
+          setCollapseItemOrderSelected()
+        })
       }
-      setCollapseItemOrderSelected()
     }
 
     function setCollapseItemOrderSelected() {
-      if (playModeList) {
-        const index = getPlayModeIndex(playMode, playModeList)
-        if (index > -1) {
-          mediaCollapseOrderRef.value?.setItemSelected(index)
+      nextTick(() => {
+        if (playModeList) {
+          const index = getPlayModeIndex(playMode, playModeList)
+          if (index > -1) {
+            mediaCollapseOrderRef.value?.setItemSelected(index)
+          }
         }
-      }
+      })
     }
 
     function setCollapseOrderMenuFocused() {
+      mediaCollapseRef.value?.expandItem(0)
       setTimeout(() => {
         mediaCollapseOrderRef.value?.setItemFocused(0)
       }, 500)
@@ -307,13 +319,20 @@ export default defineComponent({
 
     //------------------------------清晰度------------------------------------
     function initCollapseDefinitionMenu() {
-      if (definitionList) {
-        mediaCollapseDefinitionRef.value?.setListData(buildDefinitionList(definitionList))
+      if (mediaCollapseMenuInit) {
+        nextTick(() => {
+          if (definitionList) {
+            mediaCollapseDefinitionRef.value?.setListData(buildDefinitionList(definitionList))
+          }
+          setCollapseItemDefinitionSelected()
+        })
       }
-      setCollapseItemDefinitionSelected()
     }
 
     function setCollapseItemDefinitionSelected() {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-------setCollapseItemDefinitionSelected-----清晰度-->>>>', definitionList, definition)
+      }
       if (definitionList) {
         const index = getDefinitionIndex(definition, definitionList)
         if (index > -1) {
@@ -336,10 +355,14 @@ export default defineComponent({
 
     //--------------------------------倍速----------------------------------
     function initCollapseSpeedMenu() {
-      if (rateList) {
-        mediaCollapseSpeedRef.value?.setListData(buildPlayRateList(rateList))
+      if (mediaCollapseMenuInit) {
+        nextTick(() => {
+          if (rateList) {
+            mediaCollapseSpeedRef.value?.setListData(buildPlayRateList(rateList))
+          }
+          setCollapseItemSpeedSelected()
+        })
       }
-      setCollapseItemSpeedSelected()
     }
 
     function setCollapseItemSpeedSelected() {
@@ -365,16 +388,20 @@ export default defineComponent({
 
     //--------------------------------媒资列表----------------------------------
     function initCollapseListMenu() {
-      if (media) {
-        mediaCollapseMediaListRef.value?.initMedia(media)
+      if (mediaCollapseMenuInit) {
+        nextTick(() => {
+          if (media) {
+            mediaCollapseMediaListRef.value?.initMedia(media)
+          }
+          if (dataMap.size > 0) {
+            dataMap.forEach(function (mediaList: Array<IMedia>, page: number) {
+              mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+            });
+            dataMap.clear()
+          }
+          setCollapseItemMediaListSelected()
+        })
       }
-      if (dataMap.size > 0) {
-        dataMap.forEach(function (mediaList: Array<IMedia>, page: number) {
-          mediaCollapseMediaListRef.value?.setListData(page, mediaList)
-        });
-        dataMap.clear()
-      }
-      setCollapseItemMediaListSelected()
     }
 
     function setCollapseItemMediaListSelected() {
@@ -465,18 +492,33 @@ export default defineComponent({
           isMenuShowing.value = false
           isProgressShowing.value = false
           mediaCollapseMediaListRef?.value?.show(false)
+
+          if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
+            mediaCollapseRef.value?.collapse()
+          }
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
           isMenuShowing.value = true
           isProgressShowing.value = false
           mediaCollapseMediaListRef?.value?.show(true)
-          //setCollapseOrderMenuFocused()
+          if (!mediaCollapseMenuInit) {
+            initCollapseMenu()
+            initCollapseOrderMenu()
+            initCollapseSpeedMenu()
+            initCollapseDefinitionMenu()
+            initCollapseListMenu()
+          }
+          setCollapseOrderMenuFocused()
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
           mediaCollapseMediaListRef?.value?.show(false)
+
+          if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
+            mediaCollapseRef.value?.collapse()
+          }
           break
       }
       setPlayerViewStateDismissDelay(5000)
@@ -627,7 +669,7 @@ export default defineComponent({
     }
     function onPlayerDefinitionListChanged(list: Array<ESPlayerDefinition>): void {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.e(TAG, "-------onPlayerDefinitionListChanged-------->>>>>", list)
+        log.e(TAG, "-------onPlayerDefinitionListChanged-----清晰度--->>>>>", list)
       }
       definitionList = list
       initCollapseDefinitionMenu()
@@ -635,7 +677,7 @@ export default defineComponent({
 
     function onPlayerDefinitionChanged(d: ESPlayerDefinition): void {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.e(TAG, "-------onPlayerDefinitionChanged-------->>>>>", d)
+        log.e(TAG, "-------onPlayerDefinitionChanged-----清晰度--->>>>>", d)
       }
       definition = d
       setCollapseItemDefinitionSelected()
@@ -706,8 +748,10 @@ export default defineComponent({
         log.d(TAG, '-----------onPlayerPlayMediaList------------->>>>', playList)
       }
       media = playList.media
-      initCollapseMenu()
-      initCollapseListMenu()
+      mediaListVisible.value = media.itemList.enable
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------onPlayerPlayMediaList------------->>>>', mediaListVisible.value, media.itemList.enable)
+      }
     }
 
     function onPlayerPlayMedia(mediaItem: ESMediaItem): void {
@@ -792,6 +836,11 @@ export default defineComponent({
                 nextButtonFocused = false
               return true
             }
+            return true
+          }
+          if (isPlayerViewStateDismiss()) {
+            setPlayerViewStateMenu()
+            return true
           }
           break
       }
@@ -816,6 +865,11 @@ export default defineComponent({
     }
 
     function onBackPressed(): boolean {
+
+      if (player.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+        return false
+      }
+
       if (isMediaAuthError.value &&
         player.getWindowType() == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
         player.setSmallWindow()
@@ -839,6 +893,7 @@ export default defineComponent({
     }
 
     return {
+      mediaListVisible,
       mediaPlayerLoadingRef,
       mediaTitle,
       isPlayerPlaying,

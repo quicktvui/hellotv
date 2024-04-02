@@ -15,7 +15,14 @@ import {buildTransferTabContentAdapter} from "../pages/home/build_data/tab_conte
 import {ESApp} from "@extscreen/es3-vue";
 import {GlobalApiKey} from "./UseApi";
 import BuildConfig from "../build/BuildConfig";
-import {hotSearchUrl, searchLongUrl, tabContentUrl, tabListUrl} from "./RequestUrl";
+import {
+  filterContentUrl,
+  filterEntryUrl,
+  hotSearchUrl,
+  searchLongUrl,
+  tabContentUrl,
+  tabListUrl
+} from "./RequestUrl";
 import {buildO2MTabContentData, buildO2MTabData} from "../pages/home/build_data/useTabData";
 import {TabPlayItem} from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 
@@ -69,7 +76,7 @@ export function createGlobalApi(): IGlobalApi {
   function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
     const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
     const index = Number(tabId)
-    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo == 1,tabId))
+    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId))
   }
 
   function getTabBg(tabId): string {
@@ -101,10 +108,10 @@ export function createGlobalApi(): IGlobalApi {
 
   function getSearchResultTabList(): Promise<Array<QTTabItem>> {
     //此处可更换接口请求数据
-    if (BuildConfig.useMockData) return Promise.resolve(buildSearchResultTabListData(searchResultTabList))
+    if (BuildConfig.useMockData) return Promise.resolve(buildSearchResultTabListData(searchResultTabList as Array<any>))
     return requestManager.post(tabContentUrl, {'data': ''})
-      .then((searchCenterList: any) => {
-        return buildSearchResultTabListData(searchResultTabList)
+      .then((searchCenterList: Array<any>) => {
+        return buildSearchResultTabListData(searchResultTabList as Array<any>)
       })
   }
 
@@ -126,6 +133,25 @@ export function createGlobalApi(): IGlobalApi {
     }).catch(() => buildSearchResultPageData(pageNo, [], title))
   }
 
+  /********************************筛选相关*****************************/
+  function getScreenLeftTags(screenId:string) {
+    const requestUrl = filterEntryUrl+screenId
+    return requestManager.post(requestUrl,{})
+  }
+
+  function getScreenContentByTags(tags,pageNum){
+    const params = requestManager.getParams()
+    const pageParams = {
+      "pageNo": pageNum,
+      "pageSize": 20,
+    };
+    const newParams = {...params, ...pageParams};
+    return requestManager.post(filterContentUrl,{
+      'param': newParams,
+      'data': tags
+    })
+  }
+
   return {
     install: function (app: ESApp) {
       const instance = this
@@ -138,6 +164,8 @@ export function createGlobalApi(): IGlobalApi {
     getHomeBgVideoAssetsUrl,
     getHotSearch,
     getSearchResultTabList,
-    getSearchResultPageData
+    getSearchResultPageData,
+    getScreenLeftTags,
+    getScreenContentByTags
   }
 }

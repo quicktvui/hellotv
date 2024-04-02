@@ -14,6 +14,7 @@
   export const episodeAuthUrl = BuildConfig.requestBaseUrl+"/v2/zero/paid/accountAuth/authAssetLongEpisode"
   //filter请求URL
   export const filterEntryUrl = BuildConfig.requestBaseUrl+"/v2/zero/tag/search/"
+  export const filterContentUrl = BuildConfig.requestBaseUrl+"/v1/zero/media/assetlong/search/assetlongByTags"
 
   //search请求URL
   export const hotSearchUrl=BuildConfig.requestBaseUrl+"/v1/zero/media/assetlong/search/keyword"

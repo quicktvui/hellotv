@@ -3,7 +3,7 @@
 [![vue version](https://img.shields.io/badge/vue-3.2-green.svg)](https://github.com/vuejs/core)
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
 
-基于 [QuickTVUI](http://quicktvui.com/) 专为快速打造安卓TV影视应用而开发的示例项目。
+基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 专为快速打造安卓TV影视应用而开发的示例项目。
 项目主要目的是让开发者通过对本项目的简单修改，实现一些TV端常见的功能页面，从而加速开发者开发TV类影视类应用。
 主要页面包括瀑布流首页、媒资列表、搜索、视频观看详情等，以下是一些页面效果：
 
@@ -15,7 +15,11 @@
 ![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/filter.png)
 详情页
 ![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/detail.png)
-
+多级列表页
+![image](doc/live1.png)
+![image](doc/live2.png)
+内容编辑页
+![image](doc/edit.png)
 <!-- [![Build Status](https://travis-ci.org/your-username/your-project.svg?branch=master)](https://travis-ci.org/your-username/your-project) -->
 <!-- [![npm version](https://badge.fury.io/js/your-package.svg)](https://badge.fury.io/js/your-package) -->
 
@@ -25,18 +29,16 @@
 
 
 ## 快速开始
-### 调试 
+
+### 调试
 #### 1. 确认编译环境
 建议windows:
 - node version 16.20.2
 - npm version 8.10
-  
-mac  
-- node version 17.0.1
-- npm version 8.10
+
 
 #### 2. 安装运行Runtime
-安装 [./apk](./apk/)目录下apk包 (需要日志时使用debug包，否则使用release)</b> 
+下载并安装 [运行环境](http://v3.quicktvui.com/zh/resource/runtime.html) (需要日志时使用debug包，否则使用release)</b>
 
 #### 3. 安装依赖
 进入项目录下
@@ -54,7 +56,11 @@ npm run dev
 ```bash
 adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es ip 192.168.xx.xx(电脑IP地址)
 ```
-关于adb等其它配置具体说明请查看 <u>[配置运行环境](http://developer.extscreen.com/guide/) </u>
+关于adb等其它配置具体说明请查看 <u>[安装和环境配置]([http://developer.extscreen.com/guide/](http://v3.quicktvui.com/zh/guide/installation.html)) </u>
+
+
+最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
+
 
 最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
 ## 源码修改
@@ -70,10 +76,15 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 - [x] 瀑布流首页
 - [x] 搜索页
 - [x] 媒资详情页
-- [ ] 筛选页(开发中)
+- [x] 筛选页(开发中)
+- [x] 多级列表页
+
+以上页面开发完成，正在debug中
+
+开发中
+- [ ] 内容编辑页
 
 计划中
-- [ ] 直播列表页
 - [ ] 短视频浏览
 
 ## 关于QuickTVUI

@@ -1,0 +1,76 @@
+
+.screen-right-content-item-root-css{
+    width: 260px;
+    height: 422px;
+    background-color: transparent;
+}
+
+.screen-right-content-item-root-css .screen-right-content-item-img{
+    width: 260px;
+    height: 368px;
+    border-radius: 8px;
+    focus-border-color: white;
+    focus-border-style: solid;
+    z-index: 1;
+    background-color: rgba(255,255,255,0.3);
+}
+
+.screen-right-content-item-root-css .screen-right-content-item-corner{
+    position: absolute;
+    z-index: 1000;
+    top: 6px;
+    right:6px;
+
+}
+.screen-right-content-item-root-css .screen-right-content-item-score-root{
+    background-color: transparent;
+    z-index: 1000;
+    width: 260px;
+    height: 65px;
+    position: absolute;
+    left: 0;
+    bottom: 54px;
+}
+.screen-right-content-item-root-css .screen-right-content-item-score-root .screen-right-item-score{
+    width: 260px;
+    height: 32px;
+    top: 28px;
+    color: #FC5E1B;
+    z-index: 1000;
+    background-color: transparent;
+    position: absolute;
+}
+
+.screen-right-content-item-root-css .screen-right-content-item-text-root{
+    width: 260px;
+    height: 54px;
+    position: absolute;
+    left: 0;
+    top: 368px;
+    z-index: 110;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: transparent;
+    focus-background-color: white;
+}
+
+.screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-normal{
+    position: absolute;
+    width: 260px;
+    height: 54px;
+    background-color: transparent;
+    color: rgba(255, 255, 255, .7);
+    /*focus-color: black;*/
+}
+.screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-focus{
+    position: absolute;
+    width: 260px;
+    height: 54px;
+    background-color: transparent;
+    color: black;
+}
+
+
+
