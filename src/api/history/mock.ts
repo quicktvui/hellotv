@@ -25,7 +25,8 @@ export const getTestContentList = (size = 20): IHistoryContentEntity[] => {
             platformId: "1408002578460987393",
             playCount: "1",
             playTime: "2024-03-22 17:35:20",
-            userId: "9BD63E4D4960B114248F4B0038D60112:bc9d4e6a000f"
+            userId: "9BD63E4D4960B114248F4B0038D60112:bc9d4e6a000f",
+            h_modeName: index==0?'分类-'+index: ''
         }
     })
 }
