@@ -54,7 +54,7 @@ const props = withDefaults(defineProps<{
     width: 340px;
     height: 106px;
     background-color: transparent;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     flex-direction: row;
 }
@@ -67,12 +67,13 @@ const props = withDefaults(defineProps<{
 
 .list_item_icon_box{
     position: absolute;
-    width: 340px;
+    width: 280px;
     height: 106px;
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
     align-items: center;
     flex-direction: row;
+    background-color: transparent;
 }
 .list_item_icon_box img{
     width: 34px;

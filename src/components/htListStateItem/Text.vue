@@ -4,15 +4,15 @@
         <div class="list_text_bg" :duplicateParentState="true" showOnState="focused" :focusable="false"
             :gradientBackground="focusedBg"></div>
         <qt-text 
-            class="list_text" :style="custemStyle.normal" gravity="center"
+            class="list_text" :style="custemStyle.normal" gravity="centerVertical|end"
             showOnState="normal" :focusable="false"
             :duplicateParentState="true" text="${showName}" />
         <qt-text
-            class="list_text" :style="custemStyle.focused" gravity="center"
+            class="list_text" :style="custemStyle.focused" gravity="centerVertical|end"
             showOnState="focused" :focusable="false"
             :duplicateParentState="true" text="${showName}" />
         <qt-text
-            class="list_text" :style="custemStyle.selected" gravity="center"
+            class="list_text" :style="custemStyle.selected" gravity="centerVertical|end"
             showOnState="selected" :focusable="false"
             :duplicateParentState="true" text="${showName}" />
     </qt-view>
@@ -44,7 +44,7 @@ const props = withDefaults(defineProps<{
     width: 340px;
     height: 106px;
     background-color: transparent;
-    justify-content: center;
+    /* justify-content: center; */
     align-items: center;
     flex-direction: row;
 }
@@ -61,7 +61,7 @@ const props = withDefaults(defineProps<{
 }
 .list_text{
     position: absolute;
-    width: 340px;
+    width: 280px;
     height: 106px;
     font-size: 36px;
     background-color: transparent;

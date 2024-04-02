@@ -1,18 +1,22 @@
 <template>
     <div 
         v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
-        :nextFocusName="nextFocusName" :blockFocusDirections="blockFocusDirections"
+        :blockFocusDirections="blockFocusDirections"
     >
-        <qt-view class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible">
+        <!-- :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" -->
+        <qt-view 
+            class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
+            :gradientBackground="cBgColor"
+        >
             <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
                 :focusable="false"></qt-text>
             <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" />
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
-                :requestFocus="true"
+                :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }"
             >
-                <!-- 纯文字标题-->
+                <!-- 纯文字标题 :requestFocus="true"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
                 <!-- 图片标题-->
                 <ListStateImg type="2" />
@@ -38,7 +42,7 @@ import api from 'src/api/history/index.ts'
 // @ts-ignore
 import { layouts } from '../config.ts'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
     menuStyle?: {
         normal: { color: string }
         focused: { color: string }
@@ -47,9 +51,14 @@ const props = defineProps<{
     title?: string;
     titleImg?: string;
     menuList?: IHistoryMenuEntity[]
+    bgColor?:string[]
+    focusedBg?:string[]
     layout:string
     isFilter:boolean
-}>()
+}>(), {
+    focusedBg: ()=> ['#F5F5F5','#F5F5F5'],
+    bgColor: ()=> ['#0CFFFFFF','#00FFFFFF'],
+})
 
 const listRef = ref<QTIListView>();
 const isShow = ref(true)
@@ -65,11 +74,14 @@ const onTabSelect = (arg: any) => {
     mPosition = arg.position
 };
 
+const cBgColor = computed(()=>{
+    return {colors:props.bgColor, orientation: 4}
+})
 const nextFocusName = computed(()=>{
     if(props.isFilter){
-        return { right: 'h_tab_name' }
+        return { right: 'h_tab_name', left: 'h_tab_name' }
     }
-    return { right: 'content_grid_name' }
+    return { right: 'content_grid_name', left: 'content_grid_name' }
 })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
@@ -79,15 +91,18 @@ const blockFocusDirections = computed(()=>{
 })
 const menuItemFocusedBg = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
-        return { colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [8, 0, 0, 8], orientation: 6 }
+        return { colors: props.focusedBg, cornerRadii4: [8, 0, 0, 8], orientation: 6 }
     }
-    return { colors: ['#F5F5F5', '#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6 }
+    return { colors: props.focusedBg, cornerRadii4: [0, 8, 8, 0], orientation: 6 }
 })
 
 defineExpose({
     async initData() {
-        let list = await api.getMenuList()
-        if (list.data?.length) {
+        mPosition = -1
+        let list = await api.getMenuList().catch(()=>{
+            return null
+        })
+        if (list && list.data?.length) {
             menuApiList = list.data
             isShow.value = list.data.length>1
         } else if (props.menuList) {
@@ -97,6 +112,9 @@ defineExpose({
             isShow.value = false
         }
         listRef.value?.init(getMenuList(menuApiList));
+        if(isShow.value){
+            onTabSelect({ position: 0 })
+        }
         return isShow.value
     }
 })
@@ -124,23 +142,30 @@ defineExpose({
     width: 340px;
     height: 1080;
     position: absolute;
-    background-color: #434a50;
+    /* background-color: #434a50; */
+    background-color: transparent;
 }
 
 .menu-title {
-    height: 100px;
+    height: 60px;
+    line-height: 60px;
     font-size: 50px;
-    margin-left: 50px;
+    margin-top: 80px;
+    margin-left: 80px;
+    background-color: transparent;
 }
 
 .menu-title-image {
     width: 320px;
     height: 60px;
     margin: 10px;
+    background-color: transparent;
 }
 
 .menu_list {
     width: 340px;
     height: 900px;
+    margin-top: 35px;
+    background-color: transparent;
 }
 </style>

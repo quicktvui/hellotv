@@ -73,7 +73,7 @@ defineExpose({
 .h_top {
     /* width: 1570px; */
     position: relative;
-    /* background-color: pink; */
+    background-color: transparent;
     height: 100px;
     display: flex;
     flex-direction: row;
@@ -87,6 +87,7 @@ defineExpose({
     width: 1500px;
     height: 100px;
     color: #666;
+    background-color: transparent;
 }
 
 .top_edit {
@@ -99,15 +100,18 @@ defineExpose({
     flex-direction: row;
     align-items: center;
     justify-content: flex-end;
+    background-color: transparent;
 }
 
 .hc-top-txt2 {
     width: 300px;
     height: 60px;
     color: #666;
+    background-color: transparent;
 }
 
 .hc-top-clear-btn {
     margin-left: 34px;
+    background-color: transparent;
 }
 </style>
