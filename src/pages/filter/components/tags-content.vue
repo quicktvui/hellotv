@@ -47,29 +47,30 @@
                       ref="screen_right_content"
                       name="screen_right_content"
                       :blockFocusDirections="['right','down']"
-                      :spanCount="5" :openPage="true" :preloadNo="10"
-                      :focusable="false"
-                      :nextFocusName='{down:"screen_right_content"}'
+                      :enablePlaceholder="true"
+                      :spanCount="5" :openPage="true" :preloadNo="4"
+                      :focusable="false" :pageSize="screenPageSize"
                       nextFocusLeftSID="screen_left_tags"
                       :listenBoundEvent="true" :useDiff="true"
                       :listenHasFocusChange="true"
                       :clipChildren="false" :clipPadding="false"
                       :loadMore="loadMoreScreenContent"
+                      :loadingDecoration="{top:15,left:30,bottom:70}"
                       @scroll-state-changed="onScrollStateChanged"
                       @item-focused="onItemFocused"
                       @item-click="onItemClick"
-                      :padding="'50,10,50,20'">
+                      :padding="'50,30,50,0'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
-          <p class="screen-right-content-no-more" :focusable="false" :type="999">已经到底啦，按【返回键】回到顶部</p>
-          <template #loading  :focusable="false">
+          <template #footer>
+            <p class="screen-right-content-no-more" :focusable="false" :type="1003">已经到底啦，按【返回键】回到顶部</p>
+          </template>
+          <template #loading>
             <!--分页加载 Loading-->
             <qt-view class="screen-right-content-more-loading" :type="1002" :focusable="false">
               <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
             </qt-view>
           </template>
-
-
         </qt-grid-view>
 
       </qt-view>
@@ -105,9 +106,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import { computed, defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 import {useGlobalApi} from "../../../api/UseApi";
+import ScreenConfig from "../build_data/ScreenConfig"
 import {
   buildScreenContent, clearAllFilterCondition, clearFastFilterCondition,
   getCurRecordFilter,
@@ -117,12 +119,11 @@ import {
   getFilterLength,
   getOffsetY,
   getScrollHeight, isAllFilterListHasData, isFastFilterListHasData,
-  isTagContentEnd,
   updateAllFilterCondition,
   updateFastFilterCondition
 } from "../build_data/useTagsData";
 import {
-  QTGridView,
+  QTIGridView,
   QTGridViewItem,
   QTIListView,
   QTIView,
@@ -151,13 +152,14 @@ export default defineComponent({
   },
   emits:['unBlockFocus'],
   setup(props, context) {
+    const screenPageSize = computed(()=>{return ScreenConfig.screenPageSize})
     //工具变量
     const log = useESLog()
     const globalApi = useGlobalApi()
     const launch = useLaunch()
     const toast = useESToast()
     //组件变量
-    const screen_right_content = ref<QTGridView>()
+    const screen_right_content = ref<QTIGridView>()
     const screen_right_filters = ref<QTIListView>()
     const screen_record_list = ref<QTIListView>()
     const screen_right_selected_tags = ref<QTIView>()
@@ -185,8 +187,8 @@ export default defineComponent({
     let empty = ref(false)
     let screenItemContentFocus = ref(false)
     let scrollY = ref(0)
-    let filterTriggerTask = ref([])
-    let hideSelectTask = ref([])
+    let filterTriggerTask = ref<Array<any>>([])
+    let hideSelectTask = ref<Array<any>>([])
 
     function init(){
       hideSelectTask.value = [
@@ -411,9 +413,6 @@ export default defineComponent({
               screenRightContentData.push(...screenContentList)
             }
           }
-          if (isTagContentEnd()) {
-            screen_right_content.value!.stopPage()
-          }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
             if (screenRightContentData && screenRightContentData.length > 0) {
@@ -428,7 +427,7 @@ export default defineComponent({
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {
-              screen_right_content.value!.stopPage()
+              setTimeout(()=>{screen_right_content.value!.stopPage()},400)
             }
           }
         }
@@ -476,6 +475,7 @@ export default defineComponent({
       scrollY,
       screenItemContentFocus,
       filterTriggerTask,
+      screenPageSize,
     }
   }
 })

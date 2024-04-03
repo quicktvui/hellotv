@@ -103,8 +103,8 @@ export default defineComponent({
       requestFocus,
       mediaAuthorization,
       isMediaTypeFree,
-        autofocus,
-        setAutofocus,
+      autofocus,
+      setAutofocus
     }
   },
 });

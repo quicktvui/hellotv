@@ -246,15 +246,15 @@ const thirdTabList: QTListViewItem[] = []
 const showThirdTab = ref(false)
 
 async function onESCreate(params: RouteParams) {
-    console.log('huan-onESCreate-params', params)
+    // console.log('huan-onESCreate-params', params)
     // 设置优先级
     let useSet = (params.url || params.lives) ? true : false
     // 直播源地址
     let liveSourceUrl = params.lives ? '' : params.url || BuildConfig.defaultSourceUrl
-    console.log('huan-onESCreate-liveSourceUrl', liveSourceUrl)
+    // console.log('huan-onESCreate-liveSourceUrl', liveSourceUrl)
     // 直播源配置
     let liveSourceList: Lives = params.lives ? JSON.parse(params.lives) : JSON.parse(await localStore.getString('liveSourceList', '[]'))
-    console.log('huan-onESCreate-liveSourceList', liveSourceList)
+    // console.log('huan-onESCreate-liveSourceList', liveSourceList)
     // 判断源是否改变
     let isLiveSourceChange = false
 
@@ -404,7 +404,7 @@ async function onESCreate(params: RouteParams) {
             category.data.map((channel, channelIndex) => {
                 secondTabData.push({
                     type: 2,
-                    decoration: { bottom: channel.id == liveSourceChannelCount ? 450 : 0 },
+                    decoration: { bottom: channel.id == liveSourceChannelCount ? 0 : 0 },
                     channelIndex: channelIndex,
                     channelId: channel.id,
                     channelName: channel.name,
@@ -439,7 +439,7 @@ const onESResume = () => {
 }
 
 function onKeyDown(event: ESKeyEvent) {
-    console.log('huan-onKeyDown-event', event)
+    // console.log('huan-onKeyDown-event', event)
     switch (event.keyCode) {
         case 82: // 菜单键
             clearTimeout(playTimer)
@@ -594,12 +594,10 @@ function changeMediaSource(dir: -1 | 1) {
 }
 
 function onPlayerBufferStart() {
-    console.log('huan-onPlayerBufferStart')
     playNextMediaSource(false)
 }
 
 function onPlayerBufferEnd() {
-    console.log('huan-onPlayerBufferEnd')
     if (hadPlaying) {
         clearTimeout(playTimer)
         clearTimeout(playInfoTimer)
@@ -614,8 +612,6 @@ const curMediaLines = ref(0)
 const curProgram = ref<Program>({})
 const nextProgram = ref<Program>({})
 async function onPlayerPrepared() {
-    console.log('huan-onPlayerPrepared')
-
     hadPlaying = false
 
     clearTimeout(playTimer)
@@ -650,7 +646,6 @@ async function onPlayerPrepared() {
 }
 
 function onPlayerPlaying() {
-    console.log('huan-onPlayerPlaying')
 
     hadPlaying = true
 
@@ -661,7 +656,7 @@ function onPlayerPlaying() {
 }
 
 function onPlayerError(error: ESPlayerError) {
-    console.log('huan-onPlayerError', error)
+    // console.log('huan-onPlayerError', error)
     playNextMediaSource(true)
 }
 
@@ -669,7 +664,6 @@ let menuCloseTimer: any = -1
 let onFocusTimer: any = -1
 let secondTabActive = false
 function onFocus(e: any) {
-    console.log('huan-onFocused-e', e)
     clearTimeout(menuCloseTimer)
     clearTimeout(onFocusTimer)
     if (e.isFocused) {
@@ -707,7 +701,6 @@ function onFocus(e: any) {
 }
 
 function onClick(e: any) {
-    console.log('huan-onClick-e', e)
     showMenu.value = false
     showThirdTab.value = false
     playIndex = e.item.channelId - 1
@@ -729,7 +722,7 @@ async function fetchWithRedirect(resource: string, options: any = {}) {
 
 // 获取直播源配置
 function getLiveSourceConfig(url: string): Promise<Lives> {
-    console.log('huan-getLiveSourceConfig-url', url)
+    // console.log('huan-getLiveSourceConfig-url', url)
     return new Promise((resolve, reject) => {
         fetchWithRedirect(url)
             .then(response => response.text())
@@ -748,7 +741,7 @@ function getLiveSourceConfig(url: string): Promise<Lives> {
 
 // 获取直播源频道数据
 function getLiveSourceChannel(url: string): Promise<Category[]> {
-    console.log('huan-getLiveSourceChannel-url', url)
+    // console.log('huan-getLiveSourceChannel-url', url)
     return new Promise((resolve, reject) => {
         fetchWithRedirect(url)
             .then(response => response.text())
@@ -835,7 +828,7 @@ function getLiveSourceChannel(url: string): Promise<Category[]> {
 
 // 获取直播源频道节目数据
 function getLiveSourceChannelProgram(url: string): Promise<Program[]> {
-    console.log('huan-getLiveSourceChannelProgram-url', url)
+    // console.log('huan-getLiveSourceChannelProgram-url', url)
     return new Promise((resolve, reject) => {
         fetch(url)
             .then(response => response.json())

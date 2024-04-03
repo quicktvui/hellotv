@@ -9,7 +9,7 @@
     ```js
 
     // 搜索中间列表 接口
-    getHotSearch(keyword?: string): Promise<Array<QTListViewItem>> 
+    getHotSearch(pageNum: number,keyword?: string): Promise<Array<QTListViewItem>> 
     // 搜索结果tablist 接口
     getSearchResultTabList(): Promise<Array<QTTabItem>>
     // 搜索结果 接口

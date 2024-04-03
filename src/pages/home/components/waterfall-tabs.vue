@@ -52,9 +52,6 @@
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
         </template>
-        <!--      <template v-slot:waterfall-vue-section>-->
-        <!--        <page-mine/>-->
-        <!--      </template>-->
       </qt-tabs>
   </div>
 </template>
@@ -133,16 +130,18 @@ export default defineComponent({
       data: {} as QTWaterfallItem,
     })
     let isOneTime: boolean = false
+    let isOneTimeStop: boolean = false
     let isPlaying = ref(false)
     //背景图
     const wTabBg = ref()
     //tab
-    const tabContentBlockFocusDirections = ref(['down', 'left', 'right', 'top'])
+    const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
+    let delayStopPlaerTimer: any = -1
     //
     function onESCreate(params) {
-     getTabList()
       isOneTime = true
+      getTabList()
     }
 
     function getTabList() {
@@ -169,11 +168,18 @@ export default defineComponent({
     }
 
     function onESStop() {
-      bg_player.value?.pause()
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      if(!isOneTimeStop){
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          isOneTimeStop = true
+        },2000)
+      }
     }
 
     function onESPause() {
-      bg_player.value?.pause()
+      bg_player.value?.stop()
     }
 
     function onESDestroy() {
@@ -201,20 +207,9 @@ export default defineComponent({
               if (pageNo <= 1) {
                 tabRef.value?.setPageData(tabPageIndex, tabPage)
               } else {
-                //todo 立朋哥记得来修改下  要不这里还得延时
-                setTimeout(()=>{ tabRef.value?.addPageData(tabPageIndex, tabPage, 0)},1000)
+                tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
               }
             }
-            // else {
-              // if (log.isLoggable(ESLogLevel.DEBUG)) {
-              //   log.d(TAG, '---------getTabContent-----addPageData--->>>>' +
-              //     ' tabPageIndex:' + tabPageIndex +
-              //     ' pageNo:' + pageNo +
-              //     ' tabPage:', tabPage)
-              // }
-              // tabRef.value?.addPageData(tabPageIndex, buildTabPageEndData(), 0)
-              // tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-            // }
             if (tabPage.isEndPage){
               tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
             }
@@ -242,14 +237,13 @@ export default defineComponent({
           ' eventName:' + eventName +
           ' params:', params
         )
-        bg_player?.value.pause()
-        if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-          bg_player?.value.showCoverImmediately(true)
-          bg_player?.value.keepPlayerInvisible(false)
-        } else {
-          bg_player?.value.showCoverImmediately(true)
-        }
-
+      }
+      bg_player?.value.pause()
+      if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
+        bg_player?.value.showCoverImmediately(true)
+        bg_player?.value.keepPlayerInvisible(false)
+      } else {
+        bg_player?.value.showCoverImmediately(true)
       }
     }
     function onTabMoveToTopEnd(pageIndex: number, eventName: string, params: QTTabEventParams) {
@@ -285,8 +279,10 @@ export default defineComponent({
           ' eventName:' + eventName +
           ' params:', params
         )
-        //我
-        //bgPlayerActive.value = true
+      }
+      //我
+      //bgPlayerActive.value = true
+      if(bgPlayerType.value != -1){
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player.value.delayShowPlayer(200)
         }
@@ -315,26 +311,17 @@ export default defineComponent({
     let delayDealwithplayerTimer: any = -1
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList:any){
-      if(sectionList.length < 1) return
-      if(delayOnTabPageSectionAttachedTimer) clearTimeout(delayOnTabPageSectionAttachedTimer)
-      if(sectionList[0].sectionIndex !== 0){
-        return
-      }
-      sectionList.forEach((item:any)=>{
-        log.e(TAG, '-------onTabPageSectionAttached----------->>>',
-            'index:' + item.sectionIndex+
-            ',pageIndex:' + pageIndex,
-            ',isSwitchCellBg:' + item.isSwitchCellBg,
-            ',isFocusScrollTarget:'+item.isFocusScrollTarget
-        )
-      })
+      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       delayOnTabPageSectionAttachedTimer = setTimeout(async () => {
+        if(sectionList.length < 1) {
+          log.e("IndieViewLog",`reutrn on sectionList.length < 1`)
+          return
+        }
         const isSwitchCellBg =  sectionList[0].isSwitchCellBg
         if (isSwitchCellBg === '0'){
           const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
           wTabBg.value?.setImg(bg,"",true,false)
         }
-
         if(currentSectionAttachedIndex.value != pageIndex) {
           currentSectionAttachedIndex.value = pageIndex
           let sectionData = sectionList[0]
@@ -395,12 +382,12 @@ export default defineComponent({
                   1920,1080,1920,1080,
                   toRaw(recordPlayerData.data.item.playData),0
               )
-            }else
-            if (isSwitchCellBg === '1'){
+            }else if (isSwitchCellBg === '1'){
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg,"",true,false)
+            }else{
+              bg_player?.value.stop()
             }
-
             //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
 
           }
@@ -420,7 +407,6 @@ export default defineComponent({
       launch.launch(item)
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
-        log.e("TAG", '---------onTabPageItemFocused-------->>>>', sectionIndex, '---->>>', itemIndex+`,item:${JSON.stringify(item)}`)
       if (isFocused){
         if(bgPlayerType.value == CoveredPlayerType.TYPE_BG && sectionIndex === 0){
           if(recordPlayerData.pageIndex == pageIndex && recordPlayerData.itemIndex == itemIndex){
@@ -457,8 +443,6 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
-      // toast.showLongToast(scrollY + 'onTabPageScrollonTabPageScrollonTabPageScrollonTabPageScroll')
-      console.log(offsetX,scrollY,'onTabPageScrollonTabPageScrollonTabPageScrollonTabPageScroll')
       //如果有焦点播放需求时
       // if(Math.abs(scrollY) > 2) {
       //   bg_player.value?.showCoverImmediately(true)
@@ -472,6 +456,9 @@ export default defineComponent({
       log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
           ' pageIndex:' + pageIndex
       )
+      bgPlayerType.value = -1
+      currentSectionAttachedIndex.value = -1
+      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }
 

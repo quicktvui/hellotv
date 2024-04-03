@@ -47,7 +47,8 @@ function buildEndSection(): QTWaterfallSection {
       height: 200,
       marginLeft: 90,
       marginTop: 40,
-      marginBottom: 40
+      marginBottom: 40,
+      fontSize: 30
     },
     itemList: [],
     style: {
@@ -119,13 +120,13 @@ export function buildRecommendationSection(): QTWaterfallSection {
     },
     style: {
       width: 1740,
-      height: 1100,
+      height: 930,
       spacing: 36
     },
     //这里控制一下列表的滚动
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
-      down: 600, up: 0
+      down: 700, up: 0
     }
   }
   return section
@@ -226,13 +227,27 @@ export function buildMediaSeriesList(mediaList: Array<IMedia>): Array<QTMediaSer
 }
 
 export function buildMediaSeries(media: IMedia): QTMediaSeries {
-  return {
-    id: media.id,
-    title: media.title,
-    cover: media.coverH,
-    vip: {
-      enable: media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP,
-      text: 'VIP'
+  const vip = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP
+  if (vip) {
+    return {
+      id: media.id,
+      title: media.title,
+      cover: media.coverH,
+      flagText: "VIP",
+      vip: {
+        enable: true,
+        text: "VIP"
+      }
+    }
+  } else {
+    return {
+      id: media.id,
+      title: media.title,
+      cover: media.coverH,
+      vip: {
+        enable: false,
+        text: "VIP"
+      }
     }
   }
 }

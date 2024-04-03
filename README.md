@@ -62,7 +62,18 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
 
 
-最后看到加载出页面，表示完成调试，即可随时修改源码查看效果。
+#### 6. 打包生成APK
+
+[APK配置](android/README.md)
+
+``` bash
+# 生成debug包
+npm run build-apk-debug
+# 生成release包
+npm run build-apk-release
+```
+打包完成后apk在 `./android/build/outputs` 文件夹下
+
 ## 源码修改
 接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
 通过对每个页面提供的接口进行数据替换，即可实现自己的业务逻辑。
@@ -78,6 +89,7 @@ adb shell am broadcast -a  com.extscreen.runtime.ACTION_CHANGE_DEBUG_SERVER --es
 - [x] 媒资详情页
 - [x] 筛选页(开发中)
 - [x] 多级列表页
+- [x] 一键打包生成APK
 
 以上页面开发完成，正在debug中
 

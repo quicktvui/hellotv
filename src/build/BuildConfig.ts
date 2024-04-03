@@ -9,9 +9,8 @@ export default {
   packageName: 'es.tv.huan.hellotv',
   //域名
   requestBaseUrl: 'http://cms.hmon.tv/es_single/api',
-  //页面内容请求数量
+  //首页内容请求数量
   tabContentPageSize: 10,
   // 默认源
-  defaultSourceUrl: 'https://gh-proxy.com/https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json'
-
+  defaultSourceUrl: 'http://cms.hmon.tv/upload/test/tvbox/js.json'
 }

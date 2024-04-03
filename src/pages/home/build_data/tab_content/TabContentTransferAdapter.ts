@@ -22,6 +22,11 @@ import BuildConfig from '../../../../build/BuildConfig'
  * @param pageNo
  */
 export function buildTransferTabContentAdapter(tabContent:TabContent,pageNo:number=1,tabId:string):QTTabPageData{
+  if (!tabContent || !tabContent.plates || tabContent.plates.length === 0){
+    return {
+      data:[]
+    }
+  }
   const isFirstPage = pageNo === 1
   if (isFirstPage){
     tabPlateAllHeight.delete(tabId)
@@ -61,7 +66,7 @@ export function buildTransferTabContentAdapter(tabContent:TabContent,pageNo:numb
   let isEndPage:boolean = false
   const requestCount = (pageNo - 1) * BuildConfig.tabContentPageSize + plateSourceData.length
   const allPlateHeight = getAllPlateHeightByTabId(tabId) + firstPlateMarginTop
-  if (allPlateHeight > 1080 && requestCount >= tabContent.plateCount){
+  if (allPlateHeight > 1080 && requestCount >= tabContent.plateCount && plateSourceData.length > 0){
     isEndPage = true
     const endSection = buildEndSection('5');
     plateList.push(endSection)

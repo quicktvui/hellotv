@@ -19,11 +19,18 @@
   background-color: transparent;
 }
 .scroll_view_content{
-  width: 3073px;
   height: 1080px;
   flex: 1;
   background-color: transparent;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
+}
+.search_start_loading{
+  height: 1080px;
+  background-color: transparent;
+  position: absolute;
+  top:0;
+  justify-content: center;
+  align-items: center;
 }
