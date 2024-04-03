@@ -8,8 +8,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
-      :clipChildren="false"
-             :focusable="false"
+      :clipChildren="false" :focusable="false"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
@@ -37,8 +36,8 @@
         </qt-view> -->
       </qt-view>
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true" 
-        :enableFocusBorder="true" :opacity="coverOpacity">
-        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img"  :clipChildren="false"
+        :enableFocusBorder="true">
+        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img"  :clipChildren="false" :opacity="coverOpacity"
           :focusable="false"  :src="coverSrc" :width="playerWidth" :height="playerHeight"/>
       </qt-view>
       <!-- 背景视频遮罩 -->
