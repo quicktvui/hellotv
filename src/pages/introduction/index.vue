@@ -20,7 +20,7 @@
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true" class="introduction-detail-subtitle-root-css">
         <div class="introduction-detail-vip-css"
-             v-if="isMediaTypeFree"
+             v-if="!isMediaTypeFree"
              :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
           <text-view
             class="introduction-detail-vip-text-css"
