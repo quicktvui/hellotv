@@ -32,11 +32,13 @@ class HistoryApi extends HistoryBaseApi {
   }
 
   async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {
-    console.log('huan-getContentList', currentMenu.index, currentFilter.item.id, pageNum, localHistory)
+    console.log('huan-getContentList', currentMenu, currentFilter, pageNum, localHistory)
+
     let data: IHistoryContentEntity[] = []
     switch (currentMenu.index) {
       case 0: // 观看历史
         plyHistoryCategory[currentFilter.item.id].slice(--pageNum * 15, ++pageNum * 15).map((item: IMedia) => data.push({
+          assetType: item.typeId,
           assetLongTitle: item.title || '',
           assetLongCoverH: item.coverH,
           description1: '',
@@ -44,17 +46,26 @@ class HistoryApi extends HistoryBaseApi {
           metaId: item.id,
           playCount: item.playId || 0,
           currentPlayTime: item.progress,
-          allTime: Number(item.duration || 0) * 60 * 1000
+          allTime: Number(item.duration || 0) * 60 * 1000,
+          customProp: {
+            fullIndex: item.fullIndex,
+            currIndex: item.currIndex
+          }
         }))
         break
       case 1: // 我的收藏
         favHistoryCategory[currentFilter.item.id].slice(--pageNum * 15, ++pageNum * 15).map((item: IMedia) => data.push({
+          assetType: item.typeId,
           assetLongTitle: item.title || '',
           assetLongCoverH: item.coverH,
           description1: '',
           id: item.id,
           metaId: item.id,
-          playCount: item.playId || 0
+          playCount: item.playId || 0,
+          customProp: {
+            fullIndex: item.fullIndex,
+            currIndex: item.currIndex
+          }
         }))
         break
     }
@@ -71,10 +82,12 @@ class HistoryApi extends HistoryBaseApi {
 
     switch (currentMenu.index) {
       case 0: // 历史
-        delete plyHistoryCategory[currentFilter.item.id][item.index]
+        delete plyHistoryCategory[0][item.item.customProp.fullIndex]
+        delete plyHistoryCategory[item.item.metaType][item.item.customProp.currIndex]
         break
       case 1: // 收藏
-        delete favHistoryCategory[currentFilter.item.id][item.index]
+        delete favHistoryCategory[0][item.item.customProp.fullIndex]
+        delete favHistoryCategory[item.item.metaType][item.item.customProp.currInde]
         break
     }
 
