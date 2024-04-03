@@ -38,7 +38,7 @@ import { IHistoryMenuEntity } from '../../../api/history/modelEntity';
 // @ts-ignore
 import { getMenuList } from '../index.ts';
 // @ts-ignore
-import api from 'src/api/history/index.ts'
+import api from '../../../api/history/index.ts'
 // @ts-ignore
 import { layouts } from '../config.ts'
 

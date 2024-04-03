@@ -3,7 +3,7 @@ import {
     QTNavBarItemType,
     QTIListView, QTListViewItem, QTPoster, QTGridViewItem
 } from '@quicktvui/quicktvui3';
-import { IHistoryContentEntity, IHistoryFilterEntity, IHistoryMenuEntity } from 'src/api/history/modelEntity';
+import { IHistoryContentEntity, IHistoryFilterEntity, IHistoryMenuEntity } from '../../api/history/modelEntity';
 import { Iconfig } from './config';
 
 export const getMenuList = (menuList: IHistoryMenuEntity[] = []) => {
