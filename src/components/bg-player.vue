@@ -8,8 +8,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
-      :clipChildren="false"
-             :focusable="false"
+      :clipChildren="false" :focusable="false"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
@@ -36,13 +35,10 @@
           <p class="info_major" v-if="playerInfo.major">主演: {{playerInfo.major}} </p>
         </qt-view> -->
       </qt-view>
-      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true" :enableFocusBorder="true" >
-        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :fullQuality="true" :transitionTime="400" :clipChildren="false"
-                           :focusable="false" :opacity="coverOpacity"
-                           :src="coverSrc"
-                           :width="playerWidth"
-                           :height="playerHeight"
-        />
+      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true" 
+        :enableFocusBorder="true">
+        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img"  :clipChildren="false" :opacity="coverOpacity"
+          :focusable="false"  :src="coverSrc" :width="playerWidth" :height="playerHeight"/>
       </qt-view>
       <!-- 背景视频遮罩 -->
       <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"/>
@@ -107,8 +103,8 @@ export default defineComponent({
     const decode = useESPlayerDecodeManager()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
-    let playerWidth = ref<number>(860)
-    let playerHeight = ref<number>(484)
+    let playerWidth = ref<number>(1920)
+    let playerHeight = ref<number>(1080)
     let playerListWidth = ref<number>(0)
     let playerListHeight = ref<number>(0)
     let bgPlayerOpacity = ref(0)
@@ -199,7 +195,6 @@ export default defineComponent({
       log.e('BG-PLAYER',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowPlayerTimer)
-      clearTimeout(delayShowTimer)
       if(stopIfNeed){
         if(isAnyPlaying){
           isAnyPlaying.value = false
@@ -287,7 +282,15 @@ export default defineComponent({
       log.d('BG-PLAYER',`setCellNextImage bg:${backgroundImage}`)
       // if(backgroundImage) itemCellBgImgRef.value?.setNextImage(backgroundImage);
       // else itemCellBgImgRef.value?.setNextImage(recordPlayerList[currentPlayIndex.value].cover);
-        coverSrc.value = backgroundImage
+        // coverSrc.value = backgroundImage
+        if(backgroundImage != '') {
+          coverSrc.value = backgroundImage
+          // isShowVideoBjText.value = false
+        }
+        else {
+          // isShowVideoBjText.value = true
+          coverSrc.value = 'http://qcloudcdn.a311.ottcn.com/channelzero_image/web_static/extend_screen/mood/video_bj_01.png'
+      }
         //coverSrc.value = recordPlayerList[currentPlayIndex.value].cover
     }
 

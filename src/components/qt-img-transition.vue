@@ -14,10 +14,10 @@
 <!--    </qt-animation>-->
 <!--    <qt-view class="img-root-css-placeholder" v-show="maskShow" :style="{width:width+'px',height:height+'px'}">-->
 <!--    </qt-view>-->
-    <img-transition ref="img" :transitionTime="400" :style="{'border-radius': borderRadius + 'px',backgroundColor:needEmptyBg?'rgba(255,255,255,0.1)':'transparent',width:width+'px',height:height+'px'}">
+    <!-- <img-transition ref="img" :transitionTime="400" :style="{'border-radius': borderRadius + 'px',backgroundColor:needEmptyBg?'rgba(255,255,255,0.1)':'transparent',width:width+'px',height:height+'px'}">
 
-    </img-transition>
-
+    </img-transition> -->
+    <img :src="qtImageSrc" :visibility="qtImageSrc ? 'visible' : 'invisible'" :focusable="false" :style="{'border-radius': borderRadius + 'px',backgroundColor:needEmptyBg?'rgba(255,255,255,0.1)':'transparent',width:width+'px',height:height+'px'}"/>
   </div>
 </template>
 
@@ -65,6 +65,7 @@ export default defineComponent({
     let timer:any = -1
     let maskShow = ref(true)
     let img = ref()
+    let qtImageSrc = ref('')
     onMounted(() => {
      // init()
     })
@@ -155,7 +156,8 @@ export default defineComponent({
     }
 
     watch([() => props.src], (newValue, oldValue) => {
-            img.value?.setNextImage(newValue[0])
+            // img.value?.setNextImage(newValue[0])
+            qtImageSrc.value = newValue[0]
         }
     //   if (!newValue[0]){
     //     timer && clearTimeout(timer)
@@ -206,7 +208,8 @@ export default defineComponent({
       onNewLoadEnd,
       reset,
       maskShow,
-      img
+      img,
+      qtImageSrc
     }
   }
 })
