@@ -8,6 +8,7 @@ import web from './pages/web/index.vue'
 import live from './pages/live/index.vue'
 import settings from './pages/settings/index.vue'
 import networkError from './components/NetworkError.vue'
+import activity2 from './pages/activity2/index.vue'
 
 const routes = [
   {
@@ -43,6 +44,9 @@ const routes = [
   },
   {
     name: 'live', path: '/live', component: live
+  },
+  {
+    name: 'activity2', path: '/activity2', component: activity2
   },
   {
     name: 'settings', path: '/settings', component: settings, type: ESRouteType.ES_ROUTE_TYPE_DIALOG
