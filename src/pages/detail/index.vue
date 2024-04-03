@@ -84,6 +84,7 @@ export default defineComponent({
     let media: IMedia
     let isPaused = false
     let isStopped = false
+    let isPlayerInit = false
     //--------------------------------------------------------------------
     const waterfallRef = ref<QTIWaterfall>()
     const albumDetailRef = ref<IAlbumDetail>()
@@ -316,8 +317,10 @@ export default defineComponent({
       //
       mediaPlayerViewRef.value?.addMediaItemList(page, data)
 
-      if (page == 0) {
+      //TODO 等待左图右文修改获取数据的bug
+      if (page == 0 && !isPlayerInit) {
         mediaPlayerViewRef.value?.playMediaItemByIndex(0)
+        isPlayerInit = true
       }
     }
 
