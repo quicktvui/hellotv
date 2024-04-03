@@ -282,11 +282,13 @@ export default defineComponent({
       }
       //我
       //bgPlayerActive.value = true
-      if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-        bg_player.value.delayShowPlayer(200)
+      if(bgPlayerType.value != -1){
+        if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
+          bg_player.value.delayShowPlayer(200)
+        }
+        bg_player?.value.resume()
+        bg_player?.value.requestDismissCover()
       }
-      bg_player?.value.resume()
-      bg_player?.value.requestDismissCover()
     }
     function onTabPageScrollToEnd(pageIndex: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -454,6 +456,7 @@ export default defineComponent({
       log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
           ' pageIndex:' + pageIndex
       )
+      bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
