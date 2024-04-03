@@ -130,16 +130,18 @@ export default defineComponent({
       data: {} as QTWaterfallItem,
     })
     let isOneTime: boolean = false
+    let isOneTimeStop: boolean = false
     let isPlaying = ref(false)
     //背景图
     const wTabBg = ref()
     //tab
     const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
+    let delayStopPlaerTimer: any = -1
     //
     function onESCreate(params) {
-     getTabList()
       isOneTime = true
+      getTabList()
     }
 
     function getTabList() {
@@ -166,11 +168,18 @@ export default defineComponent({
     }
 
     function onESStop() {
-      bg_player.value?.pause()
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      if(!isOneTimeStop){
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          isOneTimeStop = true
+        },2000)
+      }
     }
 
     function onESPause() {
-      bg_player.value?.pause()
+      bg_player.value?.stop()
     }
 
     function onESDestroy() {
@@ -300,26 +309,17 @@ export default defineComponent({
     let delayDealwithplayerTimer: any = -1
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList:any){
-      if(sectionList.length < 1) return
-      if(delayOnTabPageSectionAttachedTimer) clearTimeout(delayOnTabPageSectionAttachedTimer)
-      if(sectionList[0].sectionIndex !== 0){
-        return
-      }
-      sectionList.forEach((item:any)=>{
-        log.e(TAG, '-------onTabPageSectionAttached----------->>>',
-            'index:' + item.sectionIndex+
-            ',pageIndex:' + pageIndex,
-            ',isSwitchCellBg:' + item.isSwitchCellBg,
-            ',isFocusScrollTarget:'+item.isFocusScrollTarget
-        )
-      })
+      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       delayOnTabPageSectionAttachedTimer = setTimeout(async () => {
+        if(sectionList.length < 1) {
+          log.e("IndieViewLog",`reutrn on sectionList.length < 1`)
+          return
+        }
         const isSwitchCellBg =  sectionList[0].isSwitchCellBg
         if (isSwitchCellBg === '0'){
           const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
           wTabBg.value?.setImg(bg,"",true,false)
         }
-
         if(currentSectionAttachedIndex.value != pageIndex) {
           currentSectionAttachedIndex.value = pageIndex
           let sectionData = sectionList[0]
@@ -380,12 +380,12 @@ export default defineComponent({
                   1920,1080,1920,1080,
                   toRaw(recordPlayerData.data.item.playData),0
               )
-            }else
-            if (isSwitchCellBg === '1'){
+            }else if (isSwitchCellBg === '1'){
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg,"",true,false)
+            }else{
+              bg_player?.value.stop()
             }
-
             //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
 
           }
@@ -454,6 +454,8 @@ export default defineComponent({
       log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
           ' pageIndex:' + pageIndex
       )
+      currentSectionAttachedIndex.value = -1
+      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }
 

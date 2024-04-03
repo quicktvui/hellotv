@@ -199,6 +199,7 @@ export default defineComponent({
       log.e('BG-PLAYER',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowPlayerTimer)
+      clearTimeout(delayShowTimer)
       if(stopIfNeed){
         if(isAnyPlaying){
           isAnyPlaying.value = false
@@ -265,6 +266,8 @@ export default defineComponent({
     const reset = () => {
       log.e('BG-PLAYER',`reset`)
       clearInterval(loopPlayListTimer)
+      clearTimeout(delayShowTimer)
+      clearTimeout(delayShowPlayerTimer)
       stop()
       release()
     }
