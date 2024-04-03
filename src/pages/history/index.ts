@@ -36,22 +36,11 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
   const { width, height, left } = aConfig
   return {
     _key: data.id,
-    type: data.type || 1001,
+    type: 1001, // data.type || 
     assetTitle: data.h_modeName,//'今天',//i < 10 ? '今天' : (i < 20 ? '一周内' : '更早'),
     decoration: {
       left,
       bottom: 20
-    },
-    shimmer: {
-      enable: true,
-    },
-    ripple: {
-      enable: true,
-      style: {
-        right: 0,
-        bottom: 0,
-        marginRight: -12,
-      }
     },
     style: {
       width,
@@ -107,11 +96,12 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
     playCount: data.playCount,
     currentPlayTime: data.currentPlayTime,
     metaType: data.assetType,
+    customProp: data.customProp,
     editMode: false,
     type: 10001,
     decoration: {
       left,
-      top: 10,
+      top: 20,
       right: left,
       bottom: dBottomNum
     },
@@ -190,40 +180,33 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
     }
   }
 }
-// const getContentItemConfig = (aConfig, data: IcontentItem): object => {
-//     const { width, height, left } = aConfig
-//     return {
-//         _key: data.id,
-//         type: 10001,
-//         title: {
-//             text: data.assetLongTitle,
-//             style: {
-//                 width
-//             }
-//         },
-//         subTitle: {
-//             text: `观看至1集 不足1%`,
-//             style: {
-//                 width
-//             }
-//         },
-//         floatTitle: {
-//             text: data.description1,
-//             style: {
-//                 width,
-//             },
-//         },
-//         image: {
-//             src: data.assetLongCoverH,
-//             enable: true,
-//             style: {
-//                 width,
-//                 height
-//             }
-//         }
-//     }
-// }
 
+
+export function getTodayTime() {
+  return new Date(new Date().toLocaleDateString()).getTime();
+}
+export function getLastSevenDayTime() {
+  const start = new Date(new Date().toLocaleDateString());
+  start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+  return start.getTime();
+}
+const dateTypes = { today: getTodayTime(), sevenDay: getLastSevenDayTime(), todayNum: 0, sevenDayNum: 0, moreNum: 0 }
+const getDateType = (timeStr: string = '') => {
+  if (!timeStr) return
+  if ((Number(new Date(timeStr))) >= (Number(dateTypes.today))) {
+    if (dateTypes.todayNum > 0) return ''
+    dateTypes.todayNum++
+    return '今天'
+  } else if ((Number(new Date(timeStr))) >= (Number(dateTypes.sevenDay))) {
+    if (dateTypes.sevenDayNum > 0) return ''
+    dateTypes.sevenDayNum++
+    return '近一周'
+  } else {
+    if (dateTypes.moreNum > 0 || dateTypes.todayNum == 0 || dateTypes.sevenDayNum == 0) return ''
+    dateTypes.moreNum++
+    return '更早'
+  }
+}
 export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWidth: number = dContentWidth, options: Iconfig) => {
   const left = options.contentSpace && options.contentSpace > 0 ? options.contentSpace : dLeft
   const width = Math.floor((contentWidth - left) / options.contentColumn) - (left * 2);
@@ -255,10 +238,19 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
     deleteHeight, deleteWidth, deleteSize, subTitleHeight
   }
 
-  // const categorys = ['今天', '一周内', '更早']
+  dateTypes.moreNum = 0;
+  dateTypes.todayNum = 0
+  dateTypes.sevenDayNum = 0
+  const isDateType = !!dataList[0]?.playTime
   const arr: Array<QTGridViewItem> = []
   for (let i = 0; i < dataList.length; i++) {
     const dataItem = dataList[i]
+    if (isDateType) {
+      const typeName = getDateType(dataItem.playTime)
+      if (typeName) {
+        arr.push(getContentCategoryConfig(configOption, { ...dataItem, h_modeName: typeName }))
+      }
+    }
     const isCategory = !!dataItem.h_modeName//i % 10 === 0;
     let poster: any = null
     if (isCategory) {

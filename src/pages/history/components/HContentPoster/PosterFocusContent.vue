@@ -1,6 +1,6 @@
 <template>
 <div :focusable="false" :duplicateParentState="true" class="focus_content_box" flexStyle="${style}">
-    <div class="focus_content_box_bg" showIf="${editMode==false}" flexStyle="${style}"></div>
+    <div class="focus_content_box_bg" showIf="${editMode==false}" flexStyle="${style}" :focusable="false"></div>
     <div class="focus_content_box_content" showIf="${editMode==false}" flexStyle="${style}" :focusable="false" :duplicateParentState="true">
         <!--封面-->
         <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false" flexStyle="${image.style}" src="${image.src}" />

@@ -32,9 +32,10 @@ const onBackPressed = () => {
         isEdit.value = false;
         centerKeyDown = 0
         emits('emEditStateChange', isEdit.value)
-        return
+        return false
     }
     router.back()
+    return true
 }
 const onKeyDown = (keyEvent: ESKeyEvent) => {
     if(!props.isLoaded){

@@ -1,9 +1,9 @@
 <template>
-    <div class="history_empty" :clipChildren="false">
-        <div class="history_empty_content">
-            <img v-if="bigImg" :style="{ width: imageWidth, height: imageHeight }" :src="bigImg">
-            <img v-else :style="{ width: imageWidth, height: imageHeight }" :src="defaultBgImg">
-            <span class="history_empty_txt" :style="{ fontSize: msgTextSize }">{{ msg }}</span>
+    <div class="history_empty" :clipChildren="false" :focusable="false">
+        <div class="history_empty_content" :focusable="false">
+            <img v-if="bigImg" :style="{ width: imageWidth, height: imageHeight }" :src="bigImg" :focusable="false" />
+            <img v-else :style="{ width: imageWidth, height: imageHeight }" :src="defaultBgImg" :focusable="false" />
+            <span class="history_empty_txt" :style="{ fontSize: msgTextSize }" :focusable="false">{{ msg }}</span>
         </div>
     </div>
 </template>

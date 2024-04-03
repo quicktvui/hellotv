@@ -14,7 +14,7 @@
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
-                :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }"
+                :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" :focusable="false"
             >
                 <!-- 纯文字标题 :requestFocus="true"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
@@ -87,9 +87,9 @@ const nextFocusName = computed(()=>{
 })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
-        return ['right', 'down']
+        return ['right', 'down', 'up']
     }
-    return ['left', 'down']
+    return ['left', 'down', 'up']
 })
 const menuItemFocusedBg = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){

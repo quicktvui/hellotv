@@ -1,12 +1,11 @@
 <template>
     <div 
-        class="h_tab" v-show="isShow" :focusable="false" name="h_tab_name" 
-        :width="pWidth"
+        class="h_tab" v-show="isShow" :focusable="false" :width="pWidth"
     >
         <!-- :requestFocus="true" -->
         <qt-nav-bar 
             ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
-            @tab-select="onTabSelect" :requestFocus="true"
+            @tab-select="onTabSelect" :requestFocus="true" name="h_tab_name"
             :nextFocusName="{ down: 'content_grid_name' }"></qt-nav-bar>
     </div>
 </template>
@@ -31,7 +30,7 @@ const emits = defineEmits(['emSelectTab'])
 const isShow = ref(true)
 let filterList:any[] = []
 let tabPosition = -1
-let timeoutId:any = null
+
 const onTabSelect = (arg: any) => {
     if(!isShow.value) return
     if (tabPosition !== arg.position) {
@@ -65,6 +64,7 @@ defineExpose({
         if(isShow.value && filterList.length){
             onTabSelect({ position: 0 })
         }
+        console.log(contentNavBar.value, '---lsj---contentNavBar')
         return isShow.value
     },
     requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦
@@ -77,13 +77,13 @@ defineExpose({
 <style scoped>
 .h_tab {
     /* width: 1570px; */
-    height: 100px;
+    height: 90px;
     background-color: transparent;
 }
 
 .hc-navbar {
     /* width: 1540px; */
-    height: 100px;
+    height: 90px;
     margin-left: 30px;
     background-color: transparent;
 }
