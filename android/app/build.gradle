@@ -78,13 +78,15 @@ task deleteRpkCacheTask(type: Delete) {
     delete assetsDir
 }
 
-task buildRpkCodeTask() {
-    doFirst {
-        log('编译Vendor')
-        log("npm run vendor".execute().text)
-        log('编译代码')
-        log("npm run build".execute().text)
-    }
+task buildVendor(type: Exec){
+    executable 'npm'
+    args 'run', 'vendor'
+}
+
+task buildVue(type: Exec){
+    executable 'npm'
+    args 'run', 'build'
+    dependsOn(buildVendor)
 }
 
 task zipRpkTask(type: Zip) {
@@ -92,7 +94,7 @@ task zipRpkTask(type: Zip) {
     destinationDir = assetsDir
     from vueDistDir
 
-    dependsOn(buildRpkCodeTask)
+    dependsOn(buildVue)
 }
 
 afterEvaluate {
