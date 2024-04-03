@@ -419,6 +419,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onCollapseItemMediaListClicked------>>>>>", index, item)
       }
+      player?.stop()
       player?.playMediaById(item.id)
     }
 
