@@ -43,7 +43,7 @@ import { ESMediaItem } from "@extscreen/es3-player-manager";
 import { IMediaAuthorization } from "../../api/media/IMediaAuthorization";
 import { mediaAuthorizationKey } from "./injectionSymbols";
 import { useMediaDataSource } from "../../api/UseApi";
-import { localHistory, historyKey, removeHistory } from 'src/api/history/store';
+import { localHistory, historyKey, removeHistory } from '../../api/history/store';
 
 const TAG = 'DetailPage'
 

@@ -34,7 +34,7 @@ import { IMediaPlaceholder } from "../component/IMediaPlaceholder";
 import { IMediaListView } from "../component/IMediaListView";
 import { QTMediaSeries } from "@quicktvui/quicktvui3";
 import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
-import { localHistory } from "src/api/history/store";
+import { localHistory } from "../../../api/history/store";
 
 const TAG = 'AlbumDetail'
 
