@@ -47,8 +47,9 @@
                       ref="screen_right_content"
                       name="screen_right_content"
                       :blockFocusDirections="['right','down']"
+                      :enablePlaceholder="true"
                       :spanCount="5" :openPage="true" :preloadNo="4"
-                      :focusable="false"
+                      :focusable="false" :pageSize="screenPageSize"
                       :nextFocusName='{down:"screen_right_content"}'
                       nextFocusLeftSID="screen_left_tags"
                       :listenBoundEvent="true" :useDiff="true"
@@ -108,9 +109,10 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import { computed, defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 import {useGlobalApi} from "../../../api/UseApi";
+import ScreenConfig from "../build_data/ScreenConfig"
 import {
   buildScreenContent, clearAllFilterCondition, clearFastFilterCondition,
   getCurRecordFilter,
@@ -120,7 +122,6 @@ import {
   getFilterLength,
   getOffsetY,
   getScrollHeight, isAllFilterListHasData, isFastFilterListHasData,
-  isTagContentEnd,
   updateAllFilterCondition,
   updateFastFilterCondition
 } from "../build_data/useTagsData";
@@ -154,6 +155,7 @@ export default defineComponent({
   },
   emits:['unBlockFocus'],
   setup(props, context) {
+    const screenPageSize = computed(()=>{return ScreenConfig.screenPageSize})
     //工具变量
     const log = useESLog()
     const globalApi = useGlobalApi()
@@ -414,9 +416,6 @@ export default defineComponent({
               screenRightContentData.push(...screenContentList)
             }
           }
-          if (isTagContentEnd()) {
-            setTimeout(()=>{screen_right_content.value!.stopPage()},260)
-          }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
             if (screenRightContentData && screenRightContentData.length > 0) {
@@ -431,7 +430,7 @@ export default defineComponent({
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {
-              setTimeout(()=>{screen_right_content.value!.stopPage()},260)
+              setTimeout(()=>{screen_right_content.value!.stopPage()},400)
             }
           }
         }
@@ -479,6 +478,7 @@ export default defineComponent({
       scrollY,
       screenItemContentFocus,
       filterTriggerTask,
+      screenPageSize,
     }
   }
 })

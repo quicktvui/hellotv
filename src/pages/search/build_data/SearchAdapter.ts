@@ -43,7 +43,7 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
-    if (section.itemList && section.itemList.length < SearchConfig.screenResultPageSize){
+    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize){
       let endSection:QTWaterfallSection = buildEndSection('5');
       tabPage =  {
         useDiff: false,

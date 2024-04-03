@@ -17,7 +17,6 @@ let defaultTagSelectIndex = 0
 let allFilterList:Array<FilterConditionList> = []
 let fastFilterList:FilterConditionList = {}
 let rootTag:string = ""
-let isEnd = false
 let isOffsetY = false
 let curRecord:Array<QTListViewItem> = []
 
@@ -207,7 +206,6 @@ export function getScrollHeight(){
 
 export function buildScreenContent(tagContents:Array<any>,pageNum?:number):Array<QTGridViewItem>{
   const tagContentArray:Array<TagContent> = []
-  isEnd = false
   tagContents.forEach((content,index)=>{
     const tagContent:TagContent = {
       id:content.id,
@@ -219,14 +217,7 @@ export function buildScreenContent(tagContents:Array<any>,pageNum?:number):Array
     }
     tagContentArray.push(tagContent)
   })
-  if (tagContents.length < SearchConfig.screenPageSize){
-    isEnd = true
-  }
   return buildTagContentsAdapter(tagContentArray,pageNum)
-}
-
-export function isTagContentEnd(){
-  return isEnd
 }
 
 export function setRootTag(tag:string){

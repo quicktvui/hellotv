@@ -159,7 +159,7 @@ export default defineComponent({
           } else {
             listDataRec = listViewRef.value!.init(list)
           }
-          if (list.length < SearchConfig.screenCenterPageSize) {
+          if (list.length < SearchConfig.searchCenterPageSize) {
             isStopPage = true
             listViewRef.value!.stopPage()
           }
@@ -183,8 +183,8 @@ export default defineComponent({
     }
     const onItemFocus = (e) => {
       if (currentItemIndex == e.position) return
-      focusItemTimer && clearTimeout(focusItemTimer)
       if (e.isFocused) {
+        focusItemTimer && clearTimeout(focusItemTimer)
         focusItemTimer = setTimeout(() => {
           currentItemIndex = e.position
           context.emit("keyword-select", e.item.text, true)

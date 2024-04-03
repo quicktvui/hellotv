@@ -1,3 +1,4 @@
+import ScreenConfig from "../pages/filter/build_data/ScreenConfig"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
 import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
@@ -113,7 +114,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchCenterListData(list, isLoadHistory))
     }
     // 根据keyword字母搜索关键字 不传返回热门搜索
-    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.screenCenterPageSize}})
+    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.searchCenterPageSize}})
       .then((result: any) => {
         let list:Array<any> = []
         if(result.keywordList.length > 0) list = result.keywordList
@@ -169,7 +170,7 @@ export function createGlobalApi(): IGlobalApi {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": SearchConfig.screenPageSize,
+      "pageSize": ScreenConfig.screenPageSize,
     };
     const newParams = {...params, ...pageParams};
     return requestManager.post(filterContentUrl,{
