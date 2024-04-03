@@ -8,8 +8,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
-      :clipChildren="true"
-             :focusable="false"
+      :clipChildren="true" :focusable="false"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
@@ -36,8 +35,9 @@
           <p class="info_major" v-if="playerInfo.major">主演: {{playerInfo.major}} </p>
         </qt-view> -->
       </qt-view>
-      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true" :enableFocusBorder="true" >
-        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :fullQuality="true" :transitionTime="400" :clipChildren="false"
+      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
+               :enableFocusBorder="true" >
+        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
                            :focusable="false" :opacity="coverOpacity"
                            :src="coverSrc"
                            :width="playerWidth"
@@ -49,9 +49,9 @@
       <!-- 小窗播放列表 -->
       <qt-view class="item_cell_list_front"
         :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
-        <qt-list-view ref="listViewRef"  padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
-          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px',backgroundColor: 'transparent'}"
-                      :bringFocusChildToFront="false" :clipChildren="true"
+        <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
+          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
+                      :bringFocusChildToFront="false"
                       :singleSelectPosition="currentPlayIndex"
           @item-click="onItemClick"  @item-focused="onItemFocus">
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
@@ -107,8 +107,8 @@ export default defineComponent({
     const decode = useESPlayerDecodeManager()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
-    let playerWidth = ref<number>(860)
-    let playerHeight = ref<number>(484)
+    let playerWidth = ref<number>(1920)
+    let playerHeight = ref<number>(1080)
     let playerListWidth = ref<number>(0)
     let playerListHeight = ref<number>(0)
     let bgPlayerOpacity = ref(0)
@@ -265,6 +265,8 @@ export default defineComponent({
     const reset = () => {
       log.e('BG-PLAYER',`reset`)
       clearInterval(loopPlayListTimer)
+      clearTimeout(delayShowTimer)
+      clearTimeout(delayShowPlayerTimer)
       stop()
       release()
     }
@@ -284,7 +286,15 @@ export default defineComponent({
       log.d('BG-PLAYER',`setCellNextImage bg:${backgroundImage}`)
       // if(backgroundImage) itemCellBgImgRef.value?.setNextImage(backgroundImage);
       // else itemCellBgImgRef.value?.setNextImage(recordPlayerList[currentPlayIndex.value].cover);
-        coverSrc.value = backgroundImage
+        // coverSrc.value = backgroundImage
+        if(backgroundImage != '') {
+          coverSrc.value = backgroundImage
+          // isShowVideoBjText.value = false
+        }
+        else {
+          // isShowVideoBjText.value = true
+          coverSrc.value = 'http://qcloudcdn.a311.ottcn.com/channelzero_image/web_static/extend_screen/mood/video_bj_01.png'
+      }
         //coverSrc.value = recordPlayerList[currentPlayIndex.value].cover
     }
 

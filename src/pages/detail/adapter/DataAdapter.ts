@@ -47,7 +47,8 @@ function buildEndSection(): QTWaterfallSection {
       height: 200,
       marginLeft: 90,
       marginTop: 40,
-      marginBottom: 40
+      marginBottom: 40,
+      fontSize: 30
     },
     itemList: [],
     style: {
