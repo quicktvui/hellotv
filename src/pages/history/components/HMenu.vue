@@ -14,7 +14,7 @@
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
-                :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" :focusable="false"
+                :nextFocusName="nextFocusName" :focusable="false"
             >
                 <!-- 纯文字标题 :requestFocus="true"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
@@ -38,7 +38,7 @@ import { IHistoryMenuEntity } from '../../../api/history/modelEntity';
 // @ts-ignore
 import { getMenuList } from '../index.ts';
 // @ts-ignore
-import api from 'src/api/history/index.ts'
+import api from '../../../api/history/index.ts'
 // @ts-ignore
 import { layouts } from '../config.ts'
 
@@ -87,9 +87,9 @@ const nextFocusName = computed(()=>{
 })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
-        return ['right', 'down', 'up']
+        return ['right', 'down']
     }
-    return ['left', 'down', 'up']
+    return ['left', 'down']
 })
 const menuItemFocusedBg = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){

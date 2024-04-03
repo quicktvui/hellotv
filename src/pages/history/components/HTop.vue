@@ -2,8 +2,8 @@
     <div class="h_top" :focusable="false" :width="pWidth">
         <div v-if="isEdit" class="top_edit" :focusable="false">
             <qt-text class="hc-top-txt2" text="按【返回键】退出" gravity="center" :focusable="false"></qt-text>
-            <qt-button text="清空" size="mini" @click="clearContentFn" round class="hc-top-clear-btn" :focusScale="1"
-                :focusable="true">
+            <qt-button text="清空" name="clear_btn_name" size="mini" @click="clearContentFn" round class="hc-top-clear-btn" :focusScale="1"
+                :focusable="true" :nextFocusName="{down:'content_grid_name'}" :blockFocusDirections="['left', 'right', 'up']">
             </qt-button>
         </div>
         <qt-text v-else class="hc-top-txt" :focusable="false" gravity="centerVertical|end"

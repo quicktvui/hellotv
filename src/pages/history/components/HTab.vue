@@ -17,7 +17,7 @@ import { getFilterList } from '../index.ts'
 import { useESToast } from '@extscreen/es3-core';
 // @ts-ignore
 import api from '../../../api/history/index.ts'
-import { Native } from "@extscreen/es3-vue";
+// import { Native } from "@extscreen/es3-vue";
 
 const props = defineProps<{
     pWidth:number
@@ -53,7 +53,7 @@ defineExpose({
             filterList = tabList.data
             if(isReset){
                 nextTick(()=>{
-                    contentNavBar.value.navList?.setItemFocused(0)
+                    contentNavBar.value?.navList.value?.setItemFocused(0)
                 })
             }
         } else {
@@ -64,13 +64,12 @@ defineExpose({
         if(isShow.value && filterList.length){
             onTabSelect({ position: 0 })
         }
-        console.log(contentNavBar.value, '---lsj---contentNavBar')
         return isShow.value
     },
     requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦
         // Native.callUIFunction(contentNavBar.value, "requestFocus", [])
         // Native.callUIFunction(contentNavBar.value, "requestFocusDirectly", [])
-        contentNavBar.value.navList?.setItemFocused(tabPosition)
+        contentNavBar.value?.navList.value?.setItemFocused(tabPosition)
     }
 })
 </script>

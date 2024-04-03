@@ -1,23 +1,18 @@
 <template>
-    <qt-view 
-        class="history" :class="['history_' + configs.layout, isShowFilter?'':'history_no_filter', isNoMenu?'history_no_menu':'']" ref="historyRootRef" :focusable="false"
-        :gradientBackground="bgColor"
-    >
+    <qt-view class="history"
+        :class="['history_' + configs.layout, isShowFilter ? '' : 'history_no_filter', isNoMenu ? 'history_no_menu' : '']"
+        ref="historyRootRef" :focusable="false" :gradientBackground="bgColor">
         <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
-        <HistoryMenu 
-            ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
+        <HistoryMenu ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
             :isFilter="isShowFilter" :layout="configs.layout" :focusedBg="configs.menuFocusedItemBg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn"
-            :bgColor="configs.menuBgColor"
-        />
-        <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn" :pWidth="contentWidth" :isLoaded="isLoaded"/>
-        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth"/>
-        <HistoryContent 
-            ref="HistoryContentRef" class="content"
-            :detailPageName="configs.detailPageName" :emptyTxt="configs.emptyTxt"
-            :pConfig="configs" :setDataCallBack="setDataCallBackFn"
-            @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth"
-        />
+            :bgColor="configs.menuBgColor" />
+        <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn"
+            :pWidth="contentWidth" :isLoaded="isLoaded" />
+        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth" />
+        <HistoryContent ref="HistoryContentRef" class="content" :detailPageName="configs.detailPageName"
+            :emptyTxt="configs.emptyTxt" :pConfig="configs" :setDataCallBack="setDataCallBackFn"
+            @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth" />
     </qt-view>
 </template>
 
@@ -50,11 +45,11 @@ const dContentWidth = 1570
 const contentWidth = ref(dContentWidth)
 const isNoMenu = ref(false)
 
-const bgColor = computed(()=>{
-    if(configs.bgColor){
-        return (typeof configs.bgColor == 'object') ? configs.bgColor : {colors:[configs.bgColor, configs.bgColor]}
+const bgColor = computed(() => {
+    if (configs.bgColor) {
+        return (typeof configs.bgColor == 'object') ? configs.bgColor : { colors: [configs.bgColor, configs.bgColor] }
     }
-    return {colors:['#252930', '#252930']}
+    return { colors: ['#252930', '#252930'] }
 })
 const emClearFn = () => {
     HistoryContentRef.value?.clearData()//情况列表数据
@@ -63,8 +58,8 @@ let currentMenu: any = { index: 0, item: {} }
 let currentFilter: any = { index: 0, item: {} }
 const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
     currentMenu = { index, item }
-    HistoryTabRef.value?.init(index, item, isReset).then(res=>{//切换菜单分类时，更新筛选条件
-        if(!res){//如果没有筛选条件，则根据分类获取列表数据
+    HistoryTabRef.value?.init(index, item, isReset).then(res => {//切换菜单分类时，更新筛选条件
+        if (!res) {//如果没有筛选条件，则根据分类获取列表数据
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
             HistoryContentRef.value?.setData(currentMenu, currentFilter)
@@ -74,7 +69,7 @@ const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
         }
         isLoaded.value = false
         currentFilter = { index: 0, item: {} }
-    }).catch(()=>{
+    }).catch(() => {
         isShowFilter.value = false
     })
 }
@@ -88,13 +83,13 @@ const emSelectTabFn = (index: number, item: any) => {
 const emEditStateChangeFn = (boo: boolean) => {
     HistoryContentRef.value?.changeEditState(boo)//切换是否时编辑状态
 }
-const setDataCallBackFn = (boo)=>{
+const setDataCallBackFn = (boo) => {
     isLoaded.value = !!boo
 }
 
 function onESCreate(params) {
-    HistoryMenuRef.value?.initData().then(res=>{
-        if(res){
+    HistoryMenuRef.value?.initData().then(res => {
+        if (res) {
             contentWidth.value = dContentWidth
         } else {
             contentWidth.value = dContentWidth + dMenuWidth
@@ -103,9 +98,9 @@ function onESCreate(params) {
         isNoMenu.value = !res
     })//初始化菜单数据
 }
-const emContentClearAllFn = ()=>{
+const emContentClearAllFn = () => {
     HTopRef.value?.setEdit(false)
-    if(configs.clearAllIsReset){
+    if (configs.clearAllIsReset) {
         emChangeMenuFn(currentMenu.index, currentMenu.item, true)
     } else {
         HistoryTabRef.value?.requestChildTabFocus()
@@ -117,16 +112,16 @@ defineExpose({
         HTopRef.value?.onKeyDown(keyEvent)
     },
     onBackPressed() {
-        if(HistoryContentRef.value?.onBackPressed()){
-           if(!HTopRef.value?.onBackPressed()){
-            HistoryContentRef.value?.scrollTo(0)
-           }
+        if (HistoryContentRef.value?.onBackPressed()) {
+            if (!HTopRef.value?.onBackPressed()) {
+                HistoryContentRef.value?.scrollTo(0)
+            }
         }
     },
     onKeyUp() {
         HTopRef.value?.onKeyUp()
     },
-    onESRestart(){
+    onESRestart() {
         isLoaded.value = false
         HistoryContentRef.value?.setData(currentMenu, currentFilter)
     }
@@ -234,27 +229,33 @@ defineExpose({
         top: 100px;
     }
 }
-.history_no_filter{
-    .tab{
+
+.history_no_filter {
+    .tab {
         display: none;
     }
-    .content{
+
+    .content {
         top: 100px;
     }
 }
-.history_no_filter.history_rightTop{
-    .content{
+
+.history_no_filter.history_rightTop {
+    .content {
         top: 100px;
     }
 }
-.history_no_menu{
+
+.history_no_menu {
     .top {
         left: 0;
     }
-    .tab{
+
+    .tab {
         left: 0;
     }
-    .content{
+
+    .content {
         left: 0;
     }
 }

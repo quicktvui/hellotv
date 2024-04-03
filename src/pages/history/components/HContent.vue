@@ -6,7 +6,7 @@
       :width="pWidth" name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
-      @item-bind="onItemBind" :nextFocusName="{ up: 'h_tab_name' }" @scroll-state-changed="onScrollStateChanged">
+      @item-bind="onItemBind" :nextFocusName="gvNextFocusName" @scroll-state-changed="onScrollStateChanged">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -94,6 +94,8 @@ let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
 
+const gvNextFocusName = ref({ up: 'h_tab_name' })
+
 const emits = defineEmits(['emContentClearAll'])
 const onItemBind = () => { }
 const onItemClick = (arg) => {
@@ -149,7 +151,6 @@ const loadMoreFn = (pageNo: number) => {
     return//同一页数据
   }
   prePageNum = pageNo
-  // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst)
   if (pageState.value === pageStates.noMore) {
     return//没有更多数据了
   }
@@ -159,12 +160,13 @@ const loadMoreFn = (pageNo: number) => {
   if (pageState.value === pageStates.empty) {
     return //空数据
   }
+  // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst)
   if (isFirst) {
     isFirst = false
   } else if (gridDataRec) {
     pageState.value = pageStates.loading
     // gridDataRec.push({ type: '1002' })
-    api.getContentList(preCurrentMenu, preCurrentFilter, pageNo + 1).then(res => {
+    api.getContentList(preCurrentMenu, preCurrentFilter, pageNo).then(res => {
       // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst, res)
       // gridDataRec.pop()
       if (res?.data?.length) {
@@ -212,6 +214,9 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   contentLenth = 0
   isShowScreenLoading.value = true
 
+  // @ts-ignore
+  gridViewRef.value?.restartPage()
+
   clearTimeout(timeOutId)
   timeOutId = setTimeout(async () => {
     gridViewRef.value?.blockRootFocus()
@@ -253,21 +258,31 @@ defineExpose({
   changeEditState(boo: boolean) {
     if (isEdit.value !== boo) {
       if (boo) {
-        rBlockFocusDirections.value = ['left', 'up', 'right', 'down']
+        rBlockFocusDirections.value = ['left', 'right', 'down']
+        gvNextFocusName.value = { 'up': 'clear_btn_name' }
       } else {
         rBlockFocusDirections.value = []
+        gvNextFocusName.value = { 'up': 'h_tab_name' }
       }
       isEdit.value = boo
       if (gridDataRec) {
         gridViewRef.value?.blockRootFocus()
+        let firstPosterindex = -1
+        let isFind = false
         gridDataRec.forEach((el) => {
+          if (!isFind) {
+            firstPosterindex++
+          }
+          if (el.type == 10001) {
+            isFind = true
+          }
           if (el.type) {
             el.editMode = boo
           }
         })
         nextTick(() => {
           gridViewRef.value?.unBlockRootFocus()
-          gridViewRef.value!.setItemFocused(0)
+          gridViewRef.value?.setItemFocused(firstPosterindex)
         })
       }
     }
