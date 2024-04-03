@@ -125,7 +125,7 @@ export function buildRecommendationSection(): QTWaterfallSection {
     //这里控制一下列表的滚动
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
-      down: 600, up: 0
+      down: 700, up: 0
     }
   }
   return section
