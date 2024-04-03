@@ -3,7 +3,7 @@ plugins {
 }
 
 ext {
-    APP_PACKAGE = 'com.extscreen.runtime.demo'
+    APP_PACKAGE = 'com.quicktvui.hellotv'
     APP_NAME = 'HelloTV'
     APP_VERSION_CODE = 1
     APP_VERSION_NAME = '1.0.0'
@@ -69,7 +69,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.7.92'
+    implementation 'com.extscreen.runtime:official:2.7.93'
 }
 
 task deleteRpkCacheTask(type: Delete) {
