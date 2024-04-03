@@ -16,7 +16,7 @@ ext {
     assetsDir = new File(project.buildDir, 'assets')            # rpk生成的位置
 }
 ```
-
+## 编译
 ``` bash
 # 生成debug包
 ./gradlew app:assembleDebug
