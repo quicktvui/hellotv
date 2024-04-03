@@ -226,13 +226,27 @@ export function buildMediaSeriesList(mediaList: Array<IMedia>): Array<QTMediaSer
 }
 
 export function buildMediaSeries(media: IMedia): QTMediaSeries {
-  return {
-    id: media.id,
-    title: media.title,
-    cover: media.coverH,
-    vip: {
-      enable: media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP,
-      text: 'VIP'
+  const vip = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP
+  if (vip) {
+    return {
+      id: media.id,
+      title: media.title,
+      cover: media.coverH,
+      flagText: "VIP",
+      vip: {
+        enable: true,
+        text: "VIP"
+      }
+    }
+  } else {
+    return {
+      id: media.id,
+      title: media.title,
+      cover: media.coverH,
+      vip: {
+        enable: false,
+        text: "VIP"
+      }
     }
   }
 }
