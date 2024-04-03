@@ -198,20 +198,9 @@ export default defineComponent({
               if (pageNo <= 1) {
                 tabRef.value?.setPageData(tabPageIndex, tabPage)
               } else {
-                //todo 立朋哥记得来修改下  要不这里还得延时
-                setTimeout(()=>{ tabRef.value?.addPageData(tabPageIndex, tabPage, 0)},1000)
+                tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
               }
             }
-            // else {
-              // if (log.isLoggable(ESLogLevel.DEBUG)) {
-              //   log.d(TAG, '---------getTabContent-----addPageData--->>>>' +
-              //     ' tabPageIndex:' + tabPageIndex +
-              //     ' pageNo:' + pageNo +
-              //     ' tabPage:', tabPage)
-              // }
-              // tabRef.value?.addPageData(tabPageIndex, buildTabPageEndData(), 0)
-              // tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-            // }
             if (tabPage.isEndPage){
               tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
             }
