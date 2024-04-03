@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.7.93'
+    implementation 'com.extscreen.runtime:official:2.7.95'
 }
 
 task deleteRpkCacheTask(type: Delete) {
