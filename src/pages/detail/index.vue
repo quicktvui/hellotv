@@ -269,6 +269,7 @@ export default defineComponent({
     function onPlayerPlaceholderFocus(focused: boolean) {
        if(focused){
            waterfallRef.value?.scrollToTop()
+           waterfallScrollY = 0
        }
        eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
@@ -404,7 +405,8 @@ export default defineComponent({
 
       if (waterfallScrollY > 0) {
           albumDetailRef.value?.setAutofocus(true)
-        waterfallRef.value?.scrollToTop()
+          waterfallRef.value?.scrollToTop()
+          waterfallScrollY = 0
         return true
       }
 
