@@ -20,7 +20,7 @@
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true" class="introduction-detail-subtitle-root-css">
         <div class="introduction-detail-vip-css"
-             v-if="isMediaTypeFree"
+             v-if="!isMediaTypeFree"
              :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
           <text-view
             class="introduction-detail-vip-text-css"
@@ -123,7 +123,8 @@ export default defineComponent({
       actors.value = media.actors
       introduction.value = media.introduction
 
-      isMediaTypeFree.value = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_FREE
+      isMediaTypeFree.value = Number(media.authType) == IMediaAuthType.MEDIA_AUTH_TYPE_FREE
+
     }
     return {
       introductionBg,
@@ -132,7 +133,8 @@ export default defineComponent({
       subtitle,
       actors,
       introduction,
-      onESCreate
+      onESCreate,
+      isMediaTypeFree
     }
   }
 })
@@ -178,7 +180,7 @@ export default defineComponent({
   font-weight: 400;
   color: white;
   line-height: 38px;
-  margin-top: 40px;
+  margin-top: 20px;
 }
 
 
@@ -238,7 +240,7 @@ export default defineComponent({
 
 .introduction-detail-actor-text-css {
   margin-left: 184px;
-  height: 28px;
+  height: 64px;
   width: 768px;
   color: white;
   focus-color: white;

@@ -18,7 +18,7 @@
 
         <media-menu-vip-button
           v-if="!authenticated && item.type === 2"
-          @click="onFullButtonClick" />
+          @click="onVIPButtonClick" />
 
         <media-menu-button
           v-if="item.type === 3"
@@ -61,7 +61,9 @@ export default defineComponent({
     "media-menu-vip-button": media_menu_vip_button
   },
   emits: [
-    "onFullButtonClick"
+    "onMenuFullButtonClick",
+    "onMenuVIPButtonClick",
+    "onMenuFavouriteButtonClick"
   ],
   setup(props, context) {
 
@@ -108,6 +110,9 @@ export default defineComponent({
       eventbus.emit("onMenuFavouriteButtonClick")
     }
 
+    function onVIPButtonClick() {
+      eventbus.emit("onMenuVIPButtonClick")
+    }
 
     return {
       init,
@@ -118,6 +123,7 @@ export default defineComponent({
       fullButtonVIPFocused,
       onFullButtonClick,
       onFavouriteButtonClick,
+      onVIPButtonClick,
       favButtonFocused,
       favButtonNormal,
       authenticated,
