@@ -18,7 +18,7 @@
              :visible="!isLoading"
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
-             :tabContentSwitchDelay='0'
+
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"

@@ -55,10 +55,11 @@
                       :listenHasFocusChange="true"
                       :clipChildren="false" :clipPadding="false"
                       :loadMore="loadMoreScreenContent"
+                      :loadingDecoration="{top:15,left:30,bottom:70}"
                       @scroll-state-changed="onScrollStateChanged"
                       @item-focused="onItemFocused"
                       @item-click="onItemClick"
-                      :padding="'50,10,50,442'">
+                      :padding="'50,10,50,0'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
           <template #footer>

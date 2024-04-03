@@ -48,8 +48,8 @@
       <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"/>
       <!-- 小窗播放列表 -->
       <qt-view class="item_cell_list_front"
-        :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}" :clipChildren="false">
-        <qt-list-view class="list_view" ref="listViewRef" :clipChildren="false" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
+        :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
+        <qt-list-view ref="listViewRef" :clipChildren="false" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
                       :bringFocusChildToFront="false"
                       :singleSelectPosition="currentPlayIndex"
