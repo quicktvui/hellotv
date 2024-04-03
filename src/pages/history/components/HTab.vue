@@ -2,11 +2,11 @@
     <div 
         class="h_tab" v-show="isShow" :focusable="false" :width="pWidth"
     >
-        <!-- :requestFocus="true" -->
+        <!-- :requestFocus="true" content_grid_name-->
         <qt-nav-bar 
             ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
             @tab-select="onTabSelect" :requestFocus="true" name="h_tab_name"
-            :nextFocusName="{ down: 'content_grid_name' }"></qt-nav-bar>
+            :nextFocusName="{ down: 'history_poster_name' }"></qt-nav-bar>
     </div>
 </template>
 <script lang='ts' setup>
