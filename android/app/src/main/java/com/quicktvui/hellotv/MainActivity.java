@@ -1,4 +1,4 @@
-package com.extscreen.runtime.demo;
+package com.quicktvui.hellotv;
 
 import android.os.Bundle;
 
