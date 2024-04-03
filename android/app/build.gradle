@@ -78,14 +78,26 @@ task deleteRpkCacheTask(type: Delete) {
     delete assetsDir
 }
 
-task buildVendor(type: Exec){
-    executable 'npm'
-    args 'run', 'vendor'
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task buildVendor(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'vendor'
+    } else {
+        executable 'npm'
+        args 'run', 'vendor'
+    }
 }
 
-task buildVue(type: Exec){
-    executable 'npm'
-    args 'run', 'build'
+task buildVue(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'build'
+    } else {
+        executable 'npm'
+        args 'run', 'build'
+    }
     dependsOn(buildVendor)
 }
 
