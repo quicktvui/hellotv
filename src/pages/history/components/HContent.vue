@@ -8,8 +8,9 @@
             v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight" :width="pWidth"
             name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
             :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
-            :blockFocusDirections="['right', 'down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
-            :loadMore="loadMoreFn" @item-bind="onItemBind"
+            :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
+            :loadMore="loadMoreFn" @item-bind="onItemBind" :nextFocusName="{ up: 'h_tab_name' }"
+            @scroll-state-changed="onScrollStateChanged"
         >
         <!-- @scroll-state-changed="onScrollStateChanged" -->
             <qt-view type="1001" class="content_type" :focusable="false">
@@ -49,7 +50,7 @@
         </qt-grid-view>
         <qt-view v-show="isShowScreenLoading" class="screen-right-content-loading" :clipChildren="false" :focusable="false">
             <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false"/>
-            <qt-text v-show="screenLoadingTxt" class="loading_txt" :text="screenLoadingTxt" gravity="center"></qt-text>
+            <qt-text v-show="screenLoadingTxt" class="loading_txt" :text="screenLoadingTxt" gravity="center" :focusable="false"></qt-text>
         </qt-view>
         <HistoryEmpty v-show="pageState === pageStates.empty" :msg="emptyTxt" :bigImg="pConfig.emptyImg" :focusable="false" />
     </div>
@@ -93,11 +94,11 @@ let gridDataRec: any[] = []
 let preCurrentMenu: any = null
 let preCurrentFilter: any = null
 let isFirst = true
-let timeoutId:any = null
 let contentDataHeight = 0
 let initRowsHeight = 0
 let prePageNum = 0
 let contentLenth = 0
+let contentScrollY = 0
 
 const emits = defineEmits(['emContentClearAll'])
 const onItemBind = ()=>{}
@@ -144,15 +145,9 @@ const onItemClick = (arg) => {
         }
     }
 }
-// const onScrollStateChanged = (ev)=>{
-//     contentScrollY = ev.offsetY
-//     if(contentScrollY>0){
-//         if (pageState.value === pageStates.noMore && !isSetNomore) {
-//             isSetNomore = true
-//             gridDataRec.push(...[{type: 1003}])
-//         }
-//     }
-// }
+const onScrollStateChanged = (ev)=>{
+    contentScrollY = ev.offsetY
+}
 
 // 加载更多数据
 const loadMoreFn = (pageNo: number) => {
@@ -225,6 +220,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
 
     clearTimeout(timeOutId)
     timeOutId = setTimeout(async () => {
+        gridViewRef.value?.blockRootFocus()
         const apiId = currentMenu?.index+'-'+currentFilter?.index
         const res = await getFirstContentListApi(currentMenu, currentFilter)
         if(apiId == res._apiId){
@@ -248,6 +244,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
             })
         }
         props.setDataCallBack((res.data?.length||0) > 0)
+        gridViewRef.value?.unBlockRootFocus()
     }, 300);
     
 }
@@ -280,6 +277,17 @@ defineExpose({
                 })
             }
         }
+    },
+    scrollTo(index:number){
+        gridViewRef.value?.scrollToPosition(index)
+    },
+    onBackPressed(){
+        if(!isEdit.value && contentScrollY > initRowsHeight){
+            gridViewRef.value?.scrollToTop()
+            contentScrollY = 0
+            return false
+        }
+        return true
     }
 })
 </script>

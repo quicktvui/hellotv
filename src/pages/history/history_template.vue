@@ -117,7 +117,11 @@ defineExpose({
         HTopRef.value?.onKeyDown(keyEvent)
     },
     onBackPressed() {
-        HTopRef.value?.onBackPressed()
+        if(HistoryContentRef.value?.onBackPressed()){
+           if(!HTopRef.value?.onBackPressed()){
+            HistoryContentRef.value?.scrollTo(0)
+           }
+        }
     },
     onKeyUp() {
         HTopRef.value?.onKeyUp()
