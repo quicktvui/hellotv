@@ -255,6 +255,10 @@ export default defineComponent({
           mediaPlayerViewRef.value?.setSmallWindow()
         }
       }
+
+      if (scrollY <= 5) {
+        albumDetailRef.value?.setAutofocus(true)
+      }
     }
 
     //-------------------------------------------------------------------------------
