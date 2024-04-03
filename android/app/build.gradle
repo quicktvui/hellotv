@@ -16,7 +16,7 @@ ext {
 }
 
 android {
-    namespace APP_PACKAGE
+    namespace 'com.quicktvui.hellotv'
     compileSdk sdk_compileSdk
 
     defaultConfig {
@@ -52,6 +52,7 @@ android {
             shrinkResources true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
 
+            // 此处替换自己签名
             signingConfig signingConfigs.create("release")
             signingConfig.initWith(buildTypes.debug.signingConfig)
         }
