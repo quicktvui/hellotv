@@ -228,7 +228,7 @@ export default defineComponent({
           " y:" + y +
           " state:" + state
       )
-      if(state == 0 && y == 0){
+      if(state == 0 && y < 5){
         if (mediaPlayerViewRef.value?.getWindowType() ==
             ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
           mediaPlayerViewRef.value?.setSmallWindow()
