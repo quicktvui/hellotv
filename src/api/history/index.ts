@@ -87,7 +87,7 @@ class HistoryApi extends HistoryBaseApi {
         break
       case 1: // 收藏
         delete favHistoryCategory[0][item.item.customProp.fullIndex]
-        delete favHistoryCategory[item.item.metaType][item.item.customProp.currInde]
+        delete favHistoryCategory[item.item.metaType][item.item.customProp.currIndex]
         break
     }
 
