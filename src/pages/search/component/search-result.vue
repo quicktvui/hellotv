@@ -18,7 +18,6 @@
              :visible="!isLoading"
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
-
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
@@ -30,7 +29,7 @@
              @onTabPageScrollToStart="onTabPageScrollToStart"
              @onTabPageItemClick="onTabPageItemClick" @onTabPageItemFocused="onTabPageItemFocused"
              @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll"
-             :enablePlaceholder="false"
+             :enablePlaceholder="true"
              @onTabPageSectionAttached="onTabPageSectionAttached" class="qt_tabs_css">
       <template v-slot:tab-item >
         <!-- 自定义tab类型 -->
@@ -71,11 +70,9 @@
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, watch } from "vue"
 import {
-  QTITab, QTTab, QTTabEventParams, QTTabItem, QTTabPageData, QTTabPageState, QTWaterfallItem,
-  QTWaterfallSection, QTWaterfallSectionType
+  QTITab, QTTabItem,  QTTabPageState, QTWaterfallItem,
 } from "@quicktvui/quicktvui3"
-import { useESToast } from "@extscreen/es3-core"
-import { buildTabPageEndData } from "../build_data/useSearchData"
+import { useESLog, } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 import SearchConfig from "../build_data/SearchConfig"
 import { useLaunch } from "../../../tools/launch/useApi"
@@ -100,6 +97,7 @@ export default defineComponent({
   setup(props, context) {
     const isShowCenterSearch = computed(()=>SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
+    const log = useESLog()
     const search_result = ref()
     let descendantFocusability = ref(1)
     const ic_search_left_arrow = require("../../../assets/search/ic_search_left_arrow.png").default
@@ -180,9 +178,9 @@ export default defineComponent({
         if (tabItem._id !== null && tabItem._id  !== undefined){
           let tabPage
           if (isRecommendRequest){
-            tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.screenResultPageSize,tabList.length === 1)
+            tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
           }else{
-            tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.screenResultPageSize,tabList.length === 1)
+            tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
           }
           const length = tabPage.data[0].itemList.length
           if (length > 0) {
