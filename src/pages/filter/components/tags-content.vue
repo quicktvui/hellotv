@@ -50,7 +50,6 @@
                       :enablePlaceholder="true"
                       :spanCount="5" :openPage="true" :preloadNo="4"
                       :focusable="false" :pageSize="screenPageSize"
-                      :nextFocusName='{down:"screen_right_content"}'
                       nextFocusLeftSID="screen_left_tags"
                       :listenBoundEvent="true" :useDiff="true"
                       :listenHasFocusChange="true"
@@ -72,8 +71,6 @@
               <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
             </qt-view>
           </template>
-
-
         </qt-grid-view>
 
       </qt-view>
