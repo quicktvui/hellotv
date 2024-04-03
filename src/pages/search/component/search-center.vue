@@ -18,7 +18,7 @@
                   text="清空" />
     </qt-view>
     <!-- 搜索词条列表-->
-    <qt-view class="search_center_view_list" name="search_center_view_list"
+    <qt-view class="search_center_view_list" name="search_center_view_list" sid="search_center_view_list"
              :style="{width:centerWidth+'px'}" ref="search_center_view_list"
              :blockFocusDirections="['down']" :focusable="false">
       <!-- 无词条提示-->

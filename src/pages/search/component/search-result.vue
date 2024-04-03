@@ -22,6 +22,7 @@
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
+             tabNavBarSid="qt_tab_nav_bar"
              @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
              @onTabMoveToBottomStart="onTabMoveToBottomStart"
              @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
@@ -31,7 +32,7 @@
              @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll"
              :enablePlaceholder="false"
              @onTabPageSectionAttached="onTabPageSectionAttached" class="qt_tabs_css">
-      <template v-slot:tab-item>
+      <template v-slot:tab-item >
         <!-- 自定义tab类型 -->
         <qt-view class="waterfall_nav_item"
                  :type="2" :clipChildren="false"
@@ -110,7 +111,6 @@ export default defineComponent({
     let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
-    let tabIndex0Sid:string = ""
     let triggerTask = [
       {
         event: "onFocusLost",
@@ -207,9 +207,8 @@ export default defineComponent({
     const onTabPageChanged = (pageIndex:number, data:any) => {
       if (tabList && pageIndex == 0 && pageIndex < tabList.length && tabList.length > 1) {
         const sid = tabList[pageIndex].sid
-        tabIndex0Sid = sid
-        context.emit("curItemSid",sid)
-        context.emit("defaultTabItemSid",sid)
+        context.emit("curItemSid","qt_tab_nav_bar")
+        context.emit("defaultTabItemSid","qt_tab_nav_bar")
       }
     }
     const onTabMoveToTopStart = () => { // 吸顶开始
@@ -236,7 +235,6 @@ export default defineComponent({
     const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       if (itemIndex % 6 === 0 && isFocused){
         //获取当前的 sid
-        // console.log("XRG=onTabPageItemFocused==sid==",item.sid,"===itemIndex==",itemIndex)
         context.emit("curItemSid",item.sid)
       }
     }
