@@ -60,7 +60,7 @@
                       @scroll-state-changed="onScrollStateChanged"
                       @item-focused="onItemFocused"
                       @item-click="onItemClick"
-                      :padding="'50,10,50,0'">
+                      :padding="'50,30,50,0'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
           <template #footer>
