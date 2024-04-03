@@ -39,7 +39,7 @@
                         :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true"/>
                 </qt-view>
             </HContentPoster>
-            <p showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" :focusable="false">已经到底啦，按【返回键】回到顶部</p>
+            <qt-text showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" gravity="center" :focusable="false" text="已经到底啦，按【返回键】回到顶部"></qt-text>
             <!--分页加载 Loading 1002  name="loading" type="1003" -->
             <template v-slot:loading>
                 <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
@@ -361,10 +361,8 @@ defineExpose({
 .screen-right-content-no-more {
     width: 1570px;
     height: 80px;
-    line-height: 80px;
     font-size: 30px;
     color: rgba(255, 255, 255, 0.6);
-    text-align: center;
     background-color: transparent;
 }
 
