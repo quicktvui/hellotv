@@ -419,6 +419,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onCollapseItemMediaListClicked------>>>>>", index, item)
       }
+      player?.stop()
       player?.playMediaById(item.id)
     }
 
@@ -483,7 +484,6 @@ export default defineComponent({
           isTitleBarShowing.value = false
           isMenuShowing.value = false
           isProgressShowing.value = false
-          mediaCollapseMediaListRef?.value?.show(false)
 
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
             mediaCollapseRef.value?.expandItem(0)
@@ -493,7 +493,6 @@ export default defineComponent({
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
           isMenuShowing.value = true
           isProgressShowing.value = false
-          mediaCollapseMediaListRef?.value?.show(true)
           if (!mediaCollapseMenuInit) {
             initCollapseMenu()
             initCollapseOrderMenu()
@@ -507,7 +506,6 @@ export default defineComponent({
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
-          mediaCollapseMediaListRef?.value?.show(false)
 
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
             mediaCollapseRef.value?.expandItem(0)

@@ -56,7 +56,6 @@ export default defineComponent({
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-    let mediaListShowing: boolean = false
     let selectedIndex = 0
 
     //---------------------------------------------------------------------------
@@ -126,14 +125,10 @@ export default defineComponent({
       mediaSeriesListRef.value?.scrollTo(position)
     }
 
-    function show(value: boolean) {
-      mediaListShowing = value
-    }
-
     //-----------------------------------------------------------
     function onLoadData(event: QTMediaSeriesEvent) {
-      if (!mediaListShowing) {
-        return
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "---选集---onLoadData------>>>>")
       }
       const page = event.page ?? 10
       eventbus.emit('onMediaSeriesLoadData', page)
@@ -168,7 +163,6 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      show,
       setItemSelected
     }
   },
