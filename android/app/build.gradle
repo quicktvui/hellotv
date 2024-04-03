@@ -1,0 +1,120 @@
+plugins {
+    id 'com.android.application'
+}
+
+ext {
+    APP_PACKAGE = 'com.quicktvui.hellotv'
+    APP_NAME = 'HelloTV'
+    APP_VERSION_CODE = 1
+    APP_VERSION_NAME = '1.0.0'
+
+    RPK_PACKAGE = "es.hellotv"
+    RPK_FILE_NAME = "hello.rpk"
+
+    vueDistDir = new File(project.rootDir, '../dist/android')
+    assetsDir = new File(project.buildDir, 'assets')
+}
+
+android {
+    namespace 'com.quicktvui.hellotv'
+    compileSdk sdk_compileSdk
+
+    defaultConfig {
+        applicationId APP_PACKAGE
+        minSdk sdk_minSdk
+        targetSdk sdk_targetSdk
+        versionCode APP_VERSION_CODE
+        versionName APP_VERSION_NAME
+
+        resValue "string", "app_name", APP_NAME
+
+        multiDexEnabled true
+
+        buildConfigField 'String', 'RPK_PACKAGE', "\"${RPK_PACKAGE}\""
+        buildConfigField 'String', 'RPK_FILE_NAME', "\"assets://${RPK_FILE_NAME}\""
+
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${APP_NAME}_${defaultConfig.versionName}_${releaseTime()}_${buildType.name}.apk"
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // 此处替换自己签名
+            signingConfig signingConfigs.create("release")
+            signingConfig.initWith(buildTypes.debug.signingConfig)
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.sourceSets.findByName('main').assets.srcDirs += assetsDir
+
+}
+
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+
+    implementation 'com.extscreen.runtime:official:2.7.93'
+}
+
+task deleteRpkCacheTask(type: Delete) {
+    delete vueDistDir
+    delete assetsDir
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task buildVendor(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'vendor'
+    } else {
+        executable 'npm'
+        args 'run', 'vendor'
+    }
+}
+
+task buildVue(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'build'
+    } else {
+        executable 'npm'
+        args 'run', 'build'
+    }
+    dependsOn(buildVendor)
+}
+
+task zipRpkTask(type: Zip) {
+    archiveName = RPK_FILE_NAME
+    destinationDir = assetsDir
+    from vueDistDir
+
+    dependsOn(buildVue)
+}
+
+afterEvaluate {
+
+    tasks.findByName('preBuild').dependsOn(deleteRpkCacheTask)
+
+    ['generateDebugAssets', 'generateReleaseAssets'].each {
+        tasks.findByName(it).dependsOn(zipRpkTask)
+    }
+
+}
