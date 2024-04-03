@@ -166,33 +166,30 @@ const loadMoreFn = (pageNo: number) => {
     if (pageState.value === pageStates.empty) {
         return //空数据
     }
-    // console.log(prePageNum, pageNo, '---loadMoreFn-lsj----', isFirst)
     if (isFirst) {
         isFirst = false
     } else if (gridDataRec) {
         pageState.value = pageStates.loading
         // gridDataRec.push({ type: '1002' })
         api.getContentList(preCurrentMenu, preCurrentFilter, pageNo).then(res => {
-            // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst, res)
-            // gridDataRec.pop()
-            if (res?.data?.length) {
-                gridDataRec.pop()
-                const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
-                // @ts-ignore
-                // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
-                gridDataRec.push(...arr.concat([{type:101}]))
-                contentDataHeight = dataHeight
-                pageState.value = pageStates.ready
-                contentLenth += arr.length
-            } else {
-                pageState.value = pageStates.noMore
-                if(contentDataHeight >= props.pHeight){
-                    gridDataRec.push(...[{type: 1003,editMode:false}])
+            if(!isFirst){
+                // gridDataRec.pop()
+                if (res?.data?.length) {
+                    gridDataRec.pop()
+                    const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
+                    // @ts-ignore
+                    // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
+                    gridDataRec.push(...arr.concat([{type:101}]))
+                    contentDataHeight = dataHeight
+                    pageState.value = pageStates.ready
+                    contentLenth += arr.length
+                } else {
+                    pageState.value = pageStates.noMore
+                    if(contentDataHeight >= props.pHeight){
+                        gridDataRec.push(...[{type: 1003,editMode:false}])
+                    }
+                    // gridViewRef.value!.stopPage()
                 }
-                // gridViewRef.value!.stopPage()
-                // setTimeout(()=>{
-                //     gridDataRec.push({type: 1002})
-                // }, 500)
             }
         }).catch(err => {
             // gridDataRec.pop()

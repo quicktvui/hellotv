@@ -42,11 +42,11 @@ export class HistoryBaseApi implements Iapi {
         return new Promise(resolve => {
             setTimeout(() => {
                 if (currentMenu?.index === 0 && currentFilter?.index === 0) {
-                    resolve({ data: getTestContentList(20) })
+                    resolve({ data: getTestContentList(20, pageNum) })
                 } else if (currentMenu?.index === 0 && currentFilter?.index === 1) {
-                    resolve({ data: getTestContentList(20) })
+                    resolve({ data: getTestContentList(20, pageNum) })
                 } else if (currentMenu?.index === 1) {
-                    resolve({ data: getTestContentList(20) })
+                    resolve({ data: getTestContentList(20, pageNum) })
                 } else {
                     resolve({})
                 }
