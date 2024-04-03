@@ -82,8 +82,8 @@ const cBgColor = computed(()=>{
 const nextFocusName = computed(()=>{
     if(props.isFilter){
         return { right: 'h_tab_name', left: 'h_tab_name' }
-    }
-    return { right: 'content_grid_name', left: 'content_grid_name' }
+    }//content_grid_name
+    return { right: 'history_poster_name', left: 'history_poster_name' }
 })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){

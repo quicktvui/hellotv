@@ -166,7 +166,7 @@ const loadMoreFn = (pageNo: number) => {
     if (pageState.value === pageStates.empty) {
         return //空数据
     }
-    // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst)
+    // console.log(prePageNum, pageNo, '---loadMoreFn-lsj----', isFirst)
     if (isFirst) {
         isFirst = false
     } else if (gridDataRec) {
@@ -243,7 +243,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
             }
             preCurrentMenu = currentMenu
             preCurrentFilter = currentFilter
-            isFirst = false
+            // isFirst = false
             nextTick(()=>{
                 isShowScreenLoading.value = false
             })

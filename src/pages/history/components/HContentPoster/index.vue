@@ -1,6 +1,6 @@
 <template>
     <item-frame :type="type" layout="${layout}" flexStyle="${style}" focusScale="${focus.scale}" :focusable="true"
-        eventClick eventFocus name="poster" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
+        eventClick eventFocus name="history_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
         hideShadow="${shadow.enable}" shimmerSize="${size}">
         
         <PosterContent :focusable="false" :duplicateParentState="true" :showOnState="['normal', 'selected']"/>
@@ -26,7 +26,7 @@ import PosterFocusContent from './PosterFocusContent.vue'
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
-    name: "qt-poster",
+    name: "history-poster",
     components: {
         PosterContent,
         PosterFocusContent,
