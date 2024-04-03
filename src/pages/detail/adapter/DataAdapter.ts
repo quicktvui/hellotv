@@ -119,7 +119,7 @@ export function buildRecommendationSection(): QTWaterfallSection {
     },
     style: {
       width: 1740,
-      height: 1100,
+      height: 930,
       spacing: 36
     },
     //这里控制一下列表的滚动
