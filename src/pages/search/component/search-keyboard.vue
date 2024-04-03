@@ -29,8 +29,7 @@
 
     <!--键盘字母列表-->
     <qt-grid-view class="search_keyboard_list" ref="grid_view" name="grid_view" :nextFocusRightSID="targetSid"
-                  :clipChildren="false" :focusable="false"
-                  :nextFocusName="{ right: 'search_center_view_list' }" :autofocusPosition="14"
+                  :clipChildren="false" :autofocusPosition="14"
                   @item-click="keyboardItemClick" :spanCount="6">
       <qt-view :type="1" :focusable="true" :focusScale="1.1"
                class="search_keyboard_item"

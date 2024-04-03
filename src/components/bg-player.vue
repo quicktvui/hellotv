@@ -8,7 +8,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
-      :clipChildren="false"
+      :clipChildren="true"
              :focusable="false"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
@@ -49,15 +49,15 @@
       <!-- 小窗播放列表 -->
       <qt-view class="item_cell_list_front"
         :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
-        <qt-list-view ref="listViewRef" :clipChildren="false" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
-          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
-                      :bringFocusChildToFront="false"
+        <qt-list-view ref="listViewRef"  padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
+          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px',backgroundColor: 'transparent'}"
+                      :bringFocusChildToFront="false" :clipChildren="true"
                       :singleSelectPosition="currentPlayIndex"
           @item-click="onItemClick"  @item-focused="onItemFocus">
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
             :style="{width: playerListWidth + 'px'}"
-            :clipChildren="false" eventClick eventFocus :focusScale="1">
-            <qt-view :duplicateParentState="true" class="iclf_item_playing" :clipChildren="false"
+            :clipChildren="true" eventClick eventFocus :focusScale="1">
+            <qt-view :duplicateParentState="true" class="iclf_item_playing" :clipChildren="true"
                      :bringFocusChildToFront="true"
               :style="{width: playerListWidth + 'px'}" >
               <qt-view class="playMark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
@@ -199,7 +199,6 @@ export default defineComponent({
       log.e('BG-PLAYER',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowPlayerTimer)
-      clearTimeout(delayShowTimer)
       if(stopIfNeed){
         if(isAnyPlaying){
           isAnyPlaying.value = false
@@ -266,8 +265,6 @@ export default defineComponent({
     const reset = () => {
       log.e('BG-PLAYER',`reset`)
       clearInterval(loopPlayListTimer)
-      clearTimeout(delayShowTimer)
-      clearTimeout(delayShowPlayerTimer)
       stop()
       release()
     }

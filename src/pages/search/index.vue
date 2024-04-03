@@ -14,8 +14,8 @@
           :nextFocusName="{right:'search_center_view'}"
           @inputChange="onInputChange"
           @scroll-to-index="onNeedScrollTo"
-          :result-item-sid="isShowCenterSearch?'search_center_view_list':curItemSid"
-          :default-item-sid="isShowCenterSearch?'search_center_view_list':defaultItemSid"/>
+          :result-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':curItemSid):curItemSid"
+          :default-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':defaultItemSid):defaultItemSid"/>
         <!-- 搜索内容 -->
         <search-center
           v-if="isShowCenterSearch"

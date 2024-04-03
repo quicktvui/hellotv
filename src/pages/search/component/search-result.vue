@@ -206,7 +206,6 @@ export default defineComponent({
     }
     const onTabPageChanged = (pageIndex:number, data:any) => {
       if (tabList && pageIndex == 0 && pageIndex < tabList.length && tabList.length > 1) {
-        const sid = tabList[pageIndex].sid
         context.emit("curItemSid","qt_tab_nav_bar")
         context.emit("defaultTabItemSid","qt_tab_nav_bar")
       }
