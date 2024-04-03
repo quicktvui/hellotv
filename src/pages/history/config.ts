@@ -1,4 +1,4 @@
-import { IHistoryMenuEntity } from "src/api/history/modelEntity";
+import { IHistoryMenuEntity } from "../../api/history/modelEntity";
 
 export const layouts = {
   lt: 'leftTop', lb: 'leftBootom', rt: 'rightTop', rb: 'rightBootom'

@@ -106,6 +106,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
     metaId: data.metaId,
     playCount: data.playCount,
     currentPlayTime: data.currentPlayTime,
+    metaType: data.assetType,
     editMode: false,
     type: 10001,
     decoration: {

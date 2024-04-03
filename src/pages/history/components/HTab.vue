@@ -12,14 +12,12 @@
 </template>
 <script lang='ts' setup>
 import { computed, nextTick, ref } from 'vue';
-import {
-    QTINavBar
-} from '@quicktvui/quicktvui3';
+// import { } from '@quicktvui/quicktvui3';
 // @ts-ignore
 import { getFilterList } from '../index.ts'
 import { useESToast } from '@extscreen/es3-core';
 // @ts-ignore
-import api from 'src/api/history/index.ts'
+import api from '../../../api/history/index.ts'
 import { Native } from "@extscreen/es3-vue";
 
 const props = defineProps<{

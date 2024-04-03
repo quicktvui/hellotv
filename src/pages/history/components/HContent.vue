@@ -62,7 +62,7 @@ import HistoryEmpty from './HistoryEmpty.vue'
 import { useESRouter } from "@extscreen/es3-router";
 import HContentPoster from './HContentPoster/index.vue'
 // import { Native } from "@extscreen/es3-vue";
-import { IcurrentItemParams } from "src/api/history/baseApi";
+import { IcurrentItemParams } from "../../../api/history/baseApi";
 import { Iconfig } from "../config";
 
 const props = withDefaults(defineProps<{
