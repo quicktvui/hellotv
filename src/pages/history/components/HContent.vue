@@ -153,10 +153,6 @@ const onScrollStateChanged = (ev)=>{
 
 // 加载更多数据
 const loadMoreFn = (pageNo: number) => {
-    if(prePageNum == pageNo){
-        return//同一页数据
-    }
-    prePageNum = pageNo
     if (pageState.value === pageStates.noMore) {
         return//没有更多数据了
     }
@@ -172,7 +168,7 @@ const loadMoreFn = (pageNo: number) => {
     if (gridDataRec) {
         pageState.value = pageStates.loading
         // gridDataRec.push({ type: '1002' })
-        api.getContentList(preCurrentMenu, preCurrentFilter, pageNo).then(res => {
+        api.getContentList(preCurrentMenu, preCurrentFilter, prePageNum).then(res => {
             // gridDataRec.pop()
             if (res?.data?.length) {
                 gridDataRec.pop()
@@ -190,6 +186,7 @@ const loadMoreFn = (pageNo: number) => {
                 }
                 // gridViewRef.value!.stopPage()
             }
+            prePageNum++
         }).catch(err => {
             // gridDataRec.pop()
             pageState.value = pageStates.ready
@@ -200,11 +197,13 @@ const loadMoreFn = (pageNo: number) => {
 // Native.callUIFunction(hContentRef.value, 'unBlockRootFocus', []);
 // 首次加载数据
 const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams)=>{
-    return api.getContentList(currentMenu, currentFilter, 1).then(res => {
-        return { ...res, _apiId: currentMenu?.index+'-'+currentFilter?.index }
-    }).catch(()=>{
-        return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[] }
-    })
+  prePageNum = 1
+  return api.getContentList(currentMenu, currentFilter, 1).then(res => {
+    prePageNum++
+    return { ...res, _apiId: currentMenu?.index+'-'+currentFilter?.index }
+  }).catch(()=>{
+    return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[] }
+  })
 }
 let timeOutId:any = null
 const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
