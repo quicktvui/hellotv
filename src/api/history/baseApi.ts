@@ -45,8 +45,8 @@ export class HistoryBaseApi implements Iapi {
                     resolve({ data: getTestContentList(20, pageNum) })
                 } else if (currentMenu?.index === 0 && currentFilter?.index === 1) {
                     resolve({ data: getTestContentList(20, pageNum) })
-                } else if (currentMenu?.index === 1) {
-                    resolve({ data: getTestContentList(20, pageNum) })
+                } else if (currentMenu?.index === 1 && pageNum === 1) {
+                    resolve({ data: getTestContentList(5, pageNum) })
                 } else {
                     resolve({})
                 }

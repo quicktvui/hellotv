@@ -160,36 +160,35 @@ const loadMoreFn = (pageNo: number) => {
     if (pageState.value === pageStates.noMore) {
         return//没有更多数据了
     }
-    if (pageState.value === pageStates.loading) {
+    if (pageState.value === pageStates.loading || pageState.value === pageStates.init) {
         return //正在加载数据
     }
     if (pageState.value === pageStates.empty) {
         return //空数据
     }
     if (isFirst) {
-        isFirst = false
-    } else if (gridDataRec) {
+        return//首次加载
+    }
+    if (gridDataRec) {
         pageState.value = pageStates.loading
         // gridDataRec.push({ type: '1002' })
         api.getContentList(preCurrentMenu, preCurrentFilter, pageNo).then(res => {
-            if(!isFirst){
-                // gridDataRec.pop()
-                if (res?.data?.length) {
-                    gridDataRec.pop()
-                    const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
-                    // @ts-ignore
-                    // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
-                    gridDataRec.push(...arr.concat([{type:101}]))
-                    contentDataHeight = dataHeight
-                    pageState.value = pageStates.ready
-                    contentLenth += arr.length
-                } else {
-                    pageState.value = pageStates.noMore
-                    if(contentDataHeight >= props.pHeight){
-                        gridDataRec.push(...[{type: 1003,editMode:false}])
-                    }
-                    // gridViewRef.value!.stopPage()
+            // gridDataRec.pop()
+            if (res?.data?.length) {
+                gridDataRec.pop()
+                const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
+                // @ts-ignore
+                // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
+                gridDataRec.push(...arr.concat([{type:101}]))
+                contentDataHeight = dataHeight
+                pageState.value = pageStates.ready
+                contentLenth += arr.length
+            } else {
+                pageState.value = pageStates.noMore
+                if(contentDataHeight >= props.pHeight){
+                    gridDataRec.push(...[{type: 1003,editMode:false}])
                 }
+                // gridViewRef.value!.stopPage()
             }
         }).catch(err => {
             // gridDataRec.pop()
@@ -226,29 +225,28 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
         const apiId = currentMenu?.index+'-'+currentFilter?.index
         const res = await getFirstContentListApi(currentMenu, currentFilter)
         if(apiId == res._apiId){
-            if (res?.data?.length) {
-                const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
-                gridDataRec = gridViewRef.value!.init(arr.concat([{type:101}]))
-                pageState.value = pageStates.ready
-                contentDataHeight = dataHeight
-                contentLenth = arr.length
-                initRowsHeight = rowsHeight
-            } else {
-                pageState.value = pageStates.empty
-                gridDataRec!.splice(0)
-                // toast.showLongToast('暂无数据')
-            }
-            preCurrentMenu = currentMenu
-            preCurrentFilter = currentFilter
-            // isFirst = false
-            nextTick(()=>{
-                isShowScreenLoading.value = false
-            })
+          if (res?.data?.length) {
+              const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
+              gridDataRec = gridViewRef.value!.init(arr.concat([{type:101}]))
+              pageState.value = pageStates.ready
+              contentDataHeight = dataHeight
+              contentLenth = arr.length
+              initRowsHeight = rowsHeight
+          } else {
+              pageState.value = pageStates.empty
+              gridDataRec!.splice(0)
+              // toast.showLongToast('暂无数据')
+          }
+          preCurrentMenu = currentMenu
+          preCurrentFilter = currentFilter
+          nextTick(()=>{
+              isShowScreenLoading.value = false
+          })
         }
         props.setDataCallBack((res.data?.length||0) > 0)
         gridViewRef.value?.unBlockRootFocus()
+        isFirst = false
     }, 300);
-    
 }
 
 defineExpose({

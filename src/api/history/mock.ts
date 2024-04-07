@@ -26,7 +26,7 @@ export const getTestContentList = (size = 20, pageNum:number=1): IHistoryContent
             playCount: "1",
             playTime: "2024-03-22 17:35:20",
             userId: "9BD63E4D4960B114248F4B0038D60112:bc9d4e6a000f",
-            h_modeName: index==0&&pageNum==1?'分类-'+index: ''
+            // h_modeName: index==0&&pageNum==1?'分类-'+index: ''
         }
     })
 }
