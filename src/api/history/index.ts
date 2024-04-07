@@ -70,6 +70,8 @@ class HistoryApi extends HistoryBaseApi {
         break
     }
 
+    console.log('huan-', pageNum, data)
+
     return Promise.resolve({
       page: pageNum,
       size: data.length,
