@@ -22,11 +22,6 @@ export interface IActivityConfig {
     btnTxtFocusedColor?:string
   }
 }
-const config: IActivityConfig = {
-  top: {
-    mode: topModes.lr
-  }
-}
 
 export interface IActivityBlockPosterLayout {
   width:number

@@ -1,14 +1,21 @@
 <template>
-<div class="activity2">
-  <span style="width: 100px;height: 100px;color: red;background-color: transparent;">activity2</span>
-</div>
+  <div class="activity2">
+    
+  </div>
 </template>
 <script lang='ts' setup>
+
+defineExpose({
+  onESCreate(params) {
+    
+  }
+})
 </script>
 <style scoped>
-.activity2{
+.activity2 {
   width: 1920px;
   height: 1080px;
-  background-color: #000;
+  border: 0px solid transparent;
+  background-color: transparent;
 }
 </style>
