@@ -30,8 +30,9 @@
             flexStyle="${delete.style}" :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true" />
         </qt-view>
       </HContentPoster>
-      <p showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" :focusable="false">
-        已经到底啦，按【返回键】回到顶部</p>
+      <qt-text showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" gravity="center"
+        :focusable="false" text="
+        已经到底啦，按【返回键】回到顶部"></qt-text>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
       <template v-slot:loading>
         <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
@@ -154,20 +155,19 @@ const loadMoreFn = (pageNo: number) => {
   if (pageState.value === pageStates.noMore) {
     return//没有更多数据了
   }
-  if (pageState.value === pageStates.loading) {
+  if (pageState.value === pageStates.loading || pageState.value === pageStates.init) {
     return //正在加载数据
   }
   if (pageState.value === pageStates.empty) {
     return //空数据
   }
-  // console.log(prePageNum, pageNo, '---loadMoreFn-lsj----', isFirst)
   if (isFirst) {
-    isFirst = false
-  } else if (gridDataRec) {
+    return//首次加载
+  }
+  if (gridDataRec) {
     pageState.value = pageStates.loading
     // gridDataRec.push({ type: '1002' })
     api.getContentList(preCurrentMenu, preCurrentFilter, pageNo).then(res => {
-      // console.log(preCurrentMenu, preCurrentFilter, pageNo, '---loadMoreFn-lsj----', isFirst, res)
       // gridDataRec.pop()
       if (res?.data?.length) {
         gridDataRec.pop()
@@ -184,9 +184,6 @@ const loadMoreFn = (pageNo: number) => {
           gridDataRec.push(...[{ type: 1003, editMode: false }])
         }
         // gridViewRef.value!.stopPage()
-        // setTimeout(()=>{
-        //     gridDataRec.push({type: 1002})
-        // }, 500)
       }
     }).catch(err => {
       // gridDataRec.pop()
@@ -237,15 +234,14 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
       }
       preCurrentMenu = currentMenu
       preCurrentFilter = currentFilter
-      // isFirst = false
       nextTick(() => {
         isShowScreenLoading.value = false
       })
     }
     props.setDataCallBack((res.data?.length || 0) > 0)
     gridViewRef.value?.unBlockRootFocus()
+    isFirst = false
   }, 300);
-
 }
 
 defineExpose({
@@ -358,10 +354,8 @@ defineExpose({
 .screen-right-content-no-more {
   width: 1570px;
   height: 80px;
-  line-height: 80px;
   font-size: 30px;
   color: rgba(255, 255, 255, 0.6);
-  text-align: center;
   background-color: transparent;
 }
 
