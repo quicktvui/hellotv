@@ -4,8 +4,8 @@
 
     <qt-view class="search_keyboard_input_root" :focusable="false">
       <qt-image :src="ic_search" class="search_keyboard_search_icon" :focusable="false" />
-      <input class="search_keyboard_input_text" type="text" placeholder="输入影片名称搜索" :value="inputText" :focusable="true"
-        @change="keyboardItemClick" />
+      <input class="search_keyboard_input_text" ref="inputRef" type="text" placeholder="输入影片名称搜索" :value="inputText"
+        :focusable="false" @change="onInputChange" />
       <!-- <qt-text class="search_keyboard_input_text" :focusable="false" v-if="inputText && inputText.length > 0"
         :text="inputText" :fontSize="28" />
       <qt-text v-else :fontSize="28" :focusable="false"
@@ -67,6 +67,7 @@ export default defineComponent({
   setup(props, context) {
     const keyboardWidth = computed(() => SearchConfig.leftWidth)
     const search_keyboard = ref()
+    const inputRef = ref()
     let inputText = ref("")
     const ic_search = require("../../../assets/search/ic_search.png").default
     const ic_search_input_clear = require("../../../assets/search/ic_search_input_clear.png").default
@@ -104,22 +105,23 @@ export default defineComponent({
         targetSid.value = props.defaultItemSid
       }
     }
+    let isEmpty = false
     const deleteBtnClick = () => {
-      let value = ""
+      let value = ''
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = inputText.value.slice(0, inputText.value.length - 1)
         value = inputText.value
+      } else {
+        isEmpty = true
       }
-      context.emit("inputChange", value)
+      isEmpty ?? context.emit("inputChange", value)
+    }
+    const onInputChange = (e: any) => {
+      inputText.value = e.value
+      context.emit("inputChange", inputText.value)
     }
     const keyboardItemClick = (e) => {
-      if (e.type == 'change') {
-        inputText.value = e.value
-        context.emit("inputChange", inputText.value)
-      } else if (inputText.value.length < 10) {
-        inputText.value += e.item.text
-        context.emit("inputChange", inputText.value)
-      }
+      inputRef.value.focus()
     }
     const requestDefaultFocus = () => grid_view.value?.setItemFocused(14)
 
@@ -144,7 +146,9 @@ export default defineComponent({
       deleteBtnClick,
       keyboardItemClick,
       keyboardWidth,
-      targetSid
+      targetSid,
+      inputRef,
+      onInputChange
     }
   }
 })
