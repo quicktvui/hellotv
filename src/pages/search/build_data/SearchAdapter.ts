@@ -21,36 +21,36 @@ const singleTabTop_OffsetY = 60
 const searchResultSpanCount = 6
 
 
-export function buildSearchResultAdapter(searchResultPageData: SearchResult,pageNo: number,singleTab:boolean):QTTabPageData{
+export function buildSearchResultAdapter(searchResultPageData: SearchResult, pageNo: number, singleTab: boolean): QTTabPageData {
   let tabPage: QTTabPageData = {
     useDiff: false,
     data: []
   }
-  if (searchResultPageData){
+  if (searchResultPageData) {
     const title = searchResultPageData.plateName
     let section: QTWaterfallSection = {
-      _id:searchResultPageData.id,
+      _id: searchResultPageData.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       title,
-      titleStyle:title != '' ? { width: 1920, height: plateTitleHeight, marginTop: 45, marginBottom: 20, marginLeft: 90 ,fontSize:38} : { width: 1920, height: 0 },
+      titleStyle: title != '' ? { width: 1920, height: plateTitleHeight, marginTop: 45, marginBottom: 20, marginLeft: 90, fontSize: 38 } : { width: 1920, height: 0 },
       style: {
         width: 1920,
         height: -1,
       },
       decoration: {
-        top: pageNo == 1 ? singleTab ? (title !== '' ? hasPlateTitle_Top -singleTabTop_OffsetY : noPlateTitle_Top -singleTabTop_OffsetY) :(title !== '' ? hasPlateTitle_Top : noPlateTitle_Top) : 0,
+        top: pageNo == 1 ? singleTab ? (title !== '' ? hasPlateTitle_Top - singleTabTop_OffsetY : noPlateTitle_Top - singleTabTop_OffsetY) : (title !== '' ? hasPlateTitle_Top : noPlateTitle_Top) : 0,
         left: 0,
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
     console.log("XRG===开始添加结束提示判断",)
-    if (section.itemList && section.itemList.length < SearchConfig.screenResultPageSize){
-      let endSection:QTWaterfallSection = buildEndSection('5');
-      tabPage =  {
+    if (section.itemList && section.itemList.length < SearchConfig.screenResultPageSize) {
+      let endSection: QTWaterfallSection = buildEndSection('5');
+      tabPage = {
         useDiff: false,
-        data: [section,endSection]
+        data: [section, endSection]
       }
-    }else{
+    } else {
       tabPage = {
         useDiff: false,
         data: [section]
@@ -60,30 +60,30 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
   return tabPage
 }
 
-export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array<QTWaterfallItem>{
+export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Array<QTWaterfallItem> {
   let data: Array<QTWaterfallItem> = []
-  list.forEach((item,index)=>{
+  list.forEach((item, index) => {
     const poster: QTPoster = {
-      _id:item.id+"i",
-      sid:item.id,
+      _id: item.id + "i",
+      sid: item.id + "",
       focus: {
         enable: true,
         scale: 1.03,
         border: true
       },
-      type:20,
+      type: 20,
       decoration: {
-        left: (index %  searchResultSpanCount) === 0 ? 90 : 40,
+        left: (index % searchResultSpanCount) === 0 ? 90 : 30,
         bottom: 40
       },
       title: {
         text: item.title,
         enable: true,
         style: {
-          width: 260,
+          width: 270,
         }
       },
-      subTitle:{
+      subTitle: {
         text: "",
         enable: false,
         style: {
@@ -94,7 +94,7 @@ export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array
         text: item.title,
         enable: true,
         style: {
-          width: 260,
+          width: 270,
         }
       },
       floatTitle: {
@@ -103,14 +103,14 @@ export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array
         style: {
           width: 260,
         },
-        background: {colors: ['#e5000000', '#00000000'], orientation: 4}
+        background: { colors: ['#e5000000', '#00000000'], orientation: 4 }
       },
       shimmer: {
         enable: false,
       },
       ripple: {
         enable: false,
-        src:"",
+        src: "",
         style: {
           right: 0,
           bottom: 0,
@@ -121,13 +121,13 @@ export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array
         src: item.poster,
         enable: true,
         style: {
-          width: 260,
-          height: 368
+          width: 270,
+          height: 377
         }
       },
       corner: {
         text: item.corner,
-        enable: true,
+        enable: false,
         style: {
           width: 260,
           height: 30
@@ -139,15 +139,15 @@ export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array
         }
       },
       style: {
-        width: 260,
-        height: 428,
+        width: 270,
+        height: 437,
       },
       titleStyle: {
-        width: 260,
+        width: 270,
         height: 120,
-        marginTop: 368-60,
+        marginTop: 377 - 60,
       },
-      titleFocusStyle: {width: 260, marginTop: 368 - 72},
+      titleFocusStyle: { width: 270, marginTop: 377 - 72 },
       item,
     }
     data.push(poster)

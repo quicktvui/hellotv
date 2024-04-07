@@ -155,7 +155,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo, singleTab))
     }
 
-    return requestManager.cmsGet(tabContentUrl + `&wd=${keyword}&page=${pageNo}&pagesize=${pageSize}`)
+    return requestManager.cmsGet(tabContentUrl + `&wd=${keyword}&pg=${pageNo}&pagesize=${pageSize}`)
       .then((result: any) => buildSearchResultData({
         itemList: result.list?.map(item => ({
           id: item.vod_id,
@@ -180,7 +180,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo, singleTab))
     }
 
-    return requestManager.cmsGet(tabContentUrl + `&page=${pageNo}&pagesize=${pageSize}`)
+    return requestManager.cmsGet(tabContentUrl + `&pg=${pageNo}&pagesize=${pageSize}`)
       .then((result: any) => buildSearchResultData({
         itemList: result.list?.map(item => ({
           id: item.vod_id,
