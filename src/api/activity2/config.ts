@@ -1,6 +1,6 @@
-import { IActivityConfig, topModes } from './entity'
+import { IActivityConfig, topModes } from './types'
 
-const config: IActivityConfig = {
+export const config: IActivityConfig = {
   bgColor: '',
   bgImg: '',
   top: {

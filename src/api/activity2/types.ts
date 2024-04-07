@@ -6,7 +6,7 @@ export const topModes = {
 } as const;
 
 export interface IActivityConfig {
-  bgColor?:string
+  bgColor?:string|object
   bgImg?:string
   top?: {
     mode?: Tvalues<typeof topModes>
