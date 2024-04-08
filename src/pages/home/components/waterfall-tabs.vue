@@ -23,7 +23,7 @@
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
-        @tab-event="myTabEvent"
+        sid='homeTabs'
         @onTabPageChanged="onTabPageChanged"
         @onTabMoveToTopStart="onTabMoveToTopStart"
         @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -35,6 +35,7 @@
         @onTabPageItemFocused="onTabPageItemFocused"
         @onTabPageLoadData="onTabPageLoadData"
         @onTabPageScroll="onTabPageScroll"
+        @onTabEvent='onTabEvent'
         @onTabPageSectionAttached="onTabPageSectionAttached"
         class="qt-tabs-css">
         <template v-slot:tab-item>
@@ -396,17 +397,7 @@ export default defineComponent({
         }
       },200)
     }
-    const myTabEvent = (e) =>{
-      let eventName = e.eventName
-      let params = e.params
-      let page = params.position
-      switch (eventName) {
-        case 'onDrawerOpenStart':
-         
-          break;
-        case 'onDrawerOpenEnd':break;
-      }
-    }
+
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
@@ -451,7 +442,11 @@ export default defineComponent({
       }
     }
 
-    function onTabPageScroll(offsetX: number, scrollY: number) {
+      function onTabEvent(tabIndex: number, eventName: string,params:any) {
+          log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
+      }
+
+      function onTabPageScroll(offsetX: number, scrollY: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
@@ -516,9 +511,9 @@ export default defineComponent({
       onTabPageItemClick,
       onTabPageItemFocused,
       onTabPageScroll,
+        onTabEvent,
       onTabClick,
       onTabPageSectionAttached,
-      myTabEvent,
       delayStopPlayer
     }
   }
