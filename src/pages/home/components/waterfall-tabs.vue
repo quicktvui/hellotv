@@ -1,7 +1,6 @@
 <template>
   <div class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
        :clipPadding="false">
-      <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
       <bg-player
         class="bg_player"
@@ -9,6 +8,7 @@
         :active="bgPlayerActive"
         style="position: absolute;">
       </bg-player>
+      <waterfall-background ref="wTabBg"/>
       <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
            v-if="isShowTop" :blockFocusDirections="['left','right','up']">
         <slot name="buttonsHeader"/>
@@ -23,6 +23,7 @@
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
+        @tab-event="myTabEvent"
         @onTabPageChanged="onTabPageChanged"
         @onTabMoveToTopStart="onTabMoveToTopStart"
         @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -169,14 +170,7 @@ export default defineComponent({
     }
 
     function onESStop() {
-      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
-      bg_player.value?.stop()
-      if(!isOneTimeStop){
-        delayStopPlaerTimer = setTimeout(() => {
-          bg_player.value?.stop()
-          isOneTimeStop = true
-        },2000)
-      }
+      delayStopPlayer()
     }
 
     function onESPause() {
@@ -185,6 +179,7 @@ export default defineComponent({
 
     function onESDestroy() {
       bg_player.value?.reset()
+      delayStopPlayer()
     }
 
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
@@ -313,6 +308,7 @@ export default defineComponent({
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList:any){
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
+      bgPlayerType.value = -1
       delayOnTabPageSectionAttachedTimer = setTimeout(async () => {
         if(sectionList.length < 1) {
           log.e("IndieViewLog",`reutrn on sectionList.length < 1`)
@@ -349,6 +345,7 @@ export default defineComponent({
                 recordPlayerData.pageIndex = pageIndex
                 recordPlayerData.itemIndex = index
                 recordPlayerData.data = element
+                wTabBg.value?.setImg('',"",true,false)
               }else if(element.isBgPlayer){
                 flag = CoveredPlayerType.TYPE_BG
                 element.childSID = ""
@@ -357,6 +354,7 @@ export default defineComponent({
                 recordPlayerData.pageIndex = pageIndex
                 recordPlayerData.itemIndex = index
                 recordPlayerData.data = element
+                wTabBg.value?.setImg('',"",true,false)
                 break
               }
             }
@@ -388,8 +386,9 @@ export default defineComponent({
             }else if (isSwitchCellBg === '1'){
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg,"",true,false)
+              delayStopPlayer()
             }else{
-              bg_player?.value.stop()
+              delayStopPlayer()
             }
             //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
 
@@ -397,7 +396,17 @@ export default defineComponent({
         }
       },200)
     }
-
+    const myTabEvent = (e) =>{
+      let eventName = e.eventName
+      let params = e.params
+      let page = params.position
+      switch (eventName) {
+        case 'onDrawerOpenStart':
+         
+          break;
+        case 'onDrawerOpenEnd':break;
+      }
+    }
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
@@ -468,6 +477,16 @@ export default defineComponent({
     function onTabClick(item:QTTabItem){
 
     }
+    function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      if(!isOneTimeStop){
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          isOneTimeStop = true
+        },2000)
+      }
+    }
 
     return {
       waterfall_tab_root,
@@ -498,7 +517,9 @@ export default defineComponent({
       onTabPageItemFocused,
       onTabPageScroll,
       onTabClick,
-      onTabPageSectionAttached
+      onTabPageSectionAttached,
+      myTabEvent,
+      delayStopPlayer
     }
   }
 })
