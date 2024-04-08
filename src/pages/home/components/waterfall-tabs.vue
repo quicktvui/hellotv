@@ -1,6 +1,7 @@
 <template>
   <div class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
        :clipPadding="false">
+      <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
       <bg-player
         class="bg_player"
@@ -8,7 +9,6 @@
         :active="bgPlayerActive"
         style="position: absolute;">
       </bg-player>
-      <waterfall-background ref="wTabBg"/>
       <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
            v-if="isShowTop" :blockFocusDirections="['left','right','up']">
         <slot name="buttonsHeader"/>
@@ -345,7 +345,6 @@ export default defineComponent({
                 recordPlayerData.pageIndex = pageIndex
                 recordPlayerData.itemIndex = index
                 recordPlayerData.data = element
-                wTabBg.value?.setImg('',"",true,false)
               }else if(element.isBgPlayer){
                 flag = CoveredPlayerType.TYPE_BG
                 element.childSID = ""
@@ -354,7 +353,6 @@ export default defineComponent({
                 recordPlayerData.pageIndex = pageIndex
                 recordPlayerData.itemIndex = index
                 recordPlayerData.data = element
-                wTabBg.value?.setImg('',"",true,false)
                 break
               }
             }
@@ -483,9 +481,11 @@ export default defineComponent({
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
       bg_player.value?.stop()
+      bg_player.value?.setNextImage()
       if(!isOneTimeStop){
         delayStopPlaerTimer = setTimeout(() => {
           bg_player.value?.stop()
+          bg_player.value?.keepPlayerInvisible(false)
           isOneTimeStop = true
         },2000)
       }
