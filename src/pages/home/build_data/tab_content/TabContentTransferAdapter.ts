@@ -121,7 +121,7 @@ function buildSectionList(plateItem,plateIndex?:number,tabIndex?:number):Array<Q
   let tabSectionList:Array<QTWaterfallItem> = []
   const showPlateName = plateItem.showPlateName === '1'
   sectionList.forEach((item,index:number)=>{
-    const qtWaterfallItem:QTWaterfallItem = buildWaterfallItem(item,showPlateName)
+    const qtWaterfallItem:QTWaterfallItem = buildWaterfallItem(item,showPlateName,tabIndex)
     //为每个格子添加具体的位置
     qtWaterfallItem.sectionPosLabel = `${tabIndex}_${plateIndex}_${index}`
     tabSectionList.push(qtWaterfallItem)
@@ -134,11 +134,11 @@ function buildSectionList(plateItem,plateIndex?:number,tabIndex?:number):Array<Q
  * @param sectionItem
  * @param showPlateName
  */
-function buildWaterfallItem(sectionItem,showPlateName): QTWaterfallItem {
+function buildWaterfallItem(sectionItem,showPlateName,tabIndex): QTWaterfallItem {
   const posY = sectionItem.posY + (showPlateName? tabPlateTitleGap :0)
   const itemSection:TabSectionItem = buildSectionData(sectionItem.id,sectionItem.width,sectionItem.height,sectionItem.cellType,sectionItem.posX,posY,sectionItem.playLogoSwitch,sectionItem.poster,sectionItem.posterTitle,sectionItem.posterTitleStyle,sectionItem.nonFocusImage,sectionItem.focusImage,sectionItem.cornerContent,sectionItem.cornerColor,sectionItem.cornerGradient,sectionItem.playData,
     sectionItem.redirectType,sectionItem.action,sectionItem.innerArgs,sectionItem.isBgPlayer,sectionItem.focusScreenImage)
-  return buildSectionItem(itemSection)
+  return buildSectionItem(itemSection,tabIndex)
 }
 
 export function getPosLabel(sectionPosLabel:string):TabContentLabel{

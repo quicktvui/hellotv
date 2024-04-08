@@ -309,7 +309,6 @@ export default defineComponent({
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList:any){
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
-      bgPlayerType.value = -1
       delayOnTabPageSectionAttachedTimer = setTimeout(async () => {
         if(sectionList.length < 1) {
           log.e("IndieViewLog",`reutrn on sectionList.length < 1`)
@@ -397,7 +396,6 @@ export default defineComponent({
         }
       },200)
     }
-
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
@@ -443,7 +441,17 @@ export default defineComponent({
     }
 
       function onTabEvent(tabIndex: number, eventName: string,params:any) {
-          log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
+        log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
+        if(eventName == 'onReplaceChildAttach'){
+          let sid = params.sid
+          if(sid){
+            let currentPageIndex = tabRef.value?.getCurrentPageIndex()
+            let tabIndex = sid.split('tabIndex')[1]
+            if(tabIndex == currentPageIndex){
+              Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
+            }
+          }
+        }
       }
 
       function onTabPageScroll(offsetX: number, scrollY: number) {
