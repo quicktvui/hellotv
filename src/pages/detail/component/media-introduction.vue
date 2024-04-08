@@ -91,8 +91,6 @@
                     :duplicateParentState="true"
                     :focusable="false"
                     :textSize="24"
-                    :lineSpacing="8"
-                    :lineHeight="30"
                     :ellipsizeMode="2"
                     enablePostTask
                     postDelay="200"
@@ -159,7 +157,7 @@ export default defineComponent({
             introduction.value = media.introduction
             if (actors.value != '') {
                 showActors.value = true
-                introductionHeight.value = 60
+                introductionHeight.value = 65
                 introductionLine.value = 2
             } else {
                 showActors.value = false
@@ -291,7 +289,7 @@ export default defineComponent({
     focus-color: white;
     background-color: transparent;
     width: 814px;
-    margin-top: 15px;
+    margin-top: 10px;
     margin-bottom: 6px;
 }
 </style>

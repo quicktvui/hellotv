@@ -26,19 +26,21 @@
   "scripts": {
     "dev": "node ./scripts/env-polyfill.js hippy-dev -c ./scripts/hippy-webpack.dev.js",
     "vendor": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android-vendor.js",
-    "build": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android.js"
+    "build": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android.js",
+    "build-apk-debug": "node ./scripts/build-apk.js Debug",
+    "build-apk-release": "node ./scripts/build-apk.js Release"
   },
   "dependencies": {
     "@extscreen/es3-ad-player": "1.0.9",
     "@extscreen/es3-component": "1.0.16",
-    "@extscreen/es3-core": "1.0.12",
+    "@extscreen/es3-core": "1.0.13",
     "@extscreen/es3-player": "1.0.15",
     "@extscreen/es3-player-manager": "1.0.20",
     "@extscreen/es3-router": "1.0.7",
     "@extscreen/es3-video-player": "1.0.21",
     "@extscreen/es3-vue": "0.0.13",
     "@extscreen/es3-vue-style-parser": "0.0.8",
-    "@quicktvui/quicktvui3": "1.1.7",
+    "@quicktvui/quicktvui3": "1.1.11",
     "@vue/devtools-api": "^6.5.0",
     "@vue/runtime-core": "^3.2.21",
     "@vue/shared": "^3.2.21",

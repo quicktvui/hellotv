@@ -43,8 +43,7 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult, pag
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
-    console.log("XRG===开始添加结束提示判断",)
-    if (section.itemList && section.itemList.length < SearchConfig.screenResultPageSize) {
+    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize) {
       let endSection: QTWaterfallSection = buildEndSection('5');
       tabPage = {
         useDiff: false,

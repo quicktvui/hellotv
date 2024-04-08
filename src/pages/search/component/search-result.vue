@@ -4,7 +4,7 @@
     :nextFocusName="{ left: 'search_center_view_content_list' }">
 
     <qt-view class="search_result_title_root_top" :focusable="false" name="search_result_title_name"
-      v-show="(keyword || recommendTitle === '热门推荐') && isShowTopTip">
+      v-show="(keyword || recommendTitle) && isShowTopTip">
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
         :focusable="false" />
       <span class="search_result_view_title_result" v-if="keyword" :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果
@@ -15,15 +15,14 @@
 
     <qt-tabs ref="tabRef" :tabContentBlockFocusDirections="tabContentBlockFocusDirections" :visible="!isLoading"
       tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css" :tabContentResumeDelay="200"
-      :tabContentSwitchDelay='0'
       :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
       :blockViewPager="['down', 'right']" :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick"
-      @onTabPageChanged="onTabPageChanged" @onTabMoveToTopStart="onTabMoveToTopStart"
+      @onTabPageChanged="onTabPageChanged" tabNavBarSid="qt_tab_nav_bar" @onTabMoveToTopStart="onTabMoveToTopStart"
       @onTabMoveToTopEnd="onTabMoveToTopEnd" @onTabMoveToBottomStart="onTabMoveToBottomStart"
       @onTabMoveToBottomEnd="onTabMoveToBottomEnd" @onTabPageScrollToEnd="onTabPageScrollToEnd"
       @onTabPageScrollToStart="onTabPageScrollToStart" @onTabPageItemClick="onTabPageItemClick"
       @onTabPageItemFocused="onTabPageItemFocused" @onTabPageLoadData="onTabPageLoadData"
-      @onTabPageScroll="onTabPageScroll" :enablePlaceholder="false" @onTabPageSectionAttached="onTabPageSectionAttached"
+      @onTabPageScroll="onTabPageScroll" :enablePlaceholder="true" @onTabPageSectionAttached="onTabPageSectionAttached"
       class="qt_tabs_css">
       <template v-slot:tab-item>
         <!-- 自定义tab类型 -->
@@ -56,11 +55,9 @@
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, watch } from "vue"
 import {
-  QTITab, QTTab, QTTabEventParams, QTTabItem, QTTabPageData, QTTabPageState, QTWaterfallItem,
-  QTWaterfallSection, QTWaterfallSectionType
+  QTITab, QTTabEventParams, QTTabItem, QTTabPageState, QTWaterfallItem
 } from "@quicktvui/quicktvui3"
-import { useESToast } from "@extscreen/es3-core"
-import { buildTabPageEndData } from "../build_data/useSearchData"
+import { useESLog, } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 import SearchConfig from "../build_data/SearchConfig"
 import { useLaunch } from "../../../tools/launch/useApi"
@@ -85,6 +82,7 @@ export default defineComponent({
   setup(props, context) {
     const isShowCenterSearch = computed(() => SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
+    const log = useESLog()
     const search_result = ref()
     let descendantFocusability = ref(1)
     const ic_search_left_arrow = require("../../../assets/search/ic_search_left_arrow.png").default
@@ -93,10 +91,9 @@ export default defineComponent({
     let isShowTopTip = ref(true)
     let isHasData = ref(false)
     let isLoading = ref(false)
-    let recommendTitle = ref("热门推荐")
+    let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
-    let tabIndex0Sid: string = ""
     let triggerTask = [
       {
         event: "onFocusLost",
@@ -139,22 +136,23 @@ export default defineComponent({
     watch(() => props.keyword, (newVal, oldVal) => {
       if (newVal) {
         isRecommendRequest = false
+        isRecommendRequest = false
         recommendTitle.value = ""
-        if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
-        isLoading.value = true
-        descendantFocusability.value = 2
-        delaySearchByKeyword = setTimeout(() => {
-          initTab(isRecommendRequest)
-          if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
-          closeLoadingTimer = setTimeout(() => {
-            isLoading.value = false
-            descendantFocusability.value = 1
-          }, 1000)
-        }, 600)
       } else {
         isRecommendRequest = true
-        recommendTitle.value = "热门推荐"
+        recommendTitle.value = "大家都在搜"
       }
+      if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
+      isLoading.value = true
+      descendantFocusability.value = 2
+      delaySearchByKeyword = setTimeout(() => {
+        initTab(isRecommendRequest)
+        if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
+        closeLoadingTimer = setTimeout(() => {
+          isLoading.value = false
+          descendantFocusability.value = 1
+        }, 1000)
+      }, 600)
       context.emit("close-loading")
     })
 
@@ -166,9 +164,9 @@ export default defineComponent({
         if (tabItem._id !== null && tabItem._id !== undefined) {
           let tabPage
           if (isRecommendRequest) {
-            tabPage = await appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.screenResultPageSize, tabList.length === 1)
+            tabPage = await appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
           } else {
-            tabPage = await appApi.getSearchResultPageData(props.keyword, (pageNo + 1), SearchConfig.screenResultPageSize, tabList.length === 1)
+            tabPage = await appApi.getSearchResultPageData(props.keyword, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
           }
           const length = tabPage.data[0].itemList.length
           if (length > 0) {
@@ -192,27 +190,25 @@ export default defineComponent({
     }
     const onTabPageChanged = (pageIndex: number, data: any) => {
       if (tabList && pageIndex == 0 && pageIndex < tabList.length && tabList.length > 1) {
-        const sid = tabList[pageIndex].sid
-        tabIndex0Sid = sid
-        context.emit("curItemSid", sid)
-        context.emit("defaultTabItemSid", sid)
+        context.emit("curItemSid", "qt_tab_nav_bar")
+        context.emit("defaultTabItemSid", "qt_tab_nav_bar")
       }
     }
-    const onTabMoveToTopStart = () => { // 吸顶开始
+    const onTabMoveToTopStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶开始
       isShowTopTip.value = false
     }
-    const onTabMoveToTopEnd = () => { // 吸顶结束
+    const onTabMoveToTopEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶结束
 
     }
-    const onTabMoveToBottomStart = () => { //恢复吸顶开始
+    const onTabMoveToBottomStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶开始
 
     }
-    const onTabMoveToBottomEnd = () => { //恢复吸顶结束
+    const onTabMoveToBottomEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶结束
       isShowTopTip.value = true
     }
-    const onTabPageScrollToEnd = () => {
+    const onTabPageScrollToEnd = (pageIndex: number) => {
     }
-    const onTabPageScrollToStart = () => {
+    const onTabPageScrollToStart = (pageIndex: number) => {
     }
     const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) => {
       const { actionRedirect } = item.item
@@ -222,7 +218,6 @@ export default defineComponent({
     const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       if (itemIndex % 6 === 0 && isFocused) {
         //获取当前的 sid
-        // console.log("XRG=onTabPageItemFocused==sid==",item.sid,"===itemIndex==",itemIndex)
         context.emit("curItemSid", item.sid)
       }
     }

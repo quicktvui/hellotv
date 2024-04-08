@@ -94,6 +94,7 @@ export default defineComponent({
       })
     })
     const clearBtnClick = () => {
+      if (inputText.value === "") return
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = ""
       }
@@ -102,11 +103,13 @@ export default defineComponent({
     const childFocus = (e) => {
       if (e.child) {
         context.emit("scroll-to-index", 0, 100)
+        if (targetSid.value === props.defaultItemSid) return
         targetSid.value = props.defaultItemSid
       }
     }
     let isEmpty = false
     const deleteBtnClick = () => {
+      if (inputText.value === "") return
       let value = ''
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = inputText.value.slice(0, inputText.value.length - 1)

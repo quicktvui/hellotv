@@ -14,8 +14,8 @@
           :nextFocusName="{right:'search_center_view'}"
           @inputChange="onInputChange"
           @scroll-to-index="onNeedScrollTo"
-          :result-item-sid="isShowCenterSearch?'':curItemSid"
-          :default-item-sid="isShowCenterSearch?'':defaultItemSid"/>
+          :result-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':curItemSid):curItemSid"
+          :default-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':defaultItemSid):defaultItemSid"/>
         <!-- 搜索内容 -->
         <search-center
           v-if="isShowCenterSearch"
@@ -106,7 +106,6 @@ export default defineComponent({
     const onESResume = () => {}
     const onESStop = () => {}
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
-      console.log("XRG===onkeydown---","-----------",curChildIndex)
       if (curChildIndex !== 2){
         search_result.value.cancelAll()
       }

@@ -133,7 +133,7 @@ export default defineComponent({
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
       let index = event.position;
-      context.emit("onMediaListGroupItemClicked", index)
+      context.emit("onMediaListGroupItemFocused", index)
     }
 
     return {

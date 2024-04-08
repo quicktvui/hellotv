@@ -2,7 +2,7 @@ export default [
   {
     id:'0',
     tabCode:'all',
-    title: `热门推荐`,
+    title: `大家都在搜`,
     totalNum: 99,
   }
 ]

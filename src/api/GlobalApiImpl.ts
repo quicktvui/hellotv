@@ -1,3 +1,4 @@
+import ScreenConfig from "../pages/filter/build_data/ScreenConfig"
 import { IGlobalApi } from "./IGlobalApi";
 import { RequestManager } from "./request/RequestManager";
 import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
@@ -79,19 +80,19 @@ export function createGlobalApi(): IGlobalApi {
     return Promise.resolve(buildTransferTabAdapter(tabs))
   }
 
-  function getTabContent(tabId: string, pageNo: number, pageSize: number): Promise<QTTabPageData> {
+  function getTabContent(tabId: string, pageNo: number, pageSize: number, tabPageIndex?: number): Promise<QTTabPageData> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {
-      return getMockTabContent(tabId, pageNo)
+      return getMockTabContent(tabId, pageNo, tabPageIndex)
     }
     return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}&pagesize=${pageSize * 6}`)
       .then(async (result: any) => buildO2MTabContentData(result, pageNo, tabId))
   }
 
-  function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
+  function getMockTabContent(tabId: string, pageNo: number, tabPageIndex?: number): Promise<QTTabPageData> {
     const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
     const index = Number(tabId)
-    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo, tabId))
+    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo, tabId, tabPageIndex))
   }
 
   function getTabBg(tabId): string {
@@ -119,7 +120,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchCenterListData(list, isLoadHistory))
     }
     // 根据keyword字母搜索关键字 不传返回热门搜索
-    return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: pageNum, pageSize: SearchConfig.screenCenterPageSize } })
+    return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: pageNum, pageSize: SearchConfig.searchCenterPageSize } })
       .then((result: any) => {
         let list: Array<any> = []
         if (result.keywordList.length > 0) list = result.keywordList
@@ -274,7 +275,7 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   async function getScreenContentByTags(pageNum: number, tags?: string) {
-    let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${SearchConfig.screenPageSize}` + tags)
+    let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${SearchConfig.searchCenterPageSize}` + tags)
     return Promise.resolve(result.list.map(item => ({
       id: '',
       assetTitle: item.vod_name,
@@ -289,7 +290,7 @@ export function createGlobalApi(): IGlobalApi {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": SearchConfig.screenPageSize,
+      "pageSize": ScreenConfig.screenPageSize,
     };
     const newParams = { ...params, ...pageParams };
     return requestManager.post(filterContentUrl, {

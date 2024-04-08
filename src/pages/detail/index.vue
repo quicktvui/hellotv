@@ -72,6 +72,7 @@ export default defineComponent({
     let media: IMedia
     let isPaused = false
     let isStopped = false
+    let isPlayerInit = false
     //--------------------------------------------------------------------
     const waterfallRef = ref<QTIWaterfall>()
     const albumDetailRef = ref<IAlbumDetail>()
@@ -224,7 +225,7 @@ export default defineComponent({
         " y:" + y +
         " state:" + state
       )
-      if (state == 0 && y == 0) {
+      if (state == 0 && y < 5) {
         if (mediaPlayerViewRef.value?.getWindowType() ==
           ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
           mediaPlayerViewRef.value?.setSmallWindow()
@@ -252,6 +253,10 @@ export default defineComponent({
           mediaPlayerViewRef.value?.setSmallWindow()
         }
       }
+
+      if (scrollY <= 5) {
+        albumDetailRef.value?.setAutofocus(true)
+      }
     }
 
     //-------------------------------------------------------------------------------
@@ -270,6 +275,7 @@ export default defineComponent({
     function onPlayerPlaceholderFocus(focused: boolean) {
       if (focused) {
         waterfallRef.value?.scrollToTop()
+        waterfallScrollY = 0
       }
       eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
@@ -311,8 +317,10 @@ export default defineComponent({
       //
       mediaPlayerViewRef.value?.addMediaItemList(page, data)
 
-      if (page == 0) {
+      //TODO 等待左图右文修改获取数据的bug
+      if (page == 0 && !isPlayerInit) {
         mediaPlayerViewRef.value?.playMediaItemById(playId || data[0].id)
+        isPlayerInit = true
       }
     }
 
@@ -380,6 +388,7 @@ export default defineComponent({
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
       mediaPlayerViewRef.value?.release()
+      mediaPlayerViewRef.value?.reset()
       albumDetailRef.value?.release()
       releaseEventBus()
     }
@@ -407,6 +416,7 @@ export default defineComponent({
       if (waterfallScrollY > 0) {
         albumDetailRef.value?.setAutofocus(true)
         waterfallRef.value?.scrollToTop()
+        waterfallScrollY = 0
         return true
       }
 

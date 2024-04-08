@@ -5,7 +5,7 @@
         <media-menu-button v-if="item.type === 1" :icon="fullButtonNormal" text="全屏" @click="onFullButtonClick"
           :vip-focus-icon="fullButtonVIPFocused" :focus-icon="fullButtonFocused" />
 
-        <media-menu-vip-button v-if="!authenticated && item.type === 2" @click="onFullButtonClick" />
+        <media-menu-vip-button v-if="!authenticated && item.type === 2" @click="onVIPButtonClick" />
 
         <media-menu-button v-if="item.type === 3" :focus-icon="isCollected ? favButtonCollected : favButtonFocused"
           :icon="isCollected ? favButtonCollected : favButtonNormal" :text="isCollected ? '已收藏' : '收藏'"
@@ -48,7 +48,9 @@ export default defineComponent({
     "media-menu-vip-button": media_menu_vip_button
   },
   emits: [
-    "onFullButtonClick"
+    "onMenuFullButtonClick",
+    "onMenuVIPButtonClick",
+    "onMenuFavouriteButtonClick"
   ],
   setup(props, context) {
     const isCollected = ref(props.isCollected)
@@ -99,6 +101,9 @@ export default defineComponent({
         eventbus.emit("onMenuFavouriteButtonClick", isCollected.value)
       }
     }
+    function onVIPButtonClick() {
+      eventbus.emit("onMenuVIPButtonClick")
+    }
 
     return {
       init,
@@ -110,6 +115,7 @@ export default defineComponent({
       fullButtonVIPFocused,
       onFullButtonClick,
       onFavouriteButtonClick,
+      onVIPButtonClick,
       favButtonFocused,
       favButtonNormal,
       favButtonCollected,
