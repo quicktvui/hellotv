@@ -35,11 +35,11 @@
         <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1" :triggerTask="switchData(filterTriggerTask)"
           ref="screen_right_content" name="screen_right_content" :blockFocusDirections="['right', 'down']"
-          :enablePlaceholder="true" :spanCount="5" :openPage="true" :preloadNo="4" :focusable="false"
+          :enablePlaceholder="true" :spanCount="6" :openPage="true" :preloadNo="4" :focusable="false"
           :pageSize="screenPageSize" nextFocusLeftSID="screen_left_tags" :listenBoundEvent="true" :useDiff="true"
           :listenHasFocusChange="true" :clipChildren="false" :clipPadding="false" :loadMore="loadMoreScreenContent"
           :loadingDecoration="{ top: 15, left: 30, bottom: 70 }" @scroll-state-changed="onScrollStateChanged"
-          @item-focused="onItemFocused" @item-click="onItemClick" :padding="'50,30,50,0'">
+          @item-focused="onItemFocused" @item-click="onItemClick" :padding="'30,10,0,20'">
           <tags-content-item :type="1" />
           <!-- 底部提示-->
           <template #footer>
