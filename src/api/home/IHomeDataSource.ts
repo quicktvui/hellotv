@@ -13,7 +13,7 @@ export interface IHomeDataSource {
    * @param pageNo 分页值
    * @param pageSize 每页请求个数
    */
-    getTabContent(tabId: string, pageNo: number, pageSize: number): Promise<QTTabPageData>
+    getTabContent(tabId: string, pageNo: number, pageSize: number,tabPageIndex?: number): Promise<QTTabPageData>
 
   /**
    * 获取首页背景播放请求地址

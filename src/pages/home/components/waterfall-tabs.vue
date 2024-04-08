@@ -59,6 +59,7 @@
 <script lang="ts">
 import {defineComponent} from "@vue/runtime-core";
 import { reactive, ref, toRaw} from "vue";
+import { getSectionPosLabelObject } from "../build_data/useTabData"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
   QTITab,
@@ -194,7 +195,7 @@ export default defineComponent({
     }
 
     function getTabContent(tabId: string, tabPageIndex: number, pageNo: number) {
-      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize)
+      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize,tabPageIndex)
         .then((tabPage: QTTabPageData) => {
             if (tabPage.data.length > 0) {
               setTabPagePageNo(tabPageIndex, pageNo)
@@ -336,6 +337,8 @@ export default defineComponent({
               const element = sectionData.itemList[index];
               log.e(TAG,`element : ${JSON.stringify(element)}`)
               log.e(TAG,`element isBGPlayer: ${element.isBgPlayer}`)
+              log.e(TAG,`element sectionPosLabel: ${getSectionPosLabelObject(element.sectionPosLabel)}`)
+
               if(element.isCellPlayer){
                 if(element.isCellPlayerList) flag = CoveredPlayerType.TYPE_CELL_LIST
                 else flag = CoveredPlayerType.TYPE_CELL

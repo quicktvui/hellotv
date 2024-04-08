@@ -70,7 +70,7 @@
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, watch } from "vue"
 import {
-  QTITab, QTTabItem,  QTTabPageState, QTWaterfallItem,
+  QTITab, QTTabEventParams, QTTabItem, QTTabPageState, QTWaterfallItem
 } from "@quicktvui/quicktvui3"
 import { useESLog, } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
@@ -208,21 +208,21 @@ export default defineComponent({
         context.emit("defaultTabItemSid","qt_tab_nav_bar")
       }
     }
-    const onTabMoveToTopStart = () => { // 吸顶开始
+    const onTabMoveToTopStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶开始
       isShowTopTip.value = false
     }
-    const onTabMoveToTopEnd = () => { // 吸顶结束
+    const onTabMoveToTopEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶结束
 
     }
-    const onTabMoveToBottomStart = () => { //恢复吸顶开始
+    const onTabMoveToBottomStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶开始
 
     }
-    const onTabMoveToBottomEnd = () => { //恢复吸顶结束
+    const onTabMoveToBottomEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶结束
       isShowTopTip.value = true
     }
-    const onTabPageScrollToEnd = () => {
+    const onTabPageScrollToEnd = (pageIndex: number) => {
     }
-    const onTabPageScrollToStart = () => {
+    const onTabPageScrollToStart = (pageIndex: number) => {
     }
     const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) => {
       const {actionRedirect} = item.item
