@@ -59,11 +59,11 @@
                       @scroll-state-changed="onScrollStateChanged"
                       @item-focused="onItemFocused"
                       @item-click="onItemClick"
-                      :padding="'50,30,50,0'">
+                      :padding="'50,24,50,0'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
           <template #footer>
-            <p class="screen-right-content-no-more" :focusable="false" :type="1003">已经到底啦，按【返回键】回到顶部</p>
+            <qt-text class="screen-right-content-no-more" :focusable="false" :type="1003" text="${text}" :fontSize="30" :lines="1" gravity="top|center"/>
           </template>
           <template #loading>
             <!--分页加载 Loading-->
