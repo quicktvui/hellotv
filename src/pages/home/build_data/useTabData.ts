@@ -19,7 +19,7 @@ export function buildO2MTabData(sourceData: Array<any>) {
   const tabs: Array<Tab> = []
   sourceData.forEach(item => {
     switch (item.type_id) {
-      case 1: case 2: case 3: case 4:
+      case 1: case 2: case 3: case 4: case 29: case 31:
         break
       default:
         const tab: Tab = {
