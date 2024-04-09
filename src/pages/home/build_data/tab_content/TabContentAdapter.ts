@@ -239,7 +239,7 @@ export function buildSectionData(id: string, sectionWidth: number, sectionHeight
   }
 }
 
-export function buildSectionItem(itemSection:TabSectionItem):QTWaterfallItem{
+export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfallItem{
   let item: QTWaterfallItem
   switch (itemSection.cellType) {
     case TabSectionItemType.TAB_CONTENT_ITEM_FOCUS_CHANGE_IMG://焦点变图格子
@@ -255,11 +255,11 @@ export function buildSectionItem(itemSection:TabSectionItem):QTWaterfallItem{
       item.type = TabSectionType.TYPE_ITEM_SECTION_PLACE_HOLDER
       break;
     case TabSectionItemType.TAB_CONTENT_ITEM_CELL_PLAYER://小窗格子
-      item = buildTabPageCellPlayerItem(itemSection)
+      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
       item.type = TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER
       break;
     case TabSectionItemType.TAB_CONTENT_ITEM_CELL_PLAYER_LIST://小窗列表格子
-      item = buildTabPageCellPlayerItem(itemSection)
+      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
       item.type = TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER
       break;
     default :
