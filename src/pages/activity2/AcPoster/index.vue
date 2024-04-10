@@ -40,11 +40,13 @@
       :focusable="false"
       showOnState="focused"/>
 
-    <div style="flex-direction: column;background-color: transparent;z-index: 999;"
-         :duplicateParentState="true"
-         :focusable="false"
-         flexStyle="${titleStyle}"
-         :showOnState=mainTextShowOnState>
+    <div 
+      style="flex-direction: column;background-color: transparent;z-index: 999;"
+      :duplicateParentState="true"
+      :focusable="false"
+      flexStyle="${titleStyle}"
+      :showOnState="mainTextShowOnState"
+    >
       <!--  浮动标题 -->
       <div flexStyle="${floatTitle.style}"
            class="qt-ui-poster-title-css"
@@ -92,7 +94,9 @@
         style="background-color: transparent"
         flexStyle="${subTitle.style}"
         text="${subTitle.text}"
-        visibility="${subTitle}"/>
+        visibility="${subTitle}"
+        showIf="${subTitle.enable}"
+      />
     </div>
     <div
       flexStyle="${ripple.style}"

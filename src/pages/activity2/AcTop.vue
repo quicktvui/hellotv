@@ -49,36 +49,21 @@ import { QTListViewItem } from '@quicktvui/quicktvui3';
 // @ts-ignore
 import { dConfig } from './index.ts'
 import { topModes } from '../../api/activity2/types'
+import { useESToast } from '@extscreen/es3-core';
+// @ts-ignore
+import activity2Api from '../../api/activity2/index.ts';
 
+const toast = useESToast()
 const topListRef = ref()
+const emits = defineEmits(['emTabChange'])
 
 const titleGravity = dConfig.top.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
 const onTabChange = () => {
-
+  emits('emTabChange')
 }
-
-import homeIcon from '../../assets/ic_header_home.png'
-import homeFocusIcon from '../../assets/ic_header_home_focus.png'
-import vipIcon from '../../assets/ic_media_vip_button_focused.png'
-const arr:QTListViewItem[] = [
-  { 
-    type: 1, //1 带图标，2不带图标
-    decoration:{ left: 20 }, text: '购买',
-    background: {colors:['#F9DFA7','#F9DFA7'],cornerRadius:25}, 
-    focusedBackground: {colors:['#F9DFA7','#F9DFA7'],cornerRadius:25},
-    icon: vipIcon, focusIcon:vipIcon, textColor: '#ffffff', textFocusColor: '#ffffff'
-  },
-  { 
-    type: 1, //1 带图标，2不带图标
-    decoration:{ left: 20 }, text: '首页',
-    background: {colors:['#30000000','#30000000'],cornerRadius:25}, 
-    focusedBackground: {colors:['#ffffff','#ffffff'],cornerRadius:25},
-    icon: homeIcon, focusIcon:homeFocusIcon,
-    textColor: '#ffffff', textFocusColor: '#333333'
-  }
-]
 defineExpose({
-  init() {
+  async init() {
+    const arr = await activity2Api.getTopBtns()
     topListRef.value?.init(arr)
   }
 })

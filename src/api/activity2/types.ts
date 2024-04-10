@@ -52,3 +52,31 @@ export interface IActivityBlock {
   columnSpace?:number//列间距
   list: IActivityBlockItem[]
 }
+
+export interface IActivityTopBtnConfig { 
+  type?: number; //1 带图标，2不带图标 默认2
+  text: string;
+  background?: string[]; 
+  focusedBackground?: string[];
+  icon?: any;
+  focusIcon?: any;
+  textColor?: string;
+  textFocusColor?: string
+}
+export interface IActivityTopItemBtn {
+  type: number;
+  decoration: { left: number; };
+  text: string;
+  background: {
+      colors: string[];
+      cornerRadius: number;
+  };
+  focusedBackground: {
+      colors: string[];
+      cornerRadius: number;
+  };
+  icon: any;
+  focusIcon: any;
+  textColor: string;
+  textFocusColor: string;
+}
