@@ -1,37 +1,26 @@
 <template>
   <qt-column class="media-player-root-css">
-    <es-player-manager
-      ref="playerManager"
-      :smallWindowWidth="890"
-      :smallWindowHeight="500"
-      :initPlayerWindowType="1"
-      playerBackgroundColor="black"
-      :playMediaAuto="false"
-      :playerList="playerListRef"
-      :playerViewList="playerViewListRef"
-      :style="{left : playerLeft, top : playerTop}"
-      @onPlayerPlayMedia="onPlayerPlayMedia"
-      @onPlayerPlaying="onPlayerPlaying"
-      @onPlayerPaused="onPlayerPaused"
-      @onPlayerStopped="onPlayerStopped"
-      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"
-      @onPlayerInterceptSuccess="onPlayerInterceptSuccess"
-      @onPlayerInterceptError="onPlayerInterceptError"
-      class="media-player-manager-css"/>
+    <es-player-manager ref="playerManager" :smallWindowWidth="890" :smallWindowHeight="500" :initPlayerWindowType="1"
+      playerBackgroundColor="black" :playMediaAuto="false" :playerList="playerListRef"
+      :playerViewList="playerViewListRef" :style="{ left: playerLeft, top: playerTop }"
+      @onPlayerPlayMedia="onPlayerPlayMedia" @onPlayerPlaying="onPlayerPlaying" @onPlayerPaused="onPlayerPaused"
+      @onPlayerStopped="onPlayerStopped" @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"
+      @onPlayerInterceptSuccess="onPlayerInterceptSuccess" @onPlayerInterceptError="onPlayerInterceptError"
+      class="media-player-manager-css" />
   </qt-column>
 </template>
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 import {
   ESIPlayerManager, ESMediaItem,
   ESMediaItemList,
   ESPlayerManager,
   useESPlayerManagerPlayModeManager
 } from "@extscreen/es3-player-manager";
-import {markRaw, ref} from "vue";
-import {ESVideoPlayer} from "@extscreen/es3-video-player";
+import { markRaw, ref } from "vue";
+import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import {
   ESPlayerInterceptError,
   ESPlayerInterceptResult,
@@ -40,11 +29,11 @@ import {
   ESPlayerRate,
   useESPlayerRateManager
 } from "@extscreen/es3-player"
-import {IMedia} from "../../../api/media/IMedia";
+import { IMedia } from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
-import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
-import {buildMediaItemList} from "../adapter/PlayerDataAdapter";
-import {useMediaDataSource} from "../../../api/UseApi";
+import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { buildMediaItemList } from "../adapter/PlayerDataAdapter";
+import { useMediaDataSource } from "../../../api/UseApi";
 import ESMediaPlayerSmallView from "./media-player-small-view.vue"
 import {
   createESPlayerMediaItemAuthInterceptor,
@@ -91,6 +80,11 @@ export default defineComponent({
       playerManager.value?.initialize()
       playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       playerManager.value?.playMediaList(playList)
+
+      if (!media.itemList.enable) {
+        addMediaItemList(1, [media])
+        playMediaItemByIndex(0)
+      }
     }
 
     function addMediaItemList(page: number, mediaList: Array<IMedia>) {
@@ -229,7 +223,7 @@ export default defineComponent({
     }
 
     function onBackPressed(): boolean {
-      if(getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL){
+      if (getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
         return false;
       }
       if (playerManager.value) {
