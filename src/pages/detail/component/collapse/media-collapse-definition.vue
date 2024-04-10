@@ -39,15 +39,22 @@ export default defineComponent({
     let itemDataList: Array<QTListViewItem>
 
     let selectedIndex = 0
+    let focusTimer
 
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------onCollapseItemExpand---紫色---->>>>', value)
+        log.d(TAG, '-------onCollapseItemExpand---清晰度---->>>>', value)
       }
       isCollapseExpand.value = value
 
       if (value) {
-        setItemFocused(selectedIndex)
+        focusTimer = setTimeout(() => {
+          setItemFocused(selectedIndex)
+        }, 1000)
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
       }
     }
 

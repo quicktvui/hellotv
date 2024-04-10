@@ -58,6 +58,8 @@ export default defineComponent({
     const eventbus = useESEventBus()
     let selectedIndex = 0
 
+    let focusTimer
+
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -98,7 +100,13 @@ export default defineComponent({
 
       if (value) {
         setItemSelected(selectedIndex)
-        setItemFocused(selectedIndex)
+        focusTimer = setTimeout(() => {
+          setItemFocused(selectedIndex)
+        }, 1000)
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
       }
     }
 
@@ -146,6 +154,9 @@ export default defineComponent({
     }
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
+      if (focusTimer) {
+        clearTimeout(focusTimer)
+      }
       let index = event.position;
       context.emit("onMediaListGroupItemFocused", index)
     }

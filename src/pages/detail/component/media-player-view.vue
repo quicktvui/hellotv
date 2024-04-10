@@ -266,6 +266,7 @@ export default defineComponent({
     const mediaCollapseRef = ref<QTICollapse>()
 
     let collapseItemList = []
+    let collapse: QTCollapse
 
     const mediaCollapseOrderRef = ref<IMediaCollapseItemListView>()
     const mediaCollapseSpeedRef = ref<IMediaCollapseItemListView>()
@@ -277,7 +278,8 @@ export default defineComponent({
 
     //-------------------------------菜单-----------------------------------
     function initCollapseMenu() {
-      const collapse = buildCollapseMenu(mediaListVisible.value)
+      collapse = buildCollapseMenu(mediaListVisible.value)
+      collapseItemIndex = collapse.defaultIndex ?? 0
       collapseItemList = collapse.itemList
       mediaCollapseRef.value?.init(collapse)
       mediaCollapseMenuInit = true
@@ -501,8 +503,8 @@ export default defineComponent({
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(0)
-            collapseItemIndex = 0
+            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
@@ -525,8 +527,8 @@ export default defineComponent({
           mediaListItemFocused = false
 
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(0)
-            collapseItemIndex = 0
+            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
       }
