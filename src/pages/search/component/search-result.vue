@@ -18,6 +18,11 @@
              :visible="!isLoading"
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
+             :focusMemory="true"
+             name='searchTabs'
+             :tabContentSwitchDelay="200"
+             :custom-pool="{name:'search'}"
+             :custom-item-pool="{name:'search_items'}"
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"

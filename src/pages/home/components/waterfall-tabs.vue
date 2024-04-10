@@ -24,6 +24,8 @@
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
         sid='homeTabs'
+        :custom-pool="{name:'home'}"
+        :custom-item-pool="{name:'homeItems'}"
         @onTabPageChanged="onTabPageChanged"
         @onTabMoveToTopStart="onTabMoveToTopStart"
         @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -439,12 +441,14 @@ export default defineComponent({
     }
 
       function onTabEvent(tabIndex: number, eventName: string,params:any) {
-        log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
+        // log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
         if(eventName == 'onReplaceChildAttach'){
           let sid = params.sid
           if(sid){
+
             let currentPageIndex = tabRef.value?.getCurrentPageIndex()
             let tabIndex = sid.split('tabIndex')[1]
+            log.e('DebugReplaceChild',`eventName:${eventName},currentPageIndex:${currentPageIndex},tabIndex:${tabIndex}`)
             if(tabIndex == currentPageIndex){
               Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
             }

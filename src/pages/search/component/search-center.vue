@@ -26,12 +26,13 @@
         <qt-text text="抱歉暂无相关内容" gravity="center" class="empty_text" :focusable="false" />
         <qt-text text="为您推荐右边热门影片～" gravity="center" class="empty_text" :focusable="false" />
       </qt-view>
+
       <!-- 词条列表-->
       <qt-list-view v-else class="list_view" :style="{width:centerWidth+'px'}" ref="listViewRef"
                     makeChildVisibleType="normal" :makeChildVisibleClampBackward="168"
                     :makeChildVisibleClampForward="168"
                     @item-focused="onItemFocus" @load-more="loadMore"
-                    :nextFocusRightSID="targetSid">
+                    :nextFocusName="{right:'searchTabs'}">
         <qt-view :type="1" :focusable="true" :focusScale="1" class="search_center_item"
                  :style="{width:centerWidth+'px'}"
                  eventClick eventFocus>
