@@ -79,10 +79,13 @@ class HistoryApi extends HistoryBaseApi {
         break
     }
 
+    console.log('huan-getContentList-data', data)
+
     return Promise.resolve({
       page: pageNum,
       size: data.length,
-      data: data.sort(sortBy('sortTime'))
+      data: data.sort(sortBy('sortTime')),
+      isNeedReload: true
     })
   }
 

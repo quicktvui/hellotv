@@ -20,7 +20,7 @@ export function loadHistory(val: History) {
 }
 
 export function removeHistory(type: 'ply' | 'fav', id: number): boolean {
-  return delete (localHistory[type][id])
+  return delete localHistory[type][id]
 }
 
 export function resetHistory(type: 'ply' | 'fav') {
