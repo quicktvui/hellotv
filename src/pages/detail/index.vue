@@ -4,6 +4,7 @@
       :descendantFocusability="descendantFocusability"
       :enablePlaceholder="false"
       ref="waterfallRef"
+      :blockFocusDirections="['left','right']"
       :disableScrollOnFirstScreen="true"
       @onScroll="onScroll"
       @onScrollStateChanged="onScrollStateChanged"
@@ -78,6 +79,9 @@ export default defineComponent({
     const eventbus = useESEventBus()
     const showLoading = ref<boolean>(true)
     const mediaAuthorizationRef = ref<IMediaAuthorization | undefined | null>()
+
+    let isFullButtonClick = false
+
     //--------------------------------------------------------------------
     const mediaDataSource = useMediaDataSource()
     let mediaId: string
@@ -266,6 +270,7 @@ export default defineComponent({
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
       mediaPlayerViewRef.value?.setFullWindow()
+      isFullButtonClick = true
     }
 
     function onPlayerPlaceholderClick() {
@@ -347,20 +352,32 @@ export default defineComponent({
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
           descendantFocusability.value = 2
           break
+        case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
+          isFullButtonClick = false
+          break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
           // albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
-          if(lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL){
-            setTimeout(() => {
-              albumDetailRef.value?.requestPlayerPlaceholderFocus()
-            }, 100)
+          if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+            if (isFullButtonClick) {
+              setTimeout(() => {
+                albumDetailRef.value?.requestFullButtonFocus()
+              }, 300)
+              isFullButtonClick = false
+            } else {
+              setTimeout(() => {
+                albumDetailRef.value?.requestPlayerPlaceholderFocus()
+              }, 300)
+            }
+            return
           }
 
-          if(media && !media.itemList.enable){
+          if (media && !media.itemList.enable) {
             setTimeout(() => {
               albumDetailRef.value?.requestPlayerPlaceholderFocus()
-            }, 100)
+            }, 200)
           }
+          isFullButtonClick = false
           break
       }
       lastWindowType = windowType
@@ -421,13 +438,12 @@ export default defineComponent({
       }
 
       if (waterfallScrollY > 0) {
-          // albumDetailRef.value?.setAutofocus(true)
           waterfallRef.value?.scrollToTop()
           waterfallScrollY = 0
-        setTimeout(() => {
-          albumDetailRef.value?.requestPlayerPlaceholderFocus()
-        }, 300)
-        return true
+          setTimeout(() => {
+            albumDetailRef.value?.requestPlayerPlaceholderFocus()
+          }, 300)
+          return true
       }
 
       router.back()

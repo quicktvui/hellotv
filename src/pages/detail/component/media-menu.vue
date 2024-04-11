@@ -11,6 +11,7 @@
           v-for="(item, index) in menuList">
         <media-menu-button
           v-if="item.type === 1"
+          ref="fullScreenButtonRef"
           :icon="fullButtonNormal"
           text="全屏"
           :autofocus='autofocus'
@@ -55,6 +56,7 @@ import { useESEventBus } from "@extscreen/es3-core"
 import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization"
 import { inject, Ref, ref, watch } from "vue"
 import { mediaAuthorizationKey } from "../injectionSymbols"
+import { IMediaMenuButton } from "./IMediaMenuButton"
 
 export default defineComponent({
   name: "media-menu",
@@ -79,6 +81,8 @@ export default defineComponent({
     const init = ref<boolean>(false)
 
     let autofocus = ref<boolean>(false)
+
+    const fullScreenButtonRef = ref<Array<IMediaMenuButton>>()
 
     const noVipMenuList = [
       { type: 1 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
@@ -123,6 +127,13 @@ export default defineComponent({
       autofocus.value = enable
     }
 
+    function requestFullButtonFocus(): void {
+      let array: Array<IMediaMenuButton> | undefined = fullScreenButtonRef.value
+      if (array) {
+        array[0].requestItemFocus()
+      }
+    }
+
     return {
       init,
       initMedia,
@@ -139,7 +150,9 @@ export default defineComponent({
       mediaAuthorization,
       favButtonVIPFocused,
       setAutofocus,
-      autofocus
+      autofocus,
+      requestFullButtonFocus,
+      fullScreenButtonRef
     }
   }
 })
