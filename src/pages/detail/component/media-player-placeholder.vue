@@ -37,7 +37,7 @@ export default defineComponent({
     const isMediaShowing = ref<boolean>(true)
     const isShowing = ref<boolean>(true)
     const toast = useESToast()
-    let autofocus = ref<boolean>(true)
+    let autofocus = ref<boolean>(false)
     const placeholder = ref<ESFocusable>()
     const isMediaTypeFree = ref<boolean>(true);
 

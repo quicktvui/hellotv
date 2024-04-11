@@ -60,6 +60,8 @@ export default defineComponent({
 
     let focusTimer
 
+    let initialized = false
+
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -94,19 +96,30 @@ export default defineComponent({
     //---------------------------------------------------------------------------
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------onCollapseItemExpand---绿色---->>>>', value)
+        log.d(TAG, '-------onCollapseItemExpand---选集---->>>>', value, 'selectedIndex:' + selectedIndex)
       }
       isCollapseExpand.value = value
 
       if (value) {
-        setItemSelected(selectedIndex)
-        focusTimer = setTimeout(() => {
-          setItemFocused(selectedIndex)
-        }, 1000)
+        if (!initialized) {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex)
+            setItemFocused(selectedIndex)
+          }, 1000)
+        } else {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex)
+            setItemFocused(selectedIndex)
+          }, 1000)
+        }
       } else {
         if (focusTimer) {
           clearTimeout(focusTimer)
         }
+      }
+
+      if(value){
+        initialized = true
       }
     }
 
@@ -115,7 +128,7 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
-      mediaSeriesListRef.value?.requestFocus(position)
+      // mediaSeriesListRef.value?.requestFocus(position)
     }
 
     function setItemSelected(position: number): void {

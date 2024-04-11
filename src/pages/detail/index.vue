@@ -224,7 +224,7 @@ export default defineComponent({
     }
 
     function onScrollStateChanged(x: number,y: number,state:number){
-      log.d(TAG, '-------onScrollStateChanged-------->>>>' +
+      log.d(TAG, '----滚动状态---onScrollStateChanged-------->>>>' +
           " y:" + y +
           " state:" + state
       )
@@ -240,7 +240,7 @@ export default defineComponent({
     }
 
     function onScroll(offsetX: number, scrollY: number) {
-      log.d(TAG, '-------onScroll-------->>>>' +
+      log.d(TAG, '---滚动----onScroll-------->>>>' +
         " offsetX:" + offsetX +
         " scrollY:" + scrollY
       )
@@ -258,7 +258,7 @@ export default defineComponent({
       }
 
       if (scrollY <= 5) {
-        albumDetailRef.value?.setAutofocus(true)
+        // albumDetailRef.value?.setAutofocus(true)
       }
     }
 
@@ -347,6 +347,7 @@ export default defineComponent({
           descendantFocusability.value = 2
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
+          albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
           setTimeout(() => {
             albumDetailRef.value?.requestPlayerPlaceholderFocus()
@@ -406,7 +407,6 @@ export default defineComponent({
 
     function onBackPressed(): boolean {
       if (mediaPlayerViewRef.value?.onBackPressed()) {
-          albumDetailRef.value?.setAutofocus(true)
         return true
       }
 
