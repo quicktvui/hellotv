@@ -217,7 +217,9 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     prePageNum = 0
     contentLenth = 0
     isShowScreenLoading.value = true
-    isInit = !!isReset
+    if(!isInit){
+        isInit = !!isReset
+    }
 
     // @ts-ignore
     gridViewRef.value?.restartPage()
