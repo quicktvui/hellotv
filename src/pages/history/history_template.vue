@@ -69,7 +69,7 @@ const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
             currentFilter = { index: 0, item: res.firstFilter||{} }
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
-            HistoryContentRef.value?.setData(currentMenu, currentFilter,isReset)
+            HistoryContentRef.value?.setData(currentMenu, currentFilter)
         } else {
             isShowFilter.value = true
             contentHeight.value = dContentHeight
@@ -107,6 +107,7 @@ function onESCreate(params) {
 const emContentClearAllFn = () => {
     HTopRef.value?.setEdit(false)
     if (configs.clearAllIsReset) {
+        HistoryContentRef.value?.reset()
         emChangeMenuFn(currentMenu.index, currentMenu.item, true)
     } else {
         HistoryTabRef.value?.requestChildTabFocus()
@@ -129,7 +130,7 @@ defineExpose({
     },
     onESRestart() {
         isLoaded.value = false
-        HistoryContentRef.value?.setData(currentMenu, currentFilter)
+        HistoryContentRef.value?.reStartload(currentMenu, currentFilter)
     }
 })
 </script>

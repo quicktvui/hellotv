@@ -82,7 +82,7 @@ const rBlockFocusDirections = ref<any[]>([])
 const router = useESRouter()
 const gridViewRef = ref<QTIListView>();
 const hContentRef = ref()
-// const toast = useESToast()
+const toast = useESToast()
 const isShowScreenLoading = ref(false)
 const screenLoadingTxt = ref('')
 let gridDataRec: any[] = []
@@ -95,7 +95,8 @@ let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
 let isInit = true
-let prevItemIndex = -1
+let prevItemIndex: string | number = -1
+let isReStartload = false
 
 const gvNextFocusName = ref({ up: 'h_tab_name' })
 
@@ -133,7 +134,7 @@ const onItemClick = (arg) => {
   } else {
     // toast.showLongToast('go player'+arg.item.metaId)
     if (props.detailPageName) {
-      prevItemIndex = arg.position
+      prevItemIndex = arg.item?.id//.position
       router.push({
         name: props.detailPageName, //'series_view',
         params: {
@@ -200,11 +201,11 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
     prePageNum++
     return { ...res, _apiId: currentMenu?.index + '-' + currentFilter?.index }
   }).catch(() => {
-    return { _apiId: currentMenu?.index + '-' + currentFilter?.index, data: [] }
+    return { _apiId: currentMenu?.index + '-' + currentFilter?.index, data: [], isNeedReload: false }
   })
 }
 let timeOutId: any = null
-const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, isReset?: boolean) => {
+const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
   isFirst = true
   pageState.value = pageStates.init
   gridDataRec!.splice(0)
@@ -212,9 +213,6 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   prePageNum = 0
   contentLenth = 0
   isShowScreenLoading.value = true
-  if (!isInit) {
-    isInit = !!isReset
-  }
 
   // @ts-ignore
   gridViewRef.value?.restartPage()
@@ -237,9 +235,10 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
             gridViewRef.value?.setItemFocused(0)
           })
           isInit = false
-        } else if (prevItemIndex >= 0) {
+        } else if (prevItemIndex != -1) {
+          const pos = res.data.findIndex(item => item.id == prevItemIndex)
           nextTick(() => {
-            gridViewRef.value?.scrollToFocused(prevItemIndex)
+            gridViewRef.value?.scrollToFocused(pos == -1 ? 0 : pos)
             prevItemIndex = -1
           })
         }
@@ -257,6 +256,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
       nextTick(() => {
         isShowScreenLoading.value = false
       })
+      isReStartload = !!res?.isNeedReload
     }
     props.setDataCallBack((res.data?.length || 0) > 0)
     gridViewRef.value?.unBlockRootFocus()
@@ -313,6 +313,15 @@ defineExpose({
       return false
     }
     return true
+  },
+  reset() {
+    isInit = true
+    rBlockFocusDirections.value = []
+  },
+  reStartload(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) {//从详情页面返回时，有时需要重载页面数据
+    if (isReStartload) {
+      setData(currentMenu, currentFilter)
+    }
   }
 })
 </script>
