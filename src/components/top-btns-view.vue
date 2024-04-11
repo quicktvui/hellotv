@@ -2,16 +2,16 @@
   <div :style="parentStyle" :class="['top_btns_root_css', { 'is-logo-right': logoRight, 'is-logo-left': logoLeft }]">
     <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="筛选" :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_screen_btn" ref="top_screen_btn"
-      icon="ic_top_search.png" focus-icon="ic_top_search_focus.png" @click="onClick" @focus="onFocus" />
+      icon="screen.png" focus-icon="screen_focus.png" @click="onClick" @focus="onFocus" />
     <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="搜索" :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_search_btn" ref="top_search_btn"
-      icon="ic_top_search.png" focus-icon="ic_top_search_focus.png" @click="onClick" @focus="onFocus" />
+      icon="search.png" focus-icon="search_focus.png" @click="onClick" @focus="onFocus" />
     <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="历史" :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_history_btn" ref="top_search_btn"
-      icon="ic_top_search.png" focus-icon="ic_top_search_focus.png" @click="onClick" @focus="onFocus" />
+      icon="history.png" focus-icon="history_focus.png" @click="onClick" @focus="onFocus" />
     <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="直播" :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_live_btn" ref="top_live_btn"
-      icon="live/ic-live.png" focus-icon="live/ic-live-focus.png" @click="onClick" @focus="onFocus" />
+      icon="direct_seeding.png" focus-icon="direct_seeding_focus.png" @click="onClick" @focus="onFocus" />
     <!--  <img-text-btn-view-->
     <!--      v-if="!$slots.btnItem"-->
     <!--      :icon-left="true"-->
