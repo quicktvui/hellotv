@@ -70,8 +70,8 @@ const topListRef = ref()
 const emits = defineEmits(['emTabChange'])
 
 const titleGravity = topConfig.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
-const onTabChange = () => {
-  emits('emTabChange')
+const onTabChange = (e) => {
+  emits('emTabChange', e)
 }
 
 const onItemClick = (e)=>{

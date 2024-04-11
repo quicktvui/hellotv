@@ -4,7 +4,7 @@
     <AcTop v-if="dConfig.top" ref="AcTopRef" :isTop="isTop" @emTabChange="emTabChangeFn" />
     <scroll-view class="ac_content" ref="acContentScrollRef" :focusable="false" :clipChildren="false" :clipPadding="false" :onScrollEnable="true">
       <div class="ac_content_inner">
-        <AcBanner v-if="dConfig.banner" />
+        <AcBanner />
         <AcAaterfall :isTop="isTop" ref="AcAaterfallRef" @emToTop="emToTopFn" />
       </div>
     </scroll-view>
@@ -22,24 +22,27 @@ import { useESRouter } from '@extscreen/es3-router';
 
 const scrollTop = parseInt(dConfig.banner?.style?.height||'0')// - 100
 let isTop = ref(false)
+let topOffset = 0
 const acContentScrollRef = ref()
 const AcTopRef = ref()
 const AcAaterfallRef = ref()
 const toast = useESToast()
 const router = useESRouter()
 
-const emTabChangeFn = ()=>{
-  if(isTop.value && scrollTop){
+const emTabChangeFn = (e)=>{
+  if(isTop.value && scrollTop && e.isFocused && topOffset === scrollTop){
     // toast.showLongToast('emTabChangeFn-'+isTop.value)
     acContentScrollRef.value?.scrollTo(0,0,100)
     isTop.value = false
+    topOffset = 0
   }
 }
 const emToTopFn = (top) => {
-  toast.showLongToast(top+'')
-  if(!isTop.value && scrollTop){
+  // toast.showLongToast(top+'')
+  if(!isTop.value && scrollTop && topOffset === 0){
     acContentScrollRef.value?.scrollTo(0,scrollTop,100)
     isTop.value = true
+    topOffset = scrollTop
   }
 }
 defineExpose({
