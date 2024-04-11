@@ -132,7 +132,7 @@ export function buildRecommendationSection(media: IMedia): QTWaterfallSection {
     //这里控制一下列表的滚动
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
-      down: 500,
+      down: 1000,
       up: upOffset
     }
   }
