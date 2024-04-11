@@ -557,6 +557,9 @@ export default defineComponent({
     }
 
     function onSeekBarSeekStop(progress) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekBarSeekStop-------->>>>>", progress)
+      }
       isSeeking = false
       if (player && progress >= 0) {
         player.seekTo(progress)
@@ -564,6 +567,9 @@ export default defineComponent({
     }
 
     function onSeekbarFocusChanged(event) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekbarFocusChanged-------->>>>>", event)
+      }
       let focused = event.isFocused;
       seekBarRef.value?.setThumbActivate(focused);
     }
