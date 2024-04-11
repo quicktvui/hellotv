@@ -14,7 +14,7 @@
 <!--    </qt-animation>-->
 <!--    <qt-view class="img-root-css-placeholder" v-show="maskShow" :style="{width:width+'px',height:height+'px'}">-->
 <!--    </qt-view>-->
-    <img-transition ref="img" :transitionTime="400" :style="{'border-radius': borderRadius + 'px',backgroundColor:needEmptyBg?'rgba(255,255,255,0.1)':'red',width:width+'px',height:height+'px'}">
+    <img-transition ref="img" :transitionTime="400" :style="{'border-radius': borderRadius + 'px',backgroundColor:'transparent',width:width+'px',height:height+'px'}">
 
     </img-transition>
     <!-- <img :src="qtImageSrc" :visibility="qtImageSrc ? 'visible' : 'invisible'" :focusable="false" :style="{'border-radius': borderRadius + 'px',backgroundColor:needEmptyBg?'rgba(255,255,255,0.1)':'transparent',width:width+'px',height:height+'px'}"/> -->
@@ -156,9 +156,13 @@ export default defineComponent({
         },hideDelay)
       }
     }
-
+    function setNextColor() {
+      img.value?.setNextColor(0)
+    }
+    function setNextImage(bac) {
+      img.value?.setNextImage(bac)
+    }
     watch([() => props.src], (newValue, oldValue) => {
-      toast.showToast(newValue[0]+'')
             img.value?.setNextImage(newValue[0])
             // qtImageSrc.value = newValue[0]
         }
@@ -212,7 +216,9 @@ export default defineComponent({
       reset,
       maskShow,
       img,
-      qtImageSrc
+      qtImageSrc,
+      setNextColor,
+      setNextImage
     }
   }
 })
@@ -221,7 +227,7 @@ export default defineComponent({
 <style>
 .img-root-css {
   display: flex;
-  background-color: green;
+  background-color: transparent;
 }
 .img-root-css-placeholder {
   display: flex;

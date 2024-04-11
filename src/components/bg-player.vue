@@ -38,7 +38,7 @@
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
                :enableFocusBorder="true" >
         <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
-                           :focusable="false" :opacity="coverOpacity"
+                           :focusable="false" 
                            :src="coverSrc"
                            :width="playerWidth"
                            :height="playerHeight"
@@ -58,8 +58,7 @@
             :style="{width: playerListWidth + 'px'}"
             :clipChildren="true" eventClick eventFocus :focusScale="1">
               <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
-                :duplicateParentState="true"
-                class="iclf_item_text" :style="{width:playerListWidth + 'px'}"  text="${title}" :paddingRect="[50,0,16,0]"/>
+                :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,16,0]"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
                 <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
               </qt-view>
@@ -105,7 +104,7 @@ export default defineComponent({
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(1920)
     let playerHeight = ref<number>(1080)
-    let playerListWidth = ref<number>(0)
+    let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
     let bgPlayerOpacity = ref(0)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
@@ -302,6 +301,9 @@ export default defineComponent({
       clearTimeout(dismissCoverTimer)
       coverOpacity.value = 1
       pauseOnCoverShow.value = pausePlay
+      if(coverSrc.value != ''){
+        itemCellBgImgRef.value.setNextImage(coverSrc.value)
+      }
       log.d('BG-PLAYER',`showCoverImmediately pausePlay:${pausePlay}`)
     }
     // const dismissCoverDelayed = () => {
@@ -322,6 +324,7 @@ export default defineComponent({
           log.d('BG-PLAYER',`requestDismissCover`)
           dismissCoverTimer = setTimeout(()=>{
             //itemCellBgImgRef.value?.setNextColor(0)
+            itemCellBgImgRef.value.setNextColor()
             coverOpacity.value = 0
             //activeState.value = false
             //bgRef.value?.setNextColor(0)
@@ -487,7 +490,7 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.item_cell_list_front{background-color: rgba(255,255,255,0.1);position: absolute;right: 0;top: 0;}
+.item_cell_list_front{background-color: rgba(255,255,255,0);position: absolute;right: 0;top: 0;}
 .iclf_item{
   height: 96px;
   background-color: transparent;
@@ -513,5 +516,6 @@ export default defineComponent({
 }
 
 .iclf_item .play_Mark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
-.iclf_item_text{position: absolute;height: 96px;color: #fff;left: 0;focus-color:#000;select-color:#FF4E46}
+.iclf_item_text{position: absolute;height: 96px;color: #fff;left: 0; focus-color:#000;width: 482px;
+select-color:#FF4E46;background-color: transparent;}
 </style>
