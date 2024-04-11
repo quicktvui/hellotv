@@ -5,7 +5,6 @@
        @click="onClick"
        @focus="onFocus"
        name="placeholder"
-       :autofocus='autofocus'
        :focusable="true"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
@@ -23,10 +22,12 @@
 import {defineComponent} from "@vue/runtime-core";
 import {IMedia} from "../../../api/media/IMedia";
 import {inject, Ref, ref, watch} from "vue";
-import {ESFocusable, useESFocus, useESToast} from "@extscreen/es3-core";
+import { ESFocusable, ESLogLevel, useESFocus, useESLog, useESToast } from "@extscreen/es3-core"
 import {IMediaAuthorization} from "../../../api/media/IMediaAuthorization";
 import {mediaAuthorizationKey} from "../injectionSymbols";
 import {IMediaAuthType} from "../../../api/media/IMediaAuthType";
+
+const TAG = 'PlayerPlaceholder'
 
 export default defineComponent({
   name: "media-player-placeholder",
@@ -40,6 +41,7 @@ export default defineComponent({
     let autofocus = ref<boolean>(false)
     const placeholder = ref<ESFocusable>()
     const isMediaTypeFree = ref<boolean>(true);
+    const log = useESLog()
 
     const mediaAuthorization: Ref<IMediaAuthorization> =
       inject(mediaAuthorizationKey, {} as any)
@@ -61,16 +63,19 @@ export default defineComponent({
       media = m
       mediaImg.value = m.coverH
 
-      // requestFocus()
+      requestFocus()
     }
 
     function requestFocus(): void {
       if (placeholder.value) {
-        //focus.requestFocusDirectly(placeholder.value!)
+        focus.requestFocusDirectly(placeholder.value!)
       }
     }
 
     function setAutofocus(enable:boolean){
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---Placeholder---setAutofocus------>>>>', enable)
+      }
         autofocus.value = enable
     }
 
