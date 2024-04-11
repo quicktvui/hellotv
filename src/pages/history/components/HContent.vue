@@ -100,7 +100,7 @@ let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
 let isInit = true
-let prevItemIndex = -1
+let prevItemIndex:string|number = -1
 
 const gvNextFocusName = ref({ up: 'h_tab_name' })
 
@@ -138,7 +138,7 @@ const onItemClick = (arg) => {
     } else {
         // toast.showLongToast('go player'+arg.item.metaId)
         if(props.detailPageName){
-            prevItemIndex = arg.position
+            prevItemIndex = arg.item?.id//.position
             router.push({
                 name: props.detailPageName, //'series_view',
                 params: {
@@ -239,9 +239,10 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
                     gridViewRef.value?.setItemFocused(0)  
                 })
                 isInit = false
-              } else if(prevItemIndex>=0){
+              } else if(prevItemIndex != -1){
+                const pos = res.data.findIndex(item=>item.id==prevItemIndex)
                 nextTick(()=>{
-                    gridViewRef.value?.scrollToFocused(prevItemIndex)
+                    gridViewRef.value?.scrollToFocused(pos==-1?0:pos)
                     prevItemIndex = -1
                 })
               }

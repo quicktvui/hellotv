@@ -12,6 +12,7 @@ export interface IHistoryFilterEntity {
     name: string
 }
 export interface IHistoryContentEntity {
+    id: string
     assetId?: string
     assetLongCoverH: string//图片
     assetLongId?: string
@@ -21,7 +22,6 @@ export interface IHistoryContentEntity {
     currentPlayTime?: number//当前播放时间-毫秒
     allTime?: number//视频总时间-毫秒
     description1?: string//浮动标题
-    id?: string
     metaId: string
     payType?: string
     platformId?: string
