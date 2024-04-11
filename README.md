@@ -72,7 +72,7 @@ npm run build-apk-debug
 # 生成release包
 npm run build-apk-release
 ```
-打包完成后apk在 `./android/build/outputs` 文件夹下
+打包完成后apk在 `./android/app/build/outputs/apk/` 文件夹下
 
 ## 源码修改
 接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
