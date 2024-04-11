@@ -87,7 +87,7 @@ const rBlockFocusDirections = ref<any[]>([])
 const router = useESRouter()
 const gridViewRef = ref<QTIListView>();
 const hContentRef = ref()
-// const toast = useESToast()
+const toast = useESToast()
 const isShowScreenLoading = ref(false)
 const screenLoadingTxt = ref('')
 let gridDataRec: any[] = []
@@ -209,7 +209,7 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
   })
 }
 let timeOutId:any = null
-const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams,isReset?:boolean) => {
+const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
     isFirst = true
     pageState.value = pageStates.init
     gridDataRec!.splice(0)
@@ -217,10 +217,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     prePageNum = 0
     contentLenth = 0
     isShowScreenLoading.value = true
-    if(!isInit){
-        isInit = !!isReset
-    }
-
+    
     // @ts-ignore
     gridViewRef.value?.restartPage()
 
@@ -318,6 +315,10 @@ defineExpose({
             return false
         }
         return true
+    },
+    reset(){
+        isInit = true
+        rBlockFocusDirections.value = []
     }
 })
 </script>
