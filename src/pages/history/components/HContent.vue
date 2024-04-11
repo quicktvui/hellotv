@@ -95,10 +95,11 @@ let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
 let isInit = true
+let prevItemIndex = -1
 
 const gvNextFocusName = ref({ up: 'h_tab_name' })
 
-const emits = defineEmits(['emContentClearAll'])
+const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
 const onItemBind = () => { }
 const onItemClick = (arg) => {
   if (isEdit.value) {
@@ -132,6 +133,7 @@ const onItemClick = (arg) => {
   } else {
     // toast.showLongToast('go player'+arg.item.metaId)
     if (props.detailPageName) {
+      prevItemIndex = arg.position
       router.push({
         name: props.detailPageName, //'series_view',
         params: {
@@ -232,11 +234,20 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
             gridViewRef.value?.setItemFocused(0)
           })
           isInit = false
+        } else if (prevItemIndex >= 0) {
+          nextTick(() => {
+            gridViewRef.value?.scrollToFocused(prevItemIndex)
+            prevItemIndex = -1
+          })
         }
       } else {
         pageState.value = pageStates.empty
         gridDataRec!.splice(0)
         // toast.showLongToast('暂无数据')
+        if (isInit) {
+          emits('emInitNoData')
+          isInit = false
+        }
       }
       preCurrentMenu = currentMenu
       preCurrentFilter = currentFilter

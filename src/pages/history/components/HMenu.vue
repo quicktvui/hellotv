@@ -14,7 +14,7 @@
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
-                :nextFocusName="nextFocusName" :focusable="false"
+                :nextFocusName="{ right: 'history_poster_name', left: 'history_poster_name' }" :focusable="false"
             >
                 <!-- 纯文字标题 :requestFocus="true"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
@@ -27,7 +27,7 @@
     </div>
 </template>
 <script lang='ts' setup>
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import {
     QTIListView
 } from '@quicktvui/quicktvui3';
@@ -79,12 +79,12 @@ const onTabSelect = (arg: any) => {
 const cBgColor = computed(()=>{
     return {colors:props.bgColor, orientation: 4}
 })
-const nextFocusName = computed(()=>{
-    if(props.isFilter){
-        return { right: 'h_tab_name', left: 'h_tab_name' }
-    }//content_grid_name
-    return { right: 'history_poster_name', left: 'history_poster_name' }
-})
+// const nextFocusName = computed(()=>{
+//     if(props.isFilter){
+//         return { right: 'h_tab_name', left: 'h_tab_name' }
+//     }//content_grid_name
+//     return { right: 'history_poster_name', left: 'history_poster_name' }
+// })
 const blockFocusDirections = computed(()=>{
     if(props.layout == layouts.rt || props.layout == layouts.rb){
         return ['right', 'down']
@@ -119,6 +119,11 @@ defineExpose({
             onTabSelect({ position: 0 })
         }
         return isShow.value
+    },
+    setItemFocused(pos:number = 0){
+        nextTick(()=>{
+            listRef.value?.setItemFocused(pos)
+        })
     }
 })
 // id:tag.id,

@@ -36,7 +36,7 @@ class HistoryApi extends HistoryBaseApi {
 
   async getFilterTabList(index: number, category: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
     const tabs = historyToCategory(index == 0 ? 'ply' : 'fav')
-    return { data: tabs, isHide: tabs.length < 2 }
+    return { data: tabs, isHide: tabs.length <= 2 }
   }
 
   async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {

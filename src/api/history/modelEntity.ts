@@ -44,6 +44,7 @@ export interface IHistoryMenuDto {
 export interface IHistoryFilterDto {
     code?: number
     data?: IHistoryFilterEntity[]
+    isHide?:boolean
 }
 export interface IHistoryContentDto {
     code?: number;
