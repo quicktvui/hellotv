@@ -173,7 +173,6 @@ export default defineComponent({
       requestPlayerPlaceholderFocus,
       release,
       setAutofocus
-      setAutofocus
     }
   },
 });

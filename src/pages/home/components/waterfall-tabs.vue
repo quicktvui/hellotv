@@ -154,7 +154,9 @@ export default defineComponent({
         isOneTime = false
         return
       } else {
-        bg_player.value?.resume()
+        if (bgPlayerType.value != -1) {
+          bg_player.value?.resume()
+        }
       }
     }
 
@@ -477,18 +479,6 @@ export default defineComponent({
 
     function onTabClick(item: QTTabItem) {
 
-    }
-    function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
-      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
-      bg_player.value?.stop()
-      bg_player.value?.setNextImage()
-      if (!isOneTimeStop) {
-        delayStopPlaerTimer = setTimeout(() => {
-          bg_player.value?.stop()
-          bg_player.value?.keepPlayerInvisible(false)
-          isOneTimeStop = true
-        }, 2000)
-      }
     }
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)

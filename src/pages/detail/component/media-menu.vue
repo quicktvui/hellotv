@@ -60,9 +60,6 @@ export default defineComponent({
     const eventbus = useESEventBus()
     let m: IMedia
 
-    const menuList = ref()
-    const init = ref<boolean>(false)
-
     let autofocus = ref<boolean>(false)
 
     const noVipMenuList = [
@@ -71,6 +68,7 @@ export default defineComponent({
     const vipMenuList = [
       { type: 1 }, { type: 2 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
     ]
+
     const init = ref<boolean>(true)
     const menuList = ref(noVipMenuList)
 
