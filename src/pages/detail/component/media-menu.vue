@@ -1,5 +1,6 @@
 <template>
-  <qt-view class="media-menu-root-css">
+  <qt-view class="media-menu-root-css"
+           :clipChildren="true">
     <ul class="media-menu-root-list-css"
         v-if="init"
         :clipChildren="false"
@@ -142,6 +143,7 @@ export default defineComponent({
   position: absolute;
   left: 1016px;
   top: 316px;
+  background-color: transparent;
 }
 
 .media-menu-root-list-css {
