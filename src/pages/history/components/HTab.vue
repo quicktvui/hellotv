@@ -5,7 +5,7 @@
         <!-- :requestFocus="true" content_grid_name-->
         <qt-nav-bar 
             ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
-            @tab-select="onTabSelect" :requestFocus="true" name="h_tab_name"
+            @tab-select="onTabSelect" name="h_tab_name"
             :nextFocusName="{ down: 'history_poster_name' }"></qt-nav-bar>
     </div>
 </template>
@@ -53,7 +53,7 @@ defineExpose({
             filterList = tabList.data
             if(isReset){
                 nextTick(()=>{
-                    contentNavBar.value?.navList.value?.setItemFocused(0)
+                    contentNavBar.value?.navList.value?.setItemFocused(0)//(当内容区被清空时,如果configs.clearAllIsReset=true,会走这里)
                 })
             }
         } else {
@@ -66,7 +66,7 @@ defineExpose({
         }
         return isShow.value
     },
-    requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦
+    requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦(当内容区被清空时，如果configs.clearAllIsReset=true，会调此方法)
         // Native.callUIFunction(contentNavBar.value, "requestFocus", [])
         // Native.callUIFunction(contentNavBar.value, "requestFocusDirectly", [])
         contentNavBar.value?.navList.value?.setItemFocused(tabPosition)
