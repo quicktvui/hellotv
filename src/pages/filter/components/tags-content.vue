@@ -8,15 +8,15 @@
 
         <!-- 筛选条件-->
         <qt-view style='width: 1800px; min-height: 1px; background-color: transparent;'>
-          <qt-list-view ref="screen_right_filters" name="screen_right_filters" :autofocusPosition="0"
-            class="screen-right-filter-root" :style="{ height: filterHeight }" v-if="filterVisible"
-            :triggerTask="switchData(hideSelectTask)" :enableSelectOnFocus="false">
+          <qt-list-view ref="screen_right_filters" name="screen_right_filters" class="screen-right-filter-root"
+            :style="{ height: filterHeight }" v-if="filterVisible" :triggerTask="switchData(hideSelectTask)"
+            :enableSelectOnFocus="false">
             <qt-list-view ref="screen_right_filter_line" name="screen_right_filter_line"
-              class="screen-right-filter-line" nextFocusLeftSID="screen_left_tags" flexStyle="${filterLineStyle}"
-              :type="1" list="${list}" :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
-              :enableSelectOnFocus="false" singleSelectPosition="${defaultSelectPosition}" :focusMemory="false"
-              @item-click="onFilterClick" @item-focused="onFilterFocused" :blockFocusDirections="['right']"
-              :padding="'0,0,12,0'">
+              class="screen-right-filter-line" cachePoolName="filter_line" nextFocusLeftSID="screen_left_tags"
+              flexStyle="${filterLineStyle}" :type="1" list="${list}" :endHintEnabled="false" horizontal
+              :clipChildren="false" :useDiff="true" :enableSelectOnFocus="false"
+              singleSelectPosition="${defaultSelectPosition}" :focusMemory="false" @item-click="onFilterClick"
+              @item-focused="onFilterFocused" :blockFocusDirections="['right']" :padding="'0,0,12,0'">
               <!-- 普通筛选条件-->
               <tags-filter-item :type="11" />
               <!-- 快速筛选头部提示-->
@@ -34,16 +34,18 @@
         <!-- 筛选结果-->
         <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1" :triggerTask="switchData(filterTriggerTask)"
-          ref="screen_right_content" name="screen_right_content" :blockFocusDirections="['right', 'down']"
-          :enablePlaceholder="true" :spanCount="6" :openPage="true" :preloadNo="4" :focusable="false"
-          :pageSize="screenPageSize" nextFocusLeftSID="screen_left_tags" :listenBoundEvent="true" :useDiff="true"
-          :listenHasFocusChange="true" :clipChildren="false" :clipPadding="false" :loadMore="loadMoreScreenContent"
-          :loadingDecoration="{ top: 15, left: 30, bottom: 70 }" @scroll-state-changed="onScrollStateChanged"
-          @item-focused="onItemFocused" @item-click="onItemClick" :padding="'30,10,0,20'">
+          ref="screen_right_content" name="screen_right_content" :cachePool="{ name: 'filter_content', size: { 1: 40, } }"
+          :blockFocusDirections="['right', 'down']" :enablePlaceholder="true" :spanCount="6" :openPage="true"
+          :preloadNo="4" :focusable="false" :pageSize="screenPageSize" nextFocusLeftSID="screen_left_tags"
+          :listenBoundEvent="true" :useDiff="true" :listenHasFocusChange="true" :clipChildren="false"
+          :clipPadding="false" :loadMore="loadMoreScreenContent" :loadingDecoration="{ top: 15, left: 30, bottom: 70 }"
+          @scroll-state-changed="onScrollStateChanged" @item-focused="onItemFocused" @item-click="onItemClick"
+          :padding="'30,10,0,20'">
           <tags-content-item :type="1" />
           <!-- 底部提示-->
           <template #footer>
-            <p class="screen-right-content-no-more" :focusable="false" :type="1003">已经到底啦，按【返回键】回到顶部</p>
+            <qt-text class="screen-right-content-no-more" :focusable="false" :type="1003" text="${text}" :fontSize="30"
+              :lines="1" gravity="top|center" />
           </template>
           <template #loading>
             <!--分页加载 Loading-->

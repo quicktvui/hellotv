@@ -200,7 +200,7 @@ export default defineComponent({
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowPlayerTimer)
       if(stopIfNeed){
-        if(isAnyPlaying){
+        if(isAnyPlaying.value){
           isAnyPlaying.value = false
           stop()
         }

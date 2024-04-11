@@ -11,13 +11,14 @@
     </div>
     <qt-tabs ref="tabRef" :tabContentResumeDelay="200" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
       tabNavBarClass="qt-tabs-waterfall-tab-css" tabPageClass="qt-tabs-waterfall-css" :triggerTask="tabsTriggerTask"
-      :outOfDateTime="5 * 60 * 1000" @onTabClick="onTabClick" :tabContentSwitchDelay='0'
-      @onTabPageChanged="onTabPageChanged" @onTabMoveToTopStart="onTabMoveToTopStart"
-      @onTabMoveToTopEnd="onTabMoveToTopEnd" @onTabMoveToBottomStart="onTabMoveToBottomStart"
-      @onTabMoveToBottomEnd="onTabMoveToBottomEnd" @onTabPageScrollToEnd="onTabPageScrollToEnd"
-      @onTabPageScrollToStart="onTabPageScrollToStart" @onTabPageItemClick="onTabPageItemClick"
-      @onTabPageItemFocused="onTabPageItemFocused" @onTabPageLoadData="onTabPageLoadData"
-      @onTabPageScroll="onTabPageScroll" @onTabPageSectionAttached="onTabPageSectionAttached" class="qt-tabs-css">
+      :outOfDateTime="5 * 60 * 1000" @onTabClick="onTabClick" :tabContentSwitchDelay='0' sid='homeTabs'
+      :custom-pool="{ name: 'home' }" :custom-item-pool="{ name: 'homeItems' }" @onTabPageChanged="onTabPageChanged"
+      @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
+      @onTabMoveToBottomStart="onTabMoveToBottomStart" @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+      @onTabPageScrollToEnd="onTabPageScrollToEnd" @onTabPageScrollToStart="onTabPageScrollToStart"
+      @onTabPageItemClick="onTabPageItemClick" @onTabPageItemFocused="onTabPageItemFocused"
+      @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll" @onTabEvent='onTabEvent'
+      @onTabPageSectionAttached="onTabPageSectionAttached" class="qt-tabs-css">
       <template v-slot:tab-item>
         <tab-image-item :type="1" />
         <tab-icon-item :type="2" cornerIconLeft />
@@ -152,14 +153,7 @@ export default defineComponent({
     }
 
     function onESStop() {
-      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
-      bg_player.value?.stop()
-      if (!isOneTimeStop) {
-        delayStopPlaerTimer = setTimeout(() => {
-          bg_player.value?.stop()
-          isOneTimeStop = true
-        }, 2000)
-      }
+      delayStopPlayer()
     }
 
     function onESPause() {
@@ -168,6 +162,7 @@ export default defineComponent({
 
     function onESDestroy() {
       bg_player.value?.reset()
+      delayStopPlayer()
     }
 
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
@@ -371,8 +366,9 @@ export default defineComponent({
             } else if (isSwitchCellBg === '1') {
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg, "", true, false)
+              delayStopPlayer()
             } else {
-              bg_player?.value.stop()
+              delayStopPlayer()
             }
             //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
 
@@ -380,7 +376,6 @@ export default defineComponent({
         }
       }, 200)
     }
-
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
@@ -425,6 +420,22 @@ export default defineComponent({
       }
     }
 
+    function onTabEvent(tabIndex: number, eventName: string, params: any) {
+      // log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
+      if (eventName == 'onReplaceChildAttach') {
+        let sid = params.sid
+        if (sid) {
+
+          let currentPageIndex = tabRef.value?.getCurrentPageIndex()
+          let tabIndex = sid.split('tabIndex')[1]
+          log.e('DebugReplaceChild', `eventName:${eventName},currentPageIndex:${currentPageIndex},tabIndex:${tabIndex}`)
+          if (tabIndex == currentPageIndex) {
+            Native.callUIFunction(waterfall_tab_root.value, 'dispatchFunctionBySid', [sid, 'setChildSID', ['bg-player']]);
+          }
+        }
+      }
+    }
+
     function onTabPageScroll(offsetX: number, scrollY: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
@@ -450,6 +461,30 @@ export default defineComponent({
 
     function onTabClick(item: QTTabItem) {
 
+    }
+    function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      bg_player.value?.setNextImage()
+      if (!isOneTimeStop) {
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          bg_player.value?.keepPlayerInvisible(false)
+          isOneTimeStop = true
+        }, 2000)
+      }
+    }
+    function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      bg_player.value?.setNextImage()
+      if (!isOneTimeStop) {
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          bg_player.value?.keepPlayerInvisible(false)
+          isOneTimeStop = true
+        }, 2000)
+      }
     }
 
     return {
@@ -480,8 +515,10 @@ export default defineComponent({
       onTabPageItemClick,
       onTabPageItemFocused,
       onTabPageScroll,
+      onTabEvent,
       onTabClick,
-      onTabPageSectionAttached
+      onTabPageSectionAttached,
+      delayStopPlayer
     }
   }
 })
