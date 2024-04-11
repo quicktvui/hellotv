@@ -7,6 +7,9 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-list-view
         ref="orderListViewRef" horizontal
+        :autofocusPosition="selectedIndex"
+        sid='collapse-item-order'
+        v-show='isCollapseExpand'
         class="qt-collapse-item-order-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
@@ -38,7 +41,7 @@ export default defineComponent({
     const orderListViewRef = ref<QTIListView>()
 
     let itemDataList: Array<QTListViewItem>
-    let selectedIndex = 0
+    const selectedIndex = ref<number>(0)
 
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -46,7 +49,7 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
       if (value) {
-        setItemFocused(selectedIndex)
+        setItemFocused(selectedIndex.value)
       }
     }
 
@@ -74,15 +77,15 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------setItemFocused---播放顺序---->>>>', position)
       }
-      selectedIndex = position
+      selectedIndex.value = position
       if (!isCollapseExpand.value) {
         return
       }
-      orderListViewRef.value?.setItemFocused(position)
+      // orderListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {
-      selectedIndex = position
+      selectedIndex.value = position
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------setItemSelected---播放顺序---->>>>', position)
       }
@@ -114,7 +117,8 @@ export default defineComponent({
       //
       setListData,
       setItemFocused,
-      setItemSelected
+      setItemSelected,
+      selectedIndex
     }
   },
 });

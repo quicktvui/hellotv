@@ -1,5 +1,5 @@
 <template>
-  <div class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root" :clipPadding="false">
+  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root" :clipPadding="false">
     <waterfall-background ref="wTabBg" />
     <!-- 背景播放及小窗播放组件 -->
     <bg-player class="bg_player" ref="bg_player" :clipChildren="false" :active="bgPlayerActive"
@@ -36,7 +36,7 @@
         <page-place-holder-item :type="3" />
       </template>
     </qt-tabs>
-  </div>
+  </qt-view>
 </template>
 
 <script lang="ts">
@@ -45,14 +45,14 @@ import { reactive, ref, toRaw } from "vue";
 import { getSectionPosLabelObject } from "../build_data/useTabData"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
-  QTITab,
+  QTITab, QTIView,
   QTTab,
   QTTabEventParams,
   QTTabItem,
   QTTabPageData,
   QTTabPageState,
   QTWaterfallItem
-} from "@quicktvui/quicktvui3";
+} from '@quicktvui/quicktvui3'
 import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import { useLaunch } from "../../../tools/launch/useApi";
 import { useGlobalApi } from "../../../api/UseApi";
@@ -84,7 +84,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    let waterfall_tab_root = ref()
+    let waterfall_tab_root = ref<QTIView>()
     const tabsTriggerTask = [
       {
         event: 'onContentScrollYGreater',
@@ -97,6 +97,12 @@ export default defineComponent({
         target: 'buttonsHeaderDiv',
         function: 'changeVisibility',
         params: ['visible'],
+      },
+      {
+        event: 'onPageChange',
+        target: 'home_player',
+        function: 'changeAlpha',
+        params: [0],
       },
     ]
     const log = useESLog()
@@ -342,19 +348,20 @@ export default defineComponent({
             // bg_player.value.bgPlayerOpacity = 0
             let parentSID: string = ''
             if (flag == CoveredPlayerType.TYPE_CELL) {
-              Native.callUIFunction(waterfall_tab_root.value, 'dispatchFunctionBySid', [recordPlayerData.data.sid, 'setChildSID', ['bg-player']]);
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
               bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
                 width, height, width, height,
                 toRaw(recordPlayerData.data.playData), 0
               )
             } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
-              Native.callUIFunction(waterfall_tab_root.value, 'dispatchFunctionBySid', [recordPlayerData.data.sid, 'setChildSID', ['bg-player']]);
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
               bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
                 width, height, 860, height,
                 toRaw(recordPlayerData.data.playData), 0
               )
             } else if (flag == CoveredPlayerType.TYPE_BG) {
-              Native.callUIFunction(waterfall_tab_root.value, 'dispatchFunctionBySid', ['bg_player_replace_child_sid', 'setChildSID', ['bg-player']]);
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', ['bg_player_replace_child_sid','setChildSID',['bg-player']]);
+              waterfall_tab_root.value?.dispatchFunctionBySid('bg_player_replace_child_sid', 'setChildSID', ['bg-player'])
               if (recordPlayerData.data.item.playData[0].isRequestUrl) {
                 let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(toRaw(recordPlayerData.data.item.playData[0]))
                 recordPlayerData.data.item.playData[0].url = playerInfo.url
@@ -421,17 +428,26 @@ export default defineComponent({
     }
 
     function onTabEvent(tabIndex: number, eventName: string, params: any) {
-      // log.e('DebugReplaceChild',`eventName:${eventName},prams:${JSON.stringify(params)}`)
-      if (eventName == 'onReplaceChildAttach') {
-        let sid = params.sid
-        if (sid) {
+      let sid = params.sid
 
-          let currentPageIndex = tabRef.value?.getCurrentPageIndex()
-          let tabIndex = sid.split('tabIndex')[1]
-          log.e('DebugReplaceChild', `eventName:${eventName},currentPageIndex:${currentPageIndex},tabIndex:${tabIndex}`)
-          if (tabIndex == currentPageIndex) {
-            Native.callUIFunction(waterfall_tab_root.value, 'dispatchFunctionBySid', [sid, 'setChildSID', ['bg-player']]);
+
+      if (eventName == 'onReplaceChildAttach') {
+        log.e('DebugReplaceChild', '-----onReplaceChildAttach----');
+
+        if (sid) {
+          tabRef.value?.getCurrentTabIndex().then((index: number) => {
+            let currentPageIndex = index
+            let tabIndex = sid.split('tabIndex')[1]
+            if (tabIndex == currentPageIndex) {
+              log.e('DebugReplaceChild', `call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
+              waterfall_tab_root.value?.dispatchFunctionBySid(sid, 'setChildSID', ['bg-player'])
+              // log.e('DebugReplaceChild',`-----call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+            }
           }
+          ).catch(err => {
+            log.e('DebugReplaceChild', ' error occur :' + JSON.stringify(err));
+          })
         }
       }
     }

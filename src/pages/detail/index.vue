@@ -78,6 +78,7 @@ export default defineComponent({
     const waterfallRef = ref<QTIWaterfall>()
     const albumDetailRef = ref<IAlbumDetail>()
     let waterfallScrollY = 0
+    let lastWindowType: ESPlayerWindowType
 
     // provide(mediaAuthorizationKey, mediaAuthorizationRef)
 
@@ -102,7 +103,7 @@ export default defineComponent({
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
       waterfallRef.value?.scrollToTop()
-      albumDetailRef.value?.setAutofocus(true)
+      albumDetailRef.value?.setAutofocus(false)
     }
 
     function initEventBus() {
@@ -222,7 +223,7 @@ export default defineComponent({
     }
 
     function onScrollStateChanged(x: number, y: number, state: number) {
-      log.d(TAG, '-------onScrollStateChanged-------->>>>' +
+      log.d(TAG, '----滚动状态---onScrollStateChanged-------->>>>' +
         " y:" + y +
         " state:" + state
       )
@@ -238,7 +239,7 @@ export default defineComponent({
     }
 
     function onScroll(offsetX: number, scrollY: number) {
-      log.d(TAG, '-------onScroll-------->>>>' +
+      log.d(TAG, '---滚动----onScroll-------->>>>' +
         " offsetX:" + offsetX +
         " scrollY:" + scrollY
       )
@@ -256,7 +257,7 @@ export default defineComponent({
       }
 
       if (scrollY <= 5) {
-        albumDetailRef.value?.setAutofocus(true)
+        // albumDetailRef.value?.setAutofocus(true)
       }
     }
 
@@ -350,12 +351,22 @@ export default defineComponent({
           descendantFocusability.value = 2
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
+          // albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
-          setTimeout(() => {
-            albumDetailRef.value?.requestPlayerPlaceholderFocus()
-          }, 200)
+          if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+            setTimeout(() => {
+              albumDetailRef.value?.requestPlayerPlaceholderFocus()
+            }, 100)
+          }
+
+          if (media && !media.itemList.enable) {
+            setTimeout(() => {
+              albumDetailRef.value?.requestPlayerPlaceholderFocus()
+            }, 100)
+          }
           break
       }
+      lastWindowType = windowType
     }
 
     //---------------------------------------------------------------------------------
@@ -411,12 +422,11 @@ export default defineComponent({
 
     function onBackPressed(): boolean {
       if (mediaPlayerViewRef.value?.onBackPressed()) {
-        albumDetailRef.value?.setAutofocus(true)
         return true
       }
 
       if (waterfallScrollY > 0) {
-        albumDetailRef.value?.setAutofocus(true)
+        // albumDetailRef.value?.setAutofocus(true)
         waterfallRef.value?.scrollToTop()
         waterfallScrollY = 0
         return true

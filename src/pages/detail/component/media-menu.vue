@@ -1,9 +1,9 @@
 <template>
-  <qt-view class="media-menu-root-css">
+  <qt-view class="media-menu-root-css" :clipChildren="true">
     <ul class="media-menu-root-list-css" v-if="init" :clipChildren="false" :horizontal="true">
       <li :clipChildren="false" :key="index" :type="1" v-for="(item, index) in menuList">
-        <media-menu-button v-if="item.type === 1" :icon="fullButtonNormal" text="全屏" @click="onFullButtonClick"
-          :vip-focus-icon="fullButtonVIPFocused" :focus-icon="fullButtonFocused" />
+        <media-menu-button v-if="item.type === 1" :icon="fullButtonNormal" text="全屏" :autofocus='autofocus'
+          @click="onFullButtonClick" :vip-focus-icon="fullButtonVIPFocused" :focus-icon="fullButtonFocused" />
 
         <media-menu-vip-button v-if="!authenticated && item.type === 2" @click="onVIPButtonClick" />
 
@@ -60,6 +60,11 @@ export default defineComponent({
     const eventbus = useESEventBus()
     let m: IMedia
 
+    const menuList = ref()
+    const init = ref<boolean>(false)
+
+    let autofocus = ref<boolean>(false)
+
     const noVipMenuList = [
       { type: 1 }, { type: 3 }
     ]
@@ -105,6 +110,10 @@ export default defineComponent({
       eventbus.emit("onMenuVIPButtonClick")
     }
 
+    function setAutofocus(enable: boolean) {
+      autofocus.value = enable
+    }
+
     return {
       init,
       initMedia,
@@ -121,7 +130,9 @@ export default defineComponent({
       favButtonCollected,
       authenticated,
       mediaAuthorization,
-      favButtonVIPFocused
+      favButtonVIPFocused,
+      setAutofocus,
+      autofocus
     }
   }
 })
@@ -135,6 +146,7 @@ export default defineComponent({
   position: absolute;
   left: 1016px;
   top: 316px;
+  background-color: transparent;
 }
 
 .media-menu-root-list-css {

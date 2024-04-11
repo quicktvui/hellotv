@@ -8,8 +8,11 @@
       </qt-view>
 
       <!-- 底部进度条 -->
-      <qt-view class="media-player-view-bottom-css" v-if="isFullWindow && isProgressShowing"
-        :gradientBackground="{ colors: ['#00000000', '#E6000000'] }">
+      <qt-view class="media-player-view-bottom-css" v-show="isFullWindow && isProgressShowing">
+
+        <qt-view class="media-player-view-bottom-bg-css" v-if="isFullWindow && isProgressShowing"
+          :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
+
         <!-- 底部进度条 -->
         <qt-column class="media-player-view-state-progress-root-css" v-show="isProgressShowing">
           <!-- 播放状态 -->
@@ -52,26 +55,18 @@
         <qt-view class="media-player-collapse-css" v-if="isFullWindow && isMenuShowing"
           :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
         <qt-collapse ref="mediaCollapseRef" v-show="isFullWindow && isMenuShowing" class="media-player-collapse-css">
-          <media-collapse-order ref="mediaCollapseOrderRef" :blockFocusDirections="['left', 'right', 'up']"
-            :nextFocusName="{
-              down: 'mediaCollapseSpeed'
-            }" name="mediaCollapseOrder" @onCollapseItemFocused="onCollapseItemOrderFocused"
+          <media-collapse-order ref="mediaCollapseOrderRef" :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseOrder" @onCollapseItemFocused="onCollapseItemOrderFocused"
             @onCollapseItemClicked="onCollapseItemOrderClicked" />
-          <media-collapse-speed ref="mediaCollapseSpeedRef" :blockFocusDirections="['left', 'right']" :nextFocusName="{
-            up: 'mediaCollapseOrder',
-            down: 'mediaCollapseDefinition'
-          }" name="mediaCollapseSpeed" @onCollapseItemFocused="onCollapseItemSpeedFocused"
+          <media-collapse-speed ref="mediaCollapseSpeedRef" :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseSpeed" @onCollapseItemFocused="onCollapseItemSpeedFocused"
             @onCollapseItemClicked="onCollapseItemSpeedClicked" />
-          <media-collapse-definition ref="mediaCollapseDefinitionRef" :blockFocusDirections="['left', 'right']"
-            :nextFocusName="{
-              up: 'mediaCollapseSpeed',
-              down: 'mediaCollapseMediaList'
-            }" name="mediaCollapseDefinition" @onCollapseItemFocused="onCollapseItemDefinitionFocused"
+          <media-collapse-definition ref="mediaCollapseDefinitionRef" :blockFocusDirections="['left', 'right', 'up']"
+            name="mediaCollapseDefinition" @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked" />
           <media-collapse-media-list v-if="mediaListVisible" ref="mediaCollapseMediaListRef"
-            :blockFocusDirections="['left', 'right', 'down']" :nextFocusName="{
-              up: 'mediaCollapseDefinition',
-            }" name="mediaCollapseMediaList" @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
+            :blockFocusDirections="['left', 'right', 'down', 'up']" name="mediaCollapseMediaList"
+            @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
             @onMediaListItemFocused="onCollapseItemMediaListFocused"
             @onMediaListItemClicked="onCollapseItemMediaListClicked" />
         </qt-collapse>
@@ -498,6 +493,9 @@ export default defineComponent({
     }
 
     function onSeekBarSeekStop(progress) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekBarSeekStop-------->>>>>", progress)
+      }
       isSeeking = false
       if (player && progress >= 0) {
         player.seekTo(progress)
@@ -505,6 +503,9 @@ export default defineComponent({
     }
 
     function onSeekbarFocusChanged(event) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekbarFocusChanged-------->>>>>", event)
+      }
       let focused = event.isFocused;
       seekBarRef.value?.setThumbActivate(focused);
     }
@@ -765,8 +766,10 @@ export default defineComponent({
           if (isPlayerViewStateProgress()) {
             if (isPlayerPlaying.value) {
               player.pause()
+              isPlayerPlaying.value = false
             } else {
               player.start(0)
+              isPlayerPlaying.value = true
             }
             return true
           }
@@ -1003,6 +1006,16 @@ export default defineComponent({
   align-items: flex-start;
   justify-content: flex-end;
 }
+
+.media-player-view-bottom-bg-css {
+  width: 1920px;
+  height: 700px;
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 
 .media-player-view-menu-css {
   width: 1920px;
