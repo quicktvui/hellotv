@@ -69,7 +69,7 @@ const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
             currentFilter = { index: 0, item: res.firstFilter||{} }
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
-            HistoryContentRef.value?.setData(currentMenu, currentFilter)
+            HistoryContentRef.value?.setData(currentMenu, currentFilter,isReset)
         } else {
             isShowFilter.value = true
             contentHeight.value = dContentHeight
