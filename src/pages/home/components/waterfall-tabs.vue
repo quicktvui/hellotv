@@ -174,7 +174,9 @@ export default defineComponent({
         isOneTime = false
         return
       }else{
-        bg_player.value?.resume()
+        if(bgPlayerType.value != -1){
+          bg_player.value?.resume()
+        }
       }
     }
 
