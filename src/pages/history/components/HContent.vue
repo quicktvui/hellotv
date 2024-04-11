@@ -87,7 +87,7 @@ const rBlockFocusDirections = ref<any[]>([])
 const router = useESRouter()
 const gridViewRef = ref<QTIListView>();
 const hContentRef = ref()
-const toast = useESToast()
+// const toast = useESToast()
 const isShowScreenLoading = ref(false)
 const screenLoadingTxt = ref('')
 let gridDataRec: any[] = []
@@ -99,6 +99,7 @@ let initRowsHeight = 0
 let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
+let isInit = true
 
 const gvNextFocusName = ref({ up: 'h_tab_name' })
 
@@ -231,6 +232,12 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
               contentDataHeight = dataHeight
               contentLenth = arr.length
               initRowsHeight = rowsHeight
+              if(isInit){
+                nextTick(()=>{
+                    gridViewRef.value?.setItemFocused(0)  
+                })
+                isInit = false
+              }
           } else {
               pageState.value = pageStates.empty
               gridDataRec!.splice(0)

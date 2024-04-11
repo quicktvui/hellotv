@@ -59,6 +59,7 @@ let currentFilter: any = { index: 0, item: {} }
 const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
     currentMenu = { index, item }
     HistoryTabRef.value?.init(index, item, isReset).then(res => {//切换菜单分类时，更新筛选条件
+        currentFilter = { index: 0, item: {} }
         if (!res) {//如果没有筛选条件，则根据分类获取列表数据
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
@@ -68,7 +69,6 @@ const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
             contentHeight.value = dContentHeight
         }
         isLoaded.value = false
-        currentFilter = { index: 0, item: {} }
     }).catch(() => {
         isShowFilter.value = false
     })
