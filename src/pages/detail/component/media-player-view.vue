@@ -822,8 +822,10 @@ export default defineComponent({
           if (isPlayerViewStateProgress()) {
             if (isPlayerPlaying.value) {
               player.pause()
+              isPlayerPlaying.value = false
             } else {
               player.start(0)
+              isPlayerPlaying.value = true
             }
             return true
           }
