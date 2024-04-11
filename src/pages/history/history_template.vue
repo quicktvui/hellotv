@@ -1,8 +1,8 @@
 <template>
-    <qt-view class="history"
+    <qt-view class="history" :skipRequestFocus="true"
         :class="['history_' + configs.layout, isShowFilter ? '' : 'history_no_filter', isNoMenu ? 'history_no_menu' : '']"
         ref="historyRootRef" :focusable="false" :gradientBackground="bgColor">
-        <!-- :descendantFocusability="2" 2：锁定， 1：放开-->
+        <!-- :descendantFocusability="2" 2：锁定， 1：放开 :skipRequestFocus="true"-->
         <HistoryMenu ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
             :isFilter="isShowFilter" :layout="configs.layout" :focusedBg="configs.menuFocusedItemBg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn"
@@ -10,9 +10,12 @@
         <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn"
             :pWidth="contentWidth" :isLoaded="isLoaded" />
         <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth" />
-        <HistoryContent ref="HistoryContentRef" class="content" :detailPageName="configs.detailPageName"
+        <HistoryContent 
+            ref="HistoryContentRef" class="content" :detailPageName="configs.detailPageName"
             :emptyTxt="configs.emptyTxt" :pConfig="configs" :setDataCallBack="setDataCallBackFn"
-            @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth" />
+            @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth"
+            @emInitNoData="emInitNoDataFn"
+        />
     </qt-view>
 </template>
 
@@ -51,6 +54,9 @@ const bgColor = computed(() => {
     }
     return { colors: ['#252930', '#252930'] }
 })
+const emInitNoDataFn = ()=>{
+    HistoryMenuRef.value?.setItemFocused()
+}
 const emClearFn = () => {
     HistoryContentRef.value?.clearData()//情况列表数据
 }
@@ -59,8 +65,8 @@ let currentFilter: any = { index: 0, item: {} }
 const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
     currentMenu = { index, item }
     HistoryTabRef.value?.init(index, item, isReset).then(res => {//切换菜单分类时，更新筛选条件
-        currentFilter = { index: 0, item: {} }
-        if (!res) {//如果没有筛选条件，则根据分类获取列表数据
+        if (!res.isShow) {//如果没有筛选条件，则根据分类获取列表数据
+            currentFilter = { index: 0, item: res.firstFilter||{} }
             isShowFilter.value = false
             contentHeight.value = dContentHeight + dTabFilterHeight - 10
             HistoryContentRef.value?.setData(currentMenu, currentFilter)

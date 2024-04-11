@@ -45,7 +45,7 @@ defineExpose({
         let tabList = await api.getFilterTabList(index, category).catch(()=>{
             return null
         })
-        if (tabList && tabList.data?.length) {
+        if (tabList && tabList.data?.length && !tabList.isHide) {
             isShow.value = true
             contentNavBar.value?.init({
                 data: getFilterList(tabList.data),
@@ -64,7 +64,7 @@ defineExpose({
         if(isShow.value && filterList.length){
             onTabSelect({ position: 0 })
         }
-        return isShow.value
+        return {isShow:isShow.value,firstFilter:tabList?.data?.[0]}
     },
     requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦(当内容区被清空时，如果configs.clearAllIsReset=true，会调此方法)
         // Native.callUIFunction(contentNavBar.value, "requestFocus", [])
