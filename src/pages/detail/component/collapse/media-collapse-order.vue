@@ -116,7 +116,8 @@ export default defineComponent({
       //
       setListData,
       setItemFocused,
-      setItemSelected
+      setItemSelected,
+      selectedIndex
     }
   },
 });

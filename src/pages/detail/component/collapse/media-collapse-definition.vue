@@ -120,6 +120,7 @@ export default defineComponent({
       setListData,
       setItemFocused,
       setItemSelected,
+      selectedIndex,
     }
   },
 });
