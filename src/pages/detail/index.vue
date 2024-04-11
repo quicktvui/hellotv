@@ -424,6 +424,9 @@ export default defineComponent({
           // albumDetailRef.value?.setAutofocus(true)
           waterfallRef.value?.scrollToTop()
           waterfallScrollY = 0
+        setTimeout(() => {
+          albumDetailRef.value?.requestPlayerPlaceholderFocus()
+        }, 300)
         return true
       }
 
