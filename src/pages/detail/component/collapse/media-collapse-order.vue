@@ -8,7 +8,8 @@
       <qt-list-view
         ref="orderListViewRef" horizontal
         :autofocusPosition="selectedIndex"
-        :visible="isCollapseExpand"
+        sid='collapse-item-order'
+        v-show='isCollapseExpand'
         class="qt-collapse-item-order-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
@@ -48,7 +49,7 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
       if (value) {
-        // setItemFocused(selectedIndex.value)
+        setItemFocused(selectedIndex.value)
       }
     }
 
@@ -80,7 +81,7 @@ export default defineComponent({
       if (!isCollapseExpand.value) {
         return
       }
-      orderListViewRef.value?.setItemFocused(position)
+      // orderListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {

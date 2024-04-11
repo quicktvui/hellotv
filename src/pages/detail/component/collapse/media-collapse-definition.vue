@@ -8,9 +8,11 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-list-view
         ref="definitionListViewRef" horizontal
-        :visible="isCollapseExpand"
-        class="qt-collapse-item-content-list"
+        v-show="isCollapseExpand"
+        sid='collapse-item-definition'
         :autofocusPosition="selectedIndex"
+        :blockFocusDirections="['up','down']"
+        class="qt-collapse-item-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
         <media-collapse-list-item type="1"/>
@@ -85,7 +87,7 @@ export default defineComponent({
       if (!isCollapseExpand.value) {
         return
       }
-      definitionListViewRef.value?.setItemFocused(position)
+      // definitionListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {

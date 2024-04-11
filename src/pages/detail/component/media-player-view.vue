@@ -94,40 +94,29 @@
           class="media-player-collapse-css">
           <media-collapse-order
             ref="mediaCollapseOrderRef"
-            :blockFocusDirections="['left','right', 'up']"
-            :nextFocusName="{
-                    down:'mediaCollapseSpeed'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
+
             name="mediaCollapseOrder"
             @onCollapseItemFocused="onCollapseItemOrderFocused"
             @onCollapseItemClicked="onCollapseItemOrderClicked"/>
           <media-collapse-speed
             ref="mediaCollapseSpeedRef"
-            :blockFocusDirections="['left','right']"
-            :nextFocusName="{
-                    up:'mediaCollapseOrder',
-                    down:'mediaCollapseDefinition'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
+
             name="mediaCollapseSpeed"
             @onCollapseItemFocused="onCollapseItemSpeedFocused"
             @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
           <media-collapse-definition
             ref="mediaCollapseDefinitionRef"
-            :blockFocusDirections="['left','right']"
-            :nextFocusName="{
-                    up:'mediaCollapseSpeed',
-                    down:'mediaCollapseMediaList'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
+
             name="mediaCollapseDefinition"
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
           <media-collapse-media-list
             v-if="mediaListVisible"
             ref="mediaCollapseMediaListRef"
-            :blockFocusDirections="['left','right', 'down']"
-            :nextFocusName="{
-                    up:'mediaCollapseDefinition',
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
             name="mediaCollapseMediaList"
             @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
             @onMediaListItemFocused="onCollapseItemMediaListFocused"

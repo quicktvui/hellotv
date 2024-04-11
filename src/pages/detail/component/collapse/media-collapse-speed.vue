@@ -8,9 +8,11 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-list-view
         ref="speedListViewRef" horizontal
-        :visible="isCollapseExpand"
-        class="qt-collapse-item-speed-content-list"
+        sid='collapse-item-speed'
+        v-show='isCollapseExpand'
         :autofocusPosition="selectedIndex"
+        class="qt-collapse-item-speed-content-list"
+        :blockFocusDirections="['up','down']"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
         <media-collapse-list-item type="1"/>
@@ -43,7 +45,7 @@ export default defineComponent({
 
     function onCollapseItemExpand(value: boolean) {
       isCollapseExpand.value = value
-      scrollTo(selectedIndex.value)
+      //scrollTo(selectedIndex.value)
       if (value) {
         // setItemFocused(selectedIndex.value)
       }
@@ -81,7 +83,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------setItemFocused---倍速---->>>>', position)
       }
-      speedListViewRef.value?.setItemFocused(position)
+      // speedListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {

@@ -258,7 +258,7 @@ export default defineComponent({
       }
 
       if (scrollY <= 5) {
-        albumDetailRef.value?.setAutofocus(true)
+        // albumDetailRef.value?.setAutofocus(true)
       }
     }
 
