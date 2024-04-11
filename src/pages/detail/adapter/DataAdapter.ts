@@ -127,7 +127,7 @@ export function buildRecommendationSection(): QTWaterfallSection {
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
       down: 500,
-      up: -500
+      up: 0
     }
   }
   return section

@@ -224,7 +224,7 @@ export default defineComponent({
     }
 
     function onScrollStateChanged(x: number,y: number,state:number){
-      log.d(TAG, '-------onScrollStateChanged-------->>>>' +
+      log.d(TAG, '----滚动状态---onScrollStateChanged-------->>>>' +
           " y:" + y +
           " state:" + state
       )
@@ -240,7 +240,7 @@ export default defineComponent({
     }
 
     function onScroll(offsetX: number, scrollY: number) {
-      log.d(TAG, '-------onScroll-------->>>>' +
+      log.d(TAG, '---滚动----onScroll-------->>>>' +
         " offsetX:" + offsetX +
         " scrollY:" + scrollY
       )

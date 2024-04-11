@@ -152,7 +152,7 @@ export default defineComponent({
     }
 
   function setAutofocus(enable:boolean){
-      menuRef.value?.setAutofocus(enable)
+      placeholderRef.value?.setAutofocus(enable)
   }
 
 
