@@ -16,8 +16,12 @@
 
       <!-- 底部进度条 -->
       <qt-view class="media-player-view-bottom-css"
-               v-if="isFullWindow && isProgressShowing"
-               :gradientBackground="{colors:['#00000000', '#E6000000']}">
+               v-show="isFullWindow && isProgressShowing">
+
+        <qt-view class="media-player-view-bottom-bg-css"
+                 v-if="isFullWindow && isProgressShowing"
+                 :gradientBackground="{colors:['#00000000', '#E6000000']}" />
+
         <!-- 底部进度条 -->
         <qt-column class="media-player-view-state-progress-root-css"
                    v-show="isProgressShowing">
@@ -48,7 +52,6 @@
               :onProgressChanged="onSeekBarChanged"
               @onSeekStop="onSeekBarSeekStop"
               @focus="onSeekbarFocusChanged"
-
               :focusable="true"/>
 
             <qt-text class="media-player-view-progress-text-css"
@@ -1051,6 +1054,16 @@ export default defineComponent({
   align-items: flex-start;
   justify-content: flex-end;
 }
+
+.media-player-view-bottom-bg-css {
+  width: 1920px;
+  height: 700px;
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 
 .media-player-view-menu-css {
   width: 1920px;
