@@ -57,16 +57,12 @@
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
             :style="{width: playerListWidth + 'px'}"
             :clipChildren="true" eventClick eventFocus :focusScale="1">
-            <qt-view :duplicateParentState="true" class="iclf_item_playing" :clipChildren="true"
-                     :bringFocusChildToFront="true"
-              :style="{width: playerListWidth + 'px'}" >
-              <qt-view class="playMark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
-              </qt-view>
               <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
                 :duplicateParentState="true"
-                class="iclf_item_text"  text="${title}" :paddingRect="[0,0,0,0]"/>
-            </qt-view>
+                class="iclf_item_text" :style="{width:playerListWidth + 'px'}"  text="${title}" :paddingRect="[50,0,16,0]"/>
+              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+              </qt-view>
           </qt-view>
         </qt-list-view>
       </qt-view>
@@ -491,13 +487,12 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.small_player_seek_bar {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
 .item_cell_list_front{background-color: rgba(255,255,255,0.1);position: absolute;right: 0;top: 0;}
-.iclf_item{height: 96px;background-color: transparent;
+.iclf_item{
+  height: 96px;
+  background-color: transparent;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255,255,255,0.1);
   focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;
@@ -517,16 +512,6 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.iclf_item_playing{position: absolute;height: 96px;border-bottom-width: 1px;
-  border-bottom-color: rgba(255,255,255,0.1);}
-.iclf_item_playing_bg{
-  position: absolute;height: 96px;
-}
-.iclf_item .playMark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
-
-
-.iclf_item_noPlay{position: absolute;}
-.iclf_item_text{height: 96px;color: #fff;width: 400px;margin-left: 50px;color: #FFFFFF;focus-color:#000;select-color:#FF4E46}
-
-.bg-img{width: 1920px;height: 1080px;position: absolute;}
+.iclf_item .play_Mark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
+.iclf_item_text{position: absolute;height: 96px;color: #fff;left: 0;focus-color:#000;select-color:#FF4E46}
 </style>
