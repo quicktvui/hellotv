@@ -101,6 +101,7 @@ let contentLenth = 0
 let contentScrollY = 0
 let isInit = true
 let prevItemIndex:string|number = -1
+let isReStartload = false
 
 const gvNextFocusName = ref({ up: 'h_tab_name' })
 
@@ -205,7 +206,7 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
     prePageNum++
     return { ...res, _apiId: currentMenu?.index+'-'+currentFilter?.index }
   }).catch(()=>{
-    return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[] }
+    return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[],isNeedReload:false }
   })
 }
 let timeOutId:any = null
@@ -260,6 +261,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
           nextTick(()=>{
               isShowScreenLoading.value = false
           })
+          isReStartload = !!res?.isNeedReload
         }
         props.setDataCallBack((res.data?.length||0) > 0)
         gridViewRef.value?.unBlockRootFocus()
@@ -320,6 +322,11 @@ defineExpose({
     reset(){
         isInit = true
         rBlockFocusDirections.value = []
+    },
+    reStartload(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams){//从详情页面返回时，有时需要重载页面数据
+        if(isReStartload){
+            setData(currentMenu, currentFilter)
+        }
     }
 })
 </script>

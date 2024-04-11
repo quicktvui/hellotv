@@ -130,7 +130,7 @@ defineExpose({
     },
     onESRestart() {
         isLoaded.value = false
-        HistoryContentRef.value?.setData(currentMenu, currentFilter)
+        HistoryContentRef.value?.reStartload(currentMenu, currentFilter)
     }
 })
 </script>
