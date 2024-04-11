@@ -44,6 +44,7 @@ import { IMediaAuthorization } from "../../api/media/IMediaAuthorization";
 import { mediaAuthorizationKey } from "./injectionSymbols";
 import { useMediaDataSource } from "../../api/UseApi";
 import { localHistory, historyKey, removeHistory } from '../../api/history/store';
+import { now } from '@vue/devtools-api';
 
 const TAG = 'DetailPage'
 
@@ -265,6 +266,7 @@ export default defineComponent({
     }
 
     function onMenuFavouriteButtonClick(val: boolean) {
+      media.sortTime = new Date().getTime()
       val ? localHistory.fav[media.id] = media : removeHistory('fav', Number(media.id))
     }
 

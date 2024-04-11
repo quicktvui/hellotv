@@ -3,6 +3,13 @@ import { HistoryBaseApi, IcurrentItemParams } from "./baseApi";
 import { IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEntity, IHistoryContentEntity, IHistoryMenuDto } from "./modelEntity"
 import { localHistory, historyKey, historyToCategory, plyHistoryCategory, favHistoryCategory, removeHistory, resetHistory } from "./store";
 
+function sortBy(field: any) {
+  return (x, y) => {
+    // 倒序
+    return y.customProp[field] - x.customProp[field]
+  }
+}
+
 class HistoryApi extends HistoryBaseApi {
   init(...params: any[]): Promise<any> {
     this.requestManager = params[0]
@@ -28,7 +35,8 @@ class HistoryApi extends HistoryBaseApi {
   }
 
   async getFilterTabList(index: number, category: IHistoryMenuEntity): Promise<IHistoryFilterDto> {
-    return { data: historyToCategory(index == 0 ? 'ply' : 'fav') }
+    const tabs = historyToCategory(index == 0 ? 'ply' : 'fav')
+    return { data: tabs, isHide: tabs.length < 2 }
   }
 
   async getContentList(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, pageNum: number): Promise<IHistoryContentDto> {
@@ -48,6 +56,7 @@ class HistoryApi extends HistoryBaseApi {
           currentPlayTime: item.progress,
           allTime: Number(item.duration || 0) * 60 * 1000,
           customProp: {
+            sortTime: item.sortTime,
             fullIndex: item.fullIndex,
             currIndex: item.currIndex
           }
@@ -62,6 +71,7 @@ class HistoryApi extends HistoryBaseApi {
           id: item.id,
           metaId: item.id,
           customProp: {
+            sortTime: item.sortTime,
             fullIndex: item.fullIndex,
             currIndex: item.currIndex
           }
@@ -72,7 +82,7 @@ class HistoryApi extends HistoryBaseApi {
     return Promise.resolve({
       page: pageNum,
       size: data.length,
-      data: data
+      data: data.sort(sortBy('sortTime'))
     })
   }
 

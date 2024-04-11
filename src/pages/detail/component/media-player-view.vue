@@ -713,6 +713,7 @@ export default defineComponent({
       }
 
       // 存储播放历史
+      media.sortTime = new Date().getTime()
       localHistory.ply[media.id] = media
     }
 
