@@ -347,6 +347,7 @@ export default defineComponent({
           descendantFocusability.value = 2
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
+          albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
           setTimeout(() => {
             albumDetailRef.value?.requestPlayerPlaceholderFocus()
@@ -406,7 +407,6 @@ export default defineComponent({
 
     function onBackPressed(): boolean {
       if (mediaPlayerViewRef.value?.onBackPressed()) {
-          albumDetailRef.value?.setAutofocus(true)
         return true
       }
 
