@@ -128,7 +128,7 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
-      // mediaSeriesListRef.value?.requestFocus(position)
+      mediaSeriesListRef.value?.requestFocus(position)
     }
 
     function setItemSelected(position: number): void {

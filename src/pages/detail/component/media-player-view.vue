@@ -95,21 +95,18 @@
           <media-collapse-order
             ref="mediaCollapseOrderRef"
             :blockFocusDirections="['left','right', 'down','up']"
-
             name="mediaCollapseOrder"
             @onCollapseItemFocused="onCollapseItemOrderFocused"
             @onCollapseItemClicked="onCollapseItemOrderClicked"/>
           <media-collapse-speed
             ref="mediaCollapseSpeedRef"
             :blockFocusDirections="['left','right', 'down','up']"
-
             name="mediaCollapseSpeed"
             @onCollapseItemFocused="onCollapseItemSpeedFocused"
             @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
           <media-collapse-definition
             ref="mediaCollapseDefinitionRef"
-            :blockFocusDirections="['left','right', 'down','up']"
-
+            :blockFocusDirections="['left','right','up']"
             name="mediaCollapseDefinition"
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
