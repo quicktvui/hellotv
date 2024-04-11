@@ -204,7 +204,7 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
   })
 }
 let timeOutId: any = null
-const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
+const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, isReset?: boolean) => {
   isFirst = true
   pageState.value = pageStates.init
   gridDataRec!.splice(0)
@@ -212,6 +212,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   prePageNum = 0
   contentLenth = 0
   isShowScreenLoading.value = true
+  isInit = !!isReset
 
   // @ts-ignore
   gridViewRef.value?.restartPage()
