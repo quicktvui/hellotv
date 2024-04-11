@@ -1,12 +1,13 @@
 <template>
-  <div class="ac_top" :class="['ac_top_'+dConfig.top.mode]">
+  <div class="ac_top" :class="['ac_top_'+topConfig.mode, isTop?'ac_top_bg':'']">
     <div class="top_title_box">
-      <qt-text v-if="dConfig.top.title" class="top_title" :style="dConfig.top.titleStyle" :text="dConfig.top.title" :gravity="titleGravity"></qt-text>
+      <qt-text v-if="topConfig.title" class="top_title" :style="topConfig.titleStyle" :text="topConfig.title" :gravity="titleGravity"></qt-text>
     </div>
     <qt-list-view 
       ref="topListRef" :clipChildren="false" :clipPadding="false" class="top_list"
-      :style="{width: dConfig.top.btnListWidth + 'px'}"
+      :style="{width: topConfig.btnListWidth + 'px'}"
       @item-focused="onTabChange" :horizontal="true" :focusable="false" padding="0,0,10,0"
+      @item-click="onItemClick"
     >
       <div :type="1" class="top_list_item" :collapsable="false" :focusable="true" :focusScale="1.08">
         <!-- <qt-button :enable-flex-style="true" text="text" gradientFocusBackground="gradientBackground" size="mini" round></qt-button> -->
@@ -52,14 +53,34 @@ import { topModes } from '../../api/activity2/types'
 import { useESToast } from '@extscreen/es3-core';
 // @ts-ignore
 import activity2Api from '../../api/activity2/index.ts';
+import { useESRouter } from '@extscreen/es3-router';
 
+const props = defineProps<{ isTop:boolean }>();
+
+const topConfig = dConfig.top || {
+  mode: 'left-right',
+  titleStyle: {
+    color: '#ffffff', fontSize: '50px'
+  },
+  btnListWidth: 0
+}
+const router = useESRouter()
 const toast = useESToast()
 const topListRef = ref()
 const emits = defineEmits(['emTabChange'])
 
-const titleGravity = dConfig.top.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
+const titleGravity = topConfig.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
 const onTabChange = () => {
   emits('emTabChange')
+}
+
+const onItemClick = (e)=>{
+  if(e.item._router){
+    router.push({
+        name: e.item._router.name, //'series_view',
+        params: e.item._router.params?{...e.item._router.params}:undefined
+    });
+  }
 }
 defineExpose({
   async init() {
@@ -82,6 +103,9 @@ defineExpose({
   padding-left: 90px;
   padding-right: 80px;
   padding-top: 20px;
+}
+.ac_top_bg{
+  background-color: rgba(0,0,0,0.8);
 }
 .top_title_box{
   flex: 1;

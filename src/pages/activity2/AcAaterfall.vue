@@ -18,21 +18,24 @@
   </qt-waterfall>
 </template>
 <script lang='ts' setup>
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import {
 	QTIWaterfall, QTWaterfall,
 } from '@quicktvui/quicktvui3';
 import AcPoster from './AcPoster/index.vue'
 // @ts-ignore
 import { getBlockList, dBlockWidth, dBlockHeight, IBlockItemData } from './index.ts'
-import { useESToast, ESKeyEvent } from '@extscreen/es3-core';
+import { useESToast, ESKeyEvent, ESKeyCode } from '@extscreen/es3-core';
 // @ts-ignore
 import activity2Api from '../../api/activity2/index.ts';
 import { useESRouter } from '@extscreen/es3-router';
+import { Native } from '@extscreen/es3-vue'
 
+const emits = defineEmits(['emToTop'])
+const props = defineProps<{ isTop:boolean }>();
 const router = useESRouter()
 const toast = useESToast()
-const waterfall = ref<QTIWaterfall>();
+const waterfall = ref();//<QTIWaterfall>
 const waterfallStyle = {
   width: dBlockWidth+'px', height: dBlockHeight+'px'
 }
@@ -44,7 +47,6 @@ const onScroll = (scrollX, scrollY)=>{
 }
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
   if(item._router){
-    toast.showLongToast(item._router.name)
     router.push({
         name: item._router.name, //'series_view',
         params: item._router.params?{...item._router.params}:undefined
@@ -79,6 +81,19 @@ defineExpose({
     if(sectionList[0]){
       firstId = sectionList[0].itemList?.[0]?._id || ''
     }
+    // Native.callUIFunction(waterfall.value,"blockRootFocus",[])
+    // Native.callUIFunction(waterfall.value,"unBlockRootFocus",[])
+    // setTimeout(() => {
+    //   waterfall.value?.waterfallRef?.blockRootFocus()//unBlockRootFocus
+    // }, 300);
+  },
+  onKeyDown(keyEvent: ESKeyEvent): boolean {
+    if(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_DOWN){
+      if(scrollTop<=0){
+        emits('emToTop', scrollTop)
+      }
+    }
+    return true
   },
   onBackPressed() {
     // toast.showLongToast(firstId+'')

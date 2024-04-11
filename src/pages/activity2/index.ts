@@ -3,7 +3,7 @@ import {
 	QTWaterfallSection,
 	QTWaterfallSectionType,
 } from '@quicktvui/quicktvui3';
-import { IActivityConfig, IActivityTopBtnConfig, topModes } from '../../api/activity2/types'
+import { IActivityConfig, IActivityTopBtnConfig } from '../../api/activity2/types'
 import { config } from '../../api/activity2/config'
 
 export const getBgColor = (bColor?:string|object)=>{
@@ -13,23 +13,8 @@ export const getBgColor = (bColor?:string|object)=>{
 export const dConfig = {
   bgColor: getBgColor(config.bgColor) || {colors:['#2F3541','#252930'],cornerRadius:0},
   bgImg: config.bgImg, //|| 'https://up.deskcity.org/pic_source/28/73/cd/2873cd9dc91fa720a498b043aebd4509.jpg',
-  top: {
-    mode: 'left-right',
-    title: '页面标题',//海底冒险小剧场季卡
-    titleStyle: {
-      color: '#ffffff', fontSize: '50px'
-    },
-    btnListWidth: 330
-  },
-  banner: {
-    // img: 'https://up.deskcity.org/pic_source/28/73/cd/2873cd9dc91fa720a498b043aebd4509.jpg',
-    // style: { height: '600px' }
-  },
-  block: {
-    title: '板块标题',
-    pStyle:{ marginBottom: '100px' },
-    pTitleStyle: { fontSize: '36px', color: '#ffffff' }
-  }
+  top: config.top,
+  banner: config.banner
 }
 
 let dImgURL = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750';
@@ -139,14 +124,14 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
         height: posterTitleHeight
       },
     },
-    // subTitle: {
-    //   text: '副标题',
-    //   enable: true,
-    //   style: {
-    //     width: blackItemWidth,
-    //     height: posterSubTitleHeight
-    //   },
-    // },
+    subTitle: {
+      text: data.subTitle,
+      enable: !!data.subTitle,
+      style: {
+        width: blackItemWidth,
+        height: posterSubTitleHeight
+      },
+    },
     floatTitle: {
       text: data.floatTitle,
       enable: !!data.floatTitle,
@@ -171,7 +156,8 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
 interface IBlockData {
   id:string;
   title?: string;
-  list: IBlockItemData[]
+  list: IBlockItemData[];
+  options: IblockOptions
 }
 interface IblockOptions extends Ioptions {
   decorationLeft?:number
@@ -184,14 +170,14 @@ export interface IacTivity2GetFlexBlockRes {
   section:QTWaterfallSection
   blockHeight:number
 }
-export const getFlexBlock = (data:IBlockData, options:IblockOptions = {}, sectionType:number = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX):IacTivity2GetFlexBlockRes => {
+export const getActivity2FlexBlock = (data:IBlockData, sectionType:number = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX):IacTivity2GetFlexBlockRes => {
   let { 
     blackItemWidth = dBlackItemWidth, columns = 0, space = dSpace, blackItemHeight = dBlackItemHeight,
     posterTitleHeight = dPosterTitleHeight, posterSubTitleHeight = dPosterSubTitleHeight,
     blockTitleBottom = dBlockTitleBottom, blockTitleFontSize = dBlockTitleFontSize,
     blockTitleDecorationTop = dBlockTitleDecorationTop
-  } = options
-  const leftSpace = options.decorationLeft || dBlackSpace
+  } = data.options
+  const leftSpace = data.options.decorationLeft || dBlackSpace
   const rightSpace = dBlackSpace - space
   const contentWidth = dBlockWidth - leftSpace - rightSpace - (space * columns)
   if(columns){
@@ -217,7 +203,7 @@ export const getFlexBlock = (data:IBlockData, options:IblockOptions = {}, sectio
     //3.构造section中item列表数据
     itemList: data.list.map((item,index)=>{
       return getPosterItemList({ ...item, _sectionItemId: data.id+item.id+index}, {
-        ...options,
+        ...data.options,
         blackItemWidth,
         posterHeight
       })
@@ -274,6 +260,10 @@ export const getBlockList = (arr:IacTivity2GetFlexBlockRes[] = []) => {
   }
   return { sectionList, waterfallHeight }
 }
+// getActivity2FlexBlock( //左侧让出空隙
+//   { id: '1', title: '', list: [{id: '1'},{id:'2'},{id:'3'},{id:'4'},{id: '5'},{id:'6'},{id:'7'},{id:'8'}] }, 
+//   { columns: 4, decorationLeft: 600 }
+// ),
 
 export const getActivityTopBtn = (options:IActivityTopBtnConfig) => {
   return { 
@@ -282,6 +272,7 @@ export const getActivityTopBtn = (options:IActivityTopBtnConfig) => {
     background: {colors: options.background || ['#30000000','#30000000'],cornerRadius:25}, 
     focusedBackground: {colors: options.focusedBackground || ['#ffffff','#ffffff'],cornerRadius:25},
     icon: options.icon, focusIcon: options.focusIcon, 
-    textColor: options.textColor || '#ffffff', textFocusColor: options.textFocusColor || '#333333'
+    textColor: options.textColor || '#ffffff', textFocusColor: options.textFocusColor || '#333333',
+    _router: options._router
   }
 }

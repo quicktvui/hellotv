@@ -1,11 +1,11 @@
 <template>
   <div class="activity2" :gradientBackground="dConfig.bgColor">
     <qt-image v-if="dConfig.bgImg" class="bg_img" :src="dConfig.bgImg" :focusable="false"/>
-    <AcTop ref="AcTopRef" @emTabChange="emTabChangeFn" />
+    <AcTop v-if="dConfig.top" ref="AcTopRef" :isTop="isTop" @emTabChange="emTabChangeFn" />
     <scroll-view class="ac_content" ref="acContentScrollRef" :focusable="false" :clipChildren="false" :clipPadding="false" :onScrollEnable="true">
       <div class="ac_content_inner">
-        <AcBanner />
-        <AcAaterfall ref="AcAaterfallRef" />
+        <AcBanner v-if="dConfig.banner" />
+        <AcAaterfall :isTop="isTop" ref="AcAaterfallRef" @emToTop="emToTopFn" />
       </div>
     </scroll-view>
   </div>
@@ -14,15 +14,14 @@
 // @ts-ignore
 import { dConfig } from './index.ts'
 import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
-import { ref } from 'vue';
+import { nextTick, ref } from 'vue';
 import AcTop from './AcTop.vue'
-// import AcBlack from './AcBlack.vue'
 import AcBanner from './AcBanner.vue'
 import AcAaterfall from './AcAaterfall.vue'
 import { useESRouter } from '@extscreen/es3-router';
 
-const scrollTop = parseInt(dConfig.banner?.style?.height)// - 100
-let isTop = false
+const scrollTop = parseInt(dConfig.banner?.style?.height||'0')// - 100
+let isTop = ref(false)
 const acContentScrollRef = ref()
 const AcTopRef = ref()
 const AcAaterfallRef = ref()
@@ -30,9 +29,17 @@ const toast = useESToast()
 const router = useESRouter()
 
 const emTabChangeFn = ()=>{
-  if(isTop && scrollTop){
+  if(isTop.value && scrollTop){
+    // toast.showLongToast('emTabChangeFn-'+isTop.value)
     acContentScrollRef.value?.scrollTo(0,0,100)
-    isTop = false
+    isTop.value = false
+  }
+}
+const emToTopFn = (top) => {
+  toast.showLongToast(top+'')
+  if(!isTop.value && scrollTop){
+    acContentScrollRef.value?.scrollTo(0,scrollTop,100)
+    isTop.value = true
   }
 }
 defineExpose({
@@ -44,10 +51,7 @@ defineExpose({
     // }, 1000);
   },
   onKeyDown(keyEvent: ESKeyEvent): boolean {
-    if(!isTop && scrollTop){
-      acContentScrollRef.value?.scrollTo(0,scrollTop,100)
-      isTop = true
-    }
+    AcAaterfallRef.value?.onKeyDown(keyEvent)
     return true
   },
   onBackPressed(){

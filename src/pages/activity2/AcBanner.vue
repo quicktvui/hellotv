@@ -1,11 +1,15 @@
 <template>
-<div class="ac_banner" :style="dConfig.banner.style">
-  <img v-if="dConfig.banner.img" class="ac_banner_img" :style="dConfig.banner.style" :src="dConfig.banner.img" />
+<div class="ac_banner" :style="bannerConfig.style">
+  <img v-if="bannerConfig.img" class="ac_banner_img" :style="bannerConfig.style" :src="bannerConfig.img" />
 </div>
 </template>
 <script lang='ts' setup>
 // @ts-ignore
 import { dConfig } from './index.ts'
+const bannerConfig = dConfig.banner || {
+  img: '',
+  style: {}
+}
 </script>
 <style scoped>
 .ac_banner{

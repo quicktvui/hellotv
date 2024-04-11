@@ -5,22 +5,41 @@ export const topModes = {
   rl: 'right-left'
 } as const;
 
+// {
+//   bgColor?:string|object
+//   bgImg?:string
+//   top?: {
+//     mode?: Tvalues<typeof topModes>
+//     title?: string
+//     titleColor?:string
+//     titleSize?:number
+//     btnTxt?:string
+//     btnIcon?:string
+//     btnFocusedIcon?:string
+//     btnTxtColor?:string
+//     btnTxtBg?:string
+//     btnTxtFocusedBg?:string
+//     btnTxtFocusedColor?:string
+//   }
+// }
 export interface IActivityConfig {
-  bgColor?:string|object
-  bgImg?:string
+  bgColor?: string|object;
+  bgImg?: string;
   top?: {
-    mode?: Tvalues<typeof topModes>
-    title?: string
-    titleColor?:string
-    titleSize?:number
-    btnTxt?:string
-    btnIcon?:string
-    btnFocusedIcon?:string
-    btnTxtColor?:string
-    btnTxtBg?:string
-    btnTxtFocusedBg?:string
-    btnTxtFocusedColor?:string
-  }
+      mode?: string;
+      title?: string;
+      titleStyle?: {
+          color?: string;
+          fontSize?: string;
+      };
+      btnListWidth: number;
+  };
+  banner?: {
+      img?: string;
+      style: {
+          height: string;
+      };
+  };
 }
 
 export interface IActivityBlockPosterLayout {
@@ -61,7 +80,11 @@ export interface IActivityTopBtnConfig {
   icon?: any;
   focusIcon?: any;
   textColor?: string;
-  textFocusColor?: string
+  textFocusColor?: string;
+  _router?: {
+    name:string
+    params?: object
+  }
 }
 export interface IActivityTopItemBtn {
   type: number;
