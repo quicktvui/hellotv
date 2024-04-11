@@ -51,5 +51,5 @@ export interface IHistoryContentDto {
     page?: number;
     size?: number;
     data?: IHistoryContentEntity[]
-    isNeedReload?:boolean//默认false 该分类的数据是否会按某个条件排序，如果不排序则从详情页面返回时不刷新数据
+    isNeedReload?:boolean//默认false 从详情页面返回时是否需要刷新数据
 }
