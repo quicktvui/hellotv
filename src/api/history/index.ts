@@ -61,7 +61,6 @@ class HistoryApi extends HistoryBaseApi {
           description1: '',
           id: item.id,
           metaId: item.id,
-          playCount: item.playId || 0,
           customProp: {
             fullIndex: item.fullIndex,
             currIndex: item.currIndex
@@ -69,8 +68,6 @@ class HistoryApi extends HistoryBaseApi {
         }))
         break
     }
-
-    console.log('huan-', pageNum, data)
 
     return Promise.resolve({
       page: pageNum,

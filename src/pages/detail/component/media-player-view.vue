@@ -587,7 +587,7 @@ export default defineComponent({
       progress.value = s_to_hs(Math.floor(p / 1000))
 
       // 播放信息
-      localHistory.ply[media.id].playId = playingMediaItem.id
+      localHistory.ply[media.id].playId = playingMediaItem.playId || playingMediaItem.id
       localHistory.ply[media.id].progress = p
     }
 

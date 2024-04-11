@@ -38,6 +38,11 @@ export function buildMediaItem(page: number, index: number, media: IMedia, media
       position: media.playPosition
     }
   }
+
+  if (media.itemListCount == 1) {
+    mediaItem.playId = media.playUrl.split('$')[0]
+  }
+
   return mediaItem
 }
 
