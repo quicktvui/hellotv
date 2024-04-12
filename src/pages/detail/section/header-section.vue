@@ -6,6 +6,7 @@
           class="header-home-button-css"
           :focus-icon="searchFocused"
           :icon="searchNormal"
+          :blockFocusDirections="['left','right','top']"
           @click="onSearchButtonClicked"
           text="搜索"/>
       </qt-row>
