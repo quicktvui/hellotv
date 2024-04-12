@@ -162,9 +162,6 @@ export default defineComponent({
     }
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
-      if (focusTimer) {
-        clearTimeout(focusTimer)
-      }
       let index = event.position;
       context.emit("onMediaListGroupItemFocused", index)
     }
