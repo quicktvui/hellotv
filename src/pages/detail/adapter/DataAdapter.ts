@@ -108,7 +108,7 @@ export function buildAlbumDetailSection(m: IMedia): QTWaterfallSection {
 export function buildRecommendationSection(media: IMedia): QTWaterfallSection {
 
   let upOffset = 0
-  let downOffset = 600
+  let downOffset = 800
   if (media.itemList.enable) {
     upOffset = 0
     downOffset = 1000
