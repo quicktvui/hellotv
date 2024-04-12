@@ -147,7 +147,7 @@ export function buildPlayMode(mode: ESPlayerPlayMode, index: number): QTListView
       modeName = '单片循环'
       break
     case ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP:
-      modeName = '循环播放'
+      modeName = '自动连播'
       break
   }
   let decoration: QTListViewItemDecoration = {

@@ -291,6 +291,9 @@ export default defineComponent({
       nextTick(() => {
         if (playModeList) {
           const index = getPlayModeIndex(playMode, playModeList)
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.e(TAG, "-------getPlayModeIndex-------->>>>>", playMode, playModeList, index)
+          }
           if (index > -1) {
             mediaCollapseOrderRef.value?.setItemSelected(index)
           }
@@ -733,7 +736,17 @@ export default defineComponent({
     }
 
     function onPlayerPlayMediaListModeListChanged(modeList: Array<ESPlayerPlayMode>): void {
-      playModeList = modeList
+      const filterModeList = []
+      if (modeList && modeList.length) {
+        for (let i = 0; i < modeList.length; i++) {
+          let mode: ESPlayerPlayMode = modeList[i]
+          if (mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT ||
+            mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP) {
+            filterModeList.push(mode)
+          }
+        }
+      }
+      playModeList = filterModeList
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onPlayerPlayModeListChanged-------->>>>>", modeList)
       }
