@@ -7,8 +7,9 @@
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
     </replace-child>
-    <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
+    <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false"
+             name='home_player'
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
@@ -38,7 +39,7 @@
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
                :enableFocusBorder="true" >
         <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
-                           :focusable="false" 
+                           :focusable="false"
                            :src="coverSrc"
                            :width="playerWidth"
                            :height="playerHeight"
@@ -164,7 +165,7 @@ export default defineComponent({
                             playerListData:any, playIndex:number)=>{
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowTimer)
-      clearTimeout(delayShowPlayerTimer)
+      // clearTimeout(delayShowPlayerTimer)
       bgPlayerType.value = playerType
       log.i(`BG-PLAYER`,`doChangeCell cellReplaceSID:${cellReplaceSID},playerType:${playerType},
       boxWidth:${boxWidth},boxHeight:${boxHeight},playerWidth:${playerWidth},playerHeight:${playerHeight},playIndex:${playIndex},playerListDataSize:${playerListData == null ? 0 : playerListData.length}`)
@@ -186,14 +187,14 @@ export default defineComponent({
         initComponent(playerListData,playerType)
         setSize(boxWidth,boxHeight,playerWidth,playerHeight)
         playAtIndex(playIndex)
-        delayShowPlayer(300)
+        // delayShowPlayer(300)
       },delayToPlay)
     }
 
     const keepPlayerInvisible = (stopIfNeed : boolean = true)=>{
-      log.e('BG-PLAYER',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
-      bgPlayerOpacity.value = 0
-      clearTimeout(delayShowPlayerTimer)
+      log.e('DebugReplaceChild',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
+      // bgPlayerOpacity.value = 0
+      // clearTimeout(delayShowPlayerTimer)
       if(stopIfNeed){
         if(isAnyPlaying.value){
           isAnyPlaying.value = false
@@ -211,10 +212,12 @@ export default defineComponent({
     const delayShowPlayer = (delay : number = 300)=>{
       log.e('BG-PLAYER',`+++++delayShowPlayer delay:${delay}`)
       bgPlayerOpacity.value = 0
+        bg_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[0])
       clearTimeout(delayShowPlayerTimer)
-      delayShowPlayerTimer = setTimeout(() => {
-        log.e('BG-PLAYER',`----set bgPlayerOpacity 1 on changeParent`)
+        delayShowPlayerTimer=  setTimeout(() => {
+        log.e('DebugReplaceChild',`----set bgPlayerOpacity 1 on changeParent`)
         bgPlayerOpacity.value = 1
+            bg_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[1])
       },delay)
     }
 
