@@ -8,8 +8,10 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-media-series
         ref="mediaSeriesListRef"
+        :display="isCollapseExpand"
         class="qt-collapse-media-series-root-css"
         :clipChildren="false"
+        :initFocusPosition="selectedIndex"
         @load-data="onLoadData"
         @item-click="onItemClicked"
         @item-focused="onItemFocused"
@@ -56,11 +58,8 @@ export default defineComponent({
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-    let selectedIndex = 0
 
-    let focusTimer
-
-    let initialized = false
+    const selectedIndex = ref<number>(0)
 
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
@@ -100,27 +99,23 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
 
-      if (value) {
-        if (!initialized) {
-          focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex)
-            setItemFocused(selectedIndex)
-          }, 1000)
-        } else {
-          focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex)
-            setItemFocused(selectedIndex)
-          }, 1000)
-        }
-      } else {
-        if (focusTimer) {
-          clearTimeout(focusTimer)
-        }
-      }
-
-      if(value){
-        initialized = true
-      }
+      // if (value) {
+      //   if (!initialized) {
+      //     focusTimer = setTimeout(() => {
+      //       setItemSelected(selectedIndex.value)
+      //       setItemFocused(selectedIndex.value)
+      //     }, 1000)
+      //   } else {
+      //     focusTimer = setTimeout(() => {
+      //       setItemSelected(selectedIndex.value)
+      //       setItemFocused(selectedIndex.value)
+      //     }, 1000)
+      //   }
+      // } else {
+      //   if (focusTimer) {
+      //     clearTimeout(focusTimer)
+      //   }
+      // }
     }
 
     function onFocus(e) {
@@ -135,7 +130,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---选集---setItemSelected------>>>>', position)
       }
-      selectedIndex = position
+      selectedIndex.value = position
       mediaSeriesListRef.value?.setSelected(position)
     }
 
@@ -187,7 +182,8 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      setItemSelected
+      setItemSelected,
+      selectedIndex
     }
   },
 });
