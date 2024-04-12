@@ -490,7 +490,7 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.item_cell_list_front{background-color: rgba(255,255,255,0);position: absolute;right: 0;top: 0;}
+.item_cell_list_front{background-color: rgba(255,255,255,0.1);position: absolute;right: 0;top: 0;}
 .iclf_item{
   height: 96px;
   background-color: transparent;

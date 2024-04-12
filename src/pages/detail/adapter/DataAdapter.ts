@@ -29,7 +29,7 @@ export function buildSectionList(m: IMedia): Array<QTWaterfallSection> {
   let sectionList: Array<QTWaterfallSection> = [
     buildHeaderSection(),
     buildAlbumDetailSection(m),
-    buildRecommendationSection(),
+    buildRecommendationSection(m),
     buildEndSection()
   ]
   return sectionList
@@ -105,7 +105,15 @@ export function buildAlbumDetailSection(m: IMedia): QTWaterfallSection {
 }
 
 //--------------------------------------------------------------------------
-export function buildRecommendationSection(): QTWaterfallSection {
+export function buildRecommendationSection(media: IMedia): QTWaterfallSection {
+
+  let upOffset = 0
+  let downOffset = 600
+  if (media.itemList.enable) {
+    upOffset = 0
+    downOffset = 1000
+  }
+
   let section: QTWaterfallSection = {
     _id: '5',
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
@@ -126,8 +134,8 @@ export function buildRecommendationSection(): QTWaterfallSection {
     //这里控制一下列表的滚动
     scrollOverride : {
       //在这个版块从下键移动时，下移1000
-      down: 500,
-      up: 0
+      down: downOffset,
+      up: upOffset
     }
   }
   return section

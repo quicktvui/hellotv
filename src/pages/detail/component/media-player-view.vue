@@ -95,21 +95,18 @@
           <media-collapse-order
             ref="mediaCollapseOrderRef"
             :blockFocusDirections="['left','right', 'down','up']"
-
             name="mediaCollapseOrder"
             @onCollapseItemFocused="onCollapseItemOrderFocused"
             @onCollapseItemClicked="onCollapseItemOrderClicked"/>
           <media-collapse-speed
             ref="mediaCollapseSpeedRef"
             :blockFocusDirections="['left','right', 'down','up']"
-
             name="mediaCollapseSpeed"
             @onCollapseItemFocused="onCollapseItemSpeedFocused"
             @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
           <media-collapse-definition
             ref="mediaCollapseDefinitionRef"
-            :blockFocusDirections="['left','right', 'down','up']"
-
+            :blockFocusDirections="['left','right','up']"
             name="mediaCollapseDefinition"
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
@@ -495,7 +492,7 @@ export default defineComponent({
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            mediaCollapseRef.value?.collapse()
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
@@ -509,17 +506,16 @@ export default defineComponent({
             initCollapseDefinitionMenu()
             initCollapseListMenu()
           }
+          mediaCollapseRef.value?.expandItem(collapseItemIndex)
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
-
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
-
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            mediaCollapseRef.value?.collapse()
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
