@@ -5,6 +5,7 @@
        @click="onClick"
        @focus="onFocus"
        name="placeholder"
+       :autofocus='autofocus'
        :focusable="true"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
@@ -62,8 +63,6 @@ export default defineComponent({
     function initMedia(m: IMedia) {
       media = m
       mediaImg.value = m.coverH
-
-      requestFocus()
     }
 
     function requestFocus(): void {
@@ -76,7 +75,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---Placeholder---setAutofocus------>>>>', enable)
       }
-        autofocus.value = enable
+      autofocus.value = enable
     }
 
     function showMediaInfo(value: boolean) {

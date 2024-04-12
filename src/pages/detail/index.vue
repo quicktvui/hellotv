@@ -115,7 +115,7 @@ export default defineComponent({
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
       waterfallRef.value?.scrollToTop()
-      albumDetailRef.value?.setAutofocus(false)
+      albumDetailRef.value?.setAutofocus(true)
     }
 
     function initEventBus() {
@@ -269,6 +269,7 @@ export default defineComponent({
 
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
+      albumDetailRef.value?.setAutofocus(false)
       mediaPlayerViewRef.value?.setFullWindow()
       isFullButtonClick = true
     }
@@ -356,7 +357,6 @@ export default defineComponent({
           isFullButtonClick = false
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
-          // albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
             if (isFullButtonClick) {
@@ -365,17 +365,18 @@ export default defineComponent({
               }, 300)
               isFullButtonClick = false
             } else {
-              setTimeout(() => {
-                albumDetailRef.value?.requestPlayerPlaceholderFocus()
-              }, 300)
+              albumDetailRef.value?.setAutofocus(true)
             }
             return
           }
 
           if (media && !media.itemList.enable) {
+            albumDetailRef.value?.setAutofocus(false)
             setTimeout(() => {
               albumDetailRef.value?.requestPlayerPlaceholderFocus()
             }, 200)
+          }else{
+            albumDetailRef.value?.setAutofocus(false)
           }
           isFullButtonClick = false
           break
