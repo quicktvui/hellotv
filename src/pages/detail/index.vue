@@ -371,10 +371,10 @@ export default defineComponent({
           }
 
           if (media && !media.itemList.enable) {
-            albumDetailRef.value?.setAutofocus(true)
-            // setTimeout(() => {
-            //   albumDetailRef.value?.requestPlayerPlaceholderFocus()
-            // }, 200)
+            albumDetailRef.value?.setAutofocus(false)
+            setTimeout(() => {
+              albumDetailRef.value?.requestPlayerPlaceholderFocus()
+            }, 200)
           }else{
             albumDetailRef.value?.setAutofocus(false)
           }
