@@ -64,7 +64,7 @@ export function createESPlayerMediaSourceListInterceptor(dataSource: IMediaDataS
       dataSource.getMediaItemUrl(mediaItem.id + "")
         .then((mediaUrlList) => {
           let mediaSourceList: ESMediaSourceList = {
-            index: 0,
+            index: -1,
             list: buildMediaSourceList(mediaUrlList)
           }
           let result: ESPlayerInterceptResult = {
