@@ -19,6 +19,8 @@
         :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
         tabNavBarClass="qt-tabs-waterfall-tab-css"
         tabPageClass="qt-tabs-waterfall-css"
+        :horizontalFadingEdgeEnabled="true"
+        :fadingEdgeLength="400"
         :triggerTask="tabsTriggerTask"
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"

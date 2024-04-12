@@ -13,9 +13,7 @@
           :blockFocusDirections="['up', 'down','left']"
           :nextFocusName="{right:'search_center_view'}"
           @inputChange="onInputChange"
-          @scroll-to-index="onNeedScrollTo"
-          :result-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':curItemSid):curItemSid"
-          :default-item-sid="isShowCenterSearch?(selectKeyword?'search_center_view_list':defaultItemSid):defaultItemSid"/>
+          @scroll-to-index="onNeedScrollTo"/>
         <!-- 搜索内容 -->
         <search-center
           v-if="isShowCenterSearch"
@@ -23,33 +21,36 @@
           :descendantFocusability="loading ? 2 : 1"
           ref="search_center"
           name="search_center_view"
-          :blockFocusDirections="['up', 'down']"
+          :blockFocusDirections="['up', 'down',showResultLoading?'right':'']"
           :nextFocusName="{right:'search_result_view'}"
           @keyword-select="onKeywordSelect"
           @close-loading="closeLoading"
+          @start-loading="startLoadResultLoading"
           :search-letter="searchLetter"
-          @scroll-to-index="onNeedScrollTo"
-          :result-item-sid="curItemSid"
-          :default-item-sid="defaultItemSid"/>
+          @scroll-to-index="onNeedScrollTo"/>
         <!-- 搜索结果 -->
         <search-result
-          v-show="!loading"
+          :visible="!loading && !showResultLoading"
           ref="search_result"
           name="search_result_view"
           :blockFocusDirections="['up', 'down']"
           :keyword="selectKeyword"
-          :is-show-result-loading="showResultLoading"
           :show-is-full-screen="scrollState === 1"
           :nextFocusName="{left:'search_center_view',}"
           @scroll-to-index="onNeedScrollTo"
-          @curItemSid="setItemSid"
-          @defaultTabItemSid="setDefaultTabItemSid"
-          @close-loading="closeLoading"/>
+          @close-loading="closeLoading"
+          @close-self-loading="closeResultLoading"/>
       </qt-view>
     </scroll-view>
     <qt-view v-if="loading" :style="{left:loadingLeft+'px',width:loadingWidth+'px'}" class="search_start_loading" :focusable="false"
              :gradientBackground="{ colors: ['#ff252930','#FF2F3541'] }">
       <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px;width:100px" :focusable="false"/>
+    </qt-view>
+    <!-- 页面loading-->
+    <qt-view v-if="showResultLoading" :focusable="false"
+             class="search_result_loading" :style="{width:rightLoadingWidth}"
+             :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
+      <qt-loading-view style="width: 100px;height: 100px;" />
     </qt-view>
   </qt-view>
 </template>
@@ -75,6 +76,7 @@ export default defineComponent({
   },
   setup(props, context) {
     const isShowCenterSearch = computed(()=>SearchConfig.isShowCenterSearch)
+    const rightLoadingWidth = computed(() => SearchConfig.rightLoading)
     const rootWidth = computed(()=> SearchConfig.isShowCenterSearch ? 3073 : 2554)
     const loadingWidth = computed(()=>(1920-SearchConfig.leftWidth))
     const loadingLeft = computed(()=>SearchConfig.leftWidth)
@@ -84,8 +86,6 @@ export default defineComponent({
     const search_keyboard = ref()
     const search_center = ref()
     const search_result = ref()
-    const curItemSid = ref("")
-    const defaultItemSid = ref("")
     let selectKeyword = ref('')
     let searchLetter = ref('')
     let scrollState = ref(0)
@@ -116,12 +116,15 @@ export default defineComponent({
       selectKeyWordTimer && clearTimeout(selectKeyWordTimer)
     }
 
-    const onKeywordSelect = (keyword: string,isShowResultLoading:boolean) => {
+    const startLoadResultLoading = (isShow:boolean)=>{
+      showResultLoading.value = isShow
+    }
+
+    const onKeywordSelect = (keyword: string) => {
       if (selectKeyword.value === keyword) {
         showResultLoading.value = false
         return
       }
-      showResultLoading.value = isShowResultLoading
       selectKeyWordTimer && clearTimeout(selectKeyWordTimer)
       selectKeyWordTimer = setTimeout(()=>{
         selectKeyword.value = keyword;
@@ -146,12 +149,8 @@ export default defineComponent({
     const closeLoading = ()=> {
       setTimeout(()=>{loading.value = false},500)
     }
-
-    const setItemSid = (sid) =>{
-      curItemSid.value = sid
-    }
-    const setDefaultTabItemSid = (defaultSid)=>{
-      defaultItemSid.value = defaultSid
+    const closeResultLoading = ()=> {
+      showResultLoading.value = false
     }
 
     const onNeedScrollTo = (index: number,delay:number) => {
@@ -180,12 +179,13 @@ export default defineComponent({
       }
     }
     return {
-      search_root,search_scroll_view,scrollState,curItemSid,defaultItemSid,
+      search_root,search_scroll_view,scrollState,
       search_keyboard,onInputChange,
-      search_center,onKeywordSelect,
-      search_result,selectKeyword,searchLetter,isShowCenterSearch,rootWidth,loading,loadingWidth,loadingLeft,showResultLoading,
-      onNeedScrollTo,setItemSid,setDefaultTabItemSid,onKeyDown,
-      onESCreate, onESStart, onESResume, onESStop, onESDestroy, onBackPressed,closeLoading
+      search_center,onKeywordSelect,startLoadResultLoading,
+      search_result,selectKeyword,searchLetter,isShowCenterSearch,rootWidth,loading,loadingWidth,
+      loadingLeft,showResultLoading,rightLoadingWidth,
+      onNeedScrollTo,onKeyDown,
+      onESCreate, onESStart, onESResume, onESStop, onESDestroy, onBackPressed,closeLoading,closeResultLoading
     }
   }
 })

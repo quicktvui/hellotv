@@ -15,7 +15,6 @@
     </qt-view>
 
     <qt-tabs ref="tabRef" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
-             :visible="!isLoading"
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
              :focusMemory="true"
@@ -26,7 +25,6 @@
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
-             tabNavBarSid="qt_tab_nav_bar"
              @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
              @onTabMoveToBottomStart="onTabMoveToBottomStart"
              @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
@@ -43,15 +41,13 @@
                  :focusable="true"
                  eventFocus
                  autoWidth
-                 sid="${sid}"
-                 name="waterfall_nav_item_text"
                  ref="waterfall_nav_item_text">
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false"
                    class="waterfall_nav_item_text" :duplicateParentState="true" text="${text}" />
         </qt-view>
       </template>
       <template v-slot:waterfall-item>
-        <qt-poster :type="20" sid="${sid}"/>
+        <qt-poster :type="20" />
       </template>
     </qt-tabs>
 
@@ -62,12 +58,6 @@
                :fontSize="30" />
     </qt-view>
 
-    <!-- 页面loading-->
-    <qt-view v-if="isLoading && isShowResultLoading" :focusable="false"
-             class="search_result_loading"
-             :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
-      <qt-loading-view style="width: 100px;height: 100px;margin-left: -1200px;" />
-    </qt-view>
   </qt-view>
 </template>
 
@@ -92,13 +82,9 @@ export default defineComponent({
     showIsFullScreen: {
       type: Boolean,
       default: false
-    },
-    isShowResultLoading: {
-      type: Boolean,
-      default: true
     }
   },
-  emits: ["scroll-to-index","curItemSid","defaultTabItemSid",'close-loading'],
+  emits: ["scroll-to-index",'close-loading',"close-self-loading"],
   setup(props, context) {
     const isShowCenterSearch = computed(()=>SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
@@ -110,7 +96,6 @@ export default defineComponent({
     let showKeyword = ref("")
     let isShowTopTip = ref(true)
     let isHasData = ref(false)
-    let isLoading = ref(false)
     let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
@@ -162,56 +147,52 @@ export default defineComponent({
         recommendTitle.value = "大家都在搜"
       }
       if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
-      isLoading.value = true
       descendantFocusability.value = 2
       delaySearchByKeyword = setTimeout(() => {
         initTab(isRecommendRequest)
         if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
         closeLoadingTimer = setTimeout(() => {
-          isLoading.value = false
           descendantFocusability.value = 1
+          context.emit("close-loading")
+          context.emit("close-self-loading")
         }, 1000)
       }, 600)
-      context.emit("close-loading")
+
     })
 
     // qt-tabs 填充数据 回调
-    const onTabPageLoadData = async (pageIndex: number, pageNo: number, useDiff: boolean) => {
+    const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
       // 搜索数据
-      if (tabList && pageIndex >= 0 && pageIndex < tabList.length){
-        const tabItem = tabList[pageIndex]
-        if (tabItem._id !== null && tabItem._id  !== undefined){
-          let tabPage
-          if (isRecommendRequest){
-            tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
-          }else{
-            tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
-          }
-          const length = tabPage.data[0].itemList.length
-          if (length > 0) {
-            if (pageNo <= 0) {
-              tabRef.value?.setPageData(pageIndex, tabPage)
-            }else {
-              tabRef.value?.addPageData(pageIndex, tabPage, 0)
+     setTimeout(async ()=>{
+        if (tabList && pageIndex >= 0 && pageIndex < tabList.length){
+          const tabItem = tabList[pageIndex]
+          if (tabItem._id !== null && tabItem._id  !== undefined){
+            let tabPage
+            if (isRecommendRequest){
+              tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
+            }else{
+              tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
             }
-          } else { //停止分页
-            setTimeout(()=>{
+            const length = tabPage.data[0].itemList.length
+            if (length > 0) {
+              if (pageNo <= 0) {
+                tabRef.value?.setPageData(pageIndex, tabPage)
+              }else {
+                tabRef.value?.addPageData(pageIndex, tabPage, 0)
+              }
+            } else { //停止分页
               // tabRef.value?.addPageData(pageIndex, buildTabPageEndData(), 0)
               tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-            },2000)
-
+            }
           }
         }
-      }
+      },800)
     }
 
     const onTabClick = () => {
     }
     const onTabPageChanged = (pageIndex:number, data:any) => {
-      if (tabList && pageIndex == 0 && pageIndex < tabList.length && tabList.length > 1) {
-        context.emit("curItemSid","qt_tab_nav_bar")
-        context.emit("defaultTabItemSid","qt_tab_nav_bar")
-      }
+
     }
     const onTabMoveToTopStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶开始
       isShowTopTip.value = false
@@ -235,20 +216,12 @@ export default defineComponent({
       launch.launch(mItem)
     }
     const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
-      if (itemIndex % 6 === 0 && isFocused){
-        //获取当前的 sid
-        context.emit("curItemSid",item.sid)
-      }
+
     }
 
     const onTabPageScroll = () => {
     }
     const onTabPageSectionAttached = (pageIndex: number, sectionList:any) => {
-      if (pageIndex === 0 && tabList.length === 1){
-        const defaultSid = sectionList[0]?.itemList[0]?.sid ?? ""
-        // console.log("XRG==onTabPageSectionAttached=","单 TAB 获取到的 sid == ",defaultSid)
-        context.emit("defaultTabItemSid",defaultSid)
-      }
     }
     const childFocus = (e) => {
       if (e.child) {
@@ -263,7 +236,6 @@ export default defineComponent({
       ic_search_left_arrow,
       ic_data_empty,
       isHasData,
-      isLoading,
       isShowTopTip,
       tabRef,
       tabContentBlockFocusDirections,

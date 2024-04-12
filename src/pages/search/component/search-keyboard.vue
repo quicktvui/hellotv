@@ -28,7 +28,7 @@
     </qt-view>
 
     <!--键盘字母列表-->
-    <qt-grid-view class="search_keyboard_list" ref="grid_view" name="grid_view" :nextFocusRightSID="targetSid"
+    <qt-grid-view class="search_keyboard_list" ref="grid_view" name="grid_view"
                   :clipChildren="false" :autofocusPosition="14"
                   @item-click="keyboardItemClick" :spanCount="6">
       <qt-view :type="1" :focusable="true" :focusScale="1.1"
@@ -57,16 +57,6 @@ export default defineComponent({
     SearchBtn
   },
   emits: ["inputChange", "scroll-to-index"],
-  props: {
-    resultItemSid:{
-      type:String,
-      default:""
-    },
-    defaultItemSid:{
-      type:String,
-      default:""
-    }
-  },
   setup(props, context) {
     const keyboardWidth = computed(() => SearchConfig.leftWidth)
     const search_keyboard = ref()
@@ -77,7 +67,6 @@ export default defineComponent({
     const ic_search_input_delete = require("../../../assets/search/ic_search_input_delete.png").default
     const ic_search_input_delete_focus = require("../../../assets/search/ic_search_input_delete_focus.png").default
     const grid_view = ref<QTIGridView>()
-    let targetSid = ref()
     let listDataRec: Array<QTGridViewItem> = []
     let keyboardItems: Array<QTGridViewItem> = [
       { text: "A", type: 1 }, { text: "B", type: 1 }, { text: "C", type: 1 }, { text: "D", type: 1 },
@@ -105,8 +94,6 @@ export default defineComponent({
     const childFocus = (e) => {
       if (e.child) {
         context.emit("scroll-to-index", 0, 100)
-        if (targetSid.value === props.defaultItemSid) return
-        targetSid.value = props.defaultItemSid
       }
     }
     const deleteBtnClick = () => {
@@ -126,12 +113,6 @@ export default defineComponent({
     }
     const requestDefaultFocus = () => grid_view.value?.setItemFocused(14)
 
-    watch (()=>props.resultItemSid, (newVal,oldVal)=>{
-      targetSid.value = newVal
-    })
-    watch(()=>props.defaultItemSid,(newVal,oldVal)=>{
-      targetSid.value = newVal
-    })
     return {
       search_keyboard,
       inputText,
@@ -147,7 +128,6 @@ export default defineComponent({
       deleteBtnClick,
       keyboardItemClick,
       keyboardWidth,
-      targetSid
     }
   }
 })
