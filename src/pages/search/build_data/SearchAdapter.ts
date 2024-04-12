@@ -8,7 +8,6 @@ import {
 } from "@quicktvui/quicktvui3"
 import { SearchResultItem } from "./impl/SearchResultItem"
 import SearchConfig from "./SearchConfig"
-import { buildEndSection } from "../../home/build_data/tab_content/page"
 //板块标题高度
 const plateTitleHeight = 65
 //有板块标题距离 top的高度
@@ -42,7 +41,7 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
     if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize){
-      let endSection:QTWaterfallSection = buildEndSection('5');
+      let endSection:QTWaterfallSection = buildSearchEndSection('5');
       tabPage =  {
         useDiff: false,
         data: [section,endSection]
@@ -149,4 +148,21 @@ export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array
     data.push(poster)
   })
   return data
+}
+
+function buildSearchEndSection(sectionId: string): QTWaterfallSection {
+  let section: QTWaterfallSection = {
+    _id: sectionId,
+    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
+    title: '已经到底啦，按【返回键】回到顶部',
+    style: {
+      width: 1920,
+      height: 100,
+    },
+    titleStyle:{
+      fontSize:30
+    },
+    itemList: []
+  }
+  return section
 }
