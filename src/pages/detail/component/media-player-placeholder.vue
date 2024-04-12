@@ -7,6 +7,7 @@
        name="placeholder"
        :autofocus='autofocus'
        :focusable="true"
+       :blockFocusDirections="['left']"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
     <img class="media-player-placeholder-img-css"

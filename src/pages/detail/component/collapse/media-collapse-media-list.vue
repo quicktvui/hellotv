@@ -99,6 +99,10 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
 
+      setTimeout(() => {
+        setItemSelected(selectedIndex.value)
+      }, 300)
+
       // if (value) {
       //   if (!initialized) {
       //     focusTimer = setTimeout(() => {
