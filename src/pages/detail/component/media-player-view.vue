@@ -927,6 +927,7 @@ export default defineComponent({
         return true
       }
       if (!isPlayerPlaying.value) {
+        isPlayerPlaying.value = true
         player.start(0)
         return true
       }
