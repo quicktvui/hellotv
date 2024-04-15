@@ -15,7 +15,7 @@
                v-if="playerInit"
                :focusable="false"
                :fillParent="true"
-        class="playerBox" :clipChildren="false" @click="onClickCellItem">
+        class="playerBox" :clipChildren="false" >
         <es-player-manager :clipChildren="false"
           ref="playerManagerRef"
           class="player-manager"
@@ -37,7 +37,7 @@
         </qt-view> -->
       </qt-view>
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
-               :enableFocusBorder="true" >
+               :enableFocusBorder="true" @click="onClickCellItem">
         <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
                            :focusable="false"
                            :src="coverSrc"
@@ -71,6 +71,7 @@
 </template>
 
 <script lang="ts">
+import { useESRouter } from "@extscreen/es3-router"
 import { ref, defineComponent, markRaw,nextTick } from "vue";
 import { QTIListView,QTListViewItem } from "@quicktvui/quicktvui3";
 import {ESMediaSource, ESMediaSourceList,ESPlayerPosition,ESPlayerPlayMode,useESPlayerDecodeManager,ESPlayerDecode} from "@extscreen/es3-player";
@@ -101,6 +102,7 @@ export default defineComponent({
   setup(props,ctx) {
     const launch = useLaunch()
     const decode = useESPlayerDecodeManager()
+    const router = useESRouter()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(1920)
@@ -395,10 +397,17 @@ export default defineComponent({
     const isBGPlay = ()=>{
       return bgPlayerType.value == CoveredPlayerType.TYPE_BG
     }
-    const onClickCellItem = () => {
-
+    const onClickCellItem = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
     }
     const onItemClick = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
     }
     const onItemFocus = (e) => {
       onItemFocusTimer && clearTimeout(onItemFocusTimer)
