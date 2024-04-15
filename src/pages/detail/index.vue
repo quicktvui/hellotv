@@ -12,6 +12,7 @@
       class="detail-waterfall-css">
       <template v-slot:section>
         <header-section
+          ref="headerSectionRef"
           :type="1"
           @onSearchButtonFocused="onSearchButtonFocused" />
       </template>
@@ -56,6 +57,7 @@ import {buildRecommendationItemList, buildSectionList, buildWaterfall} from './a
 import {useESRouter} from "@extscreen/es3-router";
 import {ESPlayerWindowType} from "@extscreen/es3-player";
 import {IAlbumDetail} from "./section/IAlbumDetail";
+import {IHeader} from "./section/IHeader";
 import {QTMediaSeries} from "@quicktvui/quicktvui3/dist/src/series/QTMediaSeries";
 import {ESMediaItem} from "@extscreen/es3-player-manager";
 import {IMediaAuthorization} from "../../api/media/IMediaAuthorization";
@@ -97,6 +99,7 @@ export default defineComponent({
     //--------------------------------------------------------------------
     const waterfallRef = ref<QTIWaterfall>()
     const albumDetailRef = ref<IAlbumDetail>()
+    const headerSectionRef = ref<IHeader>()
     let waterfallScrollY = 0
     let lastWindowType: ESPlayerWindowType
 
@@ -473,6 +476,7 @@ export default defineComponent({
       }
       if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
         isKeyUpLongClick = true
+        headerSectionRef.value?.setAutofocus(true)
       } else {
         isKeyUpLongClick = false
       }
@@ -484,6 +488,7 @@ export default defineComponent({
         return true
       }
       isKeyUpLongClick = false
+      headerSectionRef.value?.setAutofocus(false)
       return true
     }
 
@@ -513,6 +518,7 @@ export default defineComponent({
       mediaPlayerViewRef,
       waterfallRef,
       albumDetailRef,
+      headerSectionRef,
       mediaAuthorizationRef,
 
       onESCreate,

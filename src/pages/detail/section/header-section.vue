@@ -3,6 +3,7 @@
     <qt-row class="header-root-css">
       <qt-row class="header-left-button-css">
         <navigation-button
+          ref="searchButtonRef"
           class="header-home-button-css"
           :focus-icon="searchFocused"
           :icon="searchNormal"
@@ -34,6 +35,8 @@ import loginNormal from "../../../assets/ic_header_login_normal.png";
 
 import logo from "../../../assets/ic_right_logo.png";
 import {useESRouter} from "@extscreen/es3-router";
+import { IMediaNavigationButton } from "../component/IMediaNavigationButton"
+import {ref} from "vue";
 
 export default defineComponent({
   name: "header-section",
@@ -43,6 +46,7 @@ export default defineComponent({
   setup(props, context) {
 
     const router = useESRouter()
+    const searchButtonRef = ref<IMediaNavigationButton>()
 
     function onSearchButtonClicked() {
       router.push("search")
@@ -52,7 +56,12 @@ export default defineComponent({
       context.emit("onSearchButtonFocused", isFocused)
     }
 
+    function setAutofocus(value: boolean): void {
+      searchButtonRef.value?.setAutofocus(value)
+    }
+
     return {
+      searchButtonRef,
       homeFocused,
       homeNormal,
       logo,
@@ -61,7 +70,8 @@ export default defineComponent({
       loginFocused,
       loginNormal,
       onSearchButtonClicked,
-      onSearchButtonFocused
+      onSearchButtonFocused,
+      setAutofocus
     }
   },
 });
