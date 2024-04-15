@@ -44,7 +44,7 @@
 <script lang="ts">
 
 import {defineComponent,} from '@vue/runtime-core';
-import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast} from "@extscreen/es3-core";
+import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast } from "@extscreen/es3-core"
 import {nextTick, ref, provide} from "vue";
 import {IMedia} from "../../api/media/IMedia";
 import {QTIWaterfall, QTWaterfallItem} from "@quicktvui/quicktvui3";
@@ -101,6 +101,8 @@ export default defineComponent({
     let lastWindowType: ESPlayerWindowType
 
     provide(mediaAuthorizationKey, mediaAuthorizationRef)
+
+    let isKeyUpLongClick = false
 
     const onESCreate = (params) => {
       mediaId = params.mediaId
@@ -239,6 +241,14 @@ export default defineComponent({
           " y:" + y +
           " state:" + state
       )
+
+      if(isKeyUpLongClick){
+        log.d(TAG, '---滚动----onScrollStateChanged--屏蔽长按------>>>>' +
+          " isKeyUpLongClick:" + isKeyUpLongClick
+        )
+        return
+      }
+
       if (state == 0 && y < 5) {
         if (mediaPlayerViewRef.value?.getWindowType() ==
           ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
@@ -256,6 +266,14 @@ export default defineComponent({
         " scrollY:" + scrollY
       )
       waterfallScrollY = scrollY
+
+      if(isKeyUpLongClick){
+        log.d(TAG, '---滚动----onScroll--屏蔽长按------>>>>' +
+          " isKeyUpLongClick:" + isKeyUpLongClick
+        )
+        return
+      }
+
       if (scrollY > 0) {
         if (mediaPlayerViewRef.value?.getWindowType() ==
           ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
@@ -401,7 +419,9 @@ export default defineComponent({
             albumDetailRef.value?.setAutofocus(false)
             detailFocusTimer = setTimeout(() => {
               cancelDetailRequestFocusTimer()
-              albumDetailRef.value?.requestPlayerPlaceholderFocus()
+              if (!isKeyUpLongClick) {
+                albumDetailRef.value?.requestPlayerPlaceholderFocus()
+              }
             }, 200)
           }else{
             albumDetailRef.value?.setAutofocus(false)
@@ -451,6 +471,11 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyDown(keyEvent)) {
         return true
       }
+      if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
+        isKeyUpLongClick = true
+      } else {
+        isKeyUpLongClick = false
+      }
       return true
     }
 
@@ -458,6 +483,7 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyUp(keyEvent)) {
         return true
       }
+      isKeyUpLongClick = false
       return true
     }
 
