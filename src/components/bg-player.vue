@@ -4,12 +4,13 @@
       :focusable="false" :clipChildren="false"
       @onChildChanged="onChildChanged"
       ref="bg_player_replace_child"
+      :replaceOnVisibilityChanged='false'
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false"
-             name='home_player'
+       name='home_player'
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
