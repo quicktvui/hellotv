@@ -11,7 +11,6 @@
         :display="isCollapseExpand"
         class="qt-collapse-media-series-root-css"
         :clipChildren="false"
-        :initFocusPosition="selectedIndex"
         @load-data="onLoadData"
         @item-click="onItemClicked"
         @item-focused="onItemFocused"
@@ -61,6 +60,9 @@ export default defineComponent({
 
     const selectedIndex = ref<number>(0)
 
+    let focusTimer
+    let initialized = false
+
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -99,27 +101,28 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
 
-      setTimeout(() => {
-        setItemSelected(selectedIndex.value)
-      }, 300)
+      // setTimeout(() => {
+      //   setItemSelected(selectedIndex.value)
+      // }, 300)
 
-      // if (value) {
-      //   if (!initialized) {
-      //     focusTimer = setTimeout(() => {
-      //       setItemSelected(selectedIndex.value)
-      //       setItemFocused(selectedIndex.value)
-      //     }, 1000)
-      //   } else {
-      //     focusTimer = setTimeout(() => {
-      //       setItemSelected(selectedIndex.value)
-      //       setItemFocused(selectedIndex.value)
-      //     }, 1000)
-      //   }
-      // } else {
-      //   if (focusTimer) {
-      //     clearTimeout(focusTimer)
-      //   }
-      // }
+      if (value) {
+        if (!initialized) {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 500)
+        } else {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 200)
+        }
+        initialized = true
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
+      }
     }
 
     function onFocus(e) {
