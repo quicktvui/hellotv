@@ -10,4 +10,6 @@ export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
   setItemFocused(position: number): void
 
   setItemSelected(position: number): void
+
+  release(): void
 }

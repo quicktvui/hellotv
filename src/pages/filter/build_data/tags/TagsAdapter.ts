@@ -11,7 +11,7 @@ export const _filter_text_height:number = 60
 export const _filter_line_top_gap:number = 30
 export const _filter_line_bottom_gap:number = 30
 export const _filter_tag_gap:number = 12
-export const _filter_record_height:number = 100
+export const _filter_record_height:number = 60
 
 export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
  const tagList:Array<QTListViewItem> = []
@@ -39,7 +39,8 @@ export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
 export function buildTagContentEnd():QTGridViewItem{
   const endList: QTGridViewItem = {
     type:1003,
-    decoration:{top:30,bottom:30}
+    decoration:{top:30,bottom:10},
+    text:"已经到底啦，按【返回键】回到顶部"
   }
   return endList
 }

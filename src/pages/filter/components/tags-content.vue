@@ -13,11 +13,13 @@
                         name="screen_right_filters"
                         class="screen-right-filter-root" :style="{height:filterHeight}"
                         v-if="filterVisible"
+                        :autofocusPosition="isFirstLoad?0:-1"
                         :triggerTask="switchData(hideSelectTask)"
                         :enableSelectOnFocus="false">
             <qt-list-view ref="screen_right_filter_line"
                           name="screen_right_filter_line"
                           class="screen-right-filter-line"
+                          cachePoolName="filter_line"
                           nextFocusLeftSID="screen_left_tags"
                           flexStyle="${filterLineStyle}" :type="1" list="${list}"
                           :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
@@ -41,11 +43,12 @@
         </qt-view>
 
         <!-- 筛选结果-->
-        <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
+        <qt-grid-view class="screen-right-content" v-show='!filterClickLoading' :autofocusPosition="isFirstLoad?(filterVisible?-1:0):-1"
                       :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
                       :triggerTask="switchData(filterTriggerTask)"
                       ref="screen_right_content"
                       name="screen_right_content"
+                      :cachePool="{name:'filter_content',size:{1:40,}}"
                       :blockFocusDirections="['right','down']"
                       :enablePlaceholder="true"
                       :spanCount="5" :openPage="true" :preloadNo="4"
@@ -59,11 +62,11 @@
                       @scroll-state-changed="onScrollStateChanged"
                       @item-focused="onItemFocused"
                       @item-click="onItemClick"
-                      :padding="'50,30,50,0'">
+                      :padding="'50,24,50,0'">
           <tags-content-item :type="1"/>
           <!-- 底部提示-->
           <template #footer>
-            <p class="screen-right-content-no-more" :focusable="false" :type="1003">已经到底啦，按【返回键】回到顶部</p>
+            <qt-text class="screen-right-content-no-more" :focusable="false" :type="1003" text="${text}" :fontSize="30" :lines="1" gravity="top|center"/>
           </template>
           <template #loading>
             <!--分页加载 Loading-->
@@ -189,6 +192,7 @@ export default defineComponent({
     let scrollY = ref(0)
     let filterTriggerTask = ref<Array<any>>([])
     let hideSelectTask = ref<Array<any>>([])
+    let isFirstLoad = ref(true)
 
     function init(){
       hideSelectTask.value = [
@@ -413,6 +417,9 @@ export default defineComponent({
               screenRightContentData.push(...screenContentList)
             }
           }
+          if(isFirstLoad.value){
+            setTimeout(()=>{isFirstLoad.value = false},500)
+          }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
             if (screenRightContentData && screenRightContentData.length > 0) {
@@ -476,6 +483,7 @@ export default defineComponent({
       screenItemContentFocus,
       filterTriggerTask,
       screenPageSize,
+      isFirstLoad
     }
   }
 })

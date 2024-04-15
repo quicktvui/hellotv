@@ -4,17 +4,19 @@
       :focusable="false" :clipChildren="false"
       @onChildChanged="onChildChanged"
       ref="bg_player_replace_child"
+      :replaceOnVisibilityChanged='false'
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
     </replace-child>
-    <qt-view sid="bg-player" class="bg_player_box" :opacity="bgPlayerOpacity"
+    <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false"
+       name='home_player'
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
                v-if="playerInit"
                :focusable="false"
                :fillParent="true"
-        class="playerBox" :clipChildren="false" @click="onClickCellItem">
+        class="playerBox" :clipChildren="false" >
         <es-player-manager :clipChildren="false"
           ref="playerManagerRef"
           class="player-manager"
@@ -36,9 +38,9 @@
         </qt-view> -->
       </qt-view>
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
-               :enableFocusBorder="true" >
+               :enableFocusBorder="true" @click="onClickCellItem">
         <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
-                           :focusable="false" :opacity="coverOpacity"
+                           :focusable="false"
                            :src="coverSrc"
                            :width="playerWidth"
                            :height="playerHeight"
@@ -57,16 +59,11 @@
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
             :style="{width: playerListWidth + 'px'}"
             :clipChildren="true" eventClick eventFocus :focusScale="1">
-            <qt-view :duplicateParentState="true" class="iclf_item_playing" :clipChildren="true"
-                     :bringFocusChildToFront="true"
-              :style="{width: playerListWidth + 'px'}" >
-              <qt-view class="playMark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+              <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
+                :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,16,0]"/>
+              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
                 <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
               </qt-view>
-              <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
-                :duplicateParentState="true"
-                class="iclf_item_text"  text="${title}" :paddingRect="[0,0,0,0]"/>
-            </qt-view>
           </qt-view>
         </qt-list-view>
       </qt-view>
@@ -75,6 +72,7 @@
 </template>
 
 <script lang="ts">
+import { useESRouter } from "@extscreen/es3-router"
 import { ref, defineComponent, markRaw,nextTick } from "vue";
 import { QTIListView,QTListViewItem } from "@quicktvui/quicktvui3";
 import {ESMediaSource, ESMediaSourceList,ESPlayerPosition,ESPlayerPlayMode,useESPlayerDecodeManager,ESPlayerDecode} from "@extscreen/es3-player";
@@ -105,11 +103,12 @@ export default defineComponent({
   setup(props,ctx) {
     const launch = useLaunch()
     const decode = useESPlayerDecodeManager()
+    const router = useESRouter()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(1920)
     let playerHeight = ref<number>(1080)
-    let playerListWidth = ref<number>(0)
+    let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
     let bgPlayerOpacity = ref(0)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
@@ -169,7 +168,7 @@ export default defineComponent({
                             playerListData:any, playIndex:number)=>{
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowTimer)
-      clearTimeout(delayShowPlayerTimer)
+      // clearTimeout(delayShowPlayerTimer)
       bgPlayerType.value = playerType
       log.i(`BG-PLAYER`,`doChangeCell cellReplaceSID:${cellReplaceSID},playerType:${playerType},
       boxWidth:${boxWidth},boxHeight:${boxHeight},playerWidth:${playerWidth},playerHeight:${playerHeight},playIndex:${playIndex},playerListDataSize:${playerListData == null ? 0 : playerListData.length}`)
@@ -191,16 +190,16 @@ export default defineComponent({
         initComponent(playerListData,playerType)
         setSize(boxWidth,boxHeight,playerWidth,playerHeight)
         playAtIndex(playIndex)
-        delayShowPlayer(300)
+        // delayShowPlayer(300)
       },delayToPlay)
     }
 
     const keepPlayerInvisible = (stopIfNeed : boolean = true)=>{
-      log.e('BG-PLAYER',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
-      bgPlayerOpacity.value = 0
-      clearTimeout(delayShowPlayerTimer)
+      log.e('DebugReplaceChild',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
+      // bgPlayerOpacity.value = 0
+      // clearTimeout(delayShowPlayerTimer)
       if(stopIfNeed){
-        if(isAnyPlaying){
+        if(isAnyPlaying.value){
           isAnyPlaying.value = false
           stop()
         }
@@ -216,10 +215,12 @@ export default defineComponent({
     const delayShowPlayer = (delay : number = 300)=>{
       log.e('BG-PLAYER',`+++++delayShowPlayer delay:${delay}`)
       bgPlayerOpacity.value = 0
+        bg_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[0])
       clearTimeout(delayShowPlayerTimer)
-      delayShowPlayerTimer = setTimeout(() => {
-        log.e('BG-PLAYER',`----set bgPlayerOpacity 1 on changeParent`)
+        delayShowPlayerTimer=  setTimeout(() => {
+        log.e('DebugReplaceChild',`----set bgPlayerOpacity 1 on changeParent`)
         bgPlayerOpacity.value = 1
+            bg_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[1])
       },delay)
     }
 
@@ -306,6 +307,9 @@ export default defineComponent({
       clearTimeout(dismissCoverTimer)
       coverOpacity.value = 1
       pauseOnCoverShow.value = pausePlay
+      if(coverSrc.value != ''){
+        itemCellBgImgRef.value.setNextImage(coverSrc.value)
+      }
       log.d('BG-PLAYER',`showCoverImmediately pausePlay:${pausePlay}`)
     }
     // const dismissCoverDelayed = () => {
@@ -326,6 +330,7 @@ export default defineComponent({
           log.d('BG-PLAYER',`requestDismissCover`)
           dismissCoverTimer = setTimeout(()=>{
             //itemCellBgImgRef.value?.setNextColor(0)
+            itemCellBgImgRef.value.setNextColor()
             coverOpacity.value = 0
             //activeState.value = false
             //bgRef.value?.setNextColor(0)
@@ -393,10 +398,17 @@ export default defineComponent({
     const isBGPlay = ()=>{
       return bgPlayerType.value == CoveredPlayerType.TYPE_BG
     }
-    const onClickCellItem = () => {
-
+    const onClickCellItem = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
     }
     const onItemClick = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
     }
     const onItemFocus = (e) => {
       onItemFocusTimer && clearTimeout(onItemFocusTimer)
@@ -491,13 +503,12 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.small_player_seek_bar {
-  margin-left: 20px;
-  margin-right: 20px;
-}
-
 .item_cell_list_front{background-color: rgba(255,255,255,0.1);position: absolute;right: 0;top: 0;}
-.iclf_item{height: 96px;background-color: transparent;
+.iclf_item{
+  height: 96px;
+  background-color: transparent;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255,255,255,0.1);
   focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;
@@ -517,16 +528,7 @@ export default defineComponent({
   border-radius: 0px;
 }
 
-.iclf_item_playing{position: absolute;height: 96px;border-bottom-width: 1px;
-  border-bottom-color: rgba(255,255,255,0.1);}
-.iclf_item_playing_bg{
-  position: absolute;height: 96px;
-}
-.iclf_item .playMark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
-
-
-.iclf_item_noPlay{position: absolute;}
-.iclf_item_text{height: 96px;color: #fff;width: 400px;margin-left: 50px;color: #FFFFFF;focus-color:#000;select-color:#FF4E46}
-
-.bg-img{width: 1920px;height: 1080px;position: absolute;}
+.iclf_item .play_Mark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
+.iclf_item_text{position: absolute;height: 96px;color: #fff;left: 0; focus-color:#000;width: 482px;
+select-color:#FF4E46;background-color: transparent;}
 </style>

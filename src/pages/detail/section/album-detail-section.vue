@@ -44,6 +44,7 @@ import {IMediaPlaceholder} from "../component/IMediaPlaceholder";
 import {IMediaListView} from "../component/IMediaListView";
 import {QTMediaSeries} from "@quicktvui/quicktvui3";
 import {IMediaItemListType} from "../../../api/media/IMediaItemListType";
+import { IMediaMenuView } from "../component/IMediaMenuView"
 
 const TAG = 'AlbumDetail'
 
@@ -68,6 +69,8 @@ export default defineComponent({
     const introductionRef = ref<IMediaIntroduction>()
     const placeholderRef = ref<IMediaPlaceholder>()
     const mediaListRef = ref<IMediaListView>()
+    const menuRef = ref<IMediaMenuView>()
+
     const sectionHeight = ref<number>(550)
 
     function initMedia(media: IMedia) {
@@ -144,16 +147,22 @@ export default defineComponent({
       placeholderRef.value?.requestFocus()
     }
 
+    function requestFullButtonFocus(): void {
+      console.log("=======1====requestFullButtonFocus========>>>>")
+      menuRef.value?.requestFullButtonFocus()
+    }
+
     function release(): void {
       mediaListRef.value?.release()
     }
 
-  function setAutofocus(enable:boolean){
+    function setAutofocus(enable:boolean){
       placeholderRef.value?.setAutofocus(enable)
-  }
+    }
 
 
     return {
+      menuRef,
       sectionHeight,
       introductionRef,
       placeholderRef,
@@ -174,7 +183,8 @@ export default defineComponent({
       setMediaListViewSelected,
       requestPlayerPlaceholderFocus,
       release,
-        setAutofocus
+      setAutofocus,
+      requestFullButtonFocus
     }
   },
 });

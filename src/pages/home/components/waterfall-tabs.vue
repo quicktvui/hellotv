@@ -1,5 +1,5 @@
 <template>
-  <div class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
+  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
        :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
@@ -19,10 +19,15 @@
         :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
         tabNavBarClass="qt-tabs-waterfall-tab-css"
         tabPageClass="qt-tabs-waterfall-css"
+        :horizontalFadingEdgeEnabled="true"
+        :fadingEdgeLength="400"
         :triggerTask="tabsTriggerTask"
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
+        sid='homeTabs'
+        :custom-pool="{name:'home'}"
+        :custom-item-pool="{name:'homeItems'}"
         @onTabPageChanged="onTabPageChanged"
         @onTabMoveToTopStart="onTabMoveToTopStart"
         @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -34,6 +39,7 @@
         @onTabPageItemFocused="onTabPageItemFocused"
         @onTabPageLoadData="onTabPageLoadData"
         @onTabPageScroll="onTabPageScroll"
+        @onTabEvent='onTabEvent'
         @onTabPageSectionAttached="onTabPageSectionAttached"
         class="qt-tabs-css">
         <template v-slot:tab-item>
@@ -53,22 +59,23 @@
           <page-place-holder-item :type="3"/>
         </template>
       </qt-tabs>
-  </div>
+  </qt-view>
 </template>
 
 <script lang="ts">
 import {defineComponent} from "@vue/runtime-core";
 import { reactive, ref, toRaw} from "vue";
+import { getSectionPosLabelObject } from "../build_data/useTabData"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
-  QTITab,
-  QTTab,
-  QTTabEventParams,
-  QTTabItem,
-  QTTabPageData,
-  QTTabPageState,
-  QTWaterfallItem
-} from "@quicktvui/quicktvui3";
+    QTITab, QTIView,
+    QTTab,
+    QTTabEventParams,
+    QTTabItem,
+    QTTabPageData,
+    QTTabPageState,
+    QTWaterfallItem
+} from '@quicktvui/quicktvui3'
 import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import {useLaunch} from "../../../tools/launch/useApi";
 import {useGlobalApi} from "../../../api/UseApi";
@@ -99,7 +106,7 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    let waterfall_tab_root = ref()
+    let waterfall_tab_root = ref<QTIView>()
     const tabsTriggerTask = [
       {
         event: 'onContentScrollYGreater',
@@ -113,6 +120,12 @@ export default defineComponent({
         function: 'changeVisibility',
         params: ['visible'],
       },
+        {
+            event: 'onPageChange',
+            target: 'home_player',
+            function: 'changeAlpha',
+            params: [0],
+        },
     ]
     const log = useESLog()
     const launch = useLaunch()
@@ -138,6 +151,7 @@ export default defineComponent({
     const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     let delayStopPlaerTimer: any = -1
+    let delayChangePlayerTimer: any = -1
     //
     function onESCreate(params) {
       isOneTime = true
@@ -163,19 +177,14 @@ export default defineComponent({
         isOneTime = false
         return
       }else{
-        bg_player.value?.resume()
+        if(bgPlayerType.value != -1){
+          bg_player.value?.resume()
+        }
       }
     }
 
     function onESStop() {
-      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
-      bg_player.value?.stop()
-      if(!isOneTimeStop){
-        delayStopPlaerTimer = setTimeout(() => {
-          bg_player.value?.stop()
-          isOneTimeStop = true
-        },2000)
-      }
+      delayStopPlayer()
     }
 
     function onESPause() {
@@ -184,6 +193,7 @@ export default defineComponent({
 
     function onESDestroy() {
       bg_player.value?.reset()
+      delayStopPlayer()
     }
 
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
@@ -194,7 +204,7 @@ export default defineComponent({
     }
 
     function getTabContent(tabId: string, tabPageIndex: number, pageNo: number) {
-      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize)
+      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize,tabPageIndex)
         .then((tabPage: QTTabPageData) => {
             if (tabPage.data.length > 0) {
               setTabPagePageNo(tabPageIndex, pageNo)
@@ -240,7 +250,7 @@ export default defineComponent({
       }
       bg_player?.value.pause()
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-        bg_player?.value.showCoverImmediately(true)
+        // bg_player?.value.showCoverImmediately(true)
         bg_player?.value.keepPlayerInvisible(false)
       } else {
         bg_player?.value.showCoverImmediately(true)
@@ -284,6 +294,7 @@ export default defineComponent({
       //bgPlayerActive.value = true
       if(bgPlayerType.value != -1){
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
+          bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
         }
         bg_player?.value.resume()
@@ -336,6 +347,8 @@ export default defineComponent({
               const element = sectionData.itemList[index];
               log.e(TAG,`element : ${JSON.stringify(element)}`)
               log.e(TAG,`element isBGPlayer: ${element.isBgPlayer}`)
+              log.e(TAG,`element sectionPosLabel: ${getSectionPosLabelObject(element.sectionPosLabel)}`)
+
               if(element.isCellPlayer){
                 if(element.isCellPlayerList) flag = CoveredPlayerType.TYPE_CELL_LIST
                 else flag = CoveredPlayerType.TYPE_CELL
@@ -358,22 +371,25 @@ export default defineComponent({
               }
             }
             bgPlayerType.value = flag
+
             // bg_player.value.bgPlayerOpacity = 0
             let parentSID : string = ''
             if(flag == CoveredPlayerType.TYPE_CELL) {
-              Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
               bg_player.value?.doChangeParent(parentSID,bgPlayerType.value,
                   width,height,width,height,
                   toRaw(recordPlayerData.data.playData),0
               )
             }else if(flag == CoveredPlayerType.TYPE_CELL_LIST) {
-              Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
               bg_player.value?.doChangeParent(parentSID,bgPlayerType.value,
                   width,height,860,height,
                   toRaw(recordPlayerData.data.playData),0
               )
             }else if(flag == CoveredPlayerType.TYPE_BG) {
-              Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', ['bg_player_replace_child_sid','setChildSID',['bg-player']]);
+                // clearTimeout(delayChangePlayerTimer)
+              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', ['bg_player_replace_child_sid','setChildSID',['bg-player']]);
+                waterfall_tab_root.value?.dispatchFunctionBySid('bg_player_replace_child_sid','setChildSID',['bg-player'])
               if(recordPlayerData.data.item.playData[0].isRequestUrl){
                 let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(toRaw(recordPlayerData.data.item.playData[0]))
                 recordPlayerData.data.item.playData[0].url = playerInfo.url
@@ -382,11 +398,13 @@ export default defineComponent({
                   1920,1080,1920,1080,
                   toRaw(recordPlayerData.data.item.playData),0
               )
+                bg_player.value?.delayShowPlayer()
             }else if (isSwitchCellBg === '1'){
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg,"",true,false)
+              delayStopPlayer()
             }else{
-              bg_player?.value.stop()
+              delayStopPlayer()
             }
             //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
 
@@ -394,7 +412,6 @@ export default defineComponent({
         }
       },200)
     }
-
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
@@ -439,7 +456,38 @@ export default defineComponent({
       }
     }
 
-    function onTabPageScroll(offsetX: number, scrollY: number) {
+      function onTabEvent(tabIndex: number, eventName: string,params:any) {
+          let sid = params.sid
+
+
+          if(eventName == 'onReplaceChildAttach'){
+              log.e('DebugReplaceChild','-----onReplaceChildAttach----');
+
+          if(sid){
+              delayChangePlayerTimer =  setTimeout(()=>{
+                  // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[0])
+                  tabRef.value?.getCurrentTabIndex().then((index : number)=>{
+                          let currentPageIndex = index
+                          let tabIndex = sid.split('tabIndex')[1]
+                          if(tabIndex == currentPageIndex){
+                              log.e('DebugReplaceChild',`call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+                              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
+                              waterfall_tab_root.value?.dispatchFunctionBySid(sid,'setChildSID',['bg-player'])
+                              bg_player.value?.delayShowPlayer(100)
+                              // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[1])
+                              // log.e('DebugReplaceChild',`-----call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+                          }
+                      }
+                  ).catch(err=>{
+                      log.e('DebugReplaceChild',' error occur :'+JSON.stringify(err));
+                  })
+              },200)
+
+          }
+        }
+      }
+
+      function onTabPageScroll(offsetX: number, scrollY: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
@@ -458,12 +506,25 @@ export default defineComponent({
       )
       bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
+        clearTimeout(delayChangePlayerTimer)
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }
 
     function onTabClick(item:QTTabItem){
 
+    }
+    function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
+      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      bg_player.value?.stop()
+      bg_player.value?.setNextImage()
+      if(!isOneTimeStop){
+        delayStopPlaerTimer = setTimeout(() => {
+          bg_player.value?.stop()
+          bg_player.value?.keepPlayerInvisible(false)
+          isOneTimeStop = true
+        },2000)
+      }
     }
 
     return {
@@ -494,8 +555,10 @@ export default defineComponent({
       onTabPageItemClick,
       onTabPageItemFocused,
       onTabPageScroll,
+        onTabEvent,
       onTabClick,
-      onTabPageSectionAttached
+      onTabPageSectionAttached,
+      delayStopPlayer
     }
   }
 })

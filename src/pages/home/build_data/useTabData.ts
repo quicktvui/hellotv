@@ -1,8 +1,12 @@
 import {Tab} from "./tab/impl/Tab";
 import {buildTransferTabAdapter} from "./tab/TabTransferAdapter";
 import {TabContent} from "./tab_content/impl/TabContent";
+import { TabContentLabel } from "./tab_content/impl/TabContentLabel"
 import {TabContentSection} from "./tab_content/impl/TabContentSection";
-import {buildTransferTabContentAdapter} from "./tab_content/TabContentTransferAdapter";
+import {
+  buildTransferTabContentAdapter,
+  getPosLabel
+} from "./tab_content/TabContentTransferAdapter"
 import {TabSectionItem} from "./tab_content/impl/TabSectionItem";
 import {TabPlayItem} from "./tab_content/impl/TabPlayItem";
 
@@ -33,7 +37,7 @@ export function buildO2MTabData(sourceData:Array<any>){
   return buildTransferTabAdapter(tabs)
 }
 
-export function buildO2MTabContentData(sourceData:any,pageNo:number=1,tabId:string){
+export function buildO2MTabContentData(sourceData:any,pageNo:number=1,tabId:string,tabPageIndex?: number){
    const {firstPlateMarginTop,disableScrollOnFirstScreen} = getParameter(sourceData.parameter)
   const plates:Array<TabContentSection> = []
   sourceData.plates?.forEach((plateItem,plateIndex)=>{
@@ -114,7 +118,11 @@ export function buildO2MTabContentData(sourceData:any,pageNo:number=1,tabId:stri
     plates:plates,
     image:sourceData.image
   }
-  return buildTransferTabContentAdapter(tabContent,pageNo,tabId)
+  return buildTransferTabContentAdapter(tabContent,pageNo,tabId,tabPageIndex)
+}
+
+export function getSectionPosLabelObject(sectionPosLabel:string):TabContentLabel{
+  return getPosLabel(sectionPosLabel)
 }
 
 function getParameter(parameter){

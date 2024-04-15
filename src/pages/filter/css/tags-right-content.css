@@ -20,7 +20,7 @@
 .screen-right-selected-tags{
     position: absolute;
     top: 0;
-    height: 100px;
+    height: 60px;
     width: 1580px;
     padding-left: 66px;
     background-color: #252930;
@@ -78,10 +78,7 @@
 .screen-right-scroll-root-css .screen-right-qt-view-css .screen-right-content .screen-right-content-no-more{
     width: 1420px;
     height: 100px;
-    font-size: 30px;
     color: rgba(255,255,255,0.6);
-    display: flex;
-    text-align: center;
     background-color: transparent;
 }
 
