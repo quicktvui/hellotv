@@ -7,6 +7,7 @@
           :focus-icon="searchFocused"
           :icon="searchNormal"
           :blockFocusDirections="['left','right','top']"
+          @focus="onSearchButtonFocused"
           @click="onSearchButtonClicked"
           text="搜索"/>
       </qt-row>
@@ -47,6 +48,10 @@ export default defineComponent({
       router.push("search")
     }
 
+    function onSearchButtonFocused(isFocused: boolean) {
+      context.emit("onSearchButtonFocused", isFocused)
+    }
+
     return {
       homeFocused,
       homeNormal,
@@ -55,7 +60,8 @@ export default defineComponent({
       searchNormal,
       loginFocused,
       loginNormal,
-      onSearchButtonClicked
+      onSearchButtonClicked,
+      onSearchButtonFocused
     }
   },
 });

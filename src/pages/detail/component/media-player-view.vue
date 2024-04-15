@@ -807,6 +807,20 @@ export default defineComponent({
       playerHeight.value = height
     }
 
+    function onPlayerRelease(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-----------onPlayerRelease------------->>>>")
+      }
+      mediaCollapseMediaListRef.value?.release()
+      mediaCollapseMenuInit = false
+    }
+
+    function onPlayerReset(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------onPlayerReset------------->>>>')
+      }
+    }
+
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
       if (player.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
         return false
@@ -1010,6 +1024,8 @@ export default defineComponent({
       onPlayerNoMediaCanPlay,
       onPlayerWindowTypeChanged,
       onPlayerWindowSizeChanged,
+      onPlayerRelease,
+      onPlayerReset,
       onKeyDown,
       onKeyUp,
       onBackPressed,
