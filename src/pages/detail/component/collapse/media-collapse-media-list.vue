@@ -173,6 +173,10 @@ export default defineComponent({
       context.emit("onMediaListGroupItemFocused", index)
     }
 
+    function release(): void {
+      mediaSeriesListRef.value?.release()
+    }
+
     return {
       mediaSeriesListRef,
       isCollapseExpand,
@@ -187,7 +191,8 @@ export default defineComponent({
       visible,
       initMedia,
       setItemSelected,
-      selectedIndex
+      selectedIndex,
+      release
     }
   },
 });
