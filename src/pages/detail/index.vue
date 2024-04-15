@@ -116,6 +116,9 @@ export default defineComponent({
         log.e(TAG, "-------onESCreate------详情页面---->>>>>", params)
       }
       isPaused = false
+      isStopped = false;
+      isPlayerInit = false
+
       initWaterfall()
       initEventBus()
       getMediaDetail()
@@ -464,8 +467,8 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
-      mediaPlayerViewRef.value?.release()
       mediaPlayerViewRef.value?.reset()
+      mediaPlayerViewRef.value?.release()
       albumDetailRef.value?.release()
       releaseEventBus()
     }
