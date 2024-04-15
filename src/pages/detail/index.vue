@@ -1,5 +1,5 @@
 <template>
-  <div class="detail-root-view-css">
+  <div class="detail-root-view-css" :skipRequestFocus='true'>
     <qt-waterfall
       :descendantFocusability="descendantFocusability"
       :enablePlaceholder="false"
