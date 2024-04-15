@@ -11,7 +11,9 @@
       @onItemClick="onItemClick"
       class="detail-waterfall-css">
       <template v-slot:section>
-        <header-section :type="1"/>
+        <header-section
+          :type="1"
+          @onSearchButtonFocused="onSearchButtonFocused" />
       </template>
       <template v-slot:vue-section>
         <album-detail-section
@@ -81,6 +83,9 @@ export default defineComponent({
     const mediaAuthorizationRef = ref<IMediaAuthorization | undefined | null>()
 
     let isFullButtonClick = false
+
+    let detailFocusTimer = null
+    let detailScrollState
 
     //--------------------------------------------------------------------
     const mediaDataSource = useMediaDataSource()
@@ -228,14 +233,15 @@ export default defineComponent({
       }
     }
 
-    function onScrollStateChanged(x: number,y: number,state:number){
+    function onScrollStateChanged(x: number, y: number, state: number) {
+      detailScrollState = state
       log.d(TAG, '----滚动状态---onScrollStateChanged-------->>>>' +
           " y:" + y +
           " state:" + state
       )
-      if(state == 0 && y < 5){
+      if (state == 0 && y < 5) {
         if (mediaPlayerViewRef.value?.getWindowType() ==
-            ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
           mediaPlayerViewRef.value?.setSmallWindow()
         }
       }
@@ -256,14 +262,34 @@ export default defineComponent({
           mediaPlayerViewRef.value?.setFloatWindow()
         }
       } else {
-        if (mediaPlayerViewRef.value?.getWindowType() ==
-          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-          mediaPlayerViewRef.value?.setSmallWindow()
+        if(detailScrollState == 0){
+          if (mediaPlayerViewRef.value?.getWindowType() ==
+            ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+            mediaPlayerViewRef.value?.setSmallWindow()
+          }
         }
       }
+    }
 
-      if (scrollY <= 5) {
-        // albumDetailRef.value?.setAutofocus(true)
+
+    //------------------------------------------------------------------------------
+    function onSearchButtonFocused(isFocused: boolean) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------onSearchButtonFocused----->>>>>", isFocused)
+      }
+      waterfallRef.value?.scrollToTop()
+      detailScrollState = 0
+      if (mediaPlayerViewRef.value?.getWindowType() ==
+        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+        mediaPlayerViewRef.value?.setSmallWindow()
+      }
+      cancelDetailRequestFocusTimer()
+    }
+
+    function cancelDetailRequestFocusTimer(){
+      if(detailFocusTimer != null){
+        clearTimeout(detailFocusTimer)
+        detailFocusTimer = null
       }
     }
 
@@ -360,7 +386,8 @@ export default defineComponent({
           descendantFocusability.value = 1
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
             if (isFullButtonClick) {
-              setTimeout(() => {
+              detailFocusTimer = setTimeout(() => {
+                cancelDetailRequestFocusTimer()
                 albumDetailRef.value?.requestFullButtonFocus()
               }, 300)
               isFullButtonClick = false
@@ -372,7 +399,8 @@ export default defineComponent({
 
           if (media && !media.itemList.enable) {
             albumDetailRef.value?.setAutofocus(false)
-            setTimeout(() => {
+            detailFocusTimer = setTimeout(() => {
+              cancelDetailRequestFocusTimer()
               albumDetailRef.value?.requestPlayerPlaceholderFocus()
             }, 200)
           }else{
@@ -439,9 +467,11 @@ export default defineComponent({
       }
 
       if (waterfallScrollY > 0) {
+          detailScrollState = 0
           waterfallRef.value?.scrollToTop()
           waterfallScrollY = 0
-          setTimeout(() => {
+          detailFocusTimer = setTimeout(() => {
+            cancelDetailRequestFocusTimer()
             albumDetailRef.value?.requestPlayerPlaceholderFocus()
           }, 300)
           return true
@@ -486,7 +516,8 @@ export default defineComponent({
       //
       onIntroductionFocus,
       //
-      showLoading
+      showLoading,
+      onSearchButtonFocused
     };
   },
 });
