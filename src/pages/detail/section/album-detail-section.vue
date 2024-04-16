@@ -148,12 +148,12 @@ export default defineComponent({
     }
 
     function requestFullButtonFocus(): void {
-      console.log("=======1====requestFullButtonFocus========>>>>")
       menuRef.value?.requestFullButtonFocus()
     }
 
     function release(): void {
       mediaListRef.value?.release()
+      menuRef.value?.release()
     }
 
     function setAutofocus(enable:boolean){

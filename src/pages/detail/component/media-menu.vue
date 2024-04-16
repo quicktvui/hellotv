@@ -134,6 +134,10 @@ export default defineComponent({
       }
     }
 
+    function release(){
+      menuList.value = []
+    }
+
     return {
       init,
       initMedia,
@@ -152,7 +156,8 @@ export default defineComponent({
       setAutofocus,
       autofocus,
       requestFullButtonFocus,
-      fullScreenButtonRef
+      fullScreenButtonRef,
+      release
     }
   }
 })
