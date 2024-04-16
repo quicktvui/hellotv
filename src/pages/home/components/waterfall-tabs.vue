@@ -54,7 +54,7 @@
           <page-place-holder-item :type="3"/>
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
         </template>
-        <template #waterfall-list-item>
+        <template v-slot:waterfall-list-item>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>

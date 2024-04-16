@@ -19,6 +19,7 @@
 
     <!-- 右侧结果-->
     <tags-content  class="screen-right-root-css"
+                   :blockFocusDirections="isShowLeftList?[]:['left','right']"
                    :style="{width:rightContentWidth+'px',height:rightContentHeight+'px',left:(1920-rightContentWidth)+'px',
                    top:(1080-rightContentHeight)+'px'}"
                    ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
@@ -120,7 +121,7 @@ export default defineComponent({
       //Test
       screenId = "1764924767380697089"
       //Test
-      // defaultSelectTag = "科普"
+      // defaultSelectTag = "早教"
       if (!defaultSelectTag){
         defaultFiltersStr = params.defaultFilters
         //Test

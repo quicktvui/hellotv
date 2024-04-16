@@ -5,7 +5,7 @@
                  name="screen_right_scroll_content" :focusable="false" :onScrollEnable="true"
                  :clipChildren="false" makeChildVisibleType="none" :clipPadding="false">
       <qt-view class="screen-right-qt-view-css" :style="{width:rightContentWidth+'px',height:(rightContentHeight+640)+'px'}"
-               :visible="!loading"
+               :v-show="!loading"
                :useAdvancedFocusSearch="true" :focusable="false"
                :clipChildren="false" :clipPadding="false">
 
@@ -48,7 +48,7 @@
         <!-- 筛选结果-->
         <qt-grid-view class="screen-right-content"
                       :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
-                      :visible='!filterClickLoading' :autofocusPosition="isFirstLoad?(filterVisible?-1:0):-1"
+                      :v-show='!filterClickLoading' :autofocusPosition="isFirstLoad?(filterVisible?-1:0):-1"
                       :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
                       :triggerTask="switchData(filterTriggerTask)"
                       ref="screen_right_content"
