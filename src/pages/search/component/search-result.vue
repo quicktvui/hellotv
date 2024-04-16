@@ -1,5 +1,5 @@
 <template>
-  <qt-view  class="search_result" ref="search_result" :clipChildren="false" @childFocus="childFocus"
+  <qt-view class="search_result" ref="search_result" :clipChildren="false" @childFocus="childFocus"
            :listenHasFocusChange="true" :descendantFocusability="descendantFocusability"
            :triggerTask="triggerTask"
            :nextFocusName="{ left: 'search_center_view_content_list' }">
@@ -9,7 +9,7 @@
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
                 :focusable="false" />
       <span class="search_result_view_title_result" v-if="keyword"
-            :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 `}}</span>
+            :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 ` }}</span>
       <span class="search_result_view_title_result" v-else-if="recommendTitle"
             :focusable="false">{{ recommendTitle }}</span>
     </qt-view>
@@ -18,7 +18,7 @@
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
              :focusMemory="true"
-             name='searchTabs'
+             name="searchTabs"
              :tabContentSwitchDelay="200"
              :custom-pool="{name:'search'}"
              :custom-item-pool="{name:'search_items'}"
@@ -34,7 +34,7 @@
              @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll"
              :enablePlaceholder="true"
              @onTabPageSectionAttached="onTabPageSectionAttached" class="qt_tabs_css">
-      <template v-slot:tab-item >
+      <template v-slot:tab-item>
         <!-- 自定义tab类型 -->
         <qt-view class="waterfall_nav_item"
                  :type="2" :clipChildren="false"
@@ -67,7 +67,7 @@ import { ref, watch } from "vue"
 import {
   QTITab, QTTabEventParams, QTTabItem, QTTabPageState, QTWaterfallItem
 } from "@quicktvui/quicktvui3"
-import { useESLog, } from "@extscreen/es3-core"
+import { useESLog } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 import SearchConfig from "../build_data/SearchConfig"
 import { useLaunch } from "../../../tools/launch/useApi"
@@ -84,9 +84,9 @@ export default defineComponent({
       default: false
     }
   },
-  emits: ["scroll-to-index",'close-loading',"close-self-loading"],
+  emits: ["scroll-to-index", "close-loading", "close-self-loading"],
   setup(props, context) {
-    const isShowCenterSearch = computed(()=>SearchConfig.isShowCenterSearch)
+    const isShowCenterSearch = computed(() => SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
     const log = useESLog()
     const search_result = ref()
@@ -127,11 +127,11 @@ export default defineComponent({
     const tabContentBlockFocusDirections = ref(["down", "right"])
     const launch = useLaunch()
     let isRecommendRequest = false
-    const cancelAll =  () => {
+    const cancelAll = () => {
       tabRef!.value!.cancelAll()
     }
 
-    const initTab = async (isRecommend:boolean) => {
+    const initTab = async (isRecommend: boolean) => {
       isRecommendRequest = isRecommend
       tabList = await appApi.getSearchResultTabList(isRecommend)
       tabRef.value?.initTab({ defaultIndex: 0, defaultFocusIndex: -1, itemList: tabList })
@@ -142,7 +142,7 @@ export default defineComponent({
       if (newVal) {
         isRecommendRequest = false
         recommendTitle.value = ""
-      }else{
+      } else {
         isRecommendRequest = true
         recommendTitle.value = "大家都在搜"
       }
@@ -153,8 +153,6 @@ export default defineComponent({
         if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
         closeLoadingTimer = setTimeout(() => {
           descendantFocusability.value = 1
-          context.emit("close-loading")
-          context.emit("close-self-loading")
         }, 1000)
       }, 600)
 
@@ -163,21 +161,21 @@ export default defineComponent({
     // qt-tabs 填充数据 回调
     const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
       // 搜索数据
-     setTimeout(async ()=>{
-        if (tabList && pageIndex >= 0 && pageIndex < tabList.length){
+      setTimeout(async () => {
+        if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
           const tabItem = tabList[pageIndex]
-          if (tabItem._id !== null && tabItem._id  !== undefined){
+          if (tabItem._id !== null && tabItem._id !== undefined) {
             let tabPage
-            if (isRecommendRequest){
-              tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
-            }else{
-              tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.searchResultPageSize,tabList.length === 1)
+            if (isRecommendRequest) {
+              tabPage = await appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
+            } else {
+              tabPage = await appApi.getSearchResultPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
             }
             const length = tabPage.data[0].itemList.length
             if (length > 0) {
               if (pageNo <= 0) {
                 tabRef.value?.setPageData(pageIndex, tabPage)
-              }else {
+              } else {
                 tabRef.value?.addPageData(pageIndex, tabPage, 0)
               }
             } else { //停止分页
@@ -186,12 +184,17 @@ export default defineComponent({
             }
           }
         }
-      },800)
+        if (isShowCenterSearch.value) {
+          context.emit("close-self-loading")
+        }else{
+          context.emit("close-loading")
+        }
+      }, 800)
     }
 
     const onTabClick = () => {
     }
-    const onTabPageChanged = (pageIndex:number, data:any) => {
+    const onTabPageChanged = (pageIndex: number, data: any) => {
 
     }
     const onTabMoveToTopStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶开始
@@ -211,8 +214,8 @@ export default defineComponent({
     const onTabPageScrollToStart = (pageIndex: number) => {
     }
     const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) => {
-      const {actionRedirect} = item.item
-      const mItem = {item:{...actionRedirect}}
+      const { actionRedirect } = item.item
+      const mItem = { item: { ...actionRedirect } }
       launch.launch(mItem)
     }
     const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
@@ -221,7 +224,7 @@ export default defineComponent({
 
     const onTabPageScroll = () => {
     }
-    const onTabPageSectionAttached = (pageIndex: number, sectionList:any) => {
+    const onTabPageSectionAttached = (pageIndex: number, sectionList: any) => {
     }
     const childFocus = (e) => {
       if (e.child) {
