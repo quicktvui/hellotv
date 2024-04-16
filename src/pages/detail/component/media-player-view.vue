@@ -91,6 +91,7 @@
         <qt-collapse
           ref="mediaCollapseRef"
           v-show="isFullWindow && isMenuShowing"
+          v-if="mediaCollapseMenuInit"
           class="media-player-collapse-css">
           <media-collapse-order
             ref="mediaCollapseOrderRef"
@@ -147,7 +148,7 @@ import {
 } from "@extscreen/es3-player";
 import {ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
-import {ref, markRaw, onMounted, nextTick} from "vue";
+import {ref, markRaw, watch, onMounted, nextTick} from "vue";
 
 import playerStatePlaying from '../../../assets/ic_media_player_play.png'
 import playerStatePaused from '../../../assets/ic_media_player_pause.png'
@@ -221,7 +222,7 @@ export default defineComponent({
     const dataMap = new Map<number, Array<IMedia>>()
 
     function onMediaListItemLoad(page: number, mediaList: Array<IMedia>) {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           mediaCollapseMediaListRef.value?.setListData(page, mediaList)
         })
@@ -230,7 +231,7 @@ export default defineComponent({
       }
     }
 
-    let mediaCollapseMenuInit = false
+    const mediaCollapseMenuInit = ref<boolean>(false)
 
     let media: IMedia
 
@@ -266,17 +267,34 @@ export default defineComponent({
     let mediaListItemFocused = false
 
     //-------------------------------菜单-----------------------------------
+    watch(
+      () => [mediaCollapseRef.value] as const,
+      ([instance], [oldInstance]) => {
+        if (instance) {
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.e(TAG, "----watch---initCollapseMenu----->>>>>")
+          }
+          collapse = buildCollapseMenu(mediaListVisible.value)
+          collapseItemIndex = collapse.defaultIndex ?? 0
+          collapseItemList = collapse.itemList
+          mediaCollapseRef.value?.init(collapse)
+
+          initCollapseOrderMenu()
+          initCollapseSpeedMenu()
+          initCollapseDefinitionMenu()
+          initCollapseListMenu()
+        }
+      },
+      {flush: 'post'}
+    )
+
     function initCollapseMenu() {
-      collapse = buildCollapseMenu(mediaListVisible.value)
-      collapseItemIndex = collapse.defaultIndex ?? 0
-      collapseItemList = collapse.itemList
-      mediaCollapseRef.value?.init(collapse)
-      mediaCollapseMenuInit = true
+      mediaCollapseMenuInit.value = true
     }
 
     //-------------------------------播放顺序-----------------------------------
     function initCollapseOrderMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
             const data = buildPlayModeList(playModeList)
@@ -320,7 +338,7 @@ export default defineComponent({
 
     //------------------------------清晰度------------------------------------
     function initCollapseDefinitionMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (definitionList) {
             mediaCollapseDefinitionRef.value?.setListData(buildDefinitionList(definitionList))
@@ -354,7 +372,7 @@ export default defineComponent({
 
     //--------------------------------倍速----------------------------------
     function initCollapseSpeedMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (rateList) {
             mediaCollapseSpeedRef.value?.setListData(buildPlayRateList(rateList))
@@ -385,7 +403,7 @@ export default defineComponent({
 
     //--------------------------------媒资列表----------------------------------
     function initCollapseListMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (media) {
             mediaCollapseMediaListRef.value?.initMedia(media)
@@ -502,12 +520,8 @@ export default defineComponent({
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
           isMenuShowing.value = true
           isProgressShowing.value = false
-          if (!mediaCollapseMenuInit) {
+          if (!mediaCollapseMenuInit.value) {
             initCollapseMenu()
-            initCollapseOrderMenu()
-            initCollapseSpeedMenu()
-            initCollapseDefinitionMenu()
-            initCollapseListMenu()
           }
           mediaCollapseRef.value?.expandItem(collapseItemIndex)
           break
@@ -812,7 +826,7 @@ export default defineComponent({
         log.d(TAG, "-----------onPlayerRelease------------->>>>")
       }
       mediaCollapseMediaListRef.value?.release()
-      mediaCollapseMenuInit = false
+      mediaCollapseMenuInit.value = false
     }
 
     function onPlayerReset(): void {
@@ -1033,6 +1047,7 @@ export default defineComponent({
       //
       onNextButtonClicked,
       onNextButtonFocusChanged,
+      mediaCollapseMenuInit,
     }
   },
 });
