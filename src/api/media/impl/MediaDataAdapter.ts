@@ -33,7 +33,7 @@ export function buildMedia(media: Media): IMedia {
       id: media.vod_id,
       title: media.vod_name,
       count: epCount,
-      type: 2,
+      type: 0,
       enable: epCount > 1
     },
     //
