@@ -241,9 +241,6 @@ export default defineComponent({
       nextTick(() => {
         if (playModeList) {
           const index = getPlayModeIndex(playMode, playModeList)
-          if (log.isLoggable(ESLogLevel.DEBUG)) {
-            log.e(TAG, "-------getPlayModeIndex-------->>>>>", playMode, playModeList, index)
-          }
           if (index > -1) {
             mediaCollapseOrderRef.value?.setItemSelected(index)
           }
@@ -445,7 +442,7 @@ export default defineComponent({
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.collapse()
+            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
@@ -459,16 +456,17 @@ export default defineComponent({
             initCollapseDefinitionMenu()
             initCollapseListMenu()
           }
-          mediaCollapseRef.value?.expandItem(collapseItemIndex)
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
+
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
+
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.collapse()
+            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
@@ -690,17 +688,7 @@ export default defineComponent({
     }
 
     function onPlayerPlayMediaListModeListChanged(modeList: Array<ESPlayerPlayMode>): void {
-      const filterModeList = []
-      if (modeList && modeList.length) {
-        for (let i = 0; i < modeList.length; i++) {
-          let mode: ESPlayerPlayMode = modeList[i]
-          if (mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT ||
-            mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP) {
-            filterModeList.push(mode)
-          }
-        }
-      }
-      playModeList = filterModeList
+      playModeList = modeList
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onPlayerPlayModeListChanged-------->>>>>", modeList)
       }
@@ -763,20 +751,6 @@ export default defineComponent({
       // console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
       playerWidth.value = width
       playerHeight.value = height
-    }
-
-    function onPlayerRelease(): void {
-      if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-----------onPlayerRelease------------->>>>")
-      }
-      mediaCollapseMediaListRef.value?.release()
-      mediaCollapseMenuInit = false
-    }
-
-    function onPlayerReset(): void {
-      if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-----------onPlayerReset------------->>>>')
-      }
     }
 
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
@@ -982,8 +956,6 @@ export default defineComponent({
       onPlayerNoMediaCanPlay,
       onPlayerWindowTypeChanged,
       onPlayerWindowSizeChanged,
-      onPlayerRelease,
-      onPlayerReset,
       onKeyDown,
       onKeyUp,
       onBackPressed,

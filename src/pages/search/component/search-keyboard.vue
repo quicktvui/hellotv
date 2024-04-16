@@ -64,6 +64,7 @@ export default defineComponent({
     const ic_search_input_delete = require("../../../assets/search/ic_search_input_delete.png").default
     const ic_search_input_delete_focus = require("../../../assets/search/ic_search_input_delete_focus.png").default
     const grid_view = ref<QTIGridView>()
+    let targetSid = ref()
     let listDataRec: Array<QTGridViewItem> = []
     let keyboardItems: Array<QTGridViewItem> = [
       { text: "A", type: 1 }, { text: "B", type: 1 }, { text: "C", type: 1 }, { text: "D", type: 1 },

@@ -106,7 +106,6 @@ export default defineComponent({
 
     function requestItemFocus() {
       Native.callUIFunction(menuItemRef.value, 'requestFocus', []);
-      Native.callUIFunction(menuItemRef.value, 'requestFocusDirectly');
     }
 
     return {

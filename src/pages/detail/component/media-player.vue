@@ -131,7 +131,6 @@ export default defineComponent({
     }
 
     function reset() {
-      playerManager.value?.reset()
       playerRateManager.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)
     }
 

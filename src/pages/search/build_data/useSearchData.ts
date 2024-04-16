@@ -23,6 +23,16 @@ let section: QTWaterfallSection = {
 return section
 }
 
+export function buildTabPageEndData(): QTTabPageData {
+  const endSection = buildEndSection('5');
+  const tabPage: QTTabPageData = {
+      useDiff: false,
+      disableScrollOnFirstScreen: true,
+      data: [endSection]
+  }
+  return tabPage
+}
+
 // 构建 hotsearch 数据
 export function buildSearchCenterListData(data: Array<any>,isHistoryList:boolean): SearchCenter {
   let centerData:SearchCenter
@@ -43,6 +53,7 @@ export function buildSearchTabData(tabs:Array<SearchTab>): Array<QTTabItem>{
       text:`${item.title} (${item.totalNum}+)`,
       titleSize:36,
       type:2,
+      sid:item.tabCode,
       _id:item.id,
       decoration:{ left: index === 0 ? 66 : 16}
     }

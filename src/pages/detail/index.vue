@@ -68,7 +68,7 @@ export default defineComponent({
 
     let isFullButtonClick = false
 
-    let detailFocusTimer = null
+    let detailFocusTimer: any = null
     let detailScrollState
 
     //--------------------------------------------------------------------
@@ -103,9 +103,6 @@ export default defineComponent({
         log.e(TAG, "-------onESCreate------详情页面---->>>>>", params)
       }
       isPaused = false
-      isStopped = false;
-      isPlayerInit = false
-
       initWaterfall()
       initEventBus()
       getMediaDetail()
@@ -115,7 +112,7 @@ export default defineComponent({
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
       waterfallRef.value?.scrollToTop()
-      albumDetailRef.value?.setAutofocus(true)
+      albumDetailRef.value?.setAutofocus(false)
     }
 
     function initEventBus() {
@@ -312,14 +309,7 @@ export default defineComponent({
 
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
-      albumDetailRef.value?.setAutofocus(false)
       mediaPlayerViewRef.value?.setFullWindow()
-      isFullButtonClick = true
-    }
-
-    function onMenuFavouriteButtonClick(val: boolean) {
-      media.sortTime = new Date().getTime()
-      val ? localHistory.fav[media.id] = media : removeHistory('fav', Number(media.id)), historyToCategory('fav')
     }
 
     function onMenuFavouriteButtonClick(val: boolean) {
@@ -406,10 +396,8 @@ export default defineComponent({
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
           descendantFocusability.value = 2
           break
-        case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
-          isFullButtonClick = false
-          break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
+          // albumDetailRef.value?.setAutofocus(true)
           descendantFocusability.value = 1
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
             if (isFullButtonClick) {
@@ -472,9 +460,8 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
-      waterfallRef.value?.scrollToTop()
-      mediaPlayerViewRef.value?.reset()
       mediaPlayerViewRef.value?.release()
+      mediaPlayerViewRef.value?.reset()
       albumDetailRef.value?.release()
       releaseEventBus()
     }
@@ -483,12 +470,6 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyDown(keyEvent)) {
         return true
       }
-      if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
-        isKeyUpLongClick = true
-        headerSectionRef.value?.setAutofocus(true)
-      } else {
-        isKeyUpLongClick = false
-      }
       return true
     }
 
@@ -496,8 +477,6 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyUp(keyEvent)) {
         return true
       }
-      isKeyUpLongClick = false
-      headerSectionRef.value?.setAutofocus(false)
       return true
     }
 
@@ -528,7 +507,6 @@ export default defineComponent({
       mediaPlayerViewRef,
       waterfallRef,
       albumDetailRef,
-      headerSectionRef,
       mediaAuthorizationRef,
 
       onESCreate,

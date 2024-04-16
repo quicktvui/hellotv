@@ -2,7 +2,6 @@
   <div :focusable="true"
        @focus="onFocus"
        @click="onClick"
-       :autofocus='autofocus'
        class="navigation-button-item-icon-css">
     <div class="navigation-button-item-img-root-css">
       <img class="navigation-button-item-img-css"
@@ -45,7 +44,6 @@ export default defineComponent({
   setup(props, context) {
     const focused = ref(false)
     const menuItemRef = ref()
-    const autofocus = ref<boolean>(false)
 
     function onFocus(e) {
       focused.value = e.isFocused;
@@ -56,17 +54,11 @@ export default defineComponent({
       context.emit("click");
     }
 
-    function setAutofocus(value: boolean): void {
-      autofocus.value = value
-    }
-
     return {
-      autofocus,
       menuItemRef,
       focused,
       onFocus,
       onClick,
-      setAutofocus
     }
   },
 });

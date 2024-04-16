@@ -140,11 +140,6 @@ export default defineComponent({
       placeholderRef.value?.requestFocus()
     }
 
-    function requestFullButtonFocus(): void {
-      console.log("=======1====requestFullButtonFocus========>>>>")
-      menuRef.value?.requestFullButtonFocus()
-    }
-
     function release(): void {
       mediaListRef.value?.release()
     }
@@ -177,8 +172,7 @@ export default defineComponent({
       setMediaListViewSelected,
       requestPlayerPlaceholderFocus,
       release,
-      setAutofocus,
-      requestFullButtonFocus
+      setAutofocus
     }
   },
 });

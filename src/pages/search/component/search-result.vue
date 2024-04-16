@@ -69,6 +69,10 @@ export default defineComponent({
     showIsFullScreen: {
       type: Boolean,
       default: false
+    },
+    isShowResultLoading: {
+      type: Boolean,
+      default: true
     }
   },
   emits: ["scroll-to-index", 'close-loading', "close-self-loading"],
@@ -83,6 +87,7 @@ export default defineComponent({
     let showKeyword = ref("")
     let isShowTopTip = ref(true)
     let isHasData = ref(false)
+    let isLoading = ref(false)
     let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
@@ -135,19 +140,21 @@ export default defineComponent({
         recommendTitle.value = "大家都在搜"
       }
       if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
+      isLoading.value = true
       descendantFocusability.value = 2
       delaySearchByKeyword = setTimeout(() => {
         initTab(isRecommendRequest)
         if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
         closeLoadingTimer = setTimeout(() => {
+          isLoading.value = false
           descendantFocusability.value = 1
         }, 1000)
       }, 600)
-
+      context.emit("close-loading")
     })
 
     // qt-tabs 填充数据 回调
-    const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
+    const onTabPageLoadData = async (pageIndex: number, pageNo: number, useDiff: boolean) => {
       // 搜索数据
       setTimeout(async () => {
         if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
@@ -224,6 +231,7 @@ export default defineComponent({
       ic_search_left_arrow,
       ic_data_empty,
       isHasData,
+      isLoading,
       isShowTopTip,
       tabRef,
       tabContentBlockFocusDirections,

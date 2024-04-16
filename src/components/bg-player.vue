@@ -81,7 +81,6 @@ export default defineComponent({
   setup(props, ctx) {
     const launch = useLaunch()
     const decode = useESPlayerDecodeManager()
-    const router = useESRouter()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(1920)
@@ -146,7 +145,7 @@ export default defineComponent({
       playerListData: any, playIndex: number) => {
       bgPlayerOpacity.value = 0
       clearTimeout(delayShowTimer)
-      // clearTimeout(delayShowPlayerTimer)
+      clearTimeout(delayShowPlayerTimer)
       bgPlayerType.value = playerType
       log.i(`BG-PLAYER`, `doChangeCell cellReplaceSID:${cellReplaceSID},playerType:${playerType},
       boxWidth:${boxWidth},boxHeight:${boxHeight},playerWidth:${playerWidth},playerHeight:${playerHeight},playIndex:${playIndex},playerListDataSize:${playerListData == null ? 0 : playerListData.length}`)
@@ -376,17 +375,10 @@ export default defineComponent({
     const isBGPlay = () => {
       return bgPlayerType.value == CoveredPlayerType.TYPE_BG
     }
-    const onClickCellItem = (e) => {
-      router.push({
-        name: 'screen_main_view',
-        params: {}
-      });
+    const onClickCellItem = () => {
+
     }
     const onItemClick = (e) => {
-      router.push({
-        name: 'screen_main_view',
-        params: {}
-      });
     }
     const onItemFocus = (e) => {
       onItemFocusTimer && clearTimeout(onItemFocusTimer)

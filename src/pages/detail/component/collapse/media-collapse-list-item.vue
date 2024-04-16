@@ -7,7 +7,7 @@
              eventFocus
              :focusable=true>
     <div class="qt-collapse-list-item-text-root" :duplicateParentState="true">
-      <div class="qt-collapse-list-item-icon-root" :duplicateParentState="true"
+      <div class="qt-collapse-list-item-icon-root"
            flexStyle="${iconStyle}">
         <img class="qt-collapse-list-item-icon"
              duplicateParentState

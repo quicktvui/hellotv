@@ -229,7 +229,7 @@ export default defineComponent({
       }
       bg_player?.value.pause()
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-        // bg_player?.value.showCoverImmediately(true)
+        bg_player?.value.showCoverImmediately(true)
         bg_player?.value.keepPlayerInvisible(false)
       } else {
         bg_player?.value.showCoverImmediately(true)
@@ -273,7 +273,6 @@ export default defineComponent({
       //bgPlayerActive.value = true
       if (bgPlayerType.value != -1) {
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-          bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
         }
         bg_player?.value.resume()
@@ -350,7 +349,6 @@ export default defineComponent({
               }
             }
             bgPlayerType.value = flag
-
             // bg_player.value.bgPlayerOpacity = 0
             let parentSID: string = ''
             if (flag == CoveredPlayerType.TYPE_CELL) {

@@ -68,6 +68,8 @@ export default defineComponent({
     const search_keyboard = ref()
     const search_center = ref()
     const search_result = ref()
+    const curItemSid = ref("")
+    const defaultItemSid = ref("")
     let selectKeyword = ref('')
     let searchLetter = ref('')
     let scrollState = ref(0)

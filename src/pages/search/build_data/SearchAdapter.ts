@@ -8,10 +8,13 @@ import {
 } from "@quicktvui/quicktvui3"
 import { SearchResultItem } from "./impl/SearchResultItem"
 import SearchConfig from "./SearchConfig"
+import { buildEndSection } from "../../home/build_data/tab_content/page"
 //板块标题高度
 const plateTitleHeight = 65
 //有板块标题距离 top的高度
-const firstPlate_Top = 250
+const hasPlateTitle_Top = 200
+//无板块标题距离 top的高度
+const noPlateTitle_Top = 250
 //单个 Tab top的高度偏移量
 const singleTabTop_OffsetY = 60
 //板块一行个数

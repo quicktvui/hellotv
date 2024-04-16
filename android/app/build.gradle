@@ -3,15 +3,13 @@ plugins {
 }
 
 ext {
-    APP_PACKAGE = 'com.quicktvui.hellotv'   // APK包名
-    APP_NAME = 'HelloTV'                    // APK名字(Launcher显示)
-    APP_VERSION_CODE = 1                    // APK版本code
-    APP_VERSION_NAME = '1.0.0'              // APK版本名称
+    APP_PACKAGE = 'com.quicktvui.hellotv'
+    APP_NAME = 'HelloTV'
+    APP_VERSION_CODE = 1
+    APP_VERSION_NAME = '1.0.0'
 
-    BUILD_RPK_IN_APK = true                 // 是否将rpk打入apk(非assets加载方式不用打包进apk)
-    RPK_PACKAGE = "es.hellotv"              // 生成的rpk包名
-    RPK_FILE_NAME = "hello.rpk"             // 生成的rpk文件名
-
+    RPK_PACKAGE = "es.hellotv"
+    RPK_FILE_NAME = "hello.rpk"
 
     vueDistDir = new File(project.rootDir, '../dist/android')
     assetsDir = new File(project.buildDir, 'assets')
@@ -34,8 +32,6 @@ android {
 
         buildConfigField 'String', 'RPK_PACKAGE', "\"${RPK_PACKAGE}\""
         buildConfigField 'String', 'RPK_FILE_NAME', "\"assets://${RPK_FILE_NAME}\""
-
-        buildConfigField 'boolean', 'IS_BUILD_RPK_IN_APK', "$BUILD_RPK_IN_APK"
 
         ndk {
             abiFilters 'armeabi-v7a', 'arm64-v8a'
@@ -74,7 +70,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.8.0'
+    implementation 'com.extscreen.runtime:official:2.7.96'
 }
 
 task deleteRpkCacheTask(type: Delete) {
@@ -117,10 +113,8 @@ afterEvaluate {
 
     tasks.findByName('preBuild').dependsOn(deleteRpkCacheTask)
 
-    if(BUILD_RPK_IN_APK){
-        ['generateDebugAssets', 'generateReleaseAssets'].each {
-            tasks.findByName(it).dependsOn(zipRpkTask)
-        }
+    ['generateDebugAssets', 'generateReleaseAssets'].each {
+        tasks.findByName(it).dependsOn(zipRpkTask)
     }
 
 }

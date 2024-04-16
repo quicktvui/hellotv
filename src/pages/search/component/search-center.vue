@@ -52,6 +52,14 @@ export default defineComponent({
     searchLetter: {
       type: String,
       default: ""
+    },
+    resultItemSid: {
+      type: String,
+      default: ""
+    },
+    defaultItemSid: {
+      type: String,
+      default: ""
     }
   },
   setup(props, context) {
@@ -62,9 +70,10 @@ export default defineComponent({
 
     const listViewRef = ref<QTIListView>()
     let title = ref("热门搜索")
+    let targetSid = ref()
 
     let curTitleType = 1
-    let currentItemIndex: number = 0
+    let currentItemIndex: number = -1
     let listDataRec: QTListViewItem[] = []
     let pageNum = 1
     let isStopPage = false
@@ -77,6 +86,12 @@ export default defineComponent({
       await setListData(newVal ?? "", newVal ? 3 : 1)
       setListSelect(false)
       context.emit("close-loading")
+    })
+    watch(() => props.resultItemSid, (newVal, oldVal) => {
+      targetSid.value = newVal
+    })
+    watch(() => props.defaultItemSid, (newVal, oldVal) => {
+      targetSid.value = newVal
     })
 
     onMounted(() => {
@@ -95,7 +110,7 @@ export default defineComponent({
       context.emit("start-loading", isShowResultLoading)
       setTimeout(() => {
         listViewRef.value?.setItemSelected(0, true)
-        context.emit("keyword-select", curValue)
+        context.emit("keyword-select", curValue, isShowResultLoading)
       }, 300)
     }
 
@@ -154,7 +169,7 @@ export default defineComponent({
       context.emit("start-loading", true)
       setTimeout(() => {
         listViewRef.value?.setItemFocused(0)
-        context.emit("keyword-select", curValue)
+        context.emit("keyword-select", curValue, true)
       }, 300)
     }
     const onItemFocus = (e) => {
@@ -164,18 +179,20 @@ export default defineComponent({
         focusItemTimer && clearTimeout(focusItemTimer)
         focusItemTimer = setTimeout(() => {
           currentItemIndex = e.position
-          context.emit("keyword-select", e.item.text)
+          context.emit("keyword-select", e.item.text, true)
         }, 400)
       }
     }
     const childFocus = (e) => {
       if (e.child) {
         context.emit("scroll-to-index", 1, 100)
+        targetSid.value = props.defaultItemSid
       }
     }
     return {
       listViewRef, title, onItemFocus, childFocus, loadMore,
       clearHistoryBtnClick, ic_search_input_clear, ic_search_input_clear_focus, centerWidth,
+      targetSid
     }
   }
 })

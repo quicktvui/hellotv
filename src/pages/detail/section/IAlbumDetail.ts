@@ -14,8 +14,6 @@ export interface IAlbumDetail {
 
   requestPlayerPlaceholderFocus(): void
 
-  requestFullButtonFocus(): void
-
   release(): void
   setAutofocus(value:boolean): void
 }

@@ -1,7 +1,8 @@
 <template>
   <qt-column class="qt-collapse-item-media-list" :focusable="false">
     <span class="qt-collapse-item-media-list-title" :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放列表</span>
-    <div class="qt-collapse-item-media-list-content" :clipChildren="false" :style="{ opacity: isCollapseExpand ? 1 : 0 }">
+    <div class="qt-collapse-item-media-list-content" :clipChildren="false"
+      :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-media-series ref="mediaSeriesListRef" :display="isCollapseExpand" class="qt-collapse-media-series-root-css"
         :clipChildren="false" @load-data="onLoadData" @item-click="onItemClicked" @item-focused="onItemFocused"
         @group-item-focused="onGroupItemFocused" />
@@ -47,10 +48,10 @@ export default defineComponent({
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-
-    const selectedIndex = ref<number>(0)
+    let selectedIndex = 0
 
     let focusTimer
+
     let initialized = false
 
     //---------------------------------------------------------------------------
@@ -91,23 +92,18 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
 
-      // setTimeout(() => {
-      //   setItemSelected(selectedIndex.value)
-      // }, 300)
-
       if (value) {
         if (!initialized) {
           focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex.value)
-            setItemFocused(selectedIndex.value)
-          }, 500)
+            setItemSelected(selectedIndex)
+            setItemFocused(selectedIndex)
+          }, 1000)
         } else {
           focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex.value)
-            setItemFocused(selectedIndex.value)
-          }, 200)
+            setItemSelected(selectedIndex)
+            setItemFocused(selectedIndex)
+          }, 1000)
         }
-        initialized = true
       } else {
         if (focusTimer) {
           clearTimeout(focusTimer)
@@ -127,7 +123,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---选集---setItemSelected------>>>>', position)
       }
-      selectedIndex.value = position
+      selectedIndex = position
       mediaSeriesListRef.value?.setSelected(position)
     }
 
@@ -159,12 +155,11 @@ export default defineComponent({
     }
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
+      if (focusTimer) {
+        clearTimeout(focusTimer)
+      }
       let index = event.position;
       context.emit("onMediaListGroupItemFocused", index)
-    }
-
-    function release(): void {
-      mediaSeriesListRef.value?.release()
     }
 
     return {
@@ -180,9 +175,7 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      setItemSelected,
-      selectedIndex,
-      release
+      setItemSelected
     }
   },
 });

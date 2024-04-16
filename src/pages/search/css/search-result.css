@@ -85,3 +85,12 @@
   color: rgba(255, 255, 255, 0.5);
   margin-top: 26px;
 }
+
+.search_result_loading {
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+}
