@@ -31,10 +31,8 @@ export default defineComponent({
 <style scoped>
 .tab-list-item-root-css {
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
+
+    background-color: red;
 }
 
 .tab-list-item-image-css {

@@ -366,10 +366,8 @@ export default defineComponent({
       //
       mediaPlayerViewRef.value?.addMediaItemList(page, data)
 
-      //TODO 等待左图右文修改获取数据的bug
-      if (page == 0 && !isPlayerInit) {
-        mediaPlayerViewRef.value?.playMediaItemById(playId || data[0].id)
-        isPlayerInit = true
+      if (page == 0) {
+        mediaPlayerViewRef.value?.playMediaItemByIndex(0)
       }
     }
 

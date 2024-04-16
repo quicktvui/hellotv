@@ -7,15 +7,15 @@
       v-show="(keyword || recommendTitle) && isShowTopTip">
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
         :focusable="false" />
-      <span class="search_result_view_title_result" v-if="keyword" :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果
-        `}}</span>
+      <span class="search_result_view_title_result" v-if="keyword" :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 `
+        }}</span>
       <span class="search_result_view_title_result" v-else-if="recommendTitle" :focusable="false">{{ recommendTitle
         }}</span>
     </qt-view>
 
     <qt-tabs ref="tabRef" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
       tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css" :tabContentResumeDelay="200"
-      :focusMemory="true" name='searchTabs' :tabContentSwitchDelay="200" :custom-pool="{ name: 'search' }"
+      :focusMemory="true" name="searchTabs" :tabContentSwitchDelay="200" :custom-pool="{ name: 'search' }"
       :custom-item-pool="{ name: 'search_items' }"
       :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
       :blockViewPager="['down', 'right']" :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick"
@@ -54,7 +54,7 @@ import { ref, watch } from "vue"
 import {
   QTITab, QTTabEventParams, QTTabItem, QTTabPageState, QTWaterfallItem
 } from "@quicktvui/quicktvui3"
-import { useESLog, } from "@extscreen/es3-core"
+import { useESLog } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 import SearchConfig from "../build_data/SearchConfig"
 import { useLaunch } from "../../../tools/launch/useApi"
@@ -75,7 +75,7 @@ export default defineComponent({
       default: true
     }
   },
-  emits: ["scroll-to-index", 'close-loading', "close-self-loading"],
+  emits: ["scroll-to-index", "close-loading", "close-self-loading"],
   setup(props, context) {
     const isShowCenterSearch = computed(() => SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
@@ -133,24 +133,20 @@ export default defineComponent({
     watch(() => props.keyword, (newVal, oldVal) => {
       if (newVal) {
         isRecommendRequest = false
-        isRecommendRequest = false
         recommendTitle.value = ""
       } else {
         isRecommendRequest = true
         recommendTitle.value = "大家都在搜"
       }
       if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
-      isLoading.value = true
       descendantFocusability.value = 2
       delaySearchByKeyword = setTimeout(() => {
         initTab(isRecommendRequest)
         if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
         closeLoadingTimer = setTimeout(() => {
-          isLoading.value = false
           descendantFocusability.value = 1
         }, 1000)
       }, 600)
-      context.emit("close-loading")
     })
 
     // qt-tabs 填充数据 回调
@@ -179,8 +175,11 @@ export default defineComponent({
             }
           }
         }
-        context.emit("close-loading")
-        context.emit("close-self-loading")
+        if (isShowCenterSearch.value) {
+          context.emit("close-self-loading")
+        } else {
+          context.emit("close-loading")
+        }
       }, 800)
     }
 

@@ -12,7 +12,7 @@
           :blockFocusDirections="['up', 'down', 'left']" :nextFocusName="{ right: 'search_center_view' }"
           @inputChange="onInputChange" @scroll-to-index="onNeedScrollTo" />
         <!-- 搜索内容 -->
-        <search-center v-if="isShowCenterSearch" v-show="!loading" :descendantFocusability="loading ? 2 : 1"
+        <search-center v-if="isShowCenterSearch" :visible="!loading" :descendantFocusability="loading ? 2 : 1"
           ref="search_center" name="search_center_view"
           :blockFocusDirections="['up', 'down', showResultLoading ? 'right' : '']"
           :nextFocusName="{ right: 'search_result_view' }" @keyword-select="onKeywordSelect"
@@ -68,8 +68,6 @@ export default defineComponent({
     const search_keyboard = ref()
     const search_center = ref()
     const search_result = ref()
-    const curItemSid = ref("")
-    const defaultItemSid = ref("")
     let selectKeyword = ref('')
     let searchLetter = ref('')
     let scrollState = ref(0)
@@ -82,9 +80,9 @@ export default defineComponent({
     // 生命周期
     const onESCreate = (params) => {
       //无词条列表时，直接获取推荐列表
-      if (!SearchConfig.isShowCenterSearch) {
-        loading.value = true
+      if (!isShowCenterSearch.value) {
         showResultLoading.value = false
+        loading.value = true
         search_result.value!.initTab(true)
       }
     }
@@ -133,7 +131,12 @@ export default defineComponent({
       }
     }
     const closeLoading = () => {
-      setTimeout(() => { loading.value = false }, 500)
+      setTimeout(() => {
+        loading.value = false
+        if (isShowCenterSearch.value) {
+          showResultLoading.value = true
+        }
+      }, 500)
     }
     const closeResultLoading = () => {
       showResultLoading.value = false

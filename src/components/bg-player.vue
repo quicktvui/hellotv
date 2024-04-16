@@ -1,7 +1,8 @@
 <template>
   <qt-view class="bg_player" :clipChildren="false" ref="bg_root">
     <replace-child :focusable="false" :clipChildren="false" @onChildChanged="onChildChanged"
-      ref="bg_player_replace_child" class="bg_player_replace_child" sid="bg_player_replace_child_sid">
+      ref="bg_player_replace_child" :replaceOnVisibilityChanged='false' class="bg_player_replace_child"
+      sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :clipChildren="true" :focusable="false" name='home_player'
       :style="{ width: playerBoxWidth + 'px', height: playerBoxHeight + 'px' }">
