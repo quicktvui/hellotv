@@ -142,6 +142,7 @@ export default defineComponent({
       itemIndex:-1,
       data: {} as QTWaterfallItem,
     })
+    let recordPlayerDataMap = new Map()
     let isOneTime: boolean = false
     let isOneTimeStop: boolean = false
     let isPlaying = ref(false)
@@ -214,7 +215,9 @@ export default defineComponent({
                   ' pageNo:' + pageNo +
                   ' tabPage:', tabPage)
               }
+              
               if (pageNo <= 1) {
+                getPlayerData(tabPageIndex, tabPage.data[0].itemList)
                 tabRef.value?.setPageData(tabPageIndex, tabPage)
               } else {
                 tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
@@ -232,6 +235,41 @@ export default defineComponent({
     function setTabPagePageNo(tabPageIndex: number, pageNo: number) {
       const tab: QTTabItem = tabItemList[tabPageIndex]
       tab.pageNo = pageNo
+    }
+    // 加载数据时获取小窗 小窗列表 背景播放数据
+    async function getPlayerData(pageIndex: number, itemList: any) {
+      for (let i = 0; i < itemList.length; i++) {
+        const el = itemList[i];
+        let obj: any = {}
+        if(el.isCellPlayer){
+          if(el.isCellPlayerList) obj.playerType = CoveredPlayerType.TYPE_CELL_LIST
+          else obj.playerType = CoveredPlayerType.TYPE_CELL
+          if(recordPlayerDataMap.get(obj.playerType) == undefined){
+            obj.pageIndex = pageIndex
+            obj.sid = el.sid
+            obj.playerWidth = el.style.width
+            obj.playerHeight = el.style.height
+            obj.itemIndex = i
+            obj.data = el.playData
+            recordPlayerDataMap.set(obj.playerType,obj)
+          }
+        }else if(el.isBgPlayer){
+          obj.playerType = CoveredPlayerType.TYPE_BG
+          if(recordPlayerDataMap.get(obj.playerType) == undefined){
+            obj.pageIndex = pageIndex
+            obj.sid = el.sid
+            obj.playerWidth = 1920
+            obj.playerHeight = 1080
+            obj.itemIndex = i
+            obj.playData = el.item.playData
+            if(obj.playData.isRequestUrl){
+              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(el.playData[0])
+              obj.playData[0].url = playerInfo.url
+            }
+            recordPlayerDataMap.set(obj.playerType,obj)
+          }
+        }
+      }
     }
 
     /**
