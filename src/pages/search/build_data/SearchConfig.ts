@@ -9,5 +9,6 @@ export default {
   //左侧列表宽度
   leftWidth: 634,
   //中间列表宽度
-  centerWidth: 519
+  centerWidth: 519,  //右侧 Loading 宽度
+  rightLoading: 767
 }

@@ -10,7 +10,7 @@
         <qt-view style='width: 1800px; min-height: 1px; background-color: transparent;'>
           <qt-list-view ref="screen_right_filters" name="screen_right_filters" class="screen-right-filter-root"
             :style="{ height: filterHeight }" v-if="filterVisible" :triggerTask="switchData(hideSelectTask)"
-            :enableSelectOnFocus="false" :autofocusPosition="0">
+            :enableSelectOnFocus="false" :autofocusPosition="isFirstLoad ? 0 : -1">
             <qt-list-view ref="screen_right_filter_line" name="screen_right_filter_line"
               class="screen-right-filter-line" cachePoolName="filter_line" nextFocusLeftSID="screen_left_tags"
               flexStyle="${filterLineStyle}" :type="1" list="${list}" :endHintEnabled="false" horizontal
@@ -33,6 +33,7 @@
 
         <!-- 筛选结果-->
         <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
+          :autofocusPosition="isFirstLoad ? (filterVisible ? -1 : 0) : -1"
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1" :triggerTask="switchData(filterTriggerTask)"
           ref="screen_right_content" name="screen_right_content"
           :cachePool="{ name: 'filter_content', size: { 1: 40, } }" :blockFocusDirections="['right', 'down']"
@@ -170,6 +171,7 @@ export default defineComponent({
     let scrollY = ref(0)
     let filterTriggerTask = ref<any[]>([])
     let hideSelectTask = ref<any[]>([])
+    let isFirstLoad = ref(true)
 
     function init() {
       hideSelectTask.value = [
@@ -420,6 +422,9 @@ export default defineComponent({
               screenRightContentData.push(...screenContentList)
             }
           }
+          if (isFirstLoad.value) {
+            setTimeout(() => { isFirstLoad.value = false }, 500)
+          }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
             if (screenRightContentData && screenRightContentData.length > 0) {
@@ -483,6 +488,7 @@ export default defineComponent({
       screenItemContentFocus,
       filterTriggerTask,
       screenPageSize,
+      isFirstLoad
     }
   }
 })

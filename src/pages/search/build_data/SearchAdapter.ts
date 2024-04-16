@@ -8,13 +8,10 @@ import {
 } from "@quicktvui/quicktvui3"
 import { SearchResultItem } from "./impl/SearchResultItem"
 import SearchConfig from "./SearchConfig"
-import { buildEndSection } from "../../home/build_data/tab_content/page"
 //板块标题高度
 const plateTitleHeight = 65
 //有板块标题距离 top的高度
-const hasPlateTitle_Top = 200
-//无板块标题距离 top的高度
-const noPlateTitle_Top = 250
+const firstPlate_Top = 250
 //单个 Tab top的高度偏移量
 const singleTabTop_OffsetY = 60
 //板块一行个数
@@ -32,19 +29,19 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult, pag
       _id: searchResultPageData.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       title,
-      titleStyle: title != '' ? { width: 1920, height: plateTitleHeight, marginTop: 45, marginBottom: 20, marginLeft: 90, fontSize: 38 } : { width: 1920, height: 0 },
+      titleStyle: !!title ? { width: 1920, height: plateTitleHeight, marginBottom: 20, marginLeft: 90, fontSize: 38 } : { width: 1920, height: 0 },
       style: {
         width: 1920,
         height: -1,
       },
       decoration: {
-        top: pageNo == 1 ? singleTab ? (title !== '' ? hasPlateTitle_Top - singleTabTop_OffsetY : noPlateTitle_Top - singleTabTop_OffsetY) : (title !== '' ? hasPlateTitle_Top : noPlateTitle_Top) : 0,
+        top: pageNo == 1 ? (singleTab ? (firstPlate_Top - singleTabTop_OffsetY) : firstPlate_Top) : 0,
         left: 0,
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
     if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize) {
-      let endSection: QTWaterfallSection = buildEndSection('5');
+      let endSection: QTWaterfallSection = buildSearchEndSection('5');
       tabPage = {
         useDiff: false,
         data: [section, endSection]
@@ -64,7 +61,6 @@ export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Arr
   list.forEach((item, index) => {
     const poster: QTPoster = {
       _id: item.id + "i",
-      sid: item.id + "",
       focus: {
         enable: true,
         scale: 1.03,
@@ -152,4 +148,21 @@ export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Arr
     data.push(poster)
   })
   return data
+}
+
+function buildSearchEndSection(sectionId: string): QTWaterfallSection {
+  let section: QTWaterfallSection = {
+    _id: sectionId,
+    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
+    title: '已经到底啦，按【返回键】回到顶部',
+    style: {
+      width: 1920,
+      height: 100,
+    },
+    titleStyle: {
+      fontSize: 30
+    },
+    itemList: []
+  }
+  return section
 }

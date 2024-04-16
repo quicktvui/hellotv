@@ -108,8 +108,10 @@ export function buildAlbumDetailSection(m: IMedia): QTWaterfallSection {
 export function buildRecommendationSection(media: IMedia): QTWaterfallSection {
 
   let upOffset = 0
+  let downOffset = 800
   if (media.itemList.enable) {
     upOffset = 0
+    downOffset = 1000
   }
 
   let section: QTWaterfallSection = {
@@ -132,7 +134,7 @@ export function buildRecommendationSection(media: IMedia): QTWaterfallSection {
     //这里控制一下列表的滚动
     scrollOverride: {
       //在这个版块从下键移动时，下移1000
-      down: 1000,
+      down: downOffset,
       up: upOffset
     }
   }

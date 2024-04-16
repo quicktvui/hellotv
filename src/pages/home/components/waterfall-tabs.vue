@@ -10,7 +10,8 @@
       <slot name="buttonsHeader" />
     </div>
     <qt-tabs ref="tabRef" :tabContentResumeDelay="200" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
-      tabNavBarClass="qt-tabs-waterfall-tab-css" tabPageClass="qt-tabs-waterfall-css" :triggerTask="tabsTriggerTask"
+      tabNavBarClass="qt-tabs-waterfall-tab-css" tabPageClass="qt-tabs-waterfall-css"
+      :horizontalFadingEdgeEnabled="true" :fadingEdgeLength="400" :triggerTask="tabsTriggerTask"
       :outOfDateTime="5 * 60 * 1000" @onTabClick="onTabClick" :tabContentSwitchDelay='0' sid='homeTabs'
       :custom-pool="{ name: 'home' }" :custom-item-pool="{ name: 'homeItems' }" @onTabPageChanged="onTabPageChanged"
       @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -129,6 +130,7 @@ export default defineComponent({
     const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     let delayStopPlaerTimer: any = -1
+    let delayChangePlayerTimer: any = -1
     //
     function onESCreate(params) {
       isOneTime = true
@@ -227,7 +229,7 @@ export default defineComponent({
       }
       bg_player?.value.pause()
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-        bg_player?.value.showCoverImmediately(true)
+        // bg_player?.value.showCoverImmediately(true)
         bg_player?.value.keepPlayerInvisible(false)
       } else {
         bg_player?.value.showCoverImmediately(true)
@@ -271,6 +273,7 @@ export default defineComponent({
       //bgPlayerActive.value = true
       if (bgPlayerType.value != -1) {
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
+          bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
         }
         bg_player?.value.resume()
@@ -347,6 +350,7 @@ export default defineComponent({
               }
             }
             bgPlayerType.value = flag
+
             // bg_player.value.bgPlayerOpacity = 0
             let parentSID: string = ''
             if (flag == CoveredPlayerType.TYPE_CELL) {
@@ -362,6 +366,7 @@ export default defineComponent({
                 toRaw(recordPlayerData.data.playData), 0
               )
             } else if (flag == CoveredPlayerType.TYPE_BG) {
+              // clearTimeout(delayChangePlayerTimer)
               // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', ['bg_player_replace_child_sid','setChildSID',['bg-player']]);
               waterfall_tab_root.value?.dispatchFunctionBySid('bg_player_replace_child_sid', 'setChildSID', ['bg-player'])
               if (recordPlayerData.data.item.playData[0].isRequestUrl) {
@@ -372,6 +377,7 @@ export default defineComponent({
                 1920, 1080, 1920, 1080,
                 toRaw(recordPlayerData.data.item.playData), 0
               )
+              bg_player.value?.delayShowPlayer()
             } else if (isSwitchCellBg === '1') {
               const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
               wTabBg.value?.setImg(cellBg, "", true, false)
@@ -437,19 +443,25 @@ export default defineComponent({
         log.e('DebugReplaceChild', '-----onReplaceChildAttach----');
 
         if (sid) {
-          tabRef.value?.getCurrentTabIndex().then((index: number) => {
-            let currentPageIndex = index
-            let tabIndex = sid.split('tabIndex')[1]
-            if (tabIndex == currentPageIndex) {
-              log.e('DebugReplaceChild', `call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
-              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
-              waterfall_tab_root.value?.dispatchFunctionBySid(sid, 'setChildSID', ['bg-player'])
-              // log.e('DebugReplaceChild',`-----call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+          delayChangePlayerTimer = setTimeout(() => {
+            // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[0])
+            tabRef.value?.getCurrentTabIndex().then((index: number) => {
+              let currentPageIndex = index
+              let tabIndex = sid.split('tabIndex')[1]
+              if (tabIndex == currentPageIndex) {
+                log.e('DebugReplaceChild', `call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+                // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
+                waterfall_tab_root.value?.dispatchFunctionBySid(sid, 'setChildSID', ['bg-player'])
+                bg_player.value?.delayShowPlayer(100)
+                // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[1])
+                // log.e('DebugReplaceChild',`-----call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
+              }
             }
-          }
-          ).catch(err => {
-            log.e('DebugReplaceChild', ' error occur :' + JSON.stringify(err));
-          })
+            ).catch(err => {
+              log.e('DebugReplaceChild', ' error occur :' + JSON.stringify(err));
+            })
+          }, 200)
+
         }
       }
     }
@@ -473,6 +485,7 @@ export default defineComponent({
       )
       bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
+      clearTimeout(delayChangePlayerTimer)
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }

@@ -20,9 +20,11 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         // 第一步 设置启动参数
-        EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
-        data.setAppLoadUri(BuildConfig.RPK_FILE_NAME);
+        EsData data = DataCreateHelper.createFromAssets();
+        // 另外还支持的加载方式:
+//        DataCreateHelper.createFromFile(new File(""));
+//        DataCreateHelper.createFromUrl("https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/12/aa76e1a2-26b3-4a99-a16d-6bd1bd5a3da7.zip");
+//        DataCreateHelper.createFromRepoServer("http://nexus.hmon.tv/");
 
         // 第二步 启动
         EsManager.get().start(data);

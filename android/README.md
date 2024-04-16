@@ -10,19 +10,32 @@ sdk.dir=AndroidSDK路径
 ```
 根据需求修改app/build.gradle的ext部分。**注意是app文件夹下的build.gradle**
 ``` groovy
+// ext的信息影响APK的包名、版本、名称等。
 ext {
-    APP_PACKAGE = 'com.quicktvui.hellotv'   # APK包名
-    APP_NAME = 'HelloTV'                    # APK名字(Launcher显示)
-    APP_VERSION_CODE = 1                    # APK版本code
-    APP_VERSION_NAME = '1.0.0'              # APK版本名称
+    APP_PACKAGE = 'com.quicktvui.hellotv'   // APK包名
+    APP_NAME = 'HelloTV'                    // APK名字(Launcher显示)
+    APP_VERSION_CODE = 1                    // APK版本code
+    APP_VERSION_NAME = '1.0.0'              // APK版本名称
 
-    RPK_PACKAGE = "es.hellotv"              # 生成的rpk包名
-    RPK_FILE_NAME = "hello.rpk"             # 生成的rpk文件名
+    BUILD_RPK_IN_APK = true                 // 是否将rpk打入apk(非assets加载方式不用打包进apk)
+    RPK_PACKAGE = "es.hellotv"              // 生成的rpk包名
+    RPK_FILE_NAME = "hello.rpk"             // 生成的rpk文件名
 
-    vueDistDir = new File(project.rootDir, '../dist/android')   # vue编译后代码
-    assetsDir = new File(project.buildDir, 'assets')            # rpk生成的位置
+    vueDistDir = new File(project.rootDir, '../dist/android')   // vue编译后代码
+    assetsDir = new File(project.buildDir, 'assets')            // rpk生成的位置
+}
+
+// 引入runtime SDK
+dependencies {
+    implementation 'com.extscreen.runtime:official:2.8.0'
 }
 ```
+
+**SDK最新版本:**
+![](
+    https://img.shields.io/badge/dynamic/xml?url=https://nexus.extscreen.com/repository/maven-releases/com/extscreen/runtime/official/maven-metadata.xml&query=metadata/versioning/latest&label=latest
+)
+
 ## 3、安装VUE库
 cd到hellotv的根目录，执行:
 ```bash

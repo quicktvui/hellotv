@@ -275,7 +275,7 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   async function getScreenContentByTags(pageNum: number, tags?: string) {
-    let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${SearchConfig.searchCenterPageSize}` + tags)
+    let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${ScreenConfig.screenPageSize}` + tags)
     return Promise.resolve(result.list.map(item => ({
       id: '',
       assetTitle: item.vod_name,
