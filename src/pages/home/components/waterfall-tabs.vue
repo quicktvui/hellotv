@@ -1,96 +1,96 @@
 <template>
   <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
-           :clipPadding="false">
-    <waterfall-background ref="wTabBg" />
-    <!-- 背景播放及小窗播放组件 -->
-    <bg-player
-      class="bg_player"
-      ref="bg_player" :clipChildren="false"
-      :active="bgPlayerActive"
-      style="position: absolute;">
-    </bg-player>
-    <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css"
-         :clipChildren="false"
-         v-if="isShowTop" :blockFocusDirections="['left','right','up']">
-      <slot name="buttonsHeader" />
-    </div>
-    <qt-tabs
-      ref="tabRef"
-      :tabContentResumeDelay="200"
-      :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
-      tabNavBarClass="qt-tabs-waterfall-tab-css"
-      tabPageClass="qt-tabs-waterfall-css"
-      :horizontalFadingEdgeEnabled="true"
-      :fadingEdgeLength="400"
-      :triggerTask="tabsTriggerTask"
-      :outOfDateTime="5*60*1000"
-      @onTabClick="onTabClick"
-      :tabContentSwitchDelay="0"
-      sid="homeTabs"
-      :custom-pool="{name:'home'}"
-      :custom-item-pool="{name:'homeItems'}"
-      @onTabPageChanged="onTabPageChanged"
-      @onTabMoveToTopStart="onTabMoveToTopStart"
-      @onTabMoveToTopEnd="onTabMoveToTopEnd"
-      @onTabMoveToBottomStart="onTabMoveToBottomStart"
-      @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
-      @onTabPageScrollToEnd="onTabPageScrollToEnd"
-      @onTabPageScrollToStart="onTabPageScrollToStart"
-      @onTabPageItemClick="onTabPageItemClick"
-      @onTabPageItemFocused="onTabPageItemFocused"
-      @onTabPageLoadData="onTabPageLoadData"
-      @onTabPageScroll="onTabPageScroll"
-      @onTabEvent="onTabEvent"
-      @onTabPageSectionAttached="onTabPageSectionAttached"
-      class="qt-tabs-css">
-      <template v-slot:tab-item>
-        <tab-image-item :type="1" />
-        <tab-icon-item :type="2" cornerIconLeft />
-        <tab-text-icon-item :type="3" cornerIconLeft textIconLeft />
-      </template>
-      <template v-slot:waterfall-item>
-        <page-state-image-item :type="1" />
-        <page-no-frame-item :type="2" />
-        <page-place-holder-item :type="3" />
-        <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false" />
-      </template>
-      <template v-slot:waterfall-list-item>
-        <page-state-image-item :type="1" />
-        <page-no-frame-item :type="2" />
-        <page-place-holder-item :type="3" />
-      </template>
-    </qt-tabs>
+       :clipPadding="false">
+      <waterfall-background ref="wTabBg"/>
+      <!-- 背景播放及小窗播放组件 -->
+      <bg-player
+        class="bg_player"
+        ref="bg_player" :clipChildren="false"
+        :active="bgPlayerActive"
+        style="position: absolute;">
+      </bg-player>
+      <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
+           v-if="isShowTop" :blockFocusDirections="['left','right','up']">
+        <slot name="buttonsHeader"/>
+      </div>
+      <qt-tabs
+        ref="tabRef"
+        :tabContentResumeDelay="200"
+        :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
+        tabNavBarClass="qt-tabs-waterfall-tab-css"
+        tabPageClass="qt-tabs-waterfall-css"
+        :horizontalFadingEdgeEnabled="true"
+        :fadingEdgeLength="400"
+        :triggerTask="tabsTriggerTask"
+        :outOfDateTime="5*60*1000"
+        @onTabClick="onTabClick"
+        :tabContentSwitchDelay='0'
+        :playerBindingRelation='playerBindingRelation'
+        sid='homeTabs'
+        :custom-pool="{name:'home'}"
+        :custom-item-pool="{name:'homeItems'}"
+        @onTabPageChanged="onTabPageChanged"
+        @onTabMoveToTopStart="onTabMoveToTopStart"
+        @onTabMoveToTopEnd="onTabMoveToTopEnd"
+        @onTabMoveToBottomStart="onTabMoveToBottomStart"
+        @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+        @onTabPageScrollToEnd="onTabPageScrollToEnd"
+        @onTabPageScrollToStart="onTabPageScrollToStart"
+        @onTabPageItemClick="onTabPageItemClick"
+        @onTabPageItemFocused="onTabPageItemFocused"
+        @onTabPageLoadData="onTabPageLoadData"
+        @onTabPageScroll="onTabPageScroll"
+        @onTabEvent='onTabEvent'
+        @onTabPageSectionAttached="onTabPageSectionAttached"
+        class="qt-tabs-css">
+        <template v-slot:tab-item>
+          <tab-image-item :type="1"/>
+          <tab-icon-item :type="2" cornerIconLeft/>
+          <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
+        </template>
+        <template v-slot:waterfall-item>
+          <page-state-image-item :type="1"/>
+          <page-no-frame-item :type="2"/>
+          <page-place-holder-item :type="3"/>
+          <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
+        </template>
+        <template #waterfall-list-item>
+          <page-state-image-item :type="1"/>
+          <page-no-frame-item :type="2"/>
+          <page-place-holder-item :type="3"/>
+        </template>
+      </qt-tabs>
   </qt-view>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core"
-import { reactive, ref, toRaw } from "vue"
+import {defineComponent} from "@vue/runtime-core";
+import { reactive, ref, toRaw} from "vue";
 import { getSectionPosLabelObject } from "../build_data/useTabData"
-import WaterfallBackground from "./waterfall-background.vue"
+import WaterfallBackground from "./waterfall-background.vue";
 import {
-  QTITab, QTIView,
-  QTTab,
-  QTTabEventParams,
-  QTTabItem,
-  QTTabPageData,
-  QTTabPageState,
-  QTWaterfallItem
-} from "@quicktvui/quicktvui3"
-import { ESLogLevel, useESDevice, useESLog, useESToast } from "@extscreen/es3-core"
-import { useLaunch } from "../../../tools/launch/useApi"
-import { useGlobalApi } from "../../../api/UseApi"
-import BuildConfig from "../../../build/BuildConfig"
-import { buildTabPage } from "../build_data/tab/tabs"
-import TabImageItem from "./tab/tab-image-item.vue"
-import PageStateImageItem from "./page/page-state-image-item.vue"
-import TabIconItem from "./tab/tab-icon-item.vue"
-import TabTextIconItem from "./tab/tab-text-icon-item.vue"
-import PagePlaceHolderItem from "./page/page-place-holder-item.vue"
-import PageNoFrameItem from "./page/page-no-frame-item.vue"
+    QTITab, QTIView,
+    QTTab,
+    QTTabEventParams,
+    QTTabItem,
+    QTTabPageData,
+    QTTabPageState,
+    QTWaterfallItem
+} from '@quicktvui/quicktvui3'
+import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
+import {useLaunch} from "../../../tools/launch/useApi";
+import {useGlobalApi} from "../../../api/UseApi";
+import BuildConfig from "../../../build/BuildConfig";
+import {buildTabPage} from "../build_data/tab/tabs";
+import TabImageItem from "./tab/tab-image-item.vue";
+import PageStateImageItem from "./page/page-state-image-item.vue";
+import TabIconItem from "./tab/tab-icon-item.vue";
+import TabTextIconItem from "./tab/tab-text-icon-item.vue";
+import PagePlaceHolderItem from "./page/page-place-holder-item.vue";
+import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
-import { Native } from "@extscreen/es3-vue"
-import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
+import {Native} from "@extscreen/es3-vue";
+import bgPlayer, {CoveredPlayerType} from "../../../components/bg-player.vue"
 
 const TAG = "WATERFALL-TABS"
 
@@ -98,36 +98,35 @@ export default defineComponent({
   name: "waterfall-tabs",
   components: {
     PageNoFrameItem,
-    PagePlaceHolderItem, itemCellPlayer, bgPlayer,
-    TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
-  },
-  props: {
-    isShowTop: {
-      type: Boolean,
-      default: true
+    PagePlaceHolderItem,itemCellPlayer,bgPlayer,
+    TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground},
+  props:{
+    isShowTop:{
+      type:Boolean,
+      default:true
     }
   },
   setup(props, context) {
     let waterfall_tab_root = ref<QTIView>()
     const tabsTriggerTask = [
       {
-        event: "onContentScrollYGreater",
-        target: "buttonsHeaderDiv",
-        function: "changeVisibility",
-        params: ["invisible"]
+        event: 'onContentScrollYGreater',
+        target: 'buttonsHeaderDiv',
+        function: 'changeVisibility',
+        params: ['invisible'],
       },
       {
-        event: "onContentScrollYLesser",
-        target: "buttonsHeaderDiv",
-        function: "changeVisibility",
-        params: ["visible"]
+        event: 'onContentScrollYLesser',
+        target: 'buttonsHeaderDiv',
+        function: 'changeVisibility',
+        params: ['visible'],
       },
-      {
-        event: "onPageChange",
-        target: "home_player",
-        function: "changeAlpha",
-        params: [0]
-      }
+        {
+            event: 'onPageChange',
+            target: 'home_player',
+            function: 'changeAlpha',
+            params: [0],
+        },
     ]
     const log = useESLog()
     const launch = useLaunch()
@@ -141,8 +140,8 @@ export default defineComponent({
     let bgPlayerActive = ref(false)
     let recordPlayerData = reactive({
       pageIndex: -1,
-      itemIndex: -1,
-      data: {} as QTWaterfallItem
+      itemIndex:-1,
+      data: {} as QTWaterfallItem,
     })
     let recordPlayerDataMap = new Map()
     let isOneTime: boolean = false
@@ -151,11 +150,18 @@ export default defineComponent({
     //背景图
     const wTabBg = ref()
     //tab
-    const tabContentBlockFocusDirections = ref(["down", "right", "top"])
+    const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     let delayStopPlaerTimer: any = -1
     let delayChangePlayerTimer: any = -1
 
+    // let playerBindingRelation = {
+    //   '1' : 'bg_player_replace_child_sid',
+    //   '2' : 'CELL_LIST',
+    //   '3' : 'CELL',
+    //   '8' : 'bg_player_replace_child_sid_2',
+    // }
+    let playerBindingRelation = new Map()
     //
     function onESCreate(params) {
       isOneTime = true
@@ -164,26 +170,24 @@ export default defineComponent({
 
     function getTabList() {
       globalApi.getTabList().then((tab: QTTab) => {
-        tabItemList = tab.itemList
-        console.log("XRG==",tabItemList)
-        tabRef.value?.initTab(tab)
-        tabRef.value?.initPage(buildTabPage())
-      },
-      error => {
-        toast.showToast("加载数据失败，稍后重试！")
-      })
+          tabItemList = tab.itemList
+          tabRef.value?.initTab(tab)
+          tabRef.value?.initPage(buildTabPage())
+        },
+        error => {
+          toast.showToast('加载数据失败，稍后重试！')
+        })
     }
-
     function onESStart() {
 
     }
 
     function onESResume() {
-      if (isOneTime) {
+      if(isOneTime){
         isOneTime = false
         return
-      } else {
-        if (bgPlayerType.value != -1) {
+      }else{
+        if(bgPlayerType.value != -1){
           bg_player.value?.resume()
         }
       }
@@ -205,22 +209,22 @@ export default defineComponent({
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
       if (tabItemList && pageIndex >= 0 && pageIndex < tabItemList.length) {
         const tab = tabItemList[pageIndex]
-        if (tab._id == "0" || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
+        if(tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
       }
     }
 
     function getTabContent(tabId: string, tabPageIndex: number, pageNo: number) {
-      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize, tabPageIndex)
+      globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize,tabPageIndex)
         .then((tabPage: QTTabPageData) => {
             if (tabPage.data.length > 0) {
               setTabPagePageNo(tabPageIndex, pageNo)
               if (log.isLoggable(ESLogLevel.DEBUG)) {
-                log.d(TAG, "---------getTabContent-----pageNo--->>>>" + pageNo +
-                  " tabPageIndex:" + tabPageIndex +
-                  " pageNo:" + pageNo +
-                  " tabPage:", tabPage)
+                log.d(TAG, '---------getTabContent-----pageNo--->>>>' + pageNo +
+                  ' tabPageIndex:' + tabPageIndex +
+                  ' pageNo:' + pageNo +
+                  ' tabPage:', tabPage)
               }
-              
+
               if (pageNo <= 1) {
                 getPlayerData(tabPageIndex, tabPage.data[0].itemList)
                 tabRef.value?.setPageData(tabPageIndex, tabPage)
@@ -228,12 +232,12 @@ export default defineComponent({
                 tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
               }
             }
-            if (tabPage.isEndPage) {
+            if (tabPage.isEndPage){
               tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
             }
           },
           error => {
-            toast.showToast("加载数据失败，稍后重试！")
+            toast.showToast('加载数据失败，稍后重试！')
           })
     }
 
@@ -246,32 +250,35 @@ export default defineComponent({
       for (let i = 0; i < itemList.length; i++) {
         const el = itemList[i];
         let obj: any = {}
+        let key = ''+pageIndex
         if(el.isCellPlayer){
           if(el.isCellPlayerList) obj.playerType = CoveredPlayerType.TYPE_CELL_LIST
           else obj.playerType = CoveredPlayerType.TYPE_CELL
-          if(recordPlayerDataMap.get(obj.playerType) == undefined){
+          if(recordPlayerDataMap.get(key) == undefined){
             obj.pageIndex = pageIndex
             obj.sid = el.sid
             obj.playerWidth = el.style.width
             obj.playerHeight = el.style.height
             obj.itemIndex = i
             obj.data = el.playData
-            recordPlayerDataMap.set(obj.playerType,obj)
+            recordPlayerDataMap.set(key,obj)
+            playerBindingRelation.set(key,obj.sid)
           }
         }else if(el.isBgPlayer){
           obj.playerType = CoveredPlayerType.TYPE_BG
-          if(recordPlayerDataMap.get(obj.playerType) == undefined){
+          if(recordPlayerDataMap.get(key) == undefined){
             obj.pageIndex = pageIndex
             obj.sid = el.sid
             obj.playerWidth = 1920
             obj.playerHeight = 1080
             obj.itemIndex = i
-            obj.playData = el.item.playData
-            if(obj.playData.isRequestUrl){
-              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(el.playData[0])
-              obj.playData[0].url = playerInfo.url
+            obj.data = el.item.playData
+            if(obj.data[0].isRequestUrl){
+              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(obj.data[0])
+              obj.data[0].url = playerInfo.url
             }
-            recordPlayerDataMap.set(obj.playerType,obj)
+            recordPlayerDataMap.set(key,obj)
+            playerBindingRelation.set(key,obj.sid)
           }
         }
       }
@@ -285,10 +292,10 @@ export default defineComponent({
      */
     function onTabMoveToTopStart(pageIndex: number, eventName: string, params: QTTabEventParams) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabMoveToTopStart----------->>>",
-          " pageIndex:" + pageIndex +
-          " eventName:" + eventName +
-          " params:", params
+        log.d(TAG, '-------onTabMoveToTopStart----------->>>',
+          ' pageIndex:' + pageIndex +
+          ' eventName:' + eventName +
+          ' params:', params
         )
       }
       bg_player?.value.pause()
@@ -299,23 +306,22 @@ export default defineComponent({
         bg_player?.value.showCoverImmediately(true)
       }
     }
-
     function onTabMoveToTopEnd(pageIndex: number, eventName: string, params: QTTabEventParams) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabMoveToTopEnd----------->>>",
-          " pageIndex:" + pageIndex +
-          " eventName:" + eventName +
-          " params:", params
+        log.d(TAG, '-------onTabMoveToTopEnd----------->>>',
+          ' pageIndex:' + pageIndex +
+          ' eventName:' + eventName +
+          ' params:', params
         )
       }
     }
 
     function onTabMoveToBottomStart(pageIndex: number, eventName: string, params: QTTabEventParams) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabMoveToBottomStart----------->>>",
-          " pageIndex:" + pageIndex +
-          " eventName:" + eventName +
-          " params:", params
+        log.d(TAG, '-------onTabMoveToBottomStart----------->>>',
+          ' pageIndex:' + pageIndex +
+          ' eventName:' + eventName +
+          ' params:', params
         )
       }
     }
@@ -328,15 +334,15 @@ export default defineComponent({
      */
     function onTabMoveToBottomEnd(pageIndex: number, eventName: string, params: QTTabEventParams) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabMoveToBottomEnd----------->>>",
-          " pageIndex:" + pageIndex +
-          " eventName:" + eventName +
-          " params:", params
+        log.d(TAG, '-------onTabMoveToBottomEnd----------->>>',
+          ' pageIndex:' + pageIndex +
+          ' eventName:' + eventName +
+          ' params:', params
         )
       }
       //我
       //bgPlayerActive.value = true
-      if (bgPlayerType.value != -1) {
+      if(bgPlayerType.value != -1){
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
@@ -345,19 +351,18 @@ export default defineComponent({
         bg_player?.value.requestDismissCover()
       }
     }
-
     function onTabPageScrollToEnd(pageIndex: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabPageScrollToEnd----------->>>",
-          " pageIndex:" + pageIndex
+        log.d(TAG, '-------onTabPageScrollToEnd----------->>>',
+          ' pageIndex:' + pageIndex
         )
       }
     }
 
     function onTabPageScrollToStart(pageIndex: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "-------onTabPageScrollToStart----------->>>",
-          " pageIndex:" + pageIndex
+        log.d(TAG, '-------onTabPageScrollToStart----------->>>',
+          ' pageIndex:' + pageIndex
         )
       }
     }
@@ -366,102 +371,12 @@ export default defineComponent({
     let delayOnTabPageSectionAttachedTimer: any = -1
     let delayDealwithplayerTimer: any = -1
     let currentSectionAttachedIndex = ref(-1)
+    function onTabPageSectionAttached(pageIndex: number, sectionList:any){
 
-    function onTabPageSectionAttached(pageIndex: number, sectionList: any) {
-      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
-      delayOnTabPageSectionAttachedTimer = setTimeout(async () => {
-        if (sectionList.length < 1) {
-          log.e("IndieViewLog", `reutrn on sectionList.length < 1`)
-          return
-        }
-        const isSwitchCellBg = sectionList[0].isSwitchCellBg
-        if (isSwitchCellBg === "0") {
-          const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
-          wTabBg.value?.setImg(bg, "", true, false)
-        }
-        if (currentSectionAttachedIndex.value != pageIndex) {
-          currentSectionAttachedIndex.value = pageIndex
-          let sectionData = sectionList[0]
-          if (sectionData && sectionData.itemList) {
-            recordPlayerData.pageIndex = -1
-            recordPlayerData.itemIndex = -1
-            recordPlayerData.data = {} as QTWaterfallItem
-            let flag = -1
-            let width: any
-            let height: any
-            for (let index = 0; index < sectionData.itemList.length; index++) {
-              const element = sectionData.itemList[index]
-              log.e(TAG, `element : ${JSON.stringify(element)}`)
-              log.e(TAG, `element isBGPlayer: ${element.isBgPlayer}`)
-              log.e(TAG, `element sectionPosLabel: ${getSectionPosLabelObject(element.sectionPosLabel)}`)
-
-              if (element.isCellPlayer) {
-                if (element.isCellPlayerList) flag = CoveredPlayerType.TYPE_CELL_LIST
-                else flag = CoveredPlayerType.TYPE_CELL
-                // if(element.isBgPlayer) flag = 'isBgPlayer'
-                element.childSID = "bg-player"
-                width = element.style.width
-                height = element.style.height
-                recordPlayerData.pageIndex = pageIndex
-                recordPlayerData.itemIndex = index
-                recordPlayerData.data = element
-              } else if (element.isBgPlayer) {
-                flag = CoveredPlayerType.TYPE_BG
-                element.childSID = ""
-                width = element.style.width
-                height = element.style.height
-                recordPlayerData.pageIndex = pageIndex
-                recordPlayerData.itemIndex = index
-                recordPlayerData.data = element
-                break
-              }
-            }
-            bgPlayerType.value = flag
-
-            // bg_player.value.bgPlayerOpacity = 0
-            let parentSID: string = ""
-            if (flag == CoveredPlayerType.TYPE_CELL) {
-              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
-              bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
-                width, height, width, height,
-                toRaw(recordPlayerData.data.playData), 0
-              )
-            } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
-              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [recordPlayerData.data.sid,'setChildSID',['bg-player']]);
-              bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
-                width, height, 860, height,
-                toRaw(recordPlayerData.data.playData), 0
-              )
-            } else if (flag == CoveredPlayerType.TYPE_BG) {
-              // clearTimeout(delayChangePlayerTimer)
-              // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', ['bg_player_replace_child_sid','setChildSID',['bg-player']]);
-              waterfall_tab_root.value?.dispatchFunctionBySid("bg_player_replace_child_sid", "setChildSID", ["bg-player"])
-              if (recordPlayerData.data.item.playData[0].isRequestUrl) {
-                let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(toRaw(recordPlayerData.data.item.playData[0]))
-                recordPlayerData.data.item.playData[0].url = playerInfo.url
-              }
-              bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
-                1920, 1080, 1920, 1080,
-                toRaw(recordPlayerData.data.item.playData), 0
-              )
-              bg_player.value?.delayShowPlayer()
-            } else if (isSwitchCellBg === "1") {
-              const cellBg = sectionList[0].itemList[0]?.item.focusScreenImage
-              wTabBg.value?.setImg(cellBg, "", true, false)
-              delayStopPlayer()
-            } else {
-              delayStopPlayer()
-            }
-            //if(delayDealwithplayerTimer) clearTimeout(delayDealwithplayerTimer)
-
-          }
-        }
-      }, 200)
     }
-
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "---------onTabPageItemClick-------->>>>" +
+        log.d(TAG, '---------onTabPageItemClick-------->>>>' +
           " pageIndex: " + pageIndex +
           " sectionIndex: " + sectionIndex +
           " itemIndex: " + itemIndex +
@@ -470,13 +385,12 @@ export default defineComponent({
       }
       launch.launch(item)
     }
-
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
-      if (isFocused) {
-        if (bgPlayerType.value == CoveredPlayerType.TYPE_BG && sectionIndex === 0) {
-          if (recordPlayerData.pageIndex == pageIndex && recordPlayerData.itemIndex == itemIndex) {
-            log.i("BG-PLAYER", `return on same item`)
-          } else {
+      if (isFocused){
+        if(bgPlayerType.value == CoveredPlayerType.TYPE_BG && sectionIndex === 0){
+          if(recordPlayerData.pageIndex == pageIndex && recordPlayerData.itemIndex == itemIndex){
+            log.i("BG-PLAYER",`return on same item`)
+          }else{
             clearTimeout(delayDealwithplayerTimer)
             bg_player.value.setNextImage(item.item.playData[0].cover)
             bg_player.value.showCoverImmediately()
@@ -489,55 +403,68 @@ export default defineComponent({
               recordPlayerData.data.item.playData[0].url = playerInfo.url
               // bg_player.value.playAtIndex(itemIndex)
               bg_player.value.play(playerInfo.url)
-            }, 300)
+            },300)
           }
-        } else {
-          if (item.item.focusScreenImage && sectionIndex === 0) {//第一个板块且是格子切换背景
+        }else {
+          if(item.item.focusScreenImage && sectionIndex === 0){//第一个板块且是格子切换背景
             const cellBg = item.item.focusScreenImage
-            wTabBg.value?.setImg(cellBg, "", true, false)
-          } else {
+            wTabBg.value?.setImg(cellBg,"",true,false)
+          }else{
             const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
-            wTabBg.value?.setImg(bg, "", true, false)
+            wTabBg.value?.setImg(bg,"",true,false)
           }
         }
 
       }
     }
 
-    function onTabEvent(tabIndex: number, eventName: string, params: any) {
-      let sid = params.sid
+     async function onTabEvent(tabIndex: number, eventName: string,params:any) {
+          let sid = params.sid
+          if(eventName == 'onPageBringToFront') {
+            let pageIndex = params.page
+            bg_player.value?.delayShowPlayer(300)
+            let sectionData = tabRef.value?.getPageSection(pageIndex,0)
 
-
-      if (eventName == "onReplaceChildAttach") {
-        log.e("DebugReplaceChild", "-----onReplaceChildAttach----")
-
-        if (sid) {
-          delayChangePlayerTimer = setTimeout(() => {
-            // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[0])
-            tabRef.value?.getCurrentTabIndex().then((index: number) => {
-                let currentPageIndex = index
-                let tabIndex = sid.split("tabIndex")[1]
-                if (tabIndex == currentPageIndex) {
-                  log.e("DebugReplaceChild", `call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
-                  // Native.callUIFunction(waterfall_tab_root.value,'dispatchFunctionBySid', [sid,'setChildSID',['bg-player']]);
-                  waterfall_tab_root.value?.dispatchFunctionBySid(sid, "setChildSID", ["bg-player"])
-                  bg_player.value?.delayShowPlayer(100)
-                  // waterfall_tab_root.value?.dispatchFunctionBySid('bg-player','changeAlpha',[1])
-                  // log.e('DebugReplaceChild',`-----call dispatchFunctionBySid sid:${sid} waterfall_tab_root.value:${waterfall_tab_root.value == undefined}`)
-                }
+            let obj : any= recordPlayerDataMap.get(''+pageIndex)
+            if(obj){
+              let playData = obj.data
+              let flag = obj.playerType
+              let width =  obj.playerWidth
+              let height =  obj.playerHeight
+              // bg_player.value.bgPlayerOpacity = 0
+              let parentSID: string = ''
+              if (flag == CoveredPlayerType.TYPE_CELL) {
+                bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
+                  width, height, width, height,
+                  playData, 0
+                )
+              } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
+                bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
+                  width, height, 860, height,
+                  playData, 0
+                )
+              } else if (flag == CoveredPlayerType.TYPE_BG) {
+                // clearTimeout(delayChangePlayerTimer)
+                bg_player.value?.doChangeParent(parentSID, bgPlayerType.value,
+                  1920, 1080, 1920, 1080,
+                  playData, 0
+                )
+                bg_player.value?.delayShowPlayer()
+              } else if (sectionData && sectionData.isSwitchCellBg === '1') {
+                const cellBg = sectionData.itemList[0]?.item.focusScreenImage
+                wTabBg.value?.setImg(cellBg, "", true, false)
+                delayStopPlayer()
+              } else {
+                delayStopPlayer()
               }
-            ).catch(err => {
-              log.e("DebugReplaceChild", " error occur :" + JSON.stringify(err))
-            })
-          }, 200)
+            }
+          }
 
-        }
       }
-    }
 
-    function onTabPageScroll(offsetX: number, scrollY: number) {
+      function onTabPageScroll(offsetX: number, scrollY: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, "---------onTabPageScroll-------->>>>", offsetX, "---->>>", scrollY)
+        log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
       //如果有焦点播放需求时
       // if(Math.abs(scrollY) > 2) {
@@ -548,32 +475,30 @@ export default defineComponent({
       //   bg_player.value.requestDismissCellCover()
       // }
     }
-
-    function onTabPageChanged(pageIndex: number, data: any) {
-      log.d("BG-PLAYER", "-------onTabPageChanged----------->>>",
-        " pageIndex:" + pageIndex
+    function onTabPageChanged(pageIndex:number, data:any){
+      log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
+          ' pageIndex:' + pageIndex
       )
       bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
-      clearTimeout(delayChangePlayerTimer)
+        clearTimeout(delayChangePlayerTimer)
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }
 
-    function onTabClick(item: QTTabItem) {
+    function onTabClick(item:QTTabItem){
 
     }
-
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
       bg_player.value?.stop()
       bg_player.value?.setNextImage()
-      if (!isOneTimeStop) {
+      if(!isOneTimeStop){
         delayStopPlaerTimer = setTimeout(() => {
           bg_player.value?.stop()
           bg_player.value?.keepPlayerInvisible(false)
           isOneTimeStop = true
-        }, 2000)
+        },2000)
       }
     }
 
@@ -589,9 +514,9 @@ export default defineComponent({
       wTabBg,
       tabRef,
       bgPlayerActive,
-      bg_player, bgPlayerType,
+      bg_player,bgPlayerType,
       tabContentBlockFocusDirections,
-
+      playerBindingRelation,
       onTabPageLoadData,
       onTabPageChanged,
       onTabMoveToTopStart,
@@ -605,7 +530,7 @@ export default defineComponent({
       onTabPageItemClick,
       onTabPageItemFocused,
       onTabPageScroll,
-      onTabEvent,
+        onTabEvent,
       onTabClick,
       onTabPageSectionAttached,
       delayStopPlayer
