@@ -35,6 +35,23 @@
       </qt-row>
     </qt-column>
 
+    <!-- 鉴权失败 -->
+    <qt-column class="media-player-float-view-auth-css"
+               :style="{width:playerWidth, height:playerHeight}"
+               v-if="showAuthError && isFloatWindow"
+               :focusable="false">
+      <span class="media-player-float-view-text-css">
+        购买后可观看全部影视片VIP节目
+      </span>
+      <qt-row class="media-player-float-view-button-css"
+              :gradientBackground="{colors:['#FFEEB364','#FFFFE398'], orientation: 6, cornerRadii4: [35, 35, 35, 35]}"
+              :focusable="false">
+              <span class="media-player-float-view-buy-text-css">
+                立即购买
+              </span>
+      </qt-row>
+    </qt-column>
+
   </qt-row>
 </template>
 
@@ -410,6 +427,40 @@ export default defineComponent({
   font-size: 30px;
   color: white;
   text-align: right;
+}
+
+.media-player-float-view-auth-css {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.media-player-float-view-text-css {
+  width: 400px;
+  height: 30px;
+  font-size: 20px;
+  color: #F4D297;
+  text-align: center;
+}
+
+.media-player-float-view-button-css {
+  width: 200px;
+  height: 40px;
+  border-radius: 35px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.media-player-float-view-buy-text-css {
+  width: 200px;
+  height: 20px;
+  font-size: 20px;
+  color: #603314;
+  text-align: center;
 }
 
 </style>
