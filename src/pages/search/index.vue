@@ -17,7 +17,7 @@
         <!-- 搜索内容 -->
         <search-center
           v-if="isShowCenterSearch"
-          v-show="!loading"
+          :visible="!loading"
           :descendantFocusability="loading ? 2 : 1"
           ref="search_center"
           name="search_center_view"
@@ -47,7 +47,7 @@
       <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px;width:100px" :focusable="false"/>
     </qt-view>
     <!-- 页面loading-->
-    <qt-view v-if="showResultLoading" :focusable="false"
+    <qt-view v-if="showResultLoading && isShowCenterSearch" :focusable="false"
              class="search_result_loading" :style="{width:rightLoadingWidth}"
              :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
       <qt-loading-view style="width: 100px;height: 100px;" />
@@ -98,7 +98,9 @@ export default defineComponent({
     // 生命周期
     const onESCreate = (params) => {
       //无词条列表时，直接获取推荐列表
-      if (!SearchConfig.isShowCenterSearch){
+      if (!isShowCenterSearch.value){
+        showResultLoading.value = false
+        loading.value = true
         search_result.value!.initTab(true)
       }
     }
@@ -147,7 +149,12 @@ export default defineComponent({
       }
     }
     const closeLoading = ()=> {
-      setTimeout(()=>{loading.value = false},500)
+      setTimeout(()=>{
+        loading.value = false
+        if (isShowCenterSearch.value){
+          showResultLoading.value = true
+        }
+      },500)
     }
     const closeResultLoading = ()=> {
       showResultLoading.value = false
