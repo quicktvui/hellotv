@@ -13,6 +13,9 @@ import eskit.sdk.core.InitConfig;
  */
 public class App extends MultiDexApplication {
 
+    public static final String RPK_LOAD_URI = BuildConfig.RPK_LOAD_URI;
+    public static final String REPOSITORY_HOST = BuildConfig.REPOSITORY_HOST;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -21,9 +24,12 @@ public class App extends MultiDexApplication {
     }
 
     private void initESKitSDK() {
-        EsKitInitHelper.init(this, InitConfig.getDefault()
-                .addFlags(InitConfig.FLAG_DYNAMIC_SO)
-        );
+        InitConfig initConfig = InitConfig.getDefault();
+        if (!BuildConfig.IS_INCLUDE_SO) {
+            initConfig.addFlags(InitConfig.FLAG_DYNAMIC_SO);
+        }
+        initConfig.setDebug(true);
+        EsKitInitHelper.init(this, initConfig);
     }
 
 }
