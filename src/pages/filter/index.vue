@@ -1,7 +1,7 @@
 <template>
   <div class="screen-root-css" ref='screen_root'>
 <!--    顶部按钮-->
-    <top-btns-view :logo-right="true">
+    <top-btns-view v-if="isShowTopView" :logo-right="true">
       <template #btnItem>
         <img-text-btn-view
           :icon-left="true"
@@ -18,17 +18,23 @@
     </top-btns-view>
 
     <!-- 右侧结果-->
-    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
+    <tags-content  class="screen-right-root-css"
+                   :style="{width:rightContentWidth+'px',height:rightContentHeight+'px',left:(1920-rightContentWidth)+'px',
+                   top:(1080-rightContentHeight)+'px'}"
+                   ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
 
     <!-- 左侧列表-->
-    <div class="screen-left-root-css">
+    <div class="screen-left-root-css" v-if="isShowLeftList" :style="{width:leftRootWidth+'px',height:leftRootHeight+'px',top:(1080-leftRootHeight)+'px'}">
       <!-- 背景-->
-      <div class="screen-left-bg" :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
+      <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
+           :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
       <!-- 标题-->
-      <qt-text class="screen-left-title" v-if="title" :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
-      <img class="screen-left-title-img" v-else :src="title_img"/>
+      <qt-text class="screen-left-title" :style="{width:(leftRootWidth-20)+'px'}"
+               v-if="title" :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
+      <img class="screen-left-title-img" :style="{width:(leftRootWidth-40)+'px'}" v-else :src="title_img"/>
       <!-- 筛选列表-->
-      <qt-list-view class="screen-left-tags-root-css" :padding="'0,0,0,20'" sid="screen_left_tags"
+      <qt-list-view class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
+                    :padding="'0,0,0,20'" sid="screen_left_tags"
                     name='screen_left_tags' :autofocusPosition="defaultTagPosition"
                     ref="leftTags" :clipChildren="false" :clipPadding="false"
                     @item-focused="leftTagsItemFocus" :blockFocusDirections="['left','down']">
@@ -46,12 +52,13 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import { computed, defineComponent } from "@vue/runtime-core"
 import {ESLogLevel, useESLog} from "@extscreen/es3-core";
 import ImgTextBtnView from "../../components/img-text-btn-view.vue";
 import {useESRouter} from "@extscreen/es3-router";
 import TopBtnsView from "../../components/top-btns-view.vue";
 import {nextTick, ref} from "vue";
+import FilterConfig from "./build_data/FilterConfig"
 import TagsTextItem from "./components/tags-text-item.vue";
 import {useGlobalApi} from "../../api/UseApi";
 import {
@@ -71,6 +78,12 @@ export default defineComponent({
   name: "index",
   components: {TagsImgItem, TagsContent, TagsTextIconItem, TagsTextItem, TopBtnsView, ImgTextBtnView},
   setup(props, context) {
+    const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
+    const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
+    const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
+    const leftRootHeight = computed(()=>{return FilterConfig.isShowTopView ? FilterConfig.leftListHeight:1060})
+    const rightContentHeight = computed(()=>{return FilterConfig.isShowTopView ? FilterConfig.rightContentHeight:1060})
+    const rightContentWidth = computed(()=>{return FilterConfig.isShowLeftList ? FilterConfig.rightContentWidth:1856})
     const log = useESLog()
     //跳转
     const router = useESRouter()
@@ -101,7 +114,9 @@ export default defineComponent({
      */
     function onESCreate(params) {
       screenId = params.screenId
-      defaultSelectTag = params.defaultSelectTag
+      if (isShowLeftList.value){
+        defaultSelectTag = params.defaultSelectTag
+      }
       //Test
       screenId = "1764924767380697089"
       //Test
@@ -152,22 +167,32 @@ export default defineComponent({
     function getTagsData(){
       globalApi.getScreenLeftTags(screenId).then(res=>{
         if (res){
-          const showType = res?.entryTag?.showType
-          if (showType === '2' || showType === 2){//图片标题
-            title_img.value = res?.entryTag?.normalImage
-          }else{//文字标题
-            title.value = res?.entryTag?.showName
+          if (isShowLeftList.value){
+            const showType = res?.entryTag?.showType
+            if (showType === '2' || showType === 2){//图片标题
+              title_img.value = res?.entryTag?.normalImage
+            }else{//文字标题
+              title.value = res?.entryTag?.showName
+            }
           }
           //设置根筛选条件---接口要求，根据具体接口处理
           setRootTag(res?.entryTag?.tagName)
           const tags:Array<QTListViewItem> = buildTagsData(res,defaultSelectTag,defaultFilters,defaultFastTag)
           nextTick(()=>{
-            //设置左侧列表数据
-            leftTags.value!.init(tags)
-            //初始化筛选条件
-            tags_content.value.init()
-            //设置默认选中tag
-            defaultTagPosition.value = getDefaultTagSelectIndex()
+            if (isShowLeftList.value){
+              //设置左侧列表数据
+              leftTags.value!.init(tags)
+              //初始化筛选条件
+              tags_content.value.init()
+              //设置默认选中tag
+              defaultTagPosition.value = getDefaultTagSelectIndex()
+            }else{
+              //初始化筛选条件
+              tags_content.value.init()
+              curType = 3
+              curTagPosition = 0
+              tags_content!.value.getScreenByTags(1,curType,"",0,false,false)
+            }
           })
         }
       })
@@ -233,7 +258,13 @@ export default defineComponent({
       defaultTagPosition,
 
       tags_content,
-      screen_root
+      screen_root,
+      isShowLeftList,
+      isShowTopView,
+      leftRootWidth,
+      leftRootHeight,
+      rightContentHeight,
+      rightContentWidth
     }
   }
 })

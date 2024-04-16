@@ -1,6 +1,10 @@
 <template>
-  <qt-view class="filter-record-item-root" :focusable="false" autoWidth>
-    <qt-text class="filter-record-item-text"  :focusable="false"
+  <qt-view class="filter-record-item-root"
+           :style="{height:filterRecordHeight+'px'}"
+           :focusable="false" autoWidth>
+    <qt-text class="filter-record-item-text"
+             :style="{height:filterRecordHeight+'px'}"
+             :focusable="false"
              :fontSize="30"
              gravity="center" autoWidth text="${recordFilterName}"/>
 
@@ -8,15 +12,17 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import { computed, defineComponent } from "@vue/runtime-core"
 import {ESLogLevel, useESLog} from "@extscreen/es3-core";
+import FilterConfig from "../build_data/FilterConfig"
 
 export default defineComponent({
   name: "tags-filter-record",
   setup(props, context) {
+    const filterRecordHeight = computed(()=>{return FilterConfig.filterRecordHeight})
     const log = useESLog()
 
-    return {}
+    return {filterRecordHeight}
   }
 })
 </script>

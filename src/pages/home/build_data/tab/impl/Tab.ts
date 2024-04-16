@@ -17,9 +17,9 @@ export interface Tab {
   //tab 选中图片
   selectImage?: string
   //tab图片宽
-  imageWidth?: string
+  imageWidth?: number
   //tab图片高
-  imageHeight?: string
+  imageHeight?: number
   //角标图片
   cornerImage?: string
   //焦点角标图片
