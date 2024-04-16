@@ -313,6 +313,9 @@ export default defineComponent({
     function cancelDetailRequestFocusTimer(){
       if(detailFocusTimer != null){
         clearTimeout(detailFocusTimer)
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, "-------requestFullButtonFocus--cancelDetailRequestFocusTimer-->>>>>")
+        }
         detailFocusTimer = null
       }
     }
@@ -332,6 +335,7 @@ export default defineComponent({
        if(focused){
            waterfallRef.value?.scrollToTop()
            waterfallScrollY = 0
+           cancelDetailRequestFocusTimer()
        }
        eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
@@ -409,7 +413,9 @@ export default defineComponent({
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
             if (isFullButtonClick) {
               detailFocusTimer = setTimeout(() => {
-                cancelDetailRequestFocusTimer()
+                if (log.isLoggable(ESLogLevel.DEBUG)) {
+                  log.d(TAG, "-------requestFullButtonFocus---->>>>>")
+                }
                 albumDetailRef.value?.requestFullButtonFocus()
               }, 300)
               isFullButtonClick = false
@@ -419,6 +425,9 @@ export default defineComponent({
             return
           }
 
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.d(TAG, '-----全屏---------ES_PLAYER_WINDOW_TYPE_SMALL------>>>>')
+          }
           if (media && !media.itemList.enable) {
             albumDetailRef.value?.setAutofocus(false)
             detailFocusTimer = setTimeout(() => {
@@ -476,6 +485,7 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyDown(keyEvent)) {
         return true
       }
+      cancelDetailRequestFocusTimer()
       if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
         isKeyUpLongClick = true
         headerSectionRef.value?.setAutofocus(true)

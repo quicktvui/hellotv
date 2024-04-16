@@ -17,5 +17,6 @@ export interface IAlbumDetail {
   requestFullButtonFocus(): void
 
   release(): void
+
   setAutofocus(value:boolean): void
 }
