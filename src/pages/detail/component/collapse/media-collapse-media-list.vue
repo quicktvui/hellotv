@@ -130,6 +130,9 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---选集---setItemSelected------>>>>', position)
+      }
       mediaSeriesListRef.value?.requestFocus(position)
     }
 
@@ -174,6 +177,9 @@ export default defineComponent({
     }
 
     function release(): void {
+      selectedIndex.value = 0
+      initialized = false
+      isCollapseExpand.value = false
       mediaSeriesListRef.value?.release()
     }
 
