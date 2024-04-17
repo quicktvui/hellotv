@@ -2,9 +2,8 @@ package com.quicktvui.hellotv.config;
 
 import androidx.annotation.Keep;
 
+import com.google.gson.JsonObject;
 import com.google.gson.annotations.SerializedName;
-
-import org.json.JSONObject;
 
 /**
  * <br>
@@ -27,6 +26,6 @@ public class Config {
 
     public String repo;
 
-    public JSONObject config;
+    public JsonObject config;
 
 }

@@ -4,8 +4,11 @@ import android.content.Context;
 
 import com.quicktvui.hellotv.App;
 
+import org.json.JSONObject;
+
 import eskit.sdk.support.EsPromise;
 import eskit.sdk.support.PromiseHolder;
+import eskit.sdk.support.args.EsMap;
 import eskit.sdk.support.module.IEsModule;
 
 /**
@@ -24,8 +27,14 @@ public class ConfigModule implements IEsModule {
         PromiseHolder callback = PromiseHolder.create(promise);
         Config config = App.sConfig;
         if (config != null) {
-            callback.put("config", config.config);
-            callback.put("success", true);
+            try {
+                EsMap configMap = new EsMap();
+                configMap.pushJSONObject(new JSONObject(config.config.toString()));
+                callback.put("config", configMap);
+                callback.put("success", true);
+            } catch (Throwable e) {
+                e.printStackTrace();
+            }
         } else {
             callback.put("success", false);
         }
