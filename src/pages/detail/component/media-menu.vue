@@ -135,7 +135,7 @@ export default defineComponent({
     }
 
     function release(){
-      menuList.value = []
+      // menuList.value = []
     }
 
     return {
