@@ -7,32 +7,31 @@
        eventClick
        eventFocus>
     <img class="tab-list-item-image-css" flexStyle="${imageStyle}"
-         :duplicateParentState="true" showOnState="normal" src="${image}"/>
+         :duplicateParentState="true" showOnState="normal" src="${image}" />
     <img class="tab-list-item-image-css" flexStyle="${imageStyle}"
-         :duplicateParentState="true" showOnState="focused" src="${focusedImage}"/>
+         :duplicateParentState="true" showOnState="focused" src="${focusedImage}" />
     <img class="tab-list-item-image-css" flexStyle="${imageStyle}"
-         :duplicateParentState="true" showOnState="selected" src="${selectedImage}"/>
+         :duplicateParentState="true" showOnState="selected" src="${selectedImage}" />
   </div>
 
 </template>
 
 <script lang="ts">
 
-import { defineComponent } from '@vue/runtime-core';
+import { defineComponent } from "@vue/runtime-core"
 
 export default defineComponent({
-    name: 'tab-image-item',
-    setup() {
-        return {}
-    }
+  name: "tab-image-item",
+  setup() {
+    return {}
+  }
 })
 </script>
 
 <style scoped>
 .tab-list-item-root-css {
-    display: flex;
-
-    background-color: red;
+  display: flex;
+  background-color: transparent;
 }
 
 .tab-list-item-image-css {

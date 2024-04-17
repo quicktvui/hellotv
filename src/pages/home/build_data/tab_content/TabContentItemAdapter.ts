@@ -42,7 +42,7 @@ export function buildTabPageBlankItem(tabContentItem: TabSectionItem): QTWaterfa
     }
 }
 
-export function buildTabPageCellPlayerItem(tabContentItem: TabSectionItem,tabIndex): QTWaterfallItem{
+export function buildTabPageCellPlayerItem(tabContentItem: TabSectionItem,tabIndex:number): QTWaterfallItem{
   let item: QTWaterfallItem = {
     type: TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER,
     focusScrollTarget:true,

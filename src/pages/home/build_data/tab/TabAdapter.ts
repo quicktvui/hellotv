@@ -58,8 +58,8 @@ export function buildTabImgItem(tab:Tab, type: number, decoration?: ESListViewIt
     focusedImage:tab.focusImage,
     selectedImage:tab.selectImage,
     imageStyle: {
-      width: tab.imageWidth,
-      height: tab.imageHeight
+      width: !!tab.imageWidth ? Number(tab.imageWidth):0,
+      height:!!tab.imageHeight ? Number(tab.imageHeight):0,
     },
     decoration
   }

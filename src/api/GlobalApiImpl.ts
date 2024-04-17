@@ -1,4 +1,4 @@
-import ScreenConfig from "../pages/filter/build_data/ScreenConfig"
+import FilterConfig from "../pages/filter/build_data/FilterConfig"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
 import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
@@ -170,7 +170,7 @@ export function createGlobalApi(): IGlobalApi {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": ScreenConfig.screenPageSize,
+      "pageSize": FilterConfig.screenPageSize,
     };
     const newParams = {...params, ...pageParams};
     return requestManager.post(filterContentUrl,{
