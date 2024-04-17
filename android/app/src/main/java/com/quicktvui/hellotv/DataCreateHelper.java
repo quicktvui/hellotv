@@ -1,5 +1,10 @@
 package com.quicktvui.hellotv;
 
+import android.text.TextUtils;
+
+import com.quicktvui.hellotv.config.Config;
+import com.sunrain.toolkit.utils.ToastUtils;
+
 import eskit.sdk.core.EsData;
 
 /**
@@ -10,20 +15,35 @@ import eskit.sdk.core.EsData;
 public class DataCreateHelper {
 
     public static EsData createWithConfig() {
-        EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
 
-        switch (BuildConfig.LOAD_TYPE) {
+        Config cfg = App.sConfig;
+        if (TextUtils.isEmpty(cfg.rpkPackage)) {
+            ToastUtils.showLong("需要设置 rpk_package");
+            return null;
+        }
+
+        EsData data = new EsData();
+        data.setAppPackage(cfg.rpkPackage);
+
+        switch (cfg.loadType) {
             case 4:
-                data.setRepository(App.REPOSITORY_HOST);
+                if (TextUtils.isEmpty(cfg.repo)) {
+                    ToastUtils.showLong("需要设置 repo");
+                    return null;
+                }
+                data.setRepository(cfg.repo);
                 break;
             case 1:
             case 2:
             case 3:
-                data.setAppLoadUri(App.RPK_LOAD_URI);
+                if (TextUtils.isEmpty(cfg.rpkLoadUri)) {
+                    ToastUtils.showLong("需要设置 rpk_load_uri");
+                    return null;
+                }
+                data.setAppLoadUri(cfg.rpkLoadUri);
                 break;
             default:
-                throw new RuntimeException("not support LOAD_TYPE " + BuildConfig.LOAD_TYPE);
+                throw new RuntimeException("not support LOAD_TYPE " + cfg.loadType);
         }
 
         return data;
