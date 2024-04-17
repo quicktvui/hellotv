@@ -483,7 +483,6 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyDown(keyEvent)) {
         return true
       }
-      cancelDetailRequestFocusTimer()
       if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
         isKeyUpLongClick = true
         headerSectionRef.value?.setAutofocus(true)
