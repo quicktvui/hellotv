@@ -25,7 +25,7 @@
         :outOfDateTime="5*60*1000"
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
-        :playerBindingRelation='playerBindingRelation'
+        :playerBindingRelation='callbackFn(playerBindingRelationArrKey)'
         sid='homeTabs'
         :custom-pool="{name:'home'}"
         :custom-item-pool="{name:'homeItems'}"
@@ -64,7 +64,7 @@
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {computed, defineComponent, watch} from "@vue/runtime-core";
 import { reactive, ref, toRaw} from "vue";
 import { getSectionPosLabelObject } from "../build_data/useTabData"
 import WaterfallBackground from "./waterfall-background.vue";
@@ -161,6 +161,12 @@ export default defineComponent({
     //   '3' : 'CELL',
     //   '8' : 'bg_player_replace_child_sid_2',
     // }
+    let playerBindingRelationArrKey = ref(0)
+    const callbackFn = (arg:any)=>{
+      console.log(arg, 'argplayerBindingRelationArr', playerBindingRelation)
+      return playerBindingRelation
+    }
+    
     let playerBindingRelation = new Map()
     //
     function onESCreate(params) {
@@ -268,7 +274,7 @@ export default defineComponent({
           obj.playerType = CoveredPlayerType.TYPE_BG
           if(recordPlayerDataMap.get(key) == undefined){
             obj.pageIndex = pageIndex
-            obj.sid = el.sid
+            obj.sid = 'bg_player_replace_child_sid'
             obj.playerWidth = 1920
             obj.playerHeight = 1080
             obj.itemIndex = i
@@ -282,8 +288,9 @@ export default defineComponent({
           }
         }
       }
+      playerBindingRelationArrKey.value++
     }
-
+  
     /**
      * tab 移至最顶上时
      * @param pageIndex
@@ -517,6 +524,7 @@ export default defineComponent({
       bg_player,bgPlayerType,
       tabContentBlockFocusDirections,
       playerBindingRelation,
+      callbackFn, playerBindingRelationArrKey,
       onTabPageLoadData,
       onTabPageChanged,
       onTabMoveToTopStart,
