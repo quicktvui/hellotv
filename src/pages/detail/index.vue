@@ -127,7 +127,6 @@ export default defineComponent({
     function initWaterfall() {
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
-      waterfallRef.value?.scrollToTop()
       albumDetailRef.value?.setAutofocus(true)
     }
 
@@ -474,7 +473,6 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
-      waterfallRef.value?.scrollToTop()
       mediaPlayerViewRef.value?.reset()
       mediaPlayerViewRef.value?.release()
       albumDetailRef.value?.release()
