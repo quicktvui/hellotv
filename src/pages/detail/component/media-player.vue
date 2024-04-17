@@ -4,6 +4,8 @@
       ref="playerManager"
       :smallWindowWidth="890"
       :smallWindowHeight="500"
+      :floatWindowWidth="400"
+      :floatWindowHeight="225"
       :initPlayerWindowType="1"
       playerBackgroundColor="black"
       :playMediaAuto="false"
