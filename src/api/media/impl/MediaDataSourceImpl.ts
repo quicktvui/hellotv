@@ -24,12 +24,12 @@ export function createMediaDataSource(): IMediaDataSource {
     return Promise.resolve()
   }
   function getMediaDetail(mediaId: string): Promise<IMedia> {
-    return requestManager.cmsGet(mediaDetailUrl + `&ids=${mediaId}`)
+    return requestManager.cmsGet(mediaDetailUrl() + `&ids=${mediaId}`)
       .then((result: any) => buildMedia(result.list[0]))
   }
 
   function getMediaDetails(ids: string, pageNo: number): Promise<any> {
-    return requestManager.cmsGet(mediaDetailUrl + `&ids=${ids}&pg=${pageNo}`)
+    return requestManager.cmsGet(mediaDetailUrl() + `&ids=${ids}&pg=${pageNo}`)
       .then((result: any) => {
         let details = {}
         result.list?.map((item: any) => details[item.vod_id] = item)
@@ -38,7 +38,7 @@ export function createMediaDataSource(): IMediaDataSource {
   }
 
   function getMediaRecommendation(tabId: string): Promise<any> {
-    return requestManager.cmsGet(mediaRecommendUrl + `&t=${tabId}&pagesize=100`)
+    return requestManager.cmsGet(mediaRecommendUrl() + `&t=${tabId}&pagesize=100`)
       .then((result: any) => {
         let medias: Media[] = []
         for (let i = 0; i < 12; i++) {
@@ -65,7 +65,7 @@ export function createMediaDataSource(): IMediaDataSource {
       return Promise.resolve(iMedias)
     }
 
-    return requestManager.post(episodeListUrl + mediaItemListId, {
+    return requestManager.post(episodeListUrl() + mediaItemListId, {
       "action": "detail",
       "param": {
         "pageNo": Number(pageNo + 1),
@@ -75,17 +75,17 @@ export function createMediaDataSource(): IMediaDataSource {
   }
 
   function getMediaItemUrl(mediaItemId: string): Promise<Array<IMediaUrl>> {
-    return requestManager.post(episodePlayUrlUrl + mediaItemId, {})
+    return requestManager.post(episodePlayUrlUrl() + mediaItemId, {})
   }
 
   function getMediaAuthorization(mediaId: string): Promise<IMediaAuthorization | null | undefined> {
-    return requestManager.post(mediaAuthUrl, {
+    return requestManager.post(mediaAuthUrl(), {
       "data": mediaId
     }).then((authorization: MediaAuthorization) => buildMediaAuthorization(authorization))
   }
 
   function getMediaItemAuthorization(mediaItemId: string): Promise<IMediaAuthorization | null | undefined> {
-    return requestManager.post(episodeAuthUrl, {
+    return requestManager.post(episodeAuthUrl(), {
       "data": mediaItemId
     }).then((authorization: MediaAuthorization) => buildMediaAuthorization(authorization))
   }

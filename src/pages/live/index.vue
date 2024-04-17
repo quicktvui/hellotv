@@ -140,8 +140,8 @@ import {
 } from '@extscreen/es3-player'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { RouteParams, Lives, Category, Channel, Program } from './types'
+import { defaultSourceUrl } from '../../api/RequestUrl'
 import LoadingError from '../../components/LoadingError.vue'
-import BuildConfig from '../../build/BuildConfig'
 import bgPlayInfo from '../../assets/live/bg-play-info.png'
 import icOk from '../../assets/live/ic-ok.png'
 import icMenu from '../../assets/live/ic-menu.png'
@@ -247,7 +247,7 @@ async function onESCreate(params: RouteParams) {
   // 设置优先级
   let useSet = (params.url || params.lives) ? true : false
   // 直播源地址
-  let liveSourceUrl = params.lives ? '' : params.url || BuildConfig.defaultSourceUrl
+  let liveSourceUrl = params.lives ? '' : params.url || defaultSourceUrl()
   // console.log('huan-onESCreate-liveSourceUrl', liveSourceUrl)
   // 直播源配置
   let liveSourceList: Lives = params.lives ? JSON.parse(params.lives) : JSON.parse(await localStore.getString('liveSourceList', '[]'))

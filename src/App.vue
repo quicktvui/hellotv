@@ -15,6 +15,7 @@ import BuildConfig from "./build/BuildConfig";
 import { useLaunch } from "./tools/launch/useApi";
 import { useESNativeRouter, useESRouter } from "@extscreen/es3-router";
 import HistoryApi from './api/history/index'
+import { Native } from '@extscreen/es3-vue';
 
 export default defineComponent({
   name: "App",
@@ -42,6 +43,16 @@ export default defineComponent({
       initESLog()
       network.addListener(connectivityChangeListener)
       return Promise.resolve()
+        .then(() => {
+          // 读取APK自定义配置
+          Native.callNativeWithPromise('ConfigModule', 'readConfig')
+            .then(c => {
+              if (c.success) {
+                BuildConfig.requestBaseUrl = c.config.local.dianbo
+                BuildConfig.defaultSourceUrl = c.config.local.zhibo
+              }
+            })
+        })
         .then(() => request.init(es, develop, device, runtime, log))
         .then(() => globalApi.init(request))
         .then(() => mediaDataSource.init(request))

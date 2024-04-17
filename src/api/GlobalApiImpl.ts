@@ -71,7 +71,7 @@ export function createGlobalApi(): IGlobalApi {
     if (BuildConfig.useMockData) {
       return getMockTabList()
     }
-    return requestManager.cmsGet(tabListUrl)
+    return requestManager.cmsGet(tabListUrl())
       .then((result: any) => buildO2MTabData(result.class))
   }
 
@@ -85,7 +85,7 @@ export function createGlobalApi(): IGlobalApi {
     if (BuildConfig.useMockData) {
       return getMockTabContent(tabId, pageNo, tabPageIndex)
     }
-    return requestManager.cmsGet(tabContentUrl + `&t=${tabId}&pg=${pageNo}&pagesize=${pageSize * 6}`)
+    return requestManager.cmsGet(tabContentUrl() + `&t=${tabId}&pg=${pageNo}&pagesize=${pageSize * 6}`)
       .then(async (result: any) => buildO2MTabContentData(result, pageNo, tabId))
   }
 
@@ -120,7 +120,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchCenterListData(list, isLoadHistory))
     }
     // 根据keyword字母搜索关键字 不传返回热门搜索
-    return requestManager.post(hotSearchUrl, { 'data': keyword, param: { pageNo: pageNum, pageSize: SearchConfig.searchCenterPageSize } })
+    return requestManager.post(hotSearchUrl(), { 'data': keyword, param: { pageNo: pageNum, pageSize: SearchConfig.searchCenterPageSize } })
       .then((result: any) => {
         let list: Array<any> = []
         if (result.keywordList.length > 0) list = result.keywordList
@@ -156,7 +156,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo, singleTab))
     }
 
-    return requestManager.cmsGet(tabContentUrl + `&wd=${keyword}&pg=${pageNo}&pagesize=${pageSize}`)
+    return requestManager.cmsGet(tabContentUrl() + `&wd=${keyword}&pg=${pageNo}&pagesize=${pageSize}`)
       .then((result: any) => buildSearchResultData({
         itemList: result.list?.map(item => ({
           id: item.vod_id,
@@ -181,7 +181,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo, singleTab))
     }
 
-    return requestManager.cmsGet(tabContentUrl + `&pg=${pageNo}&pagesize=${pageSize}`)
+    return requestManager.cmsGet(tabContentUrl() + `&pg=${pageNo}&pagesize=${pageSize}`)
       .then((result: any) => buildSearchResultData({
         itemList: result.list?.map(item => ({
           id: item.vod_id,
@@ -270,12 +270,12 @@ export function createGlobalApi(): IGlobalApi {
       ]
     })
 
-    const requestUrl = filterEntryUrl + screenId
+    const requestUrl = filterEntryUrl() + screenId
     return requestManager.post(requestUrl, {})
   }
 
   async function getScreenContentByTags(pageNum: number, tags?: string) {
-    let result = await requestManager.cmsGet(tabContentUrl + `&pg=${pageNum}&pagesize=${ScreenConfig.screenPageSize}` + tags)
+    let result = await requestManager.cmsGet(tabContentUrl() + `&pg=${pageNum}&pagesize=${ScreenConfig.screenPageSize}` + tags)
     return Promise.resolve(result.list.map(item => ({
       id: '',
       assetTitle: item.vod_name,
@@ -293,7 +293,7 @@ export function createGlobalApi(): IGlobalApi {
       "pageSize": ScreenConfig.screenPageSize,
     };
     const newParams = { ...params, ...pageParams };
-    return requestManager.post(filterContentUrl, {
+    return requestManager.post(filterContentUrl(), {
       'param': newParams,
       'data': tags
     })
