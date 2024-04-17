@@ -18,14 +18,26 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        App.sExecutor.execute(WORK_START_APP);
+    }
+
+    private final Runnable WORK_START_APP = () -> {
+        if (App.sConfig == null) {
+            finish();
+            return;
+        }
 
         // 第一步 设置启动参数
         EsData data = DataCreateHelper.createWithConfig();
 
+        if (data == null) {
+            finish();
+            return;
+        }
+
         // 第二步 启动
         EsManager.get().start(data);
-
-    }
+    };
 
     @Override
     protected void onStop() {
