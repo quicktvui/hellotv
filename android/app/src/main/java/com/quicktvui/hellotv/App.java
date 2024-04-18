@@ -57,7 +57,6 @@ public class App extends MultiDexApplication {
             if(sConfig == null) return;
 
             InitConfig initConfig = InitConfig.getDefault();
-            initConfig.setDebug(true);
             if (!BuildConfig.IS_INCLUDE_SO) {
                 initConfig.addFlags(InitConfig.FLAG_DYNAMIC_SO);
             }
