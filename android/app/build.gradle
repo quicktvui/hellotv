@@ -30,10 +30,10 @@ ext {
     RPK_FILE_PATH = "data/data/$APP_PACKAGE/files/hello.rpk"
 
     // 方式3:
-    RPK_FILE_URL = "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/16/31bd4b38-4b00-4ab1-ac12-f94bda0bc8b1.rpk"
+    RPK_FILE_URL = "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/18/efe23d2e-0c05-4dac-a77a-11635d6bbf12.zip"
 
     // 方式4
-    REPOSITORY_HOST = "http://repo.hsrc.tv/"
+    REPOSITORY_HOST = "http://repo.quicktvui.com/"
 
     vueDistDir = new File(project.rootDir, '../dist/android')
     assetsDir = new File(project.buildDir, 'assets')
@@ -103,8 +103,9 @@ dependencies {
     if (INCLUDE_SO) {
         implementation 'eskit.sdk.support.so:hp-v1-armeabi-v7a:1.0.1'
         implementation 'eskit.sdk.support.so:hp-v1-arm64-v8a:1.0.1'
-        implementation 'eskit.sdk.support.so:ijk-player-0.88-armeabi-v7a:1.0.1'
-        implementation 'eskit.sdk.support.so:ijk-player-0.88-arm64-v8a:1.0.1'
+
+        implementation 'eskit.sdk.support.so:ijk-player-armeabi-v7a:1.0.0'
+        implementation 'eskit.sdk.support.so:ijk-player-arm64-v8a:1.0.0'
     }
 }
 
