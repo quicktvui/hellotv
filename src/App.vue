@@ -43,13 +43,23 @@ export default defineComponent({
       initESLog()
       network.addListener(connectivityChangeListener)
       return Promise.resolve()
-        .then(() => {
+        .then(async () => {
           // 读取APK自定义配置
           Native.callNativeWithPromise('ConfigModule', 'readConfig')
-            .then(c => {
+            .then(async c => {
               if (c.success) {
-                BuildConfig.requestBaseUrl = c.config.local.dianbo
-                BuildConfig.defaultSourceUrl = c.config.local.zhibo
+                // 远程读取
+                if (c.config.remote != '') {
+                  c.config.local = await fetch(c.config.remote).then(r => r.json())
+                }
+
+                // 本地读取
+                if (c.config.local.dianbo != '') {
+                  BuildConfig.requestBaseUrl = c.config.local.dianbo
+                }
+                if (c.config.local.zhibo != '') {
+                  BuildConfig.defaultSourceUrl = c.config.local.zhibo
+                }
               }
             })
         })
