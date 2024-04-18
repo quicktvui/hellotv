@@ -282,10 +282,12 @@ export default defineComponent({
       if (scrollY > 0) {
         if (mediaPlayerViewRef.value?.getWindowType() ==
           ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
-          mediaPlayerViewRef.value?.setFloatWindow()
+          setTimeout(() => {
+            mediaPlayerViewRef.value?.setFloatWindow()
+          }, 100)
         }
       } else {
-        if(detailScrollState == 0){
+        if (detailScrollState == 0) {
           if (mediaPlayerViewRef.value?.getWindowType() ==
             ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
             mediaPlayerViewRef.value?.setSmallWindow()
@@ -302,10 +304,12 @@ export default defineComponent({
       }
       waterfallRef.value?.scrollToTop()
       detailScrollState = 0
-      if (mediaPlayerViewRef.value?.getWindowType() ==
-        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-        mediaPlayerViewRef.value?.setSmallWindow()
-      }
+      setTimeout(() => {
+        if (mediaPlayerViewRef.value?.getWindowType() ==
+          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+          mediaPlayerViewRef.value?.setSmallWindow()
+        }
+      }, 100)
       cancelDetailRequestFocusTimer()
     }
 
