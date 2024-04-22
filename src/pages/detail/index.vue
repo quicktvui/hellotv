@@ -9,6 +9,10 @@
       @onScroll="onScroll"
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
+      :scrollYLesserReferenceValue="30"
+      :scrollYGreaterReferenceValue="30"
+      @onScrollYGreaterReference="onScrollYGreaterReference"
+      @onScrollYLesserReference="onScrollYLesserReference"
       class="detail-waterfall-css">
       <template v-slot:section>
         <header-section
@@ -240,29 +244,29 @@ export default defineComponent({
       }
     }
 
+    function onScrollYGreaterReference() {
+      log.d(TAG, "----onScrollY---onScrollYGreaterReference----->>>>")
+      if (mediaPlayerViewRef.value?.getWindowType() ==
+        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
+        nextTick(() => {
+          mediaPlayerViewRef.value?.setFloatWindow()
+        })
+      }
+      albumDetailRef.value?.setAutofocus(false)
+    }
+
+    function onScrollYLesserReference() {
+      log.d(TAG, "----onScrollY---onScrollYLesserReference----->>>>")
+      if (mediaPlayerViewRef.value?.getWindowType() ==
+        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+        nextTick(() => {
+          mediaPlayerViewRef.value?.setSmallWindow()
+        })
+      }
+    }
+
     function onScrollStateChanged(x: number, y: number, state: number) {
       detailScrollState = state
-      log.d(TAG, '----滚动状态---onScrollStateChanged-------->>>>' +
-          " y:" + y +
-          " state:" + state
-      )
-
-      if(isKeyUpLongClick){
-        log.d(TAG, '---滚动----onScrollStateChanged--屏蔽长按------>>>>' +
-          " isKeyUpLongClick:" + isKeyUpLongClick
-        )
-        return
-      }
-
-      if (state == 0 && y < 5) {
-        if (mediaPlayerViewRef.value?.getWindowType() ==
-          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-          mediaPlayerViewRef.value?.setSmallWindow()
-        }
-      }
-      if(state == 0 && y > 10){
-          albumDetailRef.value?.setAutofocus(false)
-      }
     }
 
     function onScroll(offsetX: number, scrollY: number) {
@@ -271,29 +275,6 @@ export default defineComponent({
         " scrollY:" + scrollY
       )
       waterfallScrollY = scrollY
-
-      if(isKeyUpLongClick){
-        log.d(TAG, '---滚动----onScroll--屏蔽长按------>>>>' +
-          " isKeyUpLongClick:" + isKeyUpLongClick
-        )
-        return
-      }
-
-      if (scrollY > 0) {
-        if (mediaPlayerViewRef.value?.getWindowType() ==
-          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
-          setTimeout(() => {
-            mediaPlayerViewRef.value?.setFloatWindow()
-          }, 100)
-        }
-      } else {
-        if (detailScrollState == 0) {
-          if (mediaPlayerViewRef.value?.getWindowType() ==
-            ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-            mediaPlayerViewRef.value?.setSmallWindow()
-          }
-        }
-      }
     }
 
 
@@ -562,7 +543,9 @@ export default defineComponent({
       onIntroductionFocus,
       //
       showLoading,
-      onSearchButtonFocused
+      onSearchButtonFocused,
+      onScrollYGreaterReference,
+      onScrollYLesserReference
     };
   },
 });
