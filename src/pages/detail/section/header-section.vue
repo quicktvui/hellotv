@@ -5,6 +5,7 @@
         <navigation-button
           ref="searchButtonRef"
           class="header-home-button-css"
+          name="headerSearchButton"
           :focus-icon="searchFocused"
           :icon="searchNormal"
           :blockFocusDirections="['left','right','top']"
