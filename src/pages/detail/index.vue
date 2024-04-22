@@ -249,7 +249,9 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
         nextTick(() => {
-          mediaPlayerViewRef.value?.setFloatWindow()
+          setTimeout(() => {
+            mediaPlayerViewRef.value?.setFloatWindow()
+          }, 100)
         })
       }
       albumDetailRef.value?.setAutofocus(false)
@@ -260,7 +262,9 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
         nextTick(() => {
-          mediaPlayerViewRef.value?.setSmallWindow()
+          setTimeout(() => {
+            mediaPlayerViewRef.value?.setSmallWindow()
+          }, 100)
         })
       }
     }
