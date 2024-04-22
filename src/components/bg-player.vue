@@ -4,8 +4,8 @@
       :focusable="false" :clipChildren="false"
       @onChildChanged="onChildChanged"
       ref="bg_player_replace_child"
-      childSID="bg-player"
-      :replaceOnVisibilityChanged='true'
+      markChildSID="bg-player"
+      :replaceOnVisibilityChanged='false'
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
     </replace-child>
@@ -55,6 +55,7 @@
         <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
                       :bringFocusChildToFront="false"
+                      :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
                       :singleSelectPosition="currentPlayIndex"
           @item-click="onItemClick"  @item-focused="onItemFocus">
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
@@ -471,7 +472,7 @@ export default defineComponent({
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
  flex-direction: row;justify-content: center;align-items: center;}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
-.bg_player_box{width: 1920px;height: 1080px;background-color: red;position: absolute;border-radius: 8px;top: 0;left: 0;}
+.bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 8px;top: 0;left: 0;}
 .playerBox{
   background-color: rgba(0, 0, 0, 0.1);
   focus-border-style: solid;
