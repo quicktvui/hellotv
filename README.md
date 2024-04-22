@@ -3,8 +3,9 @@
 [![vue version](https://img.shields.io/badge/vue-3.2-green.svg)](https://github.com/vuejs/core)
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
 
-基于 [HelloTv](https://github.com/quicktvui/hellotv) 专为快速打造安卓TV影视应用而开发的示例项目。
-项目主要目的是让开发者通过对本项目的简单修改，实现一些TV端常见的功能页面，从而加速开发者开发TV类影视类应用。
+**免责声明：本项目不内置任何数据，请在符合当地法律的前提下学习使用。**
+
+基于 [HelloTv](https://github.com/quicktvui/hellotv) 专为快速打造安卓TV影视应用而开发的示例项目。项目主要目的是让开发者通过对本项目的简单修改，实现一些TV端常见的功能页面，从而加速开发者开发TV类影视类应用。
 
 * 首页
 ![image](doc/home.png)
@@ -29,6 +30,7 @@
 ## 快速开始
 
 ### 调试
+
 #### 1. 确认编译环境
 建议windows:
 - node version 16.20.2
@@ -71,8 +73,50 @@ npm run build-apk-release
 
 #### 7. 修改默认源
 
-* 苹果cms `src/build/BuildConfig.ts -> requestBaseUrl`
-* tvbox `src/build/BuildConfig.ts -> defaultSourceUrl`
+* 点播源，支持苹果CMS `src/build/BuildConfig.ts -> requestBaseUrl`
+* 直播源，支持tvbox `src/build/BuildConfig.ts -> defaultSourceUrl`
+
+#### 8. 脱壳反编译
+
+> 选择对应平台安装工具，[官方文档](https://apktool.org/docs/install)
+
+```bash
+# 解包
+~ apktool d ~/Desktop/HelloTV_1.0.0_20240418143603_release.apk
+
+# 修改配置文件, 配置文件优先级：远程 > 本地 > 默认
+~ cat HelloTV_1.0.0_20240418143603_release/assets/config.json
+{
+    "config": {
+        "local": {   // 从本地读取配置
+            "name": "",
+            "icon": "",
+            "zhibo": "",  // 直播默认源
+            "dianbo": ""  // 点播默认源
+        },
+        "remote": "" // 从远程读取配置文件，文件格式 {"name": "", "icon": "", "zhibo": "", "dianbo": ""}
+    },
+    "version": 1,
+    "load_type": 3,
+    "rpk_package": "es.hellotv",
+    "rpk_load_uri": "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/18/b83e970b-deae-4db8-87e1-cec82531acab.zip",  // 从远程加载快应用代码包
+    "repo": ""
+}
+
+# 修改APK图标, 替换下面图标文件, 主意：文件名不能变
+~ res/mipmap/ic_launcher.png
+
+# 封包
+~ apktool b HelloTV_1.0.0_20240418143603_release
+
+# 生成证书
+~ keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore abc.keystore
+
+# 使用证书签名
+~ jarsigner -verbose -keystore abc.keystore -signedjar helloTv.apk HelloTV_1.0.0_20240418143603_release/dist/HelloTV_1.0.0_20240418143603_release.apk abc.keystore
+```
+
+> 最后安装当前目录下生成的 `helloTv.apk` 即可。
 
 ## 源码修改
 接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)

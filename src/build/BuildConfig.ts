@@ -7,10 +7,10 @@ export default {
   useMockData: false,
   //ES包名
   packageName: 'es.tv.huan.hellotv',
-  //域名
-  requestBaseUrl: 'http://152.136.204.154/api.php/provide/vod',
+  // 默认点播地址
+  requestBaseUrl: '',
   //页面内容请求数量
   tabContentPageSize: 3,
-  // 默认源
-  defaultSourceUrl: 'http://cms.hmon.tv/upload/test/tvbox/js.json'
+  // 默认直播地址
+  defaultSourceUrl: ''
 }
