@@ -27,7 +27,63 @@
 > 目前项目仅供参考，代码逐步完善中，请暂勿用于正式项目中。
 > release版本会于近期推出，敬请期待！
 
-## 快速开始
+## 脱壳反编译
+
+### 1. 使用 mt管理器
+
+* 安装[MT管理器](https://mt2.cn/download/)
+* 反编译修改[教程](./doc/mt.mp4)
+
+### 2. 使用 apktool
+
+> 选择对应平台安装工具，[官方文档](https://apktool.org/docs/install)
+
+```bash
+# 解包
+~ apktool d HelloTV_1.0.0_20240418143603_release.apk
+
+# 修改配置文件, 配置文件优先级：远程 > 本地 > 默认
+~ cat HelloTV_1.0.0_20240418143603_release/assets/config.json
+{
+    "config": {
+        "local": {   // 从本地读取配置
+            "name": "",
+            "icon": "",
+            "zhibo": "",  // 直播默认源
+            "dianbo": ""  // 点播默认源
+        },
+        "remote": "" // 从远程读取配置文件，文件格式 {"name": "", "icon": "", "zhibo": "", "dianbo": ""}
+    },
+    "version": 1,
+    "load_type": 3,
+    "rpk_package": "es.hellotv",
+    "rpk_load_uri": "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/18/b83e970b-deae-4db8-87e1-cec82531acab.zip",  // 从远程加载快应用代码包
+    "repo": ""
+}
+
+# 修改APK图标, 替换下面图标文件, 注意：文件名必须为 ic_launcher.png
+~ res/mipmap/ic_launcher.png
+
+# 封包
+~ apktool b HelloTV_1.0.0_20240418143603_release
+
+# 生成证书
+~ keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore abc.keystore
+
+# 使用证书签名
+~ jarsigner -verbose -keystore abc.keystore -signedjar helloTv.apk HelloTV_1.0.0_20240418143603_release/dist/HelloTV_1.0.0_20240418143603_release.apk abc.keystore
+```
+
+> 最后安装当前目录下生成的 `helloTv.apk` 即可。
+
+## 源码修改
+
+接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
+通过对每个页面提供的接口进行数据替换，即可实现自己的业务逻辑。
+
+如有定制样式需求，可自行修改页面里样式文件。
+
+具体可查看[/src/pages](./src/pages)目录下对应README说明。
 
 ### 调试
 
@@ -76,56 +132,6 @@ npm run build-apk-release
 * 点播源，支持苹果CMS `src/build/BuildConfig.ts -> requestBaseUrl`
 * 直播源，支持tvbox `src/build/BuildConfig.ts -> defaultSourceUrl`
 
-#### 8. 脱壳反编译
-
-> 选择对应平台安装工具，[官方文档](https://apktool.org/docs/install)
-
-```bash
-# 解包
-~ apktool d ~/Desktop/HelloTV_1.0.0_20240418143603_release.apk
-
-# 修改配置文件, 配置文件优先级：远程 > 本地 > 默认
-~ cat HelloTV_1.0.0_20240418143603_release/assets/config.json
-{
-    "config": {
-        "local": {   // 从本地读取配置
-            "name": "",
-            "icon": "",
-            "zhibo": "",  // 直播默认源
-            "dianbo": ""  // 点播默认源
-        },
-        "remote": "" // 从远程读取配置文件，文件格式 {"name": "", "icon": "", "zhibo": "", "dianbo": ""}
-    },
-    "version": 1,
-    "load_type": 3,
-    "rpk_package": "es.hellotv",
-    "rpk_load_uri": "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/18/b83e970b-deae-4db8-87e1-cec82531acab.zip",  // 从远程加载快应用代码包
-    "repo": ""
-}
-
-# 修改APK图标, 替换下面图标文件, 主意：文件名不能变
-~ res/mipmap/ic_launcher.png
-
-# 封包
-~ apktool b HelloTV_1.0.0_20240418143603_release
-
-# 生成证书
-~ keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore abc.keystore
-
-# 使用证书签名
-~ jarsigner -verbose -keystore abc.keystore -signedjar helloTv.apk HelloTV_1.0.0_20240418143603_release/dist/HelloTV_1.0.0_20240418143603_release.apk abc.keystore
-```
-
-> 最后安装当前目录下生成的 `helloTv.apk` 即可。
-
-## 源码修改
-接入网络数据的准备工作请查看[PROJECT-README.md](PROJECT-README.md)
-通过对每个页面提供的接口进行数据替换，即可实现自己的业务逻辑。
-
-如有定制样式需求，可自行修改页面里样式文件。
-
-具体可查看[/src/pages](./src/pages)目录下对应README说明。
-
 ## 关于QuickTVUI
 QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快应用开发框架，旨在解决大屏开发困难、更新困难等疑难问题。  
 它具有以下特征：
@@ -133,7 +139,6 @@ QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快�
 - 快速更新：利用前端生态，实现免下载、免安装，方便快速迭代；
 - 接近原生的体验：采用react-native的形式,底层用native实现，保证接近原生的体验;
 - 全面兼容：已适配市面上大部分型号的智能电视、盒子、智能投影等，可免除开发者大量的适配工作;
-
 
 <!-- ## 文档 -->
 <!-- 查看完整的文档和示例，请访问[quicktvUI](http://quicktvui.com/)文档。 -->
