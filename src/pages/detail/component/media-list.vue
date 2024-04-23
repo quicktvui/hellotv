@@ -66,6 +66,7 @@ export default defineComponent({
     const mediaDataSource = useMediaDataSource()
     const log = useESLog()
     const visible = ref<boolean>(false)
+    let selectedIndex : number = 0
 
     let itemListId: string
 
@@ -104,7 +105,16 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------选集组件----setSelected------>>>>>" + position)
       }
+      selectedIndex = position
       mediaSeriesRef.value?.setSelected(position)
+    }
+
+    function getSelectedPosition() : number{
+      return selectedIndex
+    }
+
+    function requestFocus(position:number): void {
+      mediaSeriesRef.value?.requestFocus(position)
     }
 
     function release(): void {
@@ -178,7 +188,9 @@ export default defineComponent({
       onGroupItemFocused,
       scrollTo,
       setSelected,
-      release
+      release,
+      getSelectedPosition,
+      requestFocus
     }
   },
 });

@@ -7,6 +7,7 @@
       :blockFocusDirections="['left','right']"
       :disableScrollOnFirstScreen="true"
       @onScroll="onScroll"
+      :enableKeepFocus='false'
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
       :scrollYLesserReferenceValue="30"
@@ -35,6 +36,8 @@
 
     <media-player
       ref="mediaPlayerViewRef"
+      name='media-player'
+      :visible="playerVisible"
       class="detail-media-player-view-css"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
@@ -106,6 +109,33 @@ export default defineComponent({
     const headerSectionRef = ref<IHeader>()
     let waterfallScrollY = 0
     let lastWindowType: ESPlayerWindowType
+    let playerVisible = ref(true)
+    let enterByFullButton = 0; // 0 ,placeholder,1 : fullBtn,2 : mediaItem
+    let showPlayerTimer = null
+    let currentID : any= null
+
+    let triggerTask = [
+      {
+        event: 'onScrollYGreater',
+        target: 'media-player',
+        function: 'changeVisibility',
+        params: ['invisible'],
+      },
+      //--------------------------------------------
+      {
+        event: 'onScrollYLesser',
+        target: 'media-player',
+        function: 'changeVisibility',
+        params: ['invisible'],
+      },
+      //--------------------------------------------
+      // {
+      //   event: 'onScrollStateIdle',
+      //   target: 'media-player',
+      //   function: 'changeVisibility',
+      //   params: ['visible'],
+      // },
+    ]
 
     provide(mediaAuthorizationKey, mediaAuthorizationRef)
 
@@ -161,10 +191,10 @@ export default defineComponent({
                           up:-50
                       }
                   }else{
-                      sections[2].scrollOverride = {
-                          down:600,
-                          up:-100
-                      }
+                      // sections[2].scrollOverride = {
+                      //     down:600,
+                      //     up:-100
+                      // }
                   }
               }
             waterfallRef.value?.setSectionList(sections)
@@ -249,9 +279,7 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
         nextTick(() => {
-          setTimeout(() => {
             mediaPlayerViewRef.value?.setFloatWindow()
-          }, 100)
         })
       }
       albumDetailRef.value?.setAutofocus(false)
@@ -262,14 +290,13 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
         nextTick(() => {
-          setTimeout(() => {
             mediaPlayerViewRef.value?.setSmallWindow()
-          }, 100)
         })
       }
     }
 
     function onScrollStateChanged(x: number, y: number, state: number) {
+      // log.e("ScrollLog","onScrollStateChanged x:"+x+" y:"+y+" state:"+state)
       detailScrollState = state
     }
 
@@ -310,6 +337,7 @@ export default defineComponent({
 
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
+      enterByFullButton = 1
       albumDetailRef.value?.setAutofocus(false)
       mediaPlayerViewRef.value?.setFullWindow()
       isFullButtonClick = true
@@ -317,6 +345,7 @@ export default defineComponent({
 
     function onPlayerPlaceholderClick() {
       mediaPlayerViewRef.value?.setFullWindow()
+      enterByFullButton = 0;
     }
 
     function onPlayerPlaceholderFocus(focused: boolean) {
@@ -338,7 +367,13 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onMediaListItemClicked----->>>>>" + index, data)
       }
+      if(albumDetailRef.value?.getMediaSelectedPosition() == index){
+        enterByFullButton = 2
+        mediaPlayerViewRef.value?.setFullWindow()
+        return;
+      }
       if (data.id != null) {
+        currentID = data.id
         mediaPlayerViewRef.value?.stop()
         mediaPlayerViewRef.value?.playMediaItemById(data.id)
       }
@@ -399,17 +434,21 @@ export default defineComponent({
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
           descendantFocusability.value = 1
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
-            if (isFullButtonClick) {
-              detailFocusTimer = setTimeout(() => {
-                if (log.isLoggable(ESLogLevel.DEBUG)) {
-                  log.d(TAG, "-------requestFullButtonFocus---->>>>>")
-                }
-                albumDetailRef.value?.requestFullButtonFocus()
-              }, 300)
-              isFullButtonClick = false
-            } else {
-              albumDetailRef.value?.setAutofocus(true)
-            }
+            detailFocusTimer = setTimeout(() => {
+              cancelDetailRequestFocusTimer()
+              switch (enterByFullButton) {
+                case 0:
+                  albumDetailRef.value?.requestPlayerPlaceholderFocus()
+                  break
+                case 1:
+                  albumDetailRef.value?.requestFullButtonFocus()
+                  break
+                case 2:
+                  albumDetailRef.value?.requestCurrentMediaFocus()
+                  break
+              }
+            }, 300)
+
             return
           }
 
@@ -420,10 +459,8 @@ export default defineComponent({
             albumDetailRef.value?.setAutofocus(false)
             detailFocusTimer = setTimeout(() => {
               cancelDetailRequestFocusTimer()
-              if (!isKeyUpLongClick) {
                 albumDetailRef.value?.requestPlayerPlaceholderFocus()
-              }
-            }, 200)
+            }, 0)
           }else{
             albumDetailRef.value?.setAutofocus(false)
           }
@@ -474,7 +511,7 @@ export default defineComponent({
       }
       if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
         isKeyUpLongClick = true
-        headerSectionRef.value?.setAutofocus(true)
+        // headerSectionRef.value?.setAutofocus(true)
       } else {
         isKeyUpLongClick = false
       }
@@ -549,7 +586,9 @@ export default defineComponent({
       showLoading,
       onSearchButtonFocused,
       onScrollYGreaterReference,
-      onScrollYLesserReference
+      onScrollYLesserReference,
+      triggerTask,
+      playerVisible
     };
   },
 });

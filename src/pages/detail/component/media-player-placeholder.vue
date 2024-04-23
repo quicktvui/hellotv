@@ -1,7 +1,6 @@
 <template>
   <div class="media-player-placeholder-root-css"
        ref="placeholder"
-       v-if="isShowing"
        @click="onClick"
        @focus="onFocus"
        name="placeholder"
