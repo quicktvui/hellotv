@@ -1,6 +1,9 @@
 package com.quicktvui.hellotv;
 
-import java.io.File;
+import android.text.TextUtils;
+
+import com.quicktvui.hellotv.config.Config;
+import com.sunrain.toolkit.utils.ToastUtils;
 
 import eskit.sdk.core.EsData;
 
@@ -11,49 +14,38 @@ import eskit.sdk.core.EsData;
  */
 public class DataCreateHelper {
 
-    /**
-     * 从Asset加载代码
-     **/
-    public static EsData createFromAssets() {
-        if (!BuildConfig.IS_BUILD_RPK_IN_APK) {
-            throw new RuntimeException("没有开启Assets加载");
+    public static EsData createWithConfig() {
+
+        Config cfg = App.sConfig;
+        if (TextUtils.isEmpty(cfg.rpkPackage)) {
+            ToastUtils.showLong("需要设置 rpk_package");
+            return null;
         }
-        EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
-        data.setAppLoadUri(BuildConfig.RPK_FILE_NAME);
-        return data;
-    }
 
-    /**
-     * 从File加载代码
-     **/
-    public static EsData createFromFile(File file) {
-        if (!file.exists()) throw new RuntimeException("文件不存在");
-        // 如果文件是外置存储卡，请申请文件权限
         EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
-        data.setAppLoadUri("file://" + file.getAbsolutePath());
-        return data;
-    }
+        data.setAppPackage(cfg.rpkPackage);
 
-    /**
-     * 从网络地址加载代码
-     **/
-    public static EsData createFromUrl(String url) {
-        EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
-        data.setAppLoadUri(url);
-        return data;
-    }
+        switch (cfg.loadType) {
+            case 4:
+                if (TextUtils.isEmpty(cfg.repo)) {
+                    ToastUtils.showLong("需要设置 repo");
+                    return null;
+                }
+                data.setRepository(cfg.repo);
+                break;
+            case 1:
+            case 2:
+            case 3:
+                if (TextUtils.isEmpty(cfg.rpkLoadUri)) {
+                    ToastUtils.showLong("需要设置 rpk_load_uri");
+                    return null;
+                }
+                data.setAppLoadUri(cfg.rpkLoadUri);
+                break;
+            default:
+                throw new RuntimeException("not support LOAD_TYPE " + cfg.loadType);
+        }
 
-    /**
-     * 从仓库地址加载代码
-     * 需要将代码上传至仓库
-     **/
-    public static EsData createFromRepoServer(String repo) {
-        EsData data = new EsData();
-        data.setAppPackage(BuildConfig.RPK_PACKAGE);
-        data.setRepository(repo);
         return data;
     }
 

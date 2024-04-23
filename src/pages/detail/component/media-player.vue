@@ -1,12 +1,15 @@
 <template>
-  <qt-column class="media-player-root-css">
+  <qt-column class="media-player-root-css" ref='playerParent' sid='playerParent' :focusable='false'>
     <es-player-manager
       ref="playerManager"
       :smallWindowWidth="890"
       :smallWindowHeight="500"
+      :floatWindowWidth="400"
+      :floatWindowHeight="225"
       :initPlayerWindowType="1"
       playerBackgroundColor="black"
       :playMediaAuto="false"
+      :focusable='false'
       :playerList="playerListRef"
       :playerViewList="playerViewListRef"
       :style="{left : playerLeft, top : playerTop}"
@@ -78,6 +81,8 @@ export default defineComponent({
 
     let progressTimer: NodeJS.Timeout
 
+    let playerParent = ref()
+
     const mediaSourceListInterceptor = createESPlayerMediaSourceListInterceptor(mediaDataSource)
     const mediaItemAuthInterceptor = createESPlayerMediaItemAuthInterceptor(mediaDataSource)
 
@@ -117,6 +122,11 @@ export default defineComponent({
 
     function playMediaItemByIndex(index: number) {
       playerManager.value?.playMediaByIndex(index)
+    }
+
+    function changeVisible(visibility: boolean) {
+      //playerParent.value?.setVisibility(visibility ? 'visible' : 'invisible')
+      playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha',[visibility ? 1 : 0])
     }
 
     function getPlayingMediaIndex(): number {
@@ -160,6 +170,7 @@ export default defineComponent({
         playerManager.value?.getCurrentPosition()
       }, 500);
     }
+
 
     function stopProgressTimer() {
       if (progressTimer) {
@@ -284,7 +295,9 @@ export default defineComponent({
       getPlayingMediaIndex,
       onPlayerPlayMedia,
       onPlayerInterceptSuccess,
-      onPlayerInterceptError
+      onPlayerInterceptError,
+      playerParent,
+      changeVisible,
     }
   },
 });

@@ -1,15 +1,16 @@
 <template>
   <div class="media-player-placeholder-root-css"
        ref="placeholder"
-       v-if="isShowing"
        @click="onClick"
        @focus="onFocus"
+       nextFocusUpSID="headerSearchButton"
        name="placeholder"
        :autofocus='autofocus'
        :focusable="true"
        :blockFocusDirections="['left']"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
+    <div class="media-player-placeholder-to-show" :focusable="false"></div>
     <img class="media-player-placeholder-img-css"
          v-if="isMediaShowing"
          :duplicateParentState="true"
@@ -123,6 +124,19 @@ export default defineComponent({
   position: absolute;
   left: 86px;
   top: -4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-player-placeholder-to-show {
+  width: 890px;
+  height: 500px;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background-color: rgba(255,255,255,0.1);
   display: flex;
   flex-direction: row;
   align-items: center;

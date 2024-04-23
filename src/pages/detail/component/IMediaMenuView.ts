@@ -6,4 +6,6 @@ export interface IMediaMenuView {
   setAutofocus(enable: boolean): void
 
   requestFullButtonFocus(): void
+
+  release(): void
 }

@@ -12,10 +12,14 @@ export interface IAlbumDetail {
 
   setMediaListViewSelected(position: number): void
 
+  requestCurrentMediaFocus(): void
+  getMediaSelectedPosition() : number
+
   requestPlayerPlaceholderFocus(): void
 
   requestFullButtonFocus(): void
 
   release(): void
+
   setAutofocus(value:boolean): void
 }

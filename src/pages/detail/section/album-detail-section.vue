@@ -148,16 +148,24 @@ export default defineComponent({
     }
 
     function requestFullButtonFocus(): void {
-      console.log("=======1====requestFullButtonFocus========>>>>")
       menuRef.value?.requestFullButtonFocus()
     }
 
     function release(): void {
       mediaListRef.value?.release()
+      menuRef.value?.release()
     }
 
     function setAutofocus(enable:boolean){
       placeholderRef.value?.setAutofocus(enable)
+    }
+
+    function requestCurrentMediaFocus(){
+      mediaListRef.value?.requestFocus(mediaListRef.value?.getSelectedPosition() ?? -1)
+    }
+
+    function getMediaSelectedPosition(): number {
+      return mediaListRef.value?.getSelectedPosition() ?? -1
     }
 
 
@@ -184,7 +192,9 @@ export default defineComponent({
       requestPlayerPlaceholderFocus,
       release,
       setAutofocus,
-      requestFullButtonFocus
+      requestFullButtonFocus,
+      requestCurrentMediaFocus,
+      getMediaSelectedPosition
     }
   },
 });

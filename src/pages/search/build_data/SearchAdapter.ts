@@ -29,13 +29,13 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
       _id:searchResultPageData.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       title,
-      titleStyle:title != '' ? { width: 1920, height: plateTitleHeight,  marginBottom: 20, marginLeft: 90 ,fontSize:38} : { width: 1920, height: 0 },
+      titleStyle:!!title ? { width: 1920, height: plateTitleHeight,  marginBottom: 20, marginLeft: 90 ,fontSize:38} : { width: 1920, height: 0 },
       style: {
         width: 1920,
         height: -1,
       },
       decoration: {
-        top: pageNo == 1 ? singleTab ? (firstPlate_Top - singleTabTop_OffsetY) : firstPlate_Top : 0,
+        top: pageNo == 1 ?( singleTab ? (firstPlate_Top - singleTabTop_OffsetY) : firstPlate_Top ): 0,
         left: 0,
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)

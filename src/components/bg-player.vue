@@ -4,6 +4,7 @@
       :focusable="false" :clipChildren="false"
       @onChildChanged="onChildChanged"
       ref="bg_player_replace_child"
+      markChildSID="bg-player"
       :replaceOnVisibilityChanged='false'
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
@@ -54,6 +55,7 @@
         <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
                       :bringFocusChildToFront="false"
+                      :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
                       :singleSelectPosition="currentPlayIndex"
           @item-click="onItemClick"  @item-focused="onItemFocus">
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"

@@ -1,10 +1,12 @@
 <template>
   <qt-vue-section>
-    <qt-row class="header-root-css">
-      <qt-row class="header-left-button-css">
+    <qt-row class="header-root-css" :focusable="false">
+      <qt-row class="header-left-button-css" :focusable="false">
         <navigation-button
           ref="searchButtonRef"
           class="header-home-button-css"
+          name="headerSearchButton"
+          sid="headerSearchButton"
           :focus-icon="searchFocused"
           :icon="searchNormal"
           :blockFocusDirections="['left','right','top']"
