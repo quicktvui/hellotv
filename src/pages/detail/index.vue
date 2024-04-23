@@ -1,15 +1,15 @@
 <template>
-  <div class="detail-root-view-css" :skipRequestFocus='true'>
+  <qt-view class="detail-root-view-css" ref='detailRootViewRef'>
     <qt-waterfall
       :descendantFocusability="descendantFocusability"
       :enablePlaceholder="false"
       ref="waterfallRef"
       :blockFocusDirections="['left','right']"
-      :disableScrollOnFirstScreen="true"
       @onScroll="onScroll"
       :enableKeepFocus='false'
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
+      :triggerTask="triggerTask"
       :scrollYLesserReferenceValue="30"
       :scrollYGreaterReferenceValue="30"
       @onScrollYGreaterReference="onScrollYGreaterReference"
@@ -37,7 +37,6 @@
     <media-player
       ref="mediaPlayerViewRef"
       name='media-player'
-      :visible="playerVisible"
       class="detail-media-player-view-css"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
@@ -46,30 +45,41 @@
     <qt-view class="detail-loading-view-root-css" v-show="showLoading">
       <qt-loading-view class="detail-loading-view-css"/>
     </qt-view>
-  </div>
+  </qt-view>
 </template>
 
 <script lang="ts">
 
-import {defineComponent,} from '@vue/runtime-core';
-import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast } from "@extscreen/es3-core"
-import {nextTick, ref, provide} from "vue";
-import {IMedia} from "../../api/media/IMedia";
-import {QTIWaterfall, QTWaterfallItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from '@vue/runtime-core'
+import {
+  ESKeyCode,
+  ESKeyEvent,
+  ESLogLevel,
+  useESEventBus,
+  useESLog,
+  useESToast
+} from '@extscreen/es3-core'
+import { nextTick, provide, ref } from 'vue'
+import { IMedia } from '../../api/media/IMedia'
+import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import header_section from './section/header-section.vue'
 import album_detail_section from './section/album-detail-section.vue'
 import media_player from './component/media-player.vue'
-import {IMediaPlayer} from "./component/IMediaPlayer";
-import {buildRecommendationItemList, buildSectionList, buildWaterfall} from './adapter/DataAdapter'
-import {useESRouter} from "@extscreen/es3-router";
-import {ESPlayerWindowType} from "@extscreen/es3-player";
-import {IAlbumDetail} from "./section/IAlbumDetail";
-import {IHeader} from "./section/IHeader";
-import {QTMediaSeries} from "@quicktvui/quicktvui3/dist/src/series/QTMediaSeries";
-import {ESMediaItem} from "@extscreen/es3-player-manager";
-import {IMediaAuthorization} from "../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "./injectionSymbols";
-import {useMediaDataSource} from "../../api/UseApi";
+import { IMediaPlayer } from './component/IMediaPlayer'
+import {
+  buildRecommendationItemList,
+  buildSectionList,
+  buildWaterfall
+} from './adapter/DataAdapter'
+import { useESRouter } from '@extscreen/es3-router'
+import { ESPlayerWindowType } from '@extscreen/es3-player'
+import { IAlbumDetail } from './section/IAlbumDetail'
+import { IHeader } from './section/IHeader'
+import { QTMediaSeries } from '@quicktvui/quicktvui3/dist/src/series/QTMediaSeries'
+import { ESMediaItem } from '@extscreen/es3-player-manager'
+import { IMediaAuthorization } from '../../api/media/IMediaAuthorization'
+import { mediaAuthorizationKey } from './injectionSymbols'
+import { useMediaDataSource } from '../../api/UseApi'
 
 
 const TAG = 'DetailPage'
@@ -113,20 +123,24 @@ export default defineComponent({
     let enterByFullButton = 0; // 0 ,placeholder,1 : fullBtn,2 : mediaItem
     let showPlayerTimer = null
     let currentID : any= null
+    let detailRootViewRef = ref()
+
+    let changePlayerStateTimer = null
+    let changePlayerVisibleTimer = null
 
     let triggerTask = [
       {
         event: 'onScrollYGreater',
         target: 'media-player',
-        function: 'changeVisibility',
-        params: ['invisible'],
+        function: 'changeAlpha',
+        params: [0],
       },
       //--------------------------------------------
       {
         event: 'onScrollYLesser',
         target: 'media-player',
-        function: 'changeVisibility',
-        params: ['invisible'],
+        function: 'changeAlpha',
+        params: [0],
       },
       //--------------------------------------------
       // {
@@ -276,10 +290,14 @@ export default defineComponent({
 
     function onScrollYGreaterReference() {
       log.d(TAG, "----onScrollY---onScrollYGreaterReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
         nextTick(() => {
+          changePlayerStateTimer = setTimeout(()=>{
             mediaPlayerViewRef.value?.setFloatWindow()
+          },100)
+
         })
       }
       albumDetailRef.value?.setAutofocus(false)
@@ -287,10 +305,13 @@ export default defineComponent({
 
     function onScrollYLesserReference() {
       log.d(TAG, "----onScrollY---onScrollYLesserReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
         nextTick(() => {
+          changePlayerStateTimer = setTimeout(()=>{
             mediaPlayerViewRef.value?.setSmallWindow()
+          },200)
         })
       }
     }
@@ -298,6 +319,12 @@ export default defineComponent({
     function onScrollStateChanged(x: number, y: number, state: number) {
       // log.e("ScrollLog","onScrollStateChanged x:"+x+" y:"+y+" state:"+state)
       detailScrollState = state
+      clearTimeout(changePlayerVisibleTimer)
+      if(state == 0){
+        changePlayerVisibleTimer = setTimeout(()=>{
+            mediaPlayerViewRef.value?.changeVisible(true)
+        },200)
+      }
     }
 
     function onScroll(offsetX: number, scrollY: number) {
@@ -538,6 +565,7 @@ export default defineComponent({
           waterfallScrollY = 0
           detailFocusTimer = setTimeout(() => {
             cancelDetailRequestFocusTimer()
+              mediaPlayerViewRef.value?.changeVisible(true)
             albumDetailRef.value?.requestPlayerPlaceholderFocus()
           }, 300)
           return true
@@ -588,7 +616,8 @@ export default defineComponent({
       onScrollYGreaterReference,
       onScrollYLesserReference,
       triggerTask,
-      playerVisible
+      playerVisible,
+      detailRootViewRef,
     };
   },
 });
