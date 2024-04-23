@@ -13,7 +13,7 @@ ext {
     SO_ABI = ['armeabi-v7a', 'arm64-v8a']   // 包含SO的架构
 
     // ----- RPK加载方式 ----- //
-    LOAD_TYPE = 3                           // 加载方式:
+    LOAD_TYPE = 1                           // 加载方式:
     // 1 从APK的assets中加载(只从apk中加载rpk，不会更新)
     // 2 从指定路径加载
     // 3 从url加载(适合url不变，只更新rpk包)
@@ -97,7 +97,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.8.0.4'
+    implementation 'com.extscreen.runtime:official:2.8.0.5'
     implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
 
     if (INCLUDE_SO) {
