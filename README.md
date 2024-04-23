@@ -1,4 +1,4 @@
-# HelloTv Shell
+# HelloTV-Case 
 [![License](https://img.shields.io/badge/license-Apache2.0-blue.svg)](https://opensource.org/licenses/apache-2-0)
 [![vue version](https://img.shields.io/badge/vue-3.2-green.svg)](https://github.com/vuejs/core)
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
