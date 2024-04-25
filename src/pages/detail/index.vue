@@ -1,14 +1,15 @@
 <template>
-  <div class="detail-root-view-css" :skipRequestFocus='true'>
+  <qt-view class="detail-root-view-css" ref='detailRootViewRef'>
     <qt-waterfall
       :descendantFocusability="descendantFocusability"
       :enablePlaceholder="false"
       ref="waterfallRef"
       :blockFocusDirections="['left','right']"
-      :disableScrollOnFirstScreen="true"
       @onScroll="onScroll"
+      :enableKeepFocus='false'
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
+      :triggerTask="triggerTask"
       :scrollYLesserReferenceValue="30"
       :scrollYGreaterReferenceValue="30"
       @onScrollYGreaterReference="onScrollYGreaterReference"
@@ -35,6 +36,7 @@
 
     <media-player
       ref="mediaPlayerViewRef"
+      name='media-player'
       class="detail-media-player-view-css"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
@@ -43,30 +45,41 @@
     <qt-view class="detail-loading-view-root-css" v-show="showLoading">
       <qt-loading-view class="detail-loading-view-css"/>
     </qt-view>
-  </div>
+  </qt-view>
 </template>
 
 <script lang="ts">
 
-import {defineComponent,} from '@vue/runtime-core';
-import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast } from "@extscreen/es3-core"
-import {nextTick, ref, provide} from "vue";
-import {IMedia} from "../../api/media/IMedia";
-import {QTIWaterfall, QTWaterfallItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from '@vue/runtime-core'
+import {
+  ESKeyCode,
+  ESKeyEvent,
+  ESLogLevel,
+  useESEventBus,
+  useESLog,
+  useESToast
+} from '@extscreen/es3-core'
+import { nextTick, provide, ref } from 'vue'
+import { IMedia } from '../../api/media/IMedia'
+import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import header_section from './section/header-section.vue'
 import album_detail_section from './section/album-detail-section.vue'
 import media_player from './component/media-player.vue'
-import {IMediaPlayer} from "./component/IMediaPlayer";
-import {buildRecommendationItemList, buildSectionList, buildWaterfall} from './adapter/DataAdapter'
-import {useESRouter} from "@extscreen/es3-router";
-import {ESPlayerWindowType} from "@extscreen/es3-player";
-import {IAlbumDetail} from "./section/IAlbumDetail";
-import {IHeader} from "./section/IHeader";
-import {QTMediaSeries} from "@quicktvui/quicktvui3/dist/src/series/QTMediaSeries";
-import {ESMediaItem} from "@extscreen/es3-player-manager";
-import {IMediaAuthorization} from "../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "./injectionSymbols";
-import {useMediaDataSource} from "../../api/UseApi";
+import { IMediaPlayer } from './component/IMediaPlayer'
+import {
+  buildRecommendationItemList,
+  buildSectionList,
+  buildWaterfall
+} from './adapter/DataAdapter'
+import { useESRouter } from '@extscreen/es3-router'
+import { ESPlayerWindowType } from '@extscreen/es3-player'
+import { IAlbumDetail } from './section/IAlbumDetail'
+import { IHeader } from './section/IHeader'
+import { QTMediaSeries } from '@quicktvui/quicktvui3/dist/src/series/QTMediaSeries'
+import { ESMediaItem } from '@extscreen/es3-player-manager'
+import { IMediaAuthorization } from '../../api/media/IMediaAuthorization'
+import { mediaAuthorizationKey } from './injectionSymbols'
+import { useMediaDataSource } from '../../api/UseApi'
 
 
 const TAG = 'DetailPage'
@@ -106,6 +119,37 @@ export default defineComponent({
     const headerSectionRef = ref<IHeader>()
     let waterfallScrollY = 0
     let lastWindowType: ESPlayerWindowType
+    let playerVisible = ref(true)
+    let enterByFullButton = 0; // 0 ,placeholder,1 : fullBtn,2 : mediaItem
+    let showPlayerTimer = null
+    let currentID : any= null
+    let detailRootViewRef = ref()
+
+    let changePlayerStateTimer = null
+    let changePlayerVisibleTimer = null
+
+    let triggerTask = [
+      {
+        event: 'onScrollYGreater',
+        target: 'media-player',
+        function: 'changeAlpha',
+        params: [0],
+      },
+      //--------------------------------------------
+      {
+        event: 'onScrollYLesser',
+        target: 'media-player',
+        function: 'changeAlpha',
+        params: [0],
+      },
+      //--------------------------------------------
+      // {
+      //   event: 'onScrollStateIdle',
+      //   target: 'media-player',
+      //   function: 'changeVisibility',
+      //   params: ['visible'],
+      // },
+    ]
 
     provide(mediaAuthorizationKey, mediaAuthorizationRef)
 
@@ -161,10 +205,10 @@ export default defineComponent({
                           up:-50
                       }
                   }else{
-                      sections[2].scrollOverride = {
-                          down:600,
-                          up:-100
-                      }
+                      // sections[2].scrollOverride = {
+                      //     down:600,
+                      //     up:-100
+                      // }
                   }
               }
             waterfallRef.value?.setSectionList(sections)
@@ -246,12 +290,14 @@ export default defineComponent({
 
     function onScrollYGreaterReference() {
       log.d(TAG, "----onScrollY---onScrollYGreaterReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
         nextTick(() => {
-          setTimeout(() => {
+          changePlayerStateTimer = setTimeout(()=>{
             mediaPlayerViewRef.value?.setFloatWindow()
-          }, 100)
+          },100)
+
         })
       }
       albumDetailRef.value?.setAutofocus(false)
@@ -259,18 +305,26 @@ export default defineComponent({
 
     function onScrollYLesserReference() {
       log.d(TAG, "----onScrollY---onScrollYLesserReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
       if (mediaPlayerViewRef.value?.getWindowType() ==
         ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
         nextTick(() => {
-          setTimeout(() => {
+          changePlayerStateTimer = setTimeout(()=>{
             mediaPlayerViewRef.value?.setSmallWindow()
-          }, 100)
+          },200)
         })
       }
     }
 
     function onScrollStateChanged(x: number, y: number, state: number) {
+      // log.e("ScrollLog","onScrollStateChanged x:"+x+" y:"+y+" state:"+state)
       detailScrollState = state
+      clearTimeout(changePlayerVisibleTimer)
+      if(state == 0){
+        changePlayerVisibleTimer = setTimeout(()=>{
+            mediaPlayerViewRef.value?.changeVisible(true)
+        },200)
+      }
     }
 
     function onScroll(offsetX: number, scrollY: number) {
@@ -310,6 +364,7 @@ export default defineComponent({
 
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
+      enterByFullButton = 1
       albumDetailRef.value?.setAutofocus(false)
       mediaPlayerViewRef.value?.setFullWindow()
       isFullButtonClick = true
@@ -317,6 +372,7 @@ export default defineComponent({
 
     function onPlayerPlaceholderClick() {
       mediaPlayerViewRef.value?.setFullWindow()
+      enterByFullButton = 0;
     }
 
     function onPlayerPlaceholderFocus(focused: boolean) {
@@ -338,7 +394,13 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onMediaListItemClicked----->>>>>" + index, data)
       }
+      if(albumDetailRef.value?.getMediaSelectedPosition() == index){
+        enterByFullButton = 2
+        mediaPlayerViewRef.value?.setFullWindow()
+        return;
+      }
       if (data.id != null) {
+        currentID = data.id
         mediaPlayerViewRef.value?.stop()
         mediaPlayerViewRef.value?.playMediaItemById(data.id)
       }
@@ -400,17 +462,21 @@ export default defineComponent({
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
           descendantFocusability.value = 1
           if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
-            if (isFullButtonClick) {
-              detailFocusTimer = setTimeout(() => {
-                if (log.isLoggable(ESLogLevel.DEBUG)) {
-                  log.d(TAG, "-------requestFullButtonFocus---->>>>>")
-                }
-                albumDetailRef.value?.requestFullButtonFocus()
-              }, 300)
-              isFullButtonClick = false
-            } else {
-              albumDetailRef.value?.setAutofocus(true)
-            }
+            detailFocusTimer = setTimeout(() => {
+              cancelDetailRequestFocusTimer()
+              switch (enterByFullButton) {
+                case 0:
+                  albumDetailRef.value?.requestPlayerPlaceholderFocus()
+                  break
+                case 1:
+                  albumDetailRef.value?.requestFullButtonFocus()
+                  break
+                case 2:
+                  albumDetailRef.value?.requestCurrentMediaFocus()
+                  break
+              }
+            }, 300)
+
             return
           }
 
@@ -421,10 +487,8 @@ export default defineComponent({
             albumDetailRef.value?.setAutofocus(false)
             detailFocusTimer = setTimeout(() => {
               cancelDetailRequestFocusTimer()
-              if (!isKeyUpLongClick) {
                 albumDetailRef.value?.requestPlayerPlaceholderFocus()
-              }
-            }, 200)
+            }, 0)
           }else{
             albumDetailRef.value?.setAutofocus(false)
           }
@@ -475,7 +539,7 @@ export default defineComponent({
       }
       if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
         isKeyUpLongClick = true
-        headerSectionRef.value?.setAutofocus(true)
+        // headerSectionRef.value?.setAutofocus(true)
       } else {
         isKeyUpLongClick = false
       }
@@ -502,6 +566,7 @@ export default defineComponent({
           waterfallScrollY = 0
           detailFocusTimer = setTimeout(() => {
             cancelDetailRequestFocusTimer()
+              mediaPlayerViewRef.value?.changeVisible(true)
             albumDetailRef.value?.requestPlayerPlaceholderFocus()
           }, 300)
           return true
@@ -550,7 +615,10 @@ export default defineComponent({
       showLoading,
       onSearchButtonFocused,
       onScrollYGreaterReference,
-      onScrollYLesserReference
+      onScrollYLesserReference,
+      triggerTask,
+      playerVisible,
+      detailRootViewRef,
     };
   },
 });
