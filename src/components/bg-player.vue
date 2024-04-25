@@ -384,14 +384,13 @@ export default defineComponent({
       setTimeout(()=>{stop()},500)
     }
     const onItemFocus = (e) => {
-      onItemFocusTimer && clearTimeout(onItemFocusTimer)
       cellListFocused = e.hasFocus
-      onItemFocusTimer = setTimeout(()=>{
-        if(e.hasFocus && e.position != currentPlayIndex.value){
+      if(e.hasFocus && e.position != currentPlayIndex.value){
+        onItemFocusTimer && clearTimeout(onItemFocusTimer)
+        onItemFocusTimer = setTimeout(()=>{
           dealwithItemPlay(e.item,e.position)
-        }
-      },400)
-
+        },400)
+      }
     }
     const dealwithItemPlay = (item: any,nextIndex:any) => {
       listViewRef.value?.clearPostTask()
