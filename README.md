@@ -4,7 +4,7 @@
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
 
 HelloTV是基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 框架的视频点播直播应用，面向使用遥控器交互的安卓大屏设备。
-项目目的是让开发者通过对本项目源码的简单修改，快速实现一些TV端常见的功能页面，从而加速开发进度。如果使用者并不具备编程能力，可以参考“HelloTV-Case”项目，简单修改该项目配置文件就可以快速实现一个标准化的视频类应用。
+项目目的是让开发者通过对本项目源码的简单修改，快速实现一些TV端常见的功能页面，从而加速开发进度。如果使用者并不具备编程能力，可以参考[HelloTV-Case](https://github.com/quicktvui/HelloTV-Case)项目，简单修改该项目配置文件就可以快速实现一个标准化的视频类应用。
 点播页面包括瀑布流首页、内容列表、筛选、搜索、详情、历史、收藏、登录等，直播页面包括多级列表页、播放详情页等。
 以下是一些页面效果：
 
