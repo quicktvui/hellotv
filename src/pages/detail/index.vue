@@ -440,6 +440,7 @@ export default defineComponent({
         log.d(TAG, "----onMediaListItemClicked---onPlayerPlayMedia---->>>>>" + playingIndex)
       }
       if (playingIndex >= 0) {
+        albumDetailRef.value?.scrollMediaListViewTo(playingIndex)
         albumDetailRef.value?.setMediaListViewSelected(playingIndex)
       }
     }
