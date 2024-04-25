@@ -138,11 +138,10 @@ export default defineComponent({
     const bg_player = ref()
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
     let bgPlayerActive = ref(false)
-    let recordPlayerData = reactive({
+    let recordPlayerData = {
       pageIndex: -1,
-      itemIndex:-1,
-      data: {} as QTWaterfallItem,
-    })
+      itemIndex:0,
+    }
     let recordPlayerDataMap = new Map()
     let isOneTime: boolean = false
     let isOneTimeStop: boolean = false
@@ -150,7 +149,7 @@ export default defineComponent({
     //背景图
     const wTabBg = ref()
     //tab
-    const tabContentBlockFocusDirections = ref(['down', 'right', 'top'])
+    const tabContentBlockFocusDirections = ref(['left','down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     let delayStopPlaerTimer: any = -1
     let delayChangePlayerTimer: any = -1
@@ -316,7 +315,9 @@ export default defineComponent({
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
         // bg_player?.value.showCoverImmediately(true)
         bg_player?.value.keepPlayerInvisible(false)
+        bg_player.value.initPlayBg("")
       } else {
+        bg_player?.value.setCurBg()
         bg_player?.value.showCoverImmediately(true)
       }
     }
@@ -358,7 +359,8 @@ export default defineComponent({
       //bgPlayerActive.value = true
       if(bgPlayerType.value != -1){
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-          bg_player?.value.showCoverImmediately(true)
+          bg_player?.value.setCurBg()
+          // bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
         }
         bg_player?.value.resume()
@@ -386,7 +388,11 @@ export default defineComponent({
     let delayDealwithplayerTimer: any = -1
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList:any){
-
+      const isSwitchCellBg = sectionList[0].isSwitchCellBg
+      if (isSwitchCellBg === "0") {
+        const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
+        wTabBg.value?.setImg(bg, "", true, false)
+      }
     }
     function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -406,15 +412,13 @@ export default defineComponent({
             log.i("BG-PLAYER",`return on same item`)
           }else{
             clearTimeout(delayDealwithplayerTimer)
-            bg_player.value.setNextImage(item.item.playData[0].cover)
+            bg_player.value.initPlayBg(item.item.playData[0].cover)
             bg_player.value.showCoverImmediately()
             bg_player.value.stopIfNeed()
+            recordPlayerData.pageIndex = pageIndex
+            recordPlayerData.itemIndex = itemIndex
             delayDealwithplayerTimer = setTimeout(async () => {
-              recordPlayerData.pageIndex = pageIndex
-              recordPlayerData.itemIndex = itemIndex
-              recordPlayerData.data = item
               let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
-              recordPlayerData.data.item.playData[0].url = playerInfo.url
               // bg_player.value.playAtIndex(itemIndex)
               bg_player.value.play(playerInfo.url)
             },300)
@@ -428,19 +432,17 @@ export default defineComponent({
             wTabBg.value?.setImg(bg,"",true,false)
           }
         }
-
-      }
+     }
     }
 
     function onTabEvent(tabIndex: number, eventName: string,params:any) {
-          let sid = params.sid
           if(eventName == 'onPageBringToFront') {
             let pageIndex = params.page
-
             let sectionData = tabRef.value?.getPageSection(pageIndex,0)
-
             let obj : any= recordPlayerDataMap.get(''+pageIndex)
             if(obj){
+              recordPlayerData.pageIndex = pageIndex
+              recordPlayerData.itemIndex = obj.itemIndex
               let playData = obj.data
               let flag = obj.playerType
               let width =  obj.playerWidth
@@ -468,13 +470,14 @@ export default defineComponent({
                   playData, 0
                 )
                 bg_player.value?.delayShowPlayer()
-              } else if (sectionData && sectionData.isSwitchCellBg === '1') {
-                const cellBg = sectionData.itemList[0]?.item.focusScreenImage
-                wTabBg.value?.setImg(cellBg, "", true, false)
-                delayStopPlayer()
-              } else {
-                delayStopPlayer()
               }
+            }
+            else if (sectionData && sectionData.isSwitchCellBg === '1') {
+              const cellBg = sectionData.itemList[0]?.item.focusScreenImage
+              wTabBg.value?.setImg(cellBg, "", true, false)
+              delayStopPlayer()
+            } else {
+              delayStopPlayer()
             }
             bg_player.value?.delayShowPlayer(500)
           }
@@ -510,7 +513,7 @@ export default defineComponent({
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
       bg_player.value?.stop()
-      bg_player.value?.setNextImage()
+      bg_player.value?.setBgImage("")
       if(!isOneTimeStop){
         delayStopPlaerTimer = setTimeout(() => {
           bg_player.value?.stop()
