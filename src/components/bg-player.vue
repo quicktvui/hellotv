@@ -276,7 +276,6 @@ export default defineComponent({
     const showCoverImmediately = (pausePlay = false) =>{
       clearTimeout(dismissCoverTimer)
       pauseOnCoverShow.value = pausePlay
-      log.d('BG-PLAYER',`showCoverImmediately pausePlay:${pausePlay}`)
     }
 
     const setCurBg = ()=>{
@@ -307,7 +306,6 @@ export default defineComponent({
         if(recordPlayerList[currentPlayIndex.value].url){
           clearTimeout(dismissCoverTimer)
           pauseOnCoverShow.value = false
-          log.d('BG-PLAYER',`requestDismissCover`)
           dismissCoverTimer = setTimeout(()=>{
             setBgImage("")
           },delay)
@@ -374,14 +372,18 @@ export default defineComponent({
         name: 'screen_main_view',
         params: {}
       });
-      setTimeout(()=>{stop()},500)
+      //事件需要大于onItemFocus 中的时间
+      clearTimeout(onItemFocusTimer)
+      setTimeout(()=>{stop()},900)
     }
     const onItemClick = (e) => {
       router.push({
         name: 'screen_main_view',
         params: {}
       });
-      setTimeout(()=>{stop()},500)
+      //事件需要大于onItemFocus 中的时间
+      clearTimeout(onItemFocusTimer)
+      setTimeout(()=>{ stop()},900)
     }
     const onItemFocus = (e) => {
       cellListFocused = e.hasFocus

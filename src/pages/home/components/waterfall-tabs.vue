@@ -16,7 +16,7 @@
       <qt-tabs
         ref="tabRef"
         :tabContentResumeDelay="200"
-        :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
+        :tabContentBlockFocusDirections="['left','right','down','top']"
         tabNavBarClass="qt-tabs-waterfall-tab-css"
         tabPageClass="qt-tabs-waterfall-css"
         :horizontalFadingEdgeEnabled="true"
@@ -149,7 +149,6 @@ export default defineComponent({
     //背景图
     const wTabBg = ref()
     //tab
-    const tabContentBlockFocusDirections = ref(['left','down', 'right', 'top'])
     let tabItemList: Array<QTTabItem>
     let delayStopPlaerTimer: any = -1
     let delayChangePlayerTimer: any = -1
@@ -311,14 +310,17 @@ export default defineComponent({
           ' params:', params
         )
       }
-      bg_player?.value.pause()
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
-        // bg_player?.value.showCoverImmediately(true)
+        bg_player?.value.pause()
         bg_player?.value.keepPlayerInvisible(false)
         bg_player.value.initPlayBg("")
       } else {
-        bg_player?.value.setCurBg()
-        bg_player?.value.showCoverImmediately(true)
+        setTimeout(()=>{
+          bg_player?.value.pause()
+          bg_player?.value.setCurBg()
+          bg_player?.value.showCoverImmediately(true)
+        },900)
+
       }
     }
     function onTabMoveToTopEnd(pageIndex: number, eventName: string, params: QTTabEventParams) {
@@ -536,7 +538,6 @@ export default defineComponent({
       tabRef,
       bgPlayerActive,
       bg_player,bgPlayerType,
-      tabContentBlockFocusDirections,
       playerBindingRelation,
       callbackFn, playerBindingRelationArrKey,
       onTabPageLoadData,

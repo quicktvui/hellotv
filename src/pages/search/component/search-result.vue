@@ -194,14 +194,9 @@ export default defineComponent({
       // setTimeout(()=>{
         const length = tabPage.data[0].itemList.length
         if (length > 0) {
-          // if (pageNo == 0) {
-          //   tabRef.value?.setPageData(pageIndex, tabPage)
-          // } else {
           // log.e("XRG",`加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
-            tabRef.value?.addPageData(pageIndex, tabPage, 0)
-          // }
+          tabRef.value?.addPageData(pageIndex, tabPage, 0)
         } else { //停止分页
-          // tabRef.value?.addPageData(pageIndex, buildTabPageEndData(), 0)
           // log.e("XRG",`结束 加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
          tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
         }
