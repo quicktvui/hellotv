@@ -221,11 +221,10 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     
     // @ts-ignore
     gridViewRef.value?.restartPage()
-
+    const apiId = currentMenu?.index+'-'+currentFilter?.index
     clearTimeout(timeOutId)
     timeOutId = setTimeout(async () => {
         gridViewRef.value?.blockRootFocus()
-        const apiId = currentMenu?.index+'-'+currentFilter?.index
         const res = await getFirstContentListApi(currentMenu, currentFilter)
         if(apiId == res._apiId){
           if (res?.data?.length) {
@@ -313,7 +312,7 @@ defineExpose({
     },
     onBackPressed(){
         if(!isEdit.value && contentScrollY > initRowsHeight){
-            gridViewRef.value?.scrollToTop()
+            gridViewRef.value?.scrollToFocused(0)
             contentScrollY = 0
             return false
         }
