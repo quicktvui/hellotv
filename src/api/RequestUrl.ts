@@ -18,9 +18,6 @@
 
   //search请求URL
   export const hotSearchUrl=BuildConfig.requestBaseUrl+"/v1/zero/media/assetlong/search/keyword"
-  export const searchLongUrl=BuildConfig.requestBaseUrl+"/v1/zero/media/assetlong/search/assetlongByKeyword"
-  export const searchBookUrl = BuildConfig.requestBaseUrl +"/v1/zero/media/assetlong/search/pictureBookByKeyword"
-  export const searchShortUrl = BuildConfig.requestBaseUrl +"/v1/zero/media/search/assetByKeyword"
 
 // history url
 export const urlGetHistory = BuildConfig.requestBaseUrl+'/v1/zero/user/playHistory/listUnion'

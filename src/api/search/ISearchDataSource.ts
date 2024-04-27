@@ -6,8 +6,11 @@ export interface ISearchDataSource {
 
     clearHistory():void
 
-    getSearchResultTabList(): Promise<Array<QTTabItem>>
+    getSearchResultTabList(isHotRecommend:boolean): Promise<Array<QTTabItem>>
 
-    getSearchResultPageData(pageNo: number, pageSize: number, keyword: string, title?: string): Promise<QTTabPageData>
+    getSearchResultPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData>
+
+
+    getRecommendPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData>
 }
 

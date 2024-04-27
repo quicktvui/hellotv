@@ -66,8 +66,11 @@ export default defineComponent({
     const mediaDataSource = useMediaDataSource()
     const log = useESLog()
     const visible = ref<boolean>(false)
+    let selectedIndex : number = 0
 
     let itemListId: string
+
+    const dataMap = new Map<number, Array<IMedia>>()
 
     onMounted(() => {
       eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
@@ -92,20 +95,44 @@ export default defineComponent({
     }
 
     function scrollTo(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----scrollTo------>>>>>" + position)
+      }
       mediaSeriesRef.value?.scrollTo(position)
     }
 
     function setSelected(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----setSelected------>>>>>" + position)
+      }
+      selectedIndex = position
       mediaSeriesRef.value?.setSelected(position)
     }
 
+    function getSelectedPosition() : number{
+      return selectedIndex
+    }
+
+    function requestFocus(position:number): void {
+      mediaSeriesRef.value?.requestFocus(position)
+    }
+
     function release(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----release------>>>>>")
+      }
+      dataMap.clear()
       mediaSeriesRef.value?.release()
     }
 
     function getMediaList(mediaItemListId: string, pageNo: number) {
+      if (dataMap.has(pageNo)) {
+        //TODO 等待左图右文修改获取数据的bug
+        return
+      }
       mediaDataSource.getMediaItemList(mediaItemListId, pageNo, 10)
         .then((mediaList: Array<IMedia>) => {
+          dataMap.set(pageNo, mediaList)
           if (log.isLoggable(ESLogLevel.DEBUG)) {
             log.d(TAG, "-------getMediaList----success------>>>>>", pageNo, mediaList)
           }
@@ -145,7 +172,7 @@ export default defineComponent({
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
       let index = event.position;
-      context.emit("onMediaListGroupItemClicked", index)
+      context.emit("onMediaListGroupItemFocused", index)
     }
 
     return {
@@ -161,7 +188,9 @@ export default defineComponent({
       onGroupItemFocused,
       scrollTo,
       setSelected,
-      release
+      release,
+      getSelectedPosition,
+      requestFocus
     }
   },
 });

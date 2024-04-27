@@ -1,14 +1,16 @@
 <template>
   <div class="media-player-placeholder-root-css"
        ref="placeholder"
-       v-if="isShowing"
        @click="onClick"
        @focus="onFocus"
+       nextFocusUpSID="headerSearchButton"
        name="placeholder"
        :autofocus='autofocus'
        :focusable="true"
+       :blockFocusDirections="['left']"
        :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
        :enableFocusBorder="true">
+    <div class="media-player-placeholder-to-show" :focusable="false"></div>
     <img class="media-player-placeholder-img-css"
          v-if="isMediaShowing"
          :duplicateParentState="true"
@@ -23,10 +25,12 @@
 import {defineComponent} from "@vue/runtime-core";
 import {IMedia} from "../../../api/media/IMedia";
 import {inject, Ref, ref, watch} from "vue";
-import {ESFocusable, useESFocus, useESToast} from "@extscreen/es3-core";
+import { ESFocusable, ESLogLevel, useESFocus, useESLog, useESToast } from "@extscreen/es3-core"
 import {IMediaAuthorization} from "../../../api/media/IMediaAuthorization";
 import {mediaAuthorizationKey} from "../injectionSymbols";
 import {IMediaAuthType} from "../../../api/media/IMediaAuthType";
+
+const TAG = 'PlayerPlaceholder'
 
 export default defineComponent({
   name: "media-player-placeholder",
@@ -37,9 +41,10 @@ export default defineComponent({
     const isMediaShowing = ref<boolean>(true)
     const isShowing = ref<boolean>(true)
     const toast = useESToast()
-    let autofocus = ref<boolean>(true)
+    let autofocus = ref<boolean>(false)
     const placeholder = ref<ESFocusable>()
     const isMediaTypeFree = ref<boolean>(true);
+    const log = useESLog()
 
     const mediaAuthorization: Ref<IMediaAuthorization> =
       inject(mediaAuthorizationKey, {} as any)
@@ -60,18 +65,19 @@ export default defineComponent({
     function initMedia(m: IMedia) {
       media = m
       mediaImg.value = m.coverH
-
-      // requestFocus()
     }
 
     function requestFocus(): void {
       if (placeholder.value) {
-        //focus.requestFocusDirectly(placeholder.value!)
+        focus.requestFocusDirectly(placeholder.value!)
       }
     }
 
     function setAutofocus(enable:boolean){
-        autofocus.value = enable
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---Placeholder---setAutofocus------>>>>', enable)
+      }
+      autofocus.value = enable
     }
 
     function showMediaInfo(value: boolean) {
@@ -103,8 +109,8 @@ export default defineComponent({
       requestFocus,
       mediaAuthorization,
       isMediaTypeFree,
-        autofocus,
-        setAutofocus,
+      autofocus,
+      setAutofocus
     }
   },
 });
@@ -118,6 +124,19 @@ export default defineComponent({
   position: absolute;
   left: 86px;
   top: -4px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-player-placeholder-to-show {
+  width: 890px;
+  height: 500px;
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  background-color: rgba(255,255,255,0.1);
   display: flex;
   flex-direction: row;
   align-items: center;

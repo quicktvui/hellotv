@@ -16,8 +16,12 @@
 
       <!-- 底部进度条 -->
       <qt-view class="media-player-view-bottom-css"
-               v-if="isFullWindow && isProgressShowing"
-               :gradientBackground="{colors:['#00000000', '#E6000000']}">
+               v-show="isFullWindow && isProgressShowing">
+
+        <qt-view class="media-player-view-bottom-bg-css"
+                 v-if="isFullWindow && isProgressShowing"
+                 :gradientBackground="{colors:['#00000000', '#E6000000']}" />
+
         <!-- 底部进度条 -->
         <qt-column class="media-player-view-state-progress-root-css"
                    v-show="isProgressShowing">
@@ -48,7 +52,6 @@
               :onProgressChanged="onSeekBarChanged"
               @onSeekStop="onSeekBarSeekStop"
               @focus="onSeekbarFocusChanged"
-
               :focusable="true"/>
 
             <qt-text class="media-player-view-progress-text-css"
@@ -88,41 +91,30 @@
         <qt-collapse
           ref="mediaCollapseRef"
           v-show="isFullWindow && isMenuShowing"
+          v-if="mediaCollapseMenuInit"
           class="media-player-collapse-css">
           <media-collapse-order
             ref="mediaCollapseOrderRef"
-            :nextFocusName="{
-                    up:'mediaCollapseOrder',
-                    down:'mediaCollapseSpeed'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
             name="mediaCollapseOrder"
             @onCollapseItemFocused="onCollapseItemOrderFocused"
             @onCollapseItemClicked="onCollapseItemOrderClicked"/>
           <media-collapse-speed
             ref="mediaCollapseSpeedRef"
-            :nextFocusName="{
-                    up:'mediaCollapseOrder',
-                    down:'mediaCollapseDefinition'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
             name="mediaCollapseSpeed"
             @onCollapseItemFocused="onCollapseItemSpeedFocused"
             @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
           <media-collapse-definition
             ref="mediaCollapseDefinitionRef"
-            :nextFocusName="{
-                    up:'mediaCollapseSpeed',
-                    down:'mediaCollapseMediaList'
-                 }"
+            :blockFocusDirections="['left','right','up']"
             name="mediaCollapseDefinition"
             @onCollapseItemFocused="onCollapseItemDefinitionFocused"
             @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
           <media-collapse-media-list
             v-if="mediaListVisible"
             ref="mediaCollapseMediaListRef"
-            :nextFocusName="{
-                    up:'mediaCollapseDefinition',
-                    down:'mediaCollapseMediaList'
-                 }"
+            :blockFocusDirections="['left','right', 'down','up']"
             name="mediaCollapseMediaList"
             @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
             @onMediaListItemFocused="onCollapseItemMediaListFocused"
@@ -156,7 +148,7 @@ import {
 } from "@extscreen/es3-player";
 import {ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
-import {ref, markRaw, onMounted, nextTick} from "vue";
+import {ref, markRaw, watch, onMounted, nextTick} from "vue";
 
 import playerStatePlaying from '../../../assets/ic_media_player_play.png'
 import playerStatePaused from '../../../assets/ic_media_player_pause.png'
@@ -230,7 +222,7 @@ export default defineComponent({
     const dataMap = new Map<number, Array<IMedia>>()
 
     function onMediaListItemLoad(page: number, mediaList: Array<IMedia>) {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           mediaCollapseMediaListRef.value?.setListData(page, mediaList)
         })
@@ -239,7 +231,7 @@ export default defineComponent({
       }
     }
 
-    let mediaCollapseMenuInit = false
+    const mediaCollapseMenuInit = ref<boolean>(false)
 
     let media: IMedia
 
@@ -263,20 +255,46 @@ export default defineComponent({
     let collapseItemIndex = 0
     const mediaCollapseRef = ref<QTICollapse>()
 
+    let collapseItemList = []
+    let collapse: QTCollapse
+
     const mediaCollapseOrderRef = ref<IMediaCollapseItemListView>()
     const mediaCollapseSpeedRef = ref<IMediaCollapseItemListView>()
     const mediaCollapseDefinitionRef = ref<IMediaCollapseItemListView>()
     const mediaCollapseMediaListRef = ref<IMediaCollapseMediaSeriesView>()
 
+    let mediaListGroupItemFocused = false
+    let mediaListItemFocused = false
+
     //-------------------------------菜单-----------------------------------
+    watch(
+      () => [mediaCollapseRef.value] as const,
+      ([instance], [oldInstance]) => {
+        if (instance) {
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.e(TAG, "----watch---initCollapseMenu----->>>>>")
+          }
+          collapse = buildCollapseMenu(mediaListVisible.value)
+          collapseItemIndex = collapse.defaultIndex ?? 0
+          collapseItemList = collapse.itemList
+          mediaCollapseRef.value?.init(collapse)
+
+          initCollapseOrderMenu()
+          initCollapseSpeedMenu()
+          initCollapseDefinitionMenu()
+          initCollapseListMenu()
+        }
+      },
+      {flush: 'post'}
+    )
+
     function initCollapseMenu() {
-      mediaCollapseRef.value?.init(buildCollapseMenu(mediaListVisible.value))
-      mediaCollapseMenuInit = true;
+      mediaCollapseMenuInit.value = true
     }
 
     //-------------------------------播放顺序-----------------------------------
     function initCollapseOrderMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
             const data = buildPlayModeList(playModeList)
@@ -291,6 +309,9 @@ export default defineComponent({
       nextTick(() => {
         if (playModeList) {
           const index = getPlayModeIndex(playMode, playModeList)
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.e(TAG, "-------getPlayModeIndex-------->>>>>", playMode, playModeList, index)
+          }
           if (index > -1) {
             mediaCollapseOrderRef.value?.setItemSelected(index)
           }
@@ -306,10 +327,8 @@ export default defineComponent({
     }
 
     function onCollapseItemOrderFocused(focused: boolean) {
-      if (focused && collapseItemIndex != 0) {
-        collapseItemIndex = 0
-        mediaCollapseRef.value?.expandItem(collapseItemIndex)
-      }
+      mediaListGroupItemFocused = false
+      mediaListItemFocused = false
     }
 
     function onCollapseItemOrderClicked(index: number, item: QTListViewItem) {
@@ -319,7 +338,7 @@ export default defineComponent({
 
     //------------------------------清晰度------------------------------------
     function initCollapseDefinitionMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (definitionList) {
             mediaCollapseDefinitionRef.value?.setListData(buildDefinitionList(definitionList))
@@ -342,10 +361,8 @@ export default defineComponent({
     }
 
     function onCollapseItemDefinitionFocused(focused: boolean) {
-      if (focused && collapseItemIndex != 2) {
-        collapseItemIndex = 2
-        mediaCollapseRef.value?.expandItem(collapseItemIndex)
-      }
+      mediaListGroupItemFocused = false
+      mediaListItemFocused = false
     }
 
     function onCollapseItemDefinitionClicked(index: number, item: QTListViewItem) {
@@ -355,7 +372,7 @@ export default defineComponent({
 
     //--------------------------------倍速----------------------------------
     function initCollapseSpeedMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (rateList) {
             mediaCollapseSpeedRef.value?.setListData(buildPlayRateList(rateList))
@@ -375,10 +392,8 @@ export default defineComponent({
     }
 
     function onCollapseItemSpeedFocused(focused: boolean) {
-      if (focused && collapseItemIndex != 1) {
-        collapseItemIndex = 1
-        mediaCollapseRef.value?.expandItem(collapseItemIndex)
-      }
+      mediaListGroupItemFocused = false
+      mediaListItemFocused = false
     }
 
     function onCollapseItemSpeedClicked(index: number, item: QTListViewItem) {
@@ -388,7 +403,7 @@ export default defineComponent({
 
     //--------------------------------媒资列表----------------------------------
     function initCollapseListMenu() {
-      if (mediaCollapseMenuInit) {
+      if (mediaCollapseMenuInit.value) {
         nextTick(() => {
           if (media) {
             mediaCollapseMediaListRef.value?.initMedia(media)
@@ -414,24 +429,27 @@ export default defineComponent({
     }
 
     function onCollapseItemMediaListGroupFocused(index: number) {
-      if (collapseItemIndex != 3) {
-        collapseItemIndex = 3
-        mediaCollapseRef.value?.expandItem(collapseItemIndex)
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "---选集----onCollapseItemMediaListGroupFocused------>>>>>", index)
       }
+      mediaListGroupItemFocused = true
+      mediaListItemFocused = false
+    }
+
+    function onCollapseItemMediaListFocused(index: number) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "----选集---onCollapseItemMediaListFocused------>>>>>", index)
+      }
+      mediaListGroupItemFocused = false
+      mediaListItemFocused = true
     }
 
     function onCollapseItemMediaListClicked(index: number, item: QTListViewItem) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onCollapseItemMediaListClicked------>>>>>", index, item)
       }
+      player?.stop()
       player?.playMediaById(item.id)
-    }
-
-    function onCollapseItemMediaListFocused(index: number) {
-      if (collapseItemIndex != 3) {
-        collapseItemIndex = 3
-        mediaCollapseRef.value?.expandItem(collapseItemIndex)
-      }
     }
 
     //-----------------------------------------------------播放器窗口--------------------------------------------------------
@@ -491,33 +509,31 @@ export default defineComponent({
           isTitleBarShowing.value = false
           isMenuShowing.value = false
           isProgressShowing.value = false
-          mediaCollapseMediaListRef?.value?.show(false)
 
+          mediaListGroupItemFocused = false
+          mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
             mediaCollapseRef.value?.collapse()
+            collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU:
           isMenuShowing.value = true
           isProgressShowing.value = false
-          mediaCollapseMediaListRef?.value?.show(true)
-          if (!mediaCollapseMenuInit) {
+          if (!mediaCollapseMenuInit.value) {
             initCollapseMenu()
-            initCollapseOrderMenu()
-            initCollapseSpeedMenu()
-            initCollapseDefinitionMenu()
-            initCollapseListMenu()
           }
-          setCollapseOrderMenuFocused()
+          mediaCollapseRef.value?.expandItem(collapseItemIndex)
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
-          mediaCollapseMediaListRef?.value?.show(false)
-
+          mediaListGroupItemFocused = false
+          mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
             mediaCollapseRef.value?.collapse()
+            collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
       }
@@ -543,6 +559,9 @@ export default defineComponent({
     }
 
     function onSeekBarSeekStop(progress) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekBarSeekStop-------->>>>>", progress)
+      }
       isSeeking = false
       if (player && progress >= 0) {
         player.seekTo(progress)
@@ -550,6 +569,9 @@ export default defineComponent({
     }
 
     function onSeekbarFocusChanged(event) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.e(TAG, "-------onSeekbarFocusChanged-------->>>>>", event)
+      }
       let focused = event.isFocused;
       seekBarRef.value?.setThumbActivate(focused);
     }
@@ -728,7 +750,17 @@ export default defineComponent({
     }
 
     function onPlayerPlayMediaListModeListChanged(modeList: Array<ESPlayerPlayMode>): void {
-      playModeList = modeList
+      const filterModeList = []
+      if (modeList && modeList.length) {
+        for (let i = 0; i < modeList.length; i++) {
+          let mode: ESPlayerPlayMode = modeList[i]
+          if (mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT ||
+            mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP) {
+            filterModeList.push(mode)
+          }
+        }
+      }
+      playModeList = filterModeList
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onPlayerPlayModeListChanged-------->>>>>", modeList)
       }
@@ -784,9 +816,23 @@ export default defineComponent({
     }
 
     function onPlayerWindowSizeChanged(width: number, height: number): void {
-      console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
+      // console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
       playerWidth.value = width
       playerHeight.value = height
+    }
+
+    function onPlayerRelease(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-----------onPlayerRelease------------->>>>")
+      }
+      mediaCollapseMediaListRef.value?.release()
+      mediaCollapseMenuInit.value = false
+    }
+
+    function onPlayerReset(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------onPlayerReset------------->>>>')
+      }
     }
 
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
@@ -802,8 +848,10 @@ export default defineComponent({
           if (isPlayerViewStateProgress()) {
             if (isPlayerPlaying.value) {
               player.pause()
+              isPlayerPlaying.value = false
             } else {
               player.start(0)
+              isPlayerPlaying.value = true
             }
             return true
           }
@@ -828,8 +876,18 @@ export default defineComponent({
           }
           break
         case ESKeyCode.ES_KEYCODE_DPAD_UP:
+          if(isPlayerViewStateMenu()){
+            if(!mediaListGroupItemFocused){
+              if (collapseItemIndex - 1 >= 0) {
+                collapseItemIndex--
+                mediaCollapseRef.value?.expandItem(collapseItemIndex)
+              }
+            }
+          }
+
           break
         case ESKeyCode.ES_KEYCODE_DPAD_DOWN:
+
           if(nextButtonFocused){
             if (!isPlayerViewStateMenu()) {
               setPlayerViewStateMenu()
@@ -841,6 +899,13 @@ export default defineComponent({
           if (isPlayerViewStateDismiss()) {
             setPlayerViewStateMenu()
             return true
+          }
+
+          if(isPlayerViewStateMenu()){
+            if (collapseItemIndex + 1 < collapseItemList.length) {
+              collapseItemIndex++
+              mediaCollapseRef.value?.expandItem(collapseItemIndex)
+            }
           }
           break
       }
@@ -876,6 +941,7 @@ export default defineComponent({
         return true
       }
       if (!isPlayerPlaying.value) {
+        isPlayerPlaying.value = true
         player.start(0)
         return true
       }
@@ -973,12 +1039,15 @@ export default defineComponent({
       onPlayerNoMediaCanPlay,
       onPlayerWindowTypeChanged,
       onPlayerWindowSizeChanged,
+      onPlayerRelease,
+      onPlayerReset,
       onKeyDown,
       onKeyUp,
       onBackPressed,
       //
       onNextButtonClicked,
       onNextButtonFocusChanged,
+      mediaCollapseMenuInit,
     }
   },
 });
@@ -1023,6 +1092,16 @@ export default defineComponent({
   align-items: flex-start;
   justify-content: flex-end;
 }
+
+.media-player-view-bottom-bg-css {
+  width: 1920px;
+  height: 700px;
+  background-color: transparent;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
 
 .media-player-view-menu-css {
   width: 1920px;

@@ -6,9 +6,17 @@
          v-if="showBackground"
          :style="{width:playerWidth, height:playerHeight}"
          :src="mediaPlayerPlaceholder">
+
+    <div class="media-player-small-view-tip-root"
+         v-if="showBottomTip"
+         :gradientBackground="{colors:['#00000000','#E5000000']}"
+         :duplicateParentState="true">
+      <span class="media-player-small-view-tip-span">按【OK键】全屏观看</span>
+    </div>
+
     <media-player-loading-view
       ref="mediaPlayerLoadingRef"
-      :style="{width:playerWidth, height:playerHeight}"/>
+      :style="{width:playerWidth, height:playerHeight}" />
 
     <!-- 鉴权失败 -->
     <qt-column class="media-player-small-view-auth-css"
@@ -27,6 +35,23 @@
       </qt-row>
     </qt-column>
 
+    <!-- 鉴权失败 -->
+    <qt-column class="media-player-float-view-auth-css"
+               :style="{width:playerWidth, height:playerHeight}"
+               v-if="showAuthError && isFloatWindow"
+               :focusable="false">
+      <span class="media-player-float-view-text-css">
+        购买后可观看全部影视片VIP节目
+      </span>
+      <qt-row class="media-player-float-view-button-css"
+              :gradientBackground="{colors:['#FFEEB364','#FFFFE398'], orientation: 6, cornerRadii4: [35, 35, 35, 35]}"
+              :focusable="false">
+              <span class="media-player-float-view-buy-text-css">
+                立即购买
+              </span>
+      </qt-row>
+    </qt-column>
+
   </qt-row>
 </template>
 
@@ -39,7 +64,7 @@ import {
   ESPlayerInterceptResult,
   ESPlayerWindowType
 } from "@extscreen/es3-player";
-import {ESKeyEvent, ESLogLevel, useESLog} from "@extscreen/es3-core";
+import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {ref} from "vue";
 
@@ -64,6 +89,7 @@ export default defineComponent({
     let player: ESIPlayerManager
 
     const log = useESLog()
+    const eventBus = useESEventBus()
 
     const playerWidth = ref<number>(0)
     const playerHeight = ref<number>(0)
@@ -80,12 +106,23 @@ export default defineComponent({
     let playingMediaItem: ESMediaItem
 
     const isFullWindow = ref<boolean>(false)
-    const isFloatWindow = ref<boolean>(true)
+    const isFloatWindow = ref<boolean>(false)
+    const showBottomTip = ref<boolean>(true)
     const viewState = ref<number>(1)
     const isTitleBarShowing = ref<boolean>(true)
     const isMenuShowing = ref<boolean>(false)
     const isProgressShowing = ref<boolean>(false)
     let dismissTimer
+
+    let playerPlaceholderFocus = false
+    let windowType: ESPlayerWindowType = ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL
+
+    eventBus.on("onPlayerPlaceholderFocus", onPlayerPlaceholderFocus)
+
+    function onPlayerPlaceholderFocus(focused: boolean) {
+      playerPlaceholderFocus = focused
+      showBottomTip.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) && focused
+    }
 
     function isPlayerViewStateMenu() {
       return IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU === viewState.value;
@@ -227,6 +264,9 @@ export default defineComponent({
     }
 
     function onPlayerError(error: ESPlayerError): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-----------onPlayerError------------->>>>", error)
+      }
     }
 
     function onPlayerPlayMediaList(playList: ESMediaItemList): void {
@@ -249,6 +289,9 @@ export default defineComponent({
       showPlaceholder.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL)
       isFullWindow.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL)
       isFloatWindow.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT)
+      showBottomTip.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL)
+        && playerPlaceholderFocus
+
       switch (windowType) {
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
           break
@@ -261,7 +304,7 @@ export default defineComponent({
     }
 
     function onPlayerWindowSizeChanged(width: number, height: number): void {
-      console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
+      // console.log('----------onPlayerWindowSizeChanged------------------>>>' + width + '---' + height)
       playerWidth.value = width
       playerHeight.value = height
     }
@@ -281,6 +324,7 @@ export default defineComponent({
       isPlayerPlaying,
       isFullWindow,
       isFloatWindow,
+      showBottomTip,
       //
       isTitleBarShowing,
       isMenuShowing,
@@ -362,6 +406,59 @@ export default defineComponent({
   width: 378px;
   height: 34px;
   font-size: 30px;
+  color: #603314;
+  text-align: center;
+}
+
+.media-player-small-view-tip-root {
+  background-color: transparent;
+  height: 86px;
+  width: 890px;
+  position: absolute;
+  bottom: 0;
+}
+
+.media-player-small-view-tip-span {
+  position: absolute;
+  width: 500px;
+  height: 35px;
+  right: 25px;
+  bottom: 25px;
+  font-size: 30px;
+  color: white;
+  text-align: right;
+}
+
+.media-player-float-view-auth-css {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.media-player-float-view-text-css {
+  width: 400px;
+  height: 30px;
+  font-size: 20px;
+  color: #F4D297;
+  text-align: center;
+}
+
+.media-player-float-view-button-css {
+  width: 200px;
+  height: 40px;
+  border-radius: 35px;
+  background-color: transparent;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 40px;
+}
+
+.media-player-float-view-buy-text-css {
+  width: 200px;
+  height: 20px;
+  font-size: 20px;
   color: #603314;
   text-align: center;
 }

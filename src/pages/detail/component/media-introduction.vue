@@ -20,6 +20,7 @@
                 :enableFocusBorder="true"
                 :clipChildren="false"
                 :focusable="true"
+                :nextFocusName="{top:'headerSearchButton'}"
                 @click="onClick"
                 @focus="onFocus"
                 :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
@@ -28,6 +29,7 @@
                 <!-- 第一行 -->
                 <qt-row :duplicateParentState="true">
                     <div class="media-introduction-detail-vip-css"
+                         v-if="!isMediaTypeFree"
                          :gradientBackground="{colors:['#A06419','#CDA048'], orientation: 6, cornerRadii4: [4, 4, 4, 4]}">
                         <text-view
                             class="media-introduction-detail-vip-text-css"
@@ -90,8 +92,6 @@
                     :duplicateParentState="true"
                     :focusable="false"
                     :textSize="24"
-                    :lineSpacing="6"
-                    :lineHeight="30"
                     :ellipsizeMode="2"
                     enablePostTask
                     postDelay="200"
@@ -126,7 +126,7 @@ export default defineComponent({
         const introduction = ref<string>('')
         const isMediaTypeFree = ref<boolean>(true)
         const introductionHeight = ref<number>(28)
-        const introductionLine = ref<number>(1)
+        const introductionLine = ref<number>(2)
 
         const mediaAuthorization: Ref<IMediaAuthorization> =
             inject(mediaAuthorizationKey, {} as any)
@@ -158,8 +158,8 @@ export default defineComponent({
             introduction.value = media.introduction
             if (actors.value != '') {
                 showActors.value = true
-                introductionHeight.value = 28
-                introductionLine.value = 1
+                introductionHeight.value = 65
+                introductionLine.value = 2
             } else {
                 showActors.value = false
                 introductionHeight.value = 95
@@ -283,16 +283,14 @@ export default defineComponent({
     width: 814px;
     color: rgba(255, 255, 255, 0.6);
     focus-color: white;
-    margin-bottom: 20px;
 }
 
 .media-introduction-detail-text-css {
     color: rgba(255, 255, 255, 0.6);
     focus-color: white;
-    height: 28px;
-    width: 814px;
     background-color: transparent;
-    margin-top: 6px;
+    width: 814px;
+    margin-top: 10px;
     margin-bottom: 6px;
 }
 </style>

@@ -1,7 +1,8 @@
-import { IGlobalApi } from "./IGlobalApi";
-import { RequestManager } from "./request/RequestManager";
-import { QTTab, QTTabPageData, QTListViewItem, QTTabItem } from "@quicktvui/quicktvui3";
-import { Tab } from "../pages/home/build_data/tab/impl/Tab";
+import FilterConfig from "../pages/filter/build_data/FilterConfig"
+import {IGlobalApi} from "./IGlobalApi";
+import {RequestManager} from "./request/RequestManager";
+import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
+import {Tab} from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
 import {
   buildTransferTabAdapter,
@@ -19,7 +20,6 @@ import {
   filterContentUrl,
   filterEntryUrl,
   hotSearchUrl,
-  searchLongUrl,
   tabContentUrl,
   tabListUrl,
   urlSaveHistory, urlGetHistory, urlGetLongHistory, urlGetShortHistory, urlGetBookHistory
@@ -30,12 +30,21 @@ import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayIt
 /*****
   ***************搜索 *********
 *****/
-import { buildSearchCenterListData, buildSearchResultTabListData, buildSearchResultPageData } from "../pages/search/build_data/useSearchData";
+import {
+  buildSearchCenterListData,
+  buildSearchResultData,
+  buildSearchTabData
+} from "../pages/search/build_data/useSearchData"
 import searchCenterList from "./search/mock/search_center_list";
 import searchResultTabList from "./search/mock/search_result_tab_list";
+import searchRecommendTabList from "./search/mock/search_recommend_tab";
 import searchResultPageData from "./search/mock/search_result_page_data";
+import searchResultPageData2 from "./search/mock/search_result_page_data2";
+import searchRecommendResultData from "./search/mock/search_result_recommend_data";
 import SearchConfig from "../pages/search/build_data/SearchConfig"
 import { SearchCenter } from "../pages/search/build_data/impl/SearchCenter"
+import { SearchTab } from "../pages/search/build_data/impl/SearchTab"
+import { SearchResult } from "../pages/search/build_data/impl/SearchResult"
 export function createGlobalApi(): IGlobalApi {
   let requestManager: RequestManager
   function init(...params: any[]): Promise<any> {
@@ -59,10 +68,10 @@ export function createGlobalApi(): IGlobalApi {
     return Promise.resolve(buildTransferTabAdapter(tabs))
   }
 
-  function getTabContent(tabId: string, pageNo: number, pageSize: number): Promise<QTTabPageData> {
+  function getTabContent(tabId: string, pageNo: number, pageSize: number,tabPageIndex?: number): Promise<QTTabPageData> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {
-      return getMockTabContent(tabId, pageNo)
+      return getMockTabContent(tabId, pageNo,tabPageIndex)
     }
     return requestManager.post(tabContentUrl, {
       'data': tabId,
@@ -72,14 +81,14 @@ export function createGlobalApi(): IGlobalApi {
         "pageSize": pageSize,
       }
     }).then((tabContent: any) => {
-      return buildO2MTabContentData(tabContent, pageNo, tabId)
+      return buildO2MTabContentData(tabContent, pageNo,tabId,tabPageIndex)
     })
   }
 
-  function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
+  function getMockTabContent(tabId: string, pageNo: number,tabPageIndex?: number): Promise<QTTabPageData> {
     const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
     const index = Number(tabId)
-    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId))
+    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId,tabPageIndex))
   }
 
   function getTabBg(tabId): string {
@@ -102,11 +111,12 @@ export function createGlobalApi(): IGlobalApi {
     if (BuildConfig.useMockData) {
       let list:Array<any> = []
       if(searchCenterList.keywordList.length > 0) list = searchCenterList.keywordList
-      if(searchCenterList.historyList.length > 0) list = searchCenterList.historyList
-      return Promise.resolve(buildSearchCenterListData(list, searchCenterList.historyList.length > 0))
+      const isLoadHistory = searchCenterList.historyList.length > 0
+      if(isLoadHistory) list = searchCenterList.historyList
+      return Promise.resolve(buildSearchCenterListData(list, isLoadHistory))
     }
     // 根据keyword字母搜索关键字 不传返回热门搜索
-    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.screenCenterPageSize}})
+    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.searchCenterPageSize}})
       .then((result: any) => {
         let list:Array<any> = []
         if(result.keywordList.length > 0) list = result.keywordList
@@ -119,31 +129,37 @@ export function createGlobalApi(): IGlobalApi {
 
   }
 
-  function getSearchResultTabList(): Promise<Array<QTTabItem>> {
+  function getSearchResultTabList(isHotRecommend:boolean): Promise<Array<QTTabItem>> {
     //此处可更换接口请求数据
-    if (BuildConfig.useMockData) return Promise.resolve(buildSearchResultTabListData(searchResultTabList as Array<any>))
-    return requestManager.post(tabContentUrl, {'data': ''})
-      .then((searchCenterList: Array<any>) => {
-        return buildSearchResultTabListData(searchResultTabList as Array<any>)
-      })
+    if (BuildConfig.useMockData || true) {
+      if (isHotRecommend){
+        return Promise.resolve(buildSearchTabData(searchRecommendTabList as Array<SearchTab>))
+      }else{
+        return Promise.resolve(buildSearchTabData(searchResultTabList as Array<SearchTab>))
+      }
+    }
   }
 
-  function getSearchResultPageData(pageNo: number, pageSize: number, keyword: string, title?: string): Promise<QTTabPageData> {
+  function getSearchResultPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData> {
     //此处可更换接口请求数据
-    if (BuildConfig.useMockData) {
-      if (pageNo == 3) return Promise.resolve(buildSearchResultPageData(pageNo, [], title))
-      else return Promise.resolve(buildSearchResultPageData(pageNo, searchResultPageData, title))
-    }
-    return requestManager.post(searchLongUrl, {
-      "data": keyword,
-      'param': {
-        "pageNo": pageNo,
-        "pageSize": pageSize
+    if (BuildConfig.useMockData || true) {
+      if( pageNo === 3 ) { //模拟结束
+        return Promise.resolve(buildSearchResultData({ itemList: [] }, pageNo,singleTab))
       }
-    }).then((tabContent: any) => {
-      console.log(tabContent, '888888888888')
-      return buildSearchResultPageData(pageNo, tabContent, title)
-    }).catch(() => buildSearchResultPageData(pageNo, [], title))
+      const result = pageNo === 1 ? searchResultPageData : searchResultPageData2
+      return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo,singleTab))
+    }
+  }
+
+  function getRecommendPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData> {
+    //此处可更换接口请求数据
+    if (BuildConfig.useMockData || true) {
+      if( pageNo === 3 ) { //模拟结束
+        return Promise.resolve(buildSearchResultData({ itemList: [] }, pageNo,singleTab))
+      }
+      const result = pageNo === 1 ? searchRecommendResultData : searchResultPageData2
+      return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo,singleTab))
+    }
   }
 
   /********************************筛选相关*****************************/
@@ -156,7 +172,7 @@ export function createGlobalApi(): IGlobalApi {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": SearchConfig.screenPageSize,
+      "pageSize": FilterConfig.screenPageSize,
     };
     const newParams = { ...params, ...pageParams };
     return requestManager.post(filterContentUrl, {
@@ -179,6 +195,7 @@ export function createGlobalApi(): IGlobalApi {
     clearHistory,
     getSearchResultTabList,
     getSearchResultPageData,
+    getRecommendPageData,
     getScreenLeftTags,
     getScreenContentByTags
   }

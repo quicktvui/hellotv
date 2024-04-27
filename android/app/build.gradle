@@ -1,0 +1,199 @@
+plugins {
+    id 'com.android.application'
+}
+
+ext {
+    // ----- APK相关配置 ----- //
+    APP_PACKAGE = 'com.quicktvui.hellotv'   // APK包名
+    APP_NAME = 'HelloTV'                    // 桌面显示名称
+    APP_VERSION_CODE = 1                    // APK版本code(整数,最小为1，覆盖安装需要 >= 上次的code)
+    APP_VERSION_NAME = '1.0.0'              // APK版本名称
+
+    INCLUDE_SO = true                       // 将so打包进apk(首次启动不需要下载so文件，体积会变大，但首次启动会变快)
+    SO_ABI = ['armeabi-v7a', 'arm64-v8a']   // 包含SO的架构
+
+    // ----- RPK加载方式 ----- //
+    LOAD_TYPE = 1                           // 加载方式:
+    // 1 从APK的assets中加载(只从apk中加载rpk，不会更新)
+    // 2 从指定路径加载
+    // 3 从url加载(适合url不变，只更新rpk包)
+    // 4 从指定源服务器加载
+
+    RPK_PACKAGE = "es.hellotv"              // rpk包名(会按照这个包名进行本地版本管理)
+
+    // LOAD_MODULE修改后，只更改对应加载方式的配置即可
+
+    // 方式1:
+    RPK_FILE_NAME = "hello.rpk"             // 自动生成的rpk文件名
+
+    // 方式2:
+    RPK_FILE_PATH = "data/data/$APP_PACKAGE/files/hello.rpk"
+
+    // 方式3:
+    RPK_FILE_URL = "https://extcdn.hsrc.tv/data_center/files/plugin/2024/04/18/efe23d2e-0c05-4dac-a77a-11635d6bbf12.zip"
+
+    // 方式4
+    REPOSITORY_HOST = "http://repo.quicktvui.com/"
+
+    vueDistDir = new File(project.rootDir, '../dist/android')
+    assetsDir = new File(project.buildDir, 'assets')
+}
+
+android {
+    namespace 'com.quicktvui.hellotv'
+    compileSdk sdk_compileSdk
+
+    defaultConfig {
+        applicationId APP_PACKAGE
+        minSdk sdk_minSdk
+        targetSdk sdk_targetSdk
+        versionCode APP_VERSION_CODE
+        versionName APP_VERSION_NAME
+
+        resValue "string", "app_name", APP_NAME
+
+        multiDexEnabled true
+
+        buildConfigField 'boolean', 'IS_INCLUDE_SO', "$INCLUDE_SO"
+
+        ndk {
+            abiFilters SO_ABI.toArray() as String[]
+        }
+    }
+
+    applicationVariants.all { variant ->
+        variant.outputs.all {
+            outputFileName = "${APP_NAME}_${defaultConfig.versionName}_${releaseTime()}_${buildType.name}.apk"
+        }
+    }
+
+    buildTypes {
+        release {
+            debuggable false
+            minifyEnabled true
+            zipAlignEnabled true
+            shrinkResources true
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+
+            // 此处替换自己签名
+            signingConfig signingConfigs.create("release")
+            signingConfig.initWith(buildTypes.debug.signingConfig)
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    android.sourceSets.findByName('main').assets.srcDirs += assetsDir
+
+    packagingOptions {
+        pickFirst 'lib/**/libc++_shared.so'
+    }
+}
+
+dependencies {
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation 'androidx.appcompat:appcompat:1.0.0'
+
+    implementation 'com.extscreen.runtime:official:2.8.0.5'
+    implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
+
+    if (INCLUDE_SO) {
+        implementation 'eskit.sdk.support.so:hp-v1-armeabi-v7a:1.0.1'
+        implementation 'eskit.sdk.support.so:hp-v1-arm64-v8a:1.0.1'
+
+        implementation 'eskit.sdk.support.so:ijk-player-armeabi-v7a:1.0.0'
+        implementation 'eskit.sdk.support.so:ijk-player-arm64-v8a:1.0.0'
+    }
+}
+
+task deleteRpkCacheTask(type: Delete) {
+    delete vueDistDir
+    delete assetsDir
+}
+
+import org.apache.tools.ant.taskdefs.condition.Os
+
+task buildVendor(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'vendor'
+    } else {
+        executable 'npm'
+        args 'run', 'vendor'
+    }
+}
+
+task buildVue(type: Exec) {
+    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+        executable 'cmd'
+        args '/c', 'npm', 'run', 'build'
+    } else {
+        executable 'npm'
+        args 'run', 'build'
+    }
+    dependsOn(buildVendor)
+}
+
+task writeConfigFile() {
+    doFirst {
+        assetsDir.mkdirs()
+        def sourceFile = new File(project.projectDir, "config.json")
+        def configMap = new groovy.json.JsonSlurper().parse(sourceFile, 'UTF-8')
+
+        configMap.put('version', 1)
+        configMap.put('load_type', LOAD_TYPE)
+        configMap.put('rpk_package', RPK_PACKAGE)
+
+        def uri = ''
+        def repo = ''
+        switch (LOAD_TYPE) {
+            case 1:
+                uri = "assets://${RPK_FILE_NAME}"
+                break
+            case 2:
+                uri = "file://${RPK_FILE_PATH}"
+                configMap.put('rpk_load_uri', )
+                break
+            case 3:
+                uri = RPK_FILE_URL
+                break
+            case 4:
+                repo = REPOSITORY_HOST
+                break
+            default:
+                throw new RuntimeException("unsupport LOAD_TYPE ${LOAD_TYPE}")
+                break
+        }
+
+        configMap.put('rpk_load_uri', uri)
+        configMap.put('repo', repo)
+
+        def json = groovy.json.JsonOutput.prettyPrint(groovy.json.JsonOutput.toJson(configMap))
+        new groovy.io.GroovyPrintStream(new FileOutputStream(new File(assetsDir, "config.json")), true, 'UTF-8').print(json)
+    }
+}
+
+task zipRpkTask(type: Zip) {
+    archiveName = RPK_FILE_NAME
+    destinationDir = assetsDir
+    from vueDistDir
+
+    dependsOn(buildVue, writeConfigFile)
+}
+
+afterEvaluate {
+
+    tasks.findByName('preBuild').dependsOn(deleteRpkCacheTask)
+
+    ['generateDebugAssets', 'generateReleaseAssets'].each {
+        if (LOAD_TYPE == 1) {
+            tasks.findByName(it).dependsOn(zipRpkTask)
+        } else {
+            tasks.findByName(it).dependsOn(writeConfigFile)
+        }
+    }
+
+}

@@ -1,12 +1,15 @@
 <template>
-  <qt-column class="media-player-root-css">
+  <qt-column class="media-player-root-css" ref='playerParent' sid='playerParent' :focusable='false'>
     <es-player-manager
       ref="playerManager"
       :smallWindowWidth="890"
       :smallWindowHeight="500"
+      :floatWindowWidth="400"
+      :floatWindowHeight="225"
       :initPlayerWindowType="1"
       playerBackgroundColor="black"
       :playMediaAuto="false"
+      :focusable='false'
       :playerList="playerListRef"
       :playerViewList="playerViewListRef"
       :style="{left : playerLeft, top : playerTop}"
@@ -36,8 +39,10 @@ import {
   ESPlayerInterceptError,
   ESPlayerInterceptResult,
   ESPlayerPlayMode,
-  ESPlayerWindowType
-} from "@extscreen/es3-player";
+  ESPlayerWindowType,
+  ESPlayerRate,
+  useESPlayerRateManager
+} from "@extscreen/es3-player"
 import {IMedia} from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
 import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
@@ -69,11 +74,14 @@ export default defineComponent({
     const playerViewListRef = ref(playerViewList)
     const playModeManager = useESPlayerManagerPlayModeManager()
     const mediaDataSource = useMediaDataSource()
+    const playerRateManager = useESPlayerRateManager()
 
     const playerLeft = ref<number>(90)
     const playerTop = ref<number>(135)
 
     let progressTimer: NodeJS.Timeout
+
+    let playerParent = ref()
 
     const mediaSourceListInterceptor = createESPlayerMediaSourceListInterceptor(mediaDataSource)
     const mediaItemAuthInterceptor = createESPlayerMediaItemAuthInterceptor(mediaDataSource)
@@ -86,7 +94,7 @@ export default defineComponent({
         media: media
       }
       playerManager.value?.initialize()
-      playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ORDER)
+      playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       playerManager.value?.playMediaList(playList)
     }
 
@@ -116,6 +124,11 @@ export default defineComponent({
       playerManager.value?.playMediaByIndex(index)
     }
 
+    function changeVisible(visibility: boolean) {
+      //playerParent.value?.setVisibility(visibility ? 'visible' : 'invisible')
+      playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha',[visibility ? 1 : 0])
+    }
+
     function getPlayingMediaIndex(): number {
       return playerManager.value?.getPlayingMediaIndex() ?? -1
     }
@@ -131,6 +144,11 @@ export default defineComponent({
 
     function resume() {
       playerManager.value?.resume()
+    }
+
+    function reset() {
+      playerManager.value?.reset()
+      playerRateManager.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)
     }
 
     function onPlayerInterceptSuccess(result: ESPlayerInterceptResult): void {
@@ -152,6 +170,7 @@ export default defineComponent({
         playerManager.value?.getCurrentPosition()
       }, 500);
     }
+
 
     function stopProgressTimer() {
       if (progressTimer) {
@@ -257,6 +276,7 @@ export default defineComponent({
       play,
       stop,
       release,
+      reset,
       resume,
       onPlayerPlaying,
       onPlayerPaused,
@@ -275,7 +295,9 @@ export default defineComponent({
       getPlayingMediaIndex,
       onPlayerPlayMedia,
       onPlayerInterceptSuccess,
-      onPlayerInterceptError
+      onPlayerInterceptError,
+      playerParent,
+      changeVisible,
     }
   },
 });

@@ -12,6 +12,5 @@ export default {
   //首页内容请求数量
   tabContentPageSize: 10,
   // 默认源
-  defaultSourceUrl: 'https://gh-proxy.com/https://raw.githubusercontent.com/gaotianliuyun/gao/master/XYQ.json'
-
+  defaultSourceUrl: ''
 }

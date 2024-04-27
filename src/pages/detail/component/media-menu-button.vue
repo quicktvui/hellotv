@@ -10,23 +10,22 @@
          :duplicateParentState="true"
          :gradientBackground="focusedGradientBg"/>
 
-    <div class="menu-button-item-img-root-css">
+    <div class="menu-button-item-img-root-css"
+         :duplicateParentState="true">
       <img class="menu-button-item-img-css"
-           v-show="isMediaTypeFree"
+           v-show="isMediaTypeFree && focused"
            :duplicateParentState="true"
            :focusable="false"
-           showOnState="focused"
            :src="focusIcon"/>
       <img class="menu-button-item-img-css"
-           v-show="!isMediaTypeFree"
+           v-show="!isMediaTypeFree && focused"
            :duplicateParentState="true"
            :focusable="false"
-           showOnState="focused"
            :src="vipFocusIcon"/>
       <img class="menu-button-item-img-css"
+           v-show="!focused"
            :duplicateParentState="true"
            :focusable="false"
-           showOnState="normal"
            :src="icon"/>
     </div>
     <span class="menu-button-item-text-css"
@@ -106,7 +105,7 @@ export default defineComponent({
     }
 
     function requestItemFocus() {
-      Native.callUIFunction(menuItemRef.value, 'requestFocus', []);
+      Native.callUIFunction(menuItemRef.value, 'requestFocusDirectly');
     }
 
     return {
@@ -156,7 +155,6 @@ export default defineComponent({
   height: 30px;
   color: rgba(255, 255, 255, 0.6);
   focus-color: black;
-  select-color: black;
   align-self: center;
   font-size: 28px;
   text-align: center;

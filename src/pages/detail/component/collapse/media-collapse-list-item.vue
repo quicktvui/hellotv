@@ -3,9 +3,11 @@
              :clipChildren="false"
              :enableFocusBorder="false"
              :focusScale="1.1"
+             eventClick
+             eventFocus
              :focusable=true>
     <div class="qt-collapse-list-item-text-root" :duplicateParentState="true">
-      <div class="qt-collapse-list-item-icon-root"
+      <div class="qt-collapse-list-item-icon-root" :duplicateParentState="true"
            flexStyle="${iconStyle}">
         <img class="qt-collapse-list-item-icon"
              duplicateParentState

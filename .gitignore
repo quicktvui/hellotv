@@ -24,3 +24,7 @@ pnpm-debug.log*
 *.sh
 /package-lock.json
 yarn.lock
+
+.gradle
+android/.gradle
+android/.idea
