@@ -5,7 +5,7 @@
         <!-- :requestFocus="true" content_grid_name-->
         <qt-nav-bar 
             ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
-            @tab-select="onTabSelect" name="h_tab_name"
+            @tab-select="onTabSelect" name="h_tab_name" :requestFocus="true"
             :nextFocusName="{ down: 'history_poster_name' }"></qt-nav-bar>
     </div>
 </template>
