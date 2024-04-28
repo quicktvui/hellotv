@@ -31,6 +31,7 @@
         <!-- 搜索结果 -->
         <search-result
           :visible="!loading && !showResultLoading"
+          :descendantFocusability="showResultLoading ? 2 : 1"
           ref="search_result"
           name="search_result_view"
           :blockFocusDirections="['up', 'down']"
