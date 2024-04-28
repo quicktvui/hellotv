@@ -121,7 +121,7 @@ import {
   getPlayModeIndex, getDefinitionIndex, getPlayRateIndex
 } from "../adapter/PlayerDataAdapter";
 import { IMedia } from "../../../api/media/IMedia";
-import { localHistory } from '../../../api/history/store'
+import { historyToCategory, localHistory } from '../../../api/history/store'
 import { IMediaCollapseMediaSeriesView } from "./collapse/IMediaCollapseMediaSeriesView";
 
 const TAG = 'MediaPlayerView'
@@ -604,6 +604,7 @@ export default defineComponent({
       // 播放信息
       localHistory.ply[media.id].playId = playingMediaItem.playId || playingMediaItem.id
       localHistory.ply[media.id].progress = p
+      historyToCategory('ply')
     }
 
     function onPlayerDurationChanged(d: number): void {

@@ -6,7 +6,8 @@
       :width="pWidth" name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
-      @item-bind="onItemBind" :nextFocusName="gvNextFocusName" @scroll-state-changed="onScrollStateChanged">
+      @item-bind="onItemBind" :nextFocusName="gvNextFocusName" @scroll-state-changed="onScrollStateChanged"
+      :requestFocus="isRequestFocus">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -96,8 +97,9 @@ let contentScrollY = 0
 let isInit = true
 let prevItemIndex: string | number = -1
 let isReStartload = false
+const isRequestFocus = ref(true)
 
-const gvNextFocusName = ref({ up: 'h_tab_name' })
+const gvNextFocusName = ref({})
 
 const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
 const onItemBind = () => { }
@@ -150,7 +152,10 @@ const onScrollStateChanged = (ev) => {
 }
 
 // 加载更多数据
+let prePageNo
 const loadMoreFn = (pageNo: number) => {
+  if (prePageNo === pageNo) { return }
+  prePageNo = pageNo
   if (pageState.value === pageStates.noMore) {
     return//没有更多数据了
   }
@@ -204,6 +209,7 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
   })
 }
 let timeOutId: any = null
+let lastApiId: string = ''
 const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
   isFirst = true
   pageState.value = pageStates.init
@@ -212,15 +218,14 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   prePageNum = 0
   contentLenth = 0
   isShowScreenLoading.value = true
-
   // @ts-ignore
-  gridViewRef.value?.restartPage()
-  const apiId = currentMenu?.index + '-' + currentFilter?.index
+  // gridViewRef.value?.restartPage()
+  lastApiId = currentMenu?.index + '-' + currentFilter?.index
   clearTimeout(timeOutId)
   timeOutId = setTimeout(async () => {
     gridViewRef.value?.blockRootFocus()
     const res = await getFirstContentListApi(currentMenu, currentFilter)
-    if (apiId == res._apiId) {
+    if (lastApiId == res._apiId) {
       if (res?.data?.length) {
         const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
         gridDataRec = gridViewRef.value!.init(arr)//arr.concat([{type:101}])
@@ -232,6 +237,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
           nextTick(() => {
             gridViewRef.value?.setItemFocused(0)
           })
+          isRequestFocus.value = false
           isInit = false
         } else if (prevItemIndex != -1) {
           const pos = res.data.findIndex(item => item.id == prevItemIndex)
@@ -276,7 +282,7 @@ defineExpose({
         gvNextFocusName.value = { 'up': 'clear_btn_name' }
       } else {
         rBlockFocusDirections.value = []
-        gvNextFocusName.value = { 'up': 'h_tab_name' }
+        gvNextFocusName.value = {}
       }
       isEdit.value = boo
       if (gridDataRec) {
