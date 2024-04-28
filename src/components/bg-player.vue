@@ -216,7 +216,6 @@ export default defineComponent({
       recordPlayerList=[]
       if(delayShowTimer) clearTimeout(delayShowTimer)
       if(delayShowItemCellBgImgTimer) clearTimeout(delayShowItemCellBgImgTimer)
-      let item0 = playerListData[0]
       recordPlayerList = JSON.parse(JSON.stringify(playerListData))
       if(!playerIsInitialized.value) initPlayer();
 
@@ -238,15 +237,12 @@ export default defineComponent({
         }
         nextTick(() => {
           listDataRec = listViewRef.value!.init(arr)
-
         })
       }
     }
-    let loopPlayListTimer: any = -1
 
     const reset = () => {
       log.e('BG-PLAYER',`reset`)
-      clearInterval(loopPlayListTimer)
       clearTimeout(delayShowTimer)
       clearTimeout(delayShowPlayerTimer)
       stop()
@@ -416,10 +412,7 @@ export default defineComponent({
     }
     const onVideoPlayerCompleted = () => {
       if(bgPlayerType.value == CoveredPlayerType.TYPE_CELL_LIST){
-        clearInterval(loopPlayListTimer)
-        if (cellListFocused){
-          dealwithItemPlay(recordPlayerList[currentPlayIndex.value],currentPlayIndex.value)
-        }else{
+        if (!cellListFocused){
           if(currentPlayIndex.value + 1 >= recordPlayerList.length) dealwithItemPlay(recordPlayerList[0],0)
           else dealwithItemPlay(recordPlayerList[currentPlayIndex.value + 1],currentPlayIndex.value + 1)
         }

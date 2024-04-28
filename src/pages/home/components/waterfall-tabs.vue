@@ -290,7 +290,6 @@ export default defineComponent({
               obj.data[0].url = playerInfo.url
             }
           }
-
         }
       }
       playerBindingRelationArrKey.value++
@@ -420,9 +419,12 @@ export default defineComponent({
             recordPlayerData.pageIndex = pageIndex
             recordPlayerData.itemIndex = itemIndex
             delayDealwithplayerTimer = setTimeout(async () => {
-              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
-              // bg_player.value.playAtIndex(itemIndex)
-              bg_player.value.play(playerInfo.url)
+              if (item.item.playData[0].isRequestUrl){
+                let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
+                bg_player.value.play(playerInfo.url)
+              }else{
+                bg_player.value.play(item.item.playData[0].url)
+              }
             },300)
           }
         }else {
