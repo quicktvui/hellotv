@@ -1,13 +1,9 @@
 
 .screen-right-content-item-root-css{
-    width: 270px;
-    height: 437px;
     background-color: transparent;
 }
 
 .screen-right-content-item-root-css .screen-right-content-item-img{
-    width: 270px;
-    height: 377px;
     border-radius: 8px;
     focus-border-color: white;
     focus-border-style: solid;
@@ -25,7 +21,6 @@
 .screen-right-content-item-root-css .screen-right-content-item-score-root{
     background-color: transparent;
     z-index: 1000;
-    width: 270px;
     height: 65px;
     position: absolute;
     left: 0;
@@ -43,11 +38,9 @@
 }
 
 .screen-right-content-item-root-css .screen-right-content-item-text-root{
-    width: 270px;
     height: 60px;
     position: absolute;
     left: 0;
-    top: 377px;
     z-index: 110;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -59,7 +52,6 @@
 
 .screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-normal{
     position: absolute;
-    width: 270px;
     height: 60px;
     background-color: transparent;
     color: rgba(255, 255, 255, .7);
@@ -68,7 +60,6 @@
 
 .screen-right-content-item-root-css .screen-right-content-item-text-root .screen-right-content-item-text-focus{
     position: absolute;
-    width: 270px;
     height: 60px;
     background-color: transparent;
     color: black;

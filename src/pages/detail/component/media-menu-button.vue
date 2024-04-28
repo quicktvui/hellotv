@@ -1,48 +1,31 @@
 <template>
-  <div :focusable="true"
-       @focus="onFocus"
-       @click="onClick"
-       ref="menuItemRef"
-       class="menu-button-item-icon-css">
+  <div :focusable="true" @focus="onFocus" @click="onClick" ref="menuItemRef" class="menu-button-item-icon-css">
 
-    <div showOnState="focused"
-         class="menu-button-item-focused"
-         :duplicateParentState="true"
-         :gradientBackground="focusedGradientBg"/>
+    <div showOnState="focused" class="menu-button-item-focused" :duplicateParentState="true"
+      :gradientBackground="focusedGradientBg" />
 
-    <div class="menu-button-item-img-root-css"
-         :duplicateParentState="true">
-      <img class="menu-button-item-img-css"
-           v-show="isMediaTypeFree && focused"
-           :duplicateParentState="true"
-           :focusable="false"
-           :src="focusIcon"/>
-      <img class="menu-button-item-img-css"
-           v-show="!isMediaTypeFree && focused"
-           :duplicateParentState="true"
-           :focusable="false"
-           :src="vipFocusIcon"/>
-      <img class="menu-button-item-img-css"
-           v-show="!focused"
-           :duplicateParentState="true"
-           :focusable="false"
-           :src="icon"/>
+    <div class="menu-button-item-img-root-css" :duplicateParentState="true">
+      <img class="menu-button-item-img-css" v-show="isMediaTypeFree && focused" :duplicateParentState="true"
+        :focusable="false" :src="focusIcon" />
+      <img class="menu-button-item-img-css" v-show="!isMediaTypeFree && focused" :duplicateParentState="true"
+        :focusable="false" :src="vipFocusIcon" />
+      <img class="menu-button-item-img-css" v-show="!focused" :duplicateParentState="true" :focusable="false"
+        :src="icon" />
     </div>
-    <span class="menu-button-item-text-css"
-          :style="{focusColor:textFocusColor}"
-          :duplicateParentState="true">{{ text }}</span>
+    <span class="menu-button-item-text-css" :style="{ focusColor: textFocusColor }" :duplicateParentState="true">{{ text
+      }}</span>
   </div>
 </template>
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {inject, Ref, ref, watch} from "vue";
-import {Native} from "@extscreen/es3-vue";
-import {ESGradient} from "@extscreen/es3-component";
-import {IMediaAuthorization} from "../../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "../injectionSymbols";
-import {IMediaAuthType} from "../../../api/media/IMediaAuthType";
+import { defineComponent } from "@vue/runtime-core";
+import { inject, Ref, ref, watch } from "vue";
+import { Native } from "@extscreen/es3-vue";
+import { ESGradient } from "@extscreen/es3-component";
+import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization";
+import { mediaAuthorizationKey } from "../injectionSymbols";
+import { IMediaAuthType } from "../../../api/media/IMediaAuthType";
 
 export default defineComponent({
   name: "media-menu-button",
@@ -68,8 +51,8 @@ export default defineComponent({
     const focused = ref(false)
     const menuItemRef = ref()
 
-    let goldenBg: ESGradient = {colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: 12}
-    let whiteBg: ESGradient = {colors: ['#F5F5F5', '#F5F5F5'], orientation: 3, cornerRadius: 12}
+    let goldenBg: ESGradient = { colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: 12 }
+    let whiteBg: ESGradient = { colors: ['#F5F5F5', '#F5F5F5'], orientation: 3, cornerRadius: 12 }
     const focusedGradientBg = ref<ESGradient>(whiteBg)
 
     const textFocusColor = ref<string>('#000000')
@@ -92,7 +75,7 @@ export default defineComponent({
           textFocusColor.value = '#603314'
         }
       },
-      {flush: 'post'}
+      { flush: 'post' }
     )
 
     function onFocus(e) {
@@ -105,7 +88,7 @@ export default defineComponent({
     }
 
     function requestItemFocus() {
-      Native.callUIFunction(menuItemRef.value, 'requestFocus', []);
+      Native.callUIFunction(menuItemRef.value, 'requestFocusDirectly');
     }
 
     return {
@@ -136,6 +119,7 @@ export default defineComponent({
   display: flex;
   margin-right: 16px;
 }
+
 .menu-button-item-focused {
   width: 140px;
   height: 140px;
@@ -166,5 +150,4 @@ export default defineComponent({
   width: 46px;
   height: 46px;
 }
-
 </style>

@@ -1,20 +1,24 @@
 <template>
-  <qt-view class="screen-right-qt-view-root-css">
-    <scroll-view class="screen-right-scroll-root-css" ref="screen_right_scroll_content"
+  <qt-view class="screen-right-qt-view-root-css"
+    :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px' }">
+    <scroll-view class="screen-right-scroll-root-css"
+      :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px' }" ref="screen_right_scroll_content"
       name="screen_right_scroll_content" :focusable="false" :onScrollEnable="true" :clipChildren="false"
       makeChildVisibleType="none" :clipPadding="false">
-      <qt-view class="screen-right-qt-view-css" v-show="!loading" :useAdvancedFocusSearch="true" :focusable="false"
-        :clipChildren="false" :clipPadding="false">
+      <qt-view class="screen-right-qt-view-css"
+        :style="{ width: rightContentWidth + 'px', height: (rightContentHeight + 640) + 'px' }" :v-show="!loading"
+        :useAdvancedFocusSearch="true" :focusable="false" :clipChildren="false" :clipPadding="false">
 
         <!-- 筛选条件-->
-        <qt-view style='width: 1800px; min-height: 1px; background-color: transparent;'>
+        <qt-view :style="{ minHeight: '1px', width: rightContentWidth + 'px', backgroundColor: 'transparent' }">
           <qt-list-view ref="screen_right_filters" name="screen_right_filters" class="screen-right-filter-root"
-            :style="{ height: filterHeight }" v-if="filterVisible" :triggerTask="switchData(hideSelectTask)"
-            :enableSelectOnFocus="false" :autofocusPosition="isFirstLoad ? 0 : -1">
+            :style="{ width: rightContentWidth + 'px', height: filterHeight }" v-if="filterVisible"
+            :autofocusPosition="isFirstLoad ? 0 : -1" :triggerTask="switchData(hideSelectTask)"
+            :enableSelectOnFocus="false">
             <qt-list-view ref="screen_right_filter_line" name="screen_right_filter_line"
-              class="screen-right-filter-line" cachePoolName="filter_line" nextFocusLeftSID="screen_left_tags"
-              flexStyle="${filterLineStyle}" :type="1" list="${list}" :endHintEnabled="false" horizontal
-              :clipChildren="false" :useDiff="true" :enableSelectOnFocus="false"
+              class="screen-right-filter-line" :style="{ width: rightContentWidth + 'px' }" cachePoolName="filter_line"
+              nextFocusLeftSID="screen_left_tags" flexStyle="${filterLineStyle}" :type="1" list="${list}"
+              :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true" :enableSelectOnFocus="false"
               singleSelectPosition="${defaultSelectPosition}" :focusMemory="false" @item-click="onFilterClick"
               @item-focused="onFilterFocused" :blockFocusDirections="['right']" :padding="'0,0,12,0'">
               <!-- 普通筛选条件-->
@@ -32,25 +36,29 @@
         </qt-view>
 
         <!-- 筛选结果-->
-        <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
+        <qt-grid-view class="screen-right-content"
+          :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px' }" :v-show='!filterClickLoading'
           :autofocusPosition="isFirstLoad ? (filterVisible ? -1 : 0) : -1"
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1" :triggerTask="switchData(filterTriggerTask)"
           ref="screen_right_content" name="screen_right_content"
           :cachePool="{ name: 'filter_content', size: { 1: 40, } }" :blockFocusDirections="['right', 'down']"
-          :enablePlaceholder="true" :spanCount="6" :openPage="true" :preloadNo="4" :focusable="false"
+          :enablePlaceholder="true" :spanCount="spanCount" :openPage="true" :preloadNo="4" :focusable="false"
           :pageSize="screenPageSize" nextFocusLeftSID="screen_left_tags" :listenBoundEvent="true" :useDiff="true"
           :listenHasFocusChange="true" :clipChildren="false" :clipPadding="false" :loadMore="loadMoreScreenContent"
           :loadingDecoration="{ top: 15, left: 30, bottom: 70 }" @scroll-state-changed="onScrollStateChanged"
-          @item-focused="onItemFocused" @item-click="onItemClick" :padding="'30,10,0,20'">
+          @item-focused="onItemFocused" @item-click="onItemClick" :padding="'30,25,0,20'">
           <tags-content-item :type="1" />
           <!-- 底部提示-->
           <template #footer>
             <qt-text class="screen-right-content-no-more" :focusable="false" :type="1003" text="${text}" :fontSize="30"
               :lines="1" gravity="top|center" />
+            <qt-text class="screen-right-content-no-more" :style="{ width: (rightContentWidth - 160) + 'px' }"
+              :focusable="false" :type="1003" text="${text}" :fontSize="30" :lines="1" gravity="top|center" />
           </template>
           <template #loading>
             <!--分页加载 Loading-->
-            <qt-view class="screen-right-content-more-loading" :type="1002" :focusable="false">
+            <qt-view class="screen-right-content-more-loading" :style="{ width: (rightContentWidth - 160) + 'px' }"
+              :type="1002" :focusable="false">
               <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;" :focusable="false" />
             </qt-view>
           </template>
@@ -59,38 +67,42 @@
       </qt-view>
     </scroll-view>
     <!-- tag切换loading-->
-    <qt-view v-if="loading" class="screen-right-content-loading" :clipChildren="false" :focusable='false'>
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false' />
-    </qt-view>
-    <qt-view v-if="!loading && filterClickLoading" class="screen-right-filter-click-loading"
-      :style="{ top: filterHeight, height: 960 - filterHeight, backgroundColor: 'transparent' }" :clipChildren="false"
+    <qt-view v-if="loading" class="screen-right-content-loading"
+      :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px' }" :clipChildren="false"
       :focusable='false'>
       <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false' />
     </qt-view>
+    <qt-view v-if="!loading && filterClickLoading" class="screen-right-filter-click-loading"
+      :style="{ top: filterHeight, width: rightContentWidth + 'px', height: (rightContentHeight - filterHeight) + 'px' }"
+      :clipChildren="false" :focusable='false'>
+      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false' />
+    </qt-view>
     <!-- 空结果-->
-    <qt-view v-if="empty" class="screen-right-content-empty">
+    <qt-view v-if="empty" class="screen-right-content-empty"
+      :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px' }">
       <img style="width: 560px;height: 350px;" :src="emptyImg" />
       <span :style="{ fontSize: 30, color: 'rgba(255, 255, 255, 0.5)', marginTop: '26px' }">暂无数据</span>
     </qt-view>
     <!-- tag筛选记录-->
-    <qt-view class="screen-right-selected-tags" ref="screen_right_selected_tags" name="screen_right_selected_tags"
-      :visible="false">
+    <qt-view class="screen-right-selected-tags"
+      :style="{ width: rightContentWidth + 'px', height: filterRecordHeight + 'px' }" ref="screen_right_selected_tags"
+      name="screen_right_selected_tags" :visible="false">
       <!-- 当前选中tags-->
-      <qt-list-view class="screen-right-record-list" ref="screen_record_list" horizontal :focusable="false">
+      <qt-list-view class="screen-right-record-list"
+        :style="{ width: (rightContentWidth - 66) + 'px', height: filterRecordHeight + 'px' }" ref="screen_record_list"
+        horizontal :focusable="false">
         <tags-filter-record :type="14" :focusable="false" />
       </qt-list-view>
 
     </qt-view>
   </qt-view>
-
-
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 import { useGlobalApi } from "../../../api/UseApi";
-import ScreenConfig from "../build_data/ScreenConfig"
+import FilterConfig from "../build_data/FilterConfig"
 import {
   buildScreenContent, clearAllFilterCondition, clearFastFilterCondition,
   getCurRecordFilter,
@@ -134,7 +146,13 @@ export default defineComponent({
   },
   emits: ['unBlockFocus'],
   setup(props, context) {
-    const screenPageSize = computed(() => { return ScreenConfig.screenPageSize })
+    const screenPageSize = computed(() => { return FilterConfig.screenPageSize })
+    const isShowLeftList = computed(() => { return FilterConfig.isShowLeftList })
+    const isShowTopView = computed(() => { return FilterConfig.isShowTopView })
+    const rightContentWidth = computed(() => { return FilterConfig.isShowLeftList ? FilterConfig.rightContentWidth : 1856 })
+    const rightContentHeight = computed(() => { return FilterConfig.isShowTopView ? FilterConfig.rightContentHeight : 1060 })
+    const filterRecordHeight = computed(() => { return FilterConfig.filterRecordHeight })
+    const spanCount = computed(() => { return FilterConfig.spanCount })
     //工具变量
     const log = useESLog()
     const globalApi = useGlobalApi()
@@ -488,7 +506,13 @@ export default defineComponent({
       screenItemContentFocus,
       filterTriggerTask,
       screenPageSize,
-      isFirstLoad
+      isFirstLoad,
+      isShowLeftList,
+      isShowTopView,
+      rightContentWidth,
+      rightContentHeight,
+      filterRecordHeight,
+      spanCount
     }
   }
 })

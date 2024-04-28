@@ -3,8 +3,7 @@
     <ul class="media-menu-root-list-css" v-if="init" :clipChildren="false" :horizontal="true">
       <li :clipChildren="false" :key="index" :type="1" v-for="(item, index) in menuList">
         <media-menu-button v-if="item.type === 1" ref="fullScreenButtonRef" :icon="fullButtonNormal" text="全屏"
-          :autofocus='autofocus' @click="onFullButtonClick" :vip-focus-icon="fullButtonVIPFocused"
-          :focus-icon="fullButtonFocused" />
+          @click="onFullButtonClick" :vip-focus-icon="fullButtonVIPFocused" :focus-icon="fullButtonFocused" />
 
         <media-menu-vip-button v-if="!authenticated && item.type === 2" @click="onVIPButtonClick" />
 
@@ -34,11 +33,13 @@ import favButtonVIPFocused from "../../../assets/ic_media_fav_button_vip_focused
 import favButtonNormal from "../../../assets/ic_media_fav_button_normal.png"
 import favButtonCollected from '../../../assets/ic_media_fav_button_collected.png'
 
-import { useESEventBus } from "@extscreen/es3-core"
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization"
 import { inject, Ref, ref, watch } from "vue"
 import { mediaAuthorizationKey } from "../injectionSymbols"
 import { IMediaMenuButton } from "./IMediaMenuButton"
+
+const TAG = "MEDIA_MENU"
 
 export default defineComponent({
   name: "media-menu",
@@ -55,6 +56,7 @@ export default defineComponent({
     "onMenuFavouriteButtonClick"
   ],
   setup(props, context) {
+    const log = useESLog()
     const isCollected = ref(props.isCollected)
     const authenticated = ref<boolean>(true)
     const mediaAuthorization: Ref<IMediaAuthorization> =
@@ -119,12 +121,15 @@ export default defineComponent({
     function requestFullButtonFocus(): void {
       let array: Array<IMediaMenuButton> | undefined = fullScreenButtonRef.value
       if (array) {
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, "-------requestFullButtonFocus-------->>>>>")
+        }
         array[0].requestItemFocus()
       }
     }
 
     function release() {
-      menuList.value = []
+      // menuList.value = []
     }
 
     return {

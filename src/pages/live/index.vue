@@ -1,71 +1,71 @@
 <template>
-  <qt-view class="tvbox-live-main">
+  <qt-view class="live-main">
     <!-- 设备时间 -->
-    <p class="tvbox-live-time">{{ deviceTime }}</p>
+    <p class="live-time">{{ deviceTime }}</p>
 
     <!-- 资源播放 -->
     <ESPlayerManager ref="playerManager" :playerList="playerListRef" :initPlayerWindowType="2"
       @onPlayerBufferStart="onPlayerBufferStart" @onPlayerBufferEnd="onPlayerBufferEnd"
       @onPlayerPrepared="onPlayerPrepared" @onPlayerPlaying="onPlayerPlaying" @onPlayerError="onPlayerError" />
 
-    <qt-loading-view v-show="showLoading" class="tvbox-live-loading" />
+    <qt-loading-view v-show="showLoading" class="live-loading" />
 
     <!-- 功能区域 -->
-    <qt-view class="tvbox-live-func">
+    <qt-view class="live-func">
       <LoadingError v-show="showLoadingError" />
 
       <!-- 节目信息 -->
-      <qt-view v-show="showPlayinfo" class="tvbox-live-playinfo">
-        <img class="tvbox-live-playinfo-img" :src="bgPlayInfo">
+      <qt-view v-show="showPlayinfo" class="live-playinfo">
+        <img class="live-playinfo-img" :src="bgPlayInfo">
 
-        <qt-view class="tvbox-live-playinfo-channel">
+        <qt-view class="live-playinfo-channel">
           <p style="font-size: 52px; color: white;">{{ curMedia.channelId }}</p>
-          <qt-text class="tvbox-live-playinfo-channel-text" :text="curMedia.channelName || ''" gravity="center"
-            :lines="1" :ellipsizeMode="3" :select="true"></qt-text>
+          <qt-text class="live-playinfo-channel-text" :text="curMedia.channelName || ''" gravity="center" :lines="1"
+            :ellipsizeMode="3" :select="true"></qt-text>
         </qt-view>
 
-        <qt-view class="tvbox-live-playinfo-program">
+        <qt-view class="live-playinfo-program">
           <div style="flex-direction: row; align-items: center;">
             <img style="width: 12px; height: 20px; margin-right: 7px;" :src="icPlaying">
             <div v-if="curProgram.title" style="flex-direction: row;">
-              <p class="tvbox-live-playinfo-program-text">正在播放</p>
-              <p class="tvbox-live-playinfo-program-text" style="margin-left: 16px; margin-right: 16px;">
+              <p class="live-playinfo-program-text">正在播放</p>
+              <p class="live-playinfo-program-text" style="margin-left: 16px; margin-right: 16px;">
                 {{ curProgram.start }}</p>
-              <qt-text class="tvbox-live-playinfo-program-text" style="width: 300px;" :text="curProgram.title"
-                :lines="1" :ellipsizeMode="3" :select="true">
+              <qt-text class="live-playinfo-program-text" style="width: 300px;" :text="curProgram.title" :lines="1"
+                :ellipsizeMode="3" :select="true">
               </qt-text>
             </div>
-            <p v-else class="tvbox-live-playinfo-program-text">正在播放 - 暂无节目信息</p>
+            <p v-else class="live-playinfo-program-text">正在播放 - 暂无节目信息</p>
           </div>
 
           <div style="flex-direction: row; margin-left: 19px;">
             <div v-if="nextProgram.title" style="flex-direction: row;">
-              <p class="tvbox-live-playinfo-program-text2">下一节目</p>
-              <p class="tvbox-live-playinfo-program-text2">
+              <p class="live-playinfo-program-text2">下一节目</p>
+              <p class="live-playinfo-program-text2">
                 {{ nextProgram.start }}</p>
-              <qt-text class="tvbox-live-playinfo-program-text2" style="width: 300px;" :text="nextProgram.title"
-                :lines="1" :ellipsizeMode="3" :select="true"></qt-text>
+              <qt-text class="live-playinfo-program-text2" style="width: 300px;" :text="nextProgram.title" :lines="1"
+                :ellipsizeMode="3" :select="true"></qt-text>
             </div>
-            <p v-else class="tvbox-live-playinfo-program-text2">下一节目 - 暂无节目信息</p>
+            <p v-else class="live-playinfo-program-text2">下一节目 - 暂无节目信息</p>
           </div>
 
           <div style="flex-direction: row; align-items: center; margin-left: 19px;">
-            <img class="tvbox-live-playinfo-program-img" :src="icOk">
-            <p class="tvbox-live-playinfo-program-text2">节目列表</p>
-            <img class="tvbox-live-playinfo-program-img" :src="icMenu">
-            <p class="tvbox-live-playinfo-program-text2">换源</p>
-            <img class="tvbox-live-playinfo-program-img" :src="icChange">
-            <p class="tvbox-live-playinfo-program-text2">换台</p>
-            <img class="tvbox-live-playinfo-program-img tvbox-live-img-transform" :src="icChange">
-            <p class="tvbox-live-playinfo-program-text2">线路</p>
+            <img class="live-playinfo-program-img" :src="icOk">
+            <p class="live-playinfo-program-text2">节目列表</p>
+            <img class="live-playinfo-program-img" :src="icMenu">
+            <p class="live-playinfo-program-text2">换源</p>
+            <img class="live-playinfo-program-img" :src="icChange">
+            <p class="live-playinfo-program-text2">换台</p>
+            <img class="live-playinfo-program-img live-img-transform" :src="icChange">
+            <p class="live-playinfo-program-text2">线路</p>
           </div>
 
-          <p class="tvbox-live-playinfo-program-lines">[线路{{ curMediaLine + 1 }}/{{ curMediaLines }}]</p>
+          <p class="live-playinfo-program-lines">[线路{{ curMediaLine + 1 }}/{{ curMediaLines }}]</p>
         </qt-view>
       </qt-view>
 
       <!-- 菜单 -->
-      <qt-view v-show="showMenu" class="tvbox-live-menu" :clipChildren="false">
+      <qt-view v-show="showMenu" class="live-menu" :clipChildren="false">
         <!-- 一级 -->
         <qt-view class="menu-first-tab-bg">
           <qt-list-view class="menu-first-tab" ref="firstTabRef" :autoscroll="[firstTabScrollPos, 432]"
@@ -116,7 +116,7 @@
           <qt-text class="menu-third-tab-ext-text" text="节目信息"></qt-text>
         </qt-view>
 
-        <qt-view class="tvbox-live-menu-back">
+        <qt-view class="live-menu-back">
           <p>按</p>
           <img :src="icBack">
           <p>返回键回到首页</p>
@@ -150,6 +150,8 @@ import icMenuExtArrow from '../../assets/live/ic-menu-ext-arrow.png'
 import icBack from '../../assets/live/ic-back.png'
 import icChange from '../../assets/live/ic-change.png'
 import icPlaying from '../../assets/live/ic-playing.png'
+import { mockProgram } from './mock/program'
+import { mockChannel } from './mock/channel'
 
 // 直播源节目
 let liveSourceEpg: string = ''
@@ -846,13 +848,13 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
 </script>
 
 <style scoped>
-.tvbox-live-main {
+.live-main {
   width: 1920px;
   height: 1080px;
   background-color: black;
 }
 
-.tvbox-live-time {
+.live-time {
   position: absolute;
   top: 80px;
   right: 100px;
@@ -862,14 +864,14 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   z-index: 1;
 }
 
-.tvbox-live-func {
+.live-func {
   width: 1920px;
   height: 1080px;
   background-color: transparent;
   position: absolute
 }
 
-.tvbox-live-loading {
+.live-loading {
   width: 100px;
   height: 100px;
   background-color: transparent;
@@ -878,7 +880,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   left: 910px;
 }
 
-.tvbox-live-playinfo {
+.live-playinfo {
   width: 1200px;
   height: 140px;
   background-color: #3098FF80;
@@ -889,13 +891,13 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   flex-direction: row;
 }
 
-.tvbox-live-playinfo-img {
+.live-playinfo-img {
   width: 317px;
   height: 140px;
   position: absolute;
 }
 
-.tvbox-live-playinfo-channel {
+.live-playinfo-channel {
   width: 317px;
   height: 140px;
   background-color: transparent;
@@ -903,7 +905,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   justify-content: center;
 }
 
-.tvbox-live-playinfo-channel-text {
+.live-playinfo-channel-text {
   width: 197px;
   height: 52px;
   background-color: transparent;
@@ -911,7 +913,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   color: white;
 }
 
-.tvbox-live-playinfo-program {
+.live-playinfo-program {
   width: 883px;
   height: 140px;
   background-color: transparent;
@@ -919,20 +921,20 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   padding-left: 40px;
 }
 
-.tvbox-live-playinfo-program-text {
+.live-playinfo-program-text {
   font-size: 24px;
   line-height: 35px;
   color: white;
 }
 
-.tvbox-live-playinfo-program-text2 {
+.live-playinfo-program-text2 {
   font-size: 24px;
   line-height: 35px;
   color: #DBEDFFFF;
   margin-right: 16px;
 }
 
-.tvbox-live-playinfo-program-img {
+.live-playinfo-program-img {
   width: 22px;
   height: 22px;
   margin-top: 4px;
@@ -940,11 +942,11 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   margin-right: 2px;
 }
 
-.tvbox-live-img-transform {
+.live-img-transform {
   transform: rotate(90deg);
 }
 
-.tvbox-live-playinfo-program-lines {
+.live-playinfo-program-lines {
   color: white;
   font-size: 24px;
   position: absolute;
@@ -952,7 +954,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   right: 40px;
 }
 
-.tvbox-live-menu {
+.live-menu {
   width: 1920px;
   height: 1080px;
   background-color: transparent;
@@ -1172,7 +1174,7 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   margin-right: 36px;
 }
 
-.tvbox-live-menu-back {
+.live-menu-back {
   position: absolute;
   bottom: 80px;
   right: 100px;
@@ -1181,13 +1183,13 @@ defineExpose({ onESCreate, onESPause, onESResume, onESDestroy, onKeyDown, onBack
   justify-content: center;
 }
 
-.tvbox-live-menu-back p {
+.live-menu-back p {
   color: white;
   font-size: 36px;
   margin-bottom: 2px;
 }
 
-.tvbox-live-menu-back img {
+.live-menu-back img {
   width: 35px;
   height: 35px;
 }

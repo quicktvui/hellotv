@@ -20,6 +20,7 @@
                 :enableFocusBorder="true"
                 :clipChildren="false"
                 :focusable="true"
+                :nextFocusName="{top:'headerSearchButton'}"
                 @click="onClick"
                 @focus="onFocus"
                 :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"

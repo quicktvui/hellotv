@@ -1,8 +1,8 @@
 <template>
   <qt-view class="bg_player" :clipChildren="false" ref="bg_root">
     <replace-child :focusable="false" :clipChildren="false" @onChildChanged="onChildChanged"
-      ref="bg_player_replace_child" :replaceOnVisibilityChanged='false' class="bg_player_replace_child"
-      sid="bg_player_replace_child_sid">
+      ref="bg_player_replace_child" markChildSID="bg-player" :replaceOnVisibilityChanged='false'
+      class="bg_player_replace_child" sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box" :clipChildren="true" :focusable="false" name='home_player'
       :style="{ width: playerBoxWidth + 'px', height: playerBoxHeight + 'px' }">
@@ -23,8 +23,10 @@
       </qt-view>
       <qt-view class="item_player_focus_bg" :style="{ width: playerWidth + 'px', height: playerHeight + 'px' }"
         :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
-        <qt-img-transition ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false" :focusable="false"
-          :src="coverSrc" :width="playerWidth" :height="playerHeight" />
+        <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false"
+          class="item_cell_bg_img"
+          :style="{ backgroundColor: 'transparent', width: playerWidth + 'px', height: playerHeight + 'px' }">
+        </img-transition>
       </qt-view>
       <!-- 背景视频遮罩 -->
       <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType === 2" />
@@ -32,8 +34,8 @@
       <qt-view class="item_cell_list_front" :style="{ width: playerListWidth + 'px', height: playerListHeight + 'px' }">
         <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit"
           :visible="bgPlayerType === 1" :style="{ width: playerListWidth + 'px', height: playerListHeight + 'px' }"
-          :bringFocusChildToFront="false" :singleSelectPosition="currentPlayIndex" @item-click="onItemClick"
-          @item-focused="onItemFocus">
+          :bringFocusChildToFront="false" :autoscroll='[currentPlayIndex, playerListHeight * 0.5 - 96 * 0.5]'
+          :singleSelectPosition="currentPlayIndex" @item-click="onItemClick" @item-focused="onItemFocus">
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
             :style="{ width: playerListWidth + 'px' }" :clipChildren="true" eventClick eventFocus :focusScale="1">
             <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
@@ -82,13 +84,13 @@ export default defineComponent({
   setup(props, ctx) {
     const launch = useLaunch()
     const decode = useESPlayerDecodeManager()
+    const router = useESRouter()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(1920)
     let playerHeight = ref<number>(1080)
     let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
-    let bgPlayerOpacity = ref(0)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
     const listViewRef = ref<QTIListView>()
     let listDataRec: Array<QTListViewItem> = [];
@@ -104,8 +106,9 @@ export default defineComponent({
     let delayUpdateItemTimer: any = -1
     let onItemFocusTimer: any = -1
     let recordPlayerList: Array<any> = []
-    let coverOpacity = ref(1)
-    let coverSrc = ref('')
+    let coverSrc = ''
+    let curCoverSrc = ""
+    let cellListFocused = false
     let listInit = ref(false)
     let playerInit = ref(false)
     let pauseOnCoverShow = ref(false)
@@ -113,19 +116,12 @@ export default defineComponent({
     let currentPlayIndex = ref(0)
     const log = useESLog()
     const toast = useESToast()
-    // let playInfo = reactive({
-    //   name: '',
-    //   score: '',
-    //   major: ''
-    // })
+
+
 
     watch(() => props.active, (value) => {
       log.e('BG-PLAYER', `props.active change:${value}`)
-      // if(!value){
-      //   showCoverImmediately()
-      // }else{
-      //   dismissCoverDelayed()
-      // }
+
     })
     const playAtIndex = (index: number) => {
       let list = recordPlayerList
@@ -144,7 +140,6 @@ export default defineComponent({
     const doChangeParent = (cellReplaceSID: string, playerType: number,
       boxWidth: number, boxHeight: number, playerWidth: number, playerHeight: number,
       playerListData: any, playIndex: number) => {
-      bgPlayerOpacity.value = 0
       clearTimeout(delayShowTimer)
       clearTimeout(delayShowPlayerTimer)
       bgPlayerType.value = playerType
@@ -162,7 +157,7 @@ export default defineComponent({
         log.e('BG-PLAYER', `doChangeParent 首次初始化播放器`)
       }
       let item0 = playerListData[0]
-      setNextImage(item0.cover)
+      initPlayBg(item0.cover)
       currentPlayIndex.value = playIndex
       delayShowTimer = setTimeout(() => {
         initComponent(playerListData, playerType)
@@ -174,7 +169,6 @@ export default defineComponent({
 
     const keepPlayerInvisible = (stopIfNeed: boolean = true) => {
       log.e('DebugReplaceChild', `+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
-      // bgPlayerOpacity.value = 0
       // clearTimeout(delayShowPlayerTimer)
       if (stopIfNeed) {
         if (isAnyPlaying.value) {
@@ -192,12 +186,10 @@ export default defineComponent({
      */
     const delayShowPlayer = (delay: number = 300) => {
       log.e('BG-PLAYER', `+++++delayShowPlayer delay:${delay}`)
-      bgPlayerOpacity.value = 0
       bg_root.value?.dispatchFunctionBySid('bg-player', 'changeAlpha', [0])
       clearTimeout(delayShowPlayerTimer)
       delayShowPlayerTimer = setTimeout(() => {
         log.e('DebugReplaceChild', `----set bgPlayerOpacity 1 on changeParent`)
-        bgPlayerOpacity.value = 1
         bg_root.value?.dispatchFunctionBySid('bg-player', 'changeAlpha', [1])
       }, delay)
     }
@@ -228,19 +220,12 @@ export default defineComponent({
         }
         nextTick(() => {
           listDataRec = listViewRef.value!.init(arr)
-          // setTimeout(() => {
-          //   listViewRef.value?.setItemSelected(0,true)
-          // }, 200);
+
         })
       }
     }
     let loopPlayListTimer: any = -1
-    const startInterval = (index: number) => {
-      if (loopPlayListTimer) clearTimeout(loopPlayListTimer)
-      loopPlayListTimer = setTimeout(() => {
-        dealwithItemPlay(recordPlayerList[index], index)
-      }, 5000)
-    }
+
     const reset = () => {
       log.e('BG-PLAYER', `reset`)
       clearInterval(loopPlayListTimer)
@@ -261,57 +246,50 @@ export default defineComponent({
     }
     // cell-img-transition api
 
-    const setNextImage = (backgroundImage: any) => {
-      log.d('BG-PLAYER', `setCellNextImage bg:${backgroundImage}`)
-      // if(backgroundImage) itemCellBgImgRef.value?.setNextImage(backgroundImage);
-      // else itemCellBgImgRef.value?.setNextImage(recordPlayerList[currentPlayIndex.value].cover);
-      // coverSrc.value = backgroundImage
-      if (backgroundImage != '') {
-        coverSrc.value = backgroundImage
-        // isShowVideoBjText.value = false
-      }
-      else {
-        // isShowVideoBjText.value = true
-        coverSrc.value = 'http://qcloudcdn.a311.ottcn.com/channelzero_image/web_static/extend_screen/mood/video_bj_01.png'
-      }
-      //coverSrc.value = recordPlayerList[currentPlayIndex.value].cover
+    const initPlayBg = (backgroundImage: any) => {
+      curCoverSrc = backgroundImage
+      let imgBg = !!backgroundImage ? backgroundImage : 'http://qcloudcdn.a311.ottcn.com/channelzero_image/web_static/extend_screen/mood/video_bj_01.png'
+      setBgImage(imgBg)
     }
 
     function resetCellImage() {
       itemCellBgImgRef.value?.reset()
     }
     const showCoverImmediately = (pausePlay = false) => {
-      //itemCellBgImgRef.value?.setNextImage(recordPlayerList[currentPlayIndex.value].cover)
       clearTimeout(dismissCoverTimer)
-      coverOpacity.value = 1
       pauseOnCoverShow.value = pausePlay
-      if (coverSrc.value != '') {
-        itemCellBgImgRef.value.setNextImage(coverSrc.value)
-      }
-      log.d('BG-PLAYER', `showCoverImmediately pausePlay:${pausePlay}`)
     }
-    // const dismissCoverDelayed = () => {
-    //   clearTimeout(dismissCellCoverTimer)
-    //   dismissCellCoverTimer = setTimeout(()=>{
-    //     //itemCellBgImgRef.value?.setNextColor(0)
-    //     log.e('WATERFALL-TABS',`exe DismissCellCover!!!`)
-    //     //props.active = true
-    //     coverOpacity.value = 0
-    //   },1000)
-    // }
-    // img-transition api
+
+    const setCurBg = () => {
+      if (curCoverSrc) {
+        coverSrc = curCoverSrc
+        itemCellBgImgRef.value.setNextImage(curCoverSrc)
+      } else {
+        coverSrc = ""
+        itemCellBgImgRef.value.setNextColor(0)
+      }
+    }
+
+    const setBgImage = (imgUrl: string) => {
+      if (coverSrc === imgUrl) {
+        return
+      }
+      coverSrc = imgUrl
+      if (imgUrl) {
+        itemCellBgImgRef.value.setNextImage(imgUrl)
+      } else {
+        itemCellBgImgRef.value.setNextColor(0)
+      }
+    }
+
+
 
     const requestDismissCover = (delay = 1000) => {
       if (recordPlayerList[currentPlayIndex.value].url) {
         clearTimeout(dismissCoverTimer)
         pauseOnCoverShow.value = false
-        log.d('BG-PLAYER', `requestDismissCover`)
         dismissCoverTimer = setTimeout(() => {
-          //itemCellBgImgRef.value?.setNextColor(0)
-          itemCellBgImgRef.value.setNextColor()
-          coverOpacity.value = 0
-          //activeState.value = false
-          //bgRef.value?.setNextColor(0)
+          setBgImage("")
         }, delay)
       }
     }
@@ -361,10 +339,8 @@ export default defineComponent({
     }
     const setPlayMediaListMode = (playMode: ESPlayerPlayMode) => playerManagerRef.value?.setPlayMediaListMode(playMode)
     let dismissCoverTimer: any
-    let dismissCellCoverTimer: any
     const onVideoPlayerPlaying = () => {
       clearTimeout(dismissCoverTimer)
-      log.e('BG-PLAYER', `onVideoPlayerPlaying pauseOnCoverShow:${pauseOnCoverShow.value}`)
       isAnyPlaying.value = true
       if (pauseOnCoverShow.value) {
         pause()
@@ -373,28 +349,38 @@ export default defineComponent({
       }
     }
 
-    const isBGPlay = () => {
-      return bgPlayerType.value == CoveredPlayerType.TYPE_BG
-    }
-    const onClickCellItem = () => {
-
+    const onClickCellItem = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
+      //事件需要大于onItemFocus 中的时间
+      clearTimeout(onItemFocusTimer)
+      setTimeout(() => { stop() }, 900)
     }
     const onItemClick = (e) => {
+      router.push({
+        name: 'screen_main_view',
+        params: {}
+      });
+      //事件需要大于onItemFocus 中的时间
+      clearTimeout(onItemFocusTimer)
+      setTimeout(() => { stop() }, 900)
     }
     const onItemFocus = (e) => {
-      onItemFocusTimer && clearTimeout(onItemFocusTimer)
-      onItemFocusTimer = setTimeout(() => {
-        if (e.hasFocus && e.position != currentPlayIndex.value) {
+      cellListFocused = e.hasFocus
+      if (e.hasFocus && e.position != currentPlayIndex.value) {
+        onItemFocusTimer && clearTimeout(onItemFocusTimer)
+        onItemFocusTimer = setTimeout(() => {
           dealwithItemPlay(e.item, e.position)
-        }
-      }, 400)
-
+        }, 400)
+      }
     }
     const dealwithItemPlay = (item: any, nextIndex: any) => {
       listViewRef.value?.clearPostTask()
       if (delayUpdateItemTimer) clearTimeout(delayUpdateItemTimer)
       listViewRef.value?.setItemSelected(nextIndex, true)
-      setNextImage(item.cover)
+      initPlayBg(item.cover)
 
       showCoverImmediately()
       delayUpdateItemTimer = setTimeout(() => {
@@ -413,24 +399,28 @@ export default defineComponent({
     const onVideoPlayerCompleted = () => {
       if (bgPlayerType.value == CoveredPlayerType.TYPE_CELL_LIST) {
         clearInterval(loopPlayListTimer)
-        if (currentPlayIndex.value + 1 >= recordPlayerList.length) dealwithItemPlay(recordPlayerList[0], 0)
-        else dealwithItemPlay(recordPlayerList[currentPlayIndex.value + 1], currentPlayIndex.value + 1)
+        if (cellListFocused) {
+          dealwithItemPlay(recordPlayerList[currentPlayIndex.value], currentPlayIndex.value)
+        } else {
+          if (currentPlayIndex.value + 1 >= recordPlayerList.length) dealwithItemPlay(recordPlayerList[0], 0)
+          else dealwithItemPlay(recordPlayerList[currentPlayIndex.value + 1], currentPlayIndex.value + 1)
+        }
       }
     }
     const onChildChanged = (e) => {
       // console.log(e,'onChildChangedonChildChangedonChildChangedonChildChangedonChildChanged')
     }
     return {
-      playerList, bg_player_replace_child, bgPlayerOpacity, itemCellBgImgRef, reset, bg_root,
+      playerList, bg_player_replace_child, itemCellBgImgRef, reset, bg_root,
       playerManagerRef, release, stop, pause, resume, initPlayer, play,
       playerBoxWidth, playerBoxHeight, playerListWidth, playerListHeight,
       playerWidth, playerHeight, playerIsInitialized,
       listViewRef, onItemClick, currentPlayIndex, onItemFocus, onClickCellItem,
-      requestDismissCover,
-      setNextImage, delayShowPlayer, playerInit,
+      requestDismissCover, setCurBg, setBgImage,
+      initPlayBg, delayShowPlayer, playerInit,
       onVideoPlayerPlaying, onVideoPlayerCompleted, onPlayerInitialized,
-      initComponent, setSize, onChildChanged, coverOpacity, showCoverImmediately,
-      coverSrc, playAtIndex, doChangeParent, bgPlayerType, listInit, pauseOnCoverShow, isAnyPlaying, stopIfNeed,
+      initComponent, setSize, onChildChanged, showCoverImmediately,
+      playAtIndex, doChangeParent, bgPlayerType, listInit, pauseOnCoverShow, isAnyPlaying, stopIfNeed,
       keepPlayerInvisible
     };
   },

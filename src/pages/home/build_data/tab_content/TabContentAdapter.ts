@@ -280,7 +280,8 @@ export function buildQTTabContent(disableScrollOnFirstScreen: boolean = false, p
   return {
     useDiff: false,
     disableScrollOnFirstScreen,
-    data: plateList
+    data: plateList,
+    bindingPlayer:null,
   }
 }
 

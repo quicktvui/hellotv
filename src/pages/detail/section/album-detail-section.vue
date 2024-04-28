@@ -153,6 +153,14 @@ export default defineComponent({
       placeholderRef.value?.setAutofocus(enable)
     }
 
+    function requestCurrentMediaFocus() {
+      mediaListRef.value?.requestFocus(mediaListRef.value?.getSelectedPosition() ?? -1)
+    }
+
+    function getMediaSelectedPosition(): number {
+      return mediaListRef.value?.getSelectedPosition() ?? -1
+    }
+
 
     return {
       isCollected,
@@ -177,7 +185,10 @@ export default defineComponent({
       setMediaListViewSelected,
       requestPlayerPlaceholderFocus,
       release,
-      setAutofocus
+      setAutofocus,
+      requestFullButtonFocus,
+      requestCurrentMediaFocus,
+      getMediaSelectedPosition
     }
   },
 });

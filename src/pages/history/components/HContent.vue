@@ -31,12 +31,11 @@
         </qt-view>
       </HContentPoster>
       <qt-text showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" gravity="center"
-        :focusable="false" text="
-        已经到底啦，按【返回键】回到顶部"></qt-text>
+        :focusable="false" text="已经到底啦，按【返回键】回到顶部"></qt-text>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
       <template v-slot:loading>
         <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
-          <!-- <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false"/> -->
+          <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false" />
         </qt-view>
       </template>
 
@@ -170,11 +169,11 @@ const loadMoreFn = (pageNo: number) => {
     api.getContentList(preCurrentMenu, preCurrentFilter, prePageNum).then(res => {
       // gridDataRec.pop()
       if (res?.data?.length) {
-        gridDataRec.pop()
+        // gridDataRec.pop()
         const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
         // @ts-ignore
         // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
-        gridDataRec.push(...arr.concat([{ type: 101 }]))
+        gridDataRec.push(...arr)//...arr.concat([{type:101}])
         contentDataHeight = dataHeight
         pageState.value = pageStates.ready
         contentLenth += arr.length
@@ -183,7 +182,7 @@ const loadMoreFn = (pageNo: number) => {
         if (contentDataHeight >= props.pHeight) {
           gridDataRec.push(...[{ type: 1003, editMode: false }])
         }
-        // gridViewRef.value!.stopPage()
+        gridViewRef.value!.stopPage()
       }
       prePageNum++
     }).catch(err => {
@@ -216,16 +215,15 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
 
   // @ts-ignore
   gridViewRef.value?.restartPage()
-
+  const apiId = currentMenu?.index + '-' + currentFilter?.index
   clearTimeout(timeOutId)
   timeOutId = setTimeout(async () => {
     gridViewRef.value?.blockRootFocus()
-    const apiId = currentMenu?.index + '-' + currentFilter?.index
     const res = await getFirstContentListApi(currentMenu, currentFilter)
     if (apiId == res._apiId) {
       if (res?.data?.length) {
         const { arr, dataHeight, rowsHeight } = getContentList(res.data, props.pWidth, props.pConfig)
-        gridDataRec = gridViewRef.value!.init(arr.concat([{ type: 101 }]))
+        gridDataRec = gridViewRef.value!.init(arr)//arr.concat([{type:101}])
         pageState.value = pageStates.ready
         contentDataHeight = dataHeight
         contentLenth = arr.length
@@ -308,7 +306,7 @@ defineExpose({
   },
   onBackPressed() {
     if (!isEdit.value && contentScrollY > initRowsHeight) {
-      gridViewRef.value?.scrollToTop()
+      gridViewRef.value?.scrollToFocused(0)
       contentScrollY = 0
       return false
     }

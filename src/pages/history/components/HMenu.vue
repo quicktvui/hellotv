@@ -15,6 +15,7 @@
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
                 :nextFocusName="{ right: 'history_poster_name', left: 'history_poster_name' }" :focusable="false"
+                :requestFocus="true"
             >
                 <!-- 纯文字标题 :requestFocus="true"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
