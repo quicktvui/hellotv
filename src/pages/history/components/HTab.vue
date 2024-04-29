@@ -69,7 +69,9 @@ defineExpose({
     requestChildTabFocus(index) { // 针对上方tab的焦点重新获焦(当内容区被清空时，如果configs.clearAllIsReset=true，会调此方法)
         // Native.callUIFunction(contentNavBar.value, "requestFocus", [])
         // Native.callUIFunction(contentNavBar.value, "requestFocusDirectly", [])
-        contentNavBar.value?.navList.value?.setItemFocused(tabPosition)
+        nextTick(()=>{
+            contentNavBar.value?.navList?.setItemFocused(tabPosition)
+        })
     }
 })
 </script>

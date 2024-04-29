@@ -1,7 +1,7 @@
 <template>
     <div 
         class="h_content" ref="hContentRef" :focusable="false" :height="pHeight" :width="pWidth"
-        :blockFocusDirections="rBlockFocusDirections"
+        :blockFocusDirections="rBlockFocusDirections" :clipChildren="false"
     >
         <!-- :nextFocusName="{ up: 'h_tab_name' }"  -->
         <qt-grid-view 
@@ -10,7 +10,7 @@
             :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
             :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
             :loadMore="loadMoreFn" @item-bind="onItemBind" :nextFocusName="gvNextFocusName"
-            @scroll-state-changed="onScrollStateChanged"
+            @scroll-state-changed="onScrollStateChanged" :enablePlaceholder="false"
             :requestFocus="isRequestFocus"
         >
         <!-- @scroll-state-changed="onScrollStateChanged" -->
@@ -20,7 +20,7 @@
             </qt-view>
             <!-- <HContentItem type="10001" /> qt-poster-->
             <!-- <HContentPoster :type="10001"></HContentPoster> -->
-            <HContentPoster :type="10001" >
+            <HContentPoster :type="10001" :clipChildren="false" >
                 <!-- :focusable="false" -->
                 <qt-view showIf="${editMode==true}" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${image.style}">
                     <qt-view 
@@ -130,6 +130,7 @@ const onItemClick = (arg) => {
                     gridViewRef.value?.clearFocus()
                     gridDataRec!.splice(0)
                     isEdit.value = false
+                    pageState.value = pageStates.empty
                     emits('emContentClearAll')
                 }
             }
@@ -181,7 +182,7 @@ const loadMoreFn = (pageNo: number) => {
             // gridDataRec.pop()
             if (res?.data?.length) {
                 // gridDataRec.pop()
-                const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig)
+                const { arr, dataHeight } = getContentList(res.data, props.pWidth, props.pConfig,isEdit.value)
                 // @ts-ignore
                 // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
                 gridDataRec.push(...arr)//...arr.concat([{type:101}])
@@ -216,14 +217,17 @@ const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: 
 }
 let timeOutId:any = null
 let lastApiId:string = ''
-const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
+const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams, isReset=false) => {
+    if(!isReset){
+        gridDataRec!.splice(0)
+    }
     isFirst = true
     pageState.value = pageStates.init
-    gridDataRec!.splice(0)
     contentDataHeight = 0
     prePageNum = 0
     contentLenth = 0
     isShowScreenLoading.value = true
+    isEdit.value = false
     // @ts-ignore
     // gridViewRef.value?.restartPage()
     lastApiId = currentMenu?.index+'-'+currentFilter?.index
@@ -277,9 +281,10 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
 defineExpose({
     setData,
     clearData() {
-        isEdit.value = false
-        gridDataRec!.splice(0)
         api.clearContent(preCurrentMenu, preCurrentFilter).catch(()=>{})
+        isEdit.value = false
+        pageState.value = pageStates.empty
+        gridDataRec!.splice(0)
     },
     changeEditState(boo: boolean) {
         if (isEdit.value !== boo) {
@@ -308,13 +313,16 @@ defineExpose({
                 })
                 nextTick(()=>{
                     gridViewRef.value?.unBlockRootFocus()
-                    gridViewRef.value?.setItemFocused(firstPosterindex)
+                    // gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex
                 })
             }
         }
+        if(!boo && pageState.value === pageStates.empty){
+            emits('emInitNoData')
+        }
     },
     scrollTo(index:number){
-        gridViewRef.value?.scrollToPosition(index)
+        // gridViewRef.value?.scrollToFocused(index)//scrollToPosition
     },
     onBackPressed(){
         if(!isEdit.value && contentScrollY > initRowsHeight){
@@ -330,7 +338,7 @@ defineExpose({
     },
     reStartload(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams){//从详情页面返回时，有时需要重载页面数据
         if(isReStartload){
-            setData(currentMenu, currentFilter)
+            setData(currentMenu, currentFilter, true)
         }
     }
 })
