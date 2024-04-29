@@ -287,7 +287,7 @@ export default defineComponent({
             recordPlayerDataMap.set(key,obj)
             if(obj.data[0].isRequestUrl){
               let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(obj.data[0])
-              obj.data[0].url = playerInfo.url
+              obj.data[0] = playerInfo
             }
           }
         }
