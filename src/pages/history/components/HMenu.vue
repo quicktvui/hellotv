@@ -70,6 +70,7 @@ const emits = defineEmits(['emChangeMenu'])
 let menuApiList: any[] = []
 let mPosition = -1
 const onTabSelect = (arg: any) => {
+    if(!arg.hasFocus) { return }
     if (mPosition !== arg.position) {
         emits('emChangeMenu', arg.position, menuApiList[arg.position])
     }
@@ -116,7 +117,7 @@ defineExpose({
         }
         if(isShow.value){
             listRef.value?.init(getMenuList(menuApiList));
-            onTabSelect({ position: 0 })
+            onTabSelect({ position: 0,hasFocus:true })
         }
         return isShow.value
     },

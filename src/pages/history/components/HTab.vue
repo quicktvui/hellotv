@@ -2,10 +2,11 @@
     <div 
         class="h_tab" v-show="isShow" :focusable="false" :width="pWidth"
     >
-        <!-- :requestFocus="true" content_grid_name-->
+        <!-- :requestFocus="true" content_grid_name @tab-select="onTabSelect" -->
         <qt-nav-bar 
             ref="contentNavBar" class="hc-navbar" :item-gap="10" :width="pWidth"
-            @tab-select="onTabSelect" name="h_tab_name" :requestFocus="true"
+            name="h_tab_name" :requestFocus="true"
+            @tab-focus="onTabSelect"
             :nextFocusName="{ down: 'history_poster_name' }"></qt-nav-bar>
     </div>
 </template>
@@ -32,7 +33,7 @@ let filterList:any[] = []
 let tabPosition = -1
 
 const onTabSelect = (arg: any) => {
-    if(!isShow.value) return
+    if(!isShow.value) return //arg.hasFocus
     if (tabPosition !== arg.position) {
         emits('emSelectTab', arg.position, filterList[arg.position])
     }
