@@ -30,6 +30,11 @@
          showOnState="focused"
          flexStyle="${style}"
          src="${focusedImage}"/>
+    <qt-view class="page-state-image-item-play-mark"
+             :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+      <play-mark :style="{width:'30px',height:'30px'}" showIf="${isShowPlayMark==true}"
+                 :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+    </qt-view>
   </div>
 </template>
 
@@ -59,4 +64,13 @@ export default defineComponent({
   position: absolute;
   border-radius: 8px;
 }
+
+.page-state-image-item-play-mark{
+  width: 55px;
+  height: 40px;
+  background-color: transparent;
+  position: absolute;
+  z-index: 1000;
+  right: 10px;
+  bottom: 12px;}
 </style>

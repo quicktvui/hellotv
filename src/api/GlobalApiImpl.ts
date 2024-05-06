@@ -100,7 +100,7 @@ export function createGlobalApi(): IGlobalApi {
       id:playDataItem.id,
       title:playDataItem.title,
       cover:playDataItem.cover,
-      url:"http://qcloudcdn.a311.ottcn.com/channelzero/2022/01/04/e6693388-4867-47d7-ba5d-e21ef66e744c_transcode_1137857.m3u8",
+      url:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
       isRequestUrl:false})
   }
 

@@ -31,6 +31,7 @@
         <!-- 搜索结果 -->
         <search-result
           :visible="!loading && !showResultLoading"
+          :descendantFocusability="showResultLoading ? 2 : 1"
           ref="search_result"
           name="search_result_view"
           :blockFocusDirections="['up', 'down']"
@@ -61,7 +62,7 @@ import {ref} from "vue";
 import searchKeyboard from "./component/search-keyboard.vue";
 import searchCenter from "./component/search-center.vue";
 import searchResult from "./component/search-result.vue";
-import {useESRouter, useESNativeRouter} from "@extscreen/es3-router";
+import {useESRouter} from "@extscreen/es3-router";
 import SearchConfig from "./build_data/SearchConfig"
 import { ESKeyEvent } from "@extscreen/es3-core"
 

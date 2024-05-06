@@ -12,5 +12,5 @@ export default {
   //首页内容请求数量
   tabContentPageSize: 10,
   // 默认源
-  defaultSourceUrl: 'http://cms.hmon.tv/upload/test/tvbox/js.json'
+  defaultSourceUrl: ''
 }
