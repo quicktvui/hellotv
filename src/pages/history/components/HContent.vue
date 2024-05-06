@@ -7,7 +7,7 @@
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
       @item-bind="onItemBind" :nextFocusName="gvNextFocusName" @scroll-state-changed="onScrollStateChanged"
-      :enablePlaceholder="false" :requestFocus="isRequestFocus">
+      :enablePlaceholder="false" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -83,7 +83,7 @@ const router = useESRouter()
 const gridViewRef = ref<QTIListView>();
 const hContentRef = ref()
 const toast = useESToast()
-const isShowScreenLoading = ref(false)
+const isShowScreenLoading = ref(true)
 const screenLoadingTxt = ref('')
 let gridDataRec: any[] = []
 let preCurrentMenu: any = null
@@ -151,7 +151,14 @@ const onItemClick = (arg) => {
 const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
-
+let lastFocusedId = -1
+const onItemFocuseFn = (arg) => {
+  if (arg.hasFocus) {
+    lastFocusedId = arg.item?.id
+  } else {
+    lastFocusedId = -1
+  }
+}
 // 加载更多数据
 let prePageNo = 0
 const loadMoreFn = (pageNo: number) => {
@@ -297,12 +304,16 @@ defineExpose({
         gridViewRef.value?.blockRootFocus()
         let firstPosterindex = -1
         let isFind = false
-        gridDataRec.forEach((el) => {
+        let lastFocusedIndex = -1
+        gridDataRec.forEach((el, index) => {
           if (!isFind) {
             firstPosterindex++
           }
           if (el.type == 10001) {
             isFind = true
+          }
+          if (lastFocusedId === el.id) {
+            lastFocusedIndex = index
           }
           if (el.type) {
             el.editMode = boo
@@ -310,7 +321,9 @@ defineExpose({
         })
         nextTick(() => {
           gridViewRef.value?.unBlockRootFocus()
-          // gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex
+          if (lastFocusedIndex >= 0) {
+            gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex lastFocusedIndex
+          }
         })
       }
     }
