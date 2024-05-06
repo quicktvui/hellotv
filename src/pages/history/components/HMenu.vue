@@ -14,10 +14,9 @@
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
-                :nextFocusName="{ right: 'history_poster_name', left: 'history_poster_name' }" :focusable="false"
-                :requestFocus="true"
+                :focusable="false" :requestFocus="true"
             >
-                <!-- 纯文字标题 :requestFocus="true"-->
+                <!-- 纯文字标题 :requestFocus="true" :nextFocusName="cNextFocusName"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
                 <!-- 图片标题-->
                 <ListStateImg type="2" />
@@ -80,7 +79,7 @@ const onTabSelect = (arg: any) => {
 const cBgColor = computed(()=>{
     return {colors:props.bgColor, orientation: 4}
 })
-// const nextFocusName = computed(()=>{
+// const cNextFocusName = computed(()=>{
 //     if(props.isFilter){
 //         return { right: 'h_tab_name', left: 'h_tab_name' }
 //     }//content_grid_name

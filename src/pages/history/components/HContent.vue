@@ -7,7 +7,7 @@
         <qt-grid-view 
             v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight" :width="pWidth"
             name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
-            :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="20"
+            :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
             :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
             :loadMore="loadMoreFn" @item-bind="onItemBind" :nextFocusName="gvNextFocusName"
             @scroll-state-changed="onScrollStateChanged" :enablePlaceholder="false"
@@ -59,7 +59,7 @@
 <script lang='ts' setup>
 import { computed, nextTick, ref } from "vue";
 import {
-    QTIListView
+  QTIListView
 } from '@quicktvui/quicktvui3';
 import { useESToast } from "@extscreen/es3-core";
 // @ts-ignore
@@ -74,10 +74,10 @@ import { IcurrentItemParams } from "../../../api/history/baseApi";
 import { Iconfig } from "../config";
 
 const props = withDefaults(defineProps<{
-    detailPageName?:string; emptyTxt?:string; pHeight?:number;
-    pWidth?:number; pConfig:Iconfig, setDataCallBack:(boo:boolean)=>void
+  detailPageName?: string; emptyTxt?: string; pHeight?: number;
+  pWidth?: number; pConfig: Iconfig, setDataCallBack: (boo: boolean) => void
 }>(), {
-    pHeight: 900, pWidth: 1570
+  pHeight: 900, pWidth: 1570
 })
 
 const isEdit = ref(false)
@@ -101,14 +101,14 @@ let prePageNum = 0
 let contentLenth = 0
 let contentScrollY = 0
 let isInit = true
-let prevItemIndex:string|number = -1
+let prevItemIndex: string | number = -1
 let isReStartload = false
 const isRequestFocus = ref(true)
 
 const gvNextFocusName = ref({})
 
-const emits = defineEmits(['emContentClearAll','emInitNoData'])
-const onItemBind = ()=>{}
+const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
+const onItemBind = () => { }
 const onItemClick = (arg) => {
     if (isEdit.value) {
         if(isShowScreenLoading.value) return //正在删除，防止重复点击
@@ -140,7 +140,7 @@ const onItemClick = (arg) => {
         })
         // toast.showLongToast(arg.item._key + '--' + arg.item.type)
     } else {
-        // toast.showLongToast('go player'+arg.item.metaId)
+        // console.log('lsj-go-player', arg.item)
         if(props.detailPageName){
             prevItemIndex = arg.item?.id//.position
             router.push({
@@ -154,13 +154,14 @@ const onItemClick = (arg) => {
         }
     }
 }
-const onScrollStateChanged = (ev)=>{
-    contentScrollY = ev.offsetY
+const onScrollStateChanged = (ev) => {
+  contentScrollY = ev.offsetY
 }
 
 // 加载更多数据
-let prePageNo
+let prePageNo = 0
 const loadMoreFn = (pageNo: number) => {
+    // console.log('lsj-loadmore', pageNo,prePageNo)
     if(prePageNo===pageNo) { return }
     prePageNo = pageNo
     if (pageState.value === pageStates.noMore) {
@@ -206,13 +207,13 @@ const loadMoreFn = (pageNo: number) => {
 // Native.callUIFunction(hContentRef.value, 'blockRootFocus', []);
 // Native.callUIFunction(hContentRef.value, 'unBlockRootFocus', []);
 // 首次加载数据
-const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams)=>{
+const getFirstContentListApi = (currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) => {
   prePageNum = 1
   return api.getContentList(currentMenu, currentFilter, 1).then(res => {
     prePageNum++
-    return { ...res, _apiId: currentMenu?.index+'-'+currentFilter?.index }
-  }).catch(()=>{
-    return { _apiId: currentMenu?.index+'-'+currentFilter?.index, data:[],isNeedReload:false }
+    return { ...res, _apiId: currentMenu?.index + '-' + currentFilter?.index }
+  }).catch(() => {
+    return { _apiId: currentMenu?.index + '-' + currentFilter?.index, data: [], isNeedReload: false }
   })
 }
 let timeOutId:any = null
@@ -228,6 +229,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     contentLenth = 0
     isShowScreenLoading.value = true
     isEdit.value = false
+    prePageNo = 0
     // @ts-ignore
     // gridViewRef.value?.restartPage()
     lastApiId = currentMenu?.index+'-'+currentFilter?.index
@@ -263,6 +265,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
               if(isInit){
                 emits('emInitNoData')
                 isInit = false
+                isRequestFocus.value = false
               }
           }
           preCurrentMenu = currentMenu
@@ -325,7 +328,7 @@ defineExpose({
         // gridViewRef.value?.scrollToFocused(index)//scrollToPosition
     },
     onBackPressed(){
-        if(!isEdit.value && contentScrollY > initRowsHeight){
+        if(!isEdit.value && contentScrollY > 0){
             gridViewRef.value?.scrollToFocused(0)
             contentScrollY = 0
             return false
@@ -345,92 +348,94 @@ defineExpose({
 </script>
 <style scoped>
 .h_content {
-    /* width: 1570px; */
-    /* height: 900px; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
+  /* width: 1570px; */
+  /* height: 900px; */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
 }
 
 .grid_view {
-    /* width: 1570px;
+  /* width: 1570px;
     height: 900px; */
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .content_type {
-    width: 1500px;
-    height: 50px;
-    background-color: transparent;
+  width: 1500px;
+  height: 50px;
+  background-color: transparent;
 }
 
 .content_type_name {
-    width: 1500px;
-    height: 50px;
-    background-color: transparent;
+  width: 1500px;
+  height: 50px;
+  background-color: transparent;
 }
 
 .history-item-cover {
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    border-radius: 8px;
-    flex-direction: row;
-    text-align: center;
-    justify-content: center;
-    align-items: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    z-index: 999;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  border-radius: 8px;
+  flex-direction: row;
+  text-align: center;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 999;
 }
 
 .history-delete-btn-focus {
-    position: absolute;
-    top: 0;
-    background-color: transparent;
+  position: absolute;
+  top: 0;
+  background-color: transparent;
 }
 
 .history-delete-btn {
-    color: red;
-    /* width: 100px;
+  color: red;
+  /* width: 100px;
     height: 50px; */
-    background-color: transparent;
+  background-color: transparent;
 }
 
 .screen-right-content-no-more {
-    width: 1570px;
-    height: 80px;
-    font-size: 30px;
-    color: rgba(255, 255, 255, 0.6);
-    background-color: transparent;
+  width: 1570px;
+  height: 80px;
+  font-size: 30px;
+  color: rgba(255, 255, 255, 0.6);
+  background-color: transparent;
 }
 
 .screen-right-content-more-loading {
-    width: 1570px;
-    height: 80px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background-color: transparent;
+  width: 1570px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: transparent;
 }
-.screen-right-content-loading{
-    width: 1570px;
-    height: 880px;
-    position: absolute;
-    left: 0;
-    top: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    background-color: transparent;
+
+.screen-right-content-loading {
+  width: 1570px;
+  height: 880px;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: transparent;
 }
+
 .loading_txt {
-    width: 200px;
-    height: 30px;
-    font-size: 20px;
-    color: #ccc;
-    background-color: transparent;
+  width: 200px;
+  height: 30px;
+  font-size: 20px;
+  color: #ccc;
+  background-color: transparent;
 }
 </style>

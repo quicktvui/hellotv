@@ -72,7 +72,8 @@ defineExpose({
         nextTick(()=>{
             contentNavBar.value?.navList?.setItemFocused(tabPosition)
         })
-    }
+    },
+    onKeyUp(){}
 })
 </script>
 <style scoped>

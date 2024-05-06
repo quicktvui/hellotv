@@ -135,6 +135,7 @@ defineExpose({
         }
     },
     onKeyUp() {
+        HistoryTabRef.value?.onKeyUp()
         HTopRef.value?.onKeyUp()
     },
     onESRestart() {
