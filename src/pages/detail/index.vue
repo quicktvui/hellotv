@@ -421,7 +421,7 @@ export default defineComponent({
       mediaPlayerViewRef.value?.addMediaItemList(page, data)
 
       if (page == 0) {
-        mediaPlayerViewRef.value?.playMediaItemByIndex(0)
+        mediaPlayerViewRef.value?.playMediaItemById(playId || data[0].id)
       }
     }
 
