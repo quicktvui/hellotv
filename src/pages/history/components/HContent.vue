@@ -194,7 +194,7 @@ const loadMoreFn = (pageNo: number) => {
                 // @ts-ignore
                 // gridViewRef.value?.insertItem(gridDataRec.length, arr.concat([{type:101}]))
                 gridDataRec.push(...arr)//...arr.concat([{type:101}])
-                contentDataHeight = dataHeight
+                contentDataHeight += dataHeight
                 pageState.value = pageStates.ready
                 contentLenth += arr.length
             } else {
