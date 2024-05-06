@@ -81,9 +81,9 @@ const getSubTitle = (data: IHistoryContentEntity) => {
                 if (Number(data.currentPlayTime) <= 0) {
                     progress = '不足1%'
                 }
+                subTitle += ' ' + progress
             }
             
-            subTitle += ' ' + progress
         }
     } catch (error) {
 
