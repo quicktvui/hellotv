@@ -64,11 +64,10 @@ const emInitNoDataFn = ()=>{
     }
 }
 const emClearFn = () => {
+    HistoryContentRef.value?.clearData()//情况列表数据
     if (configs.clearAllIsReset) {
         HistoryContentRef.value?.reset()
         emChangeMenuFn(currentMenu.index, currentMenu.item, true)
-    } else {
-        HistoryContentRef.value?.clearData()//情况列表数据
     }
 }
 let currentMenu: any = { index: 0, item: {} }
