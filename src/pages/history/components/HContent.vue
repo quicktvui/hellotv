@@ -11,7 +11,7 @@
             :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true"
             :loadMore="loadMoreFn" @item-bind="onItemBind" :nextFocusName="gvNextFocusName"
             @scroll-state-changed="onScrollStateChanged" :enablePlaceholder="false"
-            :requestFocus="isRequestFocus"
+            :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn"
         >
         <!-- @scroll-state-changed="onScrollStateChanged" -->
             <qt-view type="1001" class="content_type" :focusable="false">
@@ -157,7 +157,14 @@ const onItemClick = (arg) => {
 const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
-
+let lastFocusedId = -1
+const onItemFocuseFn = (arg) => {
+    if(arg.hasFocus){
+        lastFocusedId = arg.item?.id
+    }else{
+        lastFocusedId = -1
+    }
+}
 // 加载更多数据
 let prePageNo = 0
 const loadMoreFn = (pageNo: number) => {
@@ -303,12 +310,16 @@ defineExpose({
                 gridViewRef.value?.blockRootFocus()
                 let firstPosterindex = -1
                 let isFind = false
-                gridDataRec.forEach((el) => {
+                let lastFocusedIndex = -1
+                gridDataRec.forEach((el,index) => {
                     if(!isFind){
                         firstPosterindex++
                     }
                     if(el.type == 10001){
                         isFind = true
+                    }
+                    if(lastFocusedId === el.id){
+                        lastFocusedIndex = index
                     }
                     if (el.type) {
                         el.editMode = boo
@@ -316,7 +327,9 @@ defineExpose({
                 })
                 nextTick(()=>{
                     gridViewRef.value?.unBlockRootFocus()
-                    // gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex
+                    if(lastFocusedIndex>=0){
+                        gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex lastFocusedIndex
+                    }
                 })
             }
         }
