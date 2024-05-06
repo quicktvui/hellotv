@@ -75,11 +75,15 @@ const getSubTitle = (data: IHistoryContentEntity) => {
       if (!isNaN(Number(data.playCount))) {
         subTitle = `观看至${data.playCount}集`
       }
-      let progress = (((data.currentPlayTime || 0) / (data.allTime || 1)) * 100).toFixed(0) + '%'
-      if (Number(data.currentPlayTime) <= 0) {
-        progress = '不足1%'
+      let progress = ''
+      if (data.allTime && data.allTime > 0) {
+        progress = (((data.currentPlayTime || 0) / (data.allTime || 1)) * 100).toFixed(0) + '%'
+        if (Number(data.currentPlayTime) <= 0) {
+          progress = '不足1%'
+        }
+        subTitle += ' ' + progress
       }
-      subTitle += ' ' + progress
+
     }
   } catch (error) {
 
