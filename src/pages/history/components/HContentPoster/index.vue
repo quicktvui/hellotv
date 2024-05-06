@@ -10,7 +10,7 @@
             flexStyle="${ripple.style}" class="qt-ui-poster-ripple-view-root-css" showOnState="focused"
             :focusable="false" :clipChildren="false">
             <ripple-view class="qt-ui-ripple-view-css" :delayLoad="800" :focusable="false" :duplicateParentState="true"
-                :color="'#FF4E46'" isShowRipple="${editMode==false}" rippleVisible="invisible" />
+                :color="'#FF4E46'" showIf="${editMode==false}" isShowRipple="${editMode==false}" rippleVisible="invisible" />
             <img 
                 src="${ripple.src}" class="qt-ui-ripple-img-css" :focusable="false" :duplicateParentState="true"
                 showIf="${editMode==false}" :delayLoad="800" 

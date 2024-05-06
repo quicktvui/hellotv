@@ -54,8 +54,14 @@ const bgColor = computed(() => {
     }
     return { colors: ['#252930', '#252930'] }
 })
+let menuPosition = -1
+let tabPosition = -1
 const emInitNoDataFn = ()=>{
-    HistoryMenuRef.value?.setItemFocused()
+    if(tabPosition>=0){
+        HistoryTabRef.value?.requestChildTabFocus()
+    }else{
+        HistoryMenuRef.value?.setItemFocused(menuPosition)
+    }
 }
 const emClearFn = () => {
     HistoryContentRef.value?.clearData()//情况列表数据
@@ -78,6 +84,8 @@ const emChangeMenuFn = (index: number = 0, item: any = {}, isReset = false) => {
     }).catch(() => {
         isShowFilter.value = false
     })
+    menuPosition = index
+    tabPosition = -1
 }
 const emSelectTabFn = (index: number, item: any) => {
     currentFilter = { index, item }
@@ -85,6 +93,7 @@ const emSelectTabFn = (index: number, item: any) => {
     isLoaded.value = false
     HistoryContentRef.value?.setData(currentMenu, currentFilter)
     HTopRef.value?.setEdit(false)
+    tabPosition = index
 }
 const emEditStateChangeFn = (boo: boolean) => {
     HistoryContentRef.value?.changeEditState(boo)//切换是否时编辑状态
@@ -110,7 +119,7 @@ const emContentClearAllFn = () => {
         HistoryContentRef.value?.reset()
         emChangeMenuFn(currentMenu.index, currentMenu.item, true)
     } else {
-        HistoryTabRef.value?.requestChildTabFocus()
+        emInitNoDataFn()
     }
 }
 defineExpose({
@@ -126,6 +135,7 @@ defineExpose({
         }
     },
     onKeyUp() {
+        HistoryTabRef.value?.onKeyUp()
         HTopRef.value?.onKeyUp()
     },
     onESRestart() {

@@ -207,7 +207,7 @@ const getDateType = (timeStr: string = '') => {
     return '更早'
   }
 }
-export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWidth: number = dContentWidth, options: Iconfig) => {
+export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWidth: number = dContentWidth, options: Iconfig, isEdit = false) => {
   const left = options.contentSpace && options.contentSpace > 0 ? options.contentSpace : dLeft
   const width = Math.floor((contentWidth - left) / options.contentColumn) - (left * 2);
   const ratio = width / dWidth
@@ -258,6 +258,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
     } else {
       poster = getContentItemConfig(configOption, dataItem)
     }
+    poster.editMode = isEdit
     arr.push(poster)
   }
   return { arr, dataHeight, rowsHeight }

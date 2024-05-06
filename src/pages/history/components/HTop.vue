@@ -41,6 +41,7 @@ const onKeyDown = (keyEvent: ESKeyEvent) => {
     if(!props.isLoaded){
         return//数据还没初始化
     }
+    if(isEdit.value) { return false }//已经开启编辑时，不在重复监听
     switch (keyEvent.keyCode) {
         case 82: //菜单键按下
             isEdit.value = true
