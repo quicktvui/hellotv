@@ -290,7 +290,7 @@ export default defineComponent({
     function onScrollToTop() {
       const delay = curType === 3 ? 400 : 200
       if (curType === 3) {
-        screen_right_content.value?.scrollToSelected(0, false)
+        screen_right_content.value?.scrollToSelected(0, true)
         const y = getScrollHeight() * -1
         screen_right_scroll_content.value?.scrollToWithOptions(0, y, 300)
       } else {
@@ -304,7 +304,6 @@ export default defineComponent({
         } else {
           screen_right_content.value?.setItemFocused(0)
         }
-
       }, delay)
       scrollY.value = 0
     }

@@ -9,10 +9,10 @@
       v-if="isShowTop" :blockFocusDirections="['left', 'right', 'up']">
       <slot name="buttonsHeader" />
     </div>
-    <qt-tabs ref="tabRef" :tabContentResumeDelay="200" :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
-      tabNavBarClass="qt-tabs-waterfall-tab-css" tabPageClass="qt-tabs-waterfall-css"
-      :horizontalFadingEdgeEnabled="true" :fadingEdgeLength="400" :triggerTask="tabsTriggerTask"
-      :outOfDateTime="5 * 60 * 1000" @onTabClick="onTabClick" :tabContentSwitchDelay='0'
+    <qt-tabs ref="tabRef" :tabContentResumeDelay="200"
+      :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']" tabNavBarClass="qt-tabs-waterfall-tab-css"
+      tabPageClass="qt-tabs-waterfall-css" :horizontalFadingEdgeEnabled="true" :fadingEdgeLength="400"
+      :triggerTask="tabsTriggerTask" :outOfDateTime="5 * 60 * 1000" @onTabClick="onTabClick" :tabContentSwitchDelay='0'
       :playerBindingRelation='callbackFn(playerBindingRelationArrKey)' sid='homeTabs' :custom-pool="{ name: 'home' }"
       :custom-item-pool="{ name: 'homeItems' }" @onTabPageChanged="onTabPageChanged"
       @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -266,10 +266,9 @@ export default defineComponent({
             recordPlayerDataMap.set(key, obj)
             if (obj.data[0].isRequestUrl) {
               let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(obj.data[0])
-              obj.data[0].url = playerInfo.url
+              obj.data[0] = playerInfo
             }
           }
-
         }
       }
       playerBindingRelationArrKey.value++
@@ -399,9 +398,12 @@ export default defineComponent({
             recordPlayerData.pageIndex = pageIndex
             recordPlayerData.itemIndex = itemIndex
             delayDealwithplayerTimer = setTimeout(async () => {
-              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
-              // bg_player.value.playAtIndex(itemIndex)
-              bg_player.value.play(playerInfo.url)
+              if (item.item.playData[0].isRequestUrl) {
+                let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
+                bg_player.value.play(playerInfo.url)
+              } else {
+                bg_player.value.play(item.item.playData[0].url)
+              }
             }, 300)
           }
         } else {

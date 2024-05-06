@@ -19,10 +19,10 @@
           @close-loading="closeLoading" @start-loading="startLoadResultLoading" :search-letter="searchLetter"
           @scroll-to-index="onNeedScrollTo" />
         <!-- 搜索结果 -->
-        <search-result :visible="!loading" ref="search_result" name="search_result_view"
-          :blockFocusDirections="['up', 'down']" :keyword="selectKeyword" :show-is-full-screen="scrollState === 1"
-          :nextFocusName="{ left: 'search_center_view', }" @scroll-to-index="onNeedScrollTo"
-          @close-loading="closeLoading" @close-self-loading="closeResultLoading" />
+        <search-result :visible="!loading && !showResultLoading" :descendantFocusability="showResultLoading ? 2 : 1"
+          ref="search_result" name="search_result_view" :blockFocusDirections="['up', 'down']" :keyword="selectKeyword"
+          :show-is-full-screen="scrollState === 1" :nextFocusName="{ left: 'search_center_view', }"
+          @scroll-to-index="onNeedScrollTo" @close-loading="closeLoading" @close-self-loading="closeResultLoading" />
       </qt-view>
     </scroll-view>
     <qt-view v-if="loading" :style="{ left: loadingLeft + 'px', width: loadingWidth + 'px' }"
