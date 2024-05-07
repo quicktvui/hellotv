@@ -19,7 +19,7 @@ export const getTestContentList = (size = 20, pageNum:number=1): IHistoryContent
             assetType: "1",
             currentPlayTime: '',
             description1: "共1集",
-            id: index + '',
+            id: index + '' + pageNum,
             metaId: "1425432071282630657",
             payType: "2",
             platformId: "1408002578460987393",

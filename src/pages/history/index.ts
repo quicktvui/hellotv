@@ -65,6 +65,7 @@ const dDeleteWidth = 176
 const dDeleteHeight = 68
 const dDeleteSize = 36
 const dSubTitleHeight = 50
+const dPadding = 5
 
 const getSubTitle = (data: IHistoryContentEntity) => {
     if(!data) return ''
@@ -171,8 +172,8 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             }
         },
         style: {
-            width,
-            height: aConfig.rowsHeight - dBottomNum
+            width: width + dPadding*2,
+            height: aConfig.rowsHeight - dBottomNum + dPadding
         },
         focusTitle: {
             text: data.assetLongTitle,
@@ -180,6 +181,12 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             style: {
                 width,
                 height: aConfig.titleHeight
+            }
+        },
+        imgCover:{
+            style: {
+                width:width,
+                height: 7
             }
         }
     }
