@@ -91,6 +91,7 @@ module.exports = {
     new watchPlugin(),
     new webpack.DefinePlugin({
       'process.env': {
+        ...require('./env-config.js'),
         NODE_ENV: JSON.stringify('development'),
         HOST: JSON.stringify(process.env.DEV_HOST || '127.0.0.1'),
         PORT: JSON.stringify(process.env.DEV_PORT || 38989),

@@ -7,10 +7,10 @@ export default {
   useMockData: false,
   //ES包名
   packageName: 'es.tv.huan.hellotv',
-  // 默认点播地址
-  requestBaseUrl: '',
-  //页面内容请求数量
-  tabContentPageSize: 3,
-  // 默认直播地址
+  //域名
+  requestBaseUrl: process.env.requestBaseUrl || 'http://cms.hmon.tv/es_single/api',
+  //首页内容请求数量
+  tabContentPageSize: 10,
+  // 默认源
   defaultSourceUrl: ''
 }

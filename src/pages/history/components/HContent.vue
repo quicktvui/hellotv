@@ -13,24 +13,7 @@
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
           class="content_type_name" text="${assetTitle}" />
       </qt-view>
-      <!-- <HContentItem type="10001" /> qt-poster-->
-      <!-- <HContentPoster :type="10001"></HContentPoster> -->
-      <HContentPoster :type="10001" :clipChildren="false">
-        <!-- :focusable="false" -->
-        <qt-view showIf="${editMode==true}" class="history-item-cover" :focusable="false" :duplicateParentState="true"
-          flexStyle="${image.style}">
-          <qt-view :duplicateParentState="true" class="history-delete-btn-focus" showOnState="focused"
-            flexStyle="${delete.style}" :focusable="false"
-            :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadius: 99, orientation: 6 }">
-          </qt-view>
-          <qt-view :duplicateParentState="true" class="history-delete-btn-focus" :showOnState="['normal', 'selected']"
-            flexStyle="${delete.style}" :focusable="false"
-            :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }">
-          </qt-view>
-          <text-view class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}"
-            flexStyle="${delete.style}" :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true" />
-        </qt-view>
-      </HContentPoster>
+      <HContentPoster :type="10001" :clipChildren="false" />
       <qt-text showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" gravity="center"
         :focusable="false" text="已经到底啦，按【返回键】回到顶部"></qt-text>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
@@ -378,33 +361,6 @@ defineExpose({
 .content_type_name {
   width: 1500px;
   height: 50px;
-  background-color: transparent;
-}
-
-.history-item-cover {
-  position: absolute;
-  left: 0;
-  top: 0;
-  display: flex;
-  border-radius: 8px;
-  flex-direction: row;
-  text-align: center;
-  justify-content: center;
-  align-items: center;
-  background-color: rgba(0, 0, 0, 0.5);
-  z-index: 999;
-}
-
-.history-delete-btn-focus {
-  position: absolute;
-  top: 0;
-  background-color: transparent;
-}
-
-.history-delete-btn {
-  color: red;
-  /* width: 100px;
-    height: 50px; */
   background-color: transparent;
 }
 
