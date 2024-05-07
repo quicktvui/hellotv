@@ -3,9 +3,6 @@
         eventClick eventFocus name="history_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
         hideShadow="${shadow.enable}" shimmerSize="${size}">
         
-        <!-- <PosterContent :focusable="false" :duplicateParentState="true" :showOnState="['normal', 'selected']"/>
-        <PosterFocusContent showOnState="focused" :focusable="false" :duplicateParentState="true"/> -->
-        
         <div :focusable="false" duplicateParentState="${editMode==false}" class="content_box" flexStyle="${style}" :enableBlackBorder="false">
             <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
                 enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
@@ -56,13 +53,10 @@
 </template>
 
 <script lang="ts">
-import PosterContent from './PosterContent.vue'
-import PosterFocusContent from './PosterFocusContent.vue'
 import { defineComponent } from "@vue/runtime-core";
 
 export default defineComponent({
     name: "history-poster",
-    components: { PosterContent,PosterFocusContent },
     props: {
         requestFirstFocus: {
             type: Boolean,
