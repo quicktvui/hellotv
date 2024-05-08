@@ -74,7 +74,14 @@ defineExpose({
             contentNavBar.value?.navList?.setItemFocused(tabPosition)
         })
     },
-    onKeyUp(){}
+    onKeyUp(){},
+    checkFocus(){
+        if(isShow.value && tabPosition >= 0){
+            contentNavBar.value?.navList?.setItemFocused(tabPosition)
+            return true
+        }
+        return false
+    }
 })
 </script>
 <style scoped>

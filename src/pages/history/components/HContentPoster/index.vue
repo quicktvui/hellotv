@@ -15,7 +15,7 @@
                 </div>
             </div>
             <div class="poster_title_box" flexStyle="${style}" :duplicateParentState="true" :focusable="false">
-                <div class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false"></div>
+                <div class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
                 <text-view 
                     class="poster_title"
                     :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1"
@@ -122,10 +122,10 @@ export default defineComponent({
     position: relative;
     border-radius: 8px;
     background-color: transparent;
-    padding-left: 5px;
+    /* padding-left: 5px;
     padding-top: 5px;
     padding-right: 5px;
-    padding-bottom: 0px;
+    padding-bottom: 0px; */
     focus-background-color: #ffffff;
     /* focus-border-style: solid;
     focus-border-color: #ffffff;
@@ -139,8 +139,8 @@ export default defineComponent({
 }
 .float_title_box{
     position: absolute;
-    left: 5px;
-    top: 5px;
+    left: 0px;
+    top: 0px;
     background-color: transparent;
     z-index: 2;
     display: flex;
@@ -171,19 +171,15 @@ export default defineComponent({
     z-index: 5;
     border-radius: 8px;
     background-color: transparent;
-    display: flex;
+    /* display: flex;
     flex-direction: column;
-    justify-content: flex-end;
-    padding-left: 5px;
-    padding-top: 5px;
-    padding-right: 5px;
-    padding-bottom: 15px;
+    justify-content: flex-end; */
 }
 
 .history-item-cover {
   position: absolute;
-  left: 5px;
-  top: 5px;
+  left: 0px;
+  top: 0px;
   border-radius: 8px;
   display: flex;
   flex-direction: row;
