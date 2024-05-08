@@ -13,19 +13,20 @@ import tabPage0MockJson from "./home/mock/home_page0";
 import tabPage1MockJson from "./home/mock/home_page1";
 import tabPage2MockJson from "./home/mock/home_page2";
 import tabPage3MockJson from "./home/mock/home_page3";
-import {buildTransferTabContentAdapter} from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
-import {ESApp} from "@extscreen/es3-vue";
-import {GlobalApiKey} from "./UseApi";
+import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
+import { ESApp } from "@extscreen/es3-vue";
+import { GlobalApiKey } from "./UseApi";
 import BuildConfig from "../build/BuildConfig";
 import {
   filterContentUrl,
   filterEntryUrl,
   hotSearchUrl,
   tabContentUrl,
-  tabListUrl
+  tabListUrl,
+  urlSaveHistory, urlGetHistory, urlGetLongHistory, urlGetShortHistory, urlGetBookHistory
 } from "./RequestUrl";
-import {buildO2MTabContentData, buildO2MTabData} from "../pages/home/build_data/useTabData";
-import {TabPlayItem} from "../pages/home/build_data/tab_content/impl/TabPlayItem";
+import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
+import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 
 /*****
   ***************搜索 *********
@@ -160,19 +161,19 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   /********************************筛选相关*****************************/
-  function getScreenLeftTags(screenId:string) {
-    const requestUrl = filterEntryUrl+screenId
-    return requestManager.post(requestUrl,{})
+  function getScreenLeftTags(screenId: string) {
+    const requestUrl = filterEntryUrl + screenId
+    return requestManager.post(requestUrl, {})
   }
 
-  function getScreenContentByTags(tags,pageNum){
+  function getScreenContentByTags(tags, pageNum) {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
       "pageSize": FilterConfig.screenPageSize,
     };
-    const newParams = {...params, ...pageParams};
-    return requestManager.post(filterContentUrl,{
+    const newParams = { ...params, ...pageParams };
+    return requestManager.post(filterContentUrl, {
       'param': newParams,
       'data': tags
     })
