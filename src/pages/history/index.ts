@@ -126,15 +126,17 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         fontSize: aConfig.deleteSize,
       }
     },
-    titleRect: [aConfig.titlePaddingLeft, 0, 0, 0],
+    titleRect: [aConfig.titlePaddingLeft, 10, 0, 10],
+    titleEllipsizeMode: subTitle?3:2,
+    titleLines: subTitle?1:2,
     title: {
       text: data.assetLongTitle,
       enable: true,
       style: {
         width,
-        height: aConfig.titleHeight,
+        height: subTitle?aConfig.titleHeight:aConfig.titleHeight*2,
         fontSize: aConfig.titleSize,
-      }
+      },
     },
     subTitleRect: [aConfig.titlePaddingLeft, 0, 0, 0],
     subTitle: {
@@ -142,7 +144,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       enable: !!subTitle,
       style: {
         width,
-        height: subTitleHeight,
+        height: subTitle?subTitleHeight:0,
         fontSize: aConfig.subTitleSize,
       }
     },
