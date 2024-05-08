@@ -1,4 +1,5 @@
 import FilterConfig from "../pages/filter/build_data/FilterConfig"
+import bg_play from "./home/mock/bg_play"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
 import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
@@ -94,14 +95,12 @@ export function createGlobalApi(): IGlobalApi {
     return getTabBackground(tabId)
   }
 
-  function getHomeBgVideoAssetsUrl(playDataItem:TabPlayItem):Promise<TabPlayItem>{
+  function getHomeBgVideoAssetsUrl(id:string):Promise<object>{
     //todo 实现获取播放地址接口
+    const urls = bg_play
     return Promise.resolve({
-      id:playDataItem.id,
-      title:playDataItem.title,
-      cover:playDataItem.cover,
-      url:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
-      isRequestUrl:false})
+      url:urls[id]
+    })
   }
 
   //***************************************************搜索相关***************

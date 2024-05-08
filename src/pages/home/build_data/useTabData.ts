@@ -191,7 +191,8 @@ function getPlayData(videoAssets,config):Array<TabPlayItem>{
           id:item.id,
           title:item.assetName,
           cover:item.cover,
-          url:url
+          url:url,
+          isRequestUrl:false
         }
         tabPlays.push(tabPlayItem)
       })
