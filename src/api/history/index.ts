@@ -54,7 +54,7 @@ class HistoryApi extends HistoryBaseApi {
           metaId: item.id,
           playCount: item.playId || 0,
           currentPlayTime: item.progress,
-          allTime: Number(item.duration || 0) * 60 * 1000,
+          allTime: (parseInt(item.duration) || 0) * 60 * 1000,
           customProp: {
             sortTime: item.sortTime,
             fullIndex: item.fullIndex,
