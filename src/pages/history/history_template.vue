@@ -20,7 +20,7 @@
 </template>
 
 <script lang="ts" setup>
-import { computed, ref } from 'vue';
+import { computed, nextTick, ref } from 'vue';
 import HistoryMenu from './components/HMenu.vue'
 import HistoryContent from './components/HContent.vue'
 import HistoryTab from './components/HTab.vue'
@@ -54,6 +54,16 @@ const bgColor = computed(() => {
     }
     return { colors: ['#252930', '#252930'] }
 })
+
+const checkFocusFn = ()=>{
+    nextTick(()=>{
+        if(!HistoryContentRef.value?.checkFocus()){
+            if(!HistoryTabRef.value?.checkFocus()){
+                HistoryMenuRef.value?.checkFocus()
+            }
+        }
+    })
+}
 let menuPosition = -1
 let tabPosition = -1
 const emInitNoDataFn = ()=>{
@@ -63,7 +73,7 @@ const emInitNoDataFn = ()=>{
         HistoryMenuRef.value?.setItemFocused(menuPosition)
     }
 }
-const emClearFn = () => {
+const emClearFn = async () => {
     HistoryContentRef.value?.clearData()//情况列表数据
     if (configs.clearAllIsReset) {
         HistoryContentRef.value?.reset()
@@ -134,9 +144,10 @@ defineExpose({
     onBackPressed() {
         if (HistoryContentRef.value?.onBackPressed()) {
             if (!HTopRef.value?.onBackPressed()) {
-                HistoryContentRef.value?.scrollTo(0)
+                // HistoryContentRef.value?.scrollTo(0)
             }
         }
+        checkFocusFn()
     },
     onKeyUp() {
         HistoryTabRef.value?.onKeyUp()

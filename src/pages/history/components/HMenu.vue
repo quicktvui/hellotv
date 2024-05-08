@@ -125,6 +125,9 @@ defineExpose({
         nextTick(()=>{
             listRef.value?.setItemFocused(pos)
         })
+    },
+    checkFocus(){
+        listRef.value?.setItemFocused(mPosition>=0?mPosition:0)
     }
 })
 // id:tag.id,

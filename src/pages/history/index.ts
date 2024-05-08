@@ -168,7 +168,9 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
             enable: true,
             style: {
                 width,
-                height
+                height,
+                marginLeft: dPadding,
+                marginTop: dPadding
             }
         },
         style: {
@@ -186,7 +188,9 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         imgCover:{
             style: {
                 width:width,
-                height: 7
+                height: 7,
+                marginTop: height,
+                marginLeft: dPadding,
             }
         }
     }

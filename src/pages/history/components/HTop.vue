@@ -22,6 +22,7 @@ const toast = useESToast()
 const emits = defineEmits(['emClear', 'emEditStateChange'])
 const isEdit = ref(false)
 const clearContentFn = () => {
+    isEdit.value = false
     emits('emClear')
 }
 

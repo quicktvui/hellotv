@@ -335,6 +335,18 @@ defineExpose({
         if(isReStartload){
             setData(currentMenu, currentFilter, true)
         }
+    },
+    checkFocus(){
+        if(gridDataRec.length>0){
+            if(lastFocusedId === -1){
+                gridViewRef.value?.scrollToFocused(0)
+                return true
+            }
+            if(lastFocusedId > -1){
+                return true
+            }
+        }
+        return false
     }
 })
 </script>
