@@ -20,7 +20,7 @@
                     <div showIf="${editMode==false}" class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
                     <text-view 
                         class="poster_title"
-                        :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1"
+                        :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="3" :lines="1"
                         :postDelay="200" gravity="centerVertical|left" flexStyle="${title.style}" text="${title.text}"
                         showIf="${title.enable}" paddingRect="${titleRect}"/>
                     <text-view class="poster_subtitle" :focusable="false" fontSize="${subTitle.style.fontSize}" :ellipsizeMode="2" :lines="1"
