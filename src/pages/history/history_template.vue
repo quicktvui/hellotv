@@ -145,9 +145,9 @@ defineExpose({
         if (HistoryContentRef.value?.onBackPressed()) {
             if (!HTopRef.value?.onBackPressed()) {
                 // HistoryContentRef.value?.scrollTo(0)
+                checkFocusFn()
             }
         }
-        checkFocusFn()
     },
     onKeyUp() {
         HistoryTabRef.value?.onKeyUp()

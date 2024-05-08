@@ -116,7 +116,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       bottom: dBottomNum
     },
     focus: {
-      scale: 1,//1.06
+      scale: 1.06,//1.06
       enable: true
     },
     delete: {

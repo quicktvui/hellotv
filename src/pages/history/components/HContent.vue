@@ -7,7 +7,7 @@
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
       @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged"
-      :enablePlaceholder="true" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
+      :enablePlaceholder="false" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -214,6 +214,7 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   isShowScreenLoading.value = true
   isEdit.value = false
   prePageNo = 0
+  contentScrollY = 0
   // @ts-ignore
   // gridViewRef.value?.restartPage()
   lastApiId = currentMenu?.index + '-' + currentFilter?.index
