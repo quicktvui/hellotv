@@ -1,13 +1,13 @@
 <template>
   <div class="h_content" ref="hContentRef" :focusable="false" :height="pHeight" :width="pWidth"
-    :blockFocusDirections="rBlockFocusDirections" :clipChildren="false">
+    :blockFocusDirections="rBlockFocusDirections" :clipChildren="false" :nextFocusName="gvNextFocusName">
     <!-- :nextFocusName="{ up: 'h_tab_name' }"  -->
     <qt-grid-view v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight"
       :width="pWidth" name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
-      @item-bind="onItemBind" :nextFocusName="gvNextFocusName" @scroll-state-changed="onScrollStateChanged"
-      :enablePlaceholder="false" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
+      @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enablePlaceholder="false"
+      :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -82,7 +82,7 @@ let prevItemIndex: string | number = -1
 let isReStartload = false
 const isRequestFocus = ref(true)
 
-const gvNextFocusName = ref({})
+const gvNextFocusName = ref({ up: 'h_tab_name' })
 
 const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
 const onItemBind = () => { }
@@ -280,7 +280,7 @@ defineExpose({
         gvNextFocusName.value = { 'up': 'clear_btn_name' }
       } else {
         rBlockFocusDirections.value = []
-        gvNextFocusName.value = {}
+        gvNextFocusName.value = { up: 'h_tab_name' }
       }
       isEdit.value = boo
       if (gridDataRec) {
