@@ -42,9 +42,10 @@
 </template>
 
 <script lang="ts">
-import { computed, defineComponent, watch } from "@vue/runtime-core";
-import { reactive, ref, toRaw } from "vue";
-import { getSectionPosLabelObject } from "../build_data/useTabData"
+import { ESIPlayerInterceptor } from "@extscreen/es3-player"
+import { defineComponent } from "@vue/runtime-core";
+import { ref } from "vue";
+import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/createESHomeBGPlayerMediaInterceptor"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
   QTITab, QTIView,
@@ -124,7 +125,7 @@ export default defineComponent({
     let recordPlayerDataMap = new Map()
     let isOneTime: boolean = false
     let isOneTimeStop: boolean = false
-    let isPlaying = ref(false)
+    let mediaInterceptor: ESIPlayerInterceptor
     //背景图
     const wTabBg = ref()
     //tab
@@ -148,6 +149,7 @@ export default defineComponent({
     //
     function onESCreate(params) {
       isOneTime = true
+      mediaInterceptor = createESHomeBGPlayerMediaInterceptor(globalApi)
       getTabList()
     }
 
@@ -247,10 +249,10 @@ export default defineComponent({
             obj.itemIndex = i
             obj.data = el.playData
             recordPlayerDataMap.set(key, obj)
-            //playerBindingRelation.set(key,obj.sid)
           }
           //将每个tab与播放器绑定，供底层处理一些播放器相关优化逻辑，例如切换tab时，播放器会自动隐藏
           tabPage.bindingPlayer = el.sid
+          if (el.sid) break;
         } else if (el.isBgPlayer) {
           obj.playerType = CoveredPlayerType.TYPE_BG
           //log.e("DebugReplaceChild",`set bg_player_replace_child_sid`)
@@ -264,10 +266,6 @@ export default defineComponent({
             obj.itemIndex = i
             obj.data = el.item.playData
             recordPlayerDataMap.set(key, obj)
-            if (obj.data[0].isRequestUrl) {
-              let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(obj.data[0])
-              obj.data[0] = playerInfo
-            }
           }
         }
       }
@@ -398,12 +396,7 @@ export default defineComponent({
             recordPlayerData.pageIndex = pageIndex
             recordPlayerData.itemIndex = itemIndex
             delayDealwithplayerTimer = setTimeout(async () => {
-              if (item.item.playData[0].isRequestUrl) {
-                let playerInfo = await globalApi.getHomeBgVideoAssetsUrl(item.item.playData[0])
-                bg_player.value.play(playerInfo.url)
-              } else {
-                bg_player.value.play(item.item.playData[0].url)
-              }
+              bg_player.value.play(item.item.playData[0])
             }, 300)
           }
         } else {
@@ -437,20 +430,20 @@ export default defineComponent({
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               width, height, width, height,
-              playData, 0
+              playData, 0, mediaInterceptor
             )
           } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               width, height, 860, height,
-              playData, 0
+              playData, 0, mediaInterceptor
             )
           } else if (flag == CoveredPlayerType.TYPE_BG) {
             // clearTimeout(delayChangePlayerTimer)
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               1920, 1080, 1920, 1080,
-              playData, 0
+              playData, 0, mediaInterceptor
             )
             bg_player.value?.delayShowPlayer()
           }

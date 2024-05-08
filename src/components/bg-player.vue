@@ -56,11 +56,20 @@
 import { useESRouter } from "@extscreen/es3-router"
 import { ref, defineComponent, markRaw, nextTick } from "vue";
 import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
-import { ESMediaSource, ESMediaSourceList, ESPlayerPosition, ESPlayerPlayMode, useESPlayerDecodeManager, ESPlayerDecode } from "@extscreen/es3-player";
+import {
+  ESMediaSource,
+  ESMediaSourceList,
+  ESPlayerPosition,
+  ESPlayerPlayMode,
+  useESPlayerDecodeManager,
+  ESPlayerDecode,
+  ESIPlayerInterceptor
+} from "@extscreen/es3-player"
 import { ESIPlayerManager, ESMediaItemList, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager";
 import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import { ESLogLevel, useESLog, useESToast } from "@extscreen/es3-core";
 import { watch } from "@vue/runtime-core";
+import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import { useLaunch } from "../tools/launch/useApi"
 import QtImgTransition from "./qt-img-transition.vue";
 export enum CoveredPlayerType {
@@ -114,6 +123,7 @@ export default defineComponent({
     let pauseOnCoverShow = ref(false)
     let isAnyPlaying = ref(false)
     let currentPlayIndex = ref(0)
+    let mediaInterceptor: ESIPlayerInterceptor | undefined
     const log = useESLog()
     const toast = useESToast()
 
@@ -131,7 +141,7 @@ export default defineComponent({
 
         let item = list[index]
         log.e('BG-PLAYER', `playAtIndex item:${JSON.stringify(item)},index:${index}`)
-        play(item.url)
+        play(item)
         playerManagerRef.value?.setSize(playerWidth.value, playerHeight.value)
       } else {
         log.e('BG-PLAYER', `playAtIndex error list size = 0,index ${index} `)
@@ -139,7 +149,8 @@ export default defineComponent({
     }
     const doChangeParent = (cellReplaceSID: string, playerType: number,
       boxWidth: number, boxHeight: number, playerWidth: number, playerHeight: number,
-      playerListData: any, playIndex: number) => {
+      playerListData: any, playIndex: number, interceptor?: ESIPlayerInterceptor) => {
+      mediaInterceptor = interceptor
       clearTimeout(delayShowTimer)
       clearTimeout(delayShowPlayerTimer)
       bgPlayerType.value = playerType
@@ -278,10 +289,8 @@ export default defineComponent({
       }
     }
 
-
-
     const requestDismissCover = (delay = 1000) => {
-      if (recordPlayerList[currentPlayIndex.value].url) {
+      if (isAnyPlaying.value) {
         clearTimeout(dismissCoverTimer)
         pauseOnCoverShow.value = false
         dismissCoverTimer = setTimeout(() => {
@@ -291,18 +300,30 @@ export default defineComponent({
     }
     //player api
     const initPlayer = () => playerManagerRef.value?.initialize()
-    const play = (url: string) => {
-      log.e('BG-PLAYER', `play url :${url}`)
-      let mediaItem_0: ESMediaItem = {
-        mediaSourceList: {
-          index: 0,
-          list: [{
-            // uri: 'http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2023/08/25/7d3623ae-c002-4929-b5a2-fe10bca06bfc.mp4'
-            uri: url
-          }]
-        },
+    const play = (item: TabPlayItem) => {
+      const isRequestUrl = item.isRequestUrl
+      let mediaItem_0: ESMediaItem
+      let playList: ESMediaItemList
+      log.e("XRG", `isRequestUrl = ${isRequestUrl} mediaInterceptor = ${mediaInterceptor}`)
+      if (isRequestUrl && mediaInterceptor) {
+        log.e("XRG", `准备拦截数据`)
+        mediaItem_0 = {
+          id: item.id,
+          interceptors: [mediaInterceptor],
+        }
       }
-      let playList: ESMediaItemList = {
+      else {
+        const url = item.url
+        mediaItem_0 = {
+          mediaSourceList: {
+            index: 0,
+            list: [{
+              uri: url
+            }]
+          },
+        }
+      }
+      playList = {
         index: 0,
         list: [mediaItem_0]
       }
@@ -315,6 +336,9 @@ export default defineComponent({
     const stop = () => {
       log.e('BG-PLAYER', `stop called`)
       playerManagerRef.value?.stop()
+      if (isAnyPlaying.value) {
+        isAnyPlaying.value = false
+      }
     }
 
     const stopIfNeed = () => {
@@ -327,6 +351,9 @@ export default defineComponent({
     const pause = () => {
       log.d('BG-PLAYER', `pause`)
       playerManagerRef.value?.stop()
+      if (isAnyPlaying.value) {
+        isAnyPlaying.value = false
+      }
     }
     const resume = () => {
       log.d('BG-PLAYER', `resume`)
@@ -336,11 +363,13 @@ export default defineComponent({
     const setPlayMediaListMode = (playMode: ESPlayerPlayMode) => playerManagerRef.value?.setPlayMediaListMode(playMode)
     let dismissCoverTimer: any
     const onVideoPlayerPlaying = () => {
+      console.log("XRG===", `dismissCoverTimer ${dismissCoverTimer} isAnyPlaying.value isAnyPlaying.value`)
       clearTimeout(dismissCoverTimer)
       isAnyPlaying.value = true
       if (pauseOnCoverShow.value) {
         pause()
       } else {
+        console.log("XRG===", `recordPlayerList[currentPlayIndex.value].url ${recordPlayerList[currentPlayIndex.value].url}`)
         requestDismissCover(1500)
       }
     }
@@ -384,7 +413,7 @@ export default defineComponent({
         currentPlayIndex.value = nextIndex
         stop()
         listDataRec[nextIndex].isPlaying = true
-        play(item.url)
+        play(item)
         playerManagerRef.value?.setSize(playerWidth.value, playerHeight.value)
       }, 300)
     }

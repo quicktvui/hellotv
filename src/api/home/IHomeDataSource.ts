@@ -17,9 +17,9 @@ export interface IHomeDataSource {
 
   /**
    * 获取首页背景播放请求地址
-   * @param playDataItem
+   * @param id
    */
-    getHomeBgVideoAssetsUrl(playDataItem:TabPlayItem):Promise<TabPlayItem>
+    getHomeBgVideoAssetsUrl(id:string):Promise<object>
 
   /**
    * 获取Tab 背景
