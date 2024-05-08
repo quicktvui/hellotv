@@ -4,27 +4,30 @@
         hideShadow="${shadow.enable}" shimmerSize="${size}">
         
         <div :focusable="false" duplicateParentState="${editMode==false}" class="content_box" flexStyle="${style}" :enableBlackBorder="false">
-            <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
-                enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
-            <div showIf="${floatTitle.enable}" flexStyle="${image.style}" class="float_title_box" :focusable="false" :duplicateParentState="true">
-                <div flexStyle="${floatTitle.style}" class="qt-ui-poster-float-title-css" gradientBackground="${floatTitle.background}"
-                    :duplicateParentState="true" :focusable="false">
-                    <text-view :duplicateParentState="true" :focusable="false" textSize="${floatTitle.style.fontSize}" :ellipsizeMode="2"
-                        enablePostTask :postDelay="200" :lines="1" gravity="centerVertical|left" style=""
-                        flexStyle="${floatTitle.style}" text="${floatTitle.text}" />
+            <div showIf="${editMode==false}" :focusable="false" :duplicateParentState="true" class="content_box_bg" flexStyle="${style}" :enableBlackBorder="false"></div>
+            <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${style}" :enableBlackBorder="false">
+                <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
+                    enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
+                <div showIf="${floatTitle.enable}" flexStyle="${image.style}" class="float_title_box" :focusable="false" :duplicateParentState="true">
+                    <div flexStyle="${floatTitle.style}" class="qt-ui-poster-float-title-css" gradientBackground="${floatTitle.background}"
+                        :duplicateParentState="true" :focusable="false">
+                        <text-view :duplicateParentState="true" :focusable="false" textSize="${floatTitle.style.fontSize}" :ellipsizeMode="2"
+                            enablePostTask :postDelay="200" :lines="1" gravity="centerVertical|left" style=""
+                            flexStyle="${floatTitle.style}" text="${floatTitle.text}" />
+                    </div>
                 </div>
-            </div>
-            <div class="poster_title_box" flexStyle="${style}" :duplicateParentState="true" :focusable="false">
-                <div class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
-                <text-view 
-                    class="poster_title"
-                    :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1"
-                    :postDelay="200" gravity="centerVertical|left" flexStyle="${title.style}" text="${title.text}"
-                    showIf="${title.enable}" paddingRect="${titleRect}"/>
-                <text-view class="poster_subtitle" :focusable="false" fontSize="${subTitle.style.fontSize}" :ellipsizeMode="2" :lines="1"
-                    autoHeight gravity="centerVertical|left" flexStyle="${subTitle.style}" :duplicateParentState="true"
-                    text="${subTitle.text}" visibility="${subTitle}" style="color: #666;" paddingRect="${subTitleRect}"
-                />
+                <div class="poster_title_box" flexStyle="${style}" :duplicateParentState="true" :focusable="false">
+                    <div showIf="${editMode==false}" class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
+                    <text-view 
+                        class="poster_title"
+                        :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1"
+                        :postDelay="200" gravity="centerVertical|left" flexStyle="${title.style}" text="${title.text}"
+                        showIf="${title.enable}" paddingRect="${titleRect}"/>
+                    <text-view class="poster_subtitle" :focusable="false" fontSize="${subTitle.style.fontSize}" :ellipsizeMode="2" :lines="1"
+                        autoHeight gravity="centerVertical|left" flexStyle="${subTitle.style}" :duplicateParentState="true"
+                        text="${subTitle.text}" visibility="${subTitle}" style="color: #666;" paddingRect="${subTitleRect}"
+                    />
+                </div>
             </div>
         </div>
         
@@ -126,11 +129,24 @@ export default defineComponent({
     padding-top: 5px;
     padding-right: 5px;
     padding-bottom: 0px; */
-    focus-background-color: #ffffff;
+    /* focus-background-color: #ffffff; */
     /* focus-border-style: solid;
     focus-border-color: #ffffff;
     focus-border-width: 8px;
     focus-border-radius: 8px; */
+}
+.content_box_bg{
+    border-radius: 8px;
+    background-color: transparent;
+    focus-background-color: #ffffff;
+}
+.content_box_info{
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 1;
+    border-radius: 8px;
+    background-color: transparent;
 }
 .qt-ui-poster-img-css {
     background-color: rgba(255, 255, 255, 0.1);

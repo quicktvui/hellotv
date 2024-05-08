@@ -43,7 +43,7 @@ export class HistoryBaseApi implements Iapi {
       setTimeout(() => {
         if (currentMenu?.index === 0 && currentFilter?.index === 0 && pageNum < 5) {
           resolve({ data: getTestContentList(20, pageNum), isNeedReload: true })
-        } else if (currentMenu?.index === 0 && currentFilter?.index === 1) {
+        } else if (currentMenu?.index === 0 && currentFilter?.index === 1 && pageNum < 2) {
           resolve({ data: getTestContentList(20, pageNum), isNeedReload: true })
         } else if (currentMenu?.index === 1 && pageNum === 1) {
           resolve({ data: getTestContentList(5, pageNum), isNeedReload: true })

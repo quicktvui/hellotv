@@ -95,10 +95,10 @@ const getSubTitle = (data: IHistoryContentEntity) => {
 const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
   const { width, height, left, ratio } = aConfig
   let subTitle = getSubTitle(data)
-  let subTitleHeight = 0
-  if (subTitle) {
-    subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
-  }
+  let subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
+  // if (subTitle) {
+  //   subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
+  // }
   return {
     _key: data.id,
     id: data.id,
@@ -116,7 +116,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       bottom: dBottomNum
     },
     focus: {
-      scale: 1.06,
+      scale: 1,//1.06
       enable: true
     },
     delete: {
