@@ -4,8 +4,8 @@ plugins {
 
 ext {
     // ----- APK相关配置 ----- //
-    APP_PACKAGE = 'com.quicktvui.hellotv'   // APK包名
-    APP_NAME = 'HelloTV'                    // 桌面显示名称
+    APP_PACKAGE = 'com.quicktvui.hellotv.shell'   // APK包名
+    APP_NAME = 'HelloTV壳'                        // 桌面显示名称
     APP_VERSION_CODE = 1                    // APK版本code(整数,最小为1，覆盖安装需要 >= 上次的code)
     APP_VERSION_NAME = '1.0.0'              // APK版本名称
 
