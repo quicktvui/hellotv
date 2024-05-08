@@ -18,11 +18,18 @@
                 </div>
                 <div class="poster_title_box" flexStyle="${style}" :duplicateParentState="true" :focusable="false">
                     <div showIf="${editMode==false}" class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
-                    <text-view 
-                        class="poster_title"
-                        :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="3" :lines="1"
-                        :postDelay="200" gravity="centerVertical|left" flexStyle="${title.style}" text="${title.text}"
-                        showIf="${title.enable}" paddingRect="${titleRect}"/>
+                    <div class="poster_title_hold" flexStyle="${title.style}" :duplicateParentState="true" :focusable="false">
+                        <text-view 
+                            class="poster_title" :showOnState="['normal']"
+                            :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1"
+                            :postDelay="200" gravity="top|left" flexStyle="${title.style}" text="${title.text}"
+                            showIf="${title.enable}" paddingRect="${titleRect}"/>
+                        <text-view 
+                            class="poster_title_f" :showOnState="['focused']"
+                            :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}" ellipsizeMode="${titleEllipsizeMode}" lines="${titleLines}"
+                            gravity="top|left" flexStyle="${title.style}" text="${title.text}"
+                            showIf="${title.enable}" paddingRect="${titleRect}"/>
+                    </div>
                     <text-view class="poster_subtitle" :focusable="false" fontSize="${subTitle.style.fontSize}" :ellipsizeMode="2" :lines="1"
                         autoHeight gravity="centerVertical|left" flexStyle="${subTitle.style}" :duplicateParentState="true"
                         text="${subTitle.text}" visibility="${subTitle}" style="color: #666;" paddingRect="${subTitleRect}"
@@ -173,9 +180,25 @@ export default defineComponent({
     focus-border-width: 10px;
     focus-border-radius: 8px; */
 }
-.poster_title{
-    focus-color: #000000;
+.poster_title_hold{
+    position: relative;
     background-color: transparent;
+}
+.poster_title{
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: transparent;
+    z-index: 1;
+    /* focus-color: #000000; */
+}
+.poster_title_f{
+    position: absolute;
+    left: 0;
+    top: 0;
+    background-color: transparent;
+    z-index: 2;
+    color: #000000;
 }
 .poster_title_box_img_cover{
     focus-background-color: #ffffff;
