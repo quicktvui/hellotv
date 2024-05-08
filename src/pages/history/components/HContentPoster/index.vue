@@ -3,7 +3,7 @@
         eventClick eventFocus name="history_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
         hideShadow="${shadow.enable}" shimmerSize="${size}">
         
-        <div :focusable="false" :duplicateParentState="true" class="content_box" flexStyle="${style}" :enableBlackBorder="false">
+        <div :focusable="false" duplicateParentState="${editMode==false}" class="content_box" flexStyle="${style}" :enableBlackBorder="false">
             <div showIf="${editMode==false}" :focusable="false" :duplicateParentState="true" class="content_box_bg" flexStyle="${style}" :enableBlackBorder="false"></div>
             <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${style}" :enableBlackBorder="false">
                 <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
