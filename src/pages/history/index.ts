@@ -287,7 +287,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
     if(poster.subTitle?.style?.height && rowsHeight == drowsHeight){
       rowsHeight += poster.subTitle.style.height
     }
-    if((i > 0 && (i % options.contentColumn == 0)) || i == dataList.length-1){
+    if ((i % options.contentColumn == 1) || i == dataList.length - 1) {
       dataHeight += rowsHeight
     }
   }
