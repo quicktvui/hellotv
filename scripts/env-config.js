@@ -6,7 +6,7 @@ const envConfig = {}
 try {
   let cbranch = execSync('git rev-parse --abbrev-ref HEAD')
   if(cbranch){
-    cbranch = cbranch.toString()
+    cbranch = cbranch.toString().trim()
   }
   // console.log('-----env-config',process.argv) //'./scripts/hippy-webpack.dev.js'
   const isdev = process.argv.find(paitem=>paitem==='./scripts/hippy-webpack.dev.js')
@@ -23,15 +23,15 @@ try {
             const fdItemArr = fdItem.trim().split('=')
             if(fdItemArr&&fdItemArr.length>=2){
               let ckey = fdItemArr[0].trim()
-              // console.log('-----env-config-ckey', ckey, '--', cbranch)
+              const cValue = fdItemArr.slice(1).join('=').trim()
               if(ckey.startsWith('_')){
                 const kcbranch = `_${cbranch}_`
                 if(cbranch && ckey.startsWith(kcbranch)){
                   ckey = ckey.replace(kcbranch,'')
-                  envConfig[ckey] = fdItemArr.slice(1).join('=').trim()
+                  envConfig[ckey] = cValue
                 }
               } else {
-                envConfig[ckey] = fdItemArr.slice(1).join('=').trim()
+                envConfig[ckey] = cValue
               }
             }
           }
