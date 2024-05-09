@@ -127,14 +127,14 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       }
     },
     titleRect: [aConfig.titlePaddingLeft, 10, 0, 10],
-    titleEllipsizeMode: subTitle?3:2,
-    titleLines: subTitle?1:2,
+    titleEllipsizeMode: subTitle ? 3 : 2,
+    titleLines: subTitle ? 1 : 2,
     title: {
       text: data.assetLongTitle,
       enable: true,
       style: {
         width,
-        height: subTitle?aConfig.titleHeight:aConfig.titleHeight*2,
+        height: subTitle ? aConfig.titleHeight : aConfig.titleHeight * 2,
         fontSize: aConfig.titleSize,
       },
     },
@@ -144,7 +144,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       enable: !!subTitle,
       style: {
         width,
-        height: subTitle?subTitleHeight:0,
+        height: subTitle ? subTitleHeight : 0,
         fontSize: aConfig.subTitleSize,
       }
     },
@@ -287,7 +287,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
     if (poster.subTitle?.style?.height && rowsHeight == drowsHeight) {
       rowsHeight += poster.subTitle.style.height
     }
-    if ((i > 0 && (i % options.contentColumn == 0)) || i == dataList.length - 1) {
+    if ((i % options.contentColumn == 1) || i == dataList.length - 1) {
       dataHeight += rowsHeight
     }
   }
