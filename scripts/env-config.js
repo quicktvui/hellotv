@@ -4,7 +4,10 @@ const { execSync } = require('child_process');
 
 const envConfig = {}
 try {
-  const cbranch = execSync('git rev-parse --abbrev-ref HEAD')
+  let cbranch = execSync('git rev-parse --abbrev-ref HEAD')
+  if(cbranch){
+    cbranch = cbranch.toString()
+  }
   // console.log('-----env-config',process.argv) //'./scripts/hippy-webpack.dev.js'
   const isdev = process.argv.find(paitem=>paitem==='./scripts/hippy-webpack.dev.js')
   const relativePath = isdev ? './.env.dev.local' : './.env.build.local'
