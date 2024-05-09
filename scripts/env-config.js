@@ -7,9 +7,9 @@ function getCurrentGitBranch() {
     exec('git rev-parse --abbrev-ref HEAD', (err, stdout, stderr) => {
       if (err||stderr) {
         console.log('env-config-warning: getCurrentGitBranch-error')
-        resolve('dev')
+        resolve('')
       } else {
-        resolve(stdout.trim())
+        resolve(stdout.trim())//stdout.trim()
       }
     });
   })
@@ -32,7 +32,7 @@ try {
               const fdItemArr = fdItem.trim().split('=')
               if(fdItemArr&&fdItemArr.length>=2){
                 let ckey = fdItemArr[0].trim()
-                console.log('-----env-config-ckey', ckey, '--', cbranch)
+                // console.log('-----env-config-ckey', ckey, '--', cbranch)
                 if(ckey.startsWith('_')){
                   const kcbranch = `_${cbranch}_`
                   if(cbranch && ckey.startsWith(kcbranch)){
@@ -48,7 +48,7 @@ try {
         }
       }
     }
-    console.log('-----env-config',envConfig)
+    // console.log('-----env-config',envConfig)
   })
 } catch (error) {
   console.log('env-config-warning: ', error.message)
