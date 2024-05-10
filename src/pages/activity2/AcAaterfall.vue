@@ -48,7 +48,7 @@ const onScroll = (scrollX, scrollY)=>{
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
   if(item._router){
     router.push({
-        name: item._router.name, //'series_view',
+        name: item._router.url, //'series_view',
         params: item._router.params?{...item._router.params}:undefined
     });
   }

@@ -1,5 +1,5 @@
 <template>
-  <div class="ac_top" :class="['ac_top_'+topConfig.mode, isTop?'ac_top_bg':'']">
+  <div class="ac_top" :class="['ac_top_'+topConfig.mode]" :style="cStyle">
     <div class="top_title_box">
       <qt-text v-if="topConfig.title" class="top_title" :style="topConfig.titleStyle" :text="topConfig.title" :gravity="titleGravity"></qt-text>
     </div>
@@ -45,10 +45,8 @@
   </div>
 </template>
 <script lang='ts' setup>
-import { ref } from 'vue';
+import { computed, ref, onMounted } from 'vue';
 import { QTListViewItem } from '@quicktvui/quicktvui3';
-// @ts-ignore
-import { dConfig } from './index.ts'
 import { topModes } from '../../api/activity2/types'
 import { useESToast } from '@extscreen/es3-core';
 // @ts-ignore
@@ -57,19 +55,26 @@ import { useESRouter } from '@extscreen/es3-router';
 
 const props = defineProps<{ isTop:boolean }>();
 
-const topConfig = dConfig.top || {
-  mode: 'left-right',
+const topConfig = ref({
+  mode: 'left-right', title: '',
   titleStyle: {
     color: '#ffffff', fontSize: '50px'
   },
-  btnListWidth: 0
-}
+  btnListWidth: 0,
+  maskBg: 'transparent'
+})
 const router = useESRouter()
-const toast = useESToast()
+// const toast = useESToast()
 const topListRef = ref()
 const emits = defineEmits(['emTabChange'])
+const cStyle = computed(()=>{
+  return { backgroundColor: props.isTop ? topConfig.value.maskBg : 'transparent' }
+})
 
-const titleGravity = topConfig.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
+const titleGravity = computed(()=>{
+  return topConfig.value.mode === topModes.lr ? 'centerVertical' : 'centerVertical|end'
+})
+
 const onTabChange = (e) => {
   emits('emTabChange', e)
 }
@@ -82,12 +87,14 @@ const onItemClick = (e)=>{
     });
   }
 }
-defineExpose({
-  async init() {
-    const arr = await activity2Api.getTopBtns()
-    topListRef.value?.init(arr)
-  }
+onMounted(async ()=>{
+  const tconfig = await activity2Api.getConfigs()
+  topConfig.value = Object.assign(topConfig.value, tconfig.top)
+  console.log(topConfig, '---topConfig--lsj')
+  const arr = await activity2Api.getTopBtns()
+  topListRef.value?.init(arr)
 })
+// defineExpose({})
 </script>
 <style scoped lang="less">
 .ac_top {

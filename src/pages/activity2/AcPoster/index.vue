@@ -20,7 +20,9 @@
       :focusable="false"
       enableFocusBorder="${focus.border}"
       flexStyle="${image.style}"
-      src="${image.src}"/>
+      src="${image.src}"
+      showIf="${image.enable}"
+    />
 
     <text-view
       class="qt-ui-poster-score-css"

@@ -1,9 +1,15 @@
 // @ts-ignore
 import { IacTivity2GetFlexBlockRes, getActivity2FlexBlock } from "../../pages/activity2/index.ts";
-import { Activity2BaseApi } from "./base";
-import { IActivityTopItemBtn } from "./types";
+import { Activity2BaseApi, IAnyobj } from "./base";
+import { IActivityConfig, IActivityTopItemBtn } from "./types";
 
 class Activity2Api extends Activity2BaseApi {
+  // async initPageData(routerParams: IAnyobj): Promise<any> {
+  //     return {}
+  // }
+  // async getConfigs(): Promise<IActivityConfig> {
+  //     return {}
+  // }
   // async getTopBtns(): Promise<IActivityTopItemBtn[]> {
   //     return []
   // }

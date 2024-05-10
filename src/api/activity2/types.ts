@@ -33,6 +33,7 @@ export interface IActivityConfig {
           fontSize?: string;
       };
       btnListWidth: number;
+      maskBg?: string;
   };
   banner?: {
       img?: string;
@@ -82,7 +83,7 @@ export interface IActivityTopBtnConfig {
   textColor?: string;
   textFocusColor?: string;
   _router?: {
-    name:string
+    url:string
     params?: object
   }
 }

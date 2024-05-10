@@ -4,20 +4,12 @@ import {
 	QTWaterfallSectionType,
 } from '@quicktvui/quicktvui3';
 import { IActivityConfig, IActivityTopBtnConfig } from '../../api/activity2/types'
-import { config } from '../../api/activity2/config'
 
 export const getBgColor = (bColor?:string|object)=>{
-  if(!bColor) return false
+  if(!bColor) return ''
   return (typeof bColor === 'string') ? {colors:[bColor,bColor],cornerRadius:0} : bColor
 }
-export const dConfig = {
-  bgColor: getBgColor(config.bgColor) || {colors:['#2F3541','#252930'],cornerRadius:0},
-  bgImg: config.bgImg, //|| 'https://up.deskcity.org/pic_source/28/73/cd/2873cd9dc91fa720a498b043aebd4509.jpg',
-  top: config.top,
-  banner: config.banner
-}
 
-let dImgURL = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750';
 const dSpace = 35//poster间距
 const dBlackSpace = 90//板块间距
 const dBlackItemWidth = 260
@@ -52,7 +44,7 @@ export interface IBlockItemData {
   score?:string
   focusTitle?:string
   _router?: {
-    name:string
+    url:string
     params?: object
   }
   [k:string]:any
@@ -94,7 +86,7 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
     },
     image: {
       src: data.img,
-      enable: true,
+      enable: !!data.img,
       style: {
         width: blackItemWidth,
         height: blackItemHeight,

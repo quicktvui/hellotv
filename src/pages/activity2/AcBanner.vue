@@ -4,12 +4,19 @@
 </div>
 </template>
 <script lang='ts' setup>
+import { ref } from 'vue';
 // @ts-ignore
-import { dConfig } from './index.ts'
-const bannerConfig = dConfig.banner || {
+import activity2Api from '../../api/activity2/index.ts';
+const bannerConfig = ref({
   img: '',
   style: {}
-}
+})
+defineExpose({
+  async init(){
+    const tconfig = await activity2Api.getConfigs()
+    bannerConfig.value = Object.assign(bannerConfig.value, tconfig.banner)
+  }
+})
 </script>
 <style scoped>
 .ac_banner{
