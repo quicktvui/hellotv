@@ -8,8 +8,8 @@
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_screen_btn"
       ref="top_screen_btn"
-      icon="ic_top_search.png"
-      focus-icon="ic_top_search_focus.png"
+      icon="ic_top_screen.png"
+      focus-icon="ic_top_screen_focus.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view

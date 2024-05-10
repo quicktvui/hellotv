@@ -1,5 +1,6 @@
 <template>
-  <qt-view class="media-menu-root-css">
+  <qt-view class="media-menu-root-css"
+           :clipChildren="true">
     <ul class="media-menu-root-list-css"
         v-if="init"
         :clipChildren="false"
@@ -10,6 +11,7 @@
           v-for="(item, index) in menuList">
         <media-menu-button
           v-if="item.type === 1"
+          ref="fullScreenButtonRef"
           :icon="fullButtonNormal"
           text="全屏"
           @click="onFullButtonClick"
@@ -49,10 +51,13 @@ import favButtonFocused from "../../../assets/ic_media_fav_button_focused.png"
 import favButtonVIPFocused from "../../../assets/ic_media_fav_button_vip_focused.png"
 import favButtonNormal from "../../../assets/ic_media_fav_button_normal.png"
 
-import { useESEventBus } from "@extscreen/es3-core"
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization"
 import { inject, Ref, ref, watch } from "vue"
 import { mediaAuthorizationKey } from "../injectionSymbols"
+import { IMediaMenuButton } from "./IMediaMenuButton"
+
+const TAG = "MEDIA_MENU"
 
 export default defineComponent({
   name: "media-menu",
@@ -66,7 +71,7 @@ export default defineComponent({
     "onMenuFavouriteButtonClick"
   ],
   setup(props, context) {
-
+    const log = useESLog()
     const authenticated = ref<boolean>(true)
     const mediaAuthorization: Ref<IMediaAuthorization> =
       inject(mediaAuthorizationKey, {} as any)
@@ -75,6 +80,11 @@ export default defineComponent({
 
     const menuList = ref()
     const init = ref<boolean>(false)
+
+    let autofocus = ref<boolean>(false)
+
+    const fullScreenButtonRef = ref<Array<IMediaMenuButton>>()
+
     const noVipMenuList = [
       { type: 1 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
     ]
@@ -114,6 +124,24 @@ export default defineComponent({
       eventbus.emit("onMenuVIPButtonClick")
     }
 
+    function setAutofocus(enable:boolean){
+      autofocus.value = enable
+    }
+
+    function requestFullButtonFocus(): void {
+      let array: Array<IMediaMenuButton> | undefined = fullScreenButtonRef.value
+      if (array) {
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, "-------requestFullButtonFocus-------->>>>>")
+        }
+        array[0].requestItemFocus()
+      }
+    }
+
+    function release(){
+      // menuList.value = []
+    }
+
     return {
       init,
       initMedia,
@@ -128,7 +156,12 @@ export default defineComponent({
       favButtonNormal,
       authenticated,
       mediaAuthorization,
-      favButtonVIPFocused
+      favButtonVIPFocused,
+      setAutofocus,
+      autofocus,
+      requestFullButtonFocus,
+      fullScreenButtonRef,
+      release
     }
   }
 })
@@ -142,6 +175,7 @@ export default defineComponent({
   position: absolute;
   left: 1016px;
   top: 316px;
+  background-color: transparent;
 }
 
 .media-menu-root-list-css {

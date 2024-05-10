@@ -1,5 +1,5 @@
 <template>
-  <qt-view  class="search_result" ref="search_result" :clipChildren="false" @childFocus="childFocus"
+  <qt-view class="search_result" ref="search_result" :clipChildren="false" @childFocus="childFocus"
            :listenHasFocusChange="true" :descendantFocusability="descendantFocusability"
            :triggerTask="triggerTask"
            :nextFocusName="{ left: 'search_center_view_content_list' }">
@@ -9,20 +9,22 @@
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
                 :focusable="false" />
       <span class="search_result_view_title_result" v-if="keyword"
-            :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 `}}</span>
+            :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 ` }}</span>
       <span class="search_result_view_title_result" v-else-if="recommendTitle"
             :focusable="false">{{ recommendTitle }}</span>
     </qt-view>
 
     <qt-tabs ref="tabRef" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
-             :visible="!isLoading"
              tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
              :tabContentResumeDelay="200"
-             :tabContentSwitchDelay='0'
+             :focusMemory="true"
+             name="searchTabs"
+             :tabContentSwitchDelay="200"
+             :custom-pool="{name:'search'}"
+             :custom-item-pool="{name:'search_items'}"
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
-             tabNavBarSid="qt_tab_nav_bar"
              @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
              @onTabMoveToBottomStart="onTabMoveToBottomStart"
              @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
@@ -30,24 +32,22 @@
              @onTabPageScrollToStart="onTabPageScrollToStart"
              @onTabPageItemClick="onTabPageItemClick" @onTabPageItemFocused="onTabPageItemFocused"
              @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll"
-             :enablePlaceholder="false"
+             :enablePlaceholder="true"
              @onTabPageSectionAttached="onTabPageSectionAttached" class="qt_tabs_css">
-      <template v-slot:tab-item >
+      <template v-slot:tab-item>
         <!-- 自定义tab类型 -->
         <qt-view class="waterfall_nav_item"
                  :type="2" :clipChildren="false"
                  :focusable="true"
                  eventFocus
                  autoWidth
-                 sid="${sid}"
-                 name="waterfall_nav_item_text"
                  ref="waterfall_nav_item_text">
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false"
                    class="waterfall_nav_item_text" :duplicateParentState="true" text="${text}" />
         </qt-view>
       </template>
       <template v-slot:waterfall-item>
-        <qt-poster :type="20" sid="${sid}"/>
+        <qt-poster :type="20" />
       </template>
     </qt-tabs>
 
@@ -58,12 +58,6 @@
                :fontSize="30" />
     </qt-view>
 
-    <!-- 页面loading-->
-    <qt-view v-if="isLoading && isShowResultLoading" :focusable="false"
-             class="search_result_loading"
-             :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
-      <qt-loading-view style="width: 100px;height: 100px;margin-left: -1200px;" />
-    </qt-view>
   </qt-view>
 </template>
 
@@ -71,11 +65,9 @@
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, watch } from "vue"
 import {
-  QTITab, QTTab, QTTabEventParams, QTTabItem, QTTabPageData, QTTabPageState, QTWaterfallItem,
-  QTWaterfallSection, QTWaterfallSectionType
+  QTITab, QTTabEventParams, QTTabItem, QTTabPageData, QTTabPageState, QTWaterfallItem
 } from "@quicktvui/quicktvui3"
-import { useESToast } from "@extscreen/es3-core"
-import { buildTabPageEndData } from "../build_data/useSearchData"
+import { useESLog } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 import SearchConfig from "../build_data/SearchConfig"
 import { useLaunch } from "../../../tools/launch/useApi"
@@ -90,16 +82,13 @@ export default defineComponent({
     showIsFullScreen: {
       type: Boolean,
       default: false
-    },
-    isShowResultLoading: {
-      type: Boolean,
-      default: true
     }
   },
-  emits: ["scroll-to-index","curItemSid","defaultTabItemSid",'close-loading'],
+  emits: ["scroll-to-index", "close-loading", "close-self-loading"],
   setup(props, context) {
-    const isShowCenterSearch = computed(()=>SearchConfig.isShowCenterSearch)
+    const isShowCenterSearch = computed(() => SearchConfig.isShowCenterSearch)
     const appApi = useGlobalApi()
+    const log = useESLog()
     const search_result = ref()
     let descendantFocusability = ref(1)
     const ic_search_left_arrow = require("../../../assets/search/ic_search_left_arrow.png").default
@@ -107,7 +96,6 @@ export default defineComponent({
     let showKeyword = ref("")
     let isShowTopTip = ref(true)
     let isHasData = ref(false)
-    let isLoading = ref(false)
     let recommendTitle = ref("大家都在搜")
     let delaySearchByKeyword: any = -1
     let closeLoadingTimer: any = -1
@@ -139,11 +127,11 @@ export default defineComponent({
     const tabContentBlockFocusDirections = ref(["down", "right"])
     const launch = useLaunch()
     let isRecommendRequest = false
-    const cancelAll =  () => {
+    const cancelAll = () => {
       tabRef!.value!.cancelAll()
     }
 
-    const initTab = async (isRecommend:boolean) => {
+    const initTab = async (isRecommend: boolean) => {
       isRecommendRequest = isRecommend
       tabList = await appApi.getSearchResultTabList(isRecommend)
       tabRef.value?.initTab({ defaultIndex: 0, defaultFocusIndex: -1, itemList: tabList })
@@ -154,99 +142,106 @@ export default defineComponent({
       if (newVal) {
         isRecommendRequest = false
         recommendTitle.value = ""
-      }else{
+      } else {
         isRecommendRequest = true
         recommendTitle.value = "大家都在搜"
       }
       if (delaySearchByKeyword) clearTimeout(delaySearchByKeyword)
-      isLoading.value = true
       descendantFocusability.value = 2
       delaySearchByKeyword = setTimeout(() => {
         initTab(isRecommendRequest)
         if (closeLoadingTimer) clearTimeout(closeLoadingTimer)
         closeLoadingTimer = setTimeout(() => {
-          isLoading.value = false
           descendantFocusability.value = 1
         }, 1000)
       }, 600)
-      context.emit("close-loading")
+
     })
 
     // qt-tabs 填充数据 回调
-    const onTabPageLoadData = async (pageIndex: number, pageNo: number, useDiff: boolean) => {
+    const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
       // 搜索数据
-      if (tabList && pageIndex >= 0 && pageIndex < tabList.length){
-        const tabItem = tabList[pageIndex]
-        if (tabItem._id !== null && tabItem._id  !== undefined){
-          let tabPage
-          if (isRecommendRequest){
-            tabPage = await appApi.getRecommendPageData(tabItem._id,(pageNo+1), SearchConfig.screenResultPageSize,tabList.length === 1)
-          }else{
-            tabPage = await appApi.getSearchResultPageData(tabItem._id,(pageNo+1), SearchConfig.screenResultPageSize,tabList.length === 1)
-          }
-          const length = tabPage.data[0].itemList.length
-          if (length > 0) {
-            if (pageNo <= 0) {
-              tabRef.value?.setPageData(pageIndex, tabPage)
-            }else {
-              tabRef.value?.addPageData(pageIndex, tabPage, 0)
+      // setTimeout(()=>{
+      // log.e("XRG===",`加载数据的页数 pageIndex = ${pageIndex} pageNo = ${pageNo}`)
+        if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
+          const tabItem = tabList[pageIndex]
+          if (tabItem._id !== null && tabItem._id !== undefined) {
+            if (isRecommendRequest) {
+              appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
+                .then((tabPage:QTTabPageData)=>{
+                dealData(tabPage,pageNo,pageIndex)
+              })
+            } else {
+              appApi.getSearchResultPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
+                .then((tabPage:QTTabPageData) =>{
+                  // log.e("XRG===",`当前准备加载数据pageIndex = ${pageIndex} pageNo = ${pageNo}\n tabPage ${JSON.stringify(tabPage)}`)
+                dealData(tabPage,pageNo,pageIndex)
+              })
             }
-          } else { //停止分页
-            setTimeout(()=>{
-              // tabRef.value?.addPageData(pageIndex, buildTabPageEndData(), 0)
-              tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-            },2000)
-
+          }
+        }else{
+          if (isShowCenterSearch.value) {
+            context.emit("close-self-loading")
+          }else{
+            context.emit("close-loading")
           }
         }
-      }
+      // },0)
+
+    }
+
+    const dealData = (tabPage: QTTabPageData,pageNo:number,pageIndex: number)=>{
+      // setTimeout(()=>{
+        const length = tabPage.data[0].itemList.length
+        if (length > 0) {
+          // log.e("XRG",`加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
+          tabRef.value?.addPageData(pageIndex, tabPage, 0)
+        } else { //停止分页
+          // log.e("XRG",`结束 加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
+         tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+        }
+        if (isShowCenterSearch.value) {
+          context.emit("close-self-loading")
+        }else{
+          context.emit("close-loading")
+        }
+      // },400)
+
     }
 
     const onTabClick = () => {
     }
-    const onTabPageChanged = (pageIndex:number, data:any) => {
-      if (tabList && pageIndex == 0 && pageIndex < tabList.length && tabList.length > 1) {
-        const sid = tabList[pageIndex].sid
-        context.emit("curItemSid","qt_tab_nav_bar")
-        context.emit("defaultTabItemSid","qt_tab_nav_bar")
-      }
+    const onTabPageChanged = (pageIndex: number, data: any) => {
+
     }
-    const onTabMoveToTopStart = () => { // 吸顶开始
+    const onTabMoveToTopStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶开始
       isShowTopTip.value = false
     }
-    const onTabMoveToTopEnd = () => { // 吸顶结束
+    const onTabMoveToTopEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { // 吸顶结束
 
     }
-    const onTabMoveToBottomStart = () => { //恢复吸顶开始
+    const onTabMoveToBottomStart = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶开始
 
     }
-    const onTabMoveToBottomEnd = () => { //恢复吸顶结束
+    const onTabMoveToBottomEnd = (pageIndex: number, eventName: string, params: QTTabEventParams) => { //恢复吸顶结束
       isShowTopTip.value = true
     }
-    const onTabPageScrollToEnd = () => {
+    const onTabPageScrollToEnd = (pageIndex: number) => {
     }
-    const onTabPageScrollToStart = () => {
+    const onTabPageScrollToStart = (pageIndex: number) => {
     }
     const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) => {
-      const {actionRedirect} = item.item
-      const mItem = {item:{...actionRedirect}}
+      const { actionRedirect } = item.item
+      const mItem = { item: { ...actionRedirect } }
       launch.launch(mItem)
     }
     const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
-      if (itemIndex % 6 === 0 && isFocused){
-        //获取当前的 sid
-        context.emit("curItemSid",item.sid)
-      }
+
     }
 
     const onTabPageScroll = () => {
     }
-    const onTabPageSectionAttached = (pageIndex: number, sectionList:any) => {
-      if (pageIndex === 0 && tabList.length === 1){
-        const defaultSid = sectionList[0]?.itemList[0]?.sid ?? ""
-        // console.log("XRG==onTabPageSectionAttached=","单 TAB 获取到的 sid == ",defaultSid)
-        context.emit("defaultTabItemSid",defaultSid)
-      }
+    const onTabPageSectionAttached = (pageIndex: number, sectionList: any) => {
     }
     const childFocus = (e) => {
       if (e.child) {
@@ -261,7 +256,6 @@ export default defineComponent({
       ic_search_left_arrow,
       ic_data_empty,
       isHasData,
-      isLoading,
       isShowTopTip,
       tabRef,
       tabContentBlockFocusDirections,

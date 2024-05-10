@@ -1,16 +1,25 @@
 <template>
-  <div class="detail-root-view-css">
+  <qt-view class="detail-root-view-css" ref='detailRootViewRef'>
     <qt-waterfall
       :descendantFocusability="descendantFocusability"
       :enablePlaceholder="false"
       ref="waterfallRef"
-      :disableScrollOnFirstScreen="true"
+      :blockFocusDirections="['left','right']"
       @onScroll="onScroll"
+      :enableKeepFocus='false'
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
+      :triggerTask="triggerTask"
+      :scrollYLesserReferenceValue="30"
+      :scrollYGreaterReferenceValue="30"
+      @onScrollYGreaterReference="onScrollYGreaterReference"
+      @onScrollYLesserReference="onScrollYLesserReference"
       class="detail-waterfall-css">
       <template v-slot:section>
-        <header-section :type="1"/>
+        <header-section
+          ref="headerSectionRef"
+          :type="1"
+          @onSearchButtonFocused="onSearchButtonFocused" />
       </template>
       <template v-slot:vue-section>
         <album-detail-section
@@ -27,6 +36,7 @@
 
     <media-player
       ref="mediaPlayerViewRef"
+      name='media-player'
       class="detail-media-player-view-css"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
@@ -35,29 +45,41 @@
     <qt-view class="detail-loading-view-root-css" v-show="showLoading">
       <qt-loading-view class="detail-loading-view-css"/>
     </qt-view>
-  </div>
+  </qt-view>
 </template>
 
 <script lang="ts">
 
-import {defineComponent,} from '@vue/runtime-core';
-import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog, useESToast} from "@extscreen/es3-core";
-import {nextTick, ref, provide} from "vue";
-import {IMedia} from "../../api/media/IMedia";
-import {QTIWaterfall, QTWaterfallItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from '@vue/runtime-core'
+import {
+  ESKeyCode,
+  ESKeyEvent,
+  ESLogLevel,
+  useESEventBus,
+  useESLog,
+  useESToast
+} from '@extscreen/es3-core'
+import { nextTick, provide, ref } from 'vue'
+import { IMedia } from '../../api/media/IMedia'
+import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import header_section from './section/header-section.vue'
 import album_detail_section from './section/album-detail-section.vue'
 import media_player from './component/media-player.vue'
-import {IMediaPlayer} from "./component/IMediaPlayer";
-import {buildRecommendationItemList, buildSectionList, buildWaterfall} from './adapter/DataAdapter'
-import {useESRouter} from "@extscreen/es3-router";
-import {ESPlayerWindowType} from "@extscreen/es3-player";
-import {IAlbumDetail} from "./section/IAlbumDetail";
-import {QTMediaSeries} from "@quicktvui/quicktvui3/dist/src/series/QTMediaSeries";
-import {ESMediaItem} from "@extscreen/es3-player-manager";
-import {IMediaAuthorization} from "../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "./injectionSymbols";
-import {useMediaDataSource} from "../../api/UseApi";
+import { IMediaPlayer } from './component/IMediaPlayer'
+import {
+  buildRecommendationItemList,
+  buildSectionList,
+  buildWaterfall
+} from './adapter/DataAdapter'
+import { useESRouter } from '@extscreen/es3-router'
+import { ESPlayerWindowType } from '@extscreen/es3-player'
+import { IAlbumDetail } from './section/IAlbumDetail'
+import { IHeader } from './section/IHeader'
+import { QTMediaSeries } from '@quicktvui/quicktvui3/dist/src/series/QTMediaSeries'
+import { ESMediaItem } from '@extscreen/es3-player-manager'
+import { IMediaAuthorization } from '../../api/media/IMediaAuthorization'
+import { mediaAuthorizationKey } from './injectionSymbols'
+import { useMediaDataSource } from '../../api/UseApi'
 
 
 const TAG = 'DetailPage'
@@ -78,18 +100,60 @@ export default defineComponent({
     const eventbus = useESEventBus()
     const showLoading = ref<boolean>(true)
     const mediaAuthorizationRef = ref<IMediaAuthorization | undefined | null>()
+
+    let isFullButtonClick = false
+
+    let detailFocusTimer = null
+    let detailScrollState
+
     //--------------------------------------------------------------------
     const mediaDataSource = useMediaDataSource()
     let mediaId: string
     let media: IMedia
     let isPaused = false
     let isStopped = false
+    let isPlayerInit = false
     //--------------------------------------------------------------------
     const waterfallRef = ref<QTIWaterfall>()
     const albumDetailRef = ref<IAlbumDetail>()
+    const headerSectionRef = ref<IHeader>()
     let waterfallScrollY = 0
+    let lastWindowType: ESPlayerWindowType
+    let playerVisible = ref(true)
+    let enterByFullButton = 0; // 0 ,placeholder,1 : fullBtn,2 : mediaItem
+    let showPlayerTimer = null
+    let currentID : any= null
+    let detailRootViewRef = ref()
+
+    let changePlayerStateTimer = null
+    let changePlayerVisibleTimer = null
+
+    let triggerTask = [
+      {
+        event: 'onScrollYGreater',
+        target: 'media-player',
+        function: 'changeAlpha',
+        params: [0],
+      },
+      //--------------------------------------------
+      {
+        event: 'onScrollYLesser',
+        target: 'media-player',
+        function: 'changeAlpha',
+        params: [0],
+      },
+      //--------------------------------------------
+      // {
+      //   event: 'onScrollStateIdle',
+      //   target: 'media-player',
+      //   function: 'changeVisibility',
+      //   params: ['visible'],
+      // },
+    ]
 
     provide(mediaAuthorizationKey, mediaAuthorizationRef)
+
+    let isKeyUpLongClick = false
 
     const onESCreate = (params) => {
       mediaId = params.mediaId
@@ -100,6 +164,9 @@ export default defineComponent({
         log.e(TAG, "-------onESCreate------详情页面---->>>>>", params)
       }
       isPaused = false
+      isStopped = false;
+      isPlayerInit = false
+
       initWaterfall()
       initEventBus()
       getMediaDetail()
@@ -108,7 +175,6 @@ export default defineComponent({
     function initWaterfall() {
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
-      waterfallRef.value?.scrollToTop()
       albumDetailRef.value?.setAutofocus(true)
     }
 
@@ -139,10 +205,10 @@ export default defineComponent({
                           up:-50
                       }
                   }else{
-                      sections[2].scrollOverride = {
-                          down:600,
-                          up:-100
-                      }
+                      // sections[2].scrollOverride = {
+                      //     down:600,
+                      //     up:-100
+                      // }
                   }
               }
             waterfallRef.value?.setSectionList(sections)
@@ -222,58 +288,98 @@ export default defineComponent({
       }
     }
 
-    function onScrollStateChanged(x: number,y: number,state:number){
-      log.d(TAG, '-------onScrollStateChanged-------->>>>' +
-          " y:" + y +
-          " state:" + state
-      )
-      if(state == 0 && y == 0){
-        if (mediaPlayerViewRef.value?.getWindowType() ==
-            ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-          mediaPlayerViewRef.value?.setSmallWindow()
-        }
+    function onScrollYGreaterReference() {
+      log.d(TAG, "----onScrollY---onScrollYGreaterReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
+      if (mediaPlayerViewRef.value?.getWindowType() ==
+        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
+        nextTick(() => {
+          changePlayerStateTimer = setTimeout(()=>{
+            mediaPlayerViewRef.value?.setFloatWindow()
+          },100)
+
+        })
       }
-      if(state == 0 && y > 10){
-          albumDetailRef.value?.setAutofocus(false)
+      albumDetailRef.value?.setAutofocus(false)
+    }
+
+    function onScrollYLesserReference() {
+      log.d(TAG, "----onScrollY---onScrollYLesserReference----->>>>")
+      clearTimeout(changePlayerStateTimer)
+      if (mediaPlayerViewRef.value?.getWindowType() ==
+        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+        nextTick(() => {
+          changePlayerStateTimer = setTimeout(()=>{
+            mediaPlayerViewRef.value?.setSmallWindow()
+          },200)
+        })
+      }
+    }
+
+    function onScrollStateChanged(x: number, y: number, state: number) {
+      // log.e("ScrollLog","onScrollStateChanged x:"+x+" y:"+y+" state:"+state)
+      detailScrollState = state
+      clearTimeout(changePlayerVisibleTimer)
+      if(state == 0){
+        changePlayerVisibleTimer = setTimeout(()=>{
+            mediaPlayerViewRef.value?.changeVisible(true)
+        },200)
       }
     }
 
     function onScroll(offsetX: number, scrollY: number) {
-      log.d(TAG, '-------onScroll-------->>>>' +
+      log.d(TAG, '---滚动----onScroll-------->>>>' +
         " offsetX:" + offsetX +
         " scrollY:" + scrollY
       )
       waterfallScrollY = scrollY
-      if (scrollY > 0) {
-        if (mediaPlayerViewRef.value?.getWindowType() ==
-          ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
-          mediaPlayerViewRef.value?.setFloatWindow()
-        }
-      } else {
+    }
+
+
+    //------------------------------------------------------------------------------
+    function onSearchButtonFocused(isFocused: boolean) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------onSearchButtonFocused----->>>>>", isFocused)
+      }
+      waterfallRef.value?.scrollToTop()
+      detailScrollState = 0
+      setTimeout(() => {
         if (mediaPlayerViewRef.value?.getWindowType() ==
           ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
           mediaPlayerViewRef.value?.setSmallWindow()
         }
-      }
+      }, 100)
+      cancelDetailRequestFocusTimer()
+    }
 
-      if (scrollY <= 5) {
-        albumDetailRef.value?.setAutofocus(true)
+    function cancelDetailRequestFocusTimer(){
+      if(detailFocusTimer != null){
+        clearTimeout(detailFocusTimer)
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, "-------requestFullButtonFocus--cancelDetailRequestFocusTimer-->>>>>")
+        }
+        detailFocusTimer = null
       }
     }
 
     //-------------------------------------------------------------------------------
     function onMenuFullButtonClick() {
+      enterByFullButton = 1
+      albumDetailRef.value?.setAutofocus(false)
       mediaPlayerViewRef.value?.setFullWindow()
+      isFullButtonClick = true
     }
 
     function onPlayerPlaceholderClick() {
       mediaPlayerViewRef.value?.setFullWindow()
+      enterByFullButton = 0;
     }
 
     function onPlayerPlaceholderFocus(focused: boolean) {
        if(focused){
            waterfallRef.value?.scrollToTop()
            waterfallScrollY = 0
+           cancelDetailRequestFocusTimer()
        }
        eventbus.emit("onPlayerPlaceholderFocus", focused)
     }
@@ -288,7 +394,13 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onMediaListItemClicked----->>>>>" + index, data)
       }
+      if(albumDetailRef.value?.getMediaSelectedPosition() == index){
+        enterByFullButton = 2
+        mediaPlayerViewRef.value?.setFullWindow()
+        return;
+      }
       if (data.id != null) {
+        currentID = data.id
         mediaPlayerViewRef.value?.stop()
         mediaPlayerViewRef.value?.playMediaItemById(data.id)
       }
@@ -310,7 +422,6 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onMediaListItemLoad---->>>>>" + page, data)
       }
-
       //全屏菜单数据
       eventbus.emit('onMediaListItemLoad', page, data)
       //
@@ -328,6 +439,7 @@ export default defineComponent({
         log.d(TAG, "----onMediaListItemClicked---onPlayerPlayMedia---->>>>>" + playingIndex)
       }
       if (playingIndex >= 0) {
+        albumDetailRef.value?.scrollMediaListViewTo(playingIndex)
         albumDetailRef.value?.setMediaListViewSelected(playingIndex)
       }
     }
@@ -343,13 +455,46 @@ export default defineComponent({
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
           descendantFocusability.value = 2
           break
+        case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
+          isFullButtonClick = false
+          break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
           descendantFocusability.value = 1
-          setTimeout(() => {
-            albumDetailRef.value?.requestPlayerPlaceholderFocus()
-          }, 200)
+          if (lastWindowType === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+            detailFocusTimer = setTimeout(() => {
+              cancelDetailRequestFocusTimer()
+              switch (enterByFullButton) {
+                case 0:
+                  albumDetailRef.value?.requestPlayerPlaceholderFocus()
+                  break
+                case 1:
+                  albumDetailRef.value?.requestFullButtonFocus()
+                  break
+                case 2:
+                  albumDetailRef.value?.requestCurrentMediaFocus()
+                  break
+              }
+            }, 300)
+
+            return
+          }
+
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.d(TAG, '-----全屏---------ES_PLAYER_WINDOW_TYPE_SMALL------>>>>')
+          }
+          if (media && !media.itemList.enable) {
+            albumDetailRef.value?.setAutofocus(false)
+            detailFocusTimer = setTimeout(() => {
+              cancelDetailRequestFocusTimer()
+                albumDetailRef.value?.requestPlayerPlaceholderFocus()
+            }, 0)
+          }else{
+            albumDetailRef.value?.setAutofocus(false)
+          }
+          isFullButtonClick = false
           break
       }
+      lastWindowType = windowType
     }
 
     //---------------------------------------------------------------------------------
@@ -381,8 +526,8 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESDestroy---------->>>>>")
       }
-      mediaPlayerViewRef.value?.release()
       mediaPlayerViewRef.value?.reset()
+      mediaPlayerViewRef.value?.release()
       albumDetailRef.value?.release()
       releaseEventBus()
     }
@@ -391,6 +536,12 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyDown(keyEvent)) {
         return true
       }
+      if (keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && keyEvent.keyRepeat >= 1) {
+        isKeyUpLongClick = true
+        // headerSectionRef.value?.setAutofocus(true)
+      } else {
+        isKeyUpLongClick = false
+      }
       return true
     }
 
@@ -398,20 +549,26 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyUp(keyEvent)) {
         return true
       }
+      isKeyUpLongClick = false
+      headerSectionRef.value?.setAutofocus(false)
       return true
     }
 
     function onBackPressed(): boolean {
       if (mediaPlayerViewRef.value?.onBackPressed()) {
-          albumDetailRef.value?.setAutofocus(true)
         return true
       }
 
       if (waterfallScrollY > 0) {
-          albumDetailRef.value?.setAutofocus(true)
+          detailScrollState = 0
           waterfallRef.value?.scrollToTop()
           waterfallScrollY = 0
-        return true
+          detailFocusTimer = setTimeout(() => {
+            cancelDetailRequestFocusTimer()
+              mediaPlayerViewRef.value?.changeVisible(true)
+            albumDetailRef.value?.requestPlayerPlaceholderFocus()
+          }, 300)
+          return true
       }
 
       router.back()
@@ -424,6 +581,7 @@ export default defineComponent({
       mediaPlayerViewRef,
       waterfallRef,
       albumDetailRef,
+      headerSectionRef,
       mediaAuthorizationRef,
 
       onESCreate,
@@ -453,7 +611,13 @@ export default defineComponent({
       //
       onIntroductionFocus,
       //
-      showLoading
+      showLoading,
+      onSearchButtonFocused,
+      onScrollYGreaterReference,
+      onScrollYLesserReference,
+      triggerTask,
+      playerVisible,
+      detailRootViewRef,
     };
   },
 });

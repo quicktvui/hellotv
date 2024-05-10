@@ -89,8 +89,9 @@ export function buildCollapseMenu(mediaListVisible: boolean): QTCollapse {
       collapseHeight: 100
     }
   ]
-
+  let defaultIndex: number = 2
   if (mediaListVisible) {
+    defaultIndex = 3
     itemList.push({
       height: 300,
       collapseHeight: 240
@@ -100,7 +101,7 @@ export function buildCollapseMenu(mediaListVisible: boolean): QTCollapse {
   const collapse: QTCollapse = {
     width: 1920,
     height: 780,
-    defaultIndex: 0,
+    defaultIndex: defaultIndex,
     itemList: itemList
   }
   return collapse
@@ -146,7 +147,7 @@ export function buildPlayMode(mode: ESPlayerPlayMode, index: number): QTListView
       modeName = '单片循环'
       break
     case ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP:
-      modeName = '循环播放'
+      modeName = '自动连播'
       break
   }
   let decoration: QTListViewItemDecoration = {

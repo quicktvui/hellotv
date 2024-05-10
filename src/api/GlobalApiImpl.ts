@@ -1,3 +1,5 @@
+import FilterConfig from "../pages/filter/build_data/FilterConfig"
+import bg_play from "./home/mock/bg_play"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
 import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
@@ -11,19 +13,20 @@ import tabPage0MockJson from "./home/mock/home_page0";
 import tabPage1MockJson from "./home/mock/home_page1";
 import tabPage2MockJson from "./home/mock/home_page2";
 import tabPage3MockJson from "./home/mock/home_page3";
-import {buildTransferTabContentAdapter} from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
-import {ESApp} from "@extscreen/es3-vue";
-import {GlobalApiKey} from "./UseApi";
+import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
+import { ESApp } from "@extscreen/es3-vue";
+import { GlobalApiKey } from "./UseApi";
 import BuildConfig from "../build/BuildConfig";
 import {
   filterContentUrl,
   filterEntryUrl,
   hotSearchUrl,
   tabContentUrl,
-  tabListUrl
+  tabListUrl,
+  urlSaveHistory, urlGetHistory, urlGetLongHistory, urlGetShortHistory, urlGetBookHistory
 } from "./RequestUrl";
-import {buildO2MTabContentData, buildO2MTabData} from "../pages/home/build_data/useTabData";
-import {TabPlayItem} from "../pages/home/build_data/tab_content/impl/TabPlayItem";
+import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
+import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 
 /*****
   ***************搜索 *********
@@ -66,10 +69,10 @@ export function createGlobalApi(): IGlobalApi {
     return Promise.resolve(buildTransferTabAdapter(tabs))
   }
 
-  function getTabContent(tabId: string, pageNo: number, pageSize: number): Promise<QTTabPageData> {
+  function getTabContent(tabId: string, pageNo: number, pageSize: number,tabPageIndex?: number): Promise<QTTabPageData> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {
-      return getMockTabContent(tabId, pageNo)
+      return getMockTabContent(tabId, pageNo,tabPageIndex)
     }
     return requestManager.post(tabContentUrl, {
       'data': tabId,
@@ -79,28 +82,26 @@ export function createGlobalApi(): IGlobalApi {
         "pageSize": pageSize,
       }
     }).then((tabContent: any) => {
-      return buildO2MTabContentData(tabContent, pageNo,tabId)
+      return buildO2MTabContentData(tabContent, pageNo,tabId,tabPageIndex)
     })
   }
 
-  function getMockTabContent(tabId: string, pageNo: number,): Promise<QTTabPageData> {
+  function getMockTabContent(tabId: string, pageNo: number,tabPageIndex?: number): Promise<QTTabPageData> {
     const name: Array<any> = [tabPage0MockJson, tabPage1MockJson, tabPage2MockJson, tabPage3MockJson]
     const index = Number(tabId)
-    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId))
+    return Promise.resolve(buildTransferTabContentAdapter(name[index], pageNo,tabId,tabPageIndex))
   }
 
   function getTabBg(tabId): string {
     return getTabBackground(tabId)
   }
 
-  function getHomeBgVideoAssetsUrl(playDataItem:TabPlayItem):Promise<TabPlayItem>{
+  function getHomeBgVideoAssetsUrl(id:string):Promise<object>{
     //todo 实现获取播放地址接口
+    const urls = bg_play
     return Promise.resolve({
-      id:playDataItem.id,
-      title:playDataItem.title,
-      cover:playDataItem.cover,
-      url:"http://qcloudcdn.a311.ottcn.com/channelzero/2022/01/04/e6693388-4867-47d7-ba5d-e21ef66e744c_transcode_1137857.m3u8",
-      isRequestUrl:false})
+      url:urls[id]
+    })
   }
 
   //***************************************************搜索相关***************
@@ -113,7 +114,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(buildSearchCenterListData(list, isLoadHistory))
     }
     // 根据keyword字母搜索关键字 不传返回热门搜索
-    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.screenCenterPageSize}})
+    return requestManager.post(hotSearchUrl, {'data': keyword,param:{pageNo:pageNum,pageSize:SearchConfig.searchCenterPageSize}})
       .then((result: any) => {
         let list:Array<any> = []
         if(result.keywordList.length > 0) list = result.keywordList
@@ -160,19 +161,19 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   /********************************筛选相关*****************************/
-  function getScreenLeftTags(screenId:string) {
-    const requestUrl = filterEntryUrl+screenId
-    return requestManager.post(requestUrl,{})
+  function getScreenLeftTags(screenId: string) {
+    const requestUrl = filterEntryUrl + screenId
+    return requestManager.post(requestUrl, {})
   }
 
-  function getScreenContentByTags(tags,pageNum){
+  function getScreenContentByTags(tags, pageNum) {
     const params = requestManager.getParams()
     const pageParams = {
       "pageNo": pageNum,
-      "pageSize": SearchConfig.screenPageSize,
+      "pageSize": FilterConfig.screenPageSize,
     };
-    const newParams = {...params, ...pageParams};
-    return requestManager.post(filterContentUrl,{
+    const newParams = { ...params, ...pageParams };
+    return requestManager.post(filterContentUrl, {
       'param': newParams,
       'data': tags
     })

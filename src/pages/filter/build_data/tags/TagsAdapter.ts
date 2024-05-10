@@ -1,17 +1,17 @@
+import FilterConfig from "../FilterConfig"
 import {Tags} from "../impl/Tags";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import {ESListViewItemDecoration} from "@extscreen/es3-component";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {TagContent} from "../impl/TagContent";
 import {FilterConditionList} from "../impl/FilterConditionList";
-import SearchConfig from "../../../search/build_data/SearchConfig"
 
 export const _filter_line_height:number = 61
-export const _filter_text_height:number = 60
+export const _filter_text_height:number = FilterConfig.filterTextHeight
 export const _filter_line_top_gap:number = 30
 export const _filter_line_bottom_gap:number = 30
 export const _filter_tag_gap:number = 12
-export const _filter_record_height:number = 100
+export const _filter_record_height:number = FilterConfig.filterRecordHeight
 
 export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
  const tagList:Array<QTListViewItem> = []
@@ -38,7 +38,9 @@ export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
 
 export function buildTagContentEnd():QTGridViewItem{
   const endList: QTGridViewItem = {
-    type:1003
+    type:1003,
+    decoration:{top:30,bottom:10},
+    text:"已经到底啦，按【返回键】回到顶部"
   }
   return endList
 }
@@ -68,7 +70,9 @@ export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:n
     tagContentList.push(gridItem)
   })
   //添加结束提示，首页小于 10条不加载结束提示
-  if ((tagContents.length < SearchConfig.screenPageSize && pageNum !== 1) || (pageNum === 1 && tagContents.length > 10 && tagContents.length < SearchConfig.screenPageSize)){
+  if (tagContents.length > 0
+    && ((tagContents.length < FilterConfig.screenPageSize && pageNum !== 1)
+      || (pageNum === 1 && tagContents.length > 10 && tagContents.length < FilterConfig.screenPageSize))){
     tagContentList.push(buildTagContentEnd())
   }
   return tagContentList
@@ -115,7 +119,7 @@ export function buildFilterAdapter(allFilterList:Array<FilterConditionList>,fast
       },
       lineStyle:{
         height:1,
-        width:1434
+        width:((FilterConfig.isShowLeftList ? FilterConfig.rightContentWidth:1856) - 146)
       },
       decoration:{
         left:50,

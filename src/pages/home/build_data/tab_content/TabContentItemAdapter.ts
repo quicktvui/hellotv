@@ -22,7 +22,8 @@ export function buildTabPageStateImageItem(tabContentItem: TabSectionItem,cellTy
     image: image,
     selectedImage: tabContentItem.nonFocusImage,
     focusedImage: tabContentItem.focusImage,
-    item: tabContentItem//
+    isShowPlayMark:tabContentItem.isBgPlayer,
+    item: tabContentItem,//
   }
   item.isBgPlayer = tabContentItem.isBgPlayer
   return item
@@ -42,12 +43,12 @@ export function buildTabPageBlankItem(tabContentItem: TabSectionItem): QTWaterfa
     }
 }
 
-export function buildTabPageCellPlayerItem(tabContentItem: TabSectionItem): QTWaterfallItem{
+export function buildTabPageCellPlayerItem(tabContentItem: TabSectionItem,tabIndex:number): QTWaterfallItem{
   let item: QTWaterfallItem = {
     type: TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER,
     focusScrollTarget:true,
     list: [],
-    sid: tabContentItem.id + 'cellSid',
+    sid: tabContentItem.id + 'cellSid'+'tabIndex'+tabIndex,
     childSID: 'bg-player',
     size:[tabContentItem.width,tabContentItem.height],
     pLayout:[tabContentItem.posX, tabContentItem.posY, tabContentItem.width, tabContentItem.height],

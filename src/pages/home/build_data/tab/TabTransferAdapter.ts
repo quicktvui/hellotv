@@ -49,18 +49,18 @@ export function buildTransferTabAdapter(tabs:Array<Tab>):QTTab{
  * @param tab 原始数据
  * @param decoration  tab item 左右间隔
  */
-function buildTabItem(tab:any,decoration?: ESListViewItemDecoration):QTTabItem{
+function buildTabItem(tab:Tab,decoration?: ESListViewItemDecoration):QTTabItem{
   const menuType = Number(tab.menuType)
   let tabItem:QTTabItem
   switch (menuType) {
     case TabType.TAB_TEXT_TYPE:
-      tabItem = buildTabTextItem(tab.menuCode,tab.menuName,tabSectionTitleSize,QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT,decoration,tab.textIcon,tab.cornerImage,tab.focusCornerImage)
+      tabItem = buildTabTextItem(tab,tabSectionTitleSize,QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT,decoration)
       break;
     case TabType.TAB_IMG_TYPE:
-      tabItem = buildTabImgItem(tab.menuCode,1,tab.image,tab.focusImage,tab.selectImage,tab.imageWidth,tab.imageHeight,decoration)
+      tabItem = buildTabImgItem(tab,1,decoration)
       break;
     default:
-      tabItem = buildTabTextItem(tab.menuCode,tab.menuName,44,QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT,decoration,tab.textIcon,tab.cornerImage,tab.focusCornerImage)
+      tabItem = buildTabTextItem(tab,44,QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT,decoration)
       break;
   }
   return tabItem

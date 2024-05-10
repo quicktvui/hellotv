@@ -1,0 +1,35 @@
+## 在config.ts中自定义样式和布局
+- 属性/样式
+    - layout
+        - 布局模式
+            - menu左-tag上
+            - 右-上
+            - 上-右
+            - 上-左
+    - title
+        - 页面标题
+    - titleImg
+        - 使用图片作为标题
+    - menuStyle
+        - 菜单样式{color:string, selectedColor:string}
+    - menuList
+        - 静态菜单数据
+    - emptyTxt?
+        - 空数据时的图片
+    - emptyTxt
+        - 空数据文案
+    - contentColumn
+        - 内容区列数
+    - contentItemHeight?
+        - 内容区列表海报的高度，不指定时自动根据宽度计算
+## 在api/history/index.ts中重写baseApi方法，自定义获取数据的逻辑
+    - getMenuList
+        - 获取左侧动态菜单数据
+    - getFilterTabList
+        - 获取筛选条件数据，当返回值为空数组时不展示
+    - getContentList
+        - 获取内容列表数据
+    - deleteContent
+        - 删除指定id的数据
+    - clearContent
+        - 清空内容数据

@@ -7,6 +7,7 @@ export interface IMediaListView {
   scrollTo(position: number): void;
 
   setSelected(position: number): void;
-
+  getSelectedPosition(): number;
+  requestFocus(position: number): void;
   release(): void
 }

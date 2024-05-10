@@ -1,8 +1,9 @@
 import {IMedia} from "../../../api/media/IMedia";
 import {ESKeyEvent} from "@extscreen/es3-core";
 import {ESPlayerWindowType} from "@extscreen/es3-player";
+import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
 
-export interface IMediaPlayer {
+export interface IMediaPlayer extends QTIBaseView{
 
   play(media: IMedia)
 
@@ -35,4 +36,6 @@ export interface IMediaPlayer {
   onKeyUp(keyEvent: ESKeyEvent): boolean
 
   onBackPressed(): boolean
+
+  changeVisible(value: boolean): void
 }

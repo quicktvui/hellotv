@@ -8,6 +8,7 @@
          :style="{opacity: isCollapseExpand ? 1 : 0}">
       <qt-media-series
         ref="mediaSeriesListRef"
+        :display="isCollapseExpand"
         class="qt-collapse-media-series-root-css"
         :clipChildren="false"
         @load-data="onLoadData"
@@ -56,7 +57,11 @@ export default defineComponent({
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-    let selectedIndex = 0
+
+    const selectedIndex = ref<number>(0)
+
+    let focusTimer
+    let initialized = false
 
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
@@ -92,13 +97,31 @@ export default defineComponent({
     //---------------------------------------------------------------------------
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------onCollapseItemExpand---绿色---->>>>', value)
+        log.d(TAG, '-------onCollapseItemExpand---选集---->>>>', value, 'selectedIndex:' + selectedIndex)
       }
       isCollapseExpand.value = value
 
+      // setTimeout(() => {
+      //   setItemSelected(selectedIndex.value)
+      // }, 300)
+
       if (value) {
-        setItemSelected(selectedIndex)
-        setItemFocused(selectedIndex)
+        if (!initialized) {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 500)
+        } else {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 200)
+        }
+        initialized = true
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
       }
     }
 
@@ -107,6 +130,9 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---选集---setItemSelected------>>>>', position)
+      }
       mediaSeriesListRef.value?.requestFocus(position)
     }
 
@@ -114,7 +140,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---选集---setItemSelected------>>>>', position)
       }
-      selectedIndex = position
+      selectedIndex.value = position
       mediaSeriesListRef.value?.setSelected(position)
     }
 
@@ -150,6 +176,13 @@ export default defineComponent({
       context.emit("onMediaListGroupItemFocused", index)
     }
 
+    function release(): void {
+      selectedIndex.value = 0
+      initialized = false
+      isCollapseExpand.value = false
+      mediaSeriesListRef.value?.release()
+    }
+
     return {
       mediaSeriesListRef,
       isCollapseExpand,
@@ -163,7 +196,9 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      setItemSelected
+      setItemSelected,
+      selectedIndex,
+      release
     }
   },
 });

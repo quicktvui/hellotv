@@ -12,7 +12,7 @@ import { createESADPlayer } from "@extscreen/es3-ad-player";
 
 //--------------------components-----------------------
 const routerOptions = {
-    main: 'activity2',
+    main: 'home',
     error: 'error',
     limit: 5,
     routes: routes,
@@ -55,11 +55,11 @@ import { createMediaMockDataSource } from "./api/media/impl/MediaMockDataSourceI
 import BuildConfig from "./build/BuildConfig";
 
 if (BuildConfig.useMockData) {
-    const mediaDataSource: IMediaDataSource = createMediaMockDataSource()
-    app.use(mediaDataSource);
+  const mediaDataSource: IMediaDataSource = createMediaMockDataSource()
+  app.use(mediaDataSource);
 } else {
-    const mediaDataSource: IMediaDataSource = createMediaDataSource()
-    app.use(mediaDataSource);
+  const mediaDataSource: IMediaDataSource = createMediaDataSource()
+  app.use(mediaDataSource);
 }
 //---------------------------用户管理----------------------------------
 import { createUserManager, UserManager } from "./tools/user/UserManager";

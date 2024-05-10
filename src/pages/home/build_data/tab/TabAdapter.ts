@@ -4,6 +4,7 @@ import {
   QTTabItemType,
 } from "@quicktvui/quicktvui3";
 import {ESListViewItemDecoration} from "@extscreen/es3-component";
+import { Tab } from "./impl/Tab"
 export const tabDecorationGap = 0
 export const tabDecorationGapLeft = 70
 export const tabDecorationGapRight = 90
@@ -21,15 +22,15 @@ export const tabBackgroundUrls:Map<string,string> = new Map<string, string>()
  * @param tabCorner tab角标
  * @param tabCornerFocus tab焦点角标
  */
-export function buildTabTextItem(id:string,text:string,titleSize:number,type?:number,decoration?:ESListViewItemDecoration,textIcon?:string,tabCorner?:string,tabCornerFocus?:string):QTTabItem{
+export function buildTabTextItem(tab:Tab,titleSize:number,type?:number,decoration?:ESListViewItemDecoration):QTTabItem{
   const tabItem:QTTabItem = {
-    _id:id,
+    _id:tab.menuCode,
     type: type ? type : QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT,
-    text,
+    text:tab.menuName,
     titleSize,
-    textIcon,
-    tabCorner,
-    tabCornerFocus,
+    textIcon:tab.textIcon,
+    tabCorner:tab.cornerImage,
+    tabCornerFocus:tab.focusCornerImage,
     decoration,
     isTabBgShow:false,
   }
@@ -45,20 +46,20 @@ export function buildTabTextItem(id:string,text:string,titleSize:number,type?:nu
  * @param selectedImage selected 图
  * @param imageWidth 图片宽度
  * @param imageHeight 图片高度
- * @param decoration 间距
+ * @param decoration? 间距
  */
-export function buildTabImgItem(id:string,type:number,image:string,focusedImage:string,selectedImage:string,imageWidth:number,imageHeight:number,decoration?:ESListViewItemDecoration):QTTabItem{
+export function buildTabImgItem(tab:Tab, type: number, decoration?: ESListViewItemDecoration | undefined):QTTabItem{
   const tabItem:QTTabItem = {
-    _id:id,
+    _id:tab.menuCode,
     type,//1.自定义图片导航样式；QTTabItemType.QT_TAB_ITEM_TYPE_DEFAULT：默认文字样式
     text:"",
     titleSize:tabSectionTitleSize,
-    image,
-    focusedImage,
-    selectedImage,
+    image:tab.image,
+    focusedImage:tab.focusImage,
+    selectedImage:tab.selectImage,
     imageStyle: {
-      width: imageWidth,
-      height: imageHeight
+      width: !!tab.imageWidth ? Number(tab.imageWidth):0,
+      height:!!tab.imageHeight ? Number(tab.imageHeight):0,
     },
     decoration
   }

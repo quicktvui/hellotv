@@ -8,9 +8,9 @@ export default {
   //ES包名
   packageName: 'es.tv.huan.hellotv',
   //域名
-  requestBaseUrl: 'http://cms.hmon.tv/es_single/api',
+  requestBaseUrl: process.env.requestBaseUrl||'http://cms.hmon.tv/es_single/api',
   //首页内容请求数量
   tabContentPageSize: 10,
   // 默认源
-  defaultSourceUrl: 'http://cms.hmon.tv/upload/test/tvbox/js.json'
+  defaultSourceUrl: ''
 }
