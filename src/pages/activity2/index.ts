@@ -44,7 +44,7 @@ interface Ioptions { //Partial
 }
 export interface IBlockItemData {
   id:string
-  img?:string
+  img:string
   title?:string
   subTitle?:string
   floatTitle?:string
@@ -93,7 +93,7 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
       height: posterHeight,
     },
     image: {
-      src: dImgURL,
+      src: data.img,
       enable: true,
       style: {
         width: blackItemWidth,

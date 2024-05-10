@@ -44,21 +44,21 @@ export class Activity2BaseApi implements Iapi {
     let sectionList = [
       getActivity2FlexBlock({ 
         id: '2', title: '开学抢先学：一年级下册', 
-        list: [{id: '1',_router:{name:'home'}},{id:'2'},{id:'3'}],
+        list: [{id: '1',_router:{name:'home'},img:''},{id:'2',img:''},{id:'3',img:''}],
         options: { columns: 3, blackItemHeight: 260 } 
       }),
       getActivity2FlexBlock({ 
-        id: '3', title: '一年级语文强化课程', list: [{id: '1'},{id:'2'}],
+        id: '3', title: '一年级语文强化课程', list: [{id: '1',img:''},{id:'2',img:''}],
         options: { columns: 2, blackItemHeight: 400 }
       }),
       getActivity2FlexBlock({ 
         id: '4', title: '一年级数英同步课堂下册',
-        list: [{id: '1',title: 'title'},{id:'2',title: 'title'},{id:'3',title: 'title'},{id:'4',title: 'title'}],
+        list: [{id: '1',title: 'title',img:''},{id:'2',title: 'title',img:''},{id:'3',title: 'title',img:''},{id:'4',title: 'title',img:''}],
         options: { columns: 4, blackItemHeight: 260 }
       }),
       getActivity2FlexBlock({ 
         id: '5', title: '剑桥英语', 
-        list: [{id: '1'},{id:'2'},{id:'3'},{id:'4'},{id:'5'},{id:'6'},{id:'7'},{id:'8'},{id:'9'},{id:'10'}],
+        list: [{id: '1',img:''},{id:'2',img:''},{id:'3',img:''},{id:'4',img:''},{id:'5',img:''},{id:'6',img:''},{id:'7',img:''},{id:'8',img:''},{id:'9',img:''},{id:'10',img:''}],
         options: { columns: 6, }
       })
     ]
