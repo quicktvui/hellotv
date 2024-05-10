@@ -1,7 +1,7 @@
 // @ts-ignore
 import { IacTivity2GetFlexBlockRes, getActivity2FlexBlock } from "../../pages/activity2/index.ts";
 import { Activity2BaseApi } from "./base";
-import { IActivityTopItemBtn } from "./types.js";
+import { IActivityTopItemBtn } from "./types";
 
 class Activity2Api extends Activity2BaseApi {
   // async getTopBtns(): Promise<IActivityTopItemBtn[]> {

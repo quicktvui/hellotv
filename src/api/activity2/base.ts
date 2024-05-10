@@ -2,7 +2,7 @@
 import { IacTivity2GetFlexBlockRes, getActivityTopBtn, getActivity2FlexBlock } from "../../pages/activity2/index.ts";
 import { RequestManager } from "../request/RequestManager";
 import { ESLocalStorage } from "@extscreen/es3-core";
-import { IActivityTopItemBtn } from "./types.js";
+import { IActivityTopItemBtn } from "./types";
 import homeIcon from '../../assets/ic_header_home.png'
 import homeFocusIcon from '../../assets/ic_header_home_focus.png'
 import vipIcon from '../../assets/ic_media_vip_button_focused.png'
