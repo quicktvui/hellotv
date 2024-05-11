@@ -79,8 +79,8 @@ export class Activity2BaseApi implements Iapi {
     let sectionList = [
       getActivity2FlexBlock({ 
         id: '2', title: '开学抢先学：一年级下册', 
-        list: [{id: '1',_router:{ url:'home'},img:dImgURL},{id:'2',img:dImgURL},{id:'3',img:dImgURL}],
-        options: { columns: 3, blackItemHeight: 260 } 
+        list: [{id: '1',corner:'vip',_router:{ url:'home'},img:dImgURL},{id:'2',img:dImgURL},{id:'3',img:dImgURL}],
+        options: { columns: 3, blackItemHeight: 260 }// 指定 columns 创建板块数据
       }),
       getActivity2FlexBlock({ 
         id: '3', title: '一年级语文强化课程', list: [{id: '1',img:dImgURL},{id:'2',img:dImgURL}],
@@ -90,11 +90,6 @@ export class Activity2BaseApi implements Iapi {
         id: '4', title: '一年级数英同步课堂下册',
         list: [{id: '1',title: 'title',img:dImgURL},{id:'2',title: 'title',img:dImgURL},{id:'3',title: 'title',img:dImgURL},{id:'4',title: 'title',img:dImgURL}],
         options: { columns: 4, blackItemHeight: 260 }
-      }),
-      getActivity2FlexBlock({ 
-        id: '5', title: '剑桥英语', 
-        list: [{id: '1',img:dImgURL},{id:'2',img:dImgURL},{id:'3',img:dImgURL},{id:'4',img:dImgURL},{id:'5',img:dImgURL},{id:'6',img:dImgURL},{id:'7',img:dImgURL},{id:'8',img:dImgURL},{id:'9',img:dImgURL},{id:'10',img:dImgURL}],
-        options: { columns: 6, }
       })
     ]
       return sectionList

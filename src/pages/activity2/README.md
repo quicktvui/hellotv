@@ -22,3 +22,26 @@
         };
   - getTopBtns 获取顶栏按钮数据
   - getList 获取活动板块数据
+    - 返回数据需调用 getActivity2FlexBlock 生成板块数据，详见：api/activity2/base.ts 模拟数据的示例代码
+        getActivity2FlexBlock({ 
+            id: '5',//板块id
+            title: '剑桥英语', //板块标题，不传则不显示
+            list: [{
+                id: item+'',//板块子项id
+                img: dImgURL,//板块子项图片
+                title: '',//板块子项标题
+                subTitle: '',//板块子项副标题
+                corner: '',//板块子项角标文字
+                cornerBackground: '#000000',//角标背景色，支持字符串和渐变对象格式
+                layout: { x: 0, y: 0, width: 300, height: 260 },//通过坐标和宽高，创建板块数据
+                _redirectType: 0,
+                _router: {},
+                _action: {}
+            }],
+            options: { 
+                columns: 6, //指定板块列数
+                blackItemHeight: 260//指定板块内每个子项的图片高度
+            }
+        })
+    - 板块子项列数的优先级
+        - layout 大于 columns，当设置layout后可不传columns和blackItemHeight
