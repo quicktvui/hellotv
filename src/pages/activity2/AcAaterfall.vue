@@ -110,7 +110,7 @@ defineExpose({
 <style scoped>
 .ac_waterfall {
   width: 1920px;
-  height: 980px;
+  height: 1080px;
   background-color: transparent;
 }
 </style>

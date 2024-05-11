@@ -22,7 +22,7 @@ const dBlockTitleBottom = 30
 const dBlockTitleFontSize = 36
 const dBlockTitleDecorationTop = 50
 export const dBlockWidth = 1920
-export const dBlockHeight = 960
+export const dBlockHeight = 1080
 
 interface Ioptions { //Partial
   space?:number

@@ -7,7 +7,7 @@
       ref="topListRef" :clipChildren="false" :clipPadding="false" class="top_list"
       :style="{width: topConfig.btnListWidth + 'px'}"
       @item-focused="onTabChange" :horizontal="true" :focusable="false" padding="0,0,10,0"
-      @item-click="onItemClick"
+      @item-click="onItemClick" :enableSelectOnFocus="false"
     >
       <div :type="1" class="top_list_item" :collapsable="false" :focusable="true" :focusScale="1.08">
         <!-- <qt-button :enable-flex-style="true" text="text" gradientFocusBackground="gradientBackground" size="mini" round></qt-button> -->
@@ -90,7 +90,6 @@ const onItemClick = (e)=>{
 onMounted(async ()=>{
   const tconfig = await activity2Api.getConfigs()
   topConfig.value = Object.assign(topConfig.value, tconfig.top)
-  console.log(topConfig, '---topConfig--lsj')
   const arr = await activity2Api.getTopBtns()
   topListRef.value?.init(arr)
 })
