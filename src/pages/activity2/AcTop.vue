@@ -82,7 +82,7 @@ const onTabChange = (e) => {
 const onItemClick = (e)=>{
   if(e.item._router){
     router.push({
-        name: e.item._router.name, //'series_view',
+        name: e.item._router.url, //'series_view',
         params: e.item._router.params?{...e.item._router.params}:undefined
     });
   }
