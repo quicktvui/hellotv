@@ -35,8 +35,8 @@ interface Ioptions { //Partial
   columns?:number
 }
 export const activity_redirectTypes = {
-  innerRouter: 0,//跳转到当前app内部页面
-  innerApp: 1//跳转到内部其他app
+  innerRouter: 1,//跳转到当前app内部页面
+  innerApp: 0//跳转到内部其他app
 }
 export interface IBlockItemData {
   id:string

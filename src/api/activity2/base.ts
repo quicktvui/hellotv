@@ -71,7 +71,7 @@ export class Activity2BaseApi implements Iapi {
         getActivityTopBtn({ 
           type: 1, text: '首页',
           icon: homeIcon, focusIcon:homeFocusIcon,
-          _router: { url: 'home' }
+          _router: { url: 'home', isReplace:true }
         })
       ]
   }
@@ -79,7 +79,7 @@ export class Activity2BaseApi implements Iapi {
     let sectionList = [
       getActivity2FlexBlock({ 
         id: '2', title: '开学抢先学：一年级下册', 
-        list: [{id: '1',corner:'vip',_router:{ url:'home'},img:dImgURL},{id:'2',img:dImgURL},{id:'3',img:dImgURL}],
+        list: [{id: '1',corner:'vip',_redirectType: 1,_router:{ url:'home'},img:dImgURL},{id:'2',img:dImgURL},{id:'3',img:dImgURL}],
         options: { columns: 3, blackItemHeight: 260 }// 指定 columns 创建板块数据
       }),
       getActivity2FlexBlock({ 
