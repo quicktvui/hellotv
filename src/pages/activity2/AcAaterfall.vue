@@ -4,7 +4,7 @@
     class="ac_waterfall"
     :style="waterfallStyle"
     :requestFocus="true"
-    :paddingRect="[0,0,0,50]"
+    :paddingRect="[0,0,0,0]"
     @onScroll='onScroll'
     @onItemClick='onItemClick'
     @onItemFocused='onItemFocused'
@@ -24,17 +24,18 @@ import {
 } from '@quicktvui/quicktvui3';
 import AcPoster from './AcPoster/index.vue'
 // @ts-ignore
-import { getBlockList, dBlockWidth, dBlockHeight, IBlockItemData } from './index.ts'
+import { getBlockList, dBlockWidth, dBlockHeight, IBlockItemData, activity_redirectTypes } from './index.ts'
 import { useESToast, ESKeyEvent, ESKeyCode } from '@extscreen/es3-core';
 // @ts-ignore
 import activity2Api from '../../api/activity2/index.ts';
-import { useESRouter } from '@extscreen/es3-router';
+import { useESRouter, useESNativeRouter } from '@extscreen/es3-router';
 import { Native } from '@extscreen/es3-vue'
 
 const emits = defineEmits(['emToTop'])
 const props = defineProps<{ isTop:boolean }>();
 const router = useESRouter()
-const toast = useESToast()
+const nRouter = useESNativeRouter()
+// const toast = useESToast()
 const waterfall = ref();//<QTIWaterfall>
 const waterfallStyle = {
   width: dBlockWidth+'px', height: dBlockHeight+'px'
@@ -46,11 +47,13 @@ const onScroll = (scrollX, scrollY)=>{
   scrollTop = scrollY
 }
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
-  if(item._router){
+  if(item._redirectType == activity_redirectTypes.innerApp && item._router){
     router.push({
         name: item._router.url, //'series_view',
         params: item._router.params?{...item._router.params}:undefined
     });
+  } else if(item._redirectType == activity_redirectTypes.innerRouter && item._action){
+    nRouter.launch([['-d', item._action]])
   }
 }
 const onItemFocused = ()=>{

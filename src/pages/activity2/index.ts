@@ -19,7 +19,7 @@ const dPosterSubTitleHeight = 30
 const dPosterBottom = 20
 const dPosterHeight = dBlackItemHeight +dPosterTitleHeight+dPosterSubTitleHeight
 const dBlockTitleBottom = 30
-const dBlockTitleFontSize = 36
+const dBlockTitleFontSize = 50
 const dBlockTitleDecorationTop = 50
 export const dBlockWidth = 1920
 export const dBlockHeight = 1080
@@ -34,6 +34,9 @@ interface Ioptions { //Partial
   posterSubTitleHeight?:number
   columns?:number
 }
+export const activity_redirectTypes = {
+  innerRouter: 0, innerApp: 1
+}
 export interface IBlockItemData {
   id:string
   img:string
@@ -43,10 +46,13 @@ export interface IBlockItemData {
   corner?:string
   score?:string
   focusTitle?:string
+  layout?: { x:number, y:number, width:number, height:number }// 图片宽度优先级 layout > columns > blackItemWidth
   _router?: {
     url:string
     params?: object
   }
+  _action?: string
+  _redirectType?: number
   [k:string]:any
 }
 export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QTWaterfallItem =>{
@@ -59,16 +65,13 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
     posterTitleHeight = dPosterTitleHeight, 
     posterSubTitleHeight = dPosterSubTitleHeight
   } = options
-  if(!data.title){
-    posterHeight -= posterTitleHeight
-  }
-  if(!data.subTitle){
-    posterHeight -= posterSubTitleHeight
-  }
 
   return {
     _id: data._sectionItemId,
     _router: data._router,
+    _action: data._action,
+    _redirectType: data._redirectType,
+    layout: data.layout?[data.layout?.x, data.layout?.y, data.layout?.width, data.layout?.height]:undefined,
     focus: {
       enable: true,
       scale: 1.002,
@@ -169,19 +172,57 @@ export const getActivity2FlexBlock = (data:IBlockData, sectionType:number = QTWa
     blockTitleBottom = dBlockTitleBottom, blockTitleFontSize = dBlockTitleFontSize,
     blockTitleDecorationTop = dBlockTitleDecorationTop
   } = data.options
+
+  let isLayout = false
+  const layoutIndex = data.list.findIndex(item=>{
+    isLayout = !!item?.layout
+    return item && item.layout && item.layout.y != 0
+  })
+  if(isLayout){
+    columns = layoutIndex > 0 ? layoutIndex : 1;
+  }
+
   const leftSpace = data.options.decorationLeft || dBlackSpace
   const rightSpace = dBlackSpace - space
   const contentWidth = dBlockWidth - leftSpace - rightSpace - (space * columns)
-  if(columns){
+  if(columns && !isLayout){
     blackItemWidth = Math.floor(contentWidth / columns)
   }
   if(!data.title){
     blockTitleBottom = 0
     blockTitleFontSize = 0
   }
+  // const rows = columns ? Math.ceil(data.list.length/columns) : 1
   // const ratio = Math.ceil(dBlackItemWidth / dBlackItemWidth)
-  const posterHeight = blackItemHeight + posterTitleHeight + posterSubTitleHeight
-  const blockHeight = posterHeight * data.list.length + blockTitleBottom + blockTitleFontSize + blockTitleDecorationTop
+  let rowsHeight = 0
+  let blockHeight = blockTitleBottom + blockTitleFontSize + blockTitleDecorationTop
+
+  let _columns = columns || 1 
+  const itemlist = data.list.filter(item=>item.img).map((item,index)=>{
+    let posterHeight = item.layout?.height || blackItemHeight
+    if(!isLayout){
+      if(item.title){ posterHeight += posterTitleHeight }
+      if(item.subTitle){ posterHeight += posterSubTitleHeight }
+    }
+    if(isLayout){
+      blackItemWidth = item.layout?.width || blackItemWidth
+      blackItemHeight = item.layout?.height || blackItemWidth
+      // if(item.title){ blackItemHeight -= posterTitleHeight }
+      // if(item.subTitle){ blackItemHeight -= posterSubTitleHeight }
+    }
+    
+    if(index === 0 || (index % _columns == 1)){
+      rowsHeight = posterHeight
+    } else {
+      rowsHeight = Math.max(rowsHeight, posterHeight)
+    }
+    if ((index % _columns == 1) || index == data.list.length - 1) {
+      blockHeight += rowsHeight
+    }
+    return getPosterItemList({ ...item, _sectionItemId: data.id+item.id+index}, {
+      ...data.options, blackItemWidth, posterHeight, blackItemHeight
+    })
+  })
 
   const section = {
     _id: data.id,
@@ -191,18 +232,14 @@ export const getActivity2FlexBlock = (data:IBlockData, sectionType:number = QTWa
       // marginTop: 10,
       marginBottom: blockTitleBottom,
       fontSize: blockTitleFontSize,
+      height: data.title?blockTitleFontSize:10,
+      width: 1000
     },
     //3.构造section中item列表数据
-    itemList: data.list.map((item,index)=>{
-      return getPosterItemList({ ...item, _sectionItemId: data.id+item.id+index}, {
-        ...data.options,
-        blackItemWidth,
-        posterHeight
-      })
-    }),
+    itemList: itemlist,
     style: {
       width: dBlockWidth - leftSpace - rightSpace,
-      height: -1,
+      // height: blockHeight,
     },
     decoration: {
       left: leftSpace,
@@ -210,7 +247,7 @@ export const getActivity2FlexBlock = (data:IBlockData, sectionType:number = QTWa
       top: blockTitleDecorationTop
     }
   }
-  return { section, blockHeight }
+  return { section, blockHeight: itemlist.length ? blockHeight : 0 }
 }
 export const endSection: QTWaterfallSection = {
   _id: 'end-100',
@@ -218,10 +255,10 @@ export const endSection: QTWaterfallSection = {
   title: '已经到底啦，按【返回键】回到顶部',
   titleStyle: {
     width: 1920,
-    height: 200,
-    marginLeft: 90,
-    marginTop: 40,
-    marginBottom: 40,
+    height: 100,
+    // marginLeft: 90,
+    // marginTop: 40,
+    // marginBottom: 40,
     fontSize: 50
   },
   itemList: [],
@@ -239,9 +276,10 @@ export const emptySection: QTWaterfallSection = {
   style: { width: 1920, height: 200, },
 }
 export const getBlockList = (arr:IacTivity2GetFlexBlockRes[] = []) => {
+  console.log(arr, '--lsj-arr')
   // 一年级数英同步课堂下册 剑桥英语 一年级语文强化课程
   let waterfallHeight = 0
-  let sectionList: Array<QTWaterfallSection> = arr.map(item=>{
+  let sectionList: Array<QTWaterfallSection> = arr.filter(item=>item.blockHeight).map(item=>{
     waterfallHeight += item.blockHeight
     return item.section
   })
