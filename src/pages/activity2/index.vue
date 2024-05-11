@@ -24,6 +24,7 @@ import activity2Api from '../../api/activity2/index.ts'
 import { IActivityConfig } from '../../api/activity2/types.ts';
 import { getBgColor } from '.';
 
+let dScrollTop = 100// - 100
 let scrollTop = 0// - 100
 let isTop = ref(false)
 let topOffset = 0
@@ -71,7 +72,9 @@ defineExpose({
       }
       pageConfig.value = Object.assign(pageConfig.value, apiconfig)
       if(apiconfig.banner?.style.height){
-        scrollTop = parseInt(apiconfig.banner.style.height)
+        scrollTop = parseInt(apiconfig.banner.style.height)||dScrollTop
+      }else{
+        scrollTop = dScrollTop
       }
     })
     // setTimeout(() => {
