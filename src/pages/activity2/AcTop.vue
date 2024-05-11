@@ -81,10 +81,15 @@ const onTabChange = (e) => {
 
 const onItemClick = (e)=>{
   if(e.item._router){
-    router.push({
+    const route = {
         name: e.item._router.url, //'series_view',
         params: e.item._router.params?{...e.item._router.params}:undefined
-    });
+    }
+    if(e.item._router.isReplace){
+      router.replace(route);
+    } else {
+      router.push(route);
+    }
   }
 }
 onMounted(async ()=>{

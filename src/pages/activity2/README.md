@@ -34,9 +34,9 @@
                 corner: '',//板块子项角标文字
                 cornerBackground: '#000000',//角标背景色，支持字符串和渐变对象格式
                 layout: { x: 0, y: 0, width: 300, height: 260 },//通过坐标和宽高，创建板块数据
-                _redirectType: 0,
+                <!-- _redirectType: 0,
                 _router: {},
-                _action: {}
+                _action: {} -->
             }],
             options: { 
                 columns: 6, //指定板块列数

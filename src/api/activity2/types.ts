@@ -83,8 +83,8 @@ export interface IActivityTopBtnConfig {
   textColor?: string;
   textFocusColor?: string;
   _router?: {
-    url:string
-    params?: object
+    url:string; params?: object
+    isReplace?:boolean//是否替换当前页
   }
 }
 export interface IActivityTopItemBtn {

@@ -47,12 +47,12 @@ const onScroll = (scrollX, scrollY)=>{
   scrollTop = scrollY
 }
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
-  if(item._redirectType == activity_redirectTypes.innerApp && item._router){
+  if(item._redirectType == activity_redirectTypes.innerRouter && item._router){
     router.push({
         name: item._router.url, //'series_view',
         params: item._router.params?{...item._router.params}:undefined
     });
-  } else if(item._redirectType == activity_redirectTypes.innerRouter && item._action){
+  } else if(item._redirectType == activity_redirectTypes.innerApp && item._action){
     nRouter.launch([['-d', item._action]])
   }
 }
