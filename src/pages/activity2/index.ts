@@ -35,7 +35,8 @@ interface Ioptions { //Partial
   columns?:number
 }
 export const activity_redirectTypes = {
-  innerRouter: 0, innerApp: 1
+  innerRouter: 0,//跳转到当前app内部页面
+  innerApp: 1//跳转到内部其他app
 }
 export interface IBlockItemData {
   id:string
@@ -44,15 +45,13 @@ export interface IBlockItemData {
   subTitle?:string
   floatTitle?:string
   corner?:string
+  cornerBackground?: string|object;
   score?:string
   focusTitle?:string
   layout?: { x:number, y:number, width:number, height:number }// 图片宽度优先级 layout > columns > blackItemWidth
-  _router?: {
-    url:string
-    params?: object
-  }
-  _action?: string
-  _redirectType?: number
+  _router?: { url:string; params?: object }//当前app内部路由地址
+  _action?: string; // 内部其他app地址
+  _redirectType?: number;//跳转类型，取值见activity_redirectTypes
   [k:string]:any
 }
 export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QTWaterfallItem =>{
@@ -101,7 +100,7 @@ export const getPosterItemList =(data: IBlockItemData, options:Ioptions = {}):QT
       style: {
         width: blackItemWidth,
       },
-      background: { colors: ['#FE3824', '#F0051E'], cornerRadii4: [0, 8, 0, 8], orientation: 2, },
+      background: getBgColor(data.cornerBackground)||{ colors: ['#FFE398', '#EEB364'], cornerRadii4: [0, 8, 0, 8], orientation: 2, },
     },
     score: {
       text: data.score,
