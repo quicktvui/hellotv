@@ -40,10 +40,10 @@
 
 ```bash
 # 解包
-~ apktool d HelloTV_1.0.0_20240418143603_release.apk
+~ apktool d HelloTV壳_1.0.0_20240511101523_release.apk
 
 # 修改配置文件, 配置文件优先级：远程 > 本地 > 默认
-~ cat HelloTV_1.0.0_20240418143603_release/assets/config.json
+~ cat HelloTV壳_1.0.0_20240511101523_release/assets/config.json
 {
     "config": {
         "local": {   // 从本地读取配置
@@ -65,16 +65,16 @@
 ~ res/mipmap/ic_launcher.png
 
 # 封包
-~ apktool b HelloTV_1.0.0_20240418143603_release
+~ apktool b HelloTV壳_1.0.0_20240511101523_release
 
 # 生成证书
 ~ keytool -genkey -alias abc.keystore -keyalg RSA -validity 20000 -keystore abc.keystore
 
 # 使用证书签名
-~ jarsigner -verbose -keystore abc.keystore -signedjar helloTv.apk HelloTV_1.0.0_20240418143603_release/dist/HelloTV_1.0.0_20240418143603_release.apk abc.keystore
+~ jarsigner -verbose -keystore abc.keystore -signedjar helloTvCase.apk HelloTV壳_1.0.0_20240511101523_release/dist/HelloTV壳_1.0.0_20240511101523_release.apk abc.keystore
 ```
 
-> 最后安装当前目录下生成的 `helloTv.apk` 即可。
+> 最后安装当前目录下生成的 `helloTvCase.apk` 即可。
 
 ## 源码修改
 
