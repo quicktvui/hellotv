@@ -18,6 +18,7 @@ const singleTabTop_OffsetY = 60
 //板块一行个数
 const searchResultSpanCount = 6
 
+
 export function buildSearchResultAdapter(searchResultPageData: SearchResult, pageNo: number, singleTab: boolean): QTTabPageData {
   let tabPage: QTTabPageData = {
     useDiff: false,
@@ -40,7 +41,7 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult, pag
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
-    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize) {
+    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize && pageNo > 1) { // 搜索结果只有首屏时，不展示底部提示
       let endSection: QTWaterfallSection = buildSearchEndSection('5');
       tabPage = {
         useDiff: false,
@@ -68,7 +69,7 @@ export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Arr
       },
       type: 20,
       decoration: {
-        left: (index % searchResultSpanCount) === 0 ? 90 : 30,
+        left: (index % searchResultSpanCount) === 0 ? 90 : 40,
         bottom: 40
       },
       title: {
