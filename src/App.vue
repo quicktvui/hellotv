@@ -11,11 +11,12 @@ import { ESLogLevel, useES, useESDevelop, useESDevice, useESLog, useESRuntime, E
 import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from "@extscreen/es3-player";
 import { useGlobalApi, useMediaDataSource, useRequestManager } from "./api/UseApi";
 import { useUserManager } from "./tools/user/useApi";
-import BuildConfig from "./build/BuildConfig";
 import { useLaunch } from "./tools/launch/useApi";
 import { useESNativeRouter, useESRouter } from "@extscreen/es3-router";
-import HistoryApi from './api/history/index'
 import { Native } from '@extscreen/es3-vue';
+import BuildConfig from "./build/BuildConfig";
+import HistoryApi from './api/history/index'
+import activity2Api from './api/activity2/index'
 
 export default defineComponent({
   name: "App",
@@ -67,6 +68,7 @@ export default defineComponent({
         .then(() => globalApi.init(request))
         .then(() => mediaDataSource.init(request))
         .then(() => HistoryApi.init(request, localStore))
+        .then(() => activity2Api.init(request))
         .then(() => userManager.init())
         .then(() => launch.init(log, router, nativeRouter))
         .then(() => playerManager.init({
