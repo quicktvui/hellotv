@@ -24,19 +24,31 @@
       focus-icon="ic_top_search_focus.png"
       @click="onClick"
       @focus="onFocus"/>
-<!--  <img-text-btn-view-->
-<!--      v-if="!$slots.btnItem"-->
-<!--      :icon-left="true"-->
-<!--      text="多级列表"-->
-<!--      :focusable="true"-->
-<!--      :textStyle="{ width: '120px', height:'60px',color:'#ffffff',focusColor:'#000000'}"-->
-<!--      style="width: 205px;height: 60px;margin-left: 10px;margin-right: 10px"-->
-<!--      name="top_tv_box_btn"-->
-<!--      ref="top_tv_box_btn"-->
-<!--      icon="ic_top_search.png"-->
-<!--      focus-icon="ic_top_search_focus.png"-->
-<!--      @click="onClick"-->
-<!--      @focus="onFocus"/>-->
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="历史"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_history_btn"
+      ref="top_history_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="活动"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_activity_btn"
+      ref="top_activity_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+      
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem"
       :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]" :style="logoStyle" :src="logo">
@@ -99,6 +111,18 @@ export default defineComponent({
                 name: 'live',
                 params: {}
             });
+          break;
+        case 'top_history_btn':
+          router.push({
+              name: 'history',
+              params: {}
+          });
+          break;
+        case 'top_activity_btn':
+          router.push({
+              name: 'activity2',
+              params: {}
+          });
           break;
       }
     }
