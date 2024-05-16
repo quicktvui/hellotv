@@ -1,80 +1,131 @@
 <template>
-  <qt-view class="media-player-view-root-css" :focusable="false" :style="{ width: playerWidth, height: playerHeight }">
-    <qt-view class="media-player-view-full-root-css" v-show="isFullWindow" :focusable="false">
+  <qt-view class="media-player-view-root-css"
+           :focusable="false"
+           :style="{ width: playerWidth, height: playerHeight }">
+    <qt-view class="media-player-view-full-root-css"
+             v-show="isFullWindow"
+             :focusable="false">
       <!-- 顶部条 -->
-      <qt-view class="media-player-view-title-css" v-if="isFullWindow && isTitleBarShowing"
-        :gradientBackground="{ colors: ['#E6000000', '#00000000'] }">
-        <qt-text class="media-player-view-title-text-css" :focusable="false" :fontSize="30" :text="mediaTitle" />
+      <qt-view class="media-player-view-title-css"
+               v-if="isFullWindow && isTitleBarShowing"
+               :gradientBackground="{ colors: ['#E6000000', '#00000000'] }">
+        <qt-text class="media-player-view-title-text-css"
+                 :focusable="false"
+                 :fontSize="30" :text="mediaTitle"/>
       </qt-view>
 
       <!-- 底部进度条 -->
-      <qt-view class="media-player-view-bottom-css" v-show="isFullWindow && isProgressShowing">
+      <qt-view class="media-player-view-bottom-css"
+               v-show="isFullWindow && isProgressShowing">
 
-        <qt-view class="media-player-view-bottom-bg-css" v-if="isFullWindow && isProgressShowing"
-          :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
+        <qt-view class="media-player-view-bottom-bg-css"
+                 v-if="isFullWindow && isProgressShowing"
+                 :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
 
         <!-- 底部进度条 -->
-        <qt-column class="media-player-view-state-progress-root-css" v-show="isProgressShowing">
+        <qt-column class="media-player-view-state-progress-root-css"
+                   v-show="isProgressShowing">
           <!-- 播放状态 -->
-          <img class="media-player-view-state-img-css" v-show="!isPlayerPlaying" :duplicateParentState="true"
-            postDelay="100" :focusable="false" :src="playerStatePlaying" />
-          <img class="media-player-view-state-img-css" v-show="isPlayerPlaying" :duplicateParentState="true"
-            postDelay="100" :focusable="false" :src="playerStatePaused" />
+          <img class="media-player-view-state-img-css"
+               v-show="!isPlayerPlaying"
+               :duplicateParentState="true" postDelay="100" :focusable="false"
+               :src="playerStatePlaying"/>
+          <img class="media-player-view-state-img-css"
+               v-show="isPlayerPlaying"
+               :duplicateParentState="true" postDelay="100" :focusable="false"
+               :src="playerStatePaused"/>
 
           <!-- 播放进度 -->
           <qt-row class="media-player-view-progress-root-css" :autofocus="true">
 
-            <qt-text class="media-player-view-progress-text-css" :focusable="false" gravity="center" :fontSize="30"
-              :text="progress" />
+            <qt-text class="media-player-view-progress-text-css"
+                     :focusable="false"
+                     gravity="center"
+                     :fontSize="30" :text="progress"/>
 
-            <qt-seek-bar ref="seekBarRef" name="seekBar" :nextFocusName="{ left: 'seekBar' }"
-              :visible="isFullWindow && isProgressShowing" class="media-player-view-seekbar-css"
-              :onProgressChanged="onSeekBarChanged" @onSeekStop="onSeekBarSeekStop" @focus="onSeekbarFocusChanged"
-              :focusable="true" />
+            <qt-seek-bar
+              ref="seekBarRef"
+              name="seekBar"
+              :nextFocusName="{ left: 'seekBar' }"
+              :visible="isFullWindow && isProgressShowing"
+              class="media-player-view-seekbar-css"
+              :onProgressChanged="onSeekBarChanged"
+              @onSeekStop="onSeekBarSeekStop"
+              @focus="onSeekbarFocusChanged"
+              :focusable="true"/>
 
-            <qt-text class="media-player-view-progress-text-css" :focusable="false" gravity="center" :fontSize="30"
-              :text="duration" />
+            <qt-text class="media-player-view-progress-text-css"
+                     :focusable="false"
+                     gravity="center"
+                     :fontSize="30" :text="duration"/>
           </qt-row>
 
           <!-- 下一个按钮-->
-          <div class="media-player-view-next-css" :focusable="true" name="nextButton" @click="onNextButtonClicked"
-            @focus="onNextButtonFocusChanged" :nextFocusName="{
-              up: 'seekBar',
-              down: 'nextButton',
-              right: 'nextButton',
-              left: 'nextButton'
-            }">
-            <qt-text class="media-player-view-next-text-css" :duplicateParentState="true" gravity="center"
-              :fontSize="30" text="下一个" focusScale="1.1" />
+          <div class="media-player-view-next-css"
+               :focusable="true"
+               name="nextButton"
+               @click="onNextButtonClicked"
+               @focus="onNextButtonFocusChanged"
+               :nextFocusName="{
+                up: 'seekBar',
+                down: 'nextButton',
+                right: 'nextButton',
+                left: 'nextButton'
+              }"
+               >
+            <qt-text class="media-player-view-next-text-css"
+                     :duplicateParentState="true"
+                     gravity="center"
+                     :fontSize="30" text="下一个"
+                     focusScale="1.1"/>
           </div>
         </qt-column>
       </qt-view>
 
       <!-- 底部菜单 -->
-      <qt-view class="media-player-view-menu-css" v-show="isFullWindow && isMenuShowing">
-        <qt-view class="media-player-collapse-css" v-if="isFullWindow && isMenuShowing"
-          :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
-        <qt-collapse ref="mediaCollapseRef" v-show="isFullWindow && isMenuShowing" v-if="mediaCollapseMenuInit"
+      <qt-view class="media-player-view-menu-css"
+               v-show="isFullWindow && isMenuShowing">
+        <qt-view class="media-player-collapse-css"
+                 v-if="isFullWindow && isMenuShowing"
+                 :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
+        <qt-collapse
+          ref="mediaCollapseRef"
+          v-show="isFullWindow && isMenuShowing"
+          v-if="mediaCollapseMenuInit"
           class="media-player-collapse-css">
-          <media-collapse-order ref="mediaCollapseOrderRef" :blockFocusDirections="['left', 'right', 'down', 'up']"
-            name="mediaCollapseOrder" @onCollapseItemFocused="onCollapseItemOrderFocused"
-            @onCollapseItemClicked="onCollapseItemOrderClicked" />
-          <media-collapse-speed ref="mediaCollapseSpeedRef" :blockFocusDirections="['left', 'right', 'down', 'up']"
-            name="mediaCollapseSpeed" @onCollapseItemFocused="onCollapseItemSpeedFocused"
-            @onCollapseItemClicked="onCollapseItemSpeedClicked" />
-          <media-collapse-definition ref="mediaCollapseDefinitionRef" :blockFocusDirections="['left', 'right', 'up']"
-            name="mediaCollapseDefinition" @onCollapseItemFocused="onCollapseItemDefinitionFocused"
-            @onCollapseItemClicked="onCollapseItemDefinitionClicked" />
-          <media-collapse-media-list v-if="mediaListVisible" ref="mediaCollapseMediaListRef"
-            :blockFocusDirections="['left', 'right', 'down', 'up']" name="mediaCollapseMediaList"
+          <media-collapse-order
+            ref="mediaCollapseOrderRef"
+            :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseOrder"
+            @onCollapseItemFocused="onCollapseItemOrderFocused"
+            @onCollapseItemClicked="onCollapseItemOrderClicked"/>
+          <media-collapse-speed
+            ref="mediaCollapseSpeedRef"
+            :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseSpeed"
+            @onCollapseItemFocused="onCollapseItemSpeedFocused"
+            @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
+          <media-collapse-definition
+            ref="mediaCollapseDefinitionRef"
+            :blockFocusDirections="['left', 'right', 'up']"
+            name="mediaCollapseDefinition"
+            @onCollapseItemFocused="onCollapseItemDefinitionFocused"
+            @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
+          <media-collapse-media-list
+            v-if="mediaListVisible"
+            ref="mediaCollapseMediaListRef"
+            :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseMediaList"
             @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
             @onMediaListItemFocused="onCollapseItemMediaListFocused"
-            @onMediaListItemClicked="onCollapseItemMediaListClicked" />
+            @onMediaListItemClicked="onCollapseItemMediaListClicked"/>
         </qt-collapse>
       </qt-view>
     </qt-view>
 
-    <media-player-loading-view ref="mediaPlayerLoadingRef" :style="{ width: playerWidth, height: playerHeight }" />
+    <media-player-loading-view
+      ref="mediaPlayerLoadingRef"
+      :style="{ width: playerWidth, height: playerHeight }"/>
   </qt-view>
 </template>
 
@@ -141,7 +192,7 @@ export default defineComponent({
 
     const log = useESLog()
     const eventbus = useESEventBus()
-    const localStore = useESLocalStorage()
+
 
     const playerWidth = ref<number>(0)
     const playerHeight = ref<number>(0)
@@ -205,7 +256,7 @@ export default defineComponent({
     let collapseItemIndex = 0
     const mediaCollapseRef = ref<QTICollapse>()
 
-    let collapseItemList = []
+    let collapseItemList: any = []
     let collapse: QTCollapse
 
     const mediaCollapseOrderRef = ref<IMediaCollapseItemListView>()
@@ -259,6 +310,9 @@ export default defineComponent({
       nextTick(() => {
         if (playModeList) {
           const index = getPlayModeIndex(playMode, playModeList)
+          if (log.isLoggable(ESLogLevel.DEBUG)) {
+            log.e(TAG, "-------getPlayModeIndex-------->>>>>", playMode, playModeList, index)
+          }
           if (index > -1) {
             mediaCollapseOrderRef.value?.setItemSelected(index)
           }
@@ -460,7 +514,7 @@ export default defineComponent({
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            mediaCollapseRef.value?.collapse()
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
@@ -470,17 +524,16 @@ export default defineComponent({
           if (!mediaCollapseMenuInit.value) {
             initCollapseMenu()
           }
+          mediaCollapseRef.value?.expandItem(collapseItemIndex)
           break
         case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_PROGRESS:
-
           isMenuShowing.value = false
           isTitleBarShowing.value = true
           isProgressShowing.value = true
           mediaListGroupItemFocused = false
           mediaListItemFocused = false
-
           if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
-            mediaCollapseRef.value?.expandItem(collapse.defaultIndex ?? 0)
+            mediaCollapseRef.value?.collapse()
             collapseItemIndex = collapse.defaultIndex ?? 0
           }
           break
@@ -703,7 +756,17 @@ export default defineComponent({
     }
 
     function onPlayerPlayMediaListModeListChanged(modeList: Array<ESPlayerPlayMode>): void {
-      playModeList = modeList
+      const filterModeList = []
+      if (modeList && modeList.length) {
+        for (let i = 0; i < modeList.length; i++) {
+          let mode: ESPlayerPlayMode = modeList[i]
+          if (mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT ||
+            mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP) {
+            filterModeList.push(mode)
+          }
+        }
+      }
+      playModeList = filterModeList
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.e(TAG, "-------onPlayerPlayModeListChanged-------->>>>>", modeList)
       }
@@ -986,6 +1049,8 @@ export default defineComponent({
       onPlayerNoMediaCanPlay,
       onPlayerWindowTypeChanged,
       onPlayerWindowSizeChanged,
+      onPlayerRelease,
+      onPlayerReset,
       onKeyDown,
       onKeyUp,
       onBackPressed,

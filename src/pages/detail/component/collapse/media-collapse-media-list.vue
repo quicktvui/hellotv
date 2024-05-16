@@ -1,11 +1,20 @@
 <template>
-  <qt-column class="qt-collapse-item-media-list" :focusable="false">
-    <span class="qt-collapse-item-media-list-title" :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放列表</span>
-    <div class="qt-collapse-item-media-list-content" :clipChildren="false"
-      :style="{ opacity: isCollapseExpand ? 1 : 0 }">
-      <qt-media-series ref="mediaSeriesListRef" :display="isCollapseExpand" class="qt-collapse-media-series-root-css"
-        :clipChildren="false" @load-data="onLoadData" @item-click="onItemClicked" @item-focused="onItemFocused"
-        @group-item-focused="onGroupItemFocused" />
+  <qt-column class="qt-collapse-item-media-list"
+             :focusable="false">
+    <span class="qt-collapse-item-media-list-title"
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放列表</span>
+    <div class="qt-collapse-item-media-list-content"
+         :clipChildren="false"
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
+      <qt-media-series
+        ref="mediaSeriesListRef"
+        :display="isCollapseExpand"
+        class="qt-collapse-media-series-root-css"
+        :clipChildren="false"
+        @load-data="onLoadData"
+        @item-click="onItemClicked"
+        @item-focused="onItemFocused"
+        @group-item-focused="onGroupItemFocused"/>
     </div>
   </qt-column>
 </template>
@@ -37,6 +46,7 @@ export default defineComponent({
   emits: [
     'onMediaListItemClicked',
     'onMediaListItemFocused',
+    'onMediaListGroupItemFocused'
   ],
   components: {
     'media-collapse-list-item': media_collapse_list_item
@@ -48,10 +58,10 @@ export default defineComponent({
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-    let selectedIndex = 0
+
+    const selectedIndex = ref<number>(0)
 
     let focusTimer
-
     let initialized = false
 
     //---------------------------------------------------------------------------
@@ -92,17 +102,21 @@ export default defineComponent({
       }
       isCollapseExpand.value = value
 
+      // setTimeout(() => {
+      //   setItemSelected(selectedIndex.value)
+      // }, 300)
+
       if (value) {
         if (!initialized) {
           focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex)
-            setItemFocused(selectedIndex)
-          }, 1000)
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 500)
         } else {
           focusTimer = setTimeout(() => {
-            setItemSelected(selectedIndex)
-            setItemFocused(selectedIndex)
-          }, 1000)
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 200)
         }
       } else {
         if (focusTimer) {
@@ -126,7 +140,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---选集---setItemSelected------>>>>', position)
       }
-      selectedIndex = position
+      selectedIndex.value = position
       mediaSeriesListRef.value?.setSelected(position)
     }
 
@@ -158,9 +172,6 @@ export default defineComponent({
     }
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
-      if (focusTimer) {
-        clearTimeout(focusTimer)
-      }
       let index = event.position;
       context.emit("onMediaListGroupItemFocused", index)
     }
@@ -185,7 +196,9 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      setItemSelected
+      setItemSelected,
+      selectedIndex,
+      release
     }
   },
 });

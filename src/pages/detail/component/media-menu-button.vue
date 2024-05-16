@@ -1,19 +1,36 @@
 <template>
-  <div :focusable="true" @focus="onFocus" @click="onClick" ref="menuItemRef" class="menu-button-item-icon-css">
+  <div :focusable="true"
+       @focus="onFocus"
+       @click="onClick"
+       ref="menuItemRef"
+       class="menu-button-item-icon-css">
 
-    <div showOnState="focused" class="menu-button-item-focused" :duplicateParentState="true"
-      :gradientBackground="focusedGradientBg" />
+    <div showOnState="focused"
+         class="menu-button-item-focused"
+         :duplicateParentState="true"
+         :gradientBackground="focusedGradientBg"/>
 
-    <div class="menu-button-item-img-root-css" :duplicateParentState="true">
-      <img class="menu-button-item-img-css" v-show="isMediaTypeFree && focused" :duplicateParentState="true"
-        :focusable="false" :src="focusIcon" />
-      <img class="menu-button-item-img-css" v-show="!isMediaTypeFree && focused" :duplicateParentState="true"
-        :focusable="false" :src="vipFocusIcon" />
-      <img class="menu-button-item-img-css" v-show="!focused" :duplicateParentState="true" :focusable="false"
-        :src="icon" />
+    <div class="menu-button-item-img-root-css"
+         :duplicateParentState="true">
+      <img class="menu-button-item-img-css"
+           v-show="isMediaTypeFree && focused"
+           :duplicateParentState="true"
+           :focusable="false"
+           :src="focusIcon"/>
+      <img class="menu-button-item-img-css"
+           v-show="!isMediaTypeFree && focused"
+           :duplicateParentState="true"
+           :focusable="false"
+           :src="vipFocusIcon"/>
+      <img class="menu-button-item-img-css"
+           v-show="!focused"
+           :duplicateParentState="true"
+           :focusable="false"
+           :src="icon"/>
     </div>
-    <span class="menu-button-item-text-css" :style="{ focusColor: textFocusColor }" :duplicateParentState="true">{{ text
-      }}</span>
+    <span class="menu-button-item-text-css"
+          :style="{ focusColor: textFocusColor }"
+          :duplicateParentState="true">{{ text }}</span>
   </div>
 </template>
 

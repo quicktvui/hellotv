@@ -1,13 +1,23 @@
 <template>
 
-  <div class="media-list-view-root-css" v-show="visible" :clipChildren="false" :clipPadding="false">
+  <div class="media-list-view-root-css" v-show="visible"
+       :clipChildren="false"
+       :clipPadding="false">
 
     <div class="media-list-title-root-css">
-      <qt-text class="media-list-title-text-css" :focusable="false" :fontSize="40" text="选集" />
+      <qt-text class="media-list-title-text-css"
+               :focusable="false"
+               :fontSize="40" text="选集"/>
     </div>
 
-    <qt-media-series ref="mediaSeriesRef" class="media-series-root-css" :clipChildren="false" @load-data="onLoadData"
-      @item-click="onItemClick" @item-focused="onItemFocused" @group-item-focused="onGroupItemFocused" />
+    <qt-media-series
+      ref="mediaSeriesRef"
+      class="media-series-root-css"
+      :clipChildren="false"
+      @load-data="onLoadData"
+      @item-click="onItemClick"
+      @item-focused="onItemFocused"
+      @group-item-focused="onGroupItemFocused"/>
 
   </div>
 </template>
@@ -44,6 +54,7 @@ export default defineComponent({
     'onMediaListItemFocused',
     'onMediaListItemClicked',
     'onMediaListGroupItemClicked',
+    'onMediaListGroupItemFocused',
     'onMediaListItemLoad'
   ],
   setup(props, context) {
@@ -57,10 +68,12 @@ export default defineComponent({
     const log = useESLog()
     const visible = ref<boolean>(false)
     let selectedIndex: number = 0
-    const iMedia = ref<IMedia>()
+
+    let itemListId: string
 
     const dataMap = new Map<number, Array<IMedia>>()
-    let itemListId: string
+
+    const iMedia = ref()
 
     onMounted(() => {
       eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
@@ -70,12 +83,14 @@ export default defineComponent({
     });
 
     function onMediaSeriesLoadData(page: number) {
-      getMediaList(iMedia.value?.itemList.id || '', page)
+      getMediaList(itemListId, page)
     }
 
     function initMedia(media: IMedia) {
-      iMedia.value = media
+      itemListId = media.itemList?.id ?? ''
       visible.value = media.itemList.enable
+      iMedia.value = media
+
       mediaSeriesRef.value?.setInitData(
         buildMediaSeriesType(media), //
         buildMediaSeriesGroup(media), //
@@ -139,7 +154,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onLoadData---------->>>>>", page)
       }
-      getMediaList(iMedia.value?.itemList.id || '', page)
+      getMediaList(itemListId, page)
     }
 
     function onItemFocused(event: QTMediaSeriesEvent) {

@@ -1,12 +1,26 @@
 <template>
   <qt-column class="media-player-root-css" ref='playerParent' sid='playerParent' :focusable='false'>
-    <es-player-manager ref="playerManager" :smallWindowWidth="890" :smallWindowHeight="500" :floatWindowWidth="400"
-      :floatWindowHeight="225" :initPlayerWindowType="1" playerBackgroundColor="black" :playMediaAuto="false"
-      :focusable='false' :playerList="playerListRef" :playerViewList="playerViewListRef"
-      :style="{ left: playerLeft, top: playerTop }" @onPlayerPlayMedia="onPlayerPlayMedia"
-      @onPlayerPlaying="onPlayerPlaying" @onPlayerPaused="onPlayerPaused" @onPlayerStopped="onPlayerStopped"
-      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged" @onPlayerInterceptSuccess="onPlayerInterceptSuccess"
-      @onPlayerInterceptError="onPlayerInterceptError" class="media-player-manager-css" />
+    <es-player-manager
+      ref="playerManager"
+      :smallWindowWidth="890"
+      :smallWindowHeight="500"
+      :floatWindowWidth="400"
+      :floatWindowHeight="225"
+      :initPlayerWindowType="1"
+      playerBackgroundColor="black"
+      :playMediaAuto="false"
+      :focusable='false'
+      :playerList="playerListRef"
+      :playerViewList="playerViewListRef"
+      :style="{ left: playerLeft, top: playerTop }"
+      @onPlayerPlayMedia="onPlayerPlayMedia"
+      @onPlayerPlaying="onPlayerPlaying"
+      @onPlayerPaused="onPlayerPaused"
+      @onPlayerStopped="onPlayerStopped"
+      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"
+      @onPlayerInterceptSuccess="onPlayerInterceptSuccess"
+      @onPlayerInterceptError="onPlayerInterceptError"
+      class="media-player-manager-css"/>
   </qt-column>
 </template>
 
@@ -138,6 +152,7 @@ export default defineComponent({
     }
 
     function reset() {
+      playerManager.value?.reset()
       playerRateManager.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)
     }
 

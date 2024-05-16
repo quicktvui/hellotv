@@ -5,8 +5,10 @@
        @focus="onFocus"
        nextFocusUpSID="headerSearchButton"
        name="placeholder"
+       :autofocus='autofocus'
        :focusable="true"
-       :style="{'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C'}"
+       :blockFocusDirections="['left']"
+       :style="{ 'focus-border-color': isMediaTypeFree ? '#FFFFFF' : '#FFD97C' }"
        :enableFocusBorder="true">
     <div class="media-player-placeholder-to-show" :focusable="false"></div>
     <img class="media-player-placeholder-img-css"
@@ -20,13 +22,13 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {IMedia} from "../../../api/media/IMedia";
-import {inject, Ref, ref, watch} from "vue";
+import { defineComponent } from "@vue/runtime-core";
+import { IMedia } from "../../../api/media/IMedia";
+import { inject, Ref, ref, watch } from "vue";
 import { ESFocusable, ESLogLevel, useESFocus, useESLog, useESToast } from "@extscreen/es3-core"
-import {IMediaAuthorization} from "../../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "../injectionSymbols";
-import {IMediaAuthType} from "../../../api/media/IMediaAuthType";
+import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization";
+import { mediaAuthorizationKey } from "../injectionSymbols";
+import { IMediaAuthType } from "../../../api/media/IMediaAuthType";
 
 const TAG = 'PlayerPlaceholder'
 
@@ -56,15 +58,13 @@ export default defineComponent({
           isMediaTypeFree.value = false
         }
       },
-      {flush: 'post'}
+      { flush: 'post' }
     )
 
 
     function initMedia(m: IMedia) {
       media = m
       mediaImg.value = m.coverH
-
-      requestFocus()
     }
 
     function requestFocus(): void {
@@ -73,11 +73,11 @@ export default defineComponent({
       }
     }
 
-    function setAutofocus(enable:boolean){
+    function setAutofocus(enable: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---Placeholder---setAutofocus------>>>>', enable)
       }
-        autofocus.value = enable
+      autofocus.value = enable
     }
 
     function showMediaInfo(value: boolean) {
@@ -136,7 +136,7 @@ export default defineComponent({
   position: absolute;
   left: 4px;
   top: 4px;
-  background-color: rgba(255,255,255,0.1);
+  background-color: rgba(255, 255, 255, 0.1);
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -148,5 +148,4 @@ export default defineComponent({
   height: 500px;
   background-color: transparent;
 }
-
 </style>

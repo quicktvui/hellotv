@@ -1,19 +1,29 @@
 <template>
-  <qt-column class="album-detail-section-root" :style="{ height: sectionHeight }"
-    :scrollOverride="{ down: 0, up: -1080 }" :clipChildren="false" :clipPadding="false">
+  <qt-column class="album-detail-section-root"
+             :style="{ height: sectionHeight }"
+             :scrollOverride="{ down: 0, up: -1080 }"
+             :clipChildren="false"
+             :clipPadding="false">
     <!-- 简介-->
-    <media-introduction ref="introductionRef" @onIntroductionFocus="onIntroductionFocus" />
+    <media-introduction
+      ref="introductionRef"
+      @onIntroductionFocus="onIntroductionFocus"/>
 
     <!-- 菜单 -->
-    <media-menu ref="menuRef" :isCollected="isCollected" />
+    <media-menu ref="menuRef" :isCollected="isCollected"/>
 
     <!-- 播放器占位-->
-    <media-player-placeholder ref="placeholderRef" @onPlaceholderFocus="onPlayerPlaceholderFocus"
-      @onPlaceholderClick="onPlayerPlaceholderClick" />
+    <media-player-placeholder
+      ref="placeholderRef"
+      @onPlaceholderFocus="onPlayerPlaceholderFocus"
+      @onPlaceholderClick="onPlayerPlaceholderClick"/>
 
     <!-- 选集-->
-    <media-list ref="mediaListRef" @onMediaListItemLoad="onMediaListItemLoad"
-      @onMediaListItemFocused="onMediaListItemFocused" @onMediaListItemClicked="onMediaListItemClicked"
+    <media-list
+      ref="mediaListRef"
+      @onMediaListItemLoad="onMediaListItemLoad"
+      @onMediaListItemFocused="onMediaListItemFocused"
+      @onMediaListItemClicked="onMediaListItemClicked"
       @onMediaListGroupItemClicked="onMediaListGroupItemClicked">
     </media-list>
 
@@ -34,8 +44,8 @@ import { IMediaPlaceholder } from "../component/IMediaPlaceholder";
 import { IMediaListView } from "../component/IMediaListView";
 import { QTMediaSeries } from "@quicktvui/quicktvui3";
 import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
-import { localHistory } from "../../../api/history/store";
 import { IMediaMenuView } from "../component/IMediaMenuView"
+import { localHistory } from "../../../api/history/store";
 
 const TAG = 'AlbumDetail'
 

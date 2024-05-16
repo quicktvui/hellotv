@@ -1,28 +1,49 @@
 <template>
   <qt-view class="detail-root-view-css" ref='detailRootViewRef'>
-    <qt-waterfall :descendantFocusability="descendantFocusability" :enablePlaceholder="false" ref="waterfallRef"
-      :blockFocusDirections="['left', 'right']" @onScroll="onScroll" :enableKeepFocus='false'
-      @onScrollStateChanged="onScrollStateChanged" @onItemClick="onItemClick" :triggerTask="triggerTask"
-      :scrollYLesserReferenceValue="30" :scrollYGreaterReferenceValue="30"
-      @onScrollYGreaterReference="onScrollYGreaterReference" @onScrollYLesserReference="onScrollYLesserReference"
+    <qt-waterfall
+      :descendantFocusability="descendantFocusability"
+      :enablePlaceholder="false"
+      ref="waterfallRef"
+      :blockFocusDirections="['left', 'right']"
+      @onScroll="onScroll"
+      :enableKeepFocus='false'
+      @onScrollStateChanged="onScrollStateChanged"
+      @onItemClick="onItemClick"
+      :triggerTask="triggerTask"
+      :scrollYLesserReferenceValue="30"
+      :scrollYGreaterReferenceValue="30"
+      @onScrollYGreaterReference="onScrollYGreaterReference"
+      @onScrollYLesserReference="onScrollYLesserReference"
       class="detail-waterfall-css">
       <template v-slot:section>
-        <header-section ref="headerSectionRef" :type="1" @onSearchButtonFocused="onSearchButtonFocused" />
+        <header-section
+          ref="headerSectionRef"
+          :type="1"
+          @onSearchButtonFocused="onSearchButtonFocused" />
       </template>
       <template v-slot:vue-section>
-        <album-detail-section ref="albumDetailRef" @onIntroductionFocus="onIntroductionFocus"
-          @onMediaListItemLoad="onMediaListItemLoad" @onMediaListItemFocused="onMediaListItemFocused"
-          @onMediaListItemClicked="onMediaListItemClicked" @onMediaListGroupItemClicked="onMediaListGroupItemClicked"
-          @onPlayerPlaceholderFocus="onPlayerPlaceholderFocus" @onPlayerPlaceholderClick="onPlayerPlaceholderClick" />
+        <album-detail-section
+          ref="albumDetailRef"
+          @onIntroductionFocus="onIntroductionFocus"
+          @onMediaListItemLoad="onMediaListItemLoad"
+          @onMediaListItemFocused="onMediaListItemFocused"
+          @onMediaListItemClicked="onMediaListItemClicked"
+          @onMediaListGroupItemClicked="onMediaListGroupItemClicked"
+          @onPlayerPlaceholderFocus="onPlayerPlaceholderFocus"
+          @onPlayerPlaceholderClick="onPlayerPlaceholderClick"/>
       </template>
     </qt-waterfall>
 
-    <media-player ref="mediaPlayerViewRef" name='media-player' class="detail-media-player-view-css"
-      @onPlayerPlayMedia="onPlayerPlayMedia" @onPlayerPlaying="onPlayerPlaying"
-      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged" />
+    <media-player
+      ref="mediaPlayerViewRef"
+      name='media-player'
+      class="detail-media-player-view-css"
+      @onPlayerPlayMedia="onPlayerPlayMedia"
+      @onPlayerPlaying="onPlayerPlaying"
+      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"/>
 
     <qt-view class="detail-loading-view-root-css" v-show="showLoading">
-      <qt-loading-view class="detail-loading-view-css" />
+      <qt-loading-view class="detail-loading-view-css"/>
     </qt-view>
   </qt-view>
 </template>
@@ -107,8 +128,8 @@ export default defineComponent({
     let currentID: any = null
     let detailRootViewRef = ref()
 
-    let changePlayerStateTimer = null
-    let changePlayerVisibleTimer = null
+    let changePlayerStateTimer: any = null
+    let changePlayerVisibleTimer: any = null
 
     let triggerTask = [
       {
@@ -133,6 +154,7 @@ export default defineComponent({
       // },
     ]
 
+    // @ts-ignore
     provide(mediaAuthorizationKey, mediaAuthorizationRef)
 
     let isKeyUpLongClick = false
@@ -149,6 +171,9 @@ export default defineComponent({
         log.e(TAG, "-------onESCreate------详情页面---->>>>>", params)
       }
       isPaused = false
+      isStopped = false;
+      isPlayerInit = false
+
       initWaterfall()
       initEventBus()
       getMediaDetail()
@@ -157,7 +182,7 @@ export default defineComponent({
     function initWaterfall() {
       showLoading.value = true
       waterfallRef.value?.init(buildWaterfall())
-      albumDetailRef.value?.setAutofocus(false)
+      albumDetailRef.value?.setAutofocus(true)
     }
 
     function initEventBus() {
@@ -544,6 +569,8 @@ export default defineComponent({
       if (mediaPlayerViewRef.value?.onKeyUp(keyEvent)) {
         return true
       }
+      isKeyUpLongClick = false
+      headerSectionRef.value?.setAutofocus(false)
       return true
     }
 
