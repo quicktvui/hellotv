@@ -1,30 +1,54 @@
 <template>
   <div :style="parentStyle" :class="['top_btns_root_css', { 'is-logo-right': logoRight, 'is-logo-left': logoLeft }]">
-    <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="筛选" :focusable="true"
-      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_screen_btn" ref="top_screen_btn"
-      icon="screen.png" focus-icon="screen_focus.png" @click="onClick" @focus="onFocus" />
-    <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="搜索" :focusable="true"
-      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_search_btn" ref="top_search_btn"
-      icon="search.png" focus-icon="search_focus.png" @click="onClick" @focus="onFocus" />
-    <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="历史" :focusable="true"
-      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_history_btn" ref="top_search_btn"
-      icon="history.png" focus-icon="history_focus.png" @click="onClick" @focus="onFocus" />
-    <img-text-btn-view v-if="!$slots.btnItem" :icon-left="true" text="直播" :focusable="true"
-      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_live_btn" ref="top_live_btn"
-      icon="direct_seeding.png" focus-icon="direct_seeding_focus.png" @click="onClick" @focus="onFocus" />
-    <!--  <img-text-btn-view-->
-    <!--      v-if="!$slots.btnItem"-->
-    <!--      :icon-left="true"-->
-    <!--      text="多级列表"-->
-    <!--      :focusable="true"-->
-    <!--      :textStyle="{ width: '120px', height:'60px',color:'#ffffff',focusColor:'#000000'}"-->
-    <!--      style="width: 205px;height: 60px;margin-left: 10px;margin-right: 10px"-->
-    <!--      name="top_tv_box_btn"-->
-    <!--      ref="top_tv_box_btn"-->
-    <!--      icon="ic_top_search.png"-->
-    <!--      focus-icon="ic_top_search_focus.png"-->
-    <!--      @click="onClick"-->
-    <!--      @focus="onFocus"/>-->
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="筛选"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_screen_btn"
+      ref="top_screen_btn"
+      icon="ic_top_screen.png"
+      focus-icon="ic_top_screen_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="搜索"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_search_btn"
+      ref="top_search_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="历史"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_history_btn"
+      ref="top_history_btn"
+      icon="history.png"
+      focus-icon="history_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="直播"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_live_btn"
+      ref="top_live_btn"
+      icon="direct_seeding.png"
+      focus-icon="direct_seeding_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+      
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem" :class="['logo_default_css', { 'logo_left': logoLeft, 'logo_right': logoRight }]"
       :style="logoStyle" :src="logo">
@@ -82,18 +106,18 @@ export default defineComponent({
             params: {}
           });
           break;
-        case "top_history_btn":
+        case 'top_history_btn':
           router.push({
             name: 'history',
             params: {}
-          })
+          });
           break;
-        case "top_live_btn":
+        case 'top_live_btn':
           router.push({
             name: 'live',
             params: {}
           });
-          break
+          break;
       }
     }
     function onFocus(e): void {
