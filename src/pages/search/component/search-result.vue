@@ -1,37 +1,49 @@
 <template>
   <qt-view class="search_result" ref="search_result" :clipChildren="false" @childFocus="childFocus"
-    :listenHasFocusChange="true" :descendantFocusability="descendantFocusability" :triggerTask="triggerTask"
-    :nextFocusName="{ left: 'search_center_view_content_list' }">
+           :listenHasFocusChange="true" :descendantFocusability="descendantFocusability"
+           :triggerTask="triggerTask"
+           :nextFocusName="{ left: 'search_center_view_content_list' }">
 
     <qt-view class="search_result_title_root_top" :focusable="false" name="search_result_title_name"
-      v-show="(keyword || recommendTitle) && isShowTopTip">
+             v-show="(keyword || recommendTitle) && isShowTopTip">
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
-        :focusable="false" />
-      <span class="search_result_view_title_result" v-if="keyword" :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 `
-        }}</span>
-      <span class="search_result_view_title_result" v-else-if="recommendTitle" :focusable="false">{{ recommendTitle
-        }}</span>
+                :focusable="false" />
+      <span class="search_result_view_title_result" v-if="keyword"
+            :focusable="false">{{ `全部&nbsp;“${keyword}”&nbsp;结果 ` }}</span>
+      <span class="search_result_view_title_result" v-else-if="recommendTitle"
+            :focusable="false">{{ recommendTitle }}</span>
     </qt-view>
 
     <qt-tabs ref="tabRef" :tabContentBlockFocusDirections="tabContentBlockFocusDirections"
-      tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css" :tabContentResumeDelay="200"
-      :focusMemory="true" name="searchTabs" :tabContentSwitchDelay="200" :custom-pool="{ name: 'search' }"
-      :custom-item-pool="{ name: 'search_items' }"
-      :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
-      :blockViewPager="['down', 'right']" :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick"
-      @onTabPageChanged="onTabPageChanged" @onTabMoveToTopStart="onTabMoveToTopStart"
-      @onTabMoveToTopEnd="onTabMoveToTopEnd" @onTabMoveToBottomStart="onTabMoveToBottomStart"
-      @onTabMoveToBottomEnd="onTabMoveToBottomEnd" @onTabPageScrollToEnd="onTabPageScrollToEnd"
-      @onTabPageScrollToStart="onTabPageScrollToStart" @onTabPageItemClick="onTabPageItemClick"
-      @onTabPageItemFocused="onTabPageItemFocused" @onTabPageLoadData="onTabPageLoadData"
-      @onTabPageScroll="onTabPageScroll" :enablePlaceholder="true" @onTabPageSectionAttached="onTabPageSectionAttached"
-      class="qt_tabs_css">
+             tabNavBarClass="qt_tabs_waterfall_tab_css" tabPageClass="qt_tabs_waterfall_css"
+             :tabContentResumeDelay="200"
+             :focusMemory="true"
+             name="searchTabs"
+             :tabContentSwitchDelay="200"
+             :custom-pool="{ name: 'search' }"
+             :custom-item-pool="{ name: 'search_items' }"
+             :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
+             :blockViewPager="['down', 'right']"
+             :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
+             @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
+             @onTabMoveToBottomStart="onTabMoveToBottomStart"
+             @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+             @onTabPageScrollToEnd="onTabPageScrollToEnd"
+             @onTabPageScrollToStart="onTabPageScrollToStart"
+             @onTabPageItemClick="onTabPageItemClick" @onTabPageItemFocused="onTabPageItemFocused"
+             @onTabPageLoadData="onTabPageLoadData" @onTabPageScroll="onTabPageScroll"
+             :enablePlaceholder="true"
+             @onTabPageSectionAttached="onTabPageSectionAttached" class="qt_tabs_css">
       <template v-slot:tab-item>
         <!-- 自定义tab类型 -->
-        <qt-view class="waterfall_nav_item" :type="2" :clipChildren="false" :focusable="true" eventFocus autoWidth
-          ref="waterfall_nav_item_text">
+        <qt-view class="waterfall_nav_item"
+                 :type="2" :clipChildren="false"
+                 :focusable="true"
+                 eventFocus
+                 autoWidth
+                 ref="waterfall_nav_item_text">
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false"
-            class="waterfall_nav_item_text" :duplicateParentState="true" text="${text}" />
+                   class="waterfall_nav_item_text" :duplicateParentState="true" text="${text}" />
         </qt-view>
       </template>
       <template v-slot:waterfall-item>
@@ -42,7 +54,8 @@
     <!-- empty_view 空 提示-->
     <qt-view class="empty_view" v-if="isHasData">
       <qt-image :src="ic_data_empty" class="empty_view_image" />
-      <qt-text class="empty_view_text" text="没有更多内容了" :ellipsizeMode="2" gravity="center" :fontSize="30" />
+      <qt-text class="empty_view_text" text="没有更多内容了" :ellipsizeMode="2" gravity="center"
+               :fontSize="30" />
     </qt-view>
 
   </qt-view>
@@ -69,10 +82,6 @@ export default defineComponent({
     showIsFullScreen: {
       type: Boolean,
       default: false
-    },
-    isShowResultLoading: {
-      type: Boolean,
-      default: true
     }
   },
   emits: ["scroll-to-index", "close-loading", "close-self-loading"],

@@ -1,37 +1,56 @@
 <template>
   <qt-view class="search_root" ref="search_root">
     <!-- 背景渐变 -->
-    <qt-view class="search_root_bg" :gradientBackground="{ colors: ['#252930', '#2F3541'] }" :focusable="false" />
+    <qt-view class="search_root_bg" :gradientBackground="{ colors: ['#252930', '#2F3541'] }" :focusable="false"/>
     <!-- scroll-view -->
-    <scroll-view ref="search_scroll_view" class="search_scroll_view" :horizontal="true" :focusable="false"
+    <scroll-view  ref="search_scroll_view" class="search_scroll_view" :horizontal="true" :focusable="false"
       name="search_scroll_view" :onScrollEnable="true" makeChildVisibleType="none">
-      <qt-view class="scroll_view_content" :style="{ width: rootWidth }" :useAdvancedFocusSearch="true"
-        :focusable="false">
+      <qt-view class="scroll_view_content" :style="{ width: rootWidth }" :useAdvancedFocusSearch="true" :focusable="false">
         <!-- 搜索键盘 -->
-        <search-keyboard ref="search_keyboard" name="search_keyboard_view"
-          :blockFocusDirections="['up', 'down', 'left']" :nextFocusName="{ right: 'search_center_view' }"
-          @inputChange="onInputChange" @scroll-to-index="onNeedScrollTo" />
+        <search-keyboard
+          ref="search_keyboard"
+          name="search_keyboard_view"
+          :blockFocusDirections="['up', 'down', 'left']"
+          :nextFocusName="{ right: 'search_center_view' }"
+          @inputChange="onInputChange"
+          @scroll-to-index="onNeedScrollTo"/>
         <!-- 搜索内容 -->
-        <search-center v-if="isShowCenterSearch" :visible="!loading" :descendantFocusability="loading ? 2 : 1"
-          ref="search_center" name="search_center_view"
+        <search-center
+          v-if="isShowCenterSearch"
+          :visible="!loading"
+          :descendantFocusability="loading ? 2 : 1"
+          ref="search_center"
+          name="search_center_view"
           :blockFocusDirections="['up', 'down', showResultLoading ? 'right' : '']"
-          :nextFocusName="{ right: 'search_result_view' }" @keyword-select="onKeywordSelect"
-          @close-loading="closeLoading" @start-loading="startLoadResultLoading" :search-letter="searchLetter"
-          @scroll-to-index="onNeedScrollTo" />
+          :nextFocusName="{ right: 'search_result_view' }"
+          @keyword-select="onKeywordSelect"
+          @close-loading="closeLoading"
+          @start-loading="startLoadResultLoading"
+          :search-letter="searchLetter"
+          @scroll-to-index="onNeedScrollTo"/>
         <!-- 搜索结果 -->
-        <search-result :visible="!loading && !showResultLoading" :descendantFocusability="showResultLoading ? 2 : 1"
-          ref="search_result" name="search_result_view" :blockFocusDirections="['up', 'down']" :keyword="selectKeyword"
-          :show-is-full-screen="scrollState === 1" :nextFocusName="{ left: 'search_center_view', }"
-          @scroll-to-index="onNeedScrollTo" @close-loading="closeLoading" @close-self-loading="closeResultLoading" />
+        <search-result
+          :visible="!loading && !showResultLoading"
+          :descendantFocusability="showResultLoading ? 2 : 1"
+          ref="search_result"
+          name="search_result_view"
+          :blockFocusDirections="['up', 'down']"
+          :keyword="selectKeyword"
+          :show-is-full-screen="scrollState === 1"
+          :nextFocusName="{ left: 'search_center_view', }"
+          @scroll-to-index="onNeedScrollTo"
+          @close-loading="closeLoading"
+          @close-self-loading="closeResultLoading"/>
       </qt-view>
     </scroll-view>
-    <qt-view v-if="loading" :style="{ left: loadingLeft + 'px', width: loadingWidth + 'px' }"
-      class="search_start_loading" :focusable="false" :gradientBackground="{ colors: ['#ff252930', '#FF2F3541'] }">
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px;width:100px" :focusable="false" />
+    <qt-view v-if="loading" :style="{ left: loadingLeft + 'px', width: loadingWidth + 'px' }" class="search_start_loading" :focusable="false"
+             :gradientBackground="{ colors: ['#ff252930', '#FF2F3541'] }">
+      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px;width:100px" :focusable="false"/>
     </qt-view>
     <!-- 页面loading-->
-    <qt-view v-if="showResultLoading && isShowCenterSearch" :focusable="false" class="search_result_loading"
-      :style="{ width: rightLoadingWidth }" :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
+    <qt-view v-if="showResultLoading && isShowCenterSearch" :focusable="false"
+             class="search_result_loading" :style="{ width: rightLoadingWidth }"
+             :gradientBackground="{ colors: ['#252930', '#2F3541'] }">
       <qt-loading-view style="width: 100px;height: 100px;" />
     </qt-view>
   </qt-view>

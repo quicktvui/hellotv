@@ -1,39 +1,41 @@
 <template>
   <qt-view class="search_keyboard" :style="{ width: keyboardWidth + 'px' }" @childFocus="childFocus"
-    :gradientBackground="{ colors: ['#00FFFFFF', '#0DFFFFFF'] }">
+           :gradientBackground="{ colors: ['#00FFFFFF', '#0DFFFFFF'] }">
 
     <qt-view class="search_keyboard_input_root" :focusable="false">
       <qt-image :src="ic_search" class="search_keyboard_search_icon" :focusable="false" />
-      <input class="search_keyboard_input_text" ref="inputRef" type="text" placeholder="输入影片名称搜索" :value="inputText"
+      <input class="search_keyboard_input_text"
+        ref="inputRef" type="text" placeholder="输入影片名称搜索" :value="inputText"
         :focusable="false" @change="onInputChange" />
-      <!-- <qt-text class="search_keyboard_input_text" :focusable="false" v-if="inputText && inputText.length > 0"
-        :text="inputText" :fontSize="28" />
-      <qt-text v-else :fontSize="28" :focusable="false"
-        text='<font>输入片名的</font><font color="#ffffff">首字母</font>或<font color="#ffffff">全拼</font>搜索'
-        class="search_keyboard_input_placeholder_text" /> -->
     </qt-view>
     <qt-view class="search_keyboard_search_line" :focusable="false" />
 
     <!-- 清空，退格按钮-->
-    <qt-view class="search_keyboard_input_option_btns">
-      <search-btn :next-focus-names="{ down: 'grid_view' }" @click="clearBtnClick"
-        search-btn-class="search_keyboard_option_btn" :icon-width="24" :icon-height="30"
-        :icon-normal="ic_search_input_clear" :icon-focus="ic_search_input_clear_focus" search-txt-class="btn_text"
-        :font-size="30" text="清空" />
+    <qt-view class="search_keyboard_input_option_btns" >
+      <search-btn :next-focus-names="{ down: 'grid_view' }"
+                  @click="clearBtnClick" search-btn-class="search_keyboard_option_btn"
+                  :icon-width="24" :icon-height="30" :icon-normal="ic_search_input_clear"
+                  :icon-focus="ic_search_input_clear_focus" search-txt-class="btn_text"
+                  :font-size="30" text="清空" />
 
-      <search-btn :next-focus-names="{ down: 'grid_view' }" @click="deleteBtnClick"
-        search-btn-class="search_keyboard_option_btn" style="margin-left: 113px;" :icon-width="32" :icon-height="32"
-        :icon-normal="ic_search_input_delete" :icon-focus="ic_search_input_delete_focus" search-txt-class="btn_text"
-        :font-size="30" text="退格" />
+      <search-btn :next-focus-names="{ down: 'grid_view' }"
+                  @click="deleteBtnClick" search-btn-class="search_keyboard_option_btn"
+                  style="margin-left: 113px;" :icon-width="32" :icon-height="32"
+                  :icon-normal="ic_search_input_delete" :icon-focus="ic_search_input_delete_focus"
+                  search-txt-class="btn_text" :font-size="30" text="退格" />
     </qt-view>
 
     <!--键盘字母列表-->
-    <qt-grid-view class="search_keyboard_list" ref="grid_view" name="grid_view" :clipChildren="false"
-      :autofocusPosition="14" @item-click="keyboardItemClick" :spanCount="6">
-      <qt-view :type="1" :focusable="true" :focusScale="1.1" class="search_keyboard_item" eventClick eventFocus
-        :clipChildren="false">
+    <qt-grid-view class="search_keyboard_list" ref="grid_view" name="grid_view"
+                  :clipChildren="false" :autofocusPosition="14"
+                  @item-click="keyboardItemClick" :spanCount="6">
+      <qt-view :type="1" :focusable="true" :focusScale="1.1"
+               class="search_keyboard_item"
+               eventClick
+               eventFocus
+               :clipChildren="false">
         <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="center" :fontSize="40" :focusable="false"
-          class="search_keyboard_item_text" text="${text}" />
+                class="search_keyboard_item_text" text="${text}" />
       </qt-view>
     </qt-grid-view>
 
@@ -64,7 +66,6 @@ export default defineComponent({
     const ic_search_input_delete = require("../../../assets/search/ic_search_input_delete.png").default
     const ic_search_input_delete_focus = require("../../../assets/search/ic_search_input_delete_focus.png").default
     const grid_view = ref<QTIGridView>()
-    let targetSid = ref()
     let listDataRec: Array<QTGridViewItem> = []
     let keyboardItems: Array<QTGridViewItem> = [
       { text: "A", type: 1 }, { text: "B", type: 1 }, { text: "C", type: 1 }, { text: "D", type: 1 },
@@ -94,17 +95,14 @@ export default defineComponent({
         context.emit("scroll-to-index", 0, 100)
       }
     }
-    let isEmpty = false
     const deleteBtnClick = () => {
       if (inputText.value === "") return
       let value = ''
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = inputText.value.slice(0, inputText.value.length - 1)
         value = inputText.value
-      } else {
-        isEmpty = true
       }
-      isEmpty ?? context.emit("inputChange", value)
+      context.emit("inputChange", value)
     }
     const onInputChange = (e: any) => {
       inputText.value = e.value
