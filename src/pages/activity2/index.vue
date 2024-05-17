@@ -22,7 +22,8 @@ import { useESRouter } from '@extscreen/es3-router';
 import activity2Api from '../../api/activity2/index.ts'
 // @ts-ignore
 import { IActivityConfig } from '../../api/activity2/types.ts';
-import { getBgColor } from '.';
+// @ts-ignore
+import { getBgColor } from './index.ts';
 
 let dScrollTop = 100// - 100
 let scrollTop = 0// - 100
