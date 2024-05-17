@@ -1,44 +1,52 @@
 <template>
   <div class="screen-root-css" ref='screen_root'>
-    <!--    顶部按钮-->
+<!--    顶部按钮-->
     <top-btns-view v-if="isShowTopView" :logo-right="true">
       <template #btnItem>
-        <img-text-btn-view :icon-left="true" text="搜索" :focusable="true"
-          style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px" name="top_search_btn"
-          ref="top_search_btn" icon="ic_top_search.png" focus-icon="ic_top_search_focus.png"
-          :nextFocusName="{ down: 'screen_left_tags' }" @click="onClick" />
+        <img-text-btn-view
+          :icon-left="true"
+          text="搜索"
+          :focusable="true"
+          style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+          name="top_search_btn"
+          ref="top_search_btn"
+          icon="ic_top_search.png"
+          focus-icon="ic_top_search_focus.png"
+          :nextFocusName="{ down: 'screen_left_tags' }"
+          @click="onClick"/>
       </template>
     </top-btns-view>
 
     <!-- 右侧结果-->
-    <tags-content class="screen-right-root-css" :blockFocusDirections="isShowLeftList ? [] : ['left', 'right']" :style="{
-      width: rightContentWidth + 'px', height: rightContentHeight + 'px', left: (1920 - rightContentWidth) + 'px',
-      top: (1080 - rightContentHeight) + 'px'
-    }" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus' />
+    <tags-content  class="screen-right-root-css"
+                   :blockFocusDirections="isShowLeftList ? [] : ['left', 'right']"
+                   :style="{
+                    width: rightContentWidth + 'px', height: rightContentHeight + 'px', left: (1920 - rightContentWidth) + 'px',
+                    top: (1080 - rightContentHeight) + 'px'
+                  }"
+                   ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
 
     <!-- 左侧列表-->
-    <div class="screen-left-root-css" v-if="isShowLeftList"
-      :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: (1080 - leftRootHeight) + 'px' }">
+    <div class="screen-left-root-css" v-if="isShowLeftList" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: (1080 - leftRootHeight) + 'px' }">
       <!-- 背景-->
       <div class="screen-left-bg" :style="{ width: (leftRootWidth - 20) + 'px', height: leftRootHeight + 'px' }"
-        :gradientBackground="{ colors: ['#0CFFFFFF', '#00FFFFFF'], orientation: 4 }" />
+           :gradientBackground="{ colors: ['#0CFFFFFF', '#00FFFFFF'], orientation: 4 }"/>
       <!-- 标题-->
-      <qt-text class="screen-left-title" :style="{ width: (leftRootWidth - 20) + 'px' }" v-if="title" :fontSize="50"
-        gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12, 0, 12, 0]"
-        :text="title" />
-      <img class="screen-left-title-img" :style="{ width: (leftRootWidth - 40) + 'px' }" v-else :src="title_img" />
+      <qt-text class="screen-left-title" :style="{ width: (leftRootWidth - 20) + 'px' }"
+               v-if="title" :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12, 0, 12, 0]" :text="title" />
+      <img class="screen-left-title-img" :style="{ width: (leftRootWidth - 40) + 'px' }" v-else :src="title_img"/>
       <!-- 筛选列表-->
-      <qt-list-view class="screen-left-tags-root-css"
-        :style="{ width: leftRootWidth + 'px', height: (leftRootHeight - 60) + 'px' }" :padding="'0,0,0,20'"
-        sid="screen_left_tags" name='screen_left_tags' :autofocusPosition="defaultTagPosition" ref="leftTags"
-        :clipChildren="false" :clipPadding="false" @item-focused="leftTagsItemFocus"
-        :blockFocusDirections="['left', 'down']">
+      <qt-list-view class="screen-left-tags-root-css" :style="{ width: leftRootWidth + 'px', height: (leftRootHeight - 60) + 'px' }"
+                    :padding="'0,0,0,20'" sid="screen_left_tags"
+                    name='screen_left_tags' :autofocusPosition="defaultTagPosition"
+                    ref="leftTags" :clipChildren="false" :clipPadding="false"
+                    @item-focused="leftTagsItemFocus" :blockFocusDirections="['left', 'down']">
         <!-- 纯文字标题-->
-        <tags-text-item :type="1" />
+        <tags-text-item :type="1"/>
         <!-- 图片标题-->
-        <tags-img-item :type="2" />
+        <tags-img-item :type="2"/>
         <!-- 带 Icon 文字标题-->
-        <tags-text-icon-item :type="3" />
+        <tags-text-icon-item :type="3"/>
 
       </qt-list-view>
     </div>
