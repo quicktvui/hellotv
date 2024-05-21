@@ -417,54 +417,54 @@ export default defineComponent({
     }
 
     function onTabEvent(tabIndex: number, eventName: string,params:any) {
-          if(eventName == 'onPageBringToFront') {
-            let pageIndex = params.page
-            let sectionData = tabRef.value?.getPageSection(pageIndex,0)
-            let obj : any= recordPlayerDataMap.get(''+pageIndex)
-            if(obj){
-              recordPlayerData.pageIndex = pageIndex
-              recordPlayerData.itemIndex = obj.itemIndex
-              let playData = obj.data
-              let flag = obj.playerType
-              let width =  obj.playerWidth
-              let height =  obj.playerHeight
-              // bg_player.value.bgPlayerOpacity = 0
+      if(eventName == 'onPageBringToFront') {
+        let pageIndex = params.page
+        let sectionData = tabRef.value?.getPageSection(pageIndex,0)
+        let obj : any= recordPlayerDataMap.get(''+pageIndex)
+        if(obj){
+          recordPlayerData.pageIndex = pageIndex
+          recordPlayerData.itemIndex = obj.itemIndex
+          let playData = obj.data
+          let flag = obj.playerType
+          let width =  obj.playerWidth
+          let height =  obj.playerHeight
+          // bg_player.value.bgPlayerOpacity = 0
 
-              let parentSID: string = ''
-              if (flag == CoveredPlayerType.TYPE_CELL) {
-                bgPlayerType.value = flag
-                bg_player.value?.doChangeParent(parentSID, flag,
-                  width, height, width, height,
-                  playData, 0,mediaInterceptor
-                )
-              } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
-                bgPlayerType.value = flag
-                bg_player.value?.doChangeParent(parentSID, flag,
-                  width, height, 860, height,
-                  playData, 0,mediaInterceptor
-                )
-              } else if (flag == CoveredPlayerType.TYPE_BG) {
-                // clearTimeout(delayChangePlayerTimer)
-                bgPlayerType.value = flag
-                bg_player.value?.doChangeParent(parentSID, flag,
-                  1920, 1080, 1920, 1080,
-                  playData, 0,mediaInterceptor
-                )
-                bg_player.value?.delayShowPlayer()
-              }
-            }
-            else if (sectionData && sectionData.isSwitchCellBg === '1') {
-              const cellBg = sectionData.itemList[0]?.item.focusScreenImage
-              wTabBg.value?.setImg(cellBg, "", true, false)
-              delayStopPlayer()
-            } else {
-              delayStopPlayer()
-            }
-            bg_player.value?.delayShowPlayer(500)
+          let parentSID: string = ''
+          if (flag == CoveredPlayerType.TYPE_CELL) {
+            bgPlayerType.value = flag
+            bg_player.value?.doChangeParent(parentSID, flag,
+              width, height, width, height,
+              playData, 0,mediaInterceptor
+            )
+          } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
+            bgPlayerType.value = flag
+            bg_player.value?.doChangeParent(parentSID, flag,
+              width, height, 860, height,
+              playData, 0,mediaInterceptor
+            )
+          } else if (flag == CoveredPlayerType.TYPE_BG) {
+            // clearTimeout(delayChangePlayerTimer)
+            bgPlayerType.value = flag
+            bg_player.value?.doChangeParent(parentSID, flag,
+              1920, 1080, 1920, 1080,
+              playData, 0,mediaInterceptor
+            )
+            bg_player.value?.delayShowPlayer()
           }
+        }
+        else if (sectionData && sectionData.isSwitchCellBg === '1') {
+          const cellBg = sectionData.itemList[0]?.item.focusScreenImage
+          wTabBg.value?.setImg(cellBg, "", true, false)
+          delayStopPlayer()
+        } else {
+          delayStopPlayer()
+        }
+        bg_player.value?.delayShowPlayer(500)
       }
+    }
 
-      function onTabPageScroll(offsetX: number, scrollY: number) {
+    function onTabPageScroll(offsetX: number, scrollY: number) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
       }
@@ -490,6 +490,7 @@ export default defineComponent({
     function onTabClick(item:QTTabItem){
 
     }
+    
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
       bg_player.value?.stop()
