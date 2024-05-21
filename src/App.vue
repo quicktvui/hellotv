@@ -16,6 +16,7 @@ import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
 import HistoryApi from './api/history/index'
 import activity2Api from './api/activity2/index'
+import {setIsLowEndDev} from "./tools/common";
 
 export default defineComponent({
   name: "App",
@@ -81,6 +82,15 @@ export default defineComponent({
       } else {
         log.setMinimumLoggingLevel(ESLogLevel.WARN)
         playerLog.setMinimumLoggingLevel(ESPlayerLogLevel.WARN)
+      }
+    }
+    const switchDev = () => {
+      let devTotalMemory = device.getDeviceTotalMemory()
+      let devResolution = device.getResolution()
+      let devAndroidLevel = Number(device.getAndroidAPILevel())
+      let dType = runtime.getRuntimeDeviceType() ?? ''
+      if(devTotalMemory <= 1024 ||  devAndroidLevel < 22){
+        setIsLowEndDev(true)
       }
     }
 

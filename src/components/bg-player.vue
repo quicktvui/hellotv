@@ -14,10 +14,7 @@
        name='home_player'
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
-               v-if="playerInit"
-               :focusable="false"
-               :fillParent="true"
-        class="playerBox" :clipChildren="false" >
+        v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
         <es-player-manager :clipChildren="false"
           ref="playerManagerRef"
           class="player-manager"
@@ -28,7 +25,7 @@
           @onPlayerCompleted="onVideoPlayerCompleted"
           @onPlayerInitialized="onPlayerInitialized"
         />
-         <!-- 背景视频遮罩 信息 -->
+        <!-- 背景视频遮罩 信息 -->
         <!-- <qt-view class="home_bg_player_view_info" :visible="isFullScreen" :gradientBackground="{colors:['#00000000','#E6000000']}">
           <p class="info_name">{{playerInfo.name}}</p>
           <div class="info_score" v-if="playerInfo.score">
@@ -38,10 +35,10 @@
           <p class="info_major" v-if="playerInfo.major">主演: {{playerInfo.major}} </p>
         </qt-view> -->
       </qt-view>
-      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" :focusable="true"
-               :enableFocusBorder="true" @click="onClickCellItem">
+      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" 
+        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
         <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
-                        :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
+          :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
         </img-transition>
       </qt-view>
       <!-- 背景视频遮罩 -->
@@ -51,15 +48,25 @@
         :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
         <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
-                      :bringFocusChildToFront="false"
-                      :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
-                      :singleSelectPosition="currentPlayIndex"
+          :bringFocusChildToFront="false"
+          :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
+          :singleSelectPosition="currentPlayIndex"
           @item-click="onItemClick"  @item-focused="onItemFocus">
+          <!-- 小窗列表 文字类型 10001-->
           <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
             :style="{width: playerListWidth + 'px'}"
             :clipChildren="true" eventClick eventFocus :focusScale="1">
               <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
                 :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,16,0]"/>
+              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+              </qt-view>
+          </qt-view>
+          <!-- 小窗列表 图片类型 10002-->
+          <qt-view :type="10002" name="iclf_item2" class="iclf_item" :focusable="true" :enableFocusBorder="true"
+            :style="{width: playerListWidth + 'px'}"
+            :clipChildren="true" eventClick eventFocus :focusScale="1">
+              <qt-image src="${thumbnail}" :focusable="false" class="iclf_item_thumbnail" :style="{width: playerListWidth + 'px'}"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
                 <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
               </qt-view>
@@ -102,12 +109,6 @@ export default defineComponent({
     QtImgTransition,
     'es-player-manager': ESPlayerManager,
   },
-  props:{
-    active:{
-      type:Boolean,
-      default:true
-    }
-  },
   setup(props,ctx) {
     const launch = useLaunch()
     const decode = useESPlayerDecodeManager()
@@ -144,13 +145,7 @@ export default defineComponent({
     let mediaInterceptor:ESIPlayerInterceptor | undefined
     const log = useESLog()
     const toast = useESToast()
-
-
-
-    watch(()=> props.active,(value)=>{
-      log.e('BG-PLAYER',`props.active change:${value}`)
-
-    })
+    
     const playAtIndex = (index : number)=> {
       let list = recordPlayerList
       currentPlayIndex.value = index
@@ -239,9 +234,10 @@ export default defineComponent({
         setPlayMediaListMode(3)
         if(!playerListData) return
         let arr: Array<QTListViewItem> = []
+          console.log(playerListData,'playerListDataplayerListDataplayerListDataplayerListData')
         for (let i = 0; i < playerListData.length; i++) {
           let el = playerListData[i]
-          el.type = 10001;
+          el.type = el.thumbnail ? 10002 : 10001;
           el.decoration = {};
           el.isPlaying = (i === 0);
           arr.push(el)
@@ -517,6 +513,18 @@ export default defineComponent({
   focus-background-color: #fff;
   z-index: 99;
 }
+.iclf_item2{
+  height: 96px;
+  background-color: transparent;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255,255,255,0.1);
+  focus-border-style: solid;
+  focus-border-color: #fff;
+  focus-border-width: 2px;
+  focus-border-radius: 0;
+  focus-background-color: #fff;
+  z-index: 99;
+}
 
 .item_player_focus_bg{
   focus-border-style: solid;
@@ -532,4 +540,5 @@ export default defineComponent({
 .iclf_item .play_Mark{width: 45px;height: 30px;background-color: transparent;position: absolute;left: 0;top: 38px;}
 .iclf_item_text{position: absolute;height: 96px;color: #fff;left: 0; focus-color:#000;width: 482px;
 select-color:#FF4E46;background-color: transparent;}
+.iclf_item_thumbnail{position: absolute;height: 96px;}
 </style>

@@ -3,14 +3,9 @@
        :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
-      <bg-player
-        class="bg_player"
-        ref="bg_player" :clipChildren="false"
-        :active="bgPlayerActive"
-        style="position: absolute;">
-      </bg-player>
+      <bg-player class="bg_player" ref="bg_player" :clipChildren="false" style="position: absolute;" />
       <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
-           v-if="isShowTop" :blockFocusDirections="['left','right','up']">
+        v-if="isShowTop" :blockFocusDirections="['left','right','up']">
         <slot name="buttonsHeader"/>
       </div>
       <qt-tabs
@@ -69,15 +64,8 @@ import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
 import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/createESHomeBGPlayerMediaInterceptor"
 import WaterfallBackground from "./waterfall-background.vue";
-import {
-    QTITab, QTIView,
-    QTTab,
-    QTTabEventParams,
-    QTTabItem,
-    QTTabPageData,
-    QTTabPageState,
-    QTWaterfallItem
-} from '@quicktvui/quicktvui3'
+import {QTITab, QTIView,QTTab,QTTabEventParams,QTTabItem,
+  QTTabPageData,QTTabPageState,QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import {useLaunch} from "../../../tools/launch/useApi";
 import {useGlobalApi} from "../../../api/UseApi";
@@ -90,7 +78,6 @@ import TabTextIconItem from "./tab/tab-text-icon-item.vue";
 import PagePlaceHolderItem from "./page/page-place-holder-item.vue";
 import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
-import {Native} from "@extscreen/es3-vue";
 import bgPlayer, {CoveredPlayerType} from "../../../components/bg-player.vue"
 
 const TAG = "WATERFALL-TABS"
@@ -138,7 +125,6 @@ export default defineComponent({
     //播放背景组件相关
     const bg_player = ref()
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
-    let bgPlayerActive = ref(false)
     let recordPlayerData = {
       pageIndex: -1,
       itemIndex:0,
@@ -354,8 +340,6 @@ export default defineComponent({
           ' params:', params
         )
       }
-      //我
-      //bgPlayerActive.value = true
       if(bgPlayerType.value != -1){
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player?.value.setCurBg()
@@ -488,7 +472,6 @@ export default defineComponent({
       // if(Math.abs(scrollY) > 2) {
       //   bg_player.value?.showCoverImmediately(true)
       // }
-      //bgPlayerActive.value = false
       // if(scrollY == 0) {
       //   bg_player.value.requestDismissCellCover()
       // }
@@ -531,7 +514,6 @@ export default defineComponent({
       tabsTriggerTask,
       wTabBg,
       tabRef,
-      bgPlayerActive,
       bg_player,bgPlayerType,
       playerBindingRelation,
       callbackFn, playerBindingRelationArrKey,
