@@ -22,7 +22,7 @@
         <div class="poster_title" flexStyle="${titleBoxStyle}" :showOnState="['normal']" :duplicateParentState="true" :focusable="false">
           <text-view 
             :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}"
-            :ellipsizeMode="2" :lines="1" :postDelay="200" gravity="top|left" flexStyle="${title.style}"
+            :ellipsizeMode="2" :lines="1" :postDelay="200" gravity="center|left" flexStyle="${title.style}"
             text="${title.text}" showIf="${title.enable}"
             :paddingRect="[5,0,0,0]" class="poster_title_text"
           />
@@ -37,7 +37,7 @@
           :focusable="false">
           <text-view 
             :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}"
-            ellipsizeMode="${titleEllipsizeMode}" lines="${titleLines}" gravity="top|left"
+            ellipsizeMode="${titleEllipsizeMode}" lines="${titleLines}" gravity="center|left"
             flexStyle="${title.style}" text="${focusTitle.text}" showIf="${focusTitle.enable}"
             class="poster_title_f_text" :paddingRect="[5,0,0,0]"
           />
@@ -102,21 +102,12 @@ export default defineComponent({
 /* ------- */
 .content_box {
   position: relative;
-  border-radius: 8px;
+  border-radius: 15px;
   background-color: transparent;
-  /* padding-left: 5px;
-  padding-top: 5px;
-  padding-right: 5px;
-  padding-bottom: 0px; */
-  /* focus-background-color: #ffffff; */
-  /* focus-border-style: solid;
-  focus-border-color: #ffffff;
-  focus-border-width: 8px;
-  focus-border-radius: 8px; */
 }
 
 .content_box_bg {
-  border-radius: 8px;
+  border-radius: 15px;
   background-color: transparent;
   focus-background-color: #ffffff;
 }
@@ -126,7 +117,7 @@ export default defineComponent({
   left: 0;
   top: 0;
   z-index: 1;
-  border-radius: 8px;
+  border-radius: 15px;
   background-color: transparent;
 }
 
@@ -134,11 +125,11 @@ export default defineComponent({
   /* rgba(255, 255, 255, 0.1) */
   background-color: transparent;
   z-index: 1;
-  border-radius: 8px;
-  /* focus-border-width: 0px; */
+  border-radius: 15px;
+  /* focus-border-width: 15px; */
   focus-border-color: transparent;
   focus-border-style: solid;
-  border-radius: 8px;
+  focus-border-radius: 15px;
 }
 
 .float_title_box {
@@ -157,10 +148,6 @@ export default defineComponent({
   flex-direction: row;
   align-items: center;
   background-color: transparent;
-  /* focus-border-style: solid;
-  focus-border-color: transparent;
-  focus-border-width: 10px;
-  focus-border-radius: 8px; */
 }
 
 .poster_title_hold {
@@ -186,8 +173,8 @@ export default defineComponent({
   z-index: 2;
   color: #000000;
   /* margin-top: -30px; */
-  border-bottom-left-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 15px;
+  border-bottom-right-radius: 15px;
 }
 .poster_title_f_text{
   color: #000000;
@@ -198,11 +185,7 @@ export default defineComponent({
   left: 0;
   top: 0;
   z-index: 5;
-  /* border-radius: 8px; */
   background-color: transparent;
-  /* display: flex;
-  flex-direction: column;
-  justify-content: flex-end; */
 }
 /* #666666 */
 .poster_subtitle {

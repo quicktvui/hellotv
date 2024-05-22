@@ -64,7 +64,7 @@ interface IBlockData {
 }
 
 const dWidth = 408
-const dHeight = 230
+const dHeight = 228
 const whRatio = dHeight/dWidth
 const dPosterBottom = 30
 const dPosterTitleHeight = 30
@@ -72,12 +72,12 @@ const dPosterSubTitleHeight = 25
 const dTitleFontSize = 30
 const dFloatTitleFontSize = 24
 const dSubTitleFontSize = 24
-const dSpace = 36
-const dBlockTitleFontSize = 30
+const dSpace = 30
+const dBlockTitleFontSize = 44
 const dPadding = 1
 const dColumns = 4
 export const dPageWidth = 1920
-export const dPageMarginSpace = 90
+export const dPageMarginSpace = 100
 const getSubTitle = (data: IBlockItemData) => {
   if (!data) return ''
   let subTitle = data.subTitle || ''
@@ -179,11 +179,11 @@ export const getPosterConfig = (data: IBlockItemData, options:Ioptions): QTPoste
     titleFocuseBoxStyle:{
       width: posterWidth,
       height: titleboxHeight,
-      marginTop: imgHeight - 15
+      marginTop: imgHeight - 20
     },
     bgStyle:{
       width: posterWidth,
-      height: posterHeight - 15,
+      height: posterHeight - 20,
     },
     titleEllipsizeMode: 3,
     titleLines: 1,
@@ -234,8 +234,8 @@ export const getMysection = (data:IBlockData, sectionType:number = QTWaterfallSe
     const ratio = imgWidth / dWidth
     const titleFontSize = (item._titleFontSize||dTitleFontSize) * ratio
     const subTitleFontSize = (item._subTitleFontSize||dSubTitleFontSize) * ratio
-    const posterTitleHeight = titleFontSize + 10
-    const posterSubTitleHeight = subTitleFontSize + 10
+    const posterTitleHeight = titleFontSize + 20
+    const posterSubTitleHeight = subTitleFontSize + 20
     
 
     if(item.title){
@@ -260,11 +260,11 @@ export const getMysection = (data:IBlockData, sectionType:number = QTWaterfallSe
     type: sectionType,//QT_WATERFALL_SECTION_TYPE_FLEX
     title: data.title||'',
     titleStyle: {
-      // marginTop: 10,
-      marginBottom: data.title?30:1,
+      marginTop: 0,
+      marginBottom: data.title ? 20 : 1,
       fontSize: blockTitleFontSize,
       height: data.title?blockTitleFontSize:1,
-      width: 1000
+      width: 1000,
     },
     //3.构造section中item列表数据
     itemList,

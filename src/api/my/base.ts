@@ -47,9 +47,9 @@ export class MyBase {
             return {
                 id: index+'', img: dImgURL, _redirectType: 1,
                 title: '<font color="#92949A">颜色</font>',//#ffffff80
-                _focusTitle: '颜色', _titleFontSize: 24,
+                _focusTitle: '颜色', _titleFontSize: 30,
                 // subTitle: index+'-sub', _subTitleFontSize: 30,
-                // _layout: { width: 300 },
+                _layout: { width: 437, height: 228 },
                 _router:{ url:'home', params: {} }
             }
         })
