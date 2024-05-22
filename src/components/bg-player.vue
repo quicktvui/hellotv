@@ -269,7 +269,7 @@ export default defineComponent({
       else itemCellBgImgRef.value.setNextColor(0)
     }
 
-    const requestDismissCover = (delay= 1000) => {``
+    const requestDismissCover = (delay= 1000) => {
       if(isAnyPlaying.value){
         clearTimeout(dismissCoverTimer)
         pauseOnCoverShow.value = false
