@@ -50,6 +50,14 @@ export function buildTransferTabAdapter(tabs: Array<Tab>): QTTab {
       top: 10
     }
     const tabItem: QTTabItem = buildTabItem(tab, decoration)
+
+    // 处理Tab跳转
+    tabItem.item = {
+      redirectType: tab.redirectType || '',
+      action: tab.action || '',
+      innerArgs: tab.innerArgs || ''
+    }
+
     tabItemList.push(tabItem)
   })
   const mTabs: QTTab = buildQTTab(defaultFocusIndex, defaultFocusIndex, tabItemList)
