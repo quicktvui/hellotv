@@ -55,6 +55,7 @@
           <page-place-holder-item :type="3"/>
         </template>
       </qt-tabs>
+      <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
   </qt-view>
 </template>
 
@@ -81,6 +82,7 @@ import PagePlaceHolderItem from "./page/page-place-holder-item.vue";
 import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
 import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
+import loading from "../../../components/Loading.vue"
 
 const TAG = "WATERFALL-TABS"
 
@@ -88,7 +90,7 @@ export default defineComponent({
   name: "waterfall-tabs",
   components: {
     PageNoFrameItem,
-    PagePlaceHolderItem, itemCellPlayer, bgPlayer,
+    PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
     TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
   },
   props: {
