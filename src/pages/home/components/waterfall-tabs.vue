@@ -303,7 +303,6 @@ export default defineComponent({
           bg_player?.value.setCurBg()
           bg_player?.value.showCoverImmediately(true)
         },900)
-
       }
     }
     function onTabMoveToTopEnd(pageIndex: number, eventName: string, params: QTTabEventParams) {
@@ -345,6 +344,8 @@ export default defineComponent({
           bg_player?.value.setCurBg()
           // bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
+        }else{
+          bg_player?.value.showCoverImmediately(false)
         }
         bg_player?.value.resume()
         bg_player?.value.requestDismissCover()
