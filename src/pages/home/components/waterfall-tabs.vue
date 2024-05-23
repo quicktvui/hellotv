@@ -314,6 +314,7 @@ export default defineComponent({
      * @param eventName
      * @param params
      */
+    let delayPauseTimer: any = -1
     function onTabMoveToTopStart(pageIndex: number, eventName: string, params: QTTabEventParams) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-------onTabMoveToTopStart----------->>>',
@@ -327,7 +328,8 @@ export default defineComponent({
         bg_player?.value.keepPlayerInvisible(false)
         bg_player.value.initPlayBg("")
       } else {
-        setTimeout(() => {
+        delayPauseTimer && clearTimeout(delayPauseTimer)
+        delayPauseTimer = setTimeout(() => {
           bg_player?.value.pause()
           bg_player?.value.setCurBg()
           bg_player?.value.showCoverImmediately(true)
