@@ -194,6 +194,7 @@ function getPlayData(videoAssets, config): Array<TabPlayItem> {
           id: item.id,
           title: item.assetName,
           cover: item.cover,
+          // cover: 'http://cdnott.holyblade.com/sxyd/GameHallResource_JSY_SXYD/UpLoadImg/07sy_spc_dt.gif',
           url: url,
           isRequestUrl: false,
           thumbnail: index % 2 == 0 ? item.cover : 0,

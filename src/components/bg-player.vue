@@ -27,9 +27,11 @@
       </qt-view>
       <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" 
         :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
-        <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
+        <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
           :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
-        </img-transition>
+        </img-transition> -->
+        <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
+          :focusable="false" :width="playerWidth" :height="playerHeight" :transitionTime="800"/>
       </qt-view>
       <!-- 背景视频遮罩 -->
       <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"/>
@@ -80,6 +82,7 @@ import { useESLog, useESToast } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import QtImgTransition from "./qt-img-transition.vue";
 import {isLowEndDev} from "../tools/common";
+import bgPlayerImg from "./bg-player-img.vue";
 
 export enum CoveredPlayerType{
   TYPE_UNDEFINED = -1,
@@ -90,7 +93,7 @@ export enum CoveredPlayerType{
 export default defineComponent({
   name: 'waterfall-player',
   components: {
-    QtImgTransition,
+    QtImgTransition,bgPlayerImg,
     'es-player-manager': ESPlayerManager,
   },
   setup(props,ctx) {
