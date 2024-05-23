@@ -71,7 +71,7 @@ import Mytemplate from 'src/pages/my/my-template.vue'
         subTitle: '',
         img: '',
         icon: '',
-        cornerNum: -1//大于-1时显示数字，否则显示红点
+        cornerNum: -1//大于-1时右上角显示数字，否则显示红点
       }
     ]
   }

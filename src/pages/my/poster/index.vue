@@ -7,7 +7,7 @@
       <div showIf="${editMode==false}" :focusable="false" :duplicateParentState="true" class="content_box_bg"
         flexStyle="${bgStyle}" :enableBlackBorder="false"></div>
       <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${innerStyle}">
-        <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
+        <img class="my_poster_img_css" :duplicateParentState="true" :postDelay="300" :focusable="false"
           enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
         <div showIf="${floatTitle.enable}" flexStyle="${image.style}" class="float_title_box" :focusable="false"
           :duplicateParentState="true">
@@ -102,12 +102,12 @@ export default defineComponent({
 /* ------- */
 .content_box {
   position: relative;
-  border-radius: 15px;
+  border-radius: 8px;
   background-color: transparent;
 }
 
 .content_box_bg {
-  border-radius: 15px;
+  border-radius: 8px;
   background-color: transparent;
   focus-background-color: #ffffff;
 }
@@ -117,19 +117,19 @@ export default defineComponent({
   left: 0;
   top: 0;
   z-index: 1;
-  border-radius: 15px;
+  border-radius: 8px;
   background-color: transparent;
 }
 
-.qt-ui-poster-img-css {
+.my_poster_img_css {
   /* rgba(255, 255, 255, 0.1) */
   background-color: transparent;
   z-index: 1;
-  border-radius: 15px;
-  /* focus-border-width: 15px; */
-  focus-border-color: transparent;
+  border-radius: 8px;
+  /* focus-border-width: 8px; */
+  focus-border-color: #ffffff;
   focus-border-style: solid;
-  focus-border-radius: 15px;
+  focus-border-radius: 8px;
 }
 
 .float_title_box {
@@ -173,8 +173,8 @@ export default defineComponent({
   z-index: 2;
   color: #000000;
   /* margin-top: -30px; */
-  border-bottom-left-radius: 15px;
-  border-bottom-right-radius: 15px;
+  border-bottom-left-radius: 8px;
+  border-bottom-right-radius: 8px;
 }
 .poster_title_f_text{
   color: #000000;

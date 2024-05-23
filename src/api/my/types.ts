@@ -4,6 +4,7 @@ export interface Iconfig {
   // {colors:['#e5000000','#00000000'], cornerRadii4: [0, 0, 8, 8],orientation:4}
   // {colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: 12}
   headerHeight?: number; //顶部栏
+  headerLogo?: any; //顶部栏
 }
 export interface IAnyobj {
   [k: string]: any
