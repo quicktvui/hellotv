@@ -34,7 +34,7 @@
   </div>
 </template>
 <script lang='ts' setup>
-import { computed, nextTick, ref } from "vue";
+import { nextTick, ref } from "vue";
 import {
   QTIListView
 } from '@quicktvui/quicktvui3';
@@ -324,6 +324,7 @@ defineExpose({
       contentScrollY = 0
       return false
     }
+    gridViewRef.value?.unBlockRootFocus()
     return true
   },
   reset() {
