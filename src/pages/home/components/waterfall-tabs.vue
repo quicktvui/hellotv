@@ -54,6 +54,9 @@
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
         </template>
+        <template v-slot:waterfall-vue-section>
+          <loading :isFullScreen="true" :width="120" :height="120" />
+        </template>
       </qt-tabs>
       <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
   </qt-view>
@@ -67,7 +70,9 @@ import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/create
 import WaterfallBackground from "./waterfall-background.vue";
 import {
   QTITab, QTIView, QTTab, QTTabEventParams, QTTabItem,
-  QTTabPageData, QTTabPageState, QTWaterfallItem
+  QTTabPageData, QTTabPageState, QTWaterfallItem,
+  QTWaterfallSection,
+  QTWaterfallSectionType
 } from '@quicktvui/quicktvui3'
 import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import { useLaunch } from "../../../tools/launch/useApi";
@@ -83,6 +88,7 @@ import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
 import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
 import loading from "../../../components/Loading.vue"
+import config from '../config'
 
 const TAG = "WATERFALL-TABS"
 
@@ -206,7 +212,25 @@ export default defineComponent({
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
       if (tabItemList && pageIndex >= 0 && pageIndex < tabItemList.length) {
         const tab = tabItemList[pageIndex]
-        if (tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
+
+        // 处理"我的"Tab展示
+        if (config.tab.showMineTab && pageIndex === 0) {
+          let section: QTWaterfallSection = {
+            _id: '1',
+            type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_VUE,
+            style: { width: 1920, height: 1080 },
+            isSwitchCellBg: '0',
+            itemList: []
+          }
+          let sectionList: Array<QTWaterfallSection> = [section]
+          const tabPage: QTTabPageData = {
+            data: sectionList,
+            useDiff: useDiff
+          }
+          tabRef.value?.setPageData(pageIndex, tabPage)
+        } else {
+          if (tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
+        }
       }
     }
 
