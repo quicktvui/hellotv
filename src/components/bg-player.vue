@@ -273,13 +273,13 @@ export default defineComponent({
     }
 
     const requestDismissCover = (delay= 1000) => {
-      if(isAnyPlaying.value){
+      // if(isAnyPlaying.value){
         clearTimeout(dismissCoverTimer)
         pauseOnCoverShow.value = false
         dismissCoverTimer = setTimeout(()=>{
           setBgImage("")
         },delay)
-      }
+      // }
     }
     //player api
     const initPlayer = () => {if(!isLowEndDev) playerManagerRef.value?.initialize()}

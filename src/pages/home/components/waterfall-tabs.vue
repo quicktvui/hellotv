@@ -371,11 +371,8 @@ export default defineComponent({
       if (bgPlayerType.value != -1) {
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player?.value.setCurBg()
-          // bg_player?.value.showCoverImmediately(true)
           bg_player.value.delayShowPlayer(200)
-        } else {
-          bg_player?.value.showCoverImmediately(false)
-        }
+        } 
         bg_player?.value.resume()
         bg_player?.value.requestDismissCover()
       }
@@ -458,8 +455,6 @@ export default defineComponent({
           let flag = obj.playerType
           let width = obj.playerWidth
           let height = obj.playerHeight
-          // bg_player.value.bgPlayerOpacity = 0
-
           let parentSID: string = ''
           if (flag == CoveredPlayerType.TYPE_CELL) {
             bgPlayerType.value = flag
@@ -474,7 +469,6 @@ export default defineComponent({
               playData, 0, mediaInterceptor
             )
           } else if (flag == CoveredPlayerType.TYPE_BG) {
-            // clearTimeout(delayChangePlayerTimer)
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               1920, 1080, 1920, 1080,
@@ -494,18 +488,8 @@ export default defineComponent({
       }
     }
 
-    function onTabPageScroll(offsetX: number, scrollY: number) {
-      if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '---------onTabPageScroll-------->>>>', offsetX, '---->>>', scrollY)
-      }
-      //如果有焦点播放需求时
-      // if(Math.abs(scrollY) > 2) {
-      //   bg_player.value?.showCoverImmediately(true)
-      // }
-      // if(scrollY == 0) {
-      //   bg_player.value.requestDismissCellCover()
-      // }
-    }
+    function onTabPageScroll(offsetX: number, scrollY: number) {}
+
     function onTabPageChanged(pageIndex: number, data: any) {
       log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
         ' pageIndex:' + pageIndex
@@ -528,7 +512,6 @@ export default defineComponent({
       if (!isOneTimeStop) {
         delayStopPlaerTimer = setTimeout(() => {
           bg_player.value?.stop()
-          bg_player.value?.keepPlayerInvisible(false)
           isOneTimeStop = true
         }, 2000)
       }

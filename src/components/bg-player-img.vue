@@ -110,7 +110,6 @@
         animationNewRef.value?.startAnimator('new_0_1')
         timer && clearTimeout(timer)
         timer = setTimeout(()=>{srcOld.value = src},props.transitionTime)
-
       }
   
       return {
