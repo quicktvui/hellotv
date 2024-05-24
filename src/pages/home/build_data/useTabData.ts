@@ -9,6 +9,7 @@ import {
 } from "./tab_content/TabContentTransferAdapter"
 import { TabSectionItem } from "./tab_content/impl/TabSectionItem";
 import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
+import {TabSectionItemType} from './tab_content/tab_content_type/TabSectionItemType'
 
 /**
  * 转换瀑布流TAB数据
@@ -62,7 +63,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     let isFirst: boolean = true
     let isSwitchCellBg: string = '0'
     plateItem.plateDetails?.forEach((sectionItem, sectionIndex) => {
-      const cellType: string = getSectionType(sectionItem.detailStyle, sectionItem?.config?.contentType)
+      const cellType: string = getSectionType(sectionItem.detailStyle, sectionItem?.config?.contentType,sectionItem?.config?.contentData)
       if ((cellType === '10008' || cellType === '10009') && isFirst) {
         isFocusScrollTarget = true
         isFirst = false
@@ -157,7 +158,7 @@ function getParameter(parameter) {
   return params
 }
 
-function getSectionType(detailStyle, contentType): string {
+function getSectionType(detailStyle, contentType,contentData=''): string {
 
   if (detailStyle === '1') {
     return '1'
@@ -169,6 +170,10 @@ function getSectionType(detailStyle, contentType): string {
     return '10008'
   } else if (contentType === '13') {
     return '10009'
+  } else if (contentType === '12') {
+    if(contentData=='1'){ return TabSectionItemType.TAB_CONTENT_ITEM_HISTORY }
+    if(contentData=='2'){ return TabSectionItemType.TAB_CONTENT_ITEM_HISTORY_IMG }
+    return '0'
   } else {
     return '0'
   }

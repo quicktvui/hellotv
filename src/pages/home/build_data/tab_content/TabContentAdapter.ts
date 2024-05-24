@@ -78,7 +78,6 @@ export function buildTabContentPlate(tabContentPlate: TabContentPlate, isFirstPl
     isSwitchCellBg:tabContentPlate.isSwitchCellBg,
     itemList: tabContentPlate.sectionList as Array<QTWaterfallItem>
   }
-
   switch (plate.type) {
     case QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX://默认
       break
@@ -261,6 +260,14 @@ export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfal
     case TabSectionItemType.TAB_CONTENT_ITEM_CELL_PLAYER_LIST://小窗列表格子
       item = buildTabPageCellPlayerItem(itemSection,tabIndex)
       item.type = TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER
+      break;
+    case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY://历史-文字
+      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY
+      break;
+    case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY_IMG://历史-图片
+      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY_IMG
       break;
     default :
       item = buildPoster(itemSection)

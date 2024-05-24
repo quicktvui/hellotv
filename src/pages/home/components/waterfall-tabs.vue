@@ -48,11 +48,15 @@
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
+          <itemHistory :type="121" />
+          <itemHistoryImg :type="122" />
         </template>
         <template v-slot:waterfall-list-item>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
+          <itemHistory :type="121" />
+          <itemHistoryImg :type="122" />
         </template>
         <template v-slot:waterfall-vue-section>
           <loading :isFullScreen="true" :width="120" :height="120" />
@@ -86,6 +90,8 @@ import TabTextIconItem from "./tab/tab-text-icon-item.vue";
 import PagePlaceHolderItem from "./page/page-place-holder-item.vue";
 import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
+import itemHistory from "./item-history.vue"
+import itemHistoryImg from "./item-history-img.vue"
 import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
 import loading from "../../../components/Loading.vue"
 import config from '../config'
@@ -95,7 +101,7 @@ const TAG = "WATERFALL-TABS"
 export default defineComponent({
   name: "waterfall-tabs",
   components: {
-    PageNoFrameItem,
+    PageNoFrameItem,itemHistory,itemHistoryImg,
     PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
     TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
   },
