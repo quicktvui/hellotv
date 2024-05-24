@@ -1,0 +1,59 @@
+
+.login-root-css{
+  width: 1920px;
+  height: 1080px;
+  background-color: rgba(0, 0, 0,.9);
+}
+
+.login-img-css{
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background-color: transparent;
+}
+
+.login-qr-code-root-css{
+  width: 540px;
+  height: 638px;
+  position: absolute;
+  top: 218px;
+  right: 140px;
+  border-radius: 20px;
+  background-color: white;
+}
+
+.login-qr-code-tip-css{
+  width: 540px;
+  height: 100px;
+  position: absolute;
+  color: black;
+  bottom: 0;
+  background-color:transparent;
+}
+
+.login-qr-code-css{
+  width: 480px;
+  height: 480px;
+  margin-top: 29px;
+  margin-left: 30px;
+}
+
+.login-agreement-root-css{
+  width: 1920px;
+  height: 39px;
+  position: absolute;
+  bottom: 60px;
+  background-color: transparent;
+  align-items: center;
+}
+.login-agreement-text-css{
+  width: 1920px;
+  height: 36px;
+  color: rgba(255, 255, 255, .5);
+}
+.login-agreement-bottom-line-css{
+  height: 1px;
+  width: 640px;
+  margin-top: 2px;
+  background-color: rgba(255, 255, 255, .5);
+}

@@ -10,6 +10,7 @@ import settings from './pages/settings/index.vue'
 import networkError from './components/NetworkError.vue'
 import history from './pages/history/history_template.vue'
 import activity2 from './pages/activity2/index.vue'
+import login from './pages/login/index.vue'
 
 const routes = [
   {
@@ -57,6 +58,9 @@ const routes = [
   },
   {
     name: 'history', path: '/history', component: history
+  },
+  {
+    name:'login',path:'/login',component: login
   }
 ]
 export default routes

@@ -2,7 +2,7 @@ import FilterConfig from "../pages/filter/build_data/FilterConfig"
 import bg_play from "./home/mock/bg_play"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
-import {QTTab, QTTabPageData,QTListViewItem,QTTabItem} from "@quicktvui/quicktvui3";
+import {QTTab, QTTabPageData,QTTabItem} from "@quicktvui/quicktvui3";
 import {Tab} from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
 import {
@@ -22,11 +22,9 @@ import {
   filterEntryUrl,
   hotSearchUrl,
   tabContentUrl,
-  tabListUrl,
-  urlSaveHistory, urlGetHistory, urlGetLongHistory, urlGetShortHistory, urlGetBookHistory
+  tabListUrl
 } from "./RequestUrl";
 import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
-import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem";
 
 /*****
   ***************搜索 *********

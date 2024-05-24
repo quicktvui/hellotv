@@ -7,10 +7,25 @@
 <script lang="ts">
 import { ref } from 'vue'
 import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useES, useESDevelop, useESDevice, useESLog, useESRuntime, ESNetworkInfo, useESNetwork, useESLocalStorage } from "@extscreen/es3-core";
+import {
+  ESLogLevel,
+  useES,
+  useESDevelop,
+  useESDevice,
+  useESLog,
+  useESRuntime,
+  ESNetworkInfo,
+  useESNetwork,
+  useESLocalStorage,
+  useESEventBus
+} from "@extscreen/es3-core"
 import {ESPlayerLogLevel, useESPlayer, useESPlayerLog} from "@extscreen/es3-player";
-import {useGlobalApi, useMediaDataSource, useRequestManager} from "./api/UseApi";
-import {useUserManager} from "./tools/user/useApi";
+import {
+  useGlobalApi,
+  useLoginDataSource,
+  useMediaDataSource,
+  useRequestManager, useUserManager
+} from "./api/UseApi"
 import BuildConfig from "./build/BuildConfig";
 import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
@@ -37,7 +52,9 @@ export default defineComponent({
     const globalApi = useGlobalApi()
     const mediaDataSource = useMediaDataSource()
     const userManager = useUserManager()
+    const eventBus = useESEventBus()
     const localStore = useESLocalStorage()
+    const loginApi = useLoginDataSource()
 
     function onESCreate(app, params) {
       initESLog()
@@ -45,10 +62,12 @@ export default defineComponent({
       return Promise.resolve()
         .then(() => request.init(es, develop, device, runtime, log))
         .then(() => globalApi.init(request))
+        .then(() => loginApi.init(request,userManager))
+        .then(() => userManager.init(loginApi,localStore,eventBus))
         .then(() => mediaDataSource.init(request))
         .then(() => HistoryApi.init(request, localStore))
         .then(() => activity2Api.init(request))
-        .then(() => userManager.init())
+
         .then(() => launch.init(log, router, nativeRouter))
         .then(() => playerManager.init({
           debug: true,
@@ -84,8 +103,13 @@ export default defineComponent({
       }
     }
 
+    function onESDestroy(){
+      userManager.offUserEvent()
+    }
+
     return {
-      onESCreate
+      onESCreate,
+      onESDestroy
     }
   }
 });
