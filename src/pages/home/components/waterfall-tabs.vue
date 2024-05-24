@@ -90,11 +90,12 @@ import TabTextIconItem from "./tab/tab-text-icon-item.vue";
 import PagePlaceHolderItem from "./page/page-place-holder-item.vue";
 import PageNoFrameItem from "./page/page-no-frame-item.vue";
 import itemCellPlayer from "./item-cell-player.vue"
-import itemHistory from "./item-history.vue"
-import itemHistoryImg from "./item-history-img.vue"
+import itemHistory from "./history/item-history.vue"
+import itemHistoryImg from "./history/item-history-img.vue"
 import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
 import loading from "../../../components/Loading.vue"
 import config from '../config'
+import myHistory from './history/index'
 
 const TAG = "WATERFALL-TABS"
 
@@ -493,6 +494,10 @@ export default defineComponent({
           delayStopPlayer()
         }
         bg_player.value?.delayShowPlayer(500)
+
+        if(pageIndex === myHistory.tabPageIndex){
+          myHistory.setData(tabRef)
+        }
       }
     }
 
@@ -533,6 +538,9 @@ export default defineComponent({
       onESResume,
       onESPause,
       onESDestroy,
+      onESRestart(){
+        myHistory.setData(tabRef)
+      },
       tabsTriggerTask,
       wTabBg,
       tabRef,

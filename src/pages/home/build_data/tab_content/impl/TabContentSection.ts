@@ -10,5 +10,5 @@ export interface TabContentSection {
     height: number
     isSwitchCellBg:string
     timeAxisSwitch: string
-    isFocusScrollTarget?:boolean
+    isFocusScrollTarget?:boolean;
 }

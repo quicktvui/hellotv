@@ -63,6 +63,9 @@ export default defineComponent({
       onESStop,
       onESPause,
       onESDestroy,
+      onESRestart(){
+        waterfallTabs.value?.onESRestart()
+      }
     }
   }
 })

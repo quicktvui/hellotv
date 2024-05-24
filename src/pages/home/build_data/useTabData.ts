@@ -10,6 +10,7 @@ import {
 import { TabSectionItem } from "./tab_content/impl/TabSectionItem";
 import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
 import {TabSectionItemType} from './tab_content/tab_content_type/TabSectionItemType'
+import myHistory from "../components/history";
 
 /**
  * 转换瀑布流TAB数据
@@ -64,6 +65,11 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     let isSwitchCellBg: string = '0'
     plateItem.plateDetails?.forEach((sectionItem, sectionIndex) => {
       const cellType: string = getSectionType(sectionItem.detailStyle, sectionItem?.config?.contentType,sectionItem?.config?.contentData)
+      if(sectionItem?.config?.contentType === '12'){
+        myHistory.tabPageIndex = tabPageIndex
+        myHistory.plateIndex = plateIndex
+        myHistory.sectionIndex = sectionIndex
+      }
       if ((cellType === '10008' || cellType === '10009') && isFirst) {
         isFocusScrollTarget = true
         isFirst = false
@@ -122,6 +128,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     plates: plates,
     image: sourceData.image
   }
+  
   return buildTransferTabContentAdapter(tabContent, pageNo, tabId, tabPageIndex)
 }
 
