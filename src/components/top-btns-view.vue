@@ -3,6 +3,18 @@
     <img-text-btn-view
       v-if="!$slots.btnItem"
       :icon-left="true"
+      text="我的"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_my_btn"
+      ref="top_my_btn"
+      icon="ic_top_screen.png"
+      focus-icon="ic_top_screen_focus.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
       text="筛选"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
@@ -121,6 +133,11 @@ export default defineComponent({
         case 'top_activity_btn':
           router.push({
               name: 'activity2',
+              params: {}
+          });
+        case 'top_my_btn':
+          router.push({
+              name: 'my',
               params: {}
           });
           break;
