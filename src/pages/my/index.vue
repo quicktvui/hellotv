@@ -11,10 +11,10 @@ import MyTemplate from './MyTemplate.vue'
 const MyTemplateRef = ref()
 defineExpose({
   onESStart(){
-    MyTemplateRef.value.init()
+    MyTemplateRef.value.start()
   },
   onESRestart(){
-    MyTemplateRef.value.update()
+    MyTemplateRef.value.reStart()
   }
 })
 </script>

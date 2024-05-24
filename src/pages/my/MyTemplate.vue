@@ -104,7 +104,7 @@ onBeforeUnmount(()=>{
   console.log('lsj----onUnmounted')
 })
 defineExpose({
-  init(params) {
+  start(params) {
     isLoading.value = true
     myApi.initPageData(params).then(async (res) => {
       myApi.pageData = res;
@@ -119,7 +119,7 @@ defineExpose({
       updateData()
     })
   },
-  update(){
+  reStart(){
     isLoading.value = true
     updateData()
   }
