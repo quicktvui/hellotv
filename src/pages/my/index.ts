@@ -1,8 +1,11 @@
 import {
   QTPoster, QTWaterfallItem,
   QTWaterfallSection,
-  QTWaterfallSectionType,
+  QTWaterfallSectionType, QTITab
 } from '@quicktvui/quicktvui3';
+import { Ref } from 'vue'
+import myApi from '../../api/my/index';
+
 export const activity_redirectTypes = {
   innerRouter: 1,//跳转到当前app内部页面
   innerApp: 0//跳转到内部其他app
@@ -85,6 +88,7 @@ const dIconWidth = 80
 const dIconHeight = 80
 const dPosterType = posterTypes.poster
 export const dPageWidth = 1920
+export const dPageheight = 1080
 export const dPageMarginSpace = 90 // 页面两端间距
 const getSubTitle = (data: IBlockItemData) => {
   if (!data) return ''
@@ -325,3 +329,30 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
 
   return orederRes.section
 }
+
+class MyDataManager {
+  tabPageIndex?:number
+
+  async getData(){
+    const orderRes = await myApi.getOrderInfo()
+    const historyRes = await myApi.getHistorys()
+    const moreRes = await myApi.getMoreList()
+    return [
+      transOrderSection(false, orderRes),
+      transHistorySection(false, historyRes),
+      ...transMoreSectin(false, moreRes)
+    ]
+  }
+  setData(tabRef:Ref<QTITab|undefined>){
+    if(this.tabPageIndex){
+      tabRef.value?.getCurrentTabIndex().then(cIndex=>{
+        if(cIndex === this.tabPageIndex){
+          // tabRef.value?.updatePageData(this.tabPageIndex, {})
+          console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+        }
+      })
+    }
+  }
+}
+const myDataManager = new MyDataManager()
+export default myDataManager

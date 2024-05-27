@@ -5,7 +5,6 @@ import { getMysection, ImySectionRes, posterTypes } from '../../pages/my/index.t
 let dImgURL = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750';
 import vimIcon from '../../assets/my/vip.png'
 import infoIcon from '../../assets/my/info.png'
-import logo from '../../assets/cell-list-focus-img.png'
 
 const delayFn = ()=>{
   return new Promise(resolve=>{
@@ -31,8 +30,7 @@ export class MyBase {
    */
   async getConfig(): Promise<Iconfig> {
     return {
-      gradientBg: { colors: ['#FF2F3541', '#FF252930'] },
-      headerLogo: logo
+      gradientBg: { colors: ['#FF2F3541', '#FF252930'] }
     }
   }
   /**
