@@ -16,7 +16,6 @@ import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
 import HistoryApi from './api/history/index'
 import activity2Api from './api/activity2/index'
-import {setIsLowEndDev} from "./tools/common";
 
 export default defineComponent({
   name: "App",
@@ -90,7 +89,7 @@ export default defineComponent({
       let devAndroidLevel = Number(device.getAndroidAPILevel())
       let dType = runtime.getRuntimeDeviceType() ?? ''
       if(devTotalMemory <= 1024 ||  devAndroidLevel < 22){
-        setIsLowEndDev(true)
+        BuildConfig.isLowEndDev = true
       }
     }
 

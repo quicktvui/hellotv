@@ -81,7 +81,7 @@ import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import { useESLog, useESToast } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import QtImgTransition from "./qt-img-transition.vue";
-import {isLowEndDev} from "../tools/common";
+import BuildConfig from "../build/BuildConfig";
 import bgPlayerImg from "./bg-player-img.vue";
 
 export enum CoveredPlayerType{
@@ -139,7 +139,7 @@ export default defineComponent({
         let item = list[index]
         log.e('BG-PLAYER',`playAtIndex item:${JSON.stringify(item)},index:${index}`)
         play(item)
-        if(!isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
+        if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       }else{
         log.e('BG-PLAYER',`playAtIndex error list size = 0,index ${index} `)
       }
@@ -240,7 +240,7 @@ export default defineComponent({
       playerWidth.value = pWidth
       playerHeight.value = pHeight
       // playerManagerRef.value?.setSize(playerWidth,playerHeight)
-      if(!isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
     }
     // cell-img-transition api
 
@@ -282,9 +282,9 @@ export default defineComponent({
       // }
     }
     //player api
-    const initPlayer = () => {if(!isLowEndDev) playerManagerRef.value?.initialize()}
+    const initPlayer = () => {if(!BuildConfig.isLowEndDev) playerManagerRef.value?.initialize()}
     const play = (item:TabPlayItem) => {
-      if(isLowEndDev) return
+      if(BuildConfig.isLowEndDev) return
       const isRequestUrl = item.isRequestUrl
       let mediaItem_0: ESMediaItem
       let playList: ESMediaItemList
@@ -315,11 +315,11 @@ export default defineComponent({
     }
     const release = () => {
       log.e('BG-PLAYER',`release called`)
-      if(!isLowEndDev) playerManagerRef.value?.release()
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.release()
     }
     const stop = () => {
       log.e('BG-PLAYER',`stop called`)
-      if(!isLowEndDev) playerManagerRef.value?.stop()
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.stop()
       if(isAnyPlaying.value) {
         isAnyPlaying.value = false
       }
@@ -329,12 +329,12 @@ export default defineComponent({
       log.e('BG-PLAYER',`stop called`)
       if(isAnyPlaying.value){
         isAnyPlaying.value = false
-        if(!isLowEndDev) playerManagerRef.value?.stop()
+        if(!BuildConfig.isLowEndDev) playerManagerRef.value?.stop()
       }
     }
     const pause = () => {
       log.d('BG-PLAYER',`pause`)
-      if(!isLowEndDev) playerManagerRef.value?.stop()
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.stop()
       if(isAnyPlaying.value) {
         isAnyPlaying.value = false
       }
@@ -342,10 +342,10 @@ export default defineComponent({
     const resume = () => {
       log.d('BG-PLAYER',`resume`)
       //FIXME 这里使用了start方法，应该是resume?
-      if(!isLowEndDev) playerManagerRef.value?.resume()
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.resume()
     }
     const setPlayMediaListMode = (playMode: ESPlayerPlayMode ) => {
-      if(!isLowEndDev) playerManagerRef.value?.setPlayMediaListMode(playMode)
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setPlayMediaListMode(playMode)
     }
     let dismissCoverTimer: any
     const onVideoPlayerPlaying = () => {

@@ -5,6 +5,8 @@ export default {
   testEnv: env,
   // 使用模拟数据
   useMockData: false,
+  //是低端设备
+  isLowEndDev: false,
   //ES包名
   packageName: 'es.tv.huan.hellotv',
   //域名
