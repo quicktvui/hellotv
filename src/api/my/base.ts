@@ -89,7 +89,7 @@ export class MyBase {
           }
         }),
         options: {
-          posterType: posterTypes.info, columns: 6// 指定 columns 创建板块数据
+          posterType: posterTypes.info, columns: 6,// 指定 columns 创建板块数据
         }
       })
     ]

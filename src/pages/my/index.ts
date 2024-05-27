@@ -1,7 +1,7 @@
 import {
   QTPoster, QTWaterfallItem,
   QTWaterfallSection,
-  QTWaterfallSectionType, QTITab, QTTabPageData
+  QTWaterfallSectionType, QTITab, QTTabPageData, QTTabPageState
 } from '@quicktvui/quicktvui3';
 import { Ref } from 'vue'
 import myApi from '../../api/my/index';
@@ -63,6 +63,7 @@ interface IblockOptions {
   space?: number;
   posterBottom?: number;
   posterType?: number;
+  [k: string]: any
 }
 interface IBlockData {
   id: string;
@@ -257,13 +258,17 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
 }
 export interface ImySectionRes {
   section: QTWaterfallSection;
-  options?: IblockOptions
+  options?: IblockOptions;
+  sectionHeight:number
 }
 export const getMysection = (data: IBlockData, sectionType: number = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX): ImySectionRes => {
   const space = data.options?.space || dSpace
   const contentWidth = dPageWidth - dPageMarginSpace - (dPageMarginSpace - space)
+  let sectionHeight = 0
   const itemList = data.list.map((item, index) => {
-    return getPosterConfig({ ...item, _sectionItemId: data.id + item.id + index }, data.options)
+    const posterData = getPosterConfig({ ...item, _sectionItemId: data.id + item.id + index }, data.options)
+    // sectionHeight += (posterData.style.height||0)+(posterData.decoration?.bottom||0)
+    return posterData
   })
   const blockTitleFontSize = data.options?.blockTitleFontSize || dBlockTitleFontSize
   const section: QTWaterfallSection = {
@@ -288,9 +293,14 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
       // right: dPageMarginSpace-space,
       top: 15,
       bottom: 5
-    }
+    },
+    isSwitchCellBg: '0',
+    isFocusScrollTarget:false
   }
-  return { section, options: data.options }
+  return { 
+    section, options: data.options,
+    sectionHeight: sectionHeight//+(section.decoration?.bottom||0)+(section.titleStyle?.height||0)+(section.titleStyle?.marginBottom||0)
+  }
 }
 
 import recordIcon from '../../assets/my/record.png'
@@ -349,12 +359,12 @@ class MyDataManager {
       if(cIndex === this.tabPageIndex){
         const tData = await this.getData()
         tData[0].decoration!.top = tabContentTop
-        tData[0].isSwitchCellBg = '0'
-        const tabPage: QTTabPageData = {
-          data: tData,
-          useDiff: true
-        }
-        tabRef.value?.setPageData(this.tabPageIndex, tabPage)
+        tData[tData.length-1].decoration!.bottom = 20
+        // const tabPage: QTTabPageData = {
+        //   data: tData,
+        //   useDiff: true
+        // }
+        // tabRef.value?.setPageData(this.tabPageIndex, tabPage)
         // tabRef.value?.updatePageData(this.tabPageIndex, tabPage)
         console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
       }
@@ -370,14 +380,17 @@ class MyDataManager {
     // section.isSwitchCellBg = '0'
     const tData = await this.getData()
     tData[0].decoration!.top = tabContentTop
-    tData[0].isSwitchCellBg = '0'
+    tData[tData.length-1].decoration!.bottom = 20
     const tabPage: QTTabPageData = {
       data: tData,
-      useDiff: false
+      useDiff: false,
+      disableScrollOnFirstScreen: false,
+      isEndPage: true
     }
     tabRef.value?.setPageData(tabIndex, tabPage)
     this.tabPageIndex = tabIndex
-    console.log(this.tabPageIndex,'lsj-this.tabPageIndex')
+
+    tabRef.value?.setPageState(tabIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
   }
 }
 const myDataManager = new MyDataManager()

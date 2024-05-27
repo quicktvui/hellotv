@@ -226,21 +226,7 @@ export default defineComponent({
       if (tabItemList && pageIndex >= 0 && pageIndex < tabItemList.length) {
         const tab = tabItemList[pageIndex]
         // 处理"我的"Tab展示
-        if (config.tab.showMineTab && pageIndex === 0) {
-          // let section: QTWaterfallSection = {
-          //   _id: '1',
-          //   type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
-          //   style: { width: 1920, height: -1 },
-          //   isSwitchCellBg: '0',
-          //   itemList: [],
-          //   decoration: { top: tabContentTop }
-          // }
-          // let sectionList: Array<QTWaterfallSection> = [section]
-          // const tabPage: QTTabPageData = {
-          //   data: sectionList,
-          //   useDiff: useDiff
-          // }
-          // tabRef.value?.setPageData(pageIndex, tabPage)
+        if (config.tab.showMineTab && pageIndex === 0&&pageNo==0) {
           myDataManager.setData(tabRef, pageIndex, tabContentTop)
         } else {
           if (tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
@@ -263,6 +249,7 @@ export default defineComponent({
             if (pageNo <= 1) {
               buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
               //tabPage.bindingPlayer = 'CELL_LIST'
+              console.log(tabPage, '--lsj-tabPage')
               tabRef.value?.setPageData(tabPageIndex, tabPage)
 
             } else {
@@ -546,6 +533,7 @@ export default defineComponent({
       onESDestroy,
       onESRestart(){
         myHistory.setData(tabRef)
+        myDataManager.updateData(tabRef)
       },
       tabsTriggerTask,
       wTabBg,
