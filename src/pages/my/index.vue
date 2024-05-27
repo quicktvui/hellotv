@@ -9,7 +9,7 @@
       :paddingRect="[0, 0, 0, 0]" @onItemClick='onItemClick'
     >
       <template v-slot:item>
-        <MyTemplate />
+        <MyTemplates />
       </template>
     </qt-waterfall>
     <qt-loading-view v-if="isLoading" class="my_page_loading" color="rgba(255,255,255,0.3)" :focusable="false" />
@@ -17,18 +17,14 @@
 </template>
 <script lang='ts' setup>
 import { CSSProperties, reactive, computed, ref, onBeforeUnmount } from 'vue';
-// import MyPoster from './poster/index.vue'
-// import MyPosterInfo from './poster/info.vue'
-// import MyPosterCard from './poster/card.vue'
-// import MyPosterUser from './poster/user.vue'
-import MyTemplate from './MyTemplate2.vue'
+import MyTemplates from './MyTemplates.vue'
 // @ts-ignore
 import myApi from '../../api/my/index.ts'
 // @ts-ignore
 import { Iconfig } from '../../api/my/types.ts'
 import { qtRef, QTWaterfallSection } from '@quicktvui/quicktvui3'
 // @ts-ignore
-import myDataManager, { dPageWidth, dPageheight, dPageMarginSpace, transHistorySection, transMoreSectin, transOrderSection, IBlockItemData, activity_redirectTypes } from './index.ts'
+import myDataManager, { dPageWidth, dPageheight, dPageMarginSpace, IBlockItemData, activity_redirectTypes } from './index.ts'
 import { useESRouter, useESNativeRouter } from '@extscreen/es3-router';
 import logo from '../../assets/cell-list-focus-img.png'
 

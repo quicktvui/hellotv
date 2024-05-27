@@ -50,7 +50,7 @@
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
           <itemHistory :type="121" />
           <itemHistoryImg :type="122" />
-          <MyTemplate2 />
+          <MyTemplates />
         </template>
         <template v-slot:waterfall-list-item>
           <page-state-image-item :type="1"/>
@@ -98,7 +98,7 @@ import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
 import loading from "../../../components/Loading.vue"
 import config from '../config'
 import myHistory from './history/index'
-import MyTemplate2 from '../../my/MyTemplate2.vue'
+import MyTemplates from '../../my/MyTemplates.vue'
 // @ts-ignore
 import myDataManager from '../../my/index.ts'
 
@@ -107,7 +107,7 @@ const TAG = "WATERFALL-TABS"
 export default defineComponent({
   name: "waterfall-tabs",
   components: {
-    PageNoFrameItem,itemHistory,itemHistoryImg,MyTemplate2,
+    PageNoFrameItem,itemHistory,itemHistoryImg,MyTemplates,
     PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
     TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
   },

@@ -156,6 +156,10 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     _id: data._sectionItemId || data.id,
     _router: data._router,
     _action: data._action,
+    item: {
+      redirectType: data._redirectType|| activity_redirectTypes.innerRouter,
+      innerArgs: data._router?JSON.stringify(data._router):"",
+    },
     _redirectType: data._redirectType || activity_redirectTypes.innerRouter,
     cornerNum, _isShowCornerNum: cornerNum !== '0',
     _isCornerNum: data.cornerNum ? true : false,
@@ -331,7 +335,7 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
     id: orederRes.section._id || '' + orederRes.section.itemList.length,
     img: dAvatar, title: '登录同步云端记录', subTitle: '登陆',
     _layout: { width: 556, height: 230 },
-    _router: { url: 'home', isReplace: true },
+    // _router: { url: 'home', isReplace: true },
   }, {
     posterType: posterTypes.user,
     space: orederRes.options?.space
