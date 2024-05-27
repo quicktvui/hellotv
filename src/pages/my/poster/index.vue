@@ -1,5 +1,5 @@
 <template>
-  <item-frame :type="1" layout="${layout}" flexStyle="${style}" focusScale="${focus.scale}" :focusable="true" eventClick
+  <item-frame :type="101" layout="${layout}" flexStyle="${style}" focusScale="${focus.scale}" :focusable="true" eventClick
     eventFocus name="my_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
     hideShadow="${shadow.enable}" shimmerSize="${size}">
     <!-- :enableBlackBorder="false" -->

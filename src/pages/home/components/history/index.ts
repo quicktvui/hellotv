@@ -9,7 +9,7 @@ class MyHistory {
   sectionIndex = -1
 
   setData(tabRef:Ref<QTITab|undefined>){
-    if(this.tabPageIndex){
+    if(this.tabPageIndex!=undefined&&(this.tabPageIndex>=0)){
       tabRef.value?.getCurrentTabIndex().then(cIndex=>{
         if(cIndex === this.tabPageIndex){
           const _data = tabRef.value?.getPageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex)

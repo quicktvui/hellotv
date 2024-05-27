@@ -21,7 +21,7 @@ import { CSSProperties, reactive, computed, ref, onBeforeUnmount } from 'vue';
 // import MyPosterInfo from './poster/info.vue'
 // import MyPosterCard from './poster/card.vue'
 // import MyPosterUser from './poster/user.vue'
-import MyTemplate from './MyTemplate.vue'
+import MyTemplate from './MyTemplate2.vue'
 // @ts-ignore
 import myApi from '../../api/my/index.ts'
 // @ts-ignore
@@ -78,6 +78,7 @@ const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
   }
 }
 const updateData = async () => {
+  console.log(myDataManager, '-lsj-my-updateData')
   const datas = await myDataManager.getData()
   if(datas){
     contentData.value = datas

@@ -1,5 +1,5 @@
 <template>
-  <item-frame :type="4" layout="${layout}" flexStyle="${image.style}" focusScale="${focus.scale}" :focusable="true" eventClick
+  <item-frame :type="104" layout="${layout}" flexStyle="${image.style}" focusScale="${focus.scale}" :focusable="true" eventClick
     eventFocus name="my_poster_user_name" class="my_poster_user" itemShowShimmer="${shimmer.enable}"
     hideShadow="${shadow.enable}" shimmerSize="${size}">
     <div :focusable="false" overflow="hidden" :clipChildren="true" :duplicateParentState="true" class="poster_user_content_box" flexStyle="${image.style}">

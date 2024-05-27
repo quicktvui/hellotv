@@ -1,7 +1,7 @@
 import {
   QTPoster, QTWaterfallItem,
   QTWaterfallSection,
-  QTWaterfallSectionType, QTITab
+  QTWaterfallSectionType, QTITab, QTTabPageData
 } from '@quicktvui/quicktvui3';
 import { Ref } from 'vue'
 import myApi from '../../api/my/index';
@@ -14,7 +14,7 @@ export const activity_redirectTypes = {
 const dcornerGradientBg = { colors: ['#FFE398', '#EEB364'], cornerRadii4: [0, 8, 0, 8], orientation: 2, }
 
 export const posterTypes = {
-  poster: 1, card: 2, info: 3, user: 4
+  poster: 101, card: 102, info: 103, user: 104
 }
 export interface IBlockItemData {
   id: string
@@ -331,7 +331,7 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
 }
 
 class MyDataManager {
-  tabPageIndex?:number
+  tabPageIndex = -1
 
   async getData(){
     const orderRes = await myApi.getOrderInfo()
@@ -343,16 +343,46 @@ class MyDataManager {
       ...transMoreSectin(false, moreRes)
     ]
   }
-  setData(tabRef:Ref<QTITab|undefined>){
-    if(this.tabPageIndex){
-      tabRef.value?.getCurrentTabIndex().then(cIndex=>{
-        if(cIndex === this.tabPageIndex){
-          // tabRef.value?.updatePageData(this.tabPageIndex, {})
-          console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+  async updateData(tabRef:Ref<QTITab|undefined>, tabContentTop = 0){
+    if(this.tabPageIndex>=0){
+      const cIndex = await tabRef.value?.getCurrentTabIndex()
+      if(cIndex === this.tabPageIndex){
+        const tData = await this.getData()
+        tData[0].decoration!.top = tabContentTop
+        tData[0].isSwitchCellBg = '0'
+        const tabPage: QTTabPageData = {
+          data: tData,
+          useDiff: true
         }
-      })
+        tabRef.value?.setPageData(this.tabPageIndex, tabPage)
+        // tabRef.value?.updatePageData(this.tabPageIndex, tabPage)
+        console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+      }
     }
+  }
+  async setData(tabRef:Ref<QTITab|undefined>, tabIndex, tabContentTop = 0){
+    // const {section} = getMysection({
+    //   id: '1getOrderInfo',
+    //   list: [],
+    //   options: { posterType: posterTypes.card }
+    // })
+    // section.decoration!.top = tabContentTop
+    // section.isSwitchCellBg = '0'
+    const tData = await this.getData()
+    tData[0].decoration!.top = tabContentTop
+    tData[0].isSwitchCellBg = '0'
+    const tabPage: QTTabPageData = {
+      data: tData,
+      useDiff: false
+    }
+    tabRef.value?.setPageData(tabIndex, tabPage)
+    this.tabPageIndex = tabIndex
+    console.log(this.tabPageIndex,'lsj-this.tabPageIndex')
   }
 }
 const myDataManager = new MyDataManager()
+
+// if(pageIndex === myDataManager.tabPageIndex){
+//   myDataManager.setData(tabRef, tabContentTop)
+// }
 export default myDataManager

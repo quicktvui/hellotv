@@ -50,6 +50,7 @@
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
           <itemHistory :type="121" />
           <itemHistoryImg :type="122" />
+          <MyTemplate2 />
         </template>
         <template v-slot:waterfall-list-item>
           <page-state-image-item :type="1"/>
@@ -59,7 +60,7 @@
           <itemHistoryImg :type="122" />
         </template>
         <template v-slot:waterfall-vue-section>
-          <loading :isFullScreen="true" :width="120" :height="120" />
+          <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
         </template>
       </qt-tabs>
       <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
@@ -83,6 +84,7 @@ import { useLaunch } from "../../../tools/launch/useApi";
 import { useGlobalApi } from "../../../api/UseApi";
 import BuildConfig from "../../../build/BuildConfig";
 import { buildTabPage } from "../build_data/tab/tabs";
+import { tabContentTop } from "../build_data/tab_content/TabContentAdapter";
 import TabImageItem from "./tab/tab-image-item.vue";
 import PageStateImageItem from "./page/page-state-image-item.vue";
 import TabIconItem from "./tab/tab-icon-item.vue";
@@ -96,13 +98,16 @@ import bgPlayer, { CoveredPlayerType } from "../../../components/bg-player.vue"
 import loading from "../../../components/Loading.vue"
 import config from '../config'
 import myHistory from './history/index'
+import MyTemplate2 from '../../my/MyTemplate2.vue'
+// @ts-ignore
+import myDataManager from '../../my/index.ts'
 
 const TAG = "WATERFALL-TABS"
 
 export default defineComponent({
   name: "waterfall-tabs",
   components: {
-    PageNoFrameItem,itemHistory,itemHistoryImg,
+    PageNoFrameItem,itemHistory,itemHistoryImg,MyTemplate2,
     PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
     TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
   },
@@ -188,8 +193,9 @@ export default defineComponent({
           toast.showToast('加载数据失败，稍后重试！')
         })
     }
+    
     function onESStart() {
-
+      
     }
 
     function onESResume() {
@@ -219,22 +225,23 @@ export default defineComponent({
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
       if (tabItemList && pageIndex >= 0 && pageIndex < tabItemList.length) {
         const tab = tabItemList[pageIndex]
-
         // 处理"我的"Tab展示
         if (config.tab.showMineTab && pageIndex === 0) {
-          let section: QTWaterfallSection = {
-            _id: '1',
-            type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_VUE,
-            style: { width: 1920, height: 1080 },
-            isSwitchCellBg: '0',
-            itemList: []
-          }
-          let sectionList: Array<QTWaterfallSection> = [section]
-          const tabPage: QTTabPageData = {
-            data: sectionList,
-            useDiff: useDiff
-          }
-          tabRef.value?.setPageData(pageIndex, tabPage)
+          // let section: QTWaterfallSection = {
+          //   _id: '1',
+          //   type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
+          //   style: { width: 1920, height: -1 },
+          //   isSwitchCellBg: '0',
+          //   itemList: [],
+          //   decoration: { top: tabContentTop }
+          // }
+          // let sectionList: Array<QTWaterfallSection> = [section]
+          // const tabPage: QTTabPageData = {
+          //   data: sectionList,
+          //   useDiff: useDiff
+          // }
+          // tabRef.value?.setPageData(pageIndex, tabPage)
+          myDataManager.setData(tabRef, pageIndex, tabContentTop)
         } else {
           if (tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
         }
@@ -451,7 +458,6 @@ export default defineComponent({
         }
       }
     }
-
     function onTabEvent(tabIndex: number, eventName: string, params: any) {
       if (eventName == 'onPageBringToFront') {
         let pageIndex = params.page
