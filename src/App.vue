@@ -42,6 +42,7 @@ export default defineComponent({
     function onESCreate(app, params) {
       initESLog()
       network.addListener(connectivityChangeListener)
+      switchDev()
       return Promise.resolve()
         .then(() => request.init(es, develop, device, runtime, log))
         .then(() => globalApi.init(request))
