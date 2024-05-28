@@ -87,6 +87,8 @@
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
+          <itemHistory :type="121" />
+          <itemHistoryImg :type="122" />
         </template>
         <template v-slot:waterfall-vue-section>
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
@@ -497,7 +499,7 @@ export default defineComponent({
           delayStopPlayer()
         }
         bg_player.value?.delayShowPlayer(500)
-        
+        console.log(pageIndex, myHistory.tabPageIndex, '-lsj-pageIndex === myHistory.tabPageIndex')
         if(pageIndex === myHistory.tabPageIndex){
           myHistory.setData(tabRef)
         }
