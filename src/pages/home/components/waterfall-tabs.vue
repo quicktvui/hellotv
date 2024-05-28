@@ -44,6 +44,22 @@
           <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
         </template>
         <template v-slot:waterfall-item>
+          <qt-poster :type="10001">
+            <div
+              showIf="${corner.showCornerRight==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row-reverse">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+            <div
+              showIf="${corner.showCornerLeft==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+          </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
@@ -53,6 +69,22 @@
           <MyTemplates />
         </template>
         <template v-slot:waterfall-list-item>
+          <qt-poster :type="10001">
+            <div
+              showIf="${corner.showCornerRight==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row-reverse">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+            <div
+              showIf="${corner.showCornerLeft==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+          </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
@@ -193,9 +225,9 @@ export default defineComponent({
           toast.showToast('加载数据失败，稍后重试！')
         })
     }
-    
+
     function onESStart() {
-      
+
     }
 
     function onESResume() {
@@ -375,7 +407,7 @@ export default defineComponent({
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player?.value.setCurBg()
           bg_player.value.delayShowPlayer(200)
-        } 
+        }
         bg_player?.value.resume()
         bg_player?.value.requestDismissCover()
       }

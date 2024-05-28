@@ -186,20 +186,38 @@ export function buildPosterRipple(tabContentItem: TabSectionItem): QTPosterRippl
 }
 
 export function buildPosterCorner(tabContentItem: TabSectionItem): QTPosterCorner {
-    const cornerContent = tabContentItem.cornerContent
-    const cornerColor = tabContentItem.cornerColor
-    const cornerGradient = tabContentItem.cornerGradient || cornerColor
+  const cornerContent = tabContentItem.cornerContent
+  const cornerColor = tabContentItem.cornerColor
+  const cornerGradient = tabContentItem.cornerGradient || cornerColor
+  //角标类型 0：文字，1：图片
+  const cornerStyle = tabContentItem.cornerStyle ?? "0"
+  //角标位置 1:左上角，0：右上角
+  const cornerPosition = tabContentItem.cornerPosition ?? "0"
+  const text = (cornerStyle === "0") ? cornerContent + "" : ""
+  const cornerImage = (cornerStyle === "1") ? tabContentItem.cornerImage : ""
+  const enableImg = (!!cornerImage ?? false) && (cornerStyle === "1")
+  const enable = (!!cornerContent ?? false ) && !enableImg && (cornerStyle === "0")
+  const showCornerRight = cornerPosition === '0'
+  const showCornerLeft = cornerPosition === '1'
     return {
-        text: cornerContent+"",
-        enable: cornerContent != '' && cornerContent != null && cornerContent != 'null',
-        style: {
-            width: tabContentItem.width,
-            height: 30
-        },
-        background: {
-            colors: [cornerColor ? cornerColor : '#ffB67827', cornerGradient ? cornerGradient : '#ffB67827'],
-            cornerRadii4: [0, 8, 0, 8],
-            orientation: 2
-        }
+      text: text,
+      enable: enable,
+      enableImg:enableImg,
+      showCornerRight:showCornerRight,
+      showCornerLeft:showCornerLeft,
+      style: {
+        width: tabContentItem.width,
+        height: 36
+      },
+      styleImg:{
+        width: enableImg ? 120 :0,
+        height: enableImg ? 36 : 0
+      },
+      src:enableImg ? cornerImage :"",
+      background: {
+        colors: [cornerColor ? cornerColor : "#ffB67827", cornerGradient ? cornerGradient : "#ffB67827"],
+        cornerRadii4: showCornerRight ? [0, 8, 0, 8] : [8, 0, 8, 0],
+        orientation: 2
+      }
     }
 }
