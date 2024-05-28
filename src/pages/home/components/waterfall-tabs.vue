@@ -20,7 +20,6 @@
         :outOfDateTime="5 * 60 * 1000"
         @onTabClick="onTabClick"
         :tabContentSwitchDelay='0'
-        :playerBindingRelation='callbackFn(playerBindingRelationArrKey)'
         sid='homeTabs'
         :custom-pool="{ name: 'home' }"
         :custom-item-pool="{ name: 'homeItems' }"
@@ -192,23 +191,8 @@ export default defineComponent({
     const wTabBg = ref()
     //tab
     let tabItemList: Array<QTTabItem>
-    let delayStopPlaerTimer: any = -1
-    let delayChangePlayerTimer: any = -1
+    let delayStopPlayerTimer: any = -1
 
-    // let playerBindingRelation = {
-    //   '1' : 'bg_player_replace_child_sid',
-    //   '2' : 'CELL_LIST',
-    //   '3' : 'CELL',
-    //   '8' : 'bg_player_replace_child_sid_2',
-    // }
-    let playerBindingRelationArrKey = ref(0)
-    const callbackFn = (arg: any) => {
-      console.log(arg, 'argplayerBindingRelationArr', playerBindingRelation)
-      return playerBindingRelation
-    }
-
-    let playerBindingRelation = new Map()
-    //
     function onESCreate(params) {
       isOneTime = true
       mediaInterceptor = createESHomeBGPlayerMediaInterceptor(globalApi)
@@ -226,9 +210,6 @@ export default defineComponent({
         })
     }
 
-    function onESStart() {
-
-    }
 
     function onESResume() {
       if (isOneTime) {
@@ -258,7 +239,7 @@ export default defineComponent({
       if (tabItemList && pageIndex >= 0 && pageIndex < tabItemList.length) {
         const tab = tabItemList[pageIndex]
         // 处理"我的"Tab展示
-        if (config.tab.showMineTab && pageIndex === 0&&pageNo==0) {
+        if (config.tab.showMineTab && pageIndex === 0 && pageNo === 0) {
           myDataManager.setData(tabRef, pageIndex, tabContentTop)
         } else {
           if (tab._id == '0' || tab._id) getTabContent(tab._id, pageIndex, pageNo + 1)
@@ -280,10 +261,7 @@ export default defineComponent({
 
             if (pageNo <= 1) {
               buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
-              //tabPage.bindingPlayer = 'CELL_LIST'
-              console.log(tabPage, '--lsj-tabPage')
               tabRef.value?.setPageData(tabPageIndex, tabPage)
-
             } else {
               tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
             }
@@ -298,8 +276,10 @@ export default defineComponent({
     }
 
     function setTabPagePageNo(tabPageIndex: number, pageNo: number) {
+      console.log("XRG===111",tabItemList[tabPageIndex])
       const tab: QTTabItem = tabItemList[tabPageIndex]
       tab.pageNo = pageNo
+      console.log("XRG===222",tabItemList[tabPageIndex])
     }
     // 加载数据时获取小窗 小窗列表 背景播放数据
     async function buildPlayerData(pageIndex: number, itemList: any, tabPage: QTTabPageData) {
@@ -338,7 +318,6 @@ export default defineComponent({
           }
         }
       }
-      playerBindingRelationArrKey.value++
     }
 
     /**
@@ -534,7 +513,6 @@ export default defineComponent({
       )
       bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
-      clearTimeout(delayChangePlayerTimer)
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
     }
@@ -544,11 +522,11 @@ export default defineComponent({
     }
 
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
-      delayStopPlaerTimer && clearTimeout(delayStopPlaerTimer)
+      delayStopPlayerTimer && clearTimeout(delayStopPlayerTimer)
       bg_player.value?.stop()
       bg_player.value?.setBgImage("")
       if (!isOneTimeStop) {
-        delayStopPlaerTimer = setTimeout(() => {
+        delayStopPlayerTimer = setTimeout(() => {
           bg_player.value?.stop()
           isOneTimeStop = true
         }, 2000)
@@ -558,7 +536,6 @@ export default defineComponent({
     return {
       waterfall_tab_root,
       onESCreate,
-      onESStart,
       onESStop,
       onESResume,
       onESPause,
@@ -571,8 +548,6 @@ export default defineComponent({
       wTabBg,
       tabRef,
       bg_player, bgPlayerType,
-      playerBindingRelation,
-      callbackFn, playerBindingRelationArrKey,
       onTabPageLoadData,
       onTabPageChanged,
       onTabMoveToTopStart,
