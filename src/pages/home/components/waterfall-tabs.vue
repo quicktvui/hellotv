@@ -49,12 +49,44 @@
           <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
         </template>
         <template v-slot:waterfall-item>
+          <qt-poster :type="10001">
+            <div
+              showIf="${corner.showCornerRight==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row-reverse">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+            <div
+              showIf="${corner.showCornerLeft==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+          </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
         </template>
         <template v-slot:waterfall-list-item>
+          <qt-poster :type="10001">
+            <div
+              showIf="${corner.showCornerRight==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row-reverse">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+            <div
+              showIf="${corner.showCornerLeft==true}"
+              :focusable="false"
+              flexStyle="${corner.style}"
+              style="z-index:1000;position: absolute;flex-direction:row">
+              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
+            </div>
+          </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
