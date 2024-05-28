@@ -167,8 +167,8 @@ class MyHistory {
             // newData.apiList = apiList.data?.slice(0,2)
           }
           const newData = getMyHistoryBlock(_data, isLogin)
-          
-          tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
+          tabRef.value?.updateChildNode(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
+          // tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
           console.log(newData, '--lsj--data-init')
         }
       }
