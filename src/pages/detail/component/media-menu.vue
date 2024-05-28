@@ -1,6 +1,5 @@
 <template>
-  <qt-view class="media-menu-root-css"
-           :clipChildren="true">
+  <qt-view :class="`media-menu-root-css${suffix}`" :clipChildren="true">
     <ul class="media-menu-root-list-css"
         v-if="init"
         :clipChildren="false"
@@ -12,6 +11,7 @@
         <media-menu-button
           v-if="item.type === 1"
           ref="fullScreenButtonRef"
+          :suffix="suffix"
           :icon="fullButtonNormal"
           text="全屏"
           @click="onFullButtonClick"
@@ -20,13 +20,17 @@
 
         <media-menu-vip-button
           v-if="!authenticated && item.type === 2"
+          :suffix="suffix"
+          :style="item.style"
           @click="onVIPButtonClick" />
 
         <media-menu-button
           v-if="item.type === 3"
+          :suffix="suffix"
+          :style="item.style"
           :focus-icon="favButtonFocused"
           :icon="favButtonNormal"
-          text="收藏"
+          text="收藏收藏"
           :vip-focus-icon="favButtonVIPFocused"
           @click="onFavouriteButtonClick" />
       </li>
@@ -35,10 +39,8 @@
 </template>
 
 <script lang="ts">
-
 import { defineComponent } from "@vue/runtime-core"
 import { IMedia } from "../../../api/media/IMedia"
-import { useESRouter } from "@extscreen/es3-router"
 import media_menu_button from "./media-menu-button.vue"
 import media_menu_vip_button from "./media-menu-vip-button.vue"
 
@@ -57,6 +59,8 @@ import { inject, Ref, ref, watch } from "vue"
 import { mediaAuthorizationKey } from "../injectionSymbols"
 import { IMediaMenuButton } from "./IMediaMenuButton"
 
+import config from "../config"
+
 const TAG = "MEDIA_MENU"
 
 export default defineComponent({
@@ -71,6 +75,7 @@ export default defineComponent({
     "onMenuFavouriteButtonClick"
   ],
   setup(props, context) {
+    const suffix = config.menuSize === 'small' ? '-small' : ''
     const log = useESLog()
     const authenticated = ref<boolean>(true)
     const mediaAuthorization: Ref<IMediaAuthorization> =
@@ -86,10 +91,10 @@ export default defineComponent({
     const fullScreenButtonRef = ref<Array<IMediaMenuButton>>()
 
     const noVipMenuList = [
-      { type: 1 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
+      { type: 1 }, { type: 3, style: { width: '200px' } }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
     ]
     const vipMenuList = [
-      { type: 1 }, { type: 2 }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
+      { type: 1 }, { type: 2 }, { type: 3 }, { type: 3, style: { width: '200px' } }, { type: 3 }, { type: 3 }
     ]
 
     watch(
@@ -124,7 +129,7 @@ export default defineComponent({
       eventbus.emit("onMenuVIPButtonClick")
     }
 
-    function setAutofocus(enable:boolean){
+    function setAutofocus(enable: boolean) {
       autofocus.value = enable
     }
 
@@ -138,11 +143,12 @@ export default defineComponent({
       }
     }
 
-    function release(){
+    function release() {
       // menuList.value = []
     }
 
     return {
+      suffix,
       init,
       initMedia,
       menuList,
@@ -178,11 +184,19 @@ export default defineComponent({
   background-color: transparent;
 }
 
+.media-menu-root-css-small {
+  width: 846px;
+  height: 70px;
+  position: absolute;
+  left: 1016px;
+  top: 425px;
+  background-color: transparent;
+}
+
 .media-menu-root-list-css {
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: flex-start;
 }
-
 </style>
