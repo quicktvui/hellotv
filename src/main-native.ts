@@ -1,4 +1,6 @@
 //--------------------router-----------------------
+import { ILoginDataSource } from "./api/login/ILoginDataSource"
+
 import routes from "./routes";
 //--------------------ESApp-----------------------
 import application from './App.vue';
@@ -62,13 +64,19 @@ if (BuildConfig.useMockData) {
   app.use(mediaDataSource);
 }
 //---------------------------用户管理----------------------------------
-import { createUserManager, UserManager } from "./tools/user/UserManager";
+import { createUserManager, UserManager } from "./api/login/user/UserManager";
 
 const userManager: UserManager = createUserManager()
 app.use(userManager);
+
+import { createUserApi } from "./api/login/UseLoginApi"
+const loginManager:ILoginDataSource = createUserApi()
+app.use(loginManager)
 
 //---------------------------启动管理----------------------------------
 import { createLaunch, Launch } from "./tools/launch/Launch";
 
 const launch: Launch = createLaunch()
 app.use(launch);
+
+

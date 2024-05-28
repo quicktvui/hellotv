@@ -15,9 +15,14 @@ export interface TabSectionItem {
   posterTitleStyle?: string
   posterSubtitle?: string
   floatTitle?: string
+  //角标类型 0：文字，1：图片
+  cornerStyle?:string
+  //1:左上角，0：右上角
+  cornerPosition?:string
   cornerContent?: string
   cornerColor?: string
   cornerGradient?: string
+  cornerImage?:string,
   focusImage?: string
   nonFocusImage?: string
   playLogoSwitch: string

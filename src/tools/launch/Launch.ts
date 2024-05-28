@@ -1,13 +1,12 @@
 //
-import {QTWaterfallItem} from "@quicktvui/quicktvui3";
-import {App} from "vue";
+import { ESApp } from "@extscreen/es3-vue"
 import {LaunchKey} from "./useApi";
 import {ESNativeRouter, Router} from "@extscreen/es3-router";
 import {ESLog, ESLogLevel} from "@extscreen/es3-core";
 
 export interface Launch {
 
-    install(app: App): void
+    install(app: ESApp): void
 
     init(...params: any[]): Promise<any>;
 
@@ -63,7 +62,7 @@ export function createLaunch(): Launch {
     }
 
     return {
-        install: function (app: App) {
+        install: function (app: ESApp) {
             const instance = this
             app.provide(LaunchKey, instance)
         },
