@@ -5,5 +5,5 @@ export interface TabPlayItem{
   cover:string,
   url:string,
   isRequestUrl?:boolean,
-  thumbnail?:boolean,
+  thumbnail?:string,
 }

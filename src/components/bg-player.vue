@@ -216,7 +216,6 @@ export default defineComponent({
           let el = playerListData[i]
           el.type = el.thumbnail ? 10002 : 10001;
           el.decoration = {};
-          el.isPlaying = (i === 0);
           arr.push(el)
         }
         nextTick(() => {
@@ -389,16 +388,13 @@ export default defineComponent({
     }
     const dealwithItemPlay = (item: any,nextIndex:any) => {
       listViewRef.value?.clearPostTask()
-      if(delayUpdateItemTimer) clearTimeout(delayUpdateItemTimer)
+      delayUpdateItemTimer && clearTimeout(delayUpdateItemTimer)
       listViewRef.value?.setItemSelected(nextIndex,true)
       initPlayBg(item.cover)
-
       showCoverImmediately()
+      stop()
       delayUpdateItemTimer = setTimeout(() => {
-        listDataRec[currentPlayIndex.value].isPlaying = false
         currentPlayIndex.value = nextIndex
-        stop()
-        listDataRec[nextIndex].isPlaying = true
         play(item)
         playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       },300)
