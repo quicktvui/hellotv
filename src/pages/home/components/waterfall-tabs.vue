@@ -65,7 +65,7 @@
           <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
           <itemHistory :type="121" />
           <itemHistoryImg :type="122" />
-          <MyTemplates />
+          <MyTemplates :focusable="false"/>
         </template>
         <template v-slot:waterfall-list-item>
           <qt-poster :type="10001">
@@ -87,8 +87,6 @@
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
           <page-place-holder-item :type="3"/>
-          <itemHistory :type="121" />
-          <itemHistoryImg :type="122" />
         </template>
         <template v-slot:waterfall-vue-section>
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
@@ -261,6 +259,7 @@ export default defineComponent({
 
             if (pageNo <= 1) {
               buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
+              //tabPage.bindingPlayer = 'CELL_LIST'
               tabRef.value?.setPageData(tabPageIndex, tabPage)
             } else {
               tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
@@ -498,7 +497,7 @@ export default defineComponent({
           delayStopPlayer()
         }
         bg_player.value?.delayShowPlayer(500)
-
+        
         if(pageIndex === myHistory.tabPageIndex){
           myHistory.setData(tabRef)
         }
