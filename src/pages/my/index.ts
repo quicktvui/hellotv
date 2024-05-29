@@ -4,6 +4,7 @@ import {
   QTWaterfallSectionType, QTITab, QTTabPageData, QTTabPageState
 } from '@quicktvui/quicktvui3';
 import { Ref } from 'vue'
+import { UserManager } from "../../api/login/user/UserManager"
 import myApi from '../../api/my/index';
 
 export const activity_redirectTypes = {
@@ -35,7 +36,7 @@ export interface IBlockItemData {
   gradientBb?: typeof dcornerGradientBg;//背景色-渐变色
   _router?: { //当前app内部路由地址
     url: string; params?: object,
-    isReplace?:boolean//是否替换当前页 
+    isReplace?:boolean//是否替换当前页
   }
   _action?: string; // 内部其他app地址
   _redirectType?: number;//跳转类型，取值见activity_redirectTypes
@@ -301,7 +302,7 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
     isSwitchCellBg: '0',
     isFocusScrollTarget:false
   }
-  return { 
+  return {
     section, options: data.options,
     sectionHeight: sectionHeight//+(section.decoration?.bottom||0)+(section.titleStyle?.height||0)+(section.titleStyle?.marginBottom||0)
   }
@@ -330,12 +331,13 @@ export const transMoreSectin = (isLogin = false, sections: ImySectionRes[]) => {
 }
 
 import dAvatar from '../../assets/ic_header_login_normal.png'
+import { UserInfo } from "../login/build_data/UserInfo"
 export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => {
   orederRes.section.itemList.unshift(getPosterConfig({
     id: orederRes.section._id || '' + orederRes.section.itemList.length,
     img: dAvatar, title: '登录同步云端记录', subTitle: '登陆',
     _layout: { width: 556, height: 230 },
-    // _router: { url: 'home', isReplace: true },
+    _router: { url: 'login', isReplace: false },
   }, {
     posterType: posterTypes.user,
     space: orederRes.options?.space
@@ -347,10 +349,12 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
 class MyDataManager {
   tabPageIndex = -1
 
-  async getData(){
+  async getData(userManager:UserManager){
     const orderRes = await myApi.getOrderInfo()
     const historyRes = await myApi.getHistorys()
     const moreRes = await myApi.getMoreList()
+    const userInfo = userManager.getUserInfo()
+    console.log("XRG===userInfo",userInfo)
     return [
       transOrderSection(false, orderRes),
       transHistorySection(false, historyRes),
