@@ -261,22 +261,22 @@ export default defineComponent({
       context.emit('onPlayerWindowTypeChanged', windowType)
       switch (windowType) {
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
-          playerManager.value?.pause()
           playerMask.value = BuildConfig.isLowEndDev
           playerMaskCss.value = 'media-player-mask-float-css'
+          if (playerMask.value) playerManager.value?.pause()
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
-          playerManager.value?.pause()
           playerLeft.value = 90
           playerTop.value = 135
           playerMask.value = BuildConfig.isLowEndDev
           playerMaskCss.value = 'media-player-mask-small-css'
+          if (playerMask.value) playerManager.value?.pause()
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
-          playerManager.value?.resume()
           playerLeft.value = 0
           playerTop.value = 0
           playerMask.value = false
+          if (BuildConfig.isLowEndDev) playerManager.value?.resume()
           break
       }
     }
