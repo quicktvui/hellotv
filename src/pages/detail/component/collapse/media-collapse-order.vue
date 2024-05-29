@@ -1,10 +1,10 @@
 <template>
   <qt-column class="qt-collapse-item-order" :focusable="false">
     <span class="qt-collapse-item-order-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">播放顺序</span>
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放顺序</span>
     <div class="qt-collapse-item-order-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-list-view
         ref="orderListViewRef" horizontal
         :autofocusPosition="selectedIndex"
@@ -21,11 +21,11 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESLog} from "@extscreen/es3-core";
-import {ref} from "vue";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESLog } from "@extscreen/es3-core";
+import { ref } from "vue";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
-import {QTIListView, QTListViewItem} from "@quicktvui/quicktvui3";
+import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
 
 const TAG = 'QTCollapseItem'
 
@@ -134,7 +134,7 @@ export default defineComponent({
 
 .qt-collapse-item-order-title {
   width: 1740px;
-  height: 30px;
+  height: 32px;
   font-size: 27px;
   color: white;
   margin-left: 90px;
@@ -153,5 +153,4 @@ export default defineComponent({
   height: 80px;
   background-color: transparent;
 }
-
 </style>

@@ -2,17 +2,17 @@
   <qt-column class="qt-collapse-item-speed"
              :focusable="false">
     <span class="qt-collapse-item-speed-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">倍速</span>
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">倍速</span>
     <div class="qt-collapse-item-speed-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-list-view
         ref="speedListViewRef" horizontal
         sid='collapse-item-speed'
         v-show='isCollapseExpand'
         :autofocusPosition="selectedIndex"
         class="qt-collapse-item-speed-content-list"
-        :blockFocusDirections="['up','down']"
+        :blockFocusDirections="['up', 'down']"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
         <media-collapse-list-item type="1"/>
@@ -23,10 +23,10 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESLog} from "@extscreen/es3-core";
-import {ref} from "vue";
-import {QTIListView, QTListViewItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESLog } from "@extscreen/es3-core";
+import { ref } from "vue";
+import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
 
 const TAG = 'QTCollapseItem'
@@ -137,7 +137,7 @@ export default defineComponent({
 
 .qt-collapse-item-speed-title {
   width: 1740px;
-  height: 30px;
+  height: 32px;
   font-size: 27px;
   color: white;
   margin-left: 90px;

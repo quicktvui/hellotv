@@ -2,10 +2,10 @@
   <qt-column class="qt-collapse-item-media-list"
              :focusable="false">
     <span class="qt-collapse-item-media-list-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">播放列表</span>
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放列表</span>
     <div class="qt-collapse-item-media-list-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-media-series
         ref="mediaSeriesListRef"
         :display="isCollapseExpand"
@@ -21,23 +21,23 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESEventBus, useESLog, useESToast} from "@extscreen/es3-core";
-import {ref, nextTick} from "vue";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESEventBus, useESLog, useESToast } from "@extscreen/es3-core";
+import { ref, nextTick } from "vue";
 import {
   QTIListView, QTIMediaSeries,
   QTListViewItem,
   QTMediaSeriesEvent,
 } from "@quicktvui/quicktvui3";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
-import {IMedia} from "../../../../api/media/IMedia";
+import { IMedia } from "../../../../api/media/IMedia";
 import {
   buildMediaSeriesType,
   buildMediaSeriesGroup,
   buildMediaSeriesStyleType,
   buildMediaSeriesData
 } from "../../adapter/MediaSeriesAdapter";
-import {buildMediaSeriesList} from "../../adapter/DataAdapter";
+import { buildMediaSeriesList } from "../../adapter/DataAdapter";
 
 const TAG = 'QTCollapseItem'
 
