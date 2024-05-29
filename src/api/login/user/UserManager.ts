@@ -3,7 +3,6 @@ import { ESLocalStorage } from "@extscreen/es3-core/dist/src/local/ESLocalStorag
 import { ESApp, EventBus } from "@extscreen/es3-vue"
 import { UserInfo } from "../../../pages/login/build_data/UserInfo"
 import { IBaseApi } from "../../IBaseApi"
-import { RequestManager } from "../../request/RequestManager"
 import { UserManagerKey } from "../../UseApi"
 import { ILoginDataSource } from "../ILoginDataSource"
 import { USER_TOKEN_KEY, UserChangeListener, UserChangeType } from "./UserChangeListener"

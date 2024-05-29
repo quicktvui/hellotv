@@ -3,8 +3,8 @@
     <div v-if="cHeaderHeight" class="my_header" :style="cHeaderStyle">
       <img class="my_header_logo" :focusable="false" :src="logo" />
     </div>
-    <qt-waterfall 
-      ref="waterfall" class="my_content" :style="contentStyle" 
+    <qt-waterfall
+      ref="waterfall" class="my_content" :style="contentStyle"
       :requestFocus="true" :list-data="contentData"
       :paddingRect="[0, 0, 0, 0]" @onItemClick='onItemClick'
     >
@@ -17,6 +17,7 @@
 </template>
 <script lang='ts' setup>
 import { CSSProperties, reactive, computed, ref, onBeforeUnmount } from 'vue';
+import { useLoginDataSource, useUserManager } from "../../api/UseApi"
 import MyTemplates from './MyTemplates.vue'
 // @ts-ignore
 import myApi from '../../api/my/index.ts'
@@ -73,9 +74,16 @@ const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
     nRouter.launch([['-d', item._action]])
   }
 }
+
+const userManager = useUserManager()
+const loginManager = useLoginDataSource()
+const loginOut = () =>{
+  loginManager.loginOut()
+}
+
 const updateData = async () => {
   console.log(myDataManager, '-lsj-my-updateData')
-  const datas = await myDataManager.getData()
+  const datas = await myDataManager.getData(userManager)
   if(datas){
     contentData.value = datas
   }

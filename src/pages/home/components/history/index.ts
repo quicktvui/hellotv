@@ -147,7 +147,22 @@ class MyHistory {
   plateIndex = -1
   sectionIndex = -1
   isLoading = false
+  myHistoryApiData01Name = 'myHistoryApiData01Name'
+  myHistoryApiData02Name = 'myHistoryApiData02Name'
+  myHistoryApiAllName = 'myHistoryApiAllName'
 
+  checkName(name=''){
+    return name === this.myHistoryApiData01Name||name === this.myHistoryApiData02Name||name === this.myHistoryApiAllName 
+  }
+  getRouter(name = ''){
+    if(name === this.myHistoryApiData01Name){}
+    if(name === this.myHistoryApiData02Name){}
+    if(name === this.myHistoryApiAllName){}
+    return {
+      redirectType: '1',
+      innerArgs: JSON.stringify({url: 'history', params: {}})
+    }
+  }
   async setData(tabRef:Ref<QTITab|undefined>, isLogin=true){
     if(this.isLoading) { return }
     if(this.tabPageIndex!=undefined&&(this.tabPageIndex>=0)){
@@ -156,20 +171,28 @@ class MyHistory {
       const cIndex = await tabRef.value?.getCurrentTabIndex().catch((err)=>{})
       if(cIndex === this.tabPageIndex){
         const _data = tabRef.value?.getPageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex)
-        console.log(_data, '--lsj-_data', this.tabPageIndex, this.plateIndex, this.sectionIndex)
         if(_data){
           const apiList = await api.getContentList({index:0,item:{id:'-'}},{index:0,item:{id:'-'}},1).catch(err=>{})
           if(apiList && apiList.data){
-            // _data.apiData01 = apiList.data[0]
-            // _data.apiData02 = apiList.data[1]
+            _data.apiData01 = apiList.data[0]
+            _data.apiData02 = apiList.data[1]
             // assetLongTitle: string//标题
             // subTitle?:string;
             // newData.apiList = apiList.data?.slice(0,2)
           }
           const newData = getMyHistoryBlock(_data, isLogin)
-          tabRef.value?.updateChildNode(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
-          // tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
-          console.log(newData, '--lsj--data-init')
+          newData.myHistoryApiData01Name = this.myHistoryApiData01Name
+          newData.myHistoryApiData02Name = this.myHistoryApiData02Name
+          newData.myHistoryApiAllName = this.myHistoryApiAllName
+          // tabRef.value?.updateChildNode(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
+          tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
+          // todo: 判断是否需要更新板块
+          const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
+          if(sectionData){
+            tabRef.value?.updatePageSection(this.tabPageIndex, this.plateIndex, sectionData)
+          }
+
+          // console.log(newData, '--lsj--data-init')
         }
       }
       
