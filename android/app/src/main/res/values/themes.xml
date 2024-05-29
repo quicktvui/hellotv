@@ -8,4 +8,11 @@
         <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowFullscreen">true</item>
     </style>
+
+    <style name="Theme.EsRuntime" parent="android:Theme.Holo.NoActionBar.Fullscreen">
+        <!-- Primary brand color. -->
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+        <item name="android:windowBackground">@drawable/test_img</item>
+    </style>
 </resources>
