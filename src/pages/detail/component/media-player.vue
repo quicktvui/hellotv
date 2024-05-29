@@ -12,7 +12,7 @@
       :focusable='false'
       :playerList="playerListRef"
       :playerViewList="playerViewListRef"
-      :style="{left : playerLeft, top : playerTop}"
+      :style="{ left: playerLeft, top: playerTop }"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
       @onPlayerPaused="onPlayerPaused"
@@ -22,19 +22,21 @@
       @onPlayerInterceptError="onPlayerInterceptError"
       class="media-player-manager-css"/>
   </qt-column>
+
+  <!-- 低端机播放器遮罩 -->
+  <qt-image v-show="playerMask" :class=playerMaskCss :src=playerMaskImg />
 </template>
 
 <script lang="ts">
-
-import {defineComponent} from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 import {
   ESIPlayerManager, ESMediaItem,
   ESMediaItemList,
   ESPlayerManager,
   useESPlayerManagerPlayModeManager
 } from "@extscreen/es3-player-manager";
-import {markRaw, ref} from "vue";
-import {ESVideoPlayer} from "@extscreen/es3-video-player";
+import { markRaw, ref } from "vue";
+import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import {
   ESPlayerInterceptError,
   ESPlayerInterceptResult,
@@ -43,16 +45,17 @@ import {
   ESPlayerRate,
   useESPlayerRateManager
 } from "@extscreen/es3-player"
-import {IMedia} from "../../../api/media/IMedia";
+import { IMedia } from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
-import {ESKeyEvent, ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
-import {buildMediaItemList} from "../adapter/PlayerDataAdapter";
-import {useMediaDataSource} from "../../../api/UseApi";
+import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { buildMediaItemList } from "../adapter/PlayerDataAdapter";
+import { useMediaDataSource } from "../../../api/UseApi";
 import ESMediaPlayerSmallView from "./media-player-small-view.vue"
 import {
   createESPlayerMediaItemAuthInterceptor,
   createESPlayerMediaSourceListInterceptor
 } from "../player/ESPlayerMediaItemInterceptor";
+import BuildConfig from '../../../build/BuildConfig'
 
 const TAG = 'MediaPlayer'
 
@@ -79,6 +82,10 @@ export default defineComponent({
     const playerLeft = ref<number>(90)
     const playerTop = ref<number>(135)
 
+    const playerMask = ref<boolean>(BuildConfig.isLowEndDev)
+    const playerMaskCss = ref<string>('media-player-mask-small-css')
+    const playerMaskImg = ref<string>('')
+
     let progressTimer: NodeJS.Timeout
 
     let playerParent = ref()
@@ -93,6 +100,7 @@ export default defineComponent({
         list: [],
         media: media
       }
+      playerMaskImg.value = media.coverH
       playerManager.value?.initialize()
       playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       playerManager.value?.playMediaList(playList)
@@ -126,7 +134,7 @@ export default defineComponent({
 
     function changeVisible(visibility: boolean) {
       //playerParent.value?.setVisibility(visibility ? 'visible' : 'invisible')
-      playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha',[visibility ? 1 : 0])
+      playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha', [visibility ? 1 : 0])
     }
 
     function getPlayingMediaIndex(): number {
@@ -170,7 +178,6 @@ export default defineComponent({
         playerManager.value?.getCurrentPosition()
       }, 500);
     }
-
 
     function stopProgressTimer() {
       if (progressTimer) {
@@ -241,7 +248,7 @@ export default defineComponent({
     }
 
     function onBackPressed(): boolean {
-      if(getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL){
+      if (getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
         return false;
       }
       if (playerManager.value) {
@@ -254,14 +261,22 @@ export default defineComponent({
       context.emit('onPlayerWindowTypeChanged', windowType)
       switch (windowType) {
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT:
+          playerManager.value?.pause()
+          playerMask.value = BuildConfig.isLowEndDev
+          playerMaskCss.value = 'media-player-mask-float-css'
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL:
+          playerManager.value?.pause()
           playerLeft.value = 90
           playerTop.value = 135
+          playerMask.value = BuildConfig.isLowEndDev
+          playerMaskCss.value = 'media-player-mask-small-css'
           break
         case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
+          playerManager.value?.resume()
           playerLeft.value = 0
           playerTop.value = 0
+          playerMask.value = false
           break
       }
     }
@@ -273,6 +288,9 @@ export default defineComponent({
       playerViewListRef,
       playerManager,
       playerListRef,
+      playerMask,
+      playerMaskCss,
+      playerMaskImg,
       play,
       stop,
       release,
@@ -314,5 +332,23 @@ export default defineComponent({
 .media-player-manager-css {
   position: absolute;
   background-color: black;
+}
+
+.media-player-mask-small-css {
+  width: 890px;
+  height: 500px;
+  background-color: transparent;
+  position: absolute;
+  top: 135;
+  left: 90;
+}
+
+.media-player-mask-float-css {
+  width: 400px;
+  height: 225px;
+  background-color: transparent;
+  position: absolute;
+  top: 0;
+  left: 1520;
 }
 </style>
