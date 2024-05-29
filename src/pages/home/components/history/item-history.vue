@@ -4,7 +4,7 @@
   <!-- <tv-item layout="${layout}" flexStyle="${style}" :focusable="true" singleton></tv-item> -->
   <div class="his_box" layout="${layout}" flexStyle="${style}" disablePlaceholderFocus :focusable="false" :clipChildren="false">
     <div showIf="${showApiData01==true}" flexStyle="${barStyle}" class="his_bar" :focusable="true" :focusScale="1.08"
-      :enableBlackBorder="false" name="his_bar01" eventClick>
+      :enableBlackBorder="false" name="myHistoryApiData01Name" eventClick>
       <qt-text class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" :ellipsizeMode="4" :lines="1"
         gravity="centerVertical|start" text="${apiData01Title}" :duplicateParentState="true" />
       <qt-text class="his_text2" :focusable="false" gravity="centerVertical|start" text="${apiData01SubTitle}"
@@ -12,15 +12,17 @@
     </div>
     <div showIf="${showApiData01==true}" class="his_bar_bottom_border" flexStyle="${barBorderBottomStyle}" :focusable="false"></div>
     <div showIf="${showApiData02==true}" flexStyle="${barStyle2}" class="his_bar" :focusable="true" :focusScale="1.08"
-      :enableBlackBorder="false" name="his_bar02">
+      :enableBlackBorder="false" name="myHistoryApiData02Name" eventClick @click="clickBar" @focus="focusBar">
       <qt-text class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" :ellipsizeMode="4" :lines="1"
         gravity="centerVertical|start" text="${apiData02Title}" :duplicateParentState="true" />
       <qt-text class="his_text2" :focusable="false" gravity="centerVertical|start" text="${apiData02SubTitle}"
         flexStyle="${barProgressStyle}" :duplicateParentState="true" />
     </div>
     <div showIf="${showApiData02==true}" class="his_bar_bottom_border" flexStyle="${barBorderBottomStyle}" :focusable="false"></div>
-    <div flexStyle="${allTextStyle}" class="his_bar his_all" :focusable="true" :focusScale="1.08"
-      :enableBlackBorder="false">
+    <div 
+      flexStyle="${allTextStyle}" class="his_bar his_all" :focusable="true" :focusScale="1.08"
+      :enableBlackBorder="false" name="myHistoryApiAllName"
+    >
       <div class="his_all_title_box" autoHeight :duplicateParentState="true">
         <img showIf="${showAllSubText}" src="../../../../assets/my/record.png" flexStyle="${allImgSytle}" :focusable="false"/>
         <qt-text class="his_all_txt his_text1" autoWidth autoHeight :focusable="false" text="${allText}" gravity="centerVertical|start" :duplicateParentState="true" />
@@ -34,7 +36,17 @@
   </div>
 </template>
 <script lang='ts' setup>
+import { useESRouter } from '@extscreen/es3-router';
 import { ref, onMounted } from 'vue';
+
+const router = useESRouter()
+const clickBar = ()=>{
+  console.log('lsj-clickBar')
+  // router.push({ name: 'my' })
+}
+const focusBar = (ev)=>{
+  console.log('lsj-focusBar', ev)
+}
 </script>
 <style scoped>
 .his_box {
@@ -70,7 +82,7 @@ import { ref, onMounted } from 'vue';
 
 .his_text2 {
   color: #909398;
-  font-size: 22px;
+  font-size: 20px;
 }
 
 .his_all{

@@ -419,7 +419,7 @@ export default defineComponent({
         wTabBg.value?.setImg(bg, "", true, false)
       }
     }
-    function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
+    function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem, e) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---------onTabPageItemClick-------->>>>' +
           " pageIndex: " + pageIndex +
@@ -428,7 +428,11 @@ export default defineComponent({
           " item: ", item
         )
       }
-      launch.launch(item)
+      if(myHistory.checkName(e.name)){
+        launch.launch({...item, item: { ...(item.item||{}), ...myHistory.getRouter(e.name) }})
+      } else {
+        launch.launch(item)
+      }
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
       if (isFocused) {
@@ -499,7 +503,6 @@ export default defineComponent({
           delayStopPlayer()
         }
         bg_player.value?.delayShowPlayer(500)
-        console.log(pageIndex, myHistory.tabPageIndex, '-lsj-pageIndex === myHistory.tabPageIndex')
         if(pageIndex === myHistory.tabPageIndex){
           myHistory.setData(tabRef)
         }
