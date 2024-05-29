@@ -64,6 +64,11 @@ export default defineComponent({
   components: {
     'es-player-manager': ESPlayerManager,
   },
+  emits: [
+    "onPlayerPlayMedia",
+    "onPlayerPlaying",
+    "onPlayerWindowTypeChanged"
+  ],
   setup(props, context) {
     const log = useESLog()
     const eventbus = useESEventBus()
@@ -129,7 +134,7 @@ export default defineComponent({
     }
 
     function playMediaItemByIndex(index: number) {
-      playerManager.value?.playMediaByIndex(index)
+      if (!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
     }
 
     function changeVisible(visibility: boolean) {
