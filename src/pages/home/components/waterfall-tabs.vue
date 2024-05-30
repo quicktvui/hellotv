@@ -43,7 +43,7 @@
           <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
         </template>
         <template v-slot:waterfall-item>
-          <qt-poster :type="10001">
+          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'">
             <div
               showIf="${corner.showCornerRight==true}"
               :focusable="false"
@@ -68,7 +68,7 @@
           <MyTemplates :focusable="false"/>
         </template>
         <template v-slot:waterfall-list-item>
-          <qt-poster :type="10001">
+          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'">
             <div
               showIf="${corner.showCornerRight==true}"
               :focusable="false"
