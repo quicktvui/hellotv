@@ -16,6 +16,7 @@
         tabPageClass="qt-tabs-waterfall-css"
         :horizontalFadingEdgeEnabled="true"
         :fadingEdgeLength="400"
+        tabNavBarSid="tabNavBarSid"
         :triggerTask="tabsTriggerTask"
         :outOfDateTime="5 * 60 * 1000"
         @onTabClick="onTabClick"
