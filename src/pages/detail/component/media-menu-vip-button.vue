@@ -10,7 +10,7 @@
          :class="`menu-vip-button-item-focused${suffix}`"
          :style="style"
          :duplicateParentState="true"
-         :gradientBackground="{ colors: ['#FFFFE398', '#FFEEB364'], orientation: 7, cornerRadius: $props.suffix === '-small' ? 36 : 12 }"/>
+         :gradientBackground="{ colors: ['#FFFFE398', '#FFEEB364'], orientation: 6, cornerRadius: $props.suffix === '-small' ? 36 : 12 }"/>
 
     <div :class="`menu-vip-button-item-img-root-css${suffix}`">
       <img :class="`menu-vip-button-item-img-css${suffix}`"
@@ -140,7 +140,7 @@ export default defineComponent({
   width: 200px;
   height: 30px;
   color: rgba(255, 255, 255, 0.6);
-  focus-color: black;
+  focus-color: #603314;
   align-self: center;
   font-size: 28px;
   text-align: center;
@@ -150,7 +150,7 @@ export default defineComponent({
 
 .menu-vip-button-item-text-css-small {
   color: rgba(255, 255, 255, 0.6);
-  focus-color: black;
+  focus-color: #603314;
   align-self: center;
   font-size: 28px;
   text-align: center;
