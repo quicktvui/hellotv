@@ -49,15 +49,41 @@ const getSubTitle2 = (data: any) => {
   }
   return subTitle
 }
+const getTitleSpan = (data: any) => {
+  if (!data) return {text:'',spanAttr:[]}
+  // <font color="#909398" size='12'>title</font>
+  let assetLongTitle = data.assetLongTitle || ''
+  let playCount = ''
+  if(data.playCount){
+    if (!isNaN(Number(data.playCount))) {
+      playCount = ` 第${data.playCount}集`
+    }else{
+      playCount = ` ${data.playCount}`
+    }
+  }
+  const title = assetLongTitle+"  "+playCount
+  const startPos = title.indexOf(playCount)
+  let posterLength = assetLongTitle ? assetLongTitle.length : 0;
+  let titleLength = title ? title.length : 0;
+  let titleStyle0 = {text:title,
+    spanAttr:[
+      { type:"size", value:[30,0, posterLength]},
+      { type:"size", value:[20,startPos,titleLength]},
+      {type:"color",value:["#ffffff",0,posterLength]},
+      {type:"color",value:["#909398",startPos,titleLength]}
+    ]}
+  return titleStyle0
+}
 const getTitle = (data: any) => {
   if (!data) return ''
+  // <font color="#92949A">title</font>
   let assetLongTitle = data.assetLongTitle || ''
   try {
     if(data.playCount){
       if (!isNaN(Number(data.playCount))) {
-        assetLongTitle += `(第${data.playCount}集)`
+        assetLongTitle += ` 第${data.playCount}集`
       }else{
-        assetLongTitle += `(${data.playCount})`
+        assetLongTitle += ` ${data.playCount}`
       }
     }
   } catch (error) {
@@ -71,18 +97,22 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
   const showApiData01 = !!data.apiData01;
   const showApiData02 = !!data.apiData02;
   let apiData01Title = ''
+  let apiData01TitleSpan:any = {text:'', spanAttr:[]}
   let apiData01SubTitle = ''
   let apiData02Title = ''
+  let apiData02TitleSpan:any = {text:'', spanAttr:[]}
   let apiData02SubTitle = ''
   let num = 1
   if(showApiData01){ 
     num+=1
     apiData01Title = getTitle(data.apiData01)
+    apiData01TitleSpan = getTitleSpan(data.apiData01)
     apiData01SubTitle = getSubTitle2(data.apiData01)
   }
   if(showApiData02){ 
     num+=1
     apiData02Title = getTitle(data.apiData02)
+    apiData02TitleSpan = getTitleSpan(data.apiData02)
     apiData02SubTitle = getSubTitle2(data.apiData02)
   }
   const allTextStyle = {
@@ -91,10 +121,10 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
     height: Math.max(Math.floor((data.style.height||0)/num),50)
   }
   const barStyle = {
-    ...allTextStyle, height: showApiData01?allTextStyle.height:0
+    ...allTextStyle, height: showApiData01?Math.min(allTextStyle.height,80):0
   }
   const barStyle2 = {
-    ...allTextStyle, height: showApiData02?allTextStyle.height:0
+    ...allTextStyle, height: showApiData02?Math.min(allTextStyle.height,80):0
   }
   const innerWidth = barStyle.width-space*2
   const innerHeight = barStyle.height-2;
@@ -102,14 +132,28 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
   let allText = '历史记录'
   let allSubText = ''
   let showAllSubText = false
+
+  const floatHeight = 50
+  const floatTitleBoxStyleHeight = floatHeight*2
+  const barImgStyle = data.image.style||{}
+  const floatTitleBoxStyle = {
+    width: allTextStyle.width, paddingLeft: space,
+    height: floatTitleBoxStyleHeight,
+    marginTop: (data.style.height||0)-floatTitleBoxStyleHeight
+  }
+  const floatTitleStyle = {width: innerWidth,height:floatHeight}
+  const floatSubTitleStyle = {width: innerWidth,height:floatHeight}
+  
   if(isLogin){
     if(num === 1){
       allSubText = '无历史记录，快去观看视频吧~'
       showAllSubText = true
+      barImgStyle.height = 0
     }else{
       allText = '全部历史'
     }
   } else {
+    barImgStyle.height = 0
     if(num === 1){
       allSubText = '登录同步云端历史'
       showAllSubText = true
@@ -117,19 +161,19 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
       allText = '登录同步云端历史'
     }
   }
-  const floatHeight = 50
-  const floatTitleBoxStyleHeight = floatHeight*2
+  
   return {
     ...data,
+    myHisGradientBackground: { colors: ['#FF3A4578', '#FF1B2143'], cornerRadii4: [20, 20, 20, 20], orientation: 6 },
     barImg: data.apiData01?.assetLongCoverH,
-    barStyle,allTextStyle,barStyle2,
-    floatTitleBoxStyle: {
-      width: allTextStyle.width, paddingLeft: space,
-      height: floatTitleBoxStyleHeight, marginTop: (data.style.height||0)-floatTitleBoxStyleHeight
+    barStyle,allTextStyle,barStyle2, isShowBarImg: isLogin&&showApiData01,
+    barImgStyle,floatTitleBoxStyle, floatTitleStyle, floatSubTitleStyle, isLogin,
+    floatTitleText: data.apiData01?.assetLongTitle || '', floatSubTitleText: getSubTitle(data.apiData01),
+    floatTitleBackground: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 20, 20], orientation: 4 },
+    barImgEmptyTitleStyle: {
+      width: innerWidth, paddingLeft: space,
+      height: data.style.height,
     },
-    floatTitleStyle: {width: innerWidth,height:floatHeight},
-    floatSubTitleStyle: {width: innerWidth,height:floatHeight},
-    floatTitleBackground: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 8, 8], orientation: 4 },
     barTitleStyle:{
       width: Math.floor(innerWidth * 0.7),
       height: innerHeight
@@ -144,11 +188,15 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
     },
     allText,allSubText,
     showApiData01, showApiData02,
-    apiData01Title, apiData01SubTitle,
+    apiData01Title, apiData01SubTitle, apiData01TitleSpan, apiData02TitleSpan,
     apiData02Title, apiData02SubTitle,
     showAllSubText,
     allSubTextSytle: showAllSubText?{ width: innerWidth, height: 50 }:{},
-    allImgSytle: showAllSubText?{ width: 30, height: 30, marginRight: 10,marginTop: 2 }:{}
+    allImgSytle: showAllSubText?{ width: 30, height: 30, marginRight: 10,marginTop: 2 }:{},
+    allImgRowSytle: !showAllSubText?{ width: 25, height: 22,marginTop: 2 }:{},
+    hisAllTitleBoxStyle: {
+      width: innerWidth
+    }
   }
 }
 
@@ -205,7 +253,7 @@ class MyHistory {
               tabRef.value?.updatePageSection(this.tabPageIndex, this.plateIndex, sectionData)
             }
           }
-          console.log(newData, '--lsj--data-init',this.tabPageIndex, this.plateIndex, this.sectionIndex)
+          // console.log(newData, '--lsj--data-init',this.tabPageIndex, this.plateIndex, this.sectionIndex)
         }
       }
       

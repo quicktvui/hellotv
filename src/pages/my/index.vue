@@ -37,7 +37,7 @@ const nRouter = useESNativeRouter()
 const cHeaderHeight = 80
 const isLoading = ref(true)
 const configs = reactive<Iconfig>({})
-const bg = ref()
+const bg = ref<any>({ colors: ['#FF00040B', '#FF1A2334'] })
 const configStyle = ref<CSSProperties>({})
 const pageStyle = computed<CSSProperties>(() => {
   return {
