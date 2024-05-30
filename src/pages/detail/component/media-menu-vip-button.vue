@@ -10,7 +10,7 @@
          :class="`menu-vip-button-item-focused${suffix}`"
          :style="style"
          :duplicateParentState="true"
-         :gradientBackground="{ colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: $props.suffix === '-small' ? 36 : 12 }"/>
+         :gradientBackground="{ colors: ['#FFFFE398', '#FFEEB364'], orientation: 7, cornerRadius: $props.suffix === '-small' ? 36 : 12 }"/>
 
     <div :class="`menu-vip-button-item-img-root-css${suffix}`">
       <img :class="`menu-vip-button-item-img-css${suffix}`"
