@@ -145,7 +145,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
   const iconWidth = dIconWidth * ratio;
   const iconHeight = dIconHeight * ratio
   const posterType = options.posterType || data.posterType || dPosterType
-  if (posterType === posterTypes.poster) {
+  if (posterType === posterTypes.poster||posterType === posterTypes.poster2) {
     if (data.title) {
       posterHeight += posterTitleHeight
     }
@@ -161,7 +161,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     _router: data._router,
     _action: data._action,
     avatarStyle: data.avatarStyle, tip: data.tip,
-    focusedImageSrc: data.focusedImage,
+    focusedImageSrc: data.focusedImage||data.img,
     focusedBgColor: data.focusedBgColor,
     item: {
       redirectType: data._redirectType|| activity_redirectTypes.innerRouter,
@@ -314,14 +314,17 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
   }
 }
 
-import recordIcon from '../../assets/my/record.png'
-export const transHistorySection = (isLogin = false, historyRes: ImySectionRes) => {
+import recordIcon2 from '../../assets/my/record2.png'
+import recordIconf from '../../assets/my/record.png'
+export const transHistorySection = (_ = false, historyRes: ImySectionRes) => {
+  const isLogin =  userManager.getUserInfo()
   historyRes.section.itemList = historyRes.section.itemList.slice(0, 3)
   historyRes.section.itemList.push(getPosterConfig({
     id: historyRes.section._id || '' + historyRes.section.itemList.length,
     _router: { url: 'history' },
     _redirectType: activity_redirectTypes.innerRouter,
-    img: recordIcon,
+    img: recordIcon2, focusedImage: recordIconf,
+    focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
     title: isLogin ? '全部记录' : '登陆同步云端历史',
     _layout: { width: 408, height: 228 }
   }, {
@@ -330,7 +333,7 @@ export const transHistorySection = (isLogin = false, historyRes: ImySectionRes) 
   }))
   return historyRes.section
 }
-export const transMoreSectin = (isLogin = false, sections: ImySectionRes[]) => {
+export const transMoreSectin = (_ = false, sections: ImySectionRes[]) => {
   return sections.map(item => {
     return item.section
   })
@@ -340,7 +343,7 @@ import dAvatar from '../../assets/my/avatar.png'
 const userConfig = {
   btn: '立即登陆', nickName: '未登陆', tip: '登录后查看更多账号信息',
   router: { url: 'login', isReplace: false },
-  loginBtn: '账号管理',
+  loginBtn: '退出登陆', loginTip: '',
   loginRouter: { url: 'logout', isReplace: false },
 }
 export const getUserData = (userinfo, newInfo:UserInfo|null)=>{
@@ -348,12 +351,16 @@ export const getUserData = (userinfo, newInfo:UserInfo|null)=>{
     userinfo.image.src = newInfo?.userIcon
     userinfo.title.text = newInfo?.nickName
     userinfo.subTitle.text = userConfig.loginBtn
-    userinfo._router = userConfig.loginRouter
+    userinfo._router = userConfig.loginRouter,
+    userinfo.avatarStyle = {width: 200, height: 200}
+    userinfo.tip = userConfig.loginTip
   } else {
     userinfo.image.src = dAvatar
     userinfo.title.text = userConfig.nickName
     userinfo.subTitle.text = userConfig.btn
     userinfo._router = userConfig.router
+    userinfo.avatarStyle = {width: 83, height: 92}
+    userinfo.tip = userConfig.tip
   }
   return userinfo
 }
@@ -363,7 +370,7 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
     id: orederRes.section._id || '' + orederRes.section.itemList.length,
     img: info?.userIcon||dAvatar, 
     avatarStyle: info?{width: 200, height: 200}:{width: 83, height: 92},
-    title: info?info.nickName:userConfig.nickName, tip: info?'':userConfig.tip,
+    title: info?info.nickName:userConfig.nickName, tip: info?userConfig.loginTip:userConfig.tip,
     subTitle: info?userConfig.loginBtn:userConfig.btn,
     _layout: { width: 600-48, height: 314 },
     _router: info?userConfig.loginRouter:userConfig.router
@@ -392,26 +399,30 @@ class MyDataManager {
     ]
   }
   async updateUser(){
-    if(this.tabPageIndex>=0 && this.isUserChange && this.tabRef && this.isShow){
-      const cIndex = await this.tabRef.value?.getCurrentTabIndex()
-      if(cIndex === this.tabPageIndex){
-        const userinfo = this.tabRef.value?.getPageItem(this.tabPageIndex,0,0)
-        const newInfo =  userManager.getUserInfo()
-        if(userinfo){
-          this.isUserChange = false
-          this.tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, getUserData(userinfo,newInfo))
-        }
+    if(this.tabRef){
+      const userinfo = this.tabRef.value?.getPageItem(this.tabPageIndex,0,0)
+      const newInfo =  userManager.getUserInfo()
+      if(userinfo){
+        this.isUserChange = false
+        this.tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, getUserData(userinfo,newInfo))
       }
     }
   }
   async updateHistory(){
-    if(this.tabPageIndex>=0 && this.tabRef){
+    if(this.tabRef){
+      const historyRes = await myApi.getHistorys()
+      const hisSection = transHistorySection(false, historyRes)
+      // tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, {})
+      this.tabRef.value?.updatePageSection(this.tabPageIndex, 1, hisSection)
+      // console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+    }
+  }
+  async updateData(){
+    if(this.tabPageIndex>=0 && this.tabRef && this.isUserChange && this.isShow){
       const cIndex = await this.tabRef.value?.getCurrentTabIndex()
       if(cIndex === this.tabPageIndex){
-        
-        // tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, {})
-        // tabRef.value?.updatePageSection(this.tabPageIndex, 1, {})
-        console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+        await this.updateUser()
+        this.updateHistory()
       }
     }
   }
@@ -437,12 +448,15 @@ class MyDataManager {
     userManager.removeUserChangeListener(userChangeListener)
     this.isShow = false
   }
+  logout(){
+    userManager.clearUserInfo()
+  }
 }
 const myDataManager = new MyDataManager()
 const userChangeListener:UserChangeListener = {
   onUserChanged(user, state){
     myDataManager.isUserChange = true
-    myDataManager.updateUser()
+    myDataManager.updateData()
   }
 }
 // if(pageIndex === myDataManager.tabPageIndex){

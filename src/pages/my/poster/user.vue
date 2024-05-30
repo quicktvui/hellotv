@@ -3,7 +3,8 @@
     eventFocus name="my_poster_user_name" class="my_poster_user" itemShowShimmer="${shimmer.enable}"
     hideShadow="${shadow.enable}" shimmerSize="${size}">
     <div :focusable="false" overflow="hidden" :clipChildren="true" :duplicateParentState="true" class="poster_user_content_box" flexStyle="${image.style}">
-      <div class="poster_user_icon_box">
+      <div class="poster_user_icon_box" :focusable="false">
+        <div class="poster_user_icon_bg" :focusable="false"></div>
         <img class="poster_user_icon" flexStyle="${avatarStyle}" :focusable="false" src="${image.src}"/>
       </div>
 
@@ -45,6 +46,7 @@
   focus-border-style: solid; */
 }
 .poster_user_icon_box{
+  position: relative;
   width: 200px;
   height: 200px;
   display: flex;
@@ -54,13 +56,28 @@
   overflow: hidden;
   border-radius: 100px;
   margin-left: 35px;
+  background-color: transparent;
+}
+.poster_user_icon_bg{
+  width: 198px;
+  height: 198px;
+  position: absolute;
+  left: 1px;
+  top: 1px;
+  z-index: 1;
   background-color: rgba(216,216,216,0.15);
   border-style: solid;
   border-width: 1px;
   border-color: #ffffff;
+  border-radius: 100px;
 }
 .poster_user_icon{
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 2;
   background-color: transparent;
+  border-radius: 100px;
 }
 .poster_user_content_box_info{
   margin-left: 25px;

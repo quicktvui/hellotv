@@ -25,7 +25,7 @@ import myApi from '../../api/my/index.ts'
 import { Iconfig } from '../../api/my/types.ts'
 import { qtRef, QTWaterfallSection } from '@quicktvui/quicktvui3'
 // @ts-ignore
-import myDataManager, { getUserData,dPageWidth, dPageheight, dPageMarginSpace, IBlockItemData, activity_redirectTypes } from './index.ts'
+import myDataManager, { transHistorySection,getUserData,dPageWidth, dPageheight, dPageMarginSpace, IBlockItemData, activity_redirectTypes } from './index.ts'
 import { useESRouter, useESNativeRouter } from '@extscreen/es3-router';
 import logo from '../../assets/cell-list-focus-img.png'
 import userManager from '../../api/login/user/UserManager'
@@ -62,19 +62,19 @@ const contentStyle = computed<CSSProperties>(() => {
 const contentData = qtRef<QTWaterfallSection[]>()
 
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
-  if(userManager.getUserInfo()){
-    userManager.clearUserInfo()
-    return
-  }
   if(item._redirectType == activity_redirectTypes.innerRouter && item._router){
-    const route = {
-      name: item._router.url, //'series_view',
-        params: item._router.params?{...item._router.params}:undefined
-    }
-    if(item._router.isReplace){
-      router.replace(route);
+    if(item._router.url === 'logout'){
+      userManager.clearUserInfo()
     } else {
-      router.push(route);
+      const route = {
+        name: item._router.url, //'series_view',
+          params: item._router.params?{...item._router.params}:undefined
+      }
+      if(item._router.isReplace){
+        router.replace(route);
+      } else {
+        router.push(route);
+      }
     }
   } else if(item._redirectType == activity_redirectTypes.innerApp && item._action){
     nRouter.launch([['-d', item._action]])
@@ -97,6 +97,11 @@ const updateData = async () => {
     const userinfo = contentData.value[0].itemList[0]
     const newInfo =  userManager.getUserInfo()
     getUserData(userinfo, newInfo)//因为使用了双向绑定，所以这里不需要再使用主动更新ui
+
+    // 更新历史数据
+    const historyRes = await myApi.getHistorys()
+    const hisSection = transHistorySection(false, historyRes)
+    contentData.value[1] = hisSection
 
     isUserChange = false
     isLoading.value = false

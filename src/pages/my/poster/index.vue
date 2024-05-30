@@ -180,13 +180,6 @@ export default defineComponent({
   color: #000000;
 }
 
-.poster_title_box {
-  position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 5;
-  background-color: transparent;
-}
 /* #666666 */
 .poster_subtitle {
   color: #92949A;

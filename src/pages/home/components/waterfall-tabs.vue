@@ -222,7 +222,7 @@ export default defineComponent({
         }
       }
       myDataManager.isShow = true
-      myDataManager.updateUser()
+      myDataManager.updateData()
     }
 
     function onESStop() {
@@ -438,7 +438,11 @@ export default defineComponent({
       if(myHistory.checkName(e.name)){
         launch.launch({...item, item: { ...(item.item||{}), ...myHistory.getRouter(e.name) }})
       } else {
-        launch.launch(item)
+        if(item._router?.url==='logout'){
+          myDataManager.logout()
+        }else{
+          launch.launch(item)
+        }
       }
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
@@ -527,7 +531,7 @@ export default defineComponent({
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
 
-      myDataManager.updateUser()
+      myDataManager.updateData()
     }
 
     function onTabClick(item: QTTabItem) {

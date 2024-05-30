@@ -100,6 +100,7 @@ export class MyBase {
           return {
             id: ''+index,
             title: item, _titleFontSize: 36,
+            focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
             _layout: { height: 120 }
           }
         }),
