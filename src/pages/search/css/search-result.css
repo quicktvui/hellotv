@@ -50,11 +50,12 @@
   background-color: transparent;
   clip-children:false;
 }
+
 .waterfall_nav_item{
   height: 60px;
   padding-left: 24px;
   padding-right: 24px;
-  focus-background-color: #ffffff;
+  focus-background-color: #157AFC;
   background-color: transparent;
   border-radius: 30px;
   flex-direction: column;
@@ -66,7 +67,7 @@
   height: 70px;
   color: rgba(255,255,255,0.7);
   select-color:#FF4e46;
-  focus-color:black;
+  focus-color:white;
 }
 
 .empty_view{

@@ -18,7 +18,7 @@ export const activity_redirectTypes = {
 const dcornerGradientBg = { colors: ['#FFE398', '#EEB364'], cornerRadii4: [0, 8, 0, 8], orientation: 2, }
 
 export const posterTypes = {
-  poster: 101, card: 102, info: 103, user: 104
+  poster: 101, card: 102, info: 103, user: 104, btn: 105, card2: 106, poster2: 107
 }
 export interface IBlockItemData {
   id: string
@@ -85,7 +85,7 @@ const dPosterSubTitleHeight = 25
 const dTitleFontSize = 30
 const dFloatTitleFontSize = 24
 const dSubTitleFontSize = 24
-const dSpace = 36
+const dSpace = 48//36
 const dBlockTitleFontSize = 44
 const dPadding = 1
 const dColumns = 4
@@ -102,7 +102,7 @@ const getSubTitle = (data: IBlockItemData) => {
     if (!subTitle && data.playCount) {
       subTitle = data.playCount
       if (!isNaN(Number(data.playCount))) {
-        subTitle = `观看至${data.playCount}集`
+        subTitle = `第${data.playCount}集`
       }
       let progress = ''
       if (data.allTime && data.allTime > 0) {
@@ -110,7 +110,7 @@ const getSubTitle = (data: IBlockItemData) => {
         if (Number(data.currentPlayTime) <= 0) {
           progress = '不足1%'
         }
-        subTitle += ' ' + progress
+        subTitle += ' 已看' + progress
       }
     }
   } catch (error) {
@@ -160,6 +160,9 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     _id: data._sectionItemId || data.id,
     _router: data._router,
     _action: data._action,
+    avatarStyle: data.avatarStyle, tip: data.tip,
+    focusedImageSrc: data.focusedImage,
+    focusedBgColor: data.focusedBgColor,
     item: {
       redirectType: data._redirectType|| activity_redirectTypes.innerRouter,
       innerArgs: data._router?JSON.stringify(data._router):"",
@@ -320,7 +323,7 @@ export const transHistorySection = (isLogin = false, historyRes: ImySectionRes) 
     _redirectType: activity_redirectTypes.innerRouter,
     img: recordIcon,
     title: isLogin ? '全部记录' : '登陆同步云端历史',
-    _layout: { width: 401, height: 228 }
+    _layout: { width: 408, height: 228 }
   }, {
     space: historyRes.options?.space,
     posterType: posterTypes.info
@@ -333,9 +336,9 @@ export const transMoreSectin = (isLogin = false, sections: ImySectionRes[]) => {
   })
 }
 
-import dAvatar from '../../assets/ic_header_login_normal.png'
+import dAvatar from '../../assets/my/avatar.png'
 const userConfig = {
-  btn: '登陆', nickName: '登录同步云端记录',
+  btn: '立即登陆', nickName: '未登陆', tip: '登录后查看更多账号信息',
   router: { url: 'login', isReplace: false },
   loginBtn: '账号管理',
   loginRouter: { url: 'logout', isReplace: false },
@@ -358,8 +361,11 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
   const info =  userManager.getUserInfo()
   orederRes.section.itemList.unshift(getPosterConfig({
     id: orederRes.section._id || '' + orederRes.section.itemList.length,
-    img: info?.userIcon||dAvatar, title: info?info.nickName:userConfig.nickName, subTitle: info?userConfig.loginBtn:userConfig.btn,
-    _layout: { width: 556, height: 230 },
+    img: info?.userIcon||dAvatar, 
+    avatarStyle: info?{width: 200, height: 200}:{width: 83, height: 92},
+    title: info?info.nickName:userConfig.nickName, tip: info?'':userConfig.tip,
+    subTitle: info?userConfig.loginBtn:userConfig.btn,
+    _layout: { width: 600-48, height: 314 },
     _router: info?userConfig.loginRouter:userConfig.router
   }, {
     posterType: posterTypes.user,

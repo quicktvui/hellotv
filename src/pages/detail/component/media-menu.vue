@@ -30,7 +30,7 @@
           :style="item.style"
           :focus-icon="favButtonFocused"
           :icon="favButtonNormal"
-          text="收藏收藏"
+          text="收藏"
           :vip-focus-icon="favButtonVIPFocused"
           @click="onFavouriteButtonClick" />
       </li>
@@ -91,10 +91,10 @@ export default defineComponent({
     const fullScreenButtonRef = ref<Array<IMediaMenuButton>>()
 
     const noVipMenuList = [
-      { type: 1 }, { type: 3, style: { width: '200px' } }, { type: 3 }, { type: 3 }, { type: 3 }, { type: 3 }
+      { type: 1 }, { type: 3 }
     ]
     const vipMenuList = [
-      { type: 1 }, { type: 2 }, { type: 3 }, { type: 3, style: { width: '200px' } }, { type: 3 }, { type: 3 }
+      { type: 1 }, { type: 2, style: { width: '226px' } }, { type: 3 }
     ]
 
     watch(

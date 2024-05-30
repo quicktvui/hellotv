@@ -1,29 +1,46 @@
 <template>
   <!-- layout pLayout :enableBlackBorder="false" focusScale-->
-  <div :focusable="true" layout="${layout}" class="my_item_his_img" flexStyle="${style}">
+  <div 
+    :focusable="true" layout="${layout}" class="my_item_his_img" flexStyle="${style}"
+    gradientBackground="${myHisGradientBackground}"
+  >
     <img 
-      showIf="${showApiData01}" class="my_item_his_img_img" :duplicateParentState="true" 
+      showIf="${isShowBarImg}" class="my_item_his_img_img" :duplicateParentState="true" 
       :postDelay="300" :focusable="false" enableFocusBorder="${focus.border}"
-      flexStyle="${image.style}" src="${barImg}"
+      flexStyle="${barImgStyle}" src="${barImg}"
     />
     <div 
       flexStyle="${floatTitleBoxStyle}" class="my_item_his_img_title"
       gradientBackground="${floatTitleBackground}" :duplicateParentState="true"
-      :focusable="false"
+      :focusable="false" showIf="${isShowBarImg}"
     >
         <text-view 
           class="my_item_his_img_float_title" :duplicateParentState="true" :focusable="false" 
           flexStyle="${floatTitleStyle}"
           :ellipsizeMode="4" enablePostTask :postDelay="200" 
-          :lines="1" gravity="centerVertical|left" text="${apiData02Title}" 
+          :lines="1" gravity="centerVertical|left" text="${floatTitleText}" 
         />
-
         <text-view 
           class="my_item_his_img_float_subtitle" :focusable="false"
           :ellipsizeMode="2" :lines="1" autoHeight gravity="centerVertical|left"
           :duplicateParentState="true" flexStyle="${floatSubTitleStyle}"
-          text="${apiData02SubTitle}" />
+          text="${floatSubTitleText}" />
+    </div>
+    <div class="my_item_his_img_empty" showIf="${isShowBarImg==false}" :focusable="false" :duplicateParentState="true" flexStyle="${barImgEmptyTitleStyle}">
+      <div class="my_item_his_img_empty_title_box">
+        <img class="my_item_his_img_empty_icon" src="../../../../assets/my/record.png" :focusable="false"/>
+        <text-view 
+          class="my_item_his_img_empty_title" :duplicateParentState="true" :focusable="false" 
+          autoWidth autoHeight gravity="centerVertical|left" text="历史记录" 
+        />
       </div>
+      <text-view 
+        showIf="${isLogin==false}" class="my_item_his_img_empty_subtitle"
+        :duplicateParentState="true" :focusable="false" 
+        autoWidth autoHeight gravity="centerVertical|left" text="登录同步云端历史" 
+      />
+      <!-- ${barImgEmptyText} -->
+    </div>
   </div>
 </template>
 
@@ -42,11 +59,12 @@ export default defineComponent({
 .my_item_his_img {
   position: relative;
   background-color: transparent;
-  border-radius: 8px;
+  /* 424650 */
+  border-radius: 20px;
   overflow: hidden;
   focus-border-color: #ffffff;
   focus-border-style: solid;
-  focus-border-radius: 8px;
+  focus-border-radius: 20px;
 }
 /* .my_item_his_img_img{} */
 .my_item_his_img_title{
@@ -60,5 +78,31 @@ export default defineComponent({
 .my_item_his_img_float_subtitle{
   color: #909398;
   font-size: 22px;
+}
+.my_item_his_img_empty{
+  position: absolute;
+  left: 0;
+  top: 0;
+  background-color: transparent;
+  display: flex;
+  flex-direction: column;
+  /* align-items: center; */
+  justify-content: center;
+}
+.my_item_his_img_empty_title_box{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+.my_item_his_img_empty_icon{
+  width: 50px;
+  height: 50px;
+  margin-right: 10px;
+  margin-top: 2px;
+}
+.my_item_his_img_empty_subtitle{
+  color: #909398;
+  font-size: 22px;
+  margin-top: 10px;
 }
 </style>

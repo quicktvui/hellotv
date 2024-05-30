@@ -16,7 +16,7 @@
            v-show="isMediaTypeFree && focused"
            :duplicateParentState="true"
            :focusable="false"
-           :src="focusIcon"/>
+           :src="icon"/>
       <img :class="`menu-button-item-img-css${suffix}`"
            v-show="!isMediaTypeFree && focused"
            :duplicateParentState="true"
@@ -76,11 +76,11 @@ export default defineComponent({
     const menuItemRef = ref()
 
     let cornerRadius = props.suffix === '-small' ? 36 : 12
-    let goldenBg: ESGradient = { colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: cornerRadius }
-    let whiteBg: ESGradient = { colors: ['#F5F5F5', '#F5F5F5'], orientation: 3, cornerRadius: cornerRadius }
+    let goldenBg: ESGradient = { colors: ['#FFFFE398', '#FFEEB364'], orientation: 6, cornerRadius: cornerRadius }
+    let whiteBg: ESGradient = { colors: ['#FF0057FF', '#FF00C7FF'], orientation: 6, cornerRadius: cornerRadius }
     const focusedGradientBg = ref<ESGradient>(whiteBg)
 
-    const textFocusColor = ref<string>('#000000')
+    const textFocusColor = ref<string>('#FFFFFF')
 
     const isMediaTypeFree = ref<boolean>(true);
 
@@ -93,7 +93,7 @@ export default defineComponent({
         if (mediaAuthorization?.value.type == IMediaAuthType.MEDIA_AUTH_TYPE_FREE) {
           isMediaTypeFree.value = true
           focusedGradientBg.value = whiteBg
-          textFocusColor.value = '#000000'
+          textFocusColor.value = '#FFFFFF'
         } else {
           isMediaTypeFree.value = false
           focusedGradientBg.value = goldenBg

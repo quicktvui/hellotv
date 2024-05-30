@@ -4,8 +4,8 @@
       ref="playerManager"
       :smallWindowWidth="890"
       :smallWindowHeight="500"
-      :floatWindowWidth="400"
-      :floatWindowHeight="225"
+      :floatWindowWidth="502"
+      :floatWindowHeight="283"
       :initPlayerWindowType="1"
       playerBackgroundColor="black"
       :playMediaAuto="false"
@@ -224,8 +224,8 @@ export default defineComponent({
 
     function setFloatWindow() {
       playerManager.value?.setFloatWindow()
-      playerLeft.value = 1520
-      playerTop.value = 0
+      playerLeft.value = 1393
+      playerTop.value = 25
     }
 
     function setSmallWindow() {
@@ -349,11 +349,11 @@ export default defineComponent({
 }
 
 .media-player-mask-float-css {
-  width: 400px;
-  height: 225px;
+  width: 502px;
+  height: 283px;
   background-color: transparent;
   position: absolute;
-  top: 0;
-  left: 1520;
+  top: 25;
+  left: 1393;
 }
 </style>

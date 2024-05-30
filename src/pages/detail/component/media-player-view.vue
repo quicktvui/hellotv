@@ -73,6 +73,10 @@
                 left: 'nextButton'
               }"
                >
+            <div class="media-player-view-next-text-focus"
+                 :gradientBackground="{ orientation: 6, colors: ['#FF0057FF', '#FF00C7FF'], cornerRadius: 8 }"
+                 showOnState="focused"
+                 duplicateParentState></div>
             <qt-text class="media-player-view-next-text-css"
                      :duplicateParentState="true"
                      gravity="center"
@@ -1168,13 +1172,20 @@ export default defineComponent({
   focus-background-color: #FFF5F5F5;
 }
 
+.media-player-view-next-text-focus {
+  width: 130px;
+  height: 60px;
+  background-color: transparent;
+  border-radius: 8px;
+  position: absolute;
+}
+
 .media-player-view-next-text-css {
   width: 130px;
   height: 60px;
   font-size: 30px;
   font-weight: 400;
   color: white;
-  focus-color: black;
 }
 
 .media-player-view-state-progress-root-css {
