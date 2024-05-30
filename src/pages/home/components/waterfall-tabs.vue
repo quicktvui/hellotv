@@ -220,19 +220,25 @@ export default defineComponent({
           bg_player.value?.resume()
         }
       }
+      myDataManager.isShow = true
+      myDataManager.updateUser()
     }
 
     function onESStop() {
       delayStopPlayer()
+      myDataManager.isShow = false
     }
 
     function onESPause() {
       bg_player.value?.stop()
+      myDataManager.isShow = false
     }
 
     function onESDestroy() {
       bg_player.value?.reset()
       delayStopPlayer()
+
+      myDataManager.clear()
     }
 
     function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean): void {
@@ -519,6 +525,8 @@ export default defineComponent({
       currentSectionAttachedIndex.value = -1
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
       bg_player?.value.keepPlayerInvisible(true)
+
+      myDataManager.updateUser()
     }
 
     function onTabClick(item: QTTabItem) {
@@ -546,7 +554,6 @@ export default defineComponent({
       onESDestroy,
       onESRestart(){
         myHistory.setData(tabRef)
-        myDataManager.updateData(tabRef)
       },
       tabsTriggerTask,
       wTabBg,

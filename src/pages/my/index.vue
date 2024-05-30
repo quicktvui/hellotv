@@ -17,7 +17,7 @@
 </template>
 <script lang='ts' setup>
 import { CSSProperties, reactive, computed, ref, onBeforeUnmount } from 'vue';
-import { useLoginDataSource, useUserManager } from "../../api/UseApi"
+// import { useLoginDataSource, useUserManager } from "../../api/UseApi"
 import MyTemplates from './MyTemplates.vue'
 // @ts-ignore
 import myApi from '../../api/my/index.ts'
@@ -25,9 +25,11 @@ import myApi from '../../api/my/index.ts'
 import { Iconfig } from '../../api/my/types.ts'
 import { qtRef, QTWaterfallSection } from '@quicktvui/quicktvui3'
 // @ts-ignore
-import myDataManager, { dPageWidth, dPageheight, dPageMarginSpace, IBlockItemData, activity_redirectTypes } from './index.ts'
+import myDataManager, { getUserData,dPageWidth, dPageheight, dPageMarginSpace, IBlockItemData, activity_redirectTypes } from './index.ts'
 import { useESRouter, useESNativeRouter } from '@extscreen/es3-router';
 import logo from '../../assets/cell-list-focus-img.png'
+import userManager from '../../api/login/user/UserManager'
+import {UserChangeListener} from '../../api/login/user/UserChangeListener'
 
 const router = useESRouter()
 const nRouter = useESNativeRouter()
@@ -60,6 +62,10 @@ const contentStyle = computed<CSSProperties>(() => {
 const contentData = qtRef<QTWaterfallSection[]>()
 
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
+  if(userManager.getUserInfo()){
+    userManager.clearUserInfo()
+    return
+  }
   if(item._redirectType == activity_redirectTypes.innerRouter && item._router){
     const route = {
       name: item._router.url, //'series_view',
@@ -75,25 +81,30 @@ const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
   }
 }
 
-const userManager = useUserManager()
-const loginManager = useLoginDataSource()
-const loginOut = () =>{
-  loginManager.loginOut()
-}
-
-const updateData = async () => {
-  console.log(myDataManager, '-lsj-my-updateData')
-  const datas = await myDataManager.getData(userManager)
-  if(datas){
-    contentData.value = datas
+let isUserChange = false
+let isShow = true
+const userChangeListener:UserChangeListener = {
+  onUserChanged(user, state){
+    isUserChange = true
+    updateData()
   }
-  isLoading.value = false
 }
-onBeforeUnmount(()=>{
-  console.log('lsj----onUnmounted')
-})
+const updateData = async () => {
+  if(isUserChange && isShow){
+    isLoading.value = true
+
+    // 更新用户信息
+    const userinfo = contentData.value[0].itemList[0]
+    const newInfo =  userManager.getUserInfo()
+    getUserData(userinfo, newInfo)//因为使用了双向绑定，所以这里不需要再使用主动更新ui
+
+    isUserChange = false
+    isLoading.value = false
+  }
+}
+// onBeforeUnmount(()=>{ })
 defineExpose({
-  onESStart(params) {
+  onESCreate(params){
     isLoading.value = true
     myApi.initPageData(params).then(async (res) => {
       myApi.pageData = res;
@@ -105,12 +116,28 @@ defineExpose({
           bg.value = config.gradientBg
         }
       })
-      updateData()
+      const datas = await myDataManager.getData()
+      if(datas){
+        contentData.value = datas
+      }
+      isLoading.value = false
     })
+
+    userManager.addUserChangeListener(userChangeListener)
   },
-  onESRestart(){
-    isLoading.value = true
+  onESResume() {
+    isShow = true
     updateData()
+  },
+  onESPause(){
+    isShow = false
+  },
+  onESStop(){
+    isShow = false
+  },
+  // onESRestart(){ },
+  onESDestroy(){
+    userManager.removeUserChangeListener(userChangeListener)
   }
 })
 </script>

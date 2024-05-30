@@ -63,3 +63,15 @@
 }
 
 
+.qt-tabs-waterfall-tab-css .qt-ui-nav-bar-item-css {
+  focus-background-color: #157AFC;
+}
+  
+.qt-tabs-waterfall-tab-css .qt-ui-nav-bar-item-text-css {
+  select-color: #157AFC;
+}
+.qt-tabs-css .qt-ui-poster-img-css{
+    border-radius: 20px;
+}
+
+

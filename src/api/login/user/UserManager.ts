@@ -148,3 +148,5 @@ export function createUserManager(): UserManager {
     offUserEvent
   }
 }
+const userManager = createUserManager()
+export default userManager

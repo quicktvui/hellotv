@@ -64,9 +64,8 @@ if (BuildConfig.useMockData) {
   app.use(mediaDataSource);
 }
 //---------------------------用户管理----------------------------------
-import { createUserManager, UserManager } from "./api/login/user/UserManager";
-
-const userManager: UserManager = createUserManager()
+import userManager,{ UserManager } from "./api/login/user/UserManager";
+// const userManager: UserManager = createUserManager()
 app.use(userManager);
 
 import { createUserApi } from "./api/login/UseLoginApi"

@@ -1,5 +1,5 @@
 import {
-  QTITab,QTWaterfallItem
+  QTITab,QTWaterfallItem,QTWaterfallSectionType
 } from '@quicktvui/quicktvui3'
 import { Ref } from 'vue'
 import api from '../../../../api/history/index'
@@ -117,9 +117,19 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
       allText = '登录同步云端历史'
     }
   }
+  const floatHeight = 50
+  const floatTitleBoxStyleHeight = floatHeight*2
   return {
     ...data,
+    barImg: data.apiData01?.assetLongCoverH,
     barStyle,allTextStyle,barStyle2,
+    floatTitleBoxStyle: {
+      width: allTextStyle.width, paddingLeft: space,
+      height: floatTitleBoxStyleHeight, marginTop: (data.style.height||0)-floatTitleBoxStyleHeight
+    },
+    floatTitleStyle: {width: innerWidth,height:floatHeight},
+    floatSubTitleStyle: {width: innerWidth,height:floatHeight},
+    floatTitleBackground: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 8, 8], orientation: 4 },
     barTitleStyle:{
       width: Math.floor(innerWidth * 0.7),
       height: innerHeight
@@ -186,13 +196,16 @@ class MyHistory {
           newData.myHistoryApiAllName = this.myHistoryApiAllName
           // tabRef.value?.updateChildNode(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
           tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
-          // todo: 判断是否需要更新板块
-          const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
-          if(sectionData){
-            tabRef.value?.updatePageSection(this.tabPageIndex, this.plateIndex, sectionData)
-          }
 
-          // console.log(newData, '--lsj--data-init')
+          const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
+          if(sectionData?.type === QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST){
+            // 一行滚动板块需要更新整个板块
+            const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
+            if(sectionData){
+              tabRef.value?.updatePageSection(this.tabPageIndex, this.plateIndex, sectionData)
+            }
+          }
+          console.log(newData, '--lsj--data-init',this.tabPageIndex, this.plateIndex, this.sectionIndex)
         }
       }
       
