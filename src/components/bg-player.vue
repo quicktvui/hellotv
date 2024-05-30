@@ -12,7 +12,7 @@
       :clipChildren="true" :focusable="false" name='home_player'
       :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
-      <qt-view :style="{width: playerWidth + 'px',height:playerHeight + 'px'}"
+      <qt-view :style="{width: (playerWidth + 20) + 'px',height:(playerHeight+30) + 'px'}"
         v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
         <es-player-manager :clipChildren="false"
           ref="playerManagerRef"
@@ -26,14 +26,14 @@
           @onPlayerInitialized="onPlayerInitialized"
         />
       </qt-view>
-      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: leftNum,top: topNum}" 
-        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem"
-        nextFocusUpSID="tabNavBarSid">
+      <!--  -->
+      <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}" 
+        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
         <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
           :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
         </img-transition> -->
         <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
-          :focusable="false" :width="playerWidth" :height="playerHeight" :transitionTime="800"/>
+          :focusable="false" :width="(playerWidth+30)" :height="(playerHeight+20)" :transitionTime="800"/>
       </qt-view>
       <!-- 背景视频遮罩 -->
       <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"/>
@@ -106,6 +106,8 @@ export default defineComponent({
     let playerHeight = ref<number>(1080)
     let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
+    let bgPlayerImgWidth = ref<number>(1920)
+    let bgPlayerImgHeight = ref<number>(1080)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
     const listViewRef = ref<QTIListView>()
     let listDataRec: Array<QTListViewItem> = [];
@@ -132,6 +134,7 @@ export default defineComponent({
     let mediaInterceptor:ESIPlayerInterceptor | undefined
     let leftNum = ref(0)
     let topNum = ref(0)
+    let bottomNum = ref(0)
     const log = useESLog()
     const toast = useESToast()
     
@@ -148,9 +151,9 @@ export default defineComponent({
         log.e('BG-PLAYER',`playAtIndex error list size = 0,index ${index} `)
       }
     }
-    const doChangeParent = (cellReplaceSID : string, playerType:number, boxWidth:number, boxHeight:number,playerWidth:number,
-      playerHeight:number,playerListData:any, playIndex:number,interceptor?:ESIPlayerInterceptor) => {
-        leftNum.value = playerType == 2 ? 0 : 10
+    const doChangeParent = (cellReplaceSID : string, playerType:number, boxWidth:number, boxHeight:number,playerWidth1:number,
+      playerHeight1:number,playerListData:any, playIndex:number,interceptor?:ESIPlayerInterceptor) => {
+        leftNum.value = playerType == 2 ? 0 : 15
         topNum.value = playerType == 2 ? 0 : 10
         mediaInterceptor = interceptor
         clearTimeout(delayShowTimer)
@@ -170,7 +173,7 @@ export default defineComponent({
         currentPlayIndex.value = playIndex
         delayShowTimer = setTimeout(()=>{
           initComponent(playerListData,playerType)
-          setSize(boxWidth,boxHeight,playerWidth,playerHeight)
+          setSize(boxWidth,boxHeight,playerWidth1,playerHeight1)
           playAtIndex(playIndex)
         },delayToPlay)
     }
@@ -243,8 +246,9 @@ export default defineComponent({
       playerBoxHeight.value = height
       playerListWidth.value = width - pWidth
       playerListHeight.value = height
-      playerWidth.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pWidth : pWidth - 20
+      playerWidth.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pWidth : pWidth - 30
       playerHeight.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pHeight : pHeight - 20
+      // toast.showShortToast(playerHeight.value+'yyyyyyyyyyy'+playerWidth.value)
       if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
     }
     // cell-img-transition api
@@ -418,9 +422,9 @@ export default defineComponent({
       }
     }
     return {
-      playerList,bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,
+      playerList,bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,
-      playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
+      playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,bgPlayerImgWidth,bgPlayerImgHeight,
       playerWidth,playerHeight,playerIsInitialized,
       listViewRef,onItemClick,currentPlayIndex,onItemFocus,onClickCellItem,
       requestDismissCover,setCurBg,setBgImage,
@@ -440,17 +444,20 @@ export default defineComponent({
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
 .bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 20px;top: 0;left: 0;}
 .playerBox{
-  background-color: rgba(0, 0, 0, 0.1);
+  /* background-color: rgba(0, 0, 0, 0.1); */
+  background-color: transparent;
   border-radius: 20px;
   focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;
   focus-border-radius: 0;
+  position: relative;
 }
 .player-manager{
   width: 1920px;
   height: 1080px;
   background-color: transparent;
+  align-items: center;
   position: absolute;
   /* left: 10;
   top: 10; */
@@ -502,14 +509,14 @@ export default defineComponent({
 }
 
 .item_player_focus_bg{
-  focus-border-style: solid;
+  /* focus-border-style: solid;
   focus-border-color: #157AFC;
-  focus-border-radius: 0;
+  focus-border-radius: 0; */
   background-color: transparent;
   position: absolute;
   /* left: 10;
   top: 10; */
-  border-radius: 0px;
+  border-radius: 20px;
 }
 
 .iclf_item .play_Mark{
