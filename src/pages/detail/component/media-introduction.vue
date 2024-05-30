@@ -252,7 +252,7 @@ export default defineComponent({
 .media-introduction-detail-score-css {
   border-radius: 4px;
   margin-right: 20px;
-  border-color: #F7B500;
+  border-color: #157AFC;
   border-width: 1.5px;
   align-items: center;
   display: flex;
@@ -265,7 +265,7 @@ export default defineComponent({
 .media-introduction-detail-score-text-css {
   top: -1px;
   font-size: 24px;
-  color: #F7B500;
+  color: #157AFC;
   width: 60px;
   height: 32px;
 }
