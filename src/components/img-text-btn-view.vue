@@ -46,14 +46,14 @@ import {defineComponent, reactive, toRefs, watch} from "@vue/runtime-core";
 export default defineComponent({
   name: "img-text-btn-view",
   props:{
-    imgTxtBtnStyle:Object,
+    imgTxtBtnStyle:String,
     /**
      * 背景渐进色 默认
      */
     defaultGradientBg: {
       type: Object,
       default: () => {
-        return {colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadii4: [100,100,100,100]} //cornerRadii4[左上, 右上, 右下, 左下]
+        return {colors: ['#0FFFFFFF', '#0FFFFFFF'], orientation: 6, cornerRadii4: [30,30,30,30]} //cornerRadii4[左上, 右上, 右下, 左下]
       }
     },
     /**
@@ -62,7 +62,7 @@ export default defineComponent({
     selectedGradientBg: {
       type: Object,
       default: () => {
-        return {colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100}
+        return {colors: ['#0FFFFFFF', '#0FFFFFFF'], orientation: 6, cornerRadius: 30}
       }
     },
     /**
@@ -71,7 +71,7 @@ export default defineComponent({
     focusedGradientBg: {
       type: Object,
       default: () => {
-        return {colors: ['#FFF5F5F5', '#FFF5F5F5'], orientation: 6, cornerRadius: 100}
+        return {colors: ['#0057FF','#00C7FF'], orientation: 6, cornerRadius: 30}
       }
     },
     iconRootStyle:Object,
@@ -140,7 +140,7 @@ export default defineComponent({
       type:Number,
       default:28
     },
-    textStyle:Object,
+    textStyle:String,
 
 
     fontMarginLeft: {
@@ -207,7 +207,7 @@ export default defineComponent({
   align-items: center;
 }
 .img-text-btn-root-default{
-  border-radius: 100px;
+  border-radius: 30px;
 }
 .img-text-btn-root-css .bg-css{
   background-color: transparent;

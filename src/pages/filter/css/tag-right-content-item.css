@@ -4,7 +4,7 @@
 }
 
 .screen-right-content-item-root-css .screen-right-content-item-img{
-    border-radius: 8px;
+    border-radius: 20px;
     focus-border-color: white;
     focus-border-style: solid;
     z-index: 1;
@@ -43,8 +43,8 @@
     z-index: 110;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
-    border-bottom-left-radius: 8px;
-    border-bottom-right-radius: 8px;
+    border-bottom-left-radius: 20px;
+    border-bottom-right-radius: 20px;
     background-color: transparent;
     focus-background-color: white;
 }

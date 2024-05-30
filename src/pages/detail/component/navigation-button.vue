@@ -4,6 +4,8 @@
        @click="onClick"
        :autofocus='autofocus'
        class="navigation-button-item-icon-css">
+    <div class="navigation-button-item-bg-focus" :duplicateParentState="true" showOnState="focused" :focusable="false"
+         :gradientBackground="{colors:['#0057FF','#00C7FF'], cornerRadii4: [30, 30, 30, 30], orientation: 6}"/>
     <div class="navigation-button-item-img-root-css">
       <img class="navigation-button-item-img-css"
            :duplicateParentState="true"
@@ -78,11 +80,17 @@ export default defineComponent({
   height: 60px;
   border-radius: 30px;
   background-color: rgba(255, 255, 255, 0.1);
-  focus-background-color: #FFF5F5F5;
   flex-direction: row;
   align-items: center;
   justify-content: center;
   display: flex;
+}
+
+.navigation-button-item-bg-focus{
+  position: absolute;
+  width: 145px;
+  height: 60px;
+  background-color: transparent;
 }
 
 .navigation-button-item-img-css {
@@ -95,8 +103,8 @@ export default defineComponent({
   width: 56px;
   height: 60px;
   color: rgba(255, 255, 255, 0.6);
-  focus-color: black;
-  select-color: black;
+  focus-color: white;
+  select-color: white;
   align-self: center;
   font-size: 28px;
   text-align: center;

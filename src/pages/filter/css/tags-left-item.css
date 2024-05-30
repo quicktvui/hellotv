@@ -19,8 +19,8 @@
  */
 .screen-left-item-tags-root-css .screen-left-item-tags-text{
     color: rgba(255, 255, 255, 0.5);
-    focus-color: black;
-    select-color: white;
+    focus-color: white;
+    select-color: #157AFC;
     background-color: transparent;
 }
 

@@ -5,7 +5,7 @@
 
     "textColor": "#ffffff",
     "textSelectColor": "#ffffff",
-    "textFocusColor": "#000000",
+    "textFocusColor": "#ffffff",
 
     "btnColor": "rgba(230,230,230,0.5)",
     "btnSelectColor": "rgba(200,90,230,0.5)",

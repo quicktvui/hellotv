@@ -6,6 +6,9 @@
            eventClick
            eventFocus
            :focusable="true">
+    <div class="filter-line-item-focus" :style="{height:filterHeight+'px'}" autoWidth
+         :duplicateParentState="true" showOnState="focused" :focusable="false"
+         :gradientBackground="{colors:['#0057FF','#00C7FF'], cornerRadii4: [30, 30, 30, 30], orientation: 6}"/>
     <qt-text class="filter-line-item-text"
              :style="{height:filterHeight+'px'}"
              :duplicateParentState="true"

@@ -1,15 +1,22 @@
 .filter-line-item-root{
     background-color: transparent;
-    focus-background-color: white;
     select-background-color: rgba(255,255,255,0.2);
     padding-left: 24px;
     padding-right: 24px;
-    border-radius: 34px;
+    border-radius: 30px;
+}
+.filter-line-item-root .filter-line-item-focus{
+    position: absolute;
+    background-color: transparent;
+    top: 0.01px;
+    left: 0.01px;
+    right: 0.01px;
+    bottom: 0.01px;
 }
 .filter-line-item-root .filter-line-item-text{
     color: rgba(255, 255, 255, .5);
-    focus-color:black;
-    select-color: white;
+    focus-color:white;
+    select-color: #157AFC;
     background-color: transparent;
 }
 
@@ -21,16 +28,24 @@
 /**************filter-fast-item****************/
 .filter-fast-item-root{
     background-color: rgba(255,255,255,0.1);
-    focus-background-color: white;
+
     select-background-color: rgba(255,255,255,0.2);
     padding-left: 24px;
     padding-right: 24px;
-    border-radius: 34px;
+    border-radius: 30px;
+}
+.filter-fast-item-root .filter-fast-item-focus{
+    position: absolute;
+    background-color: transparent;
+    top: 0.01px;
+    left: 0.01px;
+    right: 0.01px;
+    bottom: 0.01px;
 }
 .filter-fast-item-root .filter-fast-item-text{
     color: rgba(255, 255, 255, .5);
-    focus-color:black;
-    select-color: white;
+    focus-color:white;
+    select-color: #157AFC;
     background-color: transparent;
 }
 

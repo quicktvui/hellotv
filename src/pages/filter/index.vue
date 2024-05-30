@@ -11,7 +11,7 @@
           name="top_search_btn"
           ref="top_search_btn"
           icon="ic_top_search.png"
-          focus-icon="ic_top_search_focus.png"
+          focus-icon="ic_top_search.png"
           :nextFocusName="{ down: 'screen_left_tags' }"
           @click="onClick"/>
       </template>

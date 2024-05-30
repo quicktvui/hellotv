@@ -7,7 +7,7 @@
        :sateBackgroundPadding="[10, 10]" :focusScale="1.06">
     <div class="screen-left-item-tags-bg" :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
          :duplicateParentState="true" showOnState="focused" :focusable="false"
-         :gradientBackground="{colors:['#F5F5F5','#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6}"/>
+         :gradientBackground="{colors:['#0057FF','#00C7FF'], cornerRadii4: [0, 20, 20, 0], orientation: 6}"/>
     <qt-text class="screen-left-item-tags-text"  :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
              gravity="center" :duplicateParentState="true"
              :lines="1" :fontSize="36" text="${showName}" />

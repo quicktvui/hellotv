@@ -16,7 +16,7 @@
     <!--    评分-->
     <qt-view class="screen-right-content-item-score-root" :focusable="false"
              :style="{width:contentItemWidth+'px'}"
-             :gradientBackground="{colors:['#00000000', '#E5000000'], cornerRadii4: [0, 0, 6, 6]}">
+             :gradientBackground="{colors:['#00000000', '#E5000000'], cornerRadii4: [0, 0, 18, 18]}">
       <qt-text class="screen-right-item-score" :fontSize="24" :paddingRect="[15,0,0,6]" text="${score}" :focusable="false"/>
     </qt-view>
     <!--    标题-->

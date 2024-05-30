@@ -85,12 +85,13 @@ export default defineComponent({
     }
 
     function initDefaultThemeColor(){
+      //设置默认焦点边框圆角
+      Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', 20);
       //设置默认焦点颜色
       Native.callNative('FocusModule', 'setDefaultFocusBorderColor', '#157AFC');
 // //设置焦点框是否有内里黑色边框
 //       Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable',true);
-      //设置默认焦点边框圆角
-      Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', 20);
+
 //       //设置默认焦点边框是否开启
 //       Native.callNative('FocusModule', 'setDefaultFocusBorderEnable', true);
 // //设置默认焦点放大倍数

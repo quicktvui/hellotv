@@ -216,7 +216,7 @@ export function buildPosterCorner(tabContentItem: TabSectionItem): QTPosterCorne
       src:enableImg ? cornerImage :"",
       background: {
         colors: [cornerColor ? cornerColor : "#ffB67827", cornerGradient ? cornerGradient : "#ffB67827"],
-        cornerRadii4: showCornerRight ? [0, 8, 0, 8] : [8, 0, 8, 0],
+        cornerRadii4: showCornerRight ? [0, 20, 0, 10] : [20, 0, 10, 0],
         orientation: 2
       }
     }

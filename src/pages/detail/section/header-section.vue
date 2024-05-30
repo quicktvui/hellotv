@@ -7,7 +7,7 @@
           class="header-home-button-css"
           name="headerSearchButton"
           sid="headerSearchButton"
-          :focus-icon="searchFocused"
+          :focus-icon="searchNormal"
           :icon="searchNormal"
           :blockFocusDirections="['left','right','top']"
           @focus="onSearchButtonFocused"

@@ -80,7 +80,7 @@
             <qt-view class="screen-right-content-more-loading"
                      :style="{width:(rightContentWidth-160)+'px'}"
                      :type="1002" :focusable="false">
-              <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
+              <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
             </qt-view>
           </template>
         </qt-grid-view>
@@ -91,13 +91,13 @@
     <qt-view v-if="loading" class="screen-right-content-loading"
              :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
              :clipChildren="false" :focusable='false'>
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
+      <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
     <qt-view v-if="!loading && filterClickLoading"
              class="screen-right-filter-click-loading"
              :style="{top:filterHeight,width:rightContentWidth+'px',height: (rightContentHeight-filterHeight)+'px'}"
              :clipChildren="false" :focusable='false'>
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
+      <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
     <!-- 空结果-->
     <qt-view v-if="empty" class="screen-right-content-empty"

@@ -32,6 +32,9 @@
           @onPlayerPlaceholderFocus="onPlayerPlaceholderFocus"
           @onPlayerPlaceholderClick="onPlayerPlaceholderClick"/>
       </template>
+      <template v-slot:item>
+        <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"/>
+      </template>
     </qt-waterfall>
 
     <media-player

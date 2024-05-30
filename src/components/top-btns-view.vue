@@ -9,7 +9,7 @@
       name="top_my_btn"
       ref="top_my_btn"
       icon="ic_top_screen.png"
-      focus-icon="ic_top_screen_focus.png"
+      focus-icon="ic_top_screen.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view
@@ -21,7 +21,7 @@
       name="top_screen_btn"
       ref="top_screen_btn"
       icon="ic_top_screen.png"
-      focus-icon="ic_top_screen_focus.png"
+      focus-icon="ic_top_screen.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view
@@ -33,7 +33,7 @@
       name="top_search_btn"
       ref="top_search_btn"
       icon="ic_top_search.png"
-      focus-icon="ic_top_search_focus.png"
+      focus-icon="ic_top_search.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view
@@ -45,7 +45,7 @@
       name="top_history_btn"
       ref="top_history_btn"
       icon="ic_top_search.png"
-      focus-icon="ic_top_search_focus.png"
+      focus-icon="ic_top_search.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view
@@ -57,10 +57,10 @@
       name="top_activity_btn"
       ref="top_activity_btn"
       icon="ic_top_search.png"
-      focus-icon="ic_top_search_focus.png"
+      focus-icon="ic_top_search.png"
       @click="onClick"
       @focus="onFocus"/>
-      
+
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem"
       :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]" :style="logoStyle" :src="logo">
@@ -135,6 +135,7 @@ export default defineComponent({
               name: 'activity2',
               params: {}
           });
+          break;
         case 'top_my_btn':
           router.push({
               name: 'my',
