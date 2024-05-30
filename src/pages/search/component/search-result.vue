@@ -5,7 +5,7 @@
            :nextFocusName="{ left: 'search_center_view_content_list' }">
 
     <qt-view class="search_result_title_root_top" :focusable="false" name="search_result_title_name"
-             v-show="(keyword || recommendTitle ) && isShowTopTip">
+             v-show="(keyword || recommendTitle) && isShowTopTip">
       <qt-image :visible="showIsFullScreen" :src="ic_search_left_arrow" class="ic_search_left_arrow"
                 :focusable="false" />
       <span class="search_result_view_title_result" v-if="keyword"
@@ -20,9 +20,9 @@
              :focusMemory="true"
              name="searchTabs"
              :tabContentSwitchDelay="200"
-             :custom-pool="{name:'search'}"
-             :custom-item-pool="{name:'search_items'}"
-             :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view',up:'tabList' }"
+             :custom-pool="{ name: 'search' }"
+             :custom-item-pool="{ name: 'search_items' }"
+             :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
              :blockViewPager="['down', 'right']"
              :outOfDateTime="2 * 60 * 1000" @onTabClick="onTabClick" @onTabPageChanged="onTabPageChanged"
              @onTabMoveToTopStart="onTabMoveToTopStart" @onTabMoveToTopEnd="onTabMoveToTopEnd"
@@ -47,7 +47,7 @@
         </qt-view>
       </template>
       <template v-slot:waterfall-item>
-        <qt-poster :type="20" />
+        <qt-poster :type="20" :borderRadius="20" :rippleColor="'#157AFC'" />
       </template>
     </qt-tabs>
 
@@ -163,48 +163,48 @@ export default defineComponent({
       // 搜索数据
       // setTimeout(()=>{
       // log.e("XRG===",`加载数据的页数 pageIndex = ${pageIndex} pageNo = ${pageNo}`)
-        if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
-          const tabItem = tabList[pageIndex]
-          if (tabItem._id !== null && tabItem._id !== undefined) {
-            if (isRecommendRequest) {
-              appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
-                .then((tabPage:QTTabPageData)=>{
-                dealData(tabPage,pageNo,pageIndex)
+      if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
+        const tabItem = tabList[pageIndex]
+        if (tabItem._id !== null && tabItem._id !== undefined) {
+          if (isRecommendRequest) {
+            appApi.getRecommendPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
+              .then((tabPage: QTTabPageData) => {
+                dealData(tabPage, pageNo, pageIndex)
               })
-            } else {
-              appApi.getSearchResultPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
-                .then((tabPage:QTTabPageData) =>{
-                  // log.e("XRG===",`当前准备加载数据pageIndex = ${pageIndex} pageNo = ${pageNo}\n tabPage ${JSON.stringify(tabPage)}`)
-                dealData(tabPage,pageNo,pageIndex)
+          } else {
+            appApi.getSearchResultPageData(tabItem._id, (pageNo + 1), SearchConfig.searchResultPageSize, tabList.length === 1)
+              .then((tabPage: QTTabPageData) => {
+                // log.e("XRG===",`当前准备加载数据pageIndex = ${pageIndex} pageNo = ${pageNo}\n tabPage ${JSON.stringify(tabPage)}`)
+                dealData(tabPage, pageNo, pageIndex)
               })
-            }
-          }
-        }else{
-          if (isShowCenterSearch.value) {
-            context.emit("close-self-loading")
-          }else{
-            context.emit("close-loading")
           }
         }
+      } else {
+        if (isShowCenterSearch.value) {
+          context.emit("close-self-loading")
+        } else {
+          context.emit("close-loading")
+        }
+      }
       // },0)
 
     }
 
-    const dealData = (tabPage: QTTabPageData,pageNo:number,pageIndex: number)=>{
+    const dealData = (tabPage: QTTabPageData, pageNo: number, pageIndex: number) => {
       // setTimeout(()=>{
-        const length = tabPage.data[0].itemList.length
-        if (length > 0) {
-          // log.e("XRG",`加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
-          tabRef.value?.addPageData(pageIndex, tabPage, 0)
-        } else { //停止分页
-          // log.e("XRG",`结束 加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
-         tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-        }
-        if (isShowCenterSearch.value) {
-          context.emit("close-self-loading")
-        }else{
-          context.emit("close-loading")
-        }
+      const length = tabPage.data[0].itemList.length
+      if (length > 0) {
+        // log.e("XRG",`加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
+        tabRef.value?.addPageData(pageIndex, tabPage, 0)
+      } else { //停止分页
+        // log.e("XRG",`结束 加载数据 数据长度 length ${length} pageIndex = ${pageIndex} pageNo = ${pageNo}` )
+        tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+      }
+      if (isShowCenterSearch.value) {
+        context.emit("close-self-loading")
+      } else {
+        context.emit("close-loading")
+      }
       // },400)
 
     }
