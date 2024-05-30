@@ -9,15 +9,16 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <qt-view sid="bg-player" class="bg_player_box"
-      :clipChildren="true" :focusable="false"
-       name='home_player'
+      :clipChildren="true" :focusable="false" name='home_player'
+      :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
-      <qt-view :style="{width:playerWidth + 'px',height:playerHeight + 'px'}"
+      <qt-view :style="{width: playerWidth + 'px',height:playerHeight + 'px'}"
         v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
         <es-player-manager :clipChildren="false"
           ref="playerManagerRef"
           class="player-manager"
           :focusable="false"
+          :style="{left: leftNum,top: topNum}"
           :initPlayerWindowType="2"
           :playerList="playerList"
           @onPlayerPlaying="onVideoPlayerPlaying"
@@ -25,8 +26,9 @@
           @onPlayerInitialized="onPlayerInitialized"
         />
       </qt-view>
-      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px'}" 
-        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
+      <qt-view class="item_player_focus_bg" :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: leftNum,top: topNum}" 
+        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem"
+        nextFocusUpSID="tabNavBarSid">
         <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
           :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
         </img-transition> -->
@@ -49,9 +51,9 @@
             :style="{width: playerListWidth + 'px'}"
             :clipChildren="true" eventClick eventFocus :focusScale="1">
               <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
-                :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,16,0]"/>
+                :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,40,0]"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
               </qt-view>
           </qt-view>
           <!-- 小窗列表 图片类型 10002-->
@@ -62,7 +64,7 @@
               <qt-view class="iclf_item_thumbnail_mask" :gradientBackground="{colors:['#00000000','#E6000000']}" :focusable="false"
                 :style="{width: playerListWidth + 'px'}" :showOnState="['normal']" :duplicateParentState="true"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF4E46'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
               </qt-view>
           </qt-view>
         </qt-list-view>
@@ -128,6 +130,8 @@ export default defineComponent({
     let isAnyPlaying = ref(false)
     let currentPlayIndex = ref(0)
     let mediaInterceptor:ESIPlayerInterceptor | undefined
+    let leftNum = ref(0)
+    let topNum = ref(0)
     const log = useESLog()
     const toast = useESToast()
     
@@ -146,6 +150,8 @@ export default defineComponent({
     }
     const doChangeParent = (cellReplaceSID : string, playerType:number, boxWidth:number, boxHeight:number,playerWidth:number,
       playerHeight:number,playerListData:any, playIndex:number,interceptor?:ESIPlayerInterceptor) => {
+        leftNum.value = playerType == 2 ? 0 : 10
+        topNum.value = playerType == 2 ? 0 : 10
         mediaInterceptor = interceptor
         clearTimeout(delayShowTimer)
         bgPlayerType.value = playerType
@@ -214,6 +220,7 @@ export default defineComponent({
         let arr: Array<QTListViewItem> = []
         for (let i = 0; i < playerListData.length; i++) {
           let el = playerListData[i]
+          el.thumbnail = ''
           el.type = el.thumbnail ? 10002 : 10001;
           el.decoration = {};
           arr.push(el)
@@ -236,9 +243,8 @@ export default defineComponent({
       playerBoxHeight.value = height
       playerListWidth.value = width - pWidth
       playerListHeight.value = height
-      playerWidth.value = pWidth
-      playerHeight.value = pHeight
-      // playerManagerRef.value?.setSize(playerWidth,playerHeight)
+      playerWidth.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pWidth : pWidth - 20
+      playerHeight.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pHeight : pHeight - 20
       if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
     }
     // cell-img-transition api
@@ -412,7 +418,7 @@ export default defineComponent({
       }
     }
     return {
-      playerList,bg_player_replace_child,itemCellBgImgRef,reset,bg_root,
+      playerList,bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,
       playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
       playerWidth,playerHeight,playerIsInitialized,
@@ -432,9 +438,10 @@ export default defineComponent({
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
  flex-direction: row;justify-content: center;align-items: center;}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
-.bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 8px;top: 0;left: 0;}
+.bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 20px;top: 0;left: 0;}
 .playerBox{
   background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 20px;
   focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;
@@ -445,10 +452,9 @@ export default defineComponent({
   height: 1080px;
   background-color: transparent;
   position: absolute;
-  left: 0;
-  top: 0;
+  /* left: 10;
+  top: 10; */
   z-index: -1;
-  border-radius: 8px;
 }
 .home_bg_player_view_mask{
   background-color: rgba(0,0,0,0.5);
@@ -466,7 +472,7 @@ export default defineComponent({
 }
 
 .item_cell_list_front{
-  background-color: rgba(255,255,255,0.1);
+  background-color: transparent;
   position: absolute;
   right: 0;
   top: 0;
@@ -476,11 +482,11 @@ export default defineComponent({
   background-color: transparent;
   border-bottom-width: 1px;
   border-bottom-color: rgba(255,255,255,0.1);
-  focus-border-style: solid;
+  /* focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;
   focus-border-radius: 0;
-  focus-background-color: #fff;
+  focus-background-color: #fff; */
   z-index: 99;
 }
 .iclf_item2{
@@ -497,12 +503,12 @@ export default defineComponent({
 
 .item_player_focus_bg{
   focus-border-style: solid;
-  focus-border-color: #fff;
+  focus-border-color: #157AFC;
   focus-border-radius: 0;
   background-color: transparent;
   position: absolute;
-  left: 0;
-  top: 0;
+  /* left: 10;
+  top: 10; */
   border-radius: 0px;
 }
 
@@ -512,7 +518,7 @@ export default defineComponent({
   background-color: transparent;
   position: absolute;
   left: 0;
-  top: 38px;
+  top: 23px;
   z-index: 101;
 }
 .iclf_item_text{
@@ -520,9 +526,9 @@ export default defineComponent({
   height: 96px;
   color: #fff;
   left: 0; 
-  focus-color:#000;
+  focus-color:#157AFC;
   width: 482px;
-  select-color:#FF4E46;
+  select-color:#157AFC;
   background-color: transparent;
 }
 .iclf_item_thumbnail{
