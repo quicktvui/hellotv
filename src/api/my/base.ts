@@ -40,15 +40,29 @@ export class MyBase {
     await delayFn()
     return getMysection({
       id: '1getOrderInfo',
-      list: [1, 2, 3].map((item, index) => {
-        return {
-          id: index + '', img: vimIcon,
-          title: index+'我的订单',  _titleFontSize: 32,
-          subTitle: index+'-已支付的订单在这里~', _subTitleFontSize: 26,
+      list: [
+        {
+          id: '0', img: vimIcon,
+          title: '我的订单',  _titleFontSize: 32,
+          subTitle: '已支付的订单在这里~', _subTitleFontSize: 26,
+          _infoWidthRatio: 0.9,
+          _layout: { width: 358, height: 230 },
+        },
+        {
+          id: '1', img: vimIcon,
+          title: '我的收藏',  _titleFontSize: 32,
+          subTitle: '收藏的内容~', _subTitleFontSize: 26,
+          _infoWidthRatio: 0.9,
+          _layout: { width: 358, height: 230 },
+        },
+        {
+          id: '2', img: vimIcon,
+          title: '消息中心',  _titleFontSize: 32,
+          subTitle: '查看更多消息~', _subTitleFontSize: 26,
           _infoWidthRatio: 0.9,
           _layout: { width: 358, height: 230 },
         }
-      }),
+      ],
       options: { posterType: posterTypes.card }
     })
   }
@@ -80,14 +94,19 @@ export class MyBase {
     return [
       getMysection({
         id: '3getMoreList', title: '更多功能',
-        list: [1, 2].map((item, index) => {
-          return {
-            id: index + '', img: infoIcon,
+        list: [
+          {
+            id: '0', img: infoIcon,
             title: '应用信息', _titleFontSize: 32,
+            _layout: { height: 175 }
+          },
+          {
+            id: '1', img: infoIcon,
+            title: '版本更新', _titleFontSize: 32,
             _layout: { height: 175 },
-            cornerNum: index === 1 ? -1 : undefined
+            cornerNum: -1
           }
-        }),
+        ],
         options: {
           posterType: posterTypes.info, columns: 6,// 指定 columns 创建板块数据
         }

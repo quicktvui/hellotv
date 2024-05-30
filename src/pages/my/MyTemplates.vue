@@ -7,7 +7,7 @@
   </div>
 </template>
 <script lang='ts' setup>
-// import { ref } from 'vue';
+// import { onMounted, onBeforeUnmount } from 'vue';
 import MyPoster from './poster/index.vue'
 import MyPosterInfo from './poster/info.vue'
 import MyPosterCard from './poster/card.vue'

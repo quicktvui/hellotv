@@ -4,12 +4,15 @@ import {
   QTWaterfallSectionType, QTITab, QTTabPageData, QTTabPageState
 } from '@quicktvui/quicktvui3';
 import { Ref } from 'vue'
-import { UserManager } from "../../api/login/user/UserManager"
 import myApi from '../../api/my/index';
+import userManager from '../../api/login/user/UserManager'
+import {UserChangeListener} from '../../api/login/user/UserChangeListener'
+import { UserInfo } from "../login/build_data/UserInfo"
 
 export const activity_redirectTypes = {
   innerRouter: 1,//跳转到当前app内部页面
-  innerApp: 0//跳转到内部其他app
+  innerApp: 0,//跳转到内部其他app
+  test: -1
 }
 
 const dcornerGradientBg = { colors: ['#FFE398', '#EEB364'], cornerRadii4: [0, 8, 0, 8], orientation: 2, }
@@ -331,13 +334,33 @@ export const transMoreSectin = (isLogin = false, sections: ImySectionRes[]) => {
 }
 
 import dAvatar from '../../assets/ic_header_login_normal.png'
-import { UserInfo } from "../login/build_data/UserInfo"
+const userConfig = {
+  btn: '登陆', nickName: '登录同步云端记录',
+  router: { url: 'login', isReplace: false },
+  loginBtn: '账号管理',
+  loginRouter: { url: 'logout', isReplace: false },
+}
+export const getUserData = (userinfo, newInfo:UserInfo|null)=>{
+  if(newInfo){
+    userinfo.image.src = newInfo?.userIcon
+    userinfo.title.text = newInfo?.nickName
+    userinfo.subTitle.text = userConfig.loginBtn
+    userinfo._router = userConfig.loginRouter
+  } else {
+    userinfo.image.src = dAvatar
+    userinfo.title.text = userConfig.nickName
+    userinfo.subTitle.text = userConfig.btn
+    userinfo._router = userConfig.router
+  }
+  return userinfo
+}
 export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => {
+  const info =  userManager.getUserInfo()
   orederRes.section.itemList.unshift(getPosterConfig({
     id: orederRes.section._id || '' + orederRes.section.itemList.length,
-    img: dAvatar, title: '登录同步云端记录', subTitle: '登陆',
+    img: info?.userIcon||dAvatar, title: info?info.nickName:userConfig.nickName, subTitle: info?userConfig.loginBtn:userConfig.btn,
     _layout: { width: 556, height: 230 },
-    _router: { url: 'login', isReplace: false },
+    _router: info?userConfig.loginRouter:userConfig.router
   }, {
     posterType: posterTypes.user,
     space: orederRes.options?.space
@@ -348,44 +371,45 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
 
 class MyDataManager {
   tabPageIndex = -1
+  isUserChange = false
+  isShow = false
+  tabRef?:Ref<QTITab|undefined>
 
-  async getData(userManager:UserManager){
+  async getData(){
     const orderRes = await myApi.getOrderInfo()
     const historyRes = await myApi.getHistorys()
     const moreRes = await myApi.getMoreList()
-    const userInfo = userManager.getUserInfo()
-    console.log("XRG===userInfo",userInfo)
     return [
       transOrderSection(false, orderRes),
       transHistorySection(false, historyRes),
       ...transMoreSectin(false, moreRes)
     ]
   }
-  async updateData(tabRef:Ref<QTITab|undefined>, tabContentTop = 0){
-    if(this.tabPageIndex>=0){
-      const cIndex = await tabRef.value?.getCurrentTabIndex()
+  async updateUser(){
+    if(this.tabPageIndex>=0 && this.isUserChange && this.tabRef && this.isShow){
+      const cIndex = await this.tabRef.value?.getCurrentTabIndex()
       if(cIndex === this.tabPageIndex){
-        const tData = await this.getData()
-        tData[0].decoration!.top = tabContentTop
-        tData[tData.length-1].decoration!.bottom = 20
-        // const tabPage: QTTabPageData = {
-        //   data: tData,
-        //   useDiff: true
-        // }
-        // tabRef.value?.setPageData(this.tabPageIndex, tabPage)
-        // tabRef.value?.updatePageData(this.tabPageIndex, tabPage)
+        const userinfo = this.tabRef.value?.getPageItem(this.tabPageIndex,0,0)
+        const newInfo =  userManager.getUserInfo()
+        if(userinfo){
+          this.isUserChange = false
+          this.tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, getUserData(userinfo,newInfo))
+        }
+      }
+    }
+  }
+  async updateHistory(){
+    if(this.tabPageIndex>=0 && this.tabRef){
+      const cIndex = await this.tabRef.value?.getCurrentTabIndex()
+      if(cIndex === this.tabPageIndex){
+        
+        // tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, {})
+        // tabRef.value?.updatePageSection(this.tabPageIndex, 1, {})
         console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
       }
     }
   }
   async setData(tabRef:Ref<QTITab|undefined>, tabIndex, tabContentTop = 0){
-    // const {section} = getMysection({
-    //   id: '1getOrderInfo',
-    //   list: [],
-    //   options: { posterType: posterTypes.card }
-    // })
-    // section.decoration!.top = tabContentTop
-    // section.isSwitchCellBg = '0'
     const tData = await this.getData()
     tData[0].decoration!.top = tabContentTop
     tData[tData.length-1].decoration!.bottom = 20
@@ -399,10 +423,22 @@ class MyDataManager {
     this.tabPageIndex = tabIndex
 
     tabRef.value?.setPageState(tabIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+    userManager.addUserChangeListener(userChangeListener)
+    this.tabRef = tabRef
+    this.isShow = true
+  }
+  clear(){
+    userManager.removeUserChangeListener(userChangeListener)
+    this.isShow = false
   }
 }
 const myDataManager = new MyDataManager()
-
+const userChangeListener:UserChangeListener = {
+  onUserChanged(user, state){
+    myDataManager.isUserChange = true
+    myDataManager.updateUser()
+  }
+}
 // if(pageIndex === myDataManager.tabPageIndex){
 //   myDataManager.setData(tabRef, tabContentTop)
 // }
