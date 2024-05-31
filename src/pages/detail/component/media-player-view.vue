@@ -44,11 +44,12 @@
                      :fontSize="30" :text="progress"/>
 
             <qt-seek-bar
+              class="media-player-view-seekbar-css"
               ref="seekBarRef"
               name="seekBar"
+              :color="{ startColor: '#FF0057FF', endColor: '#FF00C7FF' }"
               :nextFocusName="{ left: 'seekBar' }"
               :visible="isFullWindow && isProgressShowing"
-              class="media-player-view-seekbar-css"
               :onProgressChanged="onSeekBarChanged"
               @onSeekStop="onSeekBarSeekStop"
               @focus="onSeekbarFocusChanged"
