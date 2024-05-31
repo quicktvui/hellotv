@@ -8,59 +8,58 @@
     gradientBackground="${myHisGradientBackground}"
   >
     <div showIf="${showApiData01==true}" flexStyle="${barStyle}" class="his_bar" :focusable="true" :focusScale="1.08"
-      :enableBlackBorder="false" name="myHistoryApiData01Name" eventClick>
+      :enableBlackBorder="false" name="myHistoryApiData01Name" eventClick eventFocus>
       <!-- textSpan="${apiData01TitleSpan}" text="${apiData01Title}" -->
-      <text-view 
-        class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" 
-        :ellipsizeMode="4" :lines="1"
-        gravity="centerVertical" textSpan="${apiData01TitleSpan}" 
-        :duplicateParentState="true"
-      ></text-view>
-      <qt-text class="his_text2" :focusable="false" gravity="centerVertical|end" text="${apiData01SubTitle}"
-        flexStyle="${barProgressStyle}" :duplicateParentState="true" />
+      <div :showOnState="['focused','selected']" class="his_bar_bg" flexStyle="${barStyle}" duplicateParentState :focusable="false" gradientBackground="${myHisBarBg}"></div>
+      <div class="his_bar_inner" flexStyle="${barStyle}" duplicateParentState :focusable="false">
+        <text-view 
+          class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" 
+          :ellipsizeMode="4" :lines="1"
+          gravity="centerVertical" textSpan="${apiData01TitleSpan}" 
+          :duplicateParentState="true"
+        ></text-view>
+        <qt-text class="his_text2" :focusable="false" gravity="centerVertical|end" text="${apiData01SubTitle}"
+          flexStyle="${barProgressStyle}" :duplicateParentState="true" />
+      </div>
     </div>
     <div showIf="${showApiData01==true}" class="his_bar_bottom_border" flexStyle="${barBorderBottomStyle}" :focusable="false"></div>
     <div showIf="${showApiData02==true}" flexStyle="${barStyle2}" class="his_bar" :focusable="true" :focusScale="1.08"
-      :enableBlackBorder="false" name="myHistoryApiData02Name" eventClick @click="clickBar" @focus="focusBar">
+      :enableBlackBorder="false" name="myHistoryApiData02Name" eventClick eventFocus>
       <!-- textSpan="${apiData02TitleSpan}" text="${apiData02Title}"-->
-      <text-view class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" :ellipsizeMode="4" :lines="1"
-        gravity="center|start" textSpan="${apiData02TitleSpan}"  :duplicateParentState="true" />
-      <qt-text class="his_text2" :focusable="false" gravity="centerVertical|end" text="${apiData02SubTitle}"
-        flexStyle="${barProgressStyle}" :duplicateParentState="true" />
+      <div :showOnState="['focused','selected']" class="his_bar_bg" flexStyle="${barStyle2}" duplicateParentState :focusable="false" gradientBackground="${myHisBarBg}"></div>
+      <div class="his_bar_inner" flexStyle="${barStyle2}" duplicateParentState :focusable="false">
+        <text-view class="his_text1" :focusable="false" flexStyle="${barTitleStyle}" :ellipsizeMode="4" :lines="1"
+          gravity="center|start" textSpan="${apiData02TitleSpan}"  :duplicateParentState="true" />
+        <qt-text class="his_text2" :focusable="false" gravity="centerVertical|end" text="${apiData02SubTitle}"
+          flexStyle="${barProgressStyle}" :duplicateParentState="true" />
+      </div>
     </div>
     <div showIf="${showApiData02==true}" class="his_bar_bottom_border" flexStyle="${barBorderBottomStyle}" :focusable="false"></div>
     <div 
       flexStyle="${allTextStyle}" class="his_bar his_all" :focusable="true" :focusScale="1.08"
       :enableBlackBorder="false" name="myHistoryApiAllName"
     >
-      <div class="his_all_title_box" flexStyle="${hisAllTitleBoxStyle}" autoHeight :duplicateParentState="true">
-        <img showIf="${showAllSubText}" src="../../../../assets/my/record.png" flexStyle="${allImgSytle}" :focusable="false"/>
-        <qt-text showIf="${showAllSubText}" class="his_all_txt his_text1" autoWidth autoHeight :focusable="false" text="${allText}" gravity="centerVertical|start" :duplicateParentState="true" />
-        <div showIf="${showAllSubText==false}" class="his_all_txt_row_box" flexStyle="${hisAllTitleBoxStyle}" autoHeight :duplicateParentState="true">
-          <qt-text class="his_all_txt his_text1" autoWidth autoHeight :focusable="false" text="${allText}" gravity="centerVertical|start" :duplicateParentState="true" />
-          <img class="his_all_txt_row" src="../../../../assets/my/right_row.png" :focusable="false" flexStyle="${allImgRowSytle}"/>
+      <div :showOnState="['focused','selected']" class="his_bar_bg" flexStyle="${allTextStyle}" duplicateParentState :focusable="false" gradientBackground="${myHisBarBg}"></div>
+      <div class="his_bar_inner" flexStyle="${allTextStyle}" duplicateParentState :focusable="false">
+        <div class="his_all_title_box" flexStyle="${hisAllTitleBoxStyle}" autoHeight :duplicateParentState="true">
+          <img showIf="${showAllSubText}" src="../../../../assets/my/record.png" flexStyle="${allImgSytle}" :focusable="false"/>
+          <qt-text showIf="${showAllSubText}" class="his_all_txt his_text1" autoWidth autoHeight :focusable="false" text="${allText}" gravity="centerVertical|start" :duplicateParentState="true" />
+          <div showIf="${showAllSubText==false}" class="his_all_txt_row_box" flexStyle="${hisAllTitleBoxStyle}" autoHeight :duplicateParentState="true">
+            <qt-text class="his_all_txt his_text1" autoWidth autoHeight :focusable="false" text="${allText}" gravity="centerVertical|start" :duplicateParentState="true" />
+            <img class="his_all_txt_row" src="${allTextRightIcon}" :focusable="false" flexStyle="${allImgRowSytle}"/>
+          </div>
         </div>
+        <qt-text 
+          showIf="${showAllSubText}" class="his_text2" flexStyle="${allSubTextSytle}"
+          gravity="centerVertical|start" :focusable="false" text="${allSubText}" :duplicateParentState="true"
+          :ellipsizeMode="2" :lines="1"
+        />
       </div>
-      <qt-text 
-        showIf="${showAllSubText}" class="his_text2" flexStyle="${allSubTextSytle}"
-        gravity="centerVertical|start" :focusable="false" text="${allSubText}" :duplicateParentState="true"
-        :ellipsizeMode="2" :lines="1"
-      />
     </div>
   </div>
 </template>
 <script lang='ts' setup>
-import { useESRouter } from '@extscreen/es3-router';
-import { ref, onMounted } from 'vue';
-
-const router = useESRouter()
-const clickBar = ()=>{
-  console.log('lsj-clickBar')
-  // router.push({ name: 'my' })
-}
-const focusBar = (ev)=>{
-  console.log('lsj-focusBar', ev)
-}
+// import { ref, onMounted } from 'vue';
 </script>
 
 <style scoped>
@@ -78,21 +77,33 @@ const focusBar = (ev)=>{
 }
 
 .his_bar {
+  position: relative;
+  background-color: transparent;
+  border-radius: 20px;
+}
+.his_bar_bg{
+  position: absolute;
+  left: 0.01px;
+  top: 0.01px;
+  z-index: 1;
+  background-color: transparent;
+  border-radius: 20px;
+}
+.his_bar_inner{
+  position: absolute;
+  left: 0.01px;
+  top: 0.01px;
+  z-index: 2;
   display: flex;
   flex-direction: row;
   justify-content: space-between;
   align-items: center;
   background-color: transparent;
-  /* border-bottom-width: 1px;
-  border-bottom-style: solid;
-  border-bottom-color: rgba(255, 255, 255, 0.1); */
-  border-radius: 8px;
-  focus-background-color: #ffffff;
+  border-radius: 20px;
 }
-
 .his_text1,
 .his_text2 {
-  focus-color: #000000;
+  /* focus-color: #000000; */
 }
 
 .his_text1 {
@@ -114,7 +125,7 @@ const focusBar = (ev)=>{
 .his_all_txt{
   font-size: 30px;
   color: #ffffff;
-  focus-color: #000000;
+  /* focus-color: #000000; */
 }
 .his_all_title_box{
   position: relative;

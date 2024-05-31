@@ -47,19 +47,19 @@ export class MyBase {
       list: [
         {
           id: '0', img: orderIcon, focusedImage: orderIconF,
-          focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
+          focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
           title: '我的订单',  _titleFontSize: 32, _infoWidthRatio: 0.9,
           _layout: { width: 348, height: 314 },
         },
         {
           id: '1', img: collectionIcon, focusedImage: collectionIconF,
-          focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
+          focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
           title: '我的收藏',  _titleFontSize: 32, _infoWidthRatio: 0.9,
           _layout: { width: 348, height: 314 },
         },
         {
           id: '2', img: vipIcon, focusedImage: vipIconF,
-          focusedBgColor: {colors:['#FFFFE398','#FFEEB364'], cornerRadii4: [34, 34, 34, 34],orientation:6},
+          focusedBgColor: {colors:['#FFFFE398','#FFEEB364'], cornerRadii4: [20, 20, 20, 20],orientation:6},
           title: '我的会员卡',  _titleFontSize: 32, _infoWidthRatio: 0.9,
           _focusTitle: '<font color="#FF603314">我的会员卡</font>',
           _layout: { width: 348, height: 314 },
@@ -100,7 +100,7 @@ export class MyBase {
           return {
             id: ''+index,
             title: item, _titleFontSize: 36,
-            focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
+            focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
             _layout: { height: 120 }
           }
         }),

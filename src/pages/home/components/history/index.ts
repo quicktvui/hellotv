@@ -1,9 +1,13 @@
 import {
-  QTITab,QTWaterfallItem,QTWaterfallSectionType
+  QTITab,QTWaterfallItem,QTWaterfallSectionType,QTTabPageData
 } from '@quicktvui/quicktvui3'
 import { Ref } from 'vue'
 import api from '../../../../api/history/index'
 // import { getSubTitle } from '../../../history/index'
+import rightRowIcon from '../../../../assets/my/right_row.png'
+import record2Icon from '../../../../assets/my/record2.png'
+import userManager from '../../../../api/login/user/UserManager'//src/api/login/user/UserManager
+
 
 const getSubTitle = (data: any) => {
   if (!data) return ''
@@ -93,7 +97,8 @@ const getTitle = (data: any) => {
 }
 
 const space = 19
-const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem => {
+const getMyHistoryBlock = (data:QTWaterfallItem,_=false):QTWaterfallItem => {
+  const isLogin = userManager.getUserInfo()
   const showApiData01 = !!data.apiData01;
   const showApiData02 = !!data.apiData02;
   let apiData01Title = ''
@@ -115,16 +120,17 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
     apiData02TitleSpan = getTitleSpan(data.apiData02)
     apiData02SubTitle = getSubTitle2(data.apiData02)
   }
+  const bisectHeight = Math.max(Math.floor((data.style.height||0)/num),50)
   const allTextStyle = {
     width: (data.style.width||0),
     paddingLeft: space, paddingRight: space,
-    height: Math.max(Math.floor((data.style.height||0)/num),50)
+    height: bisectHeight
   }
   const barStyle = {
-    ...allTextStyle, height: showApiData01?Math.min(allTextStyle.height,80):0
+    ...allTextStyle, height: showApiData01?Math.min(bisectHeight,80):0
   }
   const barStyle2 = {
-    ...allTextStyle, height: showApiData02?Math.min(allTextStyle.height,80):0
+    ...allTextStyle, height: showApiData02?Math.min(bisectHeight,80):0
   }
   const innerWidth = barStyle.width-space*2
   const innerHeight = barStyle.height-2;
@@ -161,15 +167,17 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
       allText = '登录同步云端历史'
     }
   }
-  
+  allTextStyle.height = (data.style.height||0) - barStyle.height - barStyle2.height
   return {
     ...data,
+    myHisBarBg: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
     myHisGradientBackground: { colors: ['#FF3A4578', '#FF1B2143'], cornerRadii4: [20, 20, 20, 20], orientation: 6 },
     barImg: data.apiData01?.assetLongCoverH,
     barStyle,allTextStyle,barStyle2, isShowBarImg: isLogin&&showApiData01,
     barImgStyle,floatTitleBoxStyle, floatTitleStyle, floatSubTitleStyle, isLogin,
     floatTitleText: data.apiData01?.assetLongTitle || '', floatSubTitleText: getSubTitle(data.apiData01),
     floatTitleBackground: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 20, 20], orientation: 4 },
+    allTextRightIcon: num>2?rightRowIcon:record2Icon,
     barImgEmptyTitleStyle: {
       width: innerWidth, paddingLeft: space,
       height: data.style.height,
@@ -193,7 +201,7 @@ const getMyHistoryBlock = (data:QTWaterfallItem,isLogin=false):QTWaterfallItem =
     showAllSubText,
     allSubTextSytle: showAllSubText?{ width: innerWidth, height: 50 }:{},
     allImgSytle: showAllSubText?{ width: 30, height: 30, marginRight: 10,marginTop: 2 }:{},
-    allImgRowSytle: !showAllSubText?{ width: 25, height: 22,marginTop: 2 }:{},
+    allImgRowSytle: !showAllSubText?{ width: num>2?25:35, height: num>2?22:35,marginTop: 2 }:{},
     hisAllTitleBoxStyle: {
       width: innerWidth
     }
@@ -204,10 +212,12 @@ class MyHistory {
   tabPageIndex?:number
   plateIndex = -1
   sectionIndex = -1
-  isLoading = false
+  timeoutId:any = null
   myHistoryApiData01Name = 'myHistoryApiData01Name'
   myHistoryApiData02Name = 'myHistoryApiData02Name'
   myHistoryApiAllName = 'myHistoryApiAllName'
+
+  tabPage:QTTabPageData|null = null
 
   checkName(name=''){
     return name === this.myHistoryApiData01Name||name === this.myHistoryApiData02Name||name === this.myHistoryApiAllName 
@@ -221,43 +231,60 @@ class MyHistory {
       innerArgs: JSON.stringify({url: 'history', params: {}})
     }
   }
-  async setData(tabRef:Ref<QTITab|undefined>, isLogin=true){
-    if(this.isLoading) { return }
-    if(this.tabPageIndex!=undefined&&(this.tabPageIndex>=0)){
-      this.isLoading = true
 
-      const cIndex = await tabRef.value?.getCurrentTabIndex().catch((err)=>{})
-      if(cIndex === this.tabPageIndex){
-        const _data = tabRef.value?.getPageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex)
-        if(_data){
-          const apiList = await api.getContentList({index:0,item:{id:'-'}},{index:0,item:{id:'-'}},1).catch(err=>{})
-          if(apiList && apiList.data){
-            _data.apiData01 = apiList.data[0]
-            _data.apiData02 = apiList.data[1]
-            // assetLongTitle: string//标题
-            // subTitle?:string;
-            // newData.apiList = apiList.data?.slice(0,2)
-          }
-          const newData = getMyHistoryBlock(_data, isLogin)
-          newData.myHistoryApiData01Name = this.myHistoryApiData01Name
-          newData.myHistoryApiData02Name = this.myHistoryApiData02Name
-          newData.myHistoryApiAllName = this.myHistoryApiAllName
-          // tabRef.value?.updateChildNode(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
-          tabRef.value?.updatePageItem(this.tabPageIndex, this.plateIndex, this.sectionIndex, newData)
-
-          const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
-          if(sectionData?.type === QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST){
-            // 一行滚动板块需要更新整个板块
-            const sectionData = tabRef.value?.getPageSection(this.tabPageIndex, this.plateIndex)
-            if(sectionData){
-              tabRef.value?.updatePageSection(this.tabPageIndex, this.plateIndex, sectionData)
-            }
-          }
-          // console.log(newData, '--lsj--data-init',this.tabPageIndex, this.plateIndex, this.sectionIndex)
-        }
+  async getHistdata(oldData:any){
+    if(oldData){
+      const apiList = await api.getContentList({index:0,item:{id:'-'}},{index:0,item:{id:'-'}},1).catch(err=>{})
+      if(apiList && apiList.data){
+        oldData.apiData01 = apiList.data[0]
+        // _data.apiData02 = apiList.data[1]
+        // newData.apiList = apiList.data?.slice(0,2)
       }
-      
-      this.isLoading = false
+      oldData.myHistoryApiData01Name = this.myHistoryApiData01Name
+      oldData.myHistoryApiData02Name = this.myHistoryApiData02Name
+      oldData.myHistoryApiAllName = this.myHistoryApiAllName
+      oldData = getMyHistoryBlock(oldData)
+    }
+    return oldData
+  }
+  async initData(tabPageIndex:number, tabPage:QTTabPageData){
+    if(this.tabPageIndex!=undefined&&(this.tabPageIndex>=0) && tabPageIndex==this.tabPageIndex){
+      let _data = tabPage.data[this.plateIndex].itemList[this.sectionIndex]
+      // if(_data && _data.type === )
+      if(_data){
+        const newData = await this.getHistdata(_data)
+        tabPage.data[this.plateIndex].itemList[this.sectionIndex] = newData
+        this.tabPage = tabPage
+      }
+    }
+  }
+  updateData(tabRef:Ref<QTITab|undefined>){
+    if(this.tabPageIndex!=undefined&&(this.tabPageIndex>=0)){
+      clearTimeout(this.timeoutId)
+
+      this.timeoutId = setTimeout(async () => {
+        const cIndex = await tabRef.value?.getCurrentTabIndex().catch((err)=>{})
+        const sectionData = this.tabPage?.data[this.plateIndex] //tabRef.value?.getPageSection(this.tabPageIndex||0, this.plateIndex)
+        if(cIndex === this.tabPageIndex && sectionData && sectionData.itemList){
+          const _data = sectionData.itemList[this.sectionIndex]//tabRef.value?.getPageItem(this.tabPageIndex||0, this.plateIndex, this.sectionIndex)
+          if(_data){
+            const newData = await this.getHistdata(_data)
+            try {
+              tabRef.value?.updateChildNode(this.tabPageIndex||0, this.plateIndex, this.sectionIndex, newData)
+              // tabRef.value?.updatePageItem(this.tabPageIndex||0, this.plateIndex, this.sectionIndex, newData)
+
+              if(sectionData?.type === QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST){
+                sectionData!.itemList[this.sectionIndex] = newData
+                // 一行滚动板块需要更新整个板块
+                tabRef.value?.updatePageSection(this.tabPageIndex||0, this.plateIndex, sectionData)
+              }
+            } catch (error) {
+              console.log(error, '-lsj-error')
+            }
+            // console.log(newData, '--lsj--data-init',this.tabPageIndex, this.plateIndex, this.sectionIndex)
+          }
+        }
+      }, 300);
     }
   }
 }

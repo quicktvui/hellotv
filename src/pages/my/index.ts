@@ -262,7 +262,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     },
     icon: {
       style: {
-        width: iconWidth, height: iconHeight
+        width: data._iconWidth||iconWidth, height: data._iconHeight||iconHeight
       }
     }
   }
@@ -324,8 +324,8 @@ export const transHistorySection = (_ = false, historyRes: ImySectionRes) => {
     _router: { url: 'history' },
     _redirectType: activity_redirectTypes.innerRouter,
     img: recordIcon2, focusedImage: recordIconf,
-    focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [34, 34, 34, 34],orientation:6},
-    title: isLogin ? '全部记录' : '登陆同步云端历史',
+    focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
+    title: isLogin ? '全部记录' : '登陆同步云端历史', _iconHeight: 120, _iconWidth:120,
     _layout: { width: 408, height: 228 }
   }, {
     space: historyRes.options?.space,

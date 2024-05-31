@@ -65,10 +65,10 @@
   left: 1px;
   top: 1px;
   z-index: 1;
-  background-color: rgba(216,216,216,0.15);
+  background-color: rgba(216,216,216,0.5);
   border-style: solid;
   border-width: 1px;
-  border-color: #ffffff;
+  border-color: rgba(216,216,216,0.15);
   border-radius: 100px;
 }
 .poster_user_icon{

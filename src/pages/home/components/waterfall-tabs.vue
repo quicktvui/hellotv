@@ -256,7 +256,7 @@ export default defineComponent({
 
     function getTabContent(tabId: string, tabPageIndex: number, pageNo: number) {
       globalApi.getTabContent(tabId, pageNo, BuildConfig.tabContentPageSize, tabPageIndex)
-        .then((tabPage: QTTabPageData) => {
+        .then(async (tabPage: QTTabPageData) => {
           if (tabPage.data.length > 0) {
             setTabPagePageNo(tabPageIndex, pageNo)
             if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -268,6 +268,7 @@ export default defineComponent({
 
             if (pageNo <= 1) {
               buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
+              await myHistory.initData(tabPageIndex, tabPage)
               //tabPage.bindingPlayer = 'CELL_LIST'
               tabRef.value?.setPageData(tabPageIndex, tabPage)
             } else {
@@ -514,9 +515,6 @@ export default defineComponent({
           delayStopPlayer()
         }
         bg_player.value?.delayShowPlayer(500)
-        if(pageIndex === myHistory.tabPageIndex){
-          myHistory.setData(tabRef)
-        }
       }
     }
 
@@ -532,6 +530,9 @@ export default defineComponent({
       bg_player?.value.keepPlayerInvisible(true)
 
       myDataManager.updateData()
+      if(pageIndex === myHistory.tabPageIndex){
+        myHistory.updateData(tabRef)
+      }
     }
 
     function onTabClick(item: QTTabItem) {
@@ -558,7 +559,7 @@ export default defineComponent({
       onESPause,
       onESDestroy,
       onESRestart(){
-        myHistory.setData(tabRef)
+        myHistory.updateData(tabRef)
       },
       tabsTriggerTask,
       wTabBg,
