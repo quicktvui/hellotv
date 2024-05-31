@@ -315,7 +315,7 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
 }
 
 import recordIcon2 from '../../assets/my/record2.png'
-import recordIconf from '../../assets/my/record.png'
+import recordIconf from '../../assets/my/record3.png'
 export const transHistorySection = (_ = false, historyRes: ImySectionRes) => {
   const isLogin =  userManager.getUserInfo()
   historyRes.section.itemList = historyRes.section.itemList.slice(0, 3)
