@@ -65,7 +65,7 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
     let isSwitchCellBg: string = '0'
     plateItem.plateDetails?.forEach((sectionItem, sectionIndex) => {
       const cellType: string = getSectionType(sectionItem.detailStyle, sectionItem?.config?.contentType,sectionItem?.config?.contentData)
-      if(sectionItem?.config?.contentType === '12'){
+      if(sectionItem?.config?.contentType === '12' && myHistory.plateIndex==-1){
         myHistory.tabPageIndex = tabPageIndex
         myHistory.plateIndex = plateIndex
         myHistory.sectionIndex = sectionIndex

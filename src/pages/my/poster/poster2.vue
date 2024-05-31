@@ -5,10 +5,9 @@
     <!-- :enableBlackBorder="false" -->
     <div :focusable="false" duplicateParentState class="my_poster2_content_box" flexStyle="${style}">
       <div :focusable="false" :duplicateParentState="true" class="my_poster2_content_box_info" flexStyle="${innerStyle}">
-        <div flexStyle="${image.style}" class="my_poster2_img_css_box" :duplicateParentState="true" :focusable="false">
-          <img class="my_poster2_img_css" :duplicateParentState="true" :postDelay="300" :focusable="false"
+        <!-- <div flexStyle="${image.style}" class="my_poster2_img_css_box" :duplicateParentState="true" :focusable="false"></div> -->
+        <img class="my_poster2_img_css" :duplicateParentState="true" :postDelay="300" :focusable="false"
             flexStyle="${image.style}" src="${image.src}" />
-        </div>
         
         <!-- overflow="visible" :clipChildren="false" -->
         <div class="my_poster2_title" flexStyle="${titleBoxStyle}" :duplicateParentState="true" :focusable="false">
@@ -51,8 +50,8 @@ export default defineComponent({
 /* ------- */
 .my_poster2_content_box {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0.01px;
+  top: 0.01px;
   z-index: 2;
   border-radius: 20px;
   background-color: transparent;
@@ -60,30 +59,33 @@ export default defineComponent({
 
 .my_poster2_content_box_info {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0.01px;
+  top: 0.01px;
   z-index: 1;
   border-radius: 20px;
   background-color: transparent;
 }
-.my_poster2_img_css_box{
+/* .my_poster2_img_css_box{
   background-color: transparent;
   overflow: hidden;
   border-radius: 20px;
   focus-border-color: #0063FF;
   focus-border-style: solid;
   focus-border-radius: 20px;
-}
+} */
 .my_poster2_img_css {
   background-color: transparent;
   z-index: 1;
   border-radius: 20px;
+  focus-border-color: #0063FF;
+  focus-border-style: solid;
+  focus-border-radius: 20px;
 }
 
 .my_poster2_title {
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0.01px;
+  top: 0.01px;
   background-color: transparent;
   z-index: 10;
   background-color: transparent;

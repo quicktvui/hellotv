@@ -6,6 +6,7 @@ import api from '../../../../api/history/index'
 // import { getSubTitle } from '../../../history/index'
 import rightRowIcon from '../../../../assets/my/right_row.png'
 import record2Icon from '../../../../assets/my/record2.png'
+import record3Icon from '../../../../assets/my/record3.png'
 import userManager from '../../../../api/login/user/UserManager'//src/api/login/user/UserManager
 
 
@@ -53,7 +54,7 @@ const getSubTitle2 = (data: any) => {
   }
   return subTitle
 }
-const getTitleSpan = (data: any) => {
+const getTitleSpan = (data: any, color='') => {
   if (!data) return {text:'',spanAttr:[]}
   // <font color="#909398" size='12'>title</font>
   let assetLongTitle = data.assetLongTitle || ''
@@ -73,8 +74,8 @@ const getTitleSpan = (data: any) => {
     spanAttr:[
       { type:"size", value:[30,0, posterLength]},
       { type:"size", value:[20,startPos,titleLength]},
-      {type:"color",value:["#ffffff",0,posterLength]},
-      {type:"color",value:["#909398",startPos,titleLength]}
+      {type:"color",value:[color||"#ffffff",0,posterLength]},
+      {type:"color",value:[color||"#909398",startPos,titleLength]}
     ]}
   return titleStyle0
 }
@@ -108,16 +109,20 @@ const getMyHistoryBlock = (data:QTWaterfallItem,_=false):QTWaterfallItem => {
   let apiData02TitleSpan:any = {text:'', spanAttr:[]}
   let apiData02SubTitle = ''
   let num = 1
+  let apiData01TitleSpanF:any = {text:'', spanAttr:[]}
+  let apiData02TitleSpanF:any = {text:'', spanAttr:[]}
   if(showApiData01){ 
     num+=1
     apiData01Title = getTitle(data.apiData01)
     apiData01TitleSpan = getTitleSpan(data.apiData01)
+    apiData01TitleSpanF = getTitleSpan(data.apiData01,'#ffffff')
     apiData01SubTitle = getSubTitle2(data.apiData01)
   }
   if(showApiData02){ 
     num+=1
     apiData02Title = getTitle(data.apiData02)
     apiData02TitleSpan = getTitleSpan(data.apiData02)
+    apiData02TitleSpanF = getTitleSpan(data.apiData02,'#ffffff')
     apiData02SubTitle = getSubTitle2(data.apiData02)
   }
   const bisectHeight = Math.max(Math.floor((data.style.height||0)/num),50)
@@ -152,7 +157,7 @@ const getMyHistoryBlock = (data:QTWaterfallItem,_=false):QTWaterfallItem => {
   
   if(isLogin){
     if(num === 1){
-      allSubText = '无历史记录，快去观看视频吧~'
+      allSubText = '暂无历史记录~'//，快去观看视频吧
       showAllSubText = true
       barImgStyle.height = 0
     }else{
@@ -177,7 +182,8 @@ const getMyHistoryBlock = (data:QTWaterfallItem,_=false):QTWaterfallItem => {
     barImgStyle,floatTitleBoxStyle, floatTitleStyle, floatSubTitleStyle, isLogin,
     floatTitleText: data.apiData01?.assetLongTitle || '', floatSubTitleText: getSubTitle(data.apiData01),
     floatTitleBackground: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 20, 20], orientation: 4 },
-    allTextRightIcon: num>2?rightRowIcon:record2Icon,
+    allTextRightIcon: num>2||isLogin?rightRowIcon:record2Icon,
+    allTextRightIconF: num>2||isLogin?rightRowIcon:record3Icon,
     barImgEmptyTitleStyle: {
       width: innerWidth, paddingLeft: space,
       height: data.style.height,
@@ -197,13 +203,14 @@ const getMyHistoryBlock = (data:QTWaterfallItem,_=false):QTWaterfallItem => {
     allText,allSubText,
     showApiData01, showApiData02,
     apiData01Title, apiData01SubTitle, apiData01TitleSpan, apiData02TitleSpan,
-    apiData02Title, apiData02SubTitle,
+    apiData02Title, apiData02SubTitle, apiData01TitleSpanF, apiData02TitleSpanF,
     showAllSubText,
     allSubTextSytle: showAllSubText?{ width: innerWidth, height: 50 }:{},
-    allImgSytle: showAllSubText?{ width: 30, height: 30, marginRight: 10,marginTop: 2 }:{},
-    allImgRowSytle: !showAllSubText?{ width: num>2?25:35, height: num>2?22:35,marginTop: 2 }:{},
+    allImgSytle: showAllSubText?{ width: 120, height: 120, marginRight: 10,marginTop: 2 }:{},
+    allImgRowSytle: !showAllSubText?{ width: num>2||isLogin?28:120, height: num>2||isLogin?36:120,marginTop: 2 }:{},
     hisAllTitleBoxStyle: {
-      width: innerWidth
+      width: innerWidth, height: num==1? 50: allTextStyle.height,
+      paddingLeft: space
     }
   }
 }
@@ -225,7 +232,15 @@ class MyHistory {
   getRouter(name = ''){
     if(name === this.myHistoryApiData01Name){}
     if(name === this.myHistoryApiData02Name){}
-    if(name === this.myHistoryApiAllName){}
+    if(name === this.myHistoryApiAllName){
+      const isLogin = userManager.getUserInfo()
+      if(!isLogin){
+        return {
+          redirectType: '1',
+          innerArgs: JSON.stringify({url: 'login', params: {}})
+        }
+      }
+    }
     return {
       redirectType: '1',
       innerArgs: JSON.stringify({url: 'history', params: {}})
@@ -237,7 +252,7 @@ class MyHistory {
       const apiList = await api.getContentList({index:0,item:{id:'-'}},{index:0,item:{id:'-'}},1).catch(err=>{})
       if(apiList && apiList.data){
         oldData.apiData01 = apiList.data[0]
-        // _data.apiData02 = apiList.data[1]
+        oldData.apiData02 = apiList.data[1]
         // newData.apiList = apiList.data?.slice(0,2)
       }
       oldData.myHistoryApiData01Name = this.myHistoryApiData01Name
