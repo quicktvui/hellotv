@@ -211,11 +211,13 @@ export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfal
       item.type = TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER
       break;
     case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY://历史-文字
-      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      // item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item = buildPoster(itemSection)
       item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY
       break;
     case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY_IMG://历史-图片
-      item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      // item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item = buildPoster(itemSection)
       item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY_IMG
       break;
     default :

@@ -2,14 +2,15 @@
   <!-- singleton -->
   <!-- disablePlaceholder -->
   <!-- <tv-item layout="${layout}" flexStyle="${style}" :focusable="true" singleton></tv-item> -->
+  <!-- textSpan="${apiData01TitleSpan}" text="${apiData01Title}" -->
+  <!-- textSpan="${apiData02TitleSpan}" text="${apiData02Title}"-->
   <div 
     class="his_box" layout="${layout}" flexStyle="${style}" 
     disablePlaceholderFocus :focusable="false" :clipChildren="false"
-    gradientBackground="${myHisGradientBackground}"
+    gradientBackground="${myHisGradientBackground}" :type="121"
   >
     <div showIf="${showApiData01==true}" flexStyle="${barStyle}" class="his_bar" :focusable="true" :focusScale="1.08"
       :enableBlackBorder="false" name="myHistoryApiData01Name" eventClick eventFocus>
-      <!-- textSpan="${apiData01TitleSpan}" text="${apiData01Title}" -->
       <div :showOnState="['focused']" class="his_bar_bg" flexStyle="${barStyle}" duplicateParentState :focusable="false" gradientBackground="${myHisBarBg}"></div>
       <div class="his_bar_inner" flexStyle="${barStyle}" duplicateParentState :focusable="false">
         <div class="his_text_box" :focusable="false" flexStyle="${barTitleStyle}" duplicateParentState>
@@ -32,7 +33,6 @@
     <div showIf="${showApiData01==true}" class="his_bar_bottom_border" flexStyle="${barBorderBottomStyle}" :focusable="false"></div>
     <div showIf="${showApiData02==true}" flexStyle="${barStyle2}" class="his_bar" :focusable="true" :focusScale="1.08"
       :enableBlackBorder="false" name="myHistoryApiData02Name" eventClick eventFocus>
-      <!-- textSpan="${apiData02TitleSpan}" text="${apiData02Title}"-->
       <div :showOnState="['focused']" class="his_bar_bg" flexStyle="${barStyle2}" duplicateParentState :focusable="false" gradientBackground="${myHisBarBg}"></div>
       <div class="his_bar_inner" flexStyle="${barStyle2}" duplicateParentState :focusable="false">
         <div class="his_text_box" :focusable="false" flexStyle="${barTitleStyle}" duplicateParentState>
@@ -82,8 +82,15 @@
     </div>
   </div>
 </template>
-<script lang='ts' setup>
+<script lang='ts'>
 // import { ref, onMounted } from 'vue';
+import { defineComponent } from "@vue/runtime-core";
+export default defineComponent({
+  name: "my-item-history",
+  setup(props, context) {
+    return {}
+  },
+});
 </script>
 
 <style scoped>

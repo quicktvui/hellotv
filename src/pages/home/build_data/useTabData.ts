@@ -181,8 +181,8 @@ function getSectionType(detailStyle, contentType,contentData=''): string {
   } else if (contentType === '13') {
     return '10009'
   } else if (contentType === '12') {
-    if(contentData=='1'){ return TabSectionItemType.TAB_CONTENT_ITEM_HISTORY }
-    if(contentData=='2'){ return TabSectionItemType.TAB_CONTENT_ITEM_HISTORY_IMG }
+    if(contentData=='1'){ return '121' }
+    if(contentData=='2'){ return '122' }
     return '0'
   } else {
     return '0'

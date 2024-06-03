@@ -3,6 +3,7 @@
   <div 
     :focusable="true" layout="${layout}" class="my_item_his_img" flexStyle="${style}"
     gradientBackground="${myHisGradientBackground}"
+    :type="122"
   >
     <img 
       showIf="${isShowBarImg}" class="my_item_his_img_img" :duplicateParentState="true" 
