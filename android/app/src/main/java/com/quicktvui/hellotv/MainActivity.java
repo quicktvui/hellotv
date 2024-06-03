@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
             finish();
             return;
         }
-        data.setCoverLayoutId(R.layout.my_custom_cover);
+        //data.setCoverLayoutId(R.layout.my_custom_cover);
 
         // 第二步 启动
         EsManager.get().start(data);

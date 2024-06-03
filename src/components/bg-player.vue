@@ -27,7 +27,7 @@
         />
       </qt-view>
       <!--  -->
-      <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}" 
+      <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}"
         :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
         <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
           :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
@@ -137,7 +137,7 @@ export default defineComponent({
     let bottomNum = ref(0)
     const log = useESLog()
     const toast = useESToast()
-    
+
     const playAtIndex = (index : number)=> {
       let list = recordPlayerList
       currentPlayIndex.value = index
@@ -275,7 +275,7 @@ export default defineComponent({
     }
 
     const setBgImage = (imgUrl:string)=>{
-      if(coverSrc === imgUrl) return 
+      if(coverSrc === imgUrl) return
       coverSrc = imgUrl
       if (imgUrl) itemCellBgImgRef.value.setNextImage(imgUrl)
       else itemCellBgImgRef.value.setNextColor(0)
@@ -297,7 +297,6 @@ export default defineComponent({
       const isRequestUrl = item.isRequestUrl
       let mediaItem_0: ESMediaItem
       let playList: ESMediaItemList
-      log.e("XRG",`isRequestUrl = ${isRequestUrl} mediaInterceptor = ${mediaInterceptor}`)
       if (isRequestUrl && mediaInterceptor){
         log.e("XRG",`准备拦截数据`)
         mediaItem_0 = {
@@ -532,7 +531,7 @@ export default defineComponent({
   position: absolute;
   height: 96px;
   color: #fff;
-  left: 0; 
+  left: 0;
   focus-color:#157AFC;
   width: 482px;
   select-color:#157AFC;

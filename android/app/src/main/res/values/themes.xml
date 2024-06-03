@@ -13,6 +13,6 @@
         <!-- Primary brand color. -->
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@drawable/test_img</item>
+<!--        <item name="android:windowBackground">@drawable/test_img</item>-->
     </style>
 </resources>
