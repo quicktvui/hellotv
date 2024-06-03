@@ -268,9 +268,10 @@ export default defineComponent({
 
             if (pageNo <= 1) {
               buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
-              await myHistory.initData(tabPageIndex, tabPage)
+              myHistory.initData(tabPageIndex, tabPage).then((_tabPage)=>{
+                tabRef.value?.setPageData(tabPageIndex, _tabPage)
+              })
               //tabPage.bindingPlayer = 'CELL_LIST'
-              tabRef.value?.setPageData(tabPageIndex, tabPage)
             } else {
               tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
             }

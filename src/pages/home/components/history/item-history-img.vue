@@ -62,7 +62,7 @@ export default defineComponent({
   /* 424650 */
   border-radius: 20px;
   overflow: hidden;
-  focus-border-color: #ffffff;
+  focus-border-color: #0063FF;
   focus-border-style: solid;
   focus-border-radius: 20px;
 }
