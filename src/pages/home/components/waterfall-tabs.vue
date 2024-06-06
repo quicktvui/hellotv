@@ -445,11 +445,12 @@ export default defineComponent({
       if(myHistory.checkName(e.name)){
         launch.launch({...item, item: { ...(item.item||{}), ...myHistory.getRouter(e.name) }})
       } else {
-        if(item._router?.url==='logout'){
-          myDataManager.logout()
-        }else{
-          launch.launch(item)
-        }
+        // if(item._router?.url==='logout'){
+        //   myDataManager.logout()
+        // }else{
+        //   launch.launch(item)
+        // }
+        myDataManager.updateData(item)
       }
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {

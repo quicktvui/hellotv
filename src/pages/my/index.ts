@@ -417,12 +417,25 @@ class MyDataManager {
       // console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
     }
   }
-  async updateData(){
+  async updateData(item?:any){
+    console.log(item, 'lsj---item')
+    if(item?._id == '1getOrderInfo00'&&this.tabRef){
+      const moreRes = await myApi.getMoreList()
+      const moreSections = transMoreSectin(false, moreRes)
+
+      console.log(this.tabRef.value?.insertPageData,'lsj---insertPageData',moreSections)
+      this.tabRef.value?.insertPageData(this.tabPageIndex,1,moreSections)
+    }else if(item?._id == '1getOrderInfo11'&&this.tabRef){
+      console.log(this.tabRef.value?.deletePageSection,'lsj---deletePageSection')
+
+      this.tabRef.value?.deletePageSection(this.tabPageIndex,1, 1)
+    }
+    
     if(this.tabPageIndex>=0 && this.tabRef && this.isUserChange && this.isShow){
       const cIndex = await this.tabRef.value?.getCurrentTabIndex()
       if(cIndex === this.tabPageIndex){
-        await this.updateUser()
-        this.updateHistory()
+        // await this.updateUser()
+        // this.updateHistory()
       }
     }
   }
