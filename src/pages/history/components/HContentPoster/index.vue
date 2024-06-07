@@ -3,8 +3,8 @@
         eventClick eventFocus name="history_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
         hideShadow="${shadow.enable}" shimmerSize="${size}">
         
-        <div :focusable="false" duplicateParentState="${editMode==false}" class="content_box" flexStyle="${style}" :enableBlackBorder="false">
-            <div showIf="${editMode==false}" :focusable="false" :duplicateParentState="true" class="content_box_bg" flexStyle="${style}" :enableBlackBorder="false"></div>
+        <div :focusable="false" duplicateParentState class="content_box" flexStyle="${style}" :enableBlackBorder="false">
+            <div :focusable="false" :duplicateParentState="true" class="content_box_bg" flexStyle="${style}" :enableBlackBorder="false"></div>
             <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${style}" :enableBlackBorder="false">
                 <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
                     enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
@@ -17,7 +17,7 @@
                     </div>
                 </div>
                 <div class="poster_title_box" flexStyle="${style}" :duplicateParentState="true" :focusable="false">
-                    <div showIf="${editMode==false}" class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
+                    <div class="poster_title_box_img_cover" flexStyle="${imgCover.style}" :duplicateParentState="true" :focusable="false" :enableBlackBorder="false"></div>
                     <div class="poster_title_hold" flexStyle="${title.style}" :duplicateParentState="true" :focusable="false">
                         <text-view 
                             class="poster_title" :showOnState="['normal']"
@@ -41,24 +41,21 @@
         
         <div
             flexStyle="${ripple.style}" class="qt-ui-poster-ripple-view-root-css" showOnState="focused"
-            :focusable="false" :clipChildren="false">
-            <ripple-view class="qt-ui-ripple-view-css" :delayLoad="800" :focusable="false" :duplicateParentState="true"
-                :color="'#FF4E46'" showIf="${editMode==false}" isShowRipple="${editMode==false}" rippleVisible="invisible" />
+            :focusable="false" :clipChildren="false" duplicateParentState>
+            <ripple-view class="qt-ui-ripple-view-css" :delayLoad="800" :focusable="false" duplicateParentState
+                :color="'#FF4E46'" :isShowRipple="true" rippleVisible="invisible" />
             <img 
                 src="${ripple.src}" class="qt-ui-ripple-img-css" :focusable="false" :duplicateParentState="true"
                 :delayLoad="800" showIf="${ripple.src}"
             />
         </div>
 
-        <div showIf="${editMode==true}" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${image.style}">
+        <div showOnState="selected" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${style}">
             <div class="history-delete-btn_box" flexStyle="${delete.style}" :duplicateParentState="true" :focusable="false">
                 <qt-text class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}" flexStyle="${delete.style}"
                 :ellipsizeMode="2" text="删除" :focusable="false" :duplicateParentState="true"/>
             </div>
         </div>
-        <!-- :gradientBackground="{ colors: ['#F5F5F5', '#F5F5F5'], cornerRadius: 99, orientation: 6 }" -->
-        <!-- :gradientBackground="{ colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100 }" -->
-        <slot />
     </item-frame>
 </template>
 
@@ -120,8 +117,8 @@ export default defineComponent({
 .qt-ui-poster-ripple-view-root-css {
     width: 100px;
     height: 100px;
-    right: 0;
-    bottom: 0;
+    right: 0.01px;
+    bottom: 0.01px;
     margin-right: -12px;
     z-index: 1000;
     background-color: transparent;
@@ -149,8 +146,8 @@ export default defineComponent({
 }
 .content_box_info{
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 0.01px;
+    top: 0.01px;
     z-index: 1;
     border-radius: 8px;
     background-color: transparent;
@@ -162,8 +159,8 @@ export default defineComponent({
 }
 .float_title_box{
     position: absolute;
-    left: 0px;
-    top: 0px;
+    left: 0.01px;
+    top: 0.01px;
     background-color: transparent;
     z-index: 2;
     display: flex;
@@ -186,16 +183,16 @@ export default defineComponent({
 }
 .poster_title{
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 0.01px;
+    top: 0.01px;
     background-color: transparent;
     z-index: 1;
     /* focus-color: #000000; */
 }
 .poster_title_f{
     position: absolute;
-    left: 0;
-    top: 0;
+    left: 0.01px;
+    top: 0.01px;
     background-color: transparent;
     z-index: 2;
     color: #000000;
@@ -205,8 +202,8 @@ export default defineComponent({
 }
 .poster_title_box{
     position: absolute;
-    left: 0.1px;
-    top: 0.1px;
+    left: 0.01px;
+    top: 0.01px;
     z-index: 5;
     border-radius: 8px;
     background-color: transparent;
@@ -217,8 +214,8 @@ export default defineComponent({
 
 .history-item-cover {
   position: absolute;
-  left: 0px;
-  top: 0px;
+  left: 0.01px;
+  top: 0.01px;
   border-radius: 8px;
   display: flex;
   flex-direction: row;
@@ -230,7 +227,7 @@ export default defineComponent({
 }
 .history-delete-btn-focus {
   position: absolute;
-  top: 0;
+  top: 0.01px;
   background-color: transparent;
 }
 .history-delete-btn_box{
