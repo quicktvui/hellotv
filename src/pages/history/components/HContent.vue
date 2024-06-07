@@ -7,7 +7,9 @@
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
       @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enableSelectOnFocus="false" 
-      :enablePlaceholder="false" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
+      :enablePlaceholder="false" :requestFocus="isRequestFocus" 
+      @item-focused="onItemFocuseFn" :singleSelectPosition="singleSelectPositionNum"
+    >
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -134,12 +136,27 @@ const onItemClick = (arg) => {
 const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
+
+const dSingleSelectPositionNum = -1
+const singleSelectPositionNum = ref(dSingleSelectPositionNum)
 let lastFocusedId = -1
+let lastFocusedPosition = -1
 const onItemFocuseFn = (arg) => {
   if (arg.hasFocus) {
     lastFocusedId = arg.item?.id
+    lastFocusedPosition = arg.position
+    
+    if(isEdit.value){
+      singleSelectPositionNum.value = arg.position
+    }
   } else {
     lastFocusedId = -1
+    lastFocusedPosition = -1
+    nextTick(()=>{
+      if(lastFocusedPosition==-1&&isEdit.value){
+        singleSelectPositionNum.value = lastFocusedPosition
+      }
+    })
   }
 }
 // 加载更多数据
@@ -279,37 +296,15 @@ defineExpose({
       if (boo) {
         rBlockFocusDirections.value = ['left', 'right', 'down']
         gvNextFocusName.value = { 'up': 'clear_btn_name' }
+
+        singleSelectPositionNum.value = lastFocusedPosition
       } else {
         rBlockFocusDirections.value = []
         gvNextFocusName.value = {up: 'h_tab_name'}
+
+        singleSelectPositionNum.value = dSingleSelectPositionNum
       }
       isEdit.value = boo
-      if (gridDataRec) {
-        gridViewRef.value?.blockRootFocus()
-        let firstPosterindex = -1
-        let isFind = false
-        let lastFocusedIndex = -1
-        gridDataRec.forEach((el, index) => {
-          if (!isFind) {
-            firstPosterindex++
-          }
-          if (el.type == 10001) {
-            isFind = true
-          }
-          if (lastFocusedId === el.id) {
-            lastFocusedIndex = index
-          }
-          if (el.type) {
-            el.editMode = boo
-          }
-        })
-        nextTick(() => {
-          gridViewRef.value?.unBlockRootFocus()
-          if (lastFocusedIndex >= 0) {
-            gridViewRef.value?.setItemFocused(lastFocusedIndex)//firstPosterindex lastFocusedIndex
-          }
-        })
-      }
     }
     if (!boo && pageState.value === pageStates.empty) {
       emits('emInitNoData')
