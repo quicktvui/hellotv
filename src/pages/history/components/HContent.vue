@@ -7,7 +7,9 @@
       :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
       @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enableSelectOnFocus="false" 
-      :enablePlaceholder="false" :requestFocus="isRequestFocus" @item-focused="onItemFocuseFn">
+      :enablePlaceholder="false" :requestFocus="isRequestFocus" 
+      @item-focused="onItemFocuseFn" :singleSelectPosition="singleSelectPositionNum"
+    >
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
         <text-view :focusable="false" :duplicateParentState="true" :fontSize="38" gravity="centerVertical"
@@ -134,6 +136,9 @@ const onItemClick = (arg) => {
 const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
+
+const dSingleSelectPositionNum = -1
+const singleSelectPositionNum = ref(dSingleSelectPositionNum)
 let lastFocusedId = -1
 const onItemFocuseFn = (arg) => {
   if (arg.hasFocus) {
@@ -141,6 +146,7 @@ const onItemFocuseFn = (arg) => {
   } else {
     lastFocusedId = -1
   }
+  singleSelectPositionNum.value = arg.position
 }
 // 加载更多数据
 let prePageNo = 0
