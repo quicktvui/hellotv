@@ -6,7 +6,7 @@
         <div :focusable="false" duplicateParentState class="content_box" flexStyle="${style}" :enableBlackBorder="false">
             <div :focusable="false" :duplicateParentState="true" class="content_box_bg" flexStyle="${style}" :enableBlackBorder="false"></div>
             <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${style}" :enableBlackBorder="false">
-                <img class="qt-ui-poster-img-css" :duplicateParentState="true" :postDelay="300" :focusable="false"
+                <img class="qt-ui-poster-img-css" :postDelay="300" :focusable="false"
                     enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
                 <div showIf="${floatTitle.enable}" flexStyle="${image.style}" class="float_title_box" :focusable="false" :duplicateParentState="true">
                     <div flexStyle="${floatTitle.style}" class="qt-ui-poster-float-title-css" gradientBackground="${floatTitle.background}"
@@ -49,7 +49,7 @@
                 :delayLoad="800" showIf="${ripple.src}"
             />
         </div>
-
+<!-- focused&selected -->
         <div showOnState="selected" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${style}">
             <div class="history-delete-btn_box" flexStyle="${delete.style}" :duplicateParentState="true" :focusable="false">
                 <qt-text class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}" flexStyle="${delete.style}"

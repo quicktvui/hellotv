@@ -8,7 +8,8 @@
       :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
       @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enableSelectOnFocus="false" 
       :enablePlaceholder="false" :requestFocus="isRequestFocus" 
-      @item-focused="onItemFocuseFn" :singleSelectPosition="singleSelectPositionNum"
+      @item-focused="onItemFocuseFn" :selected="false"
+      :enableStatesOnFocus="enableStatesOnFocusArr"
     >
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
@@ -48,7 +49,7 @@ import api from '../../../api/history/index.ts'
 import HistoryEmpty from './HistoryEmpty.vue'
 import { useESRouter } from "@extscreen/es3-router";
 import HContentPoster from './HContentPoster/index.vue'
-// import { Native } from "@extscreen/es3-vue";
+import { Native } from "@extscreen/es3-vue";
 import { IcurrentItemParams } from "../../../api/history/baseApi";
 import { Iconfig } from "../config";
 
@@ -137,26 +138,17 @@ const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
 
-const dSingleSelectPositionNum = -1
-const singleSelectPositionNum = ref(dSingleSelectPositionNum)
+const dEnableStatesOnFocusArr = ['selected']
+const enableStatesOnFocusArr = ref<string[]>([])
 let lastFocusedId = -1
 let lastFocusedPosition = -1
 const onItemFocuseFn = (arg) => {
   if (arg.hasFocus) {
     lastFocusedId = arg.item?.id
     lastFocusedPosition = arg.position
-    
-    if(isEdit.value){
-      singleSelectPositionNum.value = arg.position
-    }
   } else {
     lastFocusedId = -1
     lastFocusedPosition = -1
-    nextTick(()=>{
-      if(lastFocusedPosition==-1&&isEdit.value){
-        singleSelectPositionNum.value = lastFocusedPosition
-      }
-    })
   }
 }
 // 加载更多数据
@@ -297,12 +289,12 @@ defineExpose({
         rBlockFocusDirections.value = ['left', 'right', 'down']
         gvNextFocusName.value = { 'up': 'clear_btn_name' }
 
-        singleSelectPositionNum.value = lastFocusedPosition
+        enableStatesOnFocusArr.value = dEnableStatesOnFocusArr
       } else {
         rBlockFocusDirections.value = []
         gvNextFocusName.value = {up: 'h_tab_name'}
 
-        singleSelectPositionNum.value = dSingleSelectPositionNum
+        enableStatesOnFocusArr.value = []
       }
       isEdit.value = boo
     }
