@@ -8,6 +8,8 @@
       class="bg_player_replace_child"
       sid="bg_player_replace_child_sid">
     </replace-child>
+    <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
+    <div class='bg_player' sid='default_bg_parent' :opacity="0">
     <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false" name='home_player'
       :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
@@ -70,6 +72,7 @@
         </qt-list-view>
       </qt-view>
     </qt-view>
+    </div>
   </qt-view>
 </template>
 
@@ -439,7 +442,7 @@ export default defineComponent({
 
 <style>
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
- flex-direction: row;justify-content: center;align-items: center;}
+ flex-direction: row;justify-content: center;align-items: center;position: absolute}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
 .bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 20px;top: 0;left: 0;}
 .playerBox{

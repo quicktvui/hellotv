@@ -133,16 +133,40 @@ export default defineComponent({
     let triggerTask = [
       {
         event: 'onScrollYGreater',
-        target: 'media-player',
-        function: 'changeAlpha',
-        params: [0],
+        target: 'es-player-manager',
+        function: 'updateLayout',
+        params: [502,283,1393,25],
       },
+      {
+        event: 'onScrollYGreater',
+        target: 'es-video-player-component',
+        function: 'setPlayerSize',
+        params: [502,283],
+      },
+      // {
+      //   event: 'onScrollYGreater',
+      //   target: 'es-video-player-component',
+      //   function: 'updateLayout',
+      //   params: [502,283,0,0],
+      // },
+      // {
+      //   event: 'onScrollYGreater',
+      //   target: 'media-player',
+      //   function: 'updateLayout',
+      //   params: [500,500,500,500],
+      // },
       //--------------------------------------------
       {
         event: 'onScrollYLesser',
-        target: 'media-player',
-        function: 'changeAlpha',
-        params: [0],
+        target: 'es-player-manager',
+        function: 'updateLayout',
+        params: [800,461,104,150],
+      },
+      {
+        event: 'onScrollYLesser',
+        target: 'es-video-player-component',
+        function: 'setPlayerSize',
+        params: [800,461],
       },
       //--------------------------------------------
       // {

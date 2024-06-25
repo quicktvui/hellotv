@@ -1,5 +1,5 @@
 <template>
-  <qt-column class="media-player-root-css" ref='playerParent' sid='playerParent' :focusable='false'>
+  <qt-column name='media-player' class="media-player-root-css" ref='playerParent' sid='playerParent' :focusable='false'>
     <es-player-manager
       ref="playerManager"
       :smallWindowWidth="890"

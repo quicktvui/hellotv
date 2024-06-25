@@ -9,7 +9,6 @@ import {
 } from "./tab_content/TabContentTransferAdapter"
 import { TabSectionItem } from "./tab_content/impl/TabSectionItem";
 import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
-import {TabSectionItemType} from './tab_content/tab_content_type/TabSectionItemType'
 import myHistory from "../components/history";
 
 /**
