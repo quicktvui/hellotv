@@ -42,6 +42,7 @@
 
 <script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "@vue/runtime-core";
+import ThemeConfig from "../build/ThemeConfig"
 
 export default defineComponent({
   name: "img-text-btn-view",
@@ -158,8 +159,8 @@ export default defineComponent({
     let data = reactive({
       src:"",
       focusSrc:"",
-      color: __THEME__.textColor,
-      focusColor:__THEME__.textFocusColor,
+      color: ThemeConfig.textColor,
+      focusColor:ThemeConfig.textFocusColor,
     })
     watch([() => props.icon,() => props.focusIcon],(newValue,oldValue)=>{
       const isIconNetUrl = newValue[0]?.startsWith('http')

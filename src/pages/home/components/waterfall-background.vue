@@ -6,12 +6,13 @@
 import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
 import { ESITransitionImage } from "@extscreen/es3-component/dist/src/ESTransitionImageView/ESITransitionImage";
+import ThemeConfig from "../../../build/ThemeConfig"
 
 export default defineComponent({
   name: "waterfall-background",
   setup(props, context) {
     // @ts-ignore
-    const bgColor = __THEME__.rootBgColor
+    const bgColor = ThemeConfig.rootBgColor
     // 背景图
     const waterfallBg = ref<ESITransitionImage>()
     const currentImg = ref("")

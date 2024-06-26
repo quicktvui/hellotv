@@ -1,5 +1,4 @@
-### config.json 
-#### theme:
+
 * rootBgColor:全局兜底背景色
 * rootBgGradientColor:全局兜底渐进背景色（数组）
 
