@@ -4,6 +4,7 @@
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="我的"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_my_btn"
@@ -16,6 +17,7 @@
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="筛选"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_screen_btn"
@@ -28,6 +30,7 @@
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="搜索"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_search_btn"
@@ -40,6 +43,7 @@
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="历史"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_history_btn"
@@ -52,6 +56,7 @@
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="活动"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_activity_btn"
@@ -63,7 +68,8 @@
 
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem"
-      :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]" :style="logoStyle" :src="logo">
+      :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]"
+         :style="logoStyle" :src="logo">
     <slot name="logoItem"></slot>
   </div>
 </template>
@@ -80,7 +86,11 @@ export default defineComponent({
     parentStyle:Object,
     logoStyle:Object,
     logoLeft:Boolean,
-    logoRight:Boolean
+    logoRight:Boolean,
+    downSid:{
+      type:String,
+      default:""
+    }
   },
   emits: ['focus', 'click'],
   setup(props, context) {

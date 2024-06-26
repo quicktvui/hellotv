@@ -8,9 +8,6 @@
 * textFocusColor:全局文字焦点色
 
 
-* btnColor:按钮背景色
-* btnSelectColor:按钮选中状态色
-* btnFocusColor:按钮焦点色
 * btnGradientColor:按钮背景色 （数组）
 * btnGradientSelectColor:按钮选中状态色（数组）
 * btnGradientFocusColor:按钮焦点色（数组）

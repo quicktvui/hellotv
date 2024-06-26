@@ -2,7 +2,7 @@
   <div class="home-root-css" ref="root">
     <waterfall-tabs ref="waterfallTabs" >
       <template #buttonsHeader>
-        <top-btns-view :logo-right="true">
+        <top-btns-view :logo-right="true" down-sid="tabNavBarSid">
         </top-btns-view>
       </template>
     </waterfall-tabs>

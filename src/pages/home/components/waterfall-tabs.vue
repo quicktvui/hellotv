@@ -10,7 +10,6 @@
       </div>
       <qt-tabs
         ref="tabRef"
-        :tabContentResumeDelay="200"
         :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
         tabNavBarClass="qt-tabs-waterfall-tab-css"
         tabPageClass="qt-tabs-waterfall-css"
@@ -20,7 +19,8 @@
         :triggerTask="tabsTriggerTask"
         :outOfDateTime="5 * 60 * 1000"
         @onTabClick="onTabClick"
-        :tabContentSwitchDelay='0'
+        :tabContentSwitchDelay="300"
+        :tabContentResumeDelay="300"
         sid='homeTabs'
         :custom-pool="{ name: 'home' }"
         :custom-item-pool="{ name: 'homeItems' }"
@@ -44,21 +44,11 @@
           <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
         </template>
         <template v-slot:waterfall-item>
-          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'">
-            <div
-              showIf="${corner.showCornerRight==true}"
-              :focusable="false"
-              flexStyle="${corner.style}"
-              style="z-index:1000;position: absolute;flex-direction:row-reverse">
-              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
-            </div>
-            <div
-              showIf="${corner.showCornerLeft==true}"
-              :focusable="false"
-              flexStyle="${corner.style}"
-              style="z-index:1000;position: absolute;flex-direction:row">
-              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
-            </div>
+          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
+                     :focusTitleColor="focusTextColor"
+                     :focusSubTitleColor="focusTextColor"
+                     :floatTitleBgColor="floatTitleBgColor"
+                     :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
           </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
@@ -69,21 +59,12 @@
           <MyTemplates :focusable="false"/>
         </template>
         <template v-slot:waterfall-list-item>
-          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'">
-            <div
-              showIf="${corner.showCornerRight==true}"
-              :focusable="false"
-              flexStyle="${corner.style}"
-              style="z-index:1000;position: absolute;flex-direction:row-reverse">
-              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
-            </div>
-            <div
-              showIf="${corner.showCornerLeft==true}"
-              :focusable="false"
-              flexStyle="${corner.style}"
-              style="z-index:1000;position: absolute;flex-direction:row">
-              <img :focusable="false" flexStyle="${corner.styleImg}" src="${corner.src}" showIf="${corner.enableImg==true}"/>
-            </div>
+          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
+                     :focusTitleColor="focusTextColor"
+                     :focusSubTitleColor="focusTextColor"
+                     :floatTitleBgColor="floatTitleBgColor"
+                     :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
+
           </qt-poster>
           <page-state-image-item :type="1"/>
           <page-no-frame-item :type="2"/>
@@ -103,6 +84,7 @@
 import { ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
+import ThemeConfig from "../../../build/ThemeConfig"
 import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/createESHomeBGPlayerMediaInterceptor"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
@@ -150,6 +132,9 @@ export default defineComponent({
     }
   },
   setup(props, context) {
+    const focusBgColor = ThemeConfig.tabContentBgGradientFocusColor
+    const focusTextColor = ThemeConfig.tabContentFocusColor
+    const floatTitleBgColor = ThemeConfig.tabContentFloatBgFocusColor
     let waterfall_tab_root = ref<QTIView>()
     const tabsTriggerTask = [
       {
@@ -571,6 +556,9 @@ export default defineComponent({
       wTabBg,
       tabRef,
       bg_player, bgPlayerType,
+      focusBgColor,
+      focusTextColor,
+      floatTitleBgColor,
       onTabPageLoadData,
       onTabPageChanged,
       onTabMoveToTopStart,

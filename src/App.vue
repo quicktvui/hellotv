@@ -1,5 +1,5 @@
 <template>
-  <div id="root">
+  <div id="root" :style="{backgroundColor:rootBgGradientColor ? 'transparent':rootBgColor}" :gradientBackground="{colors:rootBgGradientColor}">
     <es-router-view/>
   </div>
 </template>
@@ -28,6 +28,7 @@ import {
   useRequestManager, useUserManager
 } from "./api/UseApi"
 import BuildConfig from "./build/BuildConfig";
+import ThemeConfig from "./build/ThemeConfig"
 import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
 import HistoryApi from './api/history/index'
@@ -36,7 +37,8 @@ import activity2Api from './api/activity2/index'
 export default defineComponent({
   name: "App",
   setup() {
-
+    const rootBgColor = ThemeConfig.rootBgColor
+    const rootBgGradientColor = ThemeConfig.rootBgGradientColor
     const log = useESLog()
     const es = useES()
     const develop = useESDevelop()
@@ -86,16 +88,24 @@ export default defineComponent({
 
     function initDefaultThemeColor(){
       //设置默认焦点边框圆角
-      Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', 20);
-      //设置默认焦点颜色
-      Native.callNative('FocusModule', 'setDefaultFocusBorderColor', '#157AFC');
-// //设置焦点框是否有内里黑色边框
-//       Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable',true);
+      if (ThemeConfig.focusBorderCornerEnable){
+        Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', ThemeConfig.focusBorderCorner);
+      }
+      if (ThemeConfig.focusBorderColorEnable){
+        //设置默认焦点颜色
+        Native.callNative('FocusModule', 'setDefaultFocusBorderColor', ThemeConfig.focusBorderColor);
+      }
+      if (ThemeConfig.focusBorderWidthEnable){
+        //设置外边框宽度
+        Native.callNative('FocusModule', 'setDefaultFocusBorderWidth', ThemeConfig.focusBorderWidth);
+      }
+      if (ThemeConfig.focusBorderInsetEnable){
+        //设置焦点边框向内移动距离
+        Native.callNative('FocusModule', 'setFocusBorderInsetValue', ThemeConfig.focusBorderInsetValue);
+      }
+      //设置焦点框是否有内里黑色边框
+      Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable',ThemeConfig.focusInnerBorderEnable);
 
-//       //设置默认焦点边框是否开启
-//       Native.callNative('FocusModule', 'setDefaultFocusBorderEnable', true);
-// //设置默认焦点放大倍数
-//       Native.callNative('FocusModule', 'setDefaultFocusScale', 1.1);
     }
     const network = useESNetwork()
     const isNetworkConnected = ref<boolean>(true)
@@ -133,6 +143,8 @@ export default defineComponent({
     }
 
     return {
+      rootBgColor,
+      rootBgGradientColor,
       onESCreate,
       onESDestroy
     }

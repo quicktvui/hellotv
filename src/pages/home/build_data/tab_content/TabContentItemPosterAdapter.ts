@@ -1,4 +1,5 @@
 import {QTPoster, QTWaterfallItemType} from "@quicktvui/quicktvui3";
+import ThemeConfig from "../../../../build/ThemeConfig"
 import {TabSectionItem} from "./impl/TabSectionItem";
 import {QTPosterTitle} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterTitle";
 import {QTPosterRipple} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterRipple";
@@ -15,6 +16,15 @@ import ic_water_play from "../../../../assets/ic_water_play.png"
  * 其他：不展示标题，选中也不展示
  */
 export function buildPoster(tabContentItem: TabSectionItem): QTPoster {
+  let xOffset = 0
+  let x2Offset = 0
+  if (ThemeConfig.focusBorderWidthEnable){
+    const borderWidth = ThemeConfig.focusBorderWidth
+    const insetValue = ThemeConfig.focusBorderInsetEnable ? ThemeConfig.focusBorderInsetValue : 0
+    xOffset = (borderWidth - insetValue) >=0 ? (borderWidth - insetValue) : 0
+    x2Offset = 2 * xOffset
+  }
+  tabContentItem.width = tabContentItem.width + x2Offset
     const poster: QTPoster = {
         type: QTWaterfallItemType.QT_WATERFALL_ITEM_TYPE_POSTER,
         ripple: buildPosterRipple(tabContentItem),
@@ -41,7 +51,7 @@ export function buildPoster(tabContentItem: TabSectionItem): QTPoster {
         },
         titleStyle: buildTitleStyle(tabContentItem),
         focusTitle:buildPosterFocusTitle(tabContentItem),
-        titleFocusStyle: {width: tabContentItem.width, marginTop: tabContentItem.height - 100},
+        titleFocusStyle: {width: tabContentItem.width, marginTop: tabContentItem.height - 100,marginLeft:(-1*xOffset)},
         corner: buildPosterCorner(tabContentItem),
         item: tabContentItem//
     }
