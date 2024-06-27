@@ -10,10 +10,10 @@ const bigImg = 'http://qcloudimg.moss.huan.tv/project/lexue_education/lexue/2020
 <style scoped>
 .d2_video{
   width: 1920px;
-  height: 1920px;
+  height: 1080px;
 }
 .d2_video_poster{
   width: 1920px;
-  height: 1920px;
+  height: 1080px;
 }
 </style>
