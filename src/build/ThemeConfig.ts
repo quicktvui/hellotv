@@ -23,15 +23,18 @@ export default {
   rootBgColor: "#252930",
   rootBgGradientColor: ["#252930", "#2F3541"],
 
+  //普通按钮文字，文字---颜色
   textColor: "#ffffff",
   textSelectColor: "#ffffff",
   textFocusColor: "#ffffff",
-
+  //按钮背景颜色
   btnGradientColor: ['#0FFFFFFF', '#1FFFFFFF'],
   btnGradientSelectColor: [],
   btnGradientFocusColor: ['#0057FF','#00C7FF'],
-
+  //瀑布流格子文字选中颜色
   tabContentFocusColor: "#ffffff",
+  //瀑布流格子选中背景色
   tabContentBgGradientFocusColor: ['#157AFC', '#157AFC'],
+  //瀑布流格子浮动标题背景色
   tabContentFloatBgFocusColor:['#0186CF', '#00000000']
 }
