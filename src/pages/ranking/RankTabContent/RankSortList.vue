@@ -1,7 +1,5 @@
 <template>
-<div>
-  <p style="font-size: 30px;">2022最美的夜bilibili晚会</p>
-</div>
+<div></div>
 </template>
 <script lang='ts' setup>
 </script>

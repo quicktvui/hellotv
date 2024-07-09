@@ -1,11 +1,13 @@
 <template>
 <div class="ranking_page" :gradientBackground="configs.gradientBg">
   <RankTab v-if="!loading" />
+  <RankTabContent />
 </div>
 </template>
 <script lang='ts' setup>
 import { computed, ref } from 'vue';
 import RankTab from './RankTab.vue'
+import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
 import { IrankingConfig } from '../../api/ranking/types'
 
