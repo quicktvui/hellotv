@@ -12,7 +12,7 @@ import history from './pages/history/history_template.vue'
 import login from './pages/login/index.vue'
 import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
-
+import filter from './pages/filter2/index.vue'
 
 const routes = [
   {
@@ -66,6 +66,9 @@ const routes = [
   },
   {
     name: 'my', path: '/my', component: my
+  },
+  {
+    name: 'filter', path: '/filter', component: filter
   }
 ]
 export default routes
