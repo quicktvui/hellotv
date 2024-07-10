@@ -1,46 +1,39 @@
 <template>
 <div class="rtv_info">
-  <p class="rtv_ranking_name">热门榜</p>
-  <!-- <img src="http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20210709105200002.png" class="rtv_video_name_img" /> -->
-  <p class="rtv_video_name">2022最美的夜bilibili晚会</p>
-  <!-- <p class="rtv_video_sub_name">间谍过家家</p> -->
-  <div class="rtv_video_tag_box">
-    <p class="rtv_video_tag">日常｜搞笑｜战斗 跟新至第24话</p>
-    <p class="rtv_video_score">9.7分</p>
-  </div>
+  <qt-text class="rtv_ranking_name" text="${rankName.text}" flexStyle="${rankName.style}"></qt-text>
+  <img flexStyle="${vcTitleImg.style}" src="${vcTitleImg.url}" class="rtv_video_name_img" />
+  <qt-text class="rtv_video_name" text="${vcTitle.text}" flexStyle="${vcTitle.style}"></qt-text>
+  <qt-text class="rtv_video_sub_name" text="${vcSubTitle.text}" flexStyle="${vcSubTitle.style}"></qt-text>
+  <qt-text
+    class="rtv_video_tag"
+    text="${tagStr.text}" flexStyle="${tagStr.style}"
+  />
+  
   <text-view 
     class="rtv_video_des"
-    text="豆瓣飚分9.2，口碑逆天！年度霸权回归后半部开播！星光阿尼亚回归星光阿尼亚回归星光阿尼亚回归星光阿尼亚回归！"
+    text="${des.text}" flexStyle="${des.style}"
     :ellipsizeMode="2"
     :lines="2"
     autoHeight
     gravity="left"
   />
   <tv-list
-    class="rtv_video_bg_tag_list" :list="bgTags" horizontal
+    class="rtv_video_bg_tag_list" list="${bgTags}" horizontal
     ref="rtvVideoBgTagListRef"
     :clipChildren="false" :focusable="false" :endHintEnabled="false"
   >
-    <qt-text 
-      type="101" class="rtv_video_bg_tag" :focusable="false" 
-      text="${txt}" gravity="center"
-    />
+    <div type="101" class="rtv_video_bg_tag_box" autoWidth :focusable="false">
+      <qt-text 
+        class="rtv_video_bg_tag" :focusable="false" 
+        text="${txt}" gravity="center" autoWidth
+      />
+    </div>
   </tv-list>
 </div>
 </template>
 <script lang='ts' setup>
-import { onMounted, ref } from 'vue';
+// import { onMounted, ref } from 'vue';
 
-
-const rtvVideoBgTagListRef = ref()
-const bgTags = [
-  {id: 1, txt: '会员抢先看', type: 101},
-  {id: 2, txt: '会员抢先看2', type: 101},
-  {id: 3, txt: '会员抢先看3', type: 101}
-]
-onMounted(()=>{
-  // rtvVideoBgTagListRef.value.setListData(bgTags)
-})
 </script>
 <style scoped>
 .rtv_info {
@@ -51,58 +44,47 @@ onMounted(()=>{
 .rtv_ranking_name {
   font-size: 36px;
   color: #BFBFBF;
-  margin-top: 50px;
 }
 .rtv_video_name {
   font-size: 48px;
   font-weight: bold;
   color: #FFFFFF;
-  margin-top: 150px;
 }
 .rtv_video_sub_name {
   font-size: 30px;
   color: #EC0000;
 }
-.rtv_video_tag_box {
-  height: 50px;
-  display: flex;
-  flex-direction: row;
-  align-items: flex-end;
-  margin-top: 10px;
-  background-color: transparent;
-}
+
 .rtv_video_tag {
+  width: 600px;
   font-size: 30px;
   color: #BFBFBF;
-  margin-right: 15px;
 }
-.rtv_video_score {
-  height: 52px;
-  font-size: 42px;
-  color: #FF9F0A;
-}
+
 .rtv_video_des {
   width: 540px;
-  height: 90px;
   font-size: 30px;
   color: #BFBFBF;
-  margin-top: 10px;
 }
 .rtv_video_name_img {
   width: 540px;
-  height: 150px;
-  margin-top: 100px;
 }
 .rtv_video_bg_tag_list {
   width: 540px;
   height: 30px;
-  background-color: #000000;
+  margin-top: 20px;
+  background-color: transparent;
+}
+.rtv_video_bg_tag_box {
+  height: 30px;
+  border-radius: 2px;
+  padding-left: 5px;
+  padding-right: 5px;
+  background-color: #FF6699;
 }
 .rtv_video_bg_tag {
-  width: 200px;
   height: 30px;
   font-size: 20px;
   color: #FFFFFF;
-  background-color: #FF6699;
 }
 </style>

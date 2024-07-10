@@ -1,12 +1,13 @@
 <template>
-<div class="rtvp_vedio"></div>
+  <img src="${previewImg}" class="rtvp_img"/>
 </template>
 <script lang='ts' setup>
 </script>
 <style scoped>
-.rtvp_vedio {
+.rtvp_img {
   position: absolute;
   width: 1140px;
   height: 640px;
+  border-radius: 8px;
 }
 </style>
