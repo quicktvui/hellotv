@@ -1,5 +1,5 @@
 <template>
-<div class="rt_content">
+<div class="rt_content" :style="rtcStyle">
   <div class="rtc_video_box">
     <RankTabVideoInfo />
     <RankTabVideo />
@@ -18,10 +18,16 @@ import RankTabVideoInfo from './RankTabVideoInfo.vue'
 import RankTabVideo from './RankTabVideo.vue'
 import RankTabMoreList from './RankTabMoreList.vue'
 import RankSortList from './RankSortList.vue'
-import { computed } from 'vue';
+import { StyleValue, computed } from 'vue';
+import rankApi from '../../../api/ranking/index'
 
 const isSort = computed(()=>{
   return true
+})
+const configs = rankApi.getConfig()
+const rtcStyle = computed<StyleValue>(()=>{
+  const space = configs.pageSpace||0
+  return { width: 1920 - space + 'px', marginLeft: space+'px'  }
 })
 </script>
 <style scoped>

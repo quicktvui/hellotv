@@ -23,11 +23,11 @@ const listData = qtRef<QTListViewItem[]>()
 
 const initPosition = ref(2)//默认焦点位置
 const rtStyle = computed<StyleValue>(()=>{
-  const space = (configs.pageSpace||0) - 8
+  const space = (configs.pageSpace||0) - 35
   return { width: 1920 - (space*2) + 'px', marginLeft: space+'px'  }
 })
 const rtlStyle = computed(()=>{
-  return { width: 1920 - ((configs.pageSpace||0)*2) + 'px' }
+  return { width: 1920 - ((configs.pageSpace||0)-27)*2 + 'px' }
 })
 const onTabChange = () => {
 

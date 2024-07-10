@@ -62,5 +62,6 @@ defineExpose({
   justify-content: center;
   align-items: center;
   z-index: 10;
+  background-color: transparent;
 }
 </style>

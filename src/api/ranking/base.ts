@@ -14,7 +14,11 @@ export class RankBaseApi {
    * @param routerParams 当前页面的路由参数对象
    */
   async initPageData(routerParams: {[k:string]:any}): Promise<any> {
-    return {}
+    return new Promise(resolve=>{
+      setTimeout(() => {
+        resolve({})
+      }, 1000);
+    })
   }
   /**
    * 获取页面配置信息, 子类重写该方法时必须先调用父类的getConfig获取默认配置
