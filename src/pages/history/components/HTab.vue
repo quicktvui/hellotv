@@ -84,7 +84,8 @@ defineExpose({
     }
 })
 </script>
-<style scoped>
+
+<style>
 .h_tab {
     /* width: 1570px; */
     height: 90px;
@@ -96,5 +97,14 @@ defineExpose({
     height: 90px;
     margin-left: 30px;
     background-color: transparent;
+}
+
+.h_tab .qt-ui-nav-bar-item-css {
+  focus-background-color: #157AFC;
+}
+
+.h_tab .qt-ui-nav-bar-item-text-css {
+  select-color: #157AFC;
+  focus-color: #fff;
 }
 </style>

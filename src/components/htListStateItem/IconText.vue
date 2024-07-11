@@ -12,7 +12,7 @@
             />
         </qt-view>
         <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="focused">
-            <img src="../../assets/ic_screen_focus.png" :focusable="false"/>
+            <img src="../../assets/ic_screen_select.png" :focusable="false"/>
             <qt-text 
                 class="list_item_icon_txt" autoWidth :style="custemStyle.focused" gravity="center"
                 :focusable="false" text="${showName}" :ellipsizeMode="3" :lines="1"
