@@ -6,11 +6,10 @@
              eventClick
              eventFocus
              :focusable="true">
-      <div class="filter-fast-item-focus" :style="{height:filterRecordHeight+'px'}" autoWidth
-           :duplicateParentState="true" showOnState="focused" :focusable="false"
-           :gradientBackground="{colors:['#0057FF','#00C7FF'], cornerRadii4: [30, 30, 30, 30], orientation: 6}"/>
-        <qt-text class="filter-fast-item-text"
-                 :style="{height:filterRecordHeight+'px'}"
+      <div class="filter-fast-item-focus" :style="{ height: filterRecordHeight + 'px' }" autoWidth
+        :duplicateParentState="true" showOnState="focused" :focusable="false"
+        :gradientBackground="{ colors: btnGradientFocusColor, cornerRadius: 30, orientation: 6 }"/>
+        <qt-text class="filter-fast-item-text" :style="{ height: filterRecordHeight + 'px', selectColor: textSelectColor }"
                  :duplicateParentState="true" :focusable="false"
                  :fontSize="30" gravity="center"
                  autoWidth text="${filterShowName}"/>
@@ -19,22 +18,23 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "@vue/runtime-core"
-import {ESLogLevel, useESLog} from "@extscreen/es3-core";
+import ThemeConfig from "../../../build/ThemeConfig";
 import FilterConfig from "../build_data/FilterConfig"
 
 export default defineComponent({
   name: "tags-filter-fast-item",
   setup(props, context) {
-    const log = useESLog()
+    const textSelectColor = ThemeConfig.textColor
+    const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
     const filterRecordHeight = computed(()=>{return FilterConfig.filterRecordHeight})
 
     return {
+      textSelectColor,
+      btnGradientFocusColor,
       filterRecordHeight
     }
   }
 })
 </script>
 
-<style src="../css/right-filter.css">
-
-</style>
+<style src="../css/right-filter.css"></style>

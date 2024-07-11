@@ -16,7 +16,6 @@
 .filter-line-item-root .filter-line-item-text{
     color: rgba(255, 255, 255, .5);
     focus-color:white;
-    select-color: #157AFC;
     background-color: transparent;
 }
 
@@ -45,7 +44,6 @@
 .filter-fast-item-root .filter-fast-item-text{
     color: rgba(255, 255, 255, .5);
     focus-color:white;
-    select-color: #157AFC;
     background-color: transparent;
 }
 

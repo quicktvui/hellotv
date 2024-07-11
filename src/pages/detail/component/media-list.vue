@@ -1,53 +1,37 @@
 <template>
-
-  <div class="media-list-view-root-css" v-show="visible"
-       :clipChildren="false"
-       :clipPadding="false">
-
+  <div v-show="visible" class="media-list-view-root-css" :clipChildren="false" :clipPadding="false">
+    <!-- 选集标题 -->
     <div class="media-list-title-root-css">
-      <qt-text class="media-list-title-text-css"
-               :focusable="false"
-               :fontSize="40" text="选集"/>
+      <qt-text class="media-list-title-text-css" :focusable="false" :fontSize="40" text="选集"/>
     </div>
-
-    <qt-media-series
-      ref="mediaSeriesRef"
-      class="media-series-root-css"
-      :gradient-background="{colors:['#0057FF','#00C7FF'], cornerRadii4: [8, 8, 8, 8], orientation: 6}"
-      :mark-color="`#FFFFFF`"
-      :text-colors="{color:'rgba(255, 255, 255, .5)',focusColor:'#ffffff',selectColor:'#157AFC'}"
-      :clipChildren="false"
+    <!-- 选集内容 -->
+    <qt-media-series ref="mediaSeriesRef" class="media-series-root-css"
+      :clipChildren="false" :mark-color="`#FFFFFF`"
+      :text-colors="{ color: textColor, focusColor: textFocusColor, selectColor: textSelectColor }"
+      :gradient-background="{ colors: btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradient-focus-background="{ colors: btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       @load-data="onLoadData"
       @item-click="onItemClick"
       @item-focused="onItemFocused"
       @group-item-focused="onGroupItemFocused"/>
-
   </div>
 </template>
 
 <script lang="ts">
-
-import {defineComponent, onUnmounted} from "@vue/runtime-core";
-import {onMounted, ref} from "vue";
-import {
-  QTMediaSeriesEvent,
-  QTMediaSeriesType,
-  QTIMediaSeries,
-  QTMediaSeriesStyleType,
-  QTMediaSeriesGroup,
-  QTMediaSeriesData
-} from "@quicktvui/quicktvui3";
-import {IMedia} from "../../../api/media/IMedia";
-import {useMediaDataSource} from "../../../api/UseApi";
-import {ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
-import {buildMediaSeriesList} from "../adapter/DataAdapter";
-import {IMediaItemListType} from "../../../api/media/IMediaItemListType";
+import { ref, onMounted } from "vue";
+import { defineComponent, onUnmounted } from "@vue/runtime-core";
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { QTMediaSeriesEvent, QTIMediaSeries } from "@quicktvui/quicktvui3";
+import { IMedia } from "../../../api/media/IMedia";
+import { useMediaDataSource } from "../../../api/UseApi";
+import { buildMediaSeriesList } from "../adapter/DataAdapter";
 import {
   buildMediaSeriesData,
   buildMediaSeriesGroup,
   buildMediaSeriesStyleType,
   buildMediaSeriesType
 } from "../adapter/MediaSeriesAdapter";
+import ThemeConfig from "../../../build/ThemeConfig";
 
 const TAG = 'MediaListView'
 
@@ -60,7 +44,13 @@ export default defineComponent({
     'onMediaListItemLoad'
   ],
   setup(props, context) {
-
+    // 主题配置
+    const textColor = ThemeConfig.textColor
+    const textFocusColor = ThemeConfig.textFocusColor
+    const textSelectColor = ThemeConfig.textSelectColor
+    const btnGradientColor = ThemeConfig.btnGradientColor
+    const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
+    
     const eventbus = useESEventBus()
     const initParams = ref()
     const listViewWidth = ref<number>(0)
@@ -78,6 +68,7 @@ export default defineComponent({
     onMounted(() => {
       eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });
+    
     onUnmounted(() => {
       eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });
@@ -179,6 +170,11 @@ export default defineComponent({
     }
 
     return {
+      textColor,
+      textFocusColor,
+      textSelectColor,
+      btnGradientColor,
+      btnGradientFocusColor,
       visible,
       mediaSeriesRef,
       initMedia,
@@ -218,7 +214,7 @@ export default defineComponent({
 
 .media-list-title-text-css {
   width: 180px;
-  height: 45px;
+  height: 50px;
   font-size: 40px;
   font-weight: 400;
   color: white;
@@ -229,5 +225,4 @@ export default defineComponent({
   height: 150px;
   margin-top: 25px;
 }
-
 </style>
