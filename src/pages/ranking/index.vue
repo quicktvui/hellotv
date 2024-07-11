@@ -1,17 +1,17 @@
 <template>
 <div class="ranking_page" :gradientBackground="configs.gradientBg" :clipChildren="false">
-
   <!-- <RankTab v-if="!loading" />
   <RankTabContent />
   <div class="rank_loading_box" v-show="loading">
     <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false" />
   </div> -->
   <qt-tabs
-    ref="tabRef"
-    @onTabPageLoadData="onTabPageLoadData"
+    ref="tabRef" sid="rankingTabsSid"
     class="ranking_tabs"
     tabNavBarClass="rank_tab_bar"
     tabPageClass="rank_tab_waterfall"
+    @onTabPageLoadData="onTabPageLoadData"
+    @onTabPageChanged="onTabPageChanged"
   >
     <template v-slot:tab-item>
       <RankTabItem :type="1"/>
@@ -25,7 +25,7 @@
 <script lang='ts' setup>
 import { StyleValue, computed, ref } from 'vue';
 import RankTabItem from './RankTabItem.vue'
-import RankTab from './RankTab.vue'
+// import RankTab from './RankTab.vue'
 import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
 import { IrankingConfig } from '../../api/ranking/types'
@@ -33,21 +33,20 @@ import {
   QTITab, QTTabPageData, QTWaterfall, QTWaterfallSection, QTWaterfallSectionType, QTTabItem, QTTab
 } from "@quicktvui/quicktvui3";
 // @ts-ignore
-import { transRankingTabList, pageHeight, pageWidth, transRankingSections } from './index.ts'
+import { transRankingTabList, pageHeight, pageWidth, transRankingSections, rankingUi } from './index.ts'
 
-const tabRef = ref()
+const tabRef = ref<QTITab>()
 const loading = ref(true)
 const configs = ref<Partial<IrankingConfig>>({})
 
 const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
-  // console.log(pageIndex, pageNo, useDiff, '--lsj')
-  rankApi.getContentData(pageIndex).then(res=>{
-    console.log('lsj-getContentData')
-    tabRef.value?.setPageData(pageIndex, {
-      useDiff: useDiff,
-      data: transRankingSections(res, rankApi.getConfig()).sections
-    })
-  })
+  if(pageNo > 0) return//没有分页数据
+  if(tabRef.value){
+    rankingUi.setData(tabRef.value, pageIndex)
+  }
+}
+const onTabPageChanged = (pageIndex: number, data: any) => {
+  rankingUi.updateData(pageIndex)
 }
 
 defineExpose({

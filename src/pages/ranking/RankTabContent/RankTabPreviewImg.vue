@@ -1,5 +1,8 @@
 <template>
-  <img src="${previewImg}" class="rtvp_img"/>
+  <img 
+    :postDelay="300" src="${previewImg}" class="rtvp_img" :focusable="false" 
+    :enableFade="true" :fadeDuration="1000"
+  />
 </template>
 <script lang='ts' setup>
 </script>

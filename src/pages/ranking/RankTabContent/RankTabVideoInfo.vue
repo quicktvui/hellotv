@@ -1,7 +1,7 @@
 <template>
-<div class="rtv_info">
+<div class="rtv_info" :focusable="false">
   <qt-text class="rtv_ranking_name" text="${rankName.text}" flexStyle="${rankName.style}"></qt-text>
-  <img flexStyle="${vcTitleImg.style}" src="${vcTitleImg.url}" class="rtv_video_name_img" />
+  <img :focusable="false" flexStyle="${vcTitleImg.style}" src="${vcTitleImg.url}" class="rtv_video_name_img" />
   <qt-text class="rtv_video_name" text="${vcTitle.text}" flexStyle="${vcTitle.style}"></qt-text>
   <qt-text class="rtv_video_sub_name" text="${vcSubTitle.text}" flexStyle="${vcSubTitle.style}"></qt-text>
   <qt-text

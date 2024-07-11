@@ -1,5 +1,5 @@
 <template>
-<div class="rtvp_vedio"></div>
+<div class="rtvp_vedio" :focusable="false"></div>
 </template>
 <script lang='ts' setup>
 </script>

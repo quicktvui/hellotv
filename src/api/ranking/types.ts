@@ -19,6 +19,7 @@ export interface IrankingTabItem {
 interface IbgTags {id:string; txt: string};
 
 export interface IrankingContentItem {
+  id:string;
   previewImg?: string; //影视预览图地址
   previewVedio?: string;//影视预览视频地址
   title?: string;//影视标题
@@ -28,15 +29,24 @@ export interface IrankingContentItem {
   tagStr?:string;//影视相关标签
   score?:string;//影视平分
   des?:string;//影视简介
-  bgTags?:IbgTags[]//影视带背景色标签
+  bgTags?:IbgTags[];//影视带背景色标签
 }
-
+export interface IposterConfig {
+  posterWidth?:number; posterHeight?:number;
+  posterImgWidth?:number; posterImgHeight?:number;
+  rightSpace?:number;
+  [k:string]:any
+}
 export interface IrankingContent {
+  id:string;
   type: Tvalues<typeof rankingTypes>;
   rankName:string;//排行榜类型名
-  list: IrankingContentItem[]
+  list: IrankingContentItem[];
+  config?:IposterConfig;
 }
 export interface IrankingMoreContent {
+  id:string;
+  topSpace:number;
   type: Tvalues<typeof rankingTypes>;
-  moreList?: IrankingContent[];
+  moreList: IrankingContent[];
 }
