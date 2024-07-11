@@ -360,7 +360,6 @@ export default defineComponent({
     }
     let dismissCoverTimer: any
     const onVideoPlayerPlaying = () => {
-      console.log("XRG===",`dismissCoverTimer ${dismissCoverTimer} isAnyPlaying.value isAnyPlaying.value`)
       clearTimeout(dismissCoverTimer)
       isAnyPlaying.value = true
       if(pauseOnCoverShow.value){
