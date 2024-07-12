@@ -15,6 +15,7 @@ import my from './pages/my/index.vue'
 import filter from './pages/filter2/index.vue'
 import detail2 from './pages/detail2/index.vue'
 import ranking from './pages/ranking/index.vue'
+import shortVideo from './pages/shortVideo/index.vue'
 
 
 const routes = [
@@ -78,6 +79,10 @@ const routes = [
   }, 
   {
     name: 'ranking', path: '/ranking', component: ranking
+  }
+  , 
+  {
+    name: 'short_video', path: '/short_video', component: shortVideo
   }
 ]
 export default routes
