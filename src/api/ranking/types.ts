@@ -29,12 +29,13 @@ export interface IrankingContentItem {
   tagStr?:string;//影视相关标签
   score?:string;//影视平分
   des?:string;//影视简介
+  rankName?:string;//排行分类
   bgTags?:IbgTags[];//影视带背景色标签
 }
 export interface IposterConfig {
   posterWidth?:number; posterHeight?:number;
   posterImgWidth?:number; posterImgHeight?:number;
-  rightSpace?:number;
+  posterRightSpace?:number; posterTopSpace?:number;
   [k:string]:any
 }
 export interface IrankingContent {
@@ -46,7 +47,7 @@ export interface IrankingContent {
 }
 export interface IrankingMoreContent {
   id:string;
-  topSpace:number;
+  topSpace:number;//顶部偏移距离，可以是负数
   type: Tvalues<typeof rankingTypes>;
   moreList: IrankingContent[];
 }

@@ -42,7 +42,8 @@ export const rankingContentTypes = {
 
 const dPosterWidth = 396
 const dPosterHeight = 222
-const drightSpace = 48
+const dPosterRightSpace = 48
+const dPosterTopSpace = 0
 const getRankingPoster = (pData:IrankingContentItem, config:IposterConfig, index?:number) => {
   const imgW = config.posterImgWidth||config.posterWidth||dPosterWidth
   const imgH = config.posterImgHeight||config.posterHeight||dPosterHeight
@@ -51,8 +52,8 @@ const getRankingPoster = (pData:IrankingContentItem, config:IposterConfig, index
     focus: { enable: true, scale: 1.1, border: true },
     rwaData: { ...pData },
     decoration: {
-      left: 0,
-      right: config.rightSpace||drightSpace
+      left: 0, top: config.posterTopSpace||dPosterTopSpace,
+      right: config.posterRightSpace||dPosterRightSpace
     },
     style: {
       width: config.posterWidth||dPosterWidth,
@@ -118,9 +119,9 @@ const getCurrentSection = (current:IrankingContentItem, data?:IrankingContent, c
   if(current.score){
     tagStrText += `<font color="#FF9F0A" size="20">${current.score}</font>`
   }
-  const rankName = data?.rankName||oldCurrent?.rankName.text
+  const rankName = current.rankName||data?.rankName||oldCurrent?.rankName.text
   return {
-    _id: oldCurrent?._id || 'rankingCurrentSection-'+data?.id,
+    _id: oldCurrent?._id || 'rankingCurrentSection-'+data?.id+current.id,
     type: rankingContentTypes.info,
     title: '',
     titleStyle: {
@@ -191,7 +192,7 @@ export const transRankingContent = (data:IrankingContent, configs:IrankingConfig
     return getRankingPoster(item, {
       posterWidth: 320, posterHeight: 348,
       posterImgWidth: 246, posterImgHeight: 348,
-      rightSpace: 70, posterType: 1,
+      posterRightSpace: 70, posterType: 1,
       ...(data.config||{})
     }, index)
   })
@@ -200,13 +201,7 @@ export const transRankingContent = (data:IrankingContent, configs:IrankingConfig
     {
       _id: 'rankingSortSection-'+data.id, type: rankingContentTypes.sort,
       title: '',
-      titleStyle: {
-        width: 0.01,
-        height: 0.01,
-        marginLeft: 0.01,
-        marginTop: 0.01,
-        marginBottom: 0.01,
-      },
+      titleStyle: {},
       decoration: { top: -150, left: configs.pageSpace },
       style: { width: pageWidth - configs.pageSpace, height: 350, },
       itemList
@@ -214,30 +209,37 @@ export const transRankingContent = (data:IrankingContent, configs:IrankingConfig
   ]
   return { sections }
 }
+
+const dMcTitleHeight = 52
+const dMcTitleBottom = 20
+const dMcTitleTop = 40
 export const transRankingMoreContent = (data:IrankingMoreContent, configs:IrankingConfig) => {
 
   const itemList = data.moreList.map((item,index) => {
     const isFirst = index === 0
+    const isLast = index === data.moreList.length-1
+    const titleStyle = {
+      width: 1000,
+      height: isFirst?0:dMcTitleHeight,
+      marginTop: 0,
+      marginBottom: isFirst?0:dMcTitleBottom,
+      fontSize: isFirst?0:42
+    }
+    const titleReactH = titleStyle.height+titleStyle.marginTop+titleStyle.marginBottom
     return {
       _id: item.id+index,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST,
       title: isFirst?'':item.rankName,
-      titleStyle: {
-        width: 1000,
-        height: isFirst?0.1:52,
-        marginTop: isFirst?0.1:40,
-        marginBottom: isFirst?0.1:20,
-        fontSize: isFirst?0.1:42
-      },
+      titleStyle: titleStyle,
       itemList: item.list.map((mlItem,mlIndex)=>{
-        return getRankingPoster(mlItem, item.config||{})
+        return getRankingPoster({...mlItem, rankName: item.rankName}, item.config||{})
       }),// getRankingPoster(i + flag, 5),
       style: {
         width: pageWidth - configs.pageSpace,
-        height: 0.01,
+        height: dPosterHeight+titleReactH,
       },
       decoration: {
-        left: 0.01, right: 0.01, top: 0.01
+        left: configs.pageSpace, right: 0, top: isFirst?15:0, bottom: isLast?160:dMcTitleTop
       }
     }
   })
@@ -246,15 +248,10 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
     {
       _id: 'rankingMoreSection-'+data.id, type: rankingContentTypes.more,
       title: '',
-      titleStyle: {
-        width: 0.01,
-        height: 0.01,
-        marginLeft: 0.01,
-        marginTop: 0.01,
-        marginBottom: 0.01,
-      },
-      decoration: { top: data.topSpace, left: configs.pageSpace },
-      style: { width: pageWidth - configs.pageSpace, height: 384, },
+      titleStyle: {},
+      decoration: { top: data.topSpace },
+      style: { width: pageWidth , height: 400, },
+      // waterFallStyle: { width: pageWidth , height: 900, marginTop: -500 },
       itemList
     }
   ]
@@ -275,7 +272,6 @@ class RankingUi {
 
   updateCurrent(rwaData:IrankingContentItem){
     if(this.pageIndex>-1){
-      console.log(this.pageIndex, '--this.pageIndex')
       const oldSectin = this.tabRef?.getPageSection(this.pageIndex, 0);
       const newSection = getCurrentSection(rwaData, undefined, undefined, oldSectin)
       if(oldSectin?._id){
@@ -284,8 +280,14 @@ class RankingUi {
     }
   }
 
+  reInitData(){
+    if(this.pageIndex>-1){
+      console.log(this.pageIndex, '--this.pageIndex')
+    }
+  }
+
   updateData(pageIndex){
-    this.pageIndex = pageIndex
+    this.pageIndex = pageIndex;
   }
 
   setData(tabRef:QTITab, pageIndex:number){

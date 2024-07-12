@@ -34,7 +34,7 @@ const onTabChange = () => {
 }
 
 rankApi.getTabData().then(res=>{
-  listData.value = transRankingTabList(res)
+  listData.value = transRankingTabList(res,rankApi.getConfig())
 })
 </script>
 <style scoped>

@@ -4,7 +4,7 @@
     <RankTabVideoInfo :focusable="false"/>
     <div class="rtc_video_preview" :focusable="false">
       <RankTabVideo showIf="${isVedio==true}" :focusable="false"/>
-      <RankTabPreviewImg showIf="${isVedio==false}" :focusable="false"/>
+      <!-- <RankTabPreviewImg showIf="${isVedio==false}" :focusable="false"/> -->
     </div>
   </div>
   

@@ -1,10 +1,5 @@
 <template>
 <div class="ranking_page" :gradientBackground="configs.gradientBg" :clipChildren="false">
-  <!-- <RankTab v-if="!loading" />
-  <RankTabContent />
-  <div class="rank_loading_box" v-show="loading">
-    <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false" />
-  </div> -->
   <qt-tabs
     ref="tabRef" sid="rankingTabsSid"
     class="ranking_tabs"
@@ -12,6 +7,7 @@
     tabPageClass="rank_tab_waterfall"
     @onTabPageLoadData="onTabPageLoadData"
     @onTabPageChanged="onTabPageChanged"
+    enablePlaceholder
   >
     <template v-slot:tab-item>
       <RankTabItem :type="1"/>
@@ -30,10 +26,10 @@ import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
 import { IrankingConfig } from '../../api/ranking/types'
 import {
-  QTITab, QTTabPageData, QTWaterfall, QTWaterfallSection, QTWaterfallSectionType, QTTabItem, QTTab
+  QTITab, QTWaterfall, QTTab
 } from "@quicktvui/quicktvui3";
 // @ts-ignore
-import { transRankingTabList, pageHeight, pageWidth, transRankingSections, rankingUi } from './index.ts'
+import { transRankingTabList, pageHeight, pageWidth, rankingUi } from './index.ts'
 
 const tabRef = ref<QTITab>()
 const loading = ref(true)
