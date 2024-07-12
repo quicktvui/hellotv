@@ -30,5 +30,6 @@ export default {
   //筛选结果子View图片高度
   contentItemImgHeight:368,
   //筛选内容一行个数
-  spanCount:isShowLeftListTag?5:6
+  spanVCount: isShowLeftListTag ? 5 : 6,
+  spanHCount: isShowLeftListTag ? 4 : 5
 }

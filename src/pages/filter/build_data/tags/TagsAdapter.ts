@@ -45,30 +45,32 @@ export function buildTagContentEnd():QTGridViewItem{
   return endList
 }
 
-export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:number):Array<QTGridViewItem>{
+export function buildTagContentsAdapter(tagContents: Array<TagContent>, pageNum?:number, type?: number): Array<QTGridViewItem> {
   const tagContentList: Array<QTGridViewItem> = []
   const decoration: ESListViewItemDecoration = {
     top:18,
-    bottom:18,
+    bottom: type === 1 ? 18 : 35,
   }
+
   tagContents.forEach((content,index)=>{
     const gridItem:QTGridViewItem ={
-      type:1,
-      poster:content.poster,
+      type: type ?? 1,
+      poster: content.poster,
       corner:{
         style:{
           width:0,
           height:0
         },
-        src:content.cornerImg
+        src: content.cornerImg,
       },
-      score:content.score,
-      title:content.title,
-      item:content.actionRedirect,
+      score: content.score,
+      title: content.title,
+      item: content.actionRedirect,
       decoration
     }
     tagContentList.push(gridItem)
   })
+
   //添加结束提示，首页小于 10条不加载结束提示
   if (tagContents.length > 0
     && ((tagContents.length < FilterConfig.screenPageSize && pageNum !== 1)

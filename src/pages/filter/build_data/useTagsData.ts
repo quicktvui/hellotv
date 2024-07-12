@@ -10,7 +10,6 @@ import {TagContent} from "./impl/TagContent";
 import {QTGridViewItem} from "@quicktvui/quicktvui3";
 import {FilterCondition} from "./impl/FilterCondition";
 import {FilterConditionList} from "./impl/FilterConditionList";
-import SearchConfig from "../../search/build_data/SearchConfig"
 
 let defaultOffSetIndex = 0
 let defaultTagSelectIndex = 0
@@ -66,6 +65,7 @@ export function buildScreenTag(filterList:Array<any>){
     }
     defaultOffSetIndex = 1
   }
+  // @ts-ignore
   return itemTag
 }
 
@@ -169,6 +169,7 @@ export function clearAllFilterCondition(position){
     })
   }
 }
+
 export function clearFastFilterCondition(){
   if (fastFilterList){
     fastFilterList.defaultSelectPosition = -1
@@ -203,21 +204,28 @@ export function getScrollHeight(){
 
 }
 
-
-export function buildScreenContent(tagContents:Array<any>,pageNum?:number):Array<QTGridViewItem>{
+/**
+ * 构建筛选内容
+ *
+ * @param tagContents 标签内容数组
+ * @param pageNum 页码(可选)
+ * @param posterMode 海报模式(可选), 可选值为 1(竖图) 或 2(横图)
+ * @returns QTGridViewItem 数组
+ */
+export function buildScreenContent(tagContents: Array<any>, pageNum?: number, posterMode?: 1 | 2):Array<QTGridViewItem>{
   const tagContentArray:Array<TagContent> = []
   tagContents.forEach((content,index)=>{
     const tagContent:TagContent = {
-      id:content.id,
-      title:content.assetTitle,
-      poster:content.coverV,
-      score:content.doubanScore,
-      cornerImg:content.cornerImage,
-      actionRedirect:content.actionRedirect
+      id: content.id,
+      title: content.assetTitle,
+      poster: posterMode && posterMode === 1 ? content.coverV : content.coverH,
+      score: content.doubanScore,
+      cornerImg: content.cornerImage,
+      actionRedirect: content.actionRedirect
     }
     tagContentArray.push(tagContent)
   })
-  return buildTagContentsAdapter(tagContentArray,pageNum)
+  return buildTagContentsAdapter(tagContentArray, pageNum, posterMode && posterMode === 1 ? 1 : 2)
 }
 
 export function setRootTag(tag:string){
@@ -294,5 +302,3 @@ export function isFastFilterListHasData(){
 export function isAllFilterListHasData(){
   return allFilterList && allFilterList.length > 0
 }
-
-
