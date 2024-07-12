@@ -6,3 +6,11 @@ export interface SearchResult{
   plateName?:string,
   itemList:Array<SearchResultItem> | []
 }
+
+export interface GridSection{
+  pageIndex: number
+  tabItemId: string
+  isRecommendRequest:boolean,
+  tabListLength: number
+  isShowCenterSearch: boolean
+}

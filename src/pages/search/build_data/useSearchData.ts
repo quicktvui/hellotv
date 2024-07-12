@@ -41,6 +41,7 @@ export function buildSearchTabData(tabs:Array<SearchTab>): Array<QTTabItem>{
   tabs.forEach((item,index) =>{
     const tabItem:QTTabItem = {
       text:`${item.title} (${item.totalNum}+)`,
+      title:`${item.title}`,
       titleSize:36,
       type:2,
       _id:item.id,

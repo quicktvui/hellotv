@@ -59,90 +59,103 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult, pag
 export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Array<QTWaterfallItem> {
   let data: Array<QTWaterfallItem> = []
   list.forEach((item, index) => {
-    const poster: QTPoster = {
-      _id: item.id + "i",
-      focus: {
-        enable: true,
-        scale: 1.03,
-        border: true
-      },
+    const poster: any = {
+      _id: item.id + '',
       type: 20,
+      title: item.title,
+      poster: item.poster,
       decoration: {
-        left: (index % searchResultSpanCount) === 0 ? 90 : 40,
+        // left: (index % searchResultSpanCount) === 0 ? 90 : 40,
+        // left: (index % 4) === 0 ? 90 : 40,
+        left: 40,
         bottom: 40
       },
-      title: {
-        text: item.title,
-        enable: true,
-        style: {
-          width: 260,
-        }
-      },
-      subTitle: {
-        text: "",
-        enable: false,
-        style: {
-          width: 260,
-        }
-      },
-      focusTitle: {
-        text: item.title,
-        enable: true,
-        style: {
-          width: 260,
-        }
-      },
-      floatTitle: {
-        text: '',
-        enable: false,
-        style: {
-          width: 260,
-        },
-        background: { colors: ['#e5000000', '#00000000'], orientation: 4 }
-      },
-      shimmer: {
-        enable: false,
-      },
-      ripple: {
-        enable: false,
-        src: "",
-        style: {
-          right: 0,
-          bottom: 0,
-          marginRight: -12,
-        }
-      },
-      image: {
-        src: item.poster,
-        enable: true,
-        style: {
-          width: 260,
-          height: 368
-        }
-      },
-      corner: {
-        text: item.corner,
-        enable: true,
-        style: {
-          width: 260,
-          height: 30
-        },
-        background: {
-          colors: ['#A06419', '#CDA048'],
-          cornerRadii4: [0, 8, 0, 8],
-          orientation: 2
-        }
-      },
       style: {
-        width: 260,
-        height: 428,
+        width: 396,
+        height: 320,
       },
-      titleStyle: {
-        width: 260,
-        height: 120,
-        marginTop: 368 - 60,
-      },
-      titleFocusStyle: { width: 260, marginTop: 368 - 72 },
+      // focus: {
+      //   enable: true,
+      //   scale: 1.03,
+      //   border: true
+      // },
+      // type: 20,
+      // decoration: {
+      //   left: (index % searchResultSpanCount) === 0 ? 90 : 40,
+      //   bottom: 40
+      // },
+      // title: {
+      //   text: item.title,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // subTitle: {
+      //   text: "",
+      //   enable: false,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // focusTitle: {
+      //   text: item.title,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // floatTitle: {
+      //   text: '',
+      //   enable: false,
+      //   style: {
+      //     width: 260,
+      //   },
+      //   background: { colors: ['#e5000000', '#00000000'], orientation: 4 }
+      // },
+      // shimmer: {
+      //   enable: false,
+      // },
+      // ripple: {
+      //   enable: false,
+      //   src: "",
+      //   style: {
+      //     right: 0,
+      //     bottom: 0,
+      //     marginRight: -12,
+      //   }
+      // },
+      // image: {
+      //   src: item.poster,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //     height: 368
+      //   }
+      // },
+      // corner: {
+      //   text: item.corner,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //     height: 30
+      //   },
+      //   background: {
+      //     colors: ['#A06419', '#CDA048'],
+      //     cornerRadii4: [0, 8, 0, 8],
+      //     orientation: 2
+      //   }
+      // },
+      // style: {
+      //   width: 260,
+      //   height: 428,
+      // },
+      // titleStyle: {
+      //   width: 260,
+      //   height: 120,
+      //   marginTop: 368 - 60,
+      // },
+      // titleFocusStyle: { width: 260, marginTop: 368 - 72 },
       item,
     }
     data.push(poster)
