@@ -143,8 +143,8 @@ export function buildFiltersCondition(filterList:Array<any>,defaultFilter?:Array
   }
 }
 
-export function getFilterConditionData():Array<QTListViewItem>{
-  return buildFilterAdapter(allFilterList,fastFilterList)
+export function getFilterConditionData(moreLimit?: number):Array<QTListViewItem>{
+  return buildFilterAdapter(allFilterList, fastFilterList, moreLimit)
 }
 
 export function updateFastFilterCondition(itemPosition){
@@ -176,13 +176,13 @@ export function clearFastFilterCondition(){
   }
 }
 
-export function getFilterLength():number{
-  const length = (allFilterList?.length || 0) + ((isFastFilterListMore() ? 1 : 0))
+export function getFilterLength(moreLimit: number):number{
+  const length = ((allFilterList?.length - moreLimit) || 0) + ((isFastFilterListMore() ? 1 : 0))
   return length > 8 ? 8 : length
 }
 
-export function getFilterHeight(){
-  const filterLength = getFilterLength()
+export function getFilterHeight(moreLimit: number = 0):number{
+  const filterLength = getFilterLength(moreLimit)
   if (filterLength > 0){
     const isFastMore = isFastFilterListMore()
     return filterLength * _filter_text_height + (filterLength - (isFastMore ? 2 : 1)) * _filter_tag_gap + (isFastMore ? _filter_line_height : 0)

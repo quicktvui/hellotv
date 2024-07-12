@@ -19,6 +19,8 @@ export default {
   rightContentWidth:1580,
   //右侧列表默认高度
   rightContentHeight:960,
+  //筛选条件更多按钮展示, 当个数大于该值时, 会展示更多按钮
+  filterMoreLimit: 1,
   //筛选条件高度
   filterTextHeight:60,
   //筛选条件记录高度

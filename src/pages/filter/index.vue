@@ -5,9 +5,7 @@
       <template #btnItem>
         <img-text-btn-view ref="top_search_btn" name="top_search_btn"
           style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
-          text="搜索"
-          icon="ic_top_search.png"
-          focus-icon="ic_top_search.png"
+          text="搜索" icon="ic_top_search.png" focus-icon="ic_top_search.png"
           :focusable="true" :icon-left="true"
           :nextFocusName="{ down: 'screen_left_tags' }" @click="onClick"/>
       </template>
@@ -35,15 +33,14 @@
         :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition"
         :clipChildren="false" :clipPadding="false"
         :blockFocusDirections="['left','down']"
-        @item-focused="leftTagsItemFocus">
-
+        @item-focused="leftTagsItemFocus"
+      >
         <!-- 文字标题 -->
         <tags-text-item :type="1"/>
         <!-- 图片标题 -->
         <tags-img-item :type="2"/>
         <!-- Icon&文字标题 -->
         <tags-text-icon-item :type="3"/>
-
       </qt-list-view>
     </div>
   </div>

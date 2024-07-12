@@ -10,34 +10,35 @@
         :clipChildren="false" :clipPadding="false"      
         :useAdvancedFocusSearch="true" :focusable="false">
 
-        <!-- 筛选条件-->
-        <qt-view :style="{minHeight: '1px',width: rightContentWidth+'px',backgroundColor: 'transparent'}">
+        <!-- 筛选条件 -->
+        <qt-view :style="{ width: rightContentWidth+'px', minHeight: '1px', backgroundColor: 'transparent' }">
           <qt-list-view v-if="filterVisible" ref="screen_right_filters" name="screen_right_filters"
-            class="screen-right-filter-root" :style="{width: rightContentWidth+'px',height:filterHeight}"
-            :autofocusPosition="isFirstLoad?0:-1"
+            class="screen-right-filter-root" :style="{ width: rightContentWidth + 'px', height: filterHeight }"
+            :autofocusPosition="isFirstLoad ? 0 : -1"
             :triggerTask="switchData(hideSelectTask)"
             :enableSelectOnFocus="false"
+            @item-click="onFilterClick"
           >
             <qt-list-view ref="screen_right_filter_line" name="screen_right_filter_line"
-              class="screen-right-filter-line" :style="{width: rightContentWidth+'px'}"
+              class="screen-right-filter-line" :style="{ width: rightContentWidth + 'px' }"
               cachePoolName="filter_line" nextFocusLeftSID="screen_left_tags" flexStyle="${filterLineStyle}"
               :type="1" list="${list}"
               :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
-              :enableSelectOnFocus="false"
-              singleSelectPosition="${defaultSelectPosition}"
-              :focusMemory="false" @item-click="onFilterClick"
-              :blockFocusDirections="['right']"
-              @item-focused="onFilterFocused"
+              :enableSelectOnFocus="false" singleSelectPosition="${defaultSelectPosition}"
+              :focusMemory="false" :blockFocusDirections="['right']"
+              @item-focused="onFilterFocused" @item-click="onFilterClick"
             >
               <!-- 普通筛选条件 -->
               <tags-filter-item :type="11"/>
               <!-- 快速筛选头部提示 -->
               <tags-filter-fast-item-left-tip :type="12"/>
               <!-- 快速筛选 -->
-              <tags-filter-fast-item :type="13" />
+              <tags-filter-fast-item :type="13"/>
             </qt-list-view>
             <!-- 横线 -->
             <tags-filter-fast-line :type="2" :focusable="false"/>
+            <!-- 更多筛选项 -->
+            <tags-filter-more-btn :type="3" :focusable="true"/>
           </qt-list-view>
         </qt-view>
 
@@ -137,6 +138,7 @@ import {
   updateAllFilterCondition,
   updateFastFilterCondition
 } from "../build_data/useTagsData";
+import { getFilterMoreItem } from '../build_data/tags/TagsAdapter';
 import {
   QTIGridView,
   QTGridViewItem,
@@ -149,6 +151,7 @@ import TagsContentItemH from "./tags-content-item-h.vue";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import TagsFilterItem from "./tags-filter-item.vue";
 import TagsFilterFastLine from "./tags-filter-fast-line.vue";
+import TagsFilterMoreBtn from "./tags-filter-more-btn.vue";
 import TagsFilterFastItemLeftTip from "./tags-filter-fast-item-left-tip.vue";
 import TagsFilterFastItem from "./tags-filter-fast-item.vue";
 import TagsFilterRecord from "./tags-filter-record.vue";
@@ -162,6 +165,7 @@ export default defineComponent({
     TagsFilterFastItem,
     TagsFilterFastItemLeftTip,
     TagsFilterFastLine,
+    TagsFilterMoreBtn,
     TagsFilterItem,
     TagsContentItemV,
     TagsContentItemH
@@ -232,9 +236,9 @@ export default defineComponent({
       ]
     }
 
-    function setFilterHeight() {
+    function setFilterHeight(moreLimit: number = 0) {
       //单个列表的高度+间距
-      filterHeight.value = getFilterHeight()
+      filterHeight.value = getFilterHeight(moreLimit)
     }
 
     function onScrollStateChanged(e) {
@@ -261,6 +265,20 @@ export default defineComponent({
 
     function onFilterClick(e) {
       if (e) {
+        // 扩展筛选项
+        if (e.item.type === 3) {
+          setFilterHeight()
+          screen_right_filters.value.setDisplay(false)
+          screen_right_filters.value.blockRootFocus()
+          screenRightFiltersData.splice(FilterConfig.filterMoreLimit, 1, ...getFilterMoreItem())
+          setTimeout(() => {
+            screen_right_filters.value?.unBlockRootFocus()
+            screen_right_filters.value?.setItemFocused(FilterConfig.filterMoreLimit)
+            screen_right_filters.value?.setDisplay(true)
+          }, 400)
+          return
+        }
+
         filterClickLoading.value = true
         const parentPosition = e.parentPosition
         const itemPosition = e.position
@@ -298,7 +316,6 @@ export default defineComponent({
         }
        getScreenByTags(1,curType,"",curTagPosition,false,true)
       }
-
     }
 
     function onFilterFocused(e){
@@ -355,13 +372,13 @@ export default defineComponent({
         }
         if (!isLoadMore && !isClick) {
           setRecordTip()
-          setFilterHeight()
+          setFilterHeight(FilterConfig.filterMoreLimit)
           setFilterTriggerTask()
           filterVisible.value = true
         }
         let filterList: Array<QTListViewItem> = []
         if (!isLoadMore && !isClick) {
-          filterList = getFilterConditionData()
+          filterList = getFilterConditionData(FilterConfig.filterMoreLimit)
         }
         nextTick(() => {
           if (!isLoadMore && !isClick) {
