@@ -13,6 +13,8 @@ import login from './pages/login/index.vue'
 import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
 import filter from './pages/filter2/index.vue'
+import detail2 from './pages/detail2/index.vue'
+
 
 const routes = [
   {
@@ -66,6 +68,9 @@ const routes = [
   },
   {
     name: 'my', path: '/my', component: my
+  },
+  {
+    name: 'detail2', path: '/detail2', component: detail2
   },
   {
     name: 'filter', path: '/filter', component: filter
