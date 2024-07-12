@@ -139,10 +139,10 @@ export function createGlobalApi(): IGlobalApi {
   function getSearchResultPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData || true) {
-      if( pageNo === 3 ) { //模拟结束
+      if( pageNo === 20 ) { //模拟结束
         return Promise.resolve(buildSearchResultData({ itemList: [] }, pageNo,singleTab))
       }
-      const result = pageNo === 1 ? searchResultPageData : searchResultPageData2
+      const result = pageNo === 19 ? searchResultPageData2 : searchResultPageData
       return Promise.resolve(buildSearchResultData(result as SearchResult, pageNo,singleTab))
     }
   }

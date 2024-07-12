@@ -29,7 +29,20 @@
           :search-letter="searchLetter"
           @scroll-to-index="onNeedScrollTo"/>
         <!-- 搜索结果 -->
-        <search-result
+        <!-- <search-result
+          :visible="!loading && !showResultLoading"
+          :descendantFocusability="showResultLoading ? 2 : 1"
+          ref="search_result"
+          name="search_result_view"
+          :blockFocusDirections="['up', 'down']"
+          :keyword="selectKeyword"
+          :show-is-full-screen="scrollState === 1"
+          :nextFocusName="{left:'search_center_view',}"
+          @scroll-to-index="onNeedScrollTo"
+          @close-loading="closeLoading"
+          @close-self-loading="closeResultLoading"/> -->
+          <!-- 搜索结果 NEW -->
+        <search-result-new
           :visible="!loading && !showResultLoading"
           :descendantFocusability="showResultLoading ? 2 : 1"
           ref="search_result"
@@ -62,13 +75,14 @@ import {ref} from "vue";
 import searchKeyboard from "./component/search-keyboard.vue";
 import searchCenter from "./component/search-center.vue";
 import searchResult from "./component/search-result.vue";
+import searchResultNew from "./component/search-result-new.vue";
 import {useESRouter} from "@extscreen/es3-router";
 import SearchConfig from "./build_data/SearchConfig"
 import { ESKeyEvent } from "@extscreen/es3-core"
 
 export default defineComponent({
   name: "search",
-  components: {searchKeyboard,searchCenter,searchResult},
+  components: {searchKeyboard,searchCenter,searchResult,searchResultNew},
   props:{
     height:{
       type:String,
@@ -110,7 +124,7 @@ export default defineComponent({
     const onESStop = () => {}
     function onKeyDown(keyEvent: ESKeyEvent): boolean {
       if (curChildIndex !== 2){
-        search_result.value.cancelAll()
+        // search_result.value.cancelAll()
       }
       return false
     }
@@ -178,6 +192,10 @@ export default defineComponent({
     }
     //按键 返回
     const onBackPressed = () => {
+      if(search_result.value.gridSectionIsScroll > 0) {
+        search_result.value.gridSectionScrollToTop()
+        return
+      }
       if (scrollState.value === 1){
         onNeedScrollTo(0,0)
         search_keyboard.value.requestDefaultFocus();

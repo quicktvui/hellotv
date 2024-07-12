@@ -1,0 +1,38 @@
+## 页面-ui层
+- src/pages/detail2/index.vue
+  - 入口文件/主页面
+  - 控制全局样式
+  - 页面下面分五大组件：
+    - src/pages/detail2/D2Top.vue
+      - 顶部栏组件
+    - src/pages/detail2/D2Selections
+      - 选集列表组件
+    - src/pages/detail2/D2DesDrawer.vue
+      - 抽屉信息展示组件
+    - src/pages/detail2/D2Info.vue
+      - 视频详情介绍组件
+    - src/pages/detail2/D2Video.vue
+      - 视频组件
+  - 一个脚本文件：
+    - src/pages/detail2/index.ts
+      - 数据处理-提供将接口数据转换为页面需要的格式数据
+      - 作为中心仓库-处理五大组件跨层级通信问题，例：
+        - init() 初始化参数，拿到五大组件的ref
+        - xxxVideo() 处理操作视频的函数
+        - xxxDrawer() 处理操作抽屉弹框的函数
+        - xxx
+## 数据接口层
+- src/api/details2/base.ts
+  - 接口基础类-定义获取数据方法/参数/回调函数的返回结果类型
+  - init(routeParams) 初始化函数
+  - getConfig() 异步返回配置信息
+    - bgColor 背景色
+    - tab 顶栏信息，返回null则不展示顶栏
+    - tabMode 顶栏展示模式：log在左/在右
+  - getVideoInfo() 返回视频数据
+  - getRecommend() 返回推荐数据
+  - ...
+- src/api/details2/index.ts
+  - 数据业务处理-继承并实现base类，调用后台接口返回数据
+- src/api/details2/types.ts
+  - 类型定义-所有需要用到的数据类型/接口，都在这个文件中定义
