@@ -4,6 +4,11 @@ import { Detail2Base } from './base'
 
 class Detail2Api extends Detail2Base {
 
+  getConfig(): IDetail2Config {
+    const dConfig = super.getConfig()
+    // dConfig.isShowTop = false
+    return dConfig
+  }
 }
 
 const detail2Api = new Detail2Api()

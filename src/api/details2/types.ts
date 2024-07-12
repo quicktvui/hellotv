@@ -1,27 +1,19 @@
-import { StyleValue } from "vue";
+import { TtopModes, ITopMenuBarBtns, ItopMenuBarLogo } from '../../components/TopMenuBar/index'
 
 export interface IAnyobj {
   [k: string]: any
 }
 type Tvalues<T> = T[ keyof T ]
-export const topModes = {
-  rightLogo: 'rightLogo',
-  leftLogo: 'leftLogo'
-} as const;
 
 export interface IDetail2Config {
   isShowTop:boolean;
-  topMode?:Tvalues<typeof topModes>
+  topMode: TtopModes
 }
 
 // top------
-export interface Id2TopBtns {
-  id:number|string; text:string; lIcon?:any, rIcon?: any;
-  lIconf?:any, rIconf?: any;
-}
 export interface Id2TopData {
-  logo?: { title?: string; titleIcon?:any; logo?:any; };
-  btns: Array<Id2TopBtns>
+  logo?: ItopMenuBarLogo;
+  btns: Array<ITopMenuBarBtns>
 }
 
 // video-des

@@ -21,6 +21,10 @@ export class Detail2Base {
   requestManager: RequestManager | undefined;
   pageData: IAnyobj | undefined;
 
+  init(...params: any[]): Promise<any> {
+    this.requestManager = params[0]
+    return Promise.resolve()
+  }
   /**
    * 加载初始化数据
    * @param routerParams 当前页面的路由参数对象
@@ -30,11 +34,11 @@ export class Detail2Base {
     return {}
   }
   /**
-   * 获取页面配置信息
+   * 获取页面配置信息，子类重写该方法时必须先调用父类的getConfig获取默认配置
    */
-  async getConfig(): Promise<IDetail2Config> {
+  getConfig(): IDetail2Config {
     return {
-      isShowTop: true
+      isShowTop: true, topMode: 'rightLogo'
     }
   }
   /**

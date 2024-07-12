@@ -14,6 +14,7 @@ import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
 import filter from './pages/filter2/index.vue'
 import detail2 from './pages/detail2/index.vue'
+import ranking from './pages/ranking/index.vue'
 
 
 const routes = [
@@ -74,6 +75,9 @@ const routes = [
   },
   {
     name: 'filter', path: '/filter', component: filter
+  }, 
+  {
+    name: 'ranking', path: '/ranking', component: ranking
   }
 ]
 export default routes

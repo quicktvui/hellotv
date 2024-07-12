@@ -29,10 +29,8 @@ const isLoading = ref(true)
 defineExpose({
   onESCreate(params){
     api.initPageData(params).then(()=>{
-      api.getConfig().then(res=>{
-        pConfig.value = res
-        isLoading.value = false
-      })
+      pConfig.value = api.getConfig()
+      isLoading.value = false
     })
   }
 })
