@@ -408,7 +408,7 @@ export default defineComponent({
     }
 
     function setFilterTriggerTask() {
-      const length = getFilterLength()
+      const length = getFilterLength(FilterConfig.filterMoreLimit)
       const y = getScrollHeight()
       filterTriggerTask.value = (length > 1) ? [
         getOffsetY() ? {
