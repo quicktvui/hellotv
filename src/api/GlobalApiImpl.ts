@@ -2,7 +2,7 @@ import FilterConfig from "../pages/filter/build_data/FilterConfig"
 import bg_play from "./home/mock/bg_play"
 import {IGlobalApi} from "./IGlobalApi";
 import {RequestManager} from "./request/RequestManager";
-import {QTTab, QTTabPageData,QTTabItem} from "@quicktvui/quicktvui3";
+import {QTTab, QTTabPageData,QTTabItem, QTWaterfallItem} from "@quicktvui/quicktvui3";
 import {Tab} from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
 import {
@@ -44,6 +44,12 @@ import SearchConfig from "../pages/search/build_data/SearchConfig"
 import { SearchCenter } from "../pages/search/build_data/impl/SearchCenter"
 import { SearchTab } from "../pages/search/build_data/impl/SearchTab"
 import { SearchResult } from "../pages/search/build_data/impl/SearchResult"
+
+/***** *************** 短视频 **************/
+import {buildShortVideoItemAdapter} from "../pages/shortVideo/build_data/adapter"
+import {ShortVideoItem} from "../pages/shortVideo/build_data/interface"
+import shortVideoList from "./shortVideo/mock/short_video_data";
+
 export function createGlobalApi(): IGlobalApi {
   let requestManager: RequestManager
   function init(...params: any[]): Promise<any> {
@@ -177,6 +183,17 @@ export function createGlobalApi(): IGlobalApi {
     })
   }
 
+  /********************************短视频相关*****************************/
+  function getShortVideoPageData(keyword:string,pageNo: number, pageSize: number): Promise<Array<QTWaterfallItem>> {
+    //此处可更换接口请求数据
+    if (BuildConfig.useMockData || true) {
+      if( pageNo === 3 ) { //模拟结束
+        return Promise.resolve(buildShortVideoItemAdapter([]))
+      }
+      return Promise.resolve(buildShortVideoItemAdapter(shortVideoList))
+    }
+  }
+
   return {
     install: function (app: ESApp) {
       const instance = this
@@ -193,6 +210,7 @@ export function createGlobalApi(): IGlobalApi {
     getSearchResultPageData,
     getRecommendPageData,
     getScreenLeftTags,
-    getScreenContentByTags
+    getScreenContentByTags,
+    getShortVideoPageData
   }
 }

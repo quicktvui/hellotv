@@ -1,6 +1,6 @@
 
 
-export interface SearchResultItem{
+export interface ShortVideoItem{
   id:string
   title:string
   poster:string
@@ -8,8 +8,7 @@ export interface SearchResultItem{
   [prop:string]:any
   actionRedirect?:{
     redirectType:number
-    action:string,
+    action: any,
     innerArgs:string
   }
-
 }
