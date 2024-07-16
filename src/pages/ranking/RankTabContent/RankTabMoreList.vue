@@ -32,7 +32,6 @@ waterfall.value?.init({
 })
 const onItemFocused = (sectionIndex, posterIndex, isFocus, data) => {
   if(isFocus&&data&&data.rwaData){
-    console.log(data, '--lsj--data')
     rankingUi.updateCurrent(data.rwaData)
   }
 }

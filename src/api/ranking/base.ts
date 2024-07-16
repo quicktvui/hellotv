@@ -58,6 +58,7 @@ export class RankBaseApi {
           return {
             id: contentId + '-' + index,
             previewImg: pimg,
+            previewVedio: index===0?'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4':'',
             poster: pimg,
             // bgTags: [{id:'1',txt:'会员抢先'}],
             titleImg: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20210709105200002.png',
@@ -79,7 +80,7 @@ export class RankBaseApi {
             const pimg = getImg()
             return {
               id: contentId+mlIndex + '-' + index,
-              previewImg: pimg,
+              previewImg: pimg, previewVedio: '',
               poster: pimg,
               bgTags: [{id:'1',txt:'会员抢先'}],
               title: '2022最美的夜bilibili晚会' + mlIndex + index,

@@ -3,7 +3,7 @@
   <div class="rtc_video_box" :focusable="false" :type="rankingContentTypes.info" flexStyle="${style}">
     <RankTabVideoInfo :focusable="false"/>
     <div class="rtc_video_preview" :focusable="false">
-      <RankTabVideo showIf="${isVedio==true}" :focusable="false"/>
+      <!-- <RankTabVideo showIf="${isVedio==true}" :focusable="false"/> -->
       <!-- <RankTabPreviewImg showIf="${isVedio==false}" :focusable="false"/> -->
     </div>
   </div>
@@ -15,10 +15,10 @@
 </template>
 <script lang='ts' setup>
 import RankTabVideoInfo from './RankTabVideoInfo.vue'
-import RankTabVideo from './RankTabVideo.vue'
+// import RankTabVideo from './RankTabVideo.vue'
 import RankTabMoreList from './RankTabMoreList.vue'
 import RankSortList from './RankSortList.vue'
-import RankTabPreviewImg from './RankTabPreviewImg.vue'
+// import RankTabPreviewImg from './RankTabPreviewImg.vue'
 // @ts-ignore
 import { rankingContentTypes } from '../index.ts'
 

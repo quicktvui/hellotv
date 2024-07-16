@@ -266,28 +266,68 @@ export const transRankingSections = (data:IrankingContent|IrankingMoreContent, c
   }
 }
 
+const catchData = new Map<number, Array<QTWaterfallSection>>()
 class RankingUi {
   private pageIndex:number = -1
   private tabRef?:QTITab
+  private bgPlayerRef:any
+  private initPageIndex?:number
+  private initSectionIndex?:number
+  private initItemIndex?:number
 
   updateCurrent(rwaData:IrankingContentItem){
     if(this.pageIndex>-1){
       const oldSectin = this.tabRef?.getPageSection(this.pageIndex, 0);
       const newSection = getCurrentSection(rwaData, undefined, undefined, oldSectin)
-      if(oldSectin?._id){
+      if(oldSectin?._id && this.bgPlayerRef){
         VirtualView.updateChild('rankingTabsSid',oldSectin?._id, newSection)
+        this.bgPlayerRef.initPlayBg(newSection.previewImg)
+        this.bgPlayerRef.showCoverImmediately()
+        this.bgPlayerRef.stopIfNeed()
+        if(newSection.previewVedio){
+          this.bgPlayerRef.play({
+            cover: newSection.previewImg,
+            id: newSection._id,
+            isRequestUrl: false,
+            url: newSection.previewVedio
+          })
+        }
       }
     }
   }
 
-  reInitData(){
-    if(this.pageIndex>-1){
-      console.log(this.pageIndex, '--this.pageIndex')
-    }
-  }
-
-  updateData(pageIndex){
+  updateData(pageIndex:number, showPageIndex:number, showSectionIndex:number, showItemIndex:number, bgPlayerRef:any){
+    try {
+      const firstList = catchData.get(pageIndex)?.[1]
+      if(firstList){
+        let sData:any = firstList.itemList[showSectionIndex]
+        if(sData.rwaData){
+          sData = sData.rwaData
+        } else {
+          sData = sData.itemList[showItemIndex].rwaData
+        }
+        // console.log(pageIndex, showPageIndex, showSectionIndex, showItemIndex, '--lsj--', sData)
+        if(this.bgPlayerRef){
+          this.updateCurrent(sData)//更新背景
+        } else {
+          this.bgPlayerRef = bgPlayerRef//初始化背景
+          bgPlayerRef.doChangeParent('', 2,
+            1140, 640, 1140, 640,
+            [{ 
+              cover: sData.previewImg,
+              id: sData.id,
+              isRequestUrl: false,
+              url: sData.previewVedio||''//"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
+            }],
+            0
+          )
+        }
+      }
+    } catch (error) { }
     this.pageIndex = pageIndex;
+    this.initPageIndex = showPageIndex
+    this.initSectionIndex = showSectionIndex
+    this.initItemIndex = showItemIndex
   }
 
   setData(tabRef:QTITab, pageIndex:number){
@@ -297,9 +337,12 @@ class RankingUi {
         useDiff: false, isEndPage: true, disableScrollOnFirstScreen: false,
         data: sections
       })
+      catchData.set(pageIndex, sections)
     })
+    if(!this.tabRef){
+      this.tabRef = tabRef
+    }
     this.pageIndex = pageIndex
-    this.tabRef = tabRef
   }
 }
 
