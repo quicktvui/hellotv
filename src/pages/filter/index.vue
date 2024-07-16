@@ -36,7 +36,7 @@
             class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
             :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
             :clipChildren="false" :clipPadding="false"
-            :blockFocusDirections="['left','down']"
+            :blockFocusDirections="['down']"
             @item-focused="leftTagsItemFocus"
           >
             <!-- 文字标题 -->
