@@ -10,15 +10,15 @@ export default {
   //是否展示左侧列表
   isShowLeftList:isShowLeftListTag,
   //左侧列表宽度
-  leftListWidth:360,
+  leftListWidth: 360,
   //左侧列表默认高度
-  leftListHeight:960,
+  leftListHeight: 960,
   //左侧列表子View默认高度
-  leftItemHeight:106,
+  leftItemHeight: 106,
   //右侧列表默认宽度
-  rightContentWidth:1580,
+  rightContentWidth: 1580,
   //右侧列表默认高度
-  rightContentHeight:960,
+  rightContentHeight: 960,
   //筛选条件更多按钮展示, 当个数大于该值时, 会展示更多按钮
   filterMoreLimit: 1,
   //筛选条件高度

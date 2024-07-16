@@ -11,38 +11,49 @@
       </template>
     </top-btns-view>
 
-    <!-- 右侧结果 -->
-    <tags-content ref="tags_content" class="screen-right-root-css"
-      :style="{width:rightContentWidth+'px',height:rightContentHeight+'px',left:(1920-rightContentWidth)+'px', top:(1080-rightContentHeight)+'px'}"
-      :clipChildren="false" :clipPadding="false"
-      :blockFocusDirections="isShowLeftList?[]:['left','right']"
-      @unBlockFocus='unBlockRootFocus'/>
+    <scroll-view name="screenScroll" ref="contentScrollRef" class="screen-scroll"
+      :focusable="false" :horizontal="true" :onScrollEnable="true" makeChildVisibleType="none">
+      <qt-view class="screen-content" :focusable="false" :clipChildren="true">
+        <!-- 左侧扩展 -->
+        <qt-view class="screen-content-left-expand" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :focusable="true" :enableFocusBorder="true" :listenHasFocusChange="true" :triggerTask="leftExpandTriggerTask">
+          <qt-text class="screen-content-left-expand-text" text="左侧扩展" gravity="center" :focusable="false"></qt-text>
+        </qt-view>
 
-    <!-- 左侧列表 -->
-    <div v-if="isShowLeftList" class="screen-left-root-css" :style="{width:leftRootWidth+'px',height:leftRootHeight+'px',top:(1080-leftRootHeight)+'px'}">
-      <!-- 背景 -->
-      <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
-        :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
-      <!-- 标题 -->
-      <qt-text v-if="title" class="screen-left-title" :style="{width:(leftRootWidth-20)+'px'}"
-        :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
-      <img class="screen-left-title-img" :style="{width:(leftRootWidth-40)+'px'}" v-else :src="title_img"/>
-      <!-- 筛选列表 -->
-      <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
-        class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
-        :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition"
-        :clipChildren="false" :clipPadding="false"
-        :blockFocusDirections="['left','down']"
-        @item-focused="leftTagsItemFocus"
-      >
-        <!-- 文字标题 -->
-        <tags-text-item :type="1"/>
-        <!-- 图片标题 -->
-        <tags-img-item :type="2"/>
-        <!-- Icon&文字标题 -->
-        <tags-text-icon-item :type="3"/>
-      </qt-list-view>
-    </div>
+        <!-- 左侧列表 -->
+        <div v-if="isShowLeftList" class="screen-left-root-css" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }">
+          <!-- 背景 -->
+          <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
+            :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
+          <!-- 标题 -->
+          <qt-text v-if="title" class="screen-left-title" :style="{width:(leftRootWidth-20)+'px'}"
+            :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
+          <img class="screen-left-title-img" :style="{width:(leftRootWidth-40)+'px'}" v-else :src="title_img"/>
+          <!-- 筛选列表 -->
+          <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
+            class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
+            :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition"
+            :clipChildren="false" :clipPadding="false"
+            :blockFocusDirections="['left','down']"
+            @item-focused="leftTagsItemFocus"
+          >
+            <!-- 文字标题 -->
+            <tags-text-item :type="1"/>
+            <!-- 图片标题 -->
+            <tags-img-item :type="2"/>
+            <!-- Icon&文字标题 -->
+            <tags-text-icon-item :type="3"/>
+          </qt-list-view>
+        </div>
+        
+        <!-- 右侧结果 -->
+        <tags-content ref="tags_content" class="screen-right-root-css"
+          :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
+          :clipChildren="false" :clipPadding="false"
+          :blockFocusDirections="isShowLeftList?[]:['left','right']"
+          @unBlockFocus='unBlockRootFocus'/>
+      </qt-view>
+    </scroll-view>
   </div>
 </template>
 
@@ -73,6 +84,7 @@ export default defineComponent({
   name: "index",
   components: {TagsImgItem, TagsContent, TagsTextIconItem, TagsTextItem, TopBtnsView, ImgTextBtnView},
   setup(props, context) {
+    const contentScrollRef = ref()
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
     const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
     const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
@@ -102,6 +114,25 @@ export default defineComponent({
     let defaultFilters:Array<string> = []
     let defaultFastTag:string = "" //默认选中的快速标签
     let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
+
+    let leftExpandTriggerTask = [
+      {
+        event: "onFocusAcquired",
+        target: "screenScroll",
+        function: "scrollToWithOptions",
+        params: [
+          { x: -leftRootWidth.value, y: 0, duration: 300 }
+        ]
+      },
+      {
+        event: "onFocusLost",
+        target: "screenScroll",
+        function: "scrollToWithOptions",
+        params: [
+          { x: leftRootWidth.value, y: 0, duration: 300 }
+        ]
+      }
+    ]
 
     /**
      * 入口
@@ -133,6 +164,9 @@ export default defineComponent({
       }
 
       getTagsData()
+
+      // 设置默认坐标
+      setTimeout(() => contentScrollRef.value.scrollTo(leftRootWidth.value, 0, 0), 500)
     }
 
     /**
@@ -258,7 +292,9 @@ export default defineComponent({
       leftRootWidth,
       leftRootHeight,
       rightContentHeight,
-      rightContentWidth
+      rightContentWidth,
+      contentScrollRef,
+      leftExpandTriggerTask
     }
   }
 })

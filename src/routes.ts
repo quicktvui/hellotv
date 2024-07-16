@@ -12,7 +12,6 @@ import history from './pages/history/history_template.vue'
 import login from './pages/login/index.vue'
 import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
-import filter from './pages/filter2/index.vue'
 import detail2 from './pages/detail2/index.vue'
 import ranking from './pages/ranking/index.vue'
 import shortVideo from './pages/shortVideo/index.vue'
@@ -74,9 +73,6 @@ const routes = [
   {
     name: 'detail2', path: '/detail2', component: detail2
   },
-  {
-    name: 'filter', path: '/filter', component: filter
-  }, 
   {
     name: 'ranking', path: '/ranking', component: ranking
   }

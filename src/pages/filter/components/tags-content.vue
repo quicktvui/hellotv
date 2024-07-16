@@ -268,8 +268,8 @@ export default defineComponent({
         // 扩展筛选项
         if (e.item.type === 3) {
           setFilterHeight()
-          screen_right_filters.value.setDisplay(false)
-          screen_right_filters.value.blockRootFocus()
+          screen_right_filters.value?.setDisplay(false)
+          screen_right_filters.value?.blockRootFocus()
           screenRightFiltersData.splice(FilterConfig.filterMoreLimit, 1, ...getFilterMoreItem())
           setTimeout(() => {
             screen_right_filters.value?.unBlockRootFocus()
