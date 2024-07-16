@@ -15,10 +15,12 @@
       :focusable="false" :horizontal="true" :onScrollEnable="true" makeChildVisibleType="none">
       <qt-view class="screen-content" :focusable="false" :clipChildren="true">
         <!-- 左侧扩展 -->
-        <qt-view class="screen-content-left-expand" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
-          :focusable="true" :enableFocusBorder="true" :listenHasFocusChange="true" :triggerTask="leftExpandTriggerTask">
-          <qt-text class="screen-content-left-expand-text" text="左侧扩展" gravity="center" :focusable="false"></qt-text>
-        </qt-view>
+        <qt-list-view ref="leftExpandRef" class="screen-content-left-expand" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :focusable="false" :enableFocusBorder="true" :listenHasFocusChange="true" :triggerTask="leftExpandTriggerTask"
+          :autofocusPosition="leftExpandPos" nextFocusRightSID="screen_left_tags"
+          @item-focused="leftExpandFocus">
+          <tags-text-item :type="1" />
+        </qt-list-view>
 
         <!-- 左侧列表 -->
         <div v-if="isShowLeftList" class="screen-left-root-css" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }">
@@ -32,7 +34,7 @@
           <!-- 筛选列表 -->
           <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
             class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
-            :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition"
+            :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
             :clipChildren="false" :clipPadding="false"
             :blockFocusDirections="['left','down']"
             @item-focused="leftTagsItemFocus"
@@ -85,6 +87,8 @@ export default defineComponent({
   components: {TagsImgItem, TagsContent, TagsTextIconItem, TagsTextItem, TopBtnsView, ImgTextBtnView},
   setup(props, context) {
     const contentScrollRef = ref()
+    const leftExpandRef = ref()
+    const leftExpandPos = ref(0)
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
     const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
     const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
@@ -104,9 +108,11 @@ export default defineComponent({
     let title = ref("")
     let title_img = ref("")
     let defaultTagPosition = ref(0)
+    let defaultTagSelectPos = ref(0)
     //局部变量
     let leftTagSwitchTimer:any = -1
     let curTagPosition:number = -1 //左侧列表当前 tag位置
+    let curLeftExpandPos: number = 0
     //筛选接口参数
     let screenId:string = ""  //筛选分类 ID
     let defaultSelectTag:string = "" //默认选中左侧筛选 tag
@@ -114,6 +120,7 @@ export default defineComponent({
     let defaultFilters:Array<string> = []
     let defaultFastTag:string = "" //默认选中的快速标签
     let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
+    let showLeftExpand = false
 
     let leftExpandTriggerTask = [
       {
@@ -162,11 +169,17 @@ export default defineComponent({
           // defaultFastTag = "早教"
         }
       }
-
-      getTagsData()
-
+      
       // 设置默认坐标
-      setTimeout(() => contentScrollRef.value.scrollTo(leftRootWidth.value, 0, 0), 500)
+      setTimeout(() => {
+        contentScrollRef.value.scrollTo(leftRootWidth.value, 0, 0)
+        nextTick(() => {
+          const leftExpandData = getLeftExpandData()
+          showLeftExpand = leftExpandData.length ? true : false
+          leftExpandRef.value?.init(leftExpandData)
+          getTagsData(screenId)
+        })
+      }, 300)
     }
 
     /**
@@ -190,11 +203,29 @@ export default defineComponent({
       });
     }
 
+    function getLeftExpandData() {
+      return [
+        { type: 1, id: '1764924767380697089', showName: '番剧' },
+        { type: 1, id: '1768109206728179713', showName: '电影' },
+        { type: 1, id: '1755198210693124098', showName: '纪录片' },
+        { type: 1, id: '1764924767380697089', showName: '国创' },
+        { type: 1, id: '1768109206728179713', showName: '电视剧' },
+        { type: 1, id: '1755198210693124098', showName: '综艺' }
+      ]
+    }
+
+    function leftExpandFocus(e) {
+      if (e.isFocused && e.position !== curLeftExpandPos) {
+        curLeftExpandPos = e.position
+        getTagsData(e.item.id)
+      }
+    }
+
     /**
      * 获取左侧列表数据
      */
-    function getTagsData(){
-      globalApi.getScreenLeftTags(screenId).then(res=>{
+    function getTagsData(id: string){
+      globalApi.getScreenLeftTags(id).then(res=>{
         if (res){
           if (isShowLeftList.value){
             const showType = res?.entryTag?.showType
@@ -214,7 +245,12 @@ export default defineComponent({
               //初始化筛选条件
               tags_content.value.init()
               //设置默认选中tag
-              defaultTagPosition.value = getDefaultTagSelectIndex()
+              if (!showLeftExpand) {
+                defaultTagPosition.value = getDefaultTagSelectIndex()
+              } else {
+                defaultTagPosition.value = -1
+                tags_content!.value.getScreenByTags(1,curType,"",0,false,false)
+              }
             }else{
               //初始化筛选条件
               tags_content.value.init()
@@ -294,7 +330,11 @@ export default defineComponent({
       rightContentHeight,
       rightContentWidth,
       contentScrollRef,
-      leftExpandTriggerTask
+      leftExpandTriggerTask,
+      leftExpandRef,
+      leftExpandPos,
+      leftExpandFocus,
+      defaultTagSelectPos
     }
   }
 })

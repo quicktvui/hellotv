@@ -67,7 +67,7 @@
           <!-- 筛选内容竖图 -->
           <tags-content-item-v :type="1"/>
           <!-- 筛选内容横图 -->
-          <tags-content-item-h :type="2"/>
+          <tags-content-item-h :type="2" :placeholderLayout="[-5, -5, 321, 180]"/>
           <!-- 底部提示 -->
           <template #footer>
             <qt-text class="screen-right-content-no-more" :style="{width:(rightContentWidth-160)+'px'}"
@@ -268,6 +268,7 @@ export default defineComponent({
         // 扩展筛选项
         if (e.item.type === 3) {
           setFilterHeight()
+          setFilterTriggerTask()
           screen_right_filters.value?.setDisplay(false)
           screen_right_filters.value?.blockRootFocus()
           screenRightFiltersData.splice(FilterConfig.filterMoreLimit, 1, ...getFilterMoreItem())
@@ -409,7 +410,6 @@ export default defineComponent({
 
     function setFilterTriggerTask() {
       const length = getFilterLength(FilterConfig.filterMoreLimit)
-      const y = getScrollHeight()
       filterTriggerTask.value = (length > 1) ? [
         getOffsetY() ? {
           event: 'onFocusAcquired',
@@ -421,7 +421,7 @@ export default defineComponent({
           event: 'onFocusAcquired',
           target: 'screen_right_scroll_content',
           function: 'scrollToWithOptions',
-          params: [{x: 0, y: y, duration: 300}],
+          params: [{x: 0, y: filterHeight.value, duration: 300}],
         }] : []
     }
 
