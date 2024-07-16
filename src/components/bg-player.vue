@@ -9,7 +9,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class='bg_player' sid='default_bg_parent' :opacity="0">
+    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
     <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false" name='home_player'
       :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
@@ -34,7 +34,7 @@
         <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
           :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
         </img-transition> -->
-        <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
+        <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false" :borderRadius="borderRadius"
           :focusable="false" :width="(playerWidth+30)" :height="(playerHeight+20)" :transitionTime="800"/>
       </qt-view>
       <!-- 背景视频遮罩 -->
@@ -100,6 +100,12 @@ export default defineComponent({
   components: {
     QtImgTransition,bgPlayerImg,
     'es-player-manager': ESPlayerManager,
+  },
+  props: {
+    defaultBgParentOpacity:{
+      type:Number, default: 0
+    },
+    borderRadius: Number
   },
   setup(props,ctx) {
     const router = useESRouter()
@@ -279,7 +285,7 @@ export default defineComponent({
 
     const setBgImage = (imgUrl:string)=>{
       if(coverSrc === imgUrl) return
-      coverSrc = imgUrl
+      coverSrc = imgUrl;
       if (imgUrl) itemCellBgImgRef.value.setNextImage(imgUrl)
       else itemCellBgImgRef.value.setNextColor(0)
     }

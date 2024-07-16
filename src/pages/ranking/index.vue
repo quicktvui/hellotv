@@ -1,5 +1,10 @@
 <template>
 <div class="ranking_page" :gradientBackground="configs.gradientBg" :clipChildren="false">
+  <bg-player 
+    class="bg_player" ref="bgPlayerRef" :clipChildren="false" 
+    :defaultBgParentOpacity="1"
+    :border-radius="8"
+  />
   <qt-tabs
     ref="tabRef" sid="rankingTabsSid"
     class="ranking_tabs"
@@ -21,6 +26,7 @@
 <script lang='ts' setup>
 import { StyleValue, computed, ref } from 'vue';
 import RankTabItem from './RankTabItem.vue'
+import bgPlayer, { CoveredPlayerType } from "../../components/bg-player.vue"
 // import RankTab from './RankTab.vue'
 import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
@@ -31,9 +37,11 @@ import {
 // @ts-ignore
 import { transRankingTabList, pageHeight, pageWidth, rankingUi } from './index.ts'
 
+const bgPlayerRef = ref()
 const tabRef = ref<QTITab>()
 const loading = ref(true)
-const configs = ref<Partial<IrankingConfig>>({})
+const configs = ref<Partial<IrankingConfig>>({});
+const showIndex = ref(2)
 
 const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
   if(pageNo > 0) return//没有分页数据
@@ -41,8 +49,17 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) 
     rankingUi.setData(tabRef.value, pageIndex)
   }
 }
+
+let isInited = false
 const onTabPageChanged = (pageIndex: number, data: any) => {
-  rankingUi.updateData(pageIndex)
+  if(isInited){
+    rankingUi.updateData(pageIndex, showIndex.value, 0, 0, bgPlayerRef.value)
+  }else{
+    if(pageIndex===showIndex.value){
+      isInited = true
+      rankingUi.updateData(pageIndex, showIndex.value, 0, 0, bgPlayerRef.value)
+    }
+  }
 }
 
 defineExpose({
@@ -54,7 +71,7 @@ defineExpose({
 
       rankApi.getTabData().then(res=>{
         const tab: QTTab = {
-          defaultFocusIndex: 2,
+          defaultFocusIndex: showIndex.value,
           defaultIndex: 0,
           itemList: transRankingTabList(res, rankApi.getConfig())
         }
@@ -65,7 +82,6 @@ defineExpose({
         }
         tabRef.value?.initPage(waterfallData)
       })
-      
     })
   }
 })
@@ -94,11 +110,18 @@ defineExpose({
   background-color: transparent;
   /* #0E0E0E */
 }
+.bg_player {
+  position: absolute;
+  left: 732px;
+  top: 135px;
+}
 .ranking_page_top {
   background-color: transparent;
 }
 
 .ranking_tabs {
+  position: absolute;
+  z-index: 10;
   width: 1920px;
   height: 1080px;
   background-color: transparent;
