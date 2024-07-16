@@ -50,7 +50,7 @@
           :triggerTask="switchData(filterTriggerTask)"
           :cachePool="{name:'filter_content',size:{1:40,}}"
           :blockFocusDirections="['right','down']"
-          :enablePlaceholder="true"
+          :enablePlaceholder="false"
           :spanCount="spanCount" :openPage="true" :preloadNo="4"
           :focusable="false" :pageSize="screenPageSize"
           nextFocusLeftSID="screen_left_tags"
@@ -67,7 +67,7 @@
           <!-- 筛选内容竖图 -->
           <tags-content-item-v :type="1"/>
           <!-- 筛选内容横图 -->
-          <tags-content-item-h :type="2" :placeholderLayout="[-5, -5, 321, 180]"/>
+          <tags-content-item-h :type="2"/> <!-- :placeholderLayout="[-5, -5, 321, 180]" -->
           <!-- 底部提示 -->
           <template #footer>
             <qt-text class="screen-right-content-no-more" :style="{width:(rightContentWidth-160)+'px'}"

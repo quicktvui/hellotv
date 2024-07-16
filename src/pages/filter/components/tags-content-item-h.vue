@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="filter-content-item-h" :focusable="true" eventFocus eventClick>
+  <qt-view class="filter-content-item-h" :focusable="true" :focusScale="1.06" eventFocus eventClick>
 
     <!-- 海报图 -->
     <qt-image class="filter-content-item-h-img" src="${poster}" :focusable="false"/>

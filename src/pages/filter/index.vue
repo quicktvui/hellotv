@@ -173,8 +173,8 @@ export default defineComponent({
       // 设置默认坐标
       setTimeout(() => {
         contentScrollRef.value.scrollTo(leftRootWidth.value, 0, 0)
-        nextTick(() => {
-          const leftExpandData = getLeftExpandData()
+        nextTick(async() => {
+          const leftExpandData = await getLeftExpandData()
           showLeftExpand = leftExpandData.length ? true : false
           leftExpandRef.value?.init(leftExpandData)
           getTagsData(screenId)
@@ -203,15 +203,9 @@ export default defineComponent({
       });
     }
 
-    function getLeftExpandData() {
-      return [
-        { type: 1, id: '1764924767380697089', showName: '番剧' },
-        { type: 1, id: '1768109206728179713', showName: '电影' },
-        { type: 1, id: '1755198210693124098', showName: '纪录片' },
-        { type: 1, id: '1764924767380697089', showName: '国创' },
-        { type: 1, id: '1768109206728179713', showName: '电视剧' },
-        { type: 1, id: '1755198210693124098', showName: '综艺' }
-      ]
+    async function getLeftExpandData() {
+      const data = await globalApi.getScreenLeftExpand()
+      return data.map(item => ({ type: 1, id: item.id, showName: item.showName }))
     }
 
     function leftExpandFocus(e) {
