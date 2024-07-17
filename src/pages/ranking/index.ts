@@ -36,6 +36,12 @@ export const transRankingTabList = (arr:IrankingTabItem[], configs:IrankingConfi
   })
 }
 
+const ids = {
+  currentSection: 'rankingCurrentSection-',
+  rankingSortSection: 'rankingSortSection-',
+  rankingMoreSection: 'rankingMoreSection-',
+  listSID: 'listSID'
+}
 export const rankingContentTypes = {
   info: 1, sort: 2, more: 3
 } as const;
@@ -48,9 +54,9 @@ const getRankingPoster = (pData:IrankingContentItem, config:IposterConfig, index
   const imgW = config.posterImgWidth||config.posterWidth||dPosterWidth
   const imgH = config.posterImgHeight||config.posterHeight||dPosterHeight
   return {
-    _id: 'rankingSectionPoster-' + pData.id, type: config.posterType||QTWaterfallItemType.QT_WATERFALL_ITEM_TYPE_POSTER,
+    _router: pData._router,
+    _id: pData.id, type: config.posterType||QTWaterfallItemType.QT_WATERFALL_ITEM_TYPE_POSTER,
     focus: { enable: true, scale: 1.1, border: true },
-    rwaData: { ...pData },
     decoration: {
       left: 0, top: config.posterTopSpace||dPosterTopSpace,
       right: config.posterRightSpace||dPosterRightSpace
@@ -121,7 +127,7 @@ const getCurrentSection = (current:IrankingContentItem, data?:IrankingContent, c
   }
   const rankName = current.rankName||data?.rankName||oldCurrent?.rankName.text
   return {
-    _id: oldCurrent?._id || 'rankingCurrentSection-'+data?.id+current.id,
+    _id: oldCurrent?._id || ids.currentSection+data?.id,//+current.id
     type: rankingContentTypes.info,
     title: '',
     titleStyle: {
@@ -187,26 +193,29 @@ const getCurrentSection = (current:IrankingContentItem, data?:IrankingContent, c
   }
 }
 
-export const transRankingContent = (data:IrankingContent, configs:IrankingConfig) => {
-  const itemList = data.list.map((item,index)=>{
-    return getRankingPoster(item, {
-      posterWidth: 320, posterHeight: 348,
-      posterImgWidth: 246, posterImgHeight: 348,
-      posterRightSpace: 70, posterType: 1,
-      ...(data.config||{})
-    }, index)
-  })
-  const sections:QTWaterfallSection[] = [
-    getCurrentSection(itemList[0].rwaData, data, configs),
-    {
-      _id: 'rankingSortSection-'+data.id, type: rankingContentTypes.sort,
+export const transRankingContent = (data:IrankingMoreContent, configs:IrankingConfig) => {
+  const sections:QTWaterfallSection[] = []
+  const content = data.moreList[0]
+  if(data){
+    const itemList = content.list.map((item,index)=>{
+      return getRankingPoster(item, {
+        posterWidth: 320, posterHeight: 348,
+        posterImgWidth: 246, posterImgHeight: 348,
+        posterRightSpace: 70, posterType: 1,
+        ...(content.config||{})
+      }, index)
+    })
+    sections.push(getCurrentSection(content.list[0], content, configs))
+    sections.push({
+      _id: ids.rankingSortSection+data.id, type: rankingContentTypes.sort,
       title: '',
       titleStyle: {},
       decoration: { top: -150, left: configs.pageSpace },
       style: { width: pageWidth - configs.pageSpace, height: 350, },
       itemList
-    }
-  ]
+    })
+  }
+  
   return { sections }
 }
 
@@ -227,13 +236,13 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
     }
     const titleReactH = titleStyle.height+titleStyle.marginTop+titleStyle.marginBottom
     return {
-      _id: item.id+index,
+      _id: item.id, listSID: ids.listSID+item.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST,
       title: isFirst?'':item.rankName,
       titleStyle: titleStyle,
       itemList: item.list.map((mlItem,mlIndex)=>{
         return getRankingPoster({...mlItem, rankName: item.rankName}, item.config||{})
-      }),// getRankingPoster(i + flag, 5),
+      }),
       style: {
         width: pageWidth - configs.pageSpace,
         height: dPosterHeight+titleReactH,
@@ -246,7 +255,7 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
   const sections:QTWaterfallSection[] = [
     getCurrentSection(data.moreList[0].list[0], data.moreList[0], configs),
     {
-      _id: 'rankingMoreSection-'+data.id, type: rankingContentTypes.more,
+      _id: ids.rankingMoreSection+data.id, type: rankingContentTypes.more,
       title: '',
       titleStyle: {},
       decoration: { top: data.topSpace },
@@ -258,22 +267,29 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
   return { sections }
 }
 
-export const transRankingSections = (data:IrankingContent|IrankingMoreContent, configs:IrankingConfig) => {
+export const transRankingSections = (data:IrankingMoreContent, configs:IrankingConfig) => {
   if(data.type === rankingTypes.sort){
-    return transRankingContent(data as IrankingContent, configs)
+    return transRankingContent(data, configs)
   } else {
-    return transRankingMoreContent(data as IrankingMoreContent, configs)
+    return transRankingMoreContent(data, configs)
   }
 }
 
 const catchData = new Map<number, Array<QTWaterfallSection>>()
+interface Iindex {
+  pageIndex?:number;
+  sectionIndex?:number;
+  itemIndex?:number
+}
 class RankingUi {
   private pageIndex:number = -1
   private tabRef?:QTITab
   private bgPlayerRef:any
-  private initPageIndex?:number
-  private initSectionIndex?:number
-  private initItemIndex?:number
+  private showPageIndex:number = -1
+  private showSectionIndex:number = 0
+  private showItemIndex:number = 0
+  private catchRawValue:Map<number, IrankingMoreContent> = new Map()
+  private prevIndexStr:string = ''
 
   updateCurrent(rwaData:IrankingContentItem){
     if(this.pageIndex>-1){
@@ -296,20 +312,34 @@ class RankingUi {
     }
   }
 
-  updateData(pageIndex:number, showPageIndex:number, showSectionIndex:number, showItemIndex:number, bgPlayerRef:any){
+  getSid(indexs:Iindex){
+    if(indexs.sectionIndex != undefined){
+      if(indexs.itemIndex != undefined){
+        return this.catchRawValue.get(this.showPageIndex)?.moreList[indexs.sectionIndex].list[indexs.itemIndex].id
+      }
+      return ids.listSID + this.catchRawValue.get(this.showPageIndex)?.moreList[indexs.sectionIndex].id
+    }
+  }
+
+  changeData(indexs:Iindex, bgPlayerRef?:any){
+    
+    this.showPageIndex = indexs.pageIndex??this.showPageIndex
+    this.showSectionIndex = indexs.sectionIndex??this.showSectionIndex
+    this.showItemIndex = indexs.itemIndex??this.showItemIndex
+    const cIndexStr = ''+this.showPageIndex+this.showSectionIndex+this.showItemIndex
+    if(this.prevIndexStr===cIndexStr){
+      return
+    }else{
+      this.prevIndexStr = cIndexStr
+    }
     try {
-      const firstList = catchData.get(pageIndex)?.[1]
-      if(firstList){
-        let sData:any = firstList.itemList[showSectionIndex]
-        if(sData.rwaData){
-          sData = sData.rwaData
-        } else {
-          sData = sData.itemList[showItemIndex].rwaData
-        }
-        // console.log(pageIndex, showPageIndex, showSectionIndex, showItemIndex, '--lsj--', sData)
+      const section = this.catchRawValue.get(this.showPageIndex)
+      const sData = section?.moreList[this.showSectionIndex]?.list[this.showItemIndex]
+      // console.log(sData?.id, '--lsj--sData', this.prevIndexStr)
+      if(sData){
         if(this.bgPlayerRef){
-          this.updateCurrent(sData)//更新背景
-        } else {
+          this.updateCurrent(sData) //更新背景
+        } else if(bgPlayerRef) {
           this.bgPlayerRef = bgPlayerRef//初始化背景
           bgPlayerRef.doChangeParent('', 2,
             1140, 640, 1140, 640,
@@ -323,21 +353,20 @@ class RankingUi {
           )
         }
       }
-    } catch (error) { }
-    this.pageIndex = pageIndex;
-    this.initPageIndex = showPageIndex
-    this.initSectionIndex = showSectionIndex
-    this.initItemIndex = showItemIndex
+    } catch (error) {
+      console.warn(error, '-lsj-err')
+    }
   }
 
   setData(tabRef:QTITab, pageIndex:number){
     rankApi.getContentData(pageIndex).then(res=>{
+
       const {sections} = transRankingSections(res, rankApi.getConfig())
       tabRef.setPageData(pageIndex, {
         useDiff: false, isEndPage: true, disableScrollOnFirstScreen: false,
         data: sections
       })
-      catchData.set(pageIndex, sections)
+      this.catchRawValue.set(pageIndex, res)
     })
     if(!this.tabRef){
       this.tabRef = tabRef

@@ -4,8 +4,8 @@
       ref="waterfall" class="rtm_waterfall" tvItemListName="itemList"
       flexStyle="${style}" enablePlaceholder :makeChildVisibleClampForward="80"
       :makeChildVisibleClampBackward="15"
-      :endHintEnabled="false"
-      @onItemClick="onItemClick"
+      :endHintEnabled="false" sid="RankTabMoreListWaterfallSid"
+      @onItemClick="onItemClickFn"
       @onItemFocused="onItemFocused"
     >
       <template v-slot:list-item>
@@ -20,9 +20,15 @@
 // @ts-ignore
 import { rankingUi } from '../index.ts'
 import { StyleValue, computed, onMounted, ref } from 'vue';
-import { qtRef, QTWaterfallVisibleType, QTWaterfallSectionType } from '@quicktvui/quicktvui3';
+import { VirtualView, QTWaterfallVisibleType, QTWaterfallSectionType } from '@quicktvui/quicktvui3';
 import type { QTWaterfallSection, QTIWaterfall } from '@quicktvui/quicktvui3';
+import { EventBus } from "@extscreen/es3-vue"
+import { useESRouter, useESRoute } from '@extscreen/es3-router';
 
+const router = useESRouter()
+const route = useESRoute()
+const cRouteName = route.name
+let toRouteName = cRouteName
 const waterfall = ref<QTIWaterfall>()
 // const waterfallDatas = qtRef<QTWaterfallSection[]>()
 waterfall.value?.init({
@@ -30,12 +36,63 @@ waterfall.value?.init({
   height: 385,
   visibleType: QTWaterfallVisibleType.QT_WATERFALL_VISIBLE_TYPE_NORMAL
 })
+let fSectionIndex = -1
+let fPrevSectionIndex = -1
+let isLoseFocused = -1
+
+router.afterEach((to, from, failure) => {
+  toRouteName = to.name
+})
+
 const onItemFocused = (sectionIndex, posterIndex, isFocus, data) => {
-  if(isFocus&&data&&data.rwaData){
-    rankingUi.updateCurrent(data.rwaData)
+  if(isFocus){
+    rankingUi.changeData({
+      sectionIndex,itemIndex:posterIndex
+    })
+    fSectionIndex = sectionIndex
+  } else {
+    fPrevSectionIndex = sectionIndex
   }
+  isLoseFocused = Number(isFocus)
 }
-const onItemClick = (sectionIndex, posterIndex, data, ev) => {
+
+EventBus.$on('DispatchKeyEvent', (keyEvent) => {
+  if (keyEvent && keyEvent.action === 1 && toRouteName === cRouteName) {
+    if(isLoseFocused === 0){//waterfall失去焦点
+      rankingUi.changeData({
+        sectionIndex: 0, itemIndex: 0
+      })
+      
+      const sid = rankingUi.getSid({ sectionIndex: fSectionIndex })
+      if(sid){
+        VirtualView.call(sid, 'clearFocus', [])
+        VirtualView.call(sid, 'scrollToPosition', [0])
+      }
+      VirtualView.call('RankTabMoreListWaterfallSid', 'clearFocus', [])
+      VirtualView.call('RankTabMoreListWaterfallSid', 'scrollToPosition', [0])
+      
+      isLoseFocused = -1
+      fPrevSectionIndex = -1
+      fSectionIndex = -1
+    }
+    if(isLoseFocused === 1){//waterfall切换板块焦点
+      if(fSectionIndex>-1&&fPrevSectionIndex>-1&&fPrevSectionIndex!==fSectionIndex){
+        const sid = rankingUi.getSid({ sectionIndex: fPrevSectionIndex })
+        if(sid){
+          VirtualView.call(sid, 'clearFocus', [])
+          VirtualView.call(sid, 'scrollToPosition', [0])
+        }
+      }
+    }
+  }
+});
+const onItemClickFn = (sectionIndex, posterIndex, data, e)=> {
+  if(e.item._router){
+    router.push({
+        name: e.item._router.url, //'series_view',
+        params: e.item._router.params?{...e.item._router.params}:undefined
+    });
+  }
 }
 </script>
 <style scoped>

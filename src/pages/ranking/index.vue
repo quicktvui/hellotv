@@ -31,7 +31,7 @@ import bgPlayer, { CoveredPlayerType } from "../../components/bg-player.vue"
 import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
 import { IrankingConfig } from '../../api/ranking/types'
-import {
+import type {
   QTITab, QTWaterfall, QTTab
 } from "@quicktvui/quicktvui3";
 // @ts-ignore
@@ -53,11 +53,11 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) 
 let isInited = false
 const onTabPageChanged = (pageIndex: number, data: any) => {
   if(isInited){
-    rankingUi.updateData(pageIndex, showIndex.value, 0, 0, bgPlayerRef.value)
+    rankingUi.changeData({ pageIndex, sectionIndex:0, itemIndex:0 }, bgPlayerRef.value)
   }else{
     if(pageIndex===showIndex.value){
       isInited = true
-      rankingUi.updateData(pageIndex, showIndex.value, 0, 0, bgPlayerRef.value)
+      rankingUi.changeData({ pageIndex, sectionIndex:0, itemIndex:0 }, bgPlayerRef.value)
     }
   }
 }

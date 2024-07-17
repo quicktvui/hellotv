@@ -31,6 +31,9 @@ export interface IrankingContentItem {
   des?:string;//影视简介
   rankName?:string;//排行分类
   bgTags?:IbgTags[];//影视带背景色标签
+  _router?:{
+    url:string;params:object
+  }
 }
 export interface IposterConfig {
   posterWidth?:number; posterHeight?:number;
@@ -40,7 +43,6 @@ export interface IposterConfig {
 }
 export interface IrankingContent {
   id:string;
-  type: Tvalues<typeof rankingTypes>;
   rankName:string;//排行榜类型名
   list: IrankingContentItem[];
   config?:IposterConfig;
