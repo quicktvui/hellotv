@@ -6,15 +6,34 @@ export function buildShortVideoAdapter(): QTWaterfallSection {
     _id: 'shortVideo1',
     type: 1009,
     style: {
+      width: 1920,
+      height: 1080,
+    },
+    tabListStyle: {
+      width: 1920,
+      height: 60,
+      marginTop: 40,
+      marginLeft: -24,
+      marginBottom: 20,
+    },
+    listStyle: {
       width: 540,
       height: 880,
     },
-    listSID: 'shortVideo111',
-    autofocusPosition: 0,
+    tabListSID: 'shortVideoTabListSID',
+    listSID: 'shortVideoListSID',
+    autofocusTabPosition: 0,
+    autofocusListPosition: -1,
     decoration: {
-      top: 200,
+      top: 60,
       left: 40,
     },
+    tabList: [
+      {type: 10091,title: '推荐', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '日历', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '历史', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '收藏', decoration: {}, name: 'tab_list_section_item'},
+    ],
     itemList: []
   }
   return section

@@ -228,7 +228,7 @@ export function createGlobalApi(): IGlobalApi {
   ): Promise<Array<QTWaterfallItem>> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData || true) {
-      if (pageNo === 3) {
+      if (pageNo > 2) {
         //模拟结束
         return Promise.resolve(buildShortVideoItemAdapter([]));
       }

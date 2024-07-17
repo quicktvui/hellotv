@@ -1,8 +1,10 @@
 <template>
-  <qt-view class="short_video_section" ref="short_video_section"  name="short_video_section" :clipChildren="false" 
+  <qt-view class="short_video_section" ref="short_video_section"  name="short_video_section" 
+    :clipChildren="false" :focusable="false"
     :type="1009"
     @item-bind="onItemBind"
     @item-unbind="onItemRecycled"
+    @item-focused="onItemFocused"
     @item-attached="onSectionAttached">
 
     <div class="list_section_root" :focusable="false"
@@ -11,21 +13,43 @@
       :clipChildren="true"
       :useAdvancedFocusSearch="true"
       :bringFocusChildToFront="true">
+      <!-- :singleSelectPosition="singleSelectPosition"
+      :focusMemory="true" :skipRequestFocus="false" :enableSelectOnFocus="false" -->
+      <qt-list-view class="tab_list_section" name="tab_list_section" :focusable="false" :useDiff="false"
+        list="${tabList}" 
+        
+        horizontal
+        :clipChildren="false" 
+        flexStyle="${tabListStyle}"
+        sid="${tabListSID}"
+        @item-focused="onTabItemFocused"
+        :pauseTaskOnHide="true"
+        :blockFocusDirections="[]"
+        autofocusPosition="${autofocusTabPosition}">
+
+        <!-- tab list item -->
+        <qt-view class="tab_list_section_item" name='${name}' :type="10091" :clipChildren="false" :focusable="true" eventFocus eventClick>
+          <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
+            class="tab_list_section_item_text" :duplicateParentState="true" text="${title}" />
+        </qt-view>
+
+      </qt-list-view>
 
       <!-- 一行滚动板块 -->
-      <tv-list list="${itemList}" :clipChildren="false" :focusable="false"
-        class="list_section" :skipRequestFocus="true"
-        :resetOnDetach="true" :useDiff="false"
-        name="list_section"
-        flexStyle="${style}"
-        sid="shortVideo111"
+      <qt-list-view class="list_section" name="list_section" :focusable="false" :useDiff="false"
+        list="${itemList}" 
+        :clipChildren="false" 
+        :skipRequestFocus="false"
+        :resetOnDetach="true" 
+        flexStyle="${listStyle}"
+        sid="${listSID}"
         :endHintEnabled="false"
         @loadMore="loadMore"
-        @item-focused="onItemFocused"
+        @item-focused="onListItemFocused"
         :enablePlaceholder="false"
         :pauseTaskOnHide="true"
         :blockFocusDirections="[]"
-        autofocusPosition="${autofocusPosition}">
+        autofocusPosition="${autofocusListPosition}">
 
         <!-- list item -->
         <qt-view :type="10090" name="list_section_item" ref="list_section_item" class="list_section_item" :focusable="true" 
@@ -49,7 +73,7 @@
           </qt-view>
 
         </qt-view>
-      </tv-list>
+      </qt-list-view>
     </div>
   </qt-view>
 </template>
@@ -74,23 +98,35 @@ export default defineComponent({
     const appApi = useGlobalApi()
     const log = useESLog()
     const toast = useESToast()
-    const search_result = ref()
+    const short_video_section = ref()
     let pageNo = ref(1)
-   
+    let singleSelectPosition = ref(0)
+    let currentSectionIndex = ref(0)
+    let currentTabIndex = ref(0)
     const onItemRecycled = (e) => {}
-    const loadMore = () => {
-      if(props.isStopPage) return
+    const loadMore = (e) => {
       pageNo.value = pageNo.value + 1
-      context.emit("load-more", pageNo.value)
+      context.emit("load-more", pageNo.value, currentSectionIndex.value)
     }
     const onSectionAttached = (e) => {}
     const onItemBind = (e) => {}
     const onItemFocused = (e) => {
-      // toast.showShortToast(e.position+'')
+      if(e.hasFocus) currentSectionIndex.value = e.parentPosition
     }
-   
+    const onTabItemFocused = (e) => {
+      if(e.hasFocus && currentTabIndex.value != e.position){
+        currentTabIndex.value = e.position
+        pageNo.value = 1
+        singleSelectPosition.value = e.position
+      }
+    }
+    const onListItemFocused = (e) => {
+      if(e.hasFocus){
+      }
+    }
     return {
-      search_result,
+      short_video_section,singleSelectPosition,
+      onTabItemFocused,onListItemFocused,
       onItemRecycled,onSectionAttached,onItemBind,onItemFocused,loadMore,
     }
   }

@@ -12,7 +12,7 @@
       :list-data="waterfallDatas"
       :useDiff="true">
       <template v-slot:section>
-        <short-video-section :type="1009" @loadMore="loadMore" :isStopPage="isStopPage"/>
+        <short-video-section :type="1009" @loadMore="loadMore"/>
       </template>
     </qt-waterfall>  
   </qt-view>
@@ -23,7 +23,7 @@
   import {ref} from "vue";
   import {useESRouter} from "@extscreen/es3-router";
   import { ESKeyEvent,useESToast } from "@extscreen/es3-core"
-  import {qtRef, QTIWaterfall, QTWaterfallItem, QTWaterfallSection,
+  import {qtRef, QTIWaterfall, QTWaterfallItem, QTWaterfallSection,QTWaterfall,
     VirtualView, QTWaterfallSectionType, QTWaterfallItemType
   } from "@quicktvui/quicktvui3";
   import shortVideoSection from "./component/short_video_section.vue";
@@ -47,38 +47,38 @@
       const short_video = ref()
       const waterfallRef = ref<QTIWaterfall>()
       const waterfallDatas = qtRef<QTWaterfallSection[]>()
-      let isStopPage = ref(false)
+      let currentSecondTabIndex = ref(-1)
       // 生命周期
       const onESCreate = (params) => {
-        isStopPage.value = false
+        let waterfallData: QTWaterfall = {
+          width: 1920,
+          height: 1080
+        }
+        waterfallRef.value?.init(waterfallData)
         init()
-      }
+      } 
       const init = async () => {
-        let firstData = await appApi.getShortVideoPageData('mock数据',1,10)
+        // let firstData = await appApi.getShortVideoPageData('mock数据',1,10)
         let waterfallSection = buildShortVideoAdapter()
-        waterfallSection.itemList = firstData
-        waterfallDatas.value = [waterfallSection]
+        // waterfallSection.itemList = firstData
+        // waterfallDatas.value = [waterfallSection]
+        waterfallRef.value?.setSectionList([waterfallSection])
       }
       const onItemClick = () => {}
-      const onItemFocused = () => {
-        // toast.showToast('12312')
+      const onItemFocused = async (parentPosition, position, isFocused, item, e) => {
+        if(isFocused && item.name == 'tab_list_section_item' && currentSecondTabIndex.value != position){
+          currentSecondTabIndex.value = position
+          // let listSID = waterfallDatas.value[0].listSID
+          let listSID =  waterfallRef.value?.getSection(parentPosition)!.listSID
+          let data = await appApi.getShortVideoPageData('mock数据',1,10)
+          VirtualView.call(listSID,'setListData',data)
+        }
       }
-      const loadMore = async (pageNo: number) => {
+      const loadMore = async (pageNo: number, sectionIndex: number) => {
         let data = await appApi.getShortVideoPageData('mock数据',pageNo,10)
-        if(data.length < 1){
-          isStopPage.value = true
-        }else{
-          // toast.showToast(pageNo+'uuuuuuuu'+data.length)
-          console.log(pageNo,data,'88888888888888888888888888888888888888888888')
-          // VirtualView.tvCall('short_video_waterfall','shortVideo1','requestFocus',[12])
-          // Native.callUIFunction(short_video.value,'dispatchFunctionBySid', [`shortVideo111`,'requestFocus',[23]]);
-          // Native.callUIFunction(short_video.value,'dispatchFunctionBySid', ['shortVideo111','addListData',data]);
-          // const poster = data[12]
-          // poster.title = "lululu"
-          // Native.callNative('ExtendModule','callUIFunction', 'short_video_waterfall','addListData',['shortVideo111',data])
-          // Native.callNative('ExtendModule','callUIFunction', 'shortVideo111','hasFocus',[0],(res)=>{
-          //   console.log('lsj-dd:',res)
-          // })
+        if(data.length > 0){
+          let listSID =  waterfallRef.value?.getSection(sectionIndex)!.listSID
+          VirtualView.call(listSID,'addListData',data)
         }
       }
 
@@ -92,7 +92,7 @@
       }
      
       return {
-        short_video,waterfallRef,waterfallDatas,isStopPage,
+        short_video,waterfallRef,waterfallDatas,
         onItemClick,onItemFocused,loadMore,
         onKeyDown, onESCreate, onESStart, onESResume, onESStop, onESDestroy,
       }
