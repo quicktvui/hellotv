@@ -112,7 +112,8 @@ export default defineComponent({
     let defaultTagPosition = ref(0)
     let defaultTagSelectPos = ref(0)
     //局部变量
-    let leftTagSwitchTimer:any = -1
+    let leftExpandSwitchTimer: any = -1
+    let leftTagSwitchTimer: any = -1
     let curTagPosition:number = -1 //左侧列表当前 tag位置
     let curLeftExpandPos: number = 0
     //筛选接口参数
@@ -213,7 +214,8 @@ export default defineComponent({
     function leftExpandFocus(e) {
       if (e.isFocused && e.position !== curLeftExpandPos) {
         curLeftExpandPos = e.position
-        getTagsData(e.item.id)
+        leftExpandSwitchTimer && clearTimeout(leftExpandSwitchTimer)
+        leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id), 300)
       }
     }
 
