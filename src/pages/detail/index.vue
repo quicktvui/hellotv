@@ -16,10 +16,7 @@
       @onScrollYLesserReference="onScrollYLesserReference"
       class="detail-waterfall-css">
       <template v-slot:section>
-        <header-section
-          ref="headerSectionRef"
-          :type="1"
-          @onSearchButtonFocused="onSearchButtonFocused" />
+        <header-section ref="headerSectionRef" :type="1" @onSearchButtonFocused="onSearchButtonFocused" />
       </template>
       <template v-slot:vue-section>
         <album-detail-section
@@ -33,14 +30,16 @@
           @onPlayerPlaceholderClick="onPlayerPlaceholderClick"/>
       </template>
       <template v-slot:item>
-        <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"/>
+        <qt-poster
+          :type="10001"
+          :borderRadius="20"
+          :focusTitleColor="tabContentFocusColor"
+          :floatTitleBgColor="tabContentFloatBgFocusColor"
+          :focusBgColor="{ colors: tabContentBgGradientFocusColor, cornerRadii4: [0, 0, 20, 20] }" />
       </template>
     </qt-waterfall>
 
-    <media-player
-      ref="mediaPlayerViewRef"
-      name='media-player'
-      class="detail-media-player-view-css"
+    <media-player ref="mediaPlayerViewRef" name="media-player" class="detail-media-player-view-css"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
       @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"/>
@@ -52,6 +51,7 @@
 </template>
 
 <script lang="ts">
+import { nextTick, provide, ref } from 'vue'
 import { defineComponent } from '@vue/runtime-core'
 import {
   ESKeyCode,
@@ -61,7 +61,6 @@ import {
   useESLog,
   useESToast
 } from '@extscreen/es3-core'
-import { nextTick, provide, ref } from 'vue'
 import { IMedia } from '../../api/media/IMedia'
 import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import header_section from './section/header-section.vue'
@@ -82,6 +81,7 @@ import { ESMediaItem } from '@extscreen/es3-player-manager'
 import { IMediaAuthorization } from '../../api/media/IMediaAuthorization'
 import { mediaAuthorizationKey } from './injectionSymbols'
 import { useMediaDataSource } from '../../api/UseApi'
+import ThemeConfig from '../../build/ThemeConfig'
 import BuildConfig from '../../build/BuildConfig'
 
 const TAG = 'DetailPage'
@@ -94,6 +94,11 @@ export default defineComponent({
     'album-detail-section': album_detail_section
   },
   setup() {
+    // 主题配置
+    const tabContentFocusColor = ThemeConfig.tabContentFocusColor
+    const tabContentBgGradientFocusColor = ThemeConfig.tabContentBgGradientFocusColor
+    const tabContentFloatBgFocusColor = ThemeConfig.tabContentFloatBgFocusColor
+
     const log = useESLog()
     const toast = useESToast()
     const router = useESRouter()
@@ -218,6 +223,7 @@ export default defineComponent({
         log.d(TAG, "----1---getMediaDetail---------->>>>>", mediaId)
       }
       mediaDataSource.getMediaDetail(mediaId)
+        // @ts-ignore
         .then((m: IMedia) => {
           media = m
           albumDetailRef.value?.initMedia(media)
@@ -259,6 +265,7 @@ export default defineComponent({
 
     function getMediaAuthorization() {
       mediaDataSource.getMediaAuthorization(mediaId)
+        // @ts-ignore
         .then((mediaAuthorization: IMediaAuthorization) => {
           if (log.isLoggable(ESLogLevel.DEBUG)) {
             log.d(TAG, "-------getMediaAuthorization----success------>>>>>", mediaAuthorization)
@@ -361,7 +368,6 @@ export default defineComponent({
       )
       waterfallScrollY = scrollY
     }
-
 
     //------------------------------------------------------------------------------
     function onSearchButtonFocused(isFocused: boolean) {
@@ -539,12 +545,14 @@ export default defineComponent({
       isPaused = false;
       isStopped = false;
     }
+
     const onESPause = () => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESPause---------->>>>>")
       }
       isPaused = true;
     }
+
     const onESStop = () => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESStop---------->>>>>")
@@ -552,6 +560,7 @@ export default defineComponent({
       mediaPlayerViewRef.value?.stop()
       isStopped = true;
     }
+
     const onESDestroy = () => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, "-------onESDestroy---------->>>>>")
@@ -606,6 +615,9 @@ export default defineComponent({
     }
 
     return {
+      tabContentFocusColor,
+      tabContentBgGradientFocusColor,
+      tabContentFloatBgFocusColor,
       mediaId,
       descendantFocusability,
       mediaPlayerViewRef,

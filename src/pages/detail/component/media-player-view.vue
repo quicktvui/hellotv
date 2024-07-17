@@ -75,9 +75,9 @@
               }"
                >
             <div class="media-player-view-next-text-focus"
-                 :gradientBackground="{ orientation: 6, colors: ['#FF0057FF', '#FF00C7FF'], cornerRadius: 8 }"
-                 showOnState="focused"
-                 duplicateParentState></div>
+              showOnState="focused" duplicateParentState
+              :gradientBackground="{ colors: btnGradientFocusColor, cornerRadius: 8, orientation: 6 }">
+            </div>
             <qt-text class="media-player-view-next-text-css"
                      :duplicateParentState="true"
                      gravity="center"
@@ -88,11 +88,9 @@
       </qt-view>
 
       <!-- 底部菜单 -->
-      <qt-view class="media-player-view-menu-css"
-               v-show="isFullWindow && isMenuShowing">
-        <qt-view class="media-player-collapse-css"
-                 v-if="isFullWindow && isMenuShowing"
-                 :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
+      <qt-view v-show="isFullWindow && isMenuShowing" class="media-player-view-menu-css">
+        <qt-view v-if="isFullWindow && isMenuShowing"
+          class="media-player-collapse-css" :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
         <qt-collapse
           ref="mediaCollapseRef"
           v-show="isFullWindow && isMenuShowing"
@@ -135,7 +133,7 @@
 </template>
 
 <script lang="ts">
-
+import { ref, watch, onMounted, nextTick } from "vue";
 import { defineComponent, onUnmounted } from "@vue/runtime-core";
 import {
   ESMediaSource,
@@ -153,7 +151,6 @@ import {
 } from "@extscreen/es3-player";
 import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
 import { ESIPlayerManager, ESMediaItem, ESMediaItemList } from "@extscreen/es3-player-manager";
-import { ref, markRaw, watch, onMounted, nextTick } from "vue";
 
 import playerStatePlaying from '../../../assets/ic_media_player_play.png'
 import playerStatePaused from '../../../assets/ic_media_player_pause.png'
@@ -178,6 +175,7 @@ import {
 } from "../adapter/PlayerDataAdapter";
 import { IMedia } from "../../../api/media/IMedia";
 import { IMediaCollapseMediaSeriesView } from "./collapse/IMediaCollapseMediaSeriesView";
+import ThemeConfig from "../../../build/ThemeConfig";
 import BuildConfig from "../../../build/BuildConfig";
 
 const TAG = 'MediaPlayerView'
@@ -192,6 +190,9 @@ export default defineComponent({
     'media-collapse-speed': media_collapse_speed
   },
   setup(props, context) {
+    // 主题配置
+    const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
+
     let enabled = true
     let player: ESIPlayerManager
 
@@ -220,6 +221,7 @@ export default defineComponent({
     onMounted(() => {
       eventbus.on('onMediaListItemLoad', onMediaListItemLoad)
     });
+
     onUnmounted(() => {
       eventbus.off('onMediaListItemLoad', onMediaListItemLoad)
     });
@@ -261,7 +263,7 @@ export default defineComponent({
     let collapseItemIndex = 0
     const mediaCollapseRef = ref<QTICollapse>()
 
-    let collapseItemList = []
+    let collapseItemList: any = []
     let collapse: QTCollapse
 
     const mediaCollapseOrderRef = ref<IMediaCollapseItemListView>()
@@ -968,6 +970,7 @@ export default defineComponent({
     }
 
     return {
+      btnGradientFocusColor,
       mediaListVisible,
       mediaPlayerLoadingRef,
       mediaTitle,

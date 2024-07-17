@@ -9,7 +9,7 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class='bg_player' sid='default_bg_parent' :opacity="0">
+    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
     <qt-view sid="bg-player" class="bg_player_box"
       :clipChildren="true" :focusable="false" name='home_player'
       :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
@@ -25,18 +25,6 @@
           @onPlayerPlaying="onVideoPlayerPlaying"
           @onPlayerCompleted="onVideoPlayerCompleted"
           @onPlayerInitialized="onPlayerInitialized"/>
-
-<!--        <es-player-manager :clipChildren="false"-->
-<!--          ref="playerManagerRef"-->
-<!--          class="player-manager"-->
-<!--          :focusable="false"-->
-<!--          :style="{left: leftNum,top: topNum}"-->
-<!--          :initPlayerWindowType="2"-->
-<!--          :playerList="playerList"-->
-<!--          @onPlayerPlaying="onVideoPlayerPlaying"-->
-<!--          @onPlayerCompleted="onVideoPlayerCompleted"-->
-<!--          @onPlayerInitialized="onPlayerInitialized"-->
-<!--        />-->
       </qt-view>
       <!--  -->
       <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}"
@@ -107,6 +95,12 @@ export default defineComponent({
   components: {
     MediaDefPlayer,
     QtImgTransition,bgPlayerImg,
+  },
+  props: {
+    defaultBgParentOpacity:{
+      type:Number, default: 0
+    },
+    borderRadius: Number
   },
   setup(props,ctx) {
     const router = useESRouter()
