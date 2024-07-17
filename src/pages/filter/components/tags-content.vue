@@ -14,7 +14,6 @@
         <qt-view :style="{ width: rightContentWidth+'px', minHeight: '1px', backgroundColor: 'transparent' }">
           <qt-list-view v-if="filterVisible" ref="screen_right_filters" name="screen_right_filters" sid="screen_right_filters"
             class="screen-right-filter-root" :style="{ width: rightContentWidth + 'px', height: filterHeight }"
-            :autofocusPosition="isFirstLoad ? 0 : -1"
             :triggerTask="switchData(hideSelectTask)"
             :enableSelectOnFocus="false"
             @item-click="onFilterClick"
@@ -45,7 +44,6 @@
         <!-- 筛选结果 -->
         <qt-grid-view :v-show='!filterClickLoading' ref="screen_right_content" name="screen_right_content" sid="screen_right_content"
           class="screen-right-content" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
-          :autofocusPosition="isFirstLoad?(filterVisible?-1:0):-1"
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
           :triggerTask="switchData(filterTriggerTask)"
           :cachePool="{name:'filter_content',size:{1:40,}}"
@@ -170,7 +168,7 @@ export default defineComponent({
     TagsContentItemV,
     TagsContentItemH
   },
-  emits:['unBlockFocus'],
+  emits:['unBlockFocus', 'setLeftNextFocus'],
   setup(props, context) {
     const screenPageSize = computed(()=>{return FilterConfig.screenPageSize})
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
@@ -248,6 +246,7 @@ export default defineComponent({
     function onItemFocused(e) {
       screenItemContentFocus.value = e.isFocused
       if (e.isFocused){
+        context.emit('setLeftNextFocus', 'screen_right_content')
         const focusValue = focusList[0]
         if (focusValue !== 3){
           focusList[0] = 3
@@ -321,6 +320,7 @@ export default defineComponent({
 
     function onFilterFocused(e){
       if (e.isFocused){
+        context.emit('setLeftNextFocus', 'screen_right_filters')
         focusList = []
       }
     }
@@ -439,9 +439,9 @@ export default defineComponent({
         if (screenContentList && screenContentList.length > 0) {
           if (curPageNum === 1) {
             screenRightContentData = screen_right_content.value!.init(screenContentList)
-            //设置 gridview滚动到顶部并设置 selected
-            if (screenRightContentData && screenRightContentData.length > 0) {
-              screen_right_content.value?.scrollToSelected(0, true)
+            // 设置默认焦点
+            if (isFirstLoad.value && screenRightContentData && screenRightContentData.length > 0) {
+              screen_right_content.value?.setItemFocused(0)
             }
             if (type !== 3) {
               loading.value = false

@@ -53,7 +53,7 @@
           :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
           :clipChildren="false" :clipPadding="false"
           :blockFocusDirections="isShowLeftList?[]:['left','right']"
-          @unBlockFocus='unBlockRootFocus'/>
+          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus'/>
       </qt-view>
     </scroll-view>
   </div>
@@ -214,6 +214,7 @@ export default defineComponent({
     function leftExpandFocus(e) {
       if (e.isFocused && e.position !== curLeftExpandPos) {
         curLeftExpandPos = e.position
+        leftNextFocusRightSid.value = 'screen_right_content'
         leftExpandSwitchTimer && clearTimeout(leftExpandSwitchTimer)
         leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id), 300)
       }
@@ -269,14 +270,6 @@ export default defineComponent({
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d("leftTagsItemFocus--", e)
         }
-
-        // 动态设置左侧列表向右焦点位置
-        if (getFilterConditionData().length === 0) {
-          leftNextFocusRightSid.value = 'screen_right_content'
-        } else {
-          leftNextFocusRightSid.value = 'screen_right_filters'
-        }
-
         if (curTagPosition !== e.position) {
           tags_content.value.loading = true
           tags_content.value.empty = false
@@ -306,6 +299,12 @@ export default defineComponent({
       }
     }
 
+    // 设置左侧列表焦点向右位置
+    function setLeftNextFocus(sid: string) {
+      console.log('huan-xxx', sid)
+      leftNextFocusRightSid.value = sid
+    }
+
     function onBackPressed(){
       if (tags_content.value.screenItemContentFocus && tags_content.value.scrollY > 100){
         blockRootFocus()
@@ -325,6 +324,7 @@ export default defineComponent({
       leftTagsItemFocus,
       unBlockRootFocus,
       leftExpandFocus,
+      setLeftNextFocus,
 
       title,
       title_img,
