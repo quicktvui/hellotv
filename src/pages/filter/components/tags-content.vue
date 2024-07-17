@@ -38,7 +38,7 @@
             <!-- 横线 -->
             <tags-filter-fast-line :type="2" :focusable="false"/>
             <!-- 更多筛选项 -->
-            <tags-filter-more-btn :type="3" :focusable="true"/>
+            <tags-filter-more-btn :type="3"/>
           </qt-list-view>
         </qt-view>
 

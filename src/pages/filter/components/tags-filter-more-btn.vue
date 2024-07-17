@@ -4,13 +4,14 @@
       :focusable="false" showOnState="focused" duplicateParentState
       :gradientBackground="{ colors: btnGradientFocusColor, cornerRadius: 30, orientation: 6 }">
     </qt-view>
-    <qt-text class="filter-more-btn-text" text="更多筛选项" gravity="center" :focusable="false"></qt-text>
-    <qt-image class="filter-more-btn-img" :focusable="false"></qt-image>
+    <qt-text class="filter-more-btn-text" text="更多筛选项" gravity="center" :focusable="false" duplicateParentState></qt-text>
+    <qt-image class="filter-more-btn-img" :src="icExpandDown" :focusable="false"></qt-image>
   </qt-view>
 </template>
 
 <script setup>
 import ThemeConfig from "../../../build/ThemeConfig";
+import icExpandDown from '../../../assets/ic_expand_down.png'
 
 const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
 </script>
@@ -36,13 +37,14 @@ const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
   width: 150px;
   height: 60px;
   background-color: transparent;
-  color: #FFFFFF;
+  color: #BFBFBF;
   font-size: 26px;
+  focus-color: #FFFFFF;
 }
 
 .filter-more-btn-img {
   width: 20px;
   height: 20px;
-  background-color: red;
+  background-color: transparent;
 }
 </style>
