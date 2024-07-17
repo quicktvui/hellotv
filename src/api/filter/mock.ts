@@ -429,7 +429,7 @@ export const leftTags = {
   "1764924767380697090": {
     entryTag: {
       id: "1755197938868670466",
-      tagName: "少儿",
+      tagName: "早教",
       status: null,
       showName: "电影",
       showType: "1",
@@ -570,7 +570,7 @@ export const leftTags = {
   "1764924767380697091": {
     entryTag: {
       id: "1755197938868670466",
-      tagName: "少儿",
+      tagName: "玩具",
       status: null,
       showName: "纪录片",
       showType: "1",
@@ -617,7 +617,7 @@ export const leftTags = {
   "1764924767380697092": {
     entryTag: {
       id: "1755197938868670466",
-      tagName: "少儿",
+      tagName: "儿歌",
       status: null,
       showName: "国创",
       showType: "1",

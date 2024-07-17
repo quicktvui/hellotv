@@ -216,7 +216,7 @@ export default defineComponent({
     let filterTriggerTask = ref<Array<any>>([])
     let hideSelectTask = ref<Array<any>>([])
     let isFirstLoad = ref(true)
-    let showFilter = true // 筛选组件显示状态
+    let showFilter = ref(true) // 筛选组件显示状态
 
     function init(){
       hideSelectTask.value = [
@@ -250,8 +250,8 @@ export default defineComponent({
         context.emit('setLeftNextFocus', 'screen_right_content')
 
         // 手动隐藏筛选项
-        if (showFilter && e.position >= spanCount.value) {
-          showFilter = false
+        if (showFilter.value && e.position >= spanCount.value) {
+          showFilter.value = false
           screen_right_scroll_content.value?.scrollToWithOptions(0, filterHeight.value, 300)
         }
 
@@ -329,7 +329,7 @@ export default defineComponent({
     function onFilterFocused(e){
       if (e.isFocused){
         context.emit('setLeftNextFocus', 'screen_right_filters')
-        showFilter = true
+        showFilter.value = true
         focusList = []
       }
     }
@@ -376,6 +376,7 @@ export default defineComponent({
       isFirstRequest = true
       filterVisible.value = false
       if (type === 3) {//筛选
+        showFilter.value = true
         curTags = getCurScreenCondition() //获取筛选条件
         if (isClick){
           setFilterTriggerTask()
@@ -447,7 +448,10 @@ export default defineComponent({
             // 设置默认焦点
             if (isFirstLoad.value && screenRightContentData && screenRightContentData.length > 0) {
               screen_right_content.value?.setItemFocused(0)
+            } else {
+              screen_right_content.value?.scrollToSelected(0, true)
             }
+
             if (type !== 3) {
               loading.value = false
             }else{

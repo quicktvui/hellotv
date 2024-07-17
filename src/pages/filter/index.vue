@@ -302,7 +302,6 @@ export default defineComponent({
 
     // 设置左侧列表焦点向右位置
     function setLeftNextFocus(sid: string) {
-      console.log('huan-xxx', sid)
       leftNextFocusRightSid.value = sid
     }
 
