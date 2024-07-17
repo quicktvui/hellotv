@@ -35,7 +35,7 @@
           <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
             class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
             :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
-            :clipChildren="false" :clipPadding="false"
+            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid"
             :blockFocusDirections="['down']"
             @item-focused="leftTagsItemFocus"
           >
@@ -47,7 +47,7 @@
             <tags-text-icon-item :type="3"/>
           </qt-list-view>
         </div>
-        
+
         <!-- 右侧结果 -->
         <tags-content ref="tags_content" class="screen-right-root-css"
           :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
@@ -72,6 +72,7 @@ import {useGlobalApi} from "../../api/UseApi";
 import {
   buildTagsData,
   getDefaultTagSelectIndex,
+  getFilterConditionData,
   getRootTag,
   setRootTag
 } from "./build_data/useTagsData";
@@ -104,6 +105,7 @@ export default defineComponent({
     const leftTags = ref<QTIListView>()
     const screen_root = ref()
     const tags_content = ref()
+    const leftNextFocusRightSid = ref()
     //全局变量
     let title = ref("")
     let title_img = ref("")
@@ -236,6 +238,7 @@ export default defineComponent({
             if (isShowLeftList.value){
               //设置左侧列表数据
               leftTags.value!.init(tags)
+              leftTags.value?.setItemSelected(0, true)
               //初始化筛选条件
               tags_content.value.init()
               //设置默认选中tag
@@ -243,9 +246,11 @@ export default defineComponent({
                 defaultTagPosition.value = getDefaultTagSelectIndex()
               } else {
                 defaultTagPosition.value = -1
-                tags_content!.value.getScreenByTags(1,curType,"",0,false,false)
+                tags_content!.value.loading = true
+                tags_content!.value.rightScrollTo(0, 0)
+                tags_content!.value.getScreenByTags(1, 3, "", 0, false, false)
               }
-            }else{
+            } else {
               //初始化筛选条件
               tags_content.value.init()
               curType = 3
@@ -262,6 +267,14 @@ export default defineComponent({
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d("leftTagsItemFocus--", e)
         }
+
+        // 动态设置左侧列表向右焦点位置
+        if (getFilterConditionData().length === 0) {
+          leftNextFocusRightSid.value = 'screen_right_content'
+        } else {
+          leftNextFocusRightSid.value = 'screen_right_filters'
+        }
+
         if (curTagPosition !== e.position) {
           tags_content.value.loading = true
           tags_content.value.empty = false
@@ -309,6 +322,7 @@ export default defineComponent({
       onClick,
       leftTagsItemFocus,
       unBlockRootFocus,
+      leftExpandFocus,
 
       title,
       title_img,
@@ -327,8 +341,8 @@ export default defineComponent({
       leftExpandTriggerTask,
       leftExpandRef,
       leftExpandPos,
-      leftExpandFocus,
-      defaultTagSelectPos
+      defaultTagSelectPos,
+      leftNextFocusRightSid
     }
   }
 })

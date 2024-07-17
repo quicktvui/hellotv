@@ -12,7 +12,7 @@
 
         <!-- 筛选条件 -->
         <qt-view :style="{ width: rightContentWidth+'px', minHeight: '1px', backgroundColor: 'transparent' }">
-          <qt-list-view v-if="filterVisible" ref="screen_right_filters" name="screen_right_filters"
+          <qt-list-view v-if="filterVisible" ref="screen_right_filters" name="screen_right_filters" sid="screen_right_filters"
             class="screen-right-filter-root" :style="{ width: rightContentWidth + 'px', height: filterHeight }"
             :autofocusPosition="isFirstLoad ? 0 : -1"
             :triggerTask="switchData(hideSelectTask)"
@@ -43,7 +43,7 @@
         </qt-view>
 
         <!-- 筛选结果 -->
-        <qt-grid-view :v-show='!filterClickLoading' ref="screen_right_content" name="screen_right_content"
+        <qt-grid-view :v-show='!filterClickLoading' ref="screen_right_content" name="screen_right_content" sid="screen_right_content"
           class="screen-right-content" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
           :autofocusPosition="isFirstLoad?(filterVisible?-1:0):-1"
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
@@ -59,10 +59,10 @@
           :clipChildren="false" :clipPadding="false"
           :loadMore="loadMoreScreenContent"
           :loadingDecoration="{top:15,left:30,bottom:70}"
+          :padding="'50,24,50,0'"
           @scroll-state-changed="onScrollStateChanged"
           @item-focused="onItemFocused"
           @item-click="onItemClick"
-          :padding="'50,24,50,0'"
         >
           <!-- 筛选内容竖图 -->
           <tags-content-item-v :type="1"/>
@@ -365,6 +365,7 @@ export default defineComponent({
         empty.value = false
       }
       isFirstRequest = true
+      filterVisible.value = false
       if (type === 3) {//筛选
         curTags = getCurScreenCondition() //获取筛选条件
         if (isClick){
@@ -375,7 +376,7 @@ export default defineComponent({
           setRecordTip()
           setFilterHeight(FilterConfig.filterMoreLimit)
           setFilterTriggerTask()
-          filterVisible.value = true
+          setTimeout(() => filterVisible.value = true, 300)
         }
         let filterList: Array<QTListViewItem> = []
         if (!isLoadMore && !isClick) {
@@ -383,15 +384,16 @@ export default defineComponent({
         }
         nextTick(() => {
           if (!isLoadMore && !isClick) {
-            screenRightFiltersData = screen_right_filters.value!.init(filterList)
+            setTimeout(() => {
+              screenRightFiltersData = screen_right_filters.value!.init(filterList)
+            }, 300)
           }
           setTimeout(() => {
             setScreenResultData(curPageNum, curType, curTags,isClick)
             loading.value = false
           }, 300)
         })
-      }
-      else {
+      } else {
         if (!isLoadMore && !isClick){
           if (focusList.length > 0 && focusList[0] === 3){
             focusList = []
@@ -489,6 +491,11 @@ export default defineComponent({
 
     }
 
+    // 右侧页面滚动
+    function rightScrollTo(x: number, y: number) {
+      screen_right_scroll_content.value?.scrollTo(x, y)
+    }
+
     return {
       init,
       getScreenByTags,
@@ -501,6 +508,7 @@ export default defineComponent({
       onScrollToTop,
       switchData,
       clearContentFocus,
+      rightScrollTo,
 
       screen_right_content,
       screen_right_filters,
