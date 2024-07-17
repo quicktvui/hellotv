@@ -172,6 +172,7 @@ export default defineComponent({
         }
         let item0 = playerListData[0]
         initPlayBg(item0.cover)
+        toast.showShortToast(item0.cover)
         currentPlayIndex.value = playIndex
         delayShowTimer = setTimeout(()=>{
           initComponent(playerListData,playerType)

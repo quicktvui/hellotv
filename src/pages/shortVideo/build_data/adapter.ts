@@ -26,7 +26,7 @@ export function buildShortVideoAdapter(): QTWaterfallSection {
     autofocusListPosition: -1,
     decoration: {
       top: 60,
-      left: 40,
+      left: 90,
     },
     tabList: [
       {type: 10091,title: '推荐', decoration: {}, name: 'tab_list_section_item'},
@@ -52,6 +52,7 @@ export function buildShortVideoItemAdapter(list: Array<ShortVideoItem>): Array<Q
         width: 540,
         height: 144,
       },
+      name: 'list_section_item',
       ...item,
     }
     data.push(poster)

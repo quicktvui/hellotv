@@ -1,12 +1,12 @@
 .short_video_section{
   position: absolute;
-  background-color: yellow;
+  background-color: transparent;
 }
 .list_section_root{
-  background-color: aqua;
+  background-color: transparent;
 }
 .tab_list_section{
-  background-color: #E25D8A;
+  background-color: transparent;
 }
 .tab_list_section_item{
   height: 50px;
@@ -27,7 +27,7 @@
   focus-color:white;
 }
 .list_section{
-  background-color: blue;
+  background-color: transparent;
 }
 .list_section_item{
   background-color: #252525;
