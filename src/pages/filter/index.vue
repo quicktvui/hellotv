@@ -271,6 +271,7 @@ export default defineComponent({
           log.d("leftTagsItemFocus--", e)
         }
         if (curTagPosition !== e.position) {
+          tags_content.value.showFilter = true
           tags_content.value.loading = true
           tags_content.value.empty = false
         }

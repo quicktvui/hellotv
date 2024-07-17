@@ -216,6 +216,7 @@ export default defineComponent({
     let filterTriggerTask = ref<Array<any>>([])
     let hideSelectTask = ref<Array<any>>([])
     let isFirstLoad = ref(true)
+    let showFilter = true // 筛选组件显示状态
 
     function init(){
       hideSelectTask.value = [
@@ -247,6 +248,13 @@ export default defineComponent({
       screenItemContentFocus.value = e.isFocused
       if (e.isFocused){
         context.emit('setLeftNextFocus', 'screen_right_content')
+
+        // 手动隐藏筛选项
+        if (showFilter && e.position >= spanCount.value) {
+          showFilter = false
+          screen_right_scroll_content.value?.scrollToWithOptions(0, filterHeight.value, 300)
+        }
+
         const focusValue = focusList[0]
         if (focusValue !== 3){
           focusList[0] = 3
@@ -321,6 +329,7 @@ export default defineComponent({
     function onFilterFocused(e){
       if (e.isFocused){
         context.emit('setLeftNextFocus', 'screen_right_filters')
+        showFilter = true
         focusList = []
       }
     }
@@ -412,19 +421,15 @@ export default defineComponent({
 
     function setFilterTriggerTask() {
       const length = getFilterLength(FilterConfig.filterMoreLimit)
+
       filterTriggerTask.value = (length > 1) ? [
         getOffsetY() ? {
           event: 'onFocusAcquired',
           target: 'screen_right_selected_tags',
           function: 'changeVisibility',
           params: ['visible'],
-        } : {},
-        {
-          event: 'onFocusAcquired',
-          target: 'screen_right_scroll_content',
-          function: 'scrollToWithOptions',
-          params: [{x: 0, y: filterHeight.value, duration: 300}],
-        }] : []
+        } : {}
+      ] : []
     }
 
     function setRecordTip(){
