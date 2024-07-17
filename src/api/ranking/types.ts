@@ -49,7 +49,7 @@ export interface IrankingContent {
 }
 export interface IrankingMoreContent {
   id:string;
-  topSpace:number;//顶部偏移距离，可以是负数
+  topSpace?:number;//顶部偏移距离，可以是负数
   type: Tvalues<typeof rankingTypes>;
   moreList: IrankingContent[];
 }

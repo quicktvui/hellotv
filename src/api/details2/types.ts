@@ -1,4 +1,6 @@
 import { TtopModes, ITopMenuBarBtns, ItopMenuBarLogo } from '../../components/TopMenuBar/index'
+// @ts-ignore
+import type { TposterType } from '../../pages/detail2/index.ts'
 
 export interface IAnyobj {
   [k: string]: any
@@ -43,4 +45,56 @@ export interface IvideoDes {
   tags: Array<Itag>;
   actions: Array<IvideoDesAction>;
   des?:string;//视频简介信息
+}
+
+
+//选集相关类型定义--------------------------------
+export const IselectionPosterTypes = {
+  poster: 10001, btn: 1
+} as const;
+
+export interface IselectionPoster {
+  id:string;
+  title?:string;
+  subTitle?:string;
+  poster:string;//预览图
+  corner?:string;//角标
+  imgCorner?:string;//图片角标
+  _type?:Tvalues<typeof IselectionPosterTypes>;
+  _router?:{
+    url:string;params:object
+  };
+  _config?: {
+    imgWidth?: number, imgHeight?:number
+  }
+}
+export interface IselectionBaseSection {
+  id:string;
+  title?:string;
+  itemList:TposterType[];
+  _config?: {
+    space?:number
+  }
+}
+export interface IselectionSection {
+  id:string;
+  title?:string;
+  tabList: Array<{
+    id:string;
+    title?:string;
+    _config?: {
+      space?:number
+    };
+    tabList: Array<{
+      id:string;
+      title?:string;
+      _config?: {
+        space?:number
+      };
+      itemList:TposterType[];
+    }>;
+  }>;
+  _config?: {
+    space?:number
+  }
 }

@@ -19,5 +19,6 @@
   font-size: 30px;
   color: hsl(0, 0%, 75%);
   focus-color: #0E0E0E;
+  select-color: #ffffff;
 }
 </style>
