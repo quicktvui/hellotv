@@ -1,5 +1,11 @@
+import type {
+  QTWaterfallSection, QTWaterfallItem
+} from "@quicktvui/quicktvui3";
 import { RequestManager } from "../request/RequestManager";
-import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes} from './types'
+import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,IselectionPosterTypes} from './types'
+// @ts-ignore
+import { getSelectionSection,getSelectionMoreSection,getSelectionPoster } from '../../pages/detail2/index.ts'
+
 import homeIcon from '../../assets/ic_header_home.png'
 import homeIconf from '../../assets/ic_header_home_focus.png'
 import logo from '../../assets/ic_media_vip_button_focused.png'
@@ -83,5 +89,39 @@ export class Detail2Base {
         }
       ]
     }
+  }
+
+  async getSelectionsData():Promise<QTWaterfallSection[]>{
+
+    return [
+      getSelectionSection({
+        id: 'd2SelectionSection1',
+        tabList: []
+      }),
+      getSelectionMoreSection({
+        id: 'd2SelectionSection2',
+        title: '相关剧情',
+        itemList: new Array(10).fill(1).map((_,index)=>{
+          return getSelectionPoster({
+            id: 'd2SelectionSection2'+index,
+            title: '复仇者联盟: 终局之战',
+            subTitle: '2024-02-08上映',
+            poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
+          })
+        })
+      }),
+      getSelectionMoreSection({
+        id: 'd2SelectionSection3',
+        title: '更多剧情',
+        itemList: new Array(10).fill(1).map((_,index)=>{
+          return getSelectionPoster({
+            id: 'd2SelectionSection3'+index,
+            title: '生化危机: 死亡岛',
+            subTitle: '2024-03-08上映',
+            poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png',
+          })
+        })
+      })
+    ]
   }
 }

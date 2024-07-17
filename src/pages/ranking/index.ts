@@ -5,8 +5,6 @@ import type {
 } from "@quicktvui/quicktvui3";
 import { VirtualView, QTWaterfallSectionType, QTWaterfallItemType } from "@quicktvui/quicktvui3";
 import rankApi from '../../api/ranking/index';
-import { Ref } from 'vue'
-import { Native } from '@extscreen/es3-vue';
 // import numImg1 from '../../assets/ranking/1.png'
 // import numImg2 from '../../assets/ranking/2.png'
 // import numImg3 from '../../assets/ranking/3.png'
@@ -258,8 +256,8 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
       _id: ids.rankingMoreSection+data.id, type: rankingContentTypes.more,
       title: '',
       titleStyle: {},
-      decoration: { top: data.topSpace },
-      style: { width: pageWidth , height: 400, },
+      decoration: { top: data.topSpace??-102 },//102 680
+      style: { width: pageWidth , height: 400, },//400 1080
       // waterFallStyle: { width: pageWidth , height: 900, marginTop: -500 },
       itemList
     }

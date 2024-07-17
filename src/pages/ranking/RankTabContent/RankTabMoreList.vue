@@ -1,4 +1,5 @@
 <template>
+  <!-- :clipBounds="{left:100,top:100,right:100,bottom:100}" -->
   <div class="rtm_list" flexStyle="${style}" :clipChildren="true">
     <qt-waterfall
       ref="waterfall" class="rtm_waterfall" tvItemListName="itemList"

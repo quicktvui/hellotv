@@ -52,7 +52,7 @@ export class RankBaseApi {
     
     if(pageIndex === 0){
       return {
-        id: 'rankingContent'+pageIndex, type: rankingTypes.sort, topSpace: 0,
+        id: 'rankingContent'+pageIndex, type: rankingTypes.sort,
         moreList: [
           {
             id: 'rankingSortContent_'+pageIndex+'1', rankName: '',
@@ -80,7 +80,7 @@ export class RankBaseApi {
       }
     }
     return {
-      id: 'rankingContent'+pageIndex, type: rankingTypes.more, topSpace: -102,//102
+      id: 'rankingContent'+pageIndex, type: rankingTypes.more,//102 680
       moreList: ['会员榜','翻剧榜','国创榜','电影榜','电视剧榜','纪录片榜','综艺榜'].map((mlItem,mlIndex)=>{
         return {
           id: 'rankingMoreContent_' + pageIndex+mlIndex, rankName: mlItem,
