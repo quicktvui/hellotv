@@ -15,7 +15,8 @@
       <img class="screen-left-item-tags-icon" :duplicateParentState="true" showOnState="focused" :src="iconFocus" />
       <img class="screen-left-item-tags-icon" :duplicateParentState="true" showOnState="selected" :src="iconSelected" />
     </qt-view>
-    <qt-text class="screen-left-item-tags-text" :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
+    <qt-text class="screen-left-item-tags-text"
+             :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
              :focusable="false"
              gravity="center"
              autoWidth

@@ -12,9 +12,15 @@ import history from './pages/history/history_template.vue'
 import login from './pages/login/index.vue'
 import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
+import test from './pages/test.vue'
 
 
 const routes = [
+  {
+    path: '/test',
+    name: 'test',
+    component: test,
+  },
   {
     path: '/home',
     name: 'home',

@@ -47,7 +47,7 @@
               class="media-player-view-seekbar-css"
               ref="seekBarRef"
               name="seekBar"
-              :color="{ startColor: '#FF0057FF', endColor: '#FF00C7FF' }"
+              :color="{ startColor: '#FF6699', endColor: '#FF6699' }"
               :nextFocusName="{ left: 'seekBar' }"
               :visible="isFullWindow && isProgressShowing"
               :onProgressChanged="onSeekBarChanged"
@@ -543,7 +543,9 @@ export default defineComponent({
           }
           break
       }
-      setPlayerViewStateDismissDelay(5000)
+      if (viewState.value !== IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_DISMISS){
+        setPlayerViewStateDismissDelay(5000)
+      }
     }
 
     //-----------------------------------------------------
@@ -597,6 +599,7 @@ export default defineComponent({
     }
 
     function setPlayerManager(value: ESIPlayerManager): void {
+
       player = value
     }
 

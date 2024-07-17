@@ -1,22 +1,22 @@
 <template>
-  <div class="img-root-css" :style="{width:width+'px',height:height+'px'}" >
+  <div class="img-root-css" :style="{width:width+'px',height:height+'px'}" :focusable="false">
      <qt-animation ref="animationOldRef" class="animation-css">
-       <img :src="srcOld" class="bgImg"
+       <img :src="srcOld" class="bgImg" :focusable="false"
           :style="{'border-radius': borderRadius + 'px',width:width+'px',height:height+'px'}">
      </qt-animation>
      <qt-animation ref="animationNewRef" class="animation-css">
-       <img :src="srcNew" class="bgImg"
+       <img :src="srcNew" class="bgImg" :focusable="false"
           :style="{'border-radius': borderRadius + 'px',width:width+'px',height:height+'px'}">
      </qt-animation>
  </div>
 </template>
-  
+
   <script lang="ts">
   import {defineComponent, watch} from "@vue/runtime-core";
   import {ref} from "vue";
   import {QTAnimationPropertyName, QTAnimationValueType, QTIAnimation} from "@quicktvui/quicktvui3";
   import {useESToast} from "@extscreen/es3-core";
-  
+
   export default defineComponent({
     name: "bg-player-img",
     props: {
@@ -111,7 +111,7 @@
         timer && clearTimeout(timer)
         timer = setTimeout(()=>{srcOld.value = src},props.transitionTime)
       }
-  
+
       return {
         srcOld,
         srcNew,
@@ -123,7 +123,7 @@
     }
   })
   </script>
-  
+
   <style>
   .img-root-css {
     display: flex;
@@ -144,4 +144,3 @@
     background-color: transparent;
   }
   </style>
-  

@@ -47,7 +47,7 @@ import {
 } from "@extscreen/es3-player"
 import { IMedia } from "../../../api/media/IMedia";
 import ESMediaPlayerView from "./media-player-view.vue"
-import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { ESKeyEvent, ESLogLevel, useESLog } from "@extscreen/es3-core";
 import { buildMediaItemList } from "../adapter/PlayerDataAdapter";
 import { useMediaDataSource } from "../../../api/UseApi";
 import ESMediaPlayerSmallView from "./media-player-small-view.vue"
@@ -71,7 +71,6 @@ export default defineComponent({
   ],
   setup(props, context) {
     const log = useESLog()
-    const eventbus = useESEventBus()
     const playerManager = ref<ESIPlayerManager>()
     const playerList = [markRaw(ESVideoPlayer)]
     const playerListRef = ref(playerList)

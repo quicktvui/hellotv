@@ -1,6 +1,5 @@
 <template>
   <es-player-manager
-    v-if="startInit"
     ref="playerManager"
     class="media-def-root-css"
     :focusable="false"
@@ -10,6 +9,8 @@
     :playerViewList="playerViewListRef"
     @onPlayerPlayMedia="onPlayerPlayMedia"
     @onPlayerPlaying="onPlayerPlaying"
+    @onPlayerPaused="onPlayerPaused"
+    @onPlayerStopped="onPlayerStopped"
     @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged"
     @onPlayerCompleted="onPlayerCompleted"
     @onPlayerInterceptSuccess="onPlayerInterceptSuccess"
@@ -21,14 +22,16 @@
 <script lang="ts">
 import {
   ESPlayerInterceptError,
-  ESPlayerInterceptResult,
+  ESPlayerInterceptResult, ESPlayerPlayMode,
   ESPlayerWindowType
 } from "@extscreen/es3-player"
+import { ESMediaItemList } from "@extscreen/es3-player-manager/dist/src/core/ESMediaItemList"
 import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { defineComponent } from "@vue/runtime-core"
-import { ESLogLevel, useESLog } from "@extscreen/es3-core"
+import { ESKeyEvent, ESLogLevel, useESLog } from "@extscreen/es3-core"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
-import { markRaw, ref } from "vue"
+import { markRaw, onMounted, ref } from "vue"
+import MediaManagerView from "./media-manager-view.vue"
 
 const TAG = "MediaDefPlayer"
 
@@ -44,8 +47,17 @@ export default defineComponent({
     },
     isShowPlayerController:{
       type:Boolean,
-      default:false
+      default:true
     },
+    playerLeft:{
+      type:Number,
+      default:0
+    },
+    playerTop:{
+      type:Number,
+      default:0
+    },
+    list:Array
 
   },
   emits: [
@@ -59,23 +71,23 @@ export default defineComponent({
   ],
   setup(props, context) {
     const log = useESLog()
-    let playerLeft = ref(0)
-    let playerTop = ref(0)
     const playerManager = ref<ESIPlayerManager>()
     const playerList = [markRaw(ESVideoPlayer)]
     const playerListRef = ref(playerList)
     let playerViewList = []
-    let playerViewListRef = ref()
-    //初始化标志
-    let startInit = ref(false)
-    function init(){
+    let playerViewListRef = ref([])
+    let progressTimer: NodeJS.Timeout
+    onMounted(()=>{
       if (props.isShowPlayerController){
-        playerViewList = []
-      }
-      playerViewListRef.value = playerViewList
-      startInit.value = true
+        playerViewList = [markRaw(MediaManagerView)]
 
-    }
+        playerViewListRef.value = playerViewList
+        // setTimeout(()=>{
+        //   const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
+        //   mRef.setShowView(true)
+        // },6000)
+      }
+    })
 
     const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -87,8 +99,31 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-----------onPlayerPlaying------------->>>>')
       }
-      // startProgressTimer()
+      startProgressTimer()
       context.emit('onPlayerPlaying')
+    }
+    function startProgressTimer() {
+      stopProgressTimer()
+      progressTimer = setInterval(() => {
+        playerManager.value?.getDuration()
+        playerManager.value?.getCurrentPosition()
+      }, 500);
+    }
+    function stopProgressTimer() {
+      if (progressTimer) {
+        clearInterval(progressTimer);
+      }
+    }
+    function onPlayerPaused(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------onPlayerPaused------------->>>>')
+      }
+    }
+    function onPlayerStopped(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------onPlayerStopped------------->>>>')
+      }
+      stopProgressTimer()
     }
     function onPlayerWindowTypeChanged(windowType: ESPlayerWindowType): void {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -120,22 +155,100 @@ export default defineComponent({
       }
       context.emit('onPlayerInitialized')
     }
+    function initialize() {
+      playerManager.value?.initialize()
+    }
+    function setFullWindow(){
+      playerManager.value?.setFullWindow()
+    }
+    function setSmallWindow(){
+      playerManager.value?.setSmallWindow()
+    }
 
+    function setSize(width: number, height: number): void{
+      playerManager.value?.setSize(width,height)
+    }
+
+    function playMediaList(playList: ESMediaItemList): void{
+      playerManager.value?.playMediaList(playList)
+    }
+    function setPlayMediaListMode(playMode: ESPlayerPlayMode): void{
+      playerManager.value?.setPlayMediaListMode(playMode)
+    }
+
+    function start(position:number){
+      playerManager.value?.start(position)
+    }
+    function pause() {
+      playerManager.value?.pause()
+    }
+    function resume(){
+      playerManager.value?.resume()
+    }
+    function stop(){
+      playerManager.value?.stop()
+    }
+    function reset(){
+      playerManager.value?.reset()
+    }
+    function release(){
+      playerManager.value?.release()
+    }
+
+    function onKeyDown(keyEvent: ESKeyEvent): boolean {
+      if (playerManager.value) {
+        return playerManager.value!.onKeyDown(keyEvent)
+      }
+      return false
+    }
+    function onKeyUp(keyEvent: ESKeyEvent): boolean {
+      if (playerManager.value) {
+        return playerManager.value!.onKeyUp(keyEvent)
+      }
+      return false
+    }
+    function getWindowType(): ESPlayerWindowType {
+      return playerManager.value?.getWindowType() ?? ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL
+    }
+    function onBackPressed(): boolean {
+      if (getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+        return false;
+      }
+      if (playerManager.value) {
+        return playerManager.value!.onBackPressed()
+      }
+      return false
+    }
     return {
+      playerManager,
       onPlayerPlayMedia,
       onPlayerPlaying,
+      onPlayerPaused,
+      onPlayerStopped,
       onPlayerWindowTypeChanged,
       onPlayerCompleted,
       onPlayerInterceptSuccess,
       onPlayerInterceptError,
       onPlayerInitialized,
-
+      initialize,
+      setFullWindow,
+      setSmallWindow,
+      getWindowType,
+      setSize,
+      playMediaList,
+      setPlayMediaListMode,
+      start,
+      pause,
+      resume,
+      stop,
+      reset,
+      release,
+      onKeyDown,
+      onKeyUp,
+      onBackPressed,
       playerListRef,
       playerViewListRef,
 
-      startInit,
-      playerLeft,
-      playerTop
     }
   }
 })

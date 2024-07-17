@@ -3,7 +3,7 @@
        :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
-      <bg-player class="bg_player" ref="bg_player" :clipChildren="false" style="position: absolute;" />
+    <bg-player class="bg_player" ref="bg_player" :clipChildren="false" style="position: absolute;" />
       <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
         v-if="isShowTop" :blockFocusDirections="['left', 'right', 'up']">
         <slot name="buttonsHeader"/>
@@ -76,6 +76,7 @@
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
         </template>
       </qt-tabs>
+
       <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
   </qt-view>
 </template>
@@ -276,10 +277,8 @@ export default defineComponent({
     }
 
     function setTabPagePageNo(tabPageIndex: number, pageNo: number) {
-      console.log("XRG===111",tabItemList[tabPageIndex])
       const tab: QTTabItem = tabItemList[tabPageIndex]
       tab.pageNo = pageNo
-      console.log("XRG===222",tabItemList[tabPageIndex])
     }
     // 加载数据时获取小窗 小窗列表 背景播放数据
     async function buildPlayerData(pageIndex: number, itemList: any, tabPage: QTTabPageData) {

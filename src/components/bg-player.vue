@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="bg_player" :clipChildren="false" ref="bg_root">
+  <qt-view class="bg_player" :clipChildren="false" ref="bg_root" :style="{zIndex:zIndex}">
     <replace-child
       :focusable="false" :clipChildren="false"
       ref="bg_player_replace_child"
@@ -16,24 +16,31 @@
       :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
       <qt-view :style="{width: (playerWidth + 20) + 'px',height:(playerHeight+30) + 'px'}"
         v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
-        <es-player-manager :clipChildren="false"
+        <media-def-player
           ref="playerManagerRef"
           class="player-manager"
-          :focusable="false"
-          :style="{left: leftNum,top: topNum}"
-          :initPlayerWindowType="2"
-          :playerList="playerList"
+          :player-left="leftNum"
+          :player-top="topNum"
+          :clipChildren="false"
           @onPlayerPlaying="onVideoPlayerPlaying"
           @onPlayerCompleted="onVideoPlayerCompleted"
-          @onPlayerInitialized="onPlayerInitialized"
-        />
+          @onPlayerInitialized="onPlayerInitialized"/>
+
+<!--        <es-player-manager :clipChildren="false"-->
+<!--          ref="playerManagerRef"-->
+<!--          class="player-manager"-->
+<!--          :focusable="false"-->
+<!--          :style="{left: leftNum,top: topNum}"-->
+<!--          :initPlayerWindowType="2"-->
+<!--          :playerList="playerList"-->
+<!--          @onPlayerPlaying="onVideoPlayerPlaying"-->
+<!--          @onPlayerCompleted="onVideoPlayerCompleted"-->
+<!--          @onPlayerInitialized="onPlayerInitialized"-->
+<!--        />-->
       </qt-view>
       <!--  -->
       <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}"
         :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
-        <!-- <img-transition ref="itemCellBgImgRef" :transitionTime="400" :focusable="false" :clipChildren="false" class="item_cell_bg_img"
-          :style="{backgroundColor:'transparent',width:playerWidth+'px',height:playerHeight+'px'}">
-        </img-transition> -->
         <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
           :focusable="false" :width="(playerWidth+30)" :height="(playerHeight+20)" :transitionTime="800"/>
       </qt-view>
@@ -78,13 +85,13 @@
 
 <script lang="ts">
 import { useESRouter } from "@extscreen/es3-router"
-import { ref, defineComponent, markRaw,nextTick } from "vue";
+import { ref, defineComponent, nextTick } from "vue";
 import { QTIListView,QTListViewItem } from "@quicktvui/quicktvui3";
 import { ESPlayerPlayMode,ESIPlayerInterceptor } from "@extscreen/es3-player"
-import { ESIPlayerManager, ESMediaItemList,ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager";
-import { ESVideoPlayer } from "@extscreen/es3-video-player";
-import { useESLog, useESToast } from "@extscreen/es3-core";
+import { ESMediaItemList,ESMediaItem } from "@extscreen/es3-player-manager";
+import { useESLog } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
+import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
 import BuildConfig from "../build/BuildConfig";
 import bgPlayerImg from "./bg-player-img.vue";
@@ -98,8 +105,8 @@ export enum CoveredPlayerType{
 export default defineComponent({
   name: 'waterfall-player',
   components: {
+    MediaDefPlayer,
     QtImgTransition,bgPlayerImg,
-    'es-player-manager': ESPlayerManager,
   },
   setup(props,ctx) {
     const router = useESRouter()
@@ -109,13 +116,11 @@ export default defineComponent({
     let playerHeight = ref<number>(1080)
     let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
-    let bgPlayerImgWidth = ref<number>(1920)
-    let bgPlayerImgHeight = ref<number>(1080)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
     const listViewRef = ref<QTIListView>()
     let listDataRec: Array<QTListViewItem> = [];
-    const playerManagerRef = ref<ESIPlayerManager>()
-    const playerList = ref([markRaw(ESVideoPlayer)])
+    const playerManagerRef = ref()
+
     const itemCellBgImgRef = ref();
     let bg_player_replace_child = ref()
     let bg_root = ref()
@@ -139,7 +144,7 @@ export default defineComponent({
     let topNum = ref(0)
     let bottomNum = ref(0)
     const log = useESLog()
-    const toast = useESToast()
+    let zIndex = ref(0)
 
     const playAtIndex = (index : number)=> {
       let list = recordPlayerList
@@ -147,7 +152,7 @@ export default defineComponent({
       if(list && list.length > index && index > -1){
         currentPlayIndex.value = index
         let item = list[index]
-        log.e('BG-PLAYER',`playAtIndex item:${JSON.stringify(item)},index:${index}`)
+
         play(item)
         if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       }else{
@@ -169,7 +174,7 @@ export default defineComponent({
         if(!playerInit.value){
           playerInit.value = true
           delayToPlay += 2000
-          log.e('BG-PLAYER',`doChangeParent 首次初始化播放器`)
+          // log.e('BG-PLAYER',`doChangeParent 首次初始化播放器`)
         }
         let item0 = playerListData[0]
         initPlayBg(item0.cover)
@@ -252,7 +257,14 @@ export default defineComponent({
       playerWidth.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pWidth : pWidth - 30
       playerHeight.value = bgPlayerType.value == CoveredPlayerType.TYPE_BG ?  pHeight : pHeight - 20
       // toast.showShortToast(playerHeight.value+'yyyyyyyyyyy'+playerWidth.value)
-      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
+      if(!BuildConfig.isLowEndDev) {
+        if (bgPlayerType.value == CoveredPlayerType.TYPE_BG){
+          playerManagerRef.value?.setFullWindow()
+        }else{
+          playerManagerRef.value?.setSmallWindow()
+        }
+        playerManagerRef.value?.setSize(playerWidth.value, playerHeight.value)
+      }
     }
     // cell-img-transition api
 
@@ -301,7 +313,6 @@ export default defineComponent({
       let mediaItem_0: ESMediaItem
       let playList: ESMediaItemList
       if (isRequestUrl && mediaInterceptor){
-        log.e("XRG",`准备拦截数据`)
         mediaItem_0 = {
           id:item.id,
           interceptors:[mediaInterceptor],
@@ -344,14 +355,12 @@ export default defineComponent({
       }
     }
     const pause = () => {
-      log.d('BG-PLAYER',`pause`)
       if(!BuildConfig.isLowEndDev) playerManagerRef.value?.stop()
       if(isAnyPlaying.value) {
         isAnyPlaying.value = false
       }
     }
     const resume = () => {
-      log.d('BG-PLAYER',`resume`)
       //FIXME 这里使用了start方法，应该是resume?
       if(!BuildConfig.isLowEndDev) playerManagerRef.value?.resume()
     }
@@ -365,7 +374,6 @@ export default defineComponent({
       if(pauseOnCoverShow.value){
         pause()
       }else{
-        console.log("XRG===",`recordPlayerList[currentPlayIndex.value].url ${recordPlayerList[currentPlayIndex.value].url}`)
         requestDismissCover(1500)
       }
     }
@@ -423,9 +431,9 @@ export default defineComponent({
       }
     }
     return {
-      playerList,bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,
+      bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,
-      playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,bgPlayerImgWidth,bgPlayerImgHeight,
+      playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
       playerWidth,playerHeight,playerIsInitialized,
       listViewRef,onItemClick,currentPlayIndex,onItemFocus,onClickCellItem,
       requestDismissCover,setCurBg,setBgImage,
@@ -433,7 +441,7 @@ export default defineComponent({
       onVideoPlayerPlaying,onVideoPlayerCompleted,onPlayerInitialized,
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
-      keepPlayerInvisible
+      keepPlayerInvisible,zIndex
     };
   },
 });
@@ -462,7 +470,6 @@ export default defineComponent({
   position: absolute;
   /* left: 10;
   top: 10; */
-  z-index: -1;
 }
 .home_bg_player_view_mask{
   background-color: rgba(0,0,0,0.5);
@@ -542,7 +549,7 @@ export default defineComponent({
 .iclf_item_thumbnail{
   position: absolute;
   height: 96px;
-  left: 1;
+  left: 1px;
   top: 0;
   z-index: 22;
 }
