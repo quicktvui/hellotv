@@ -24,7 +24,7 @@ import {
   tabContentUrl,
   tabListUrl,
 } from "./RequestUrl";
-import { buildO2MTabContentData, buildO2MTabData } from "../pages/home/build_data/useTabData";
+import { buildO2MTabContentData, buildO2MTabData, buildHomeShortVideoAdapter } from "../pages/home/build_data/useTabData";
 
 /*****
  ***************搜索 *********
@@ -79,6 +79,11 @@ export function createGlobalApi(): IGlobalApi {
     pageSize: number,
     tabPageIndex?: number
   ): Promise<QTTabPageData> {
+    if(tabId == 'short_video' && pageNo < 2) {
+      let tabPage = buildHomeShortVideoAdapter(tabId,tabPageIndex)
+      tabPage.data[0].itemList = buildShortVideoItemAdapter(shortVideoList)
+      return Promise.resolve(tabPage);
+    }
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {
       return getMockTabContent(tabId, pageNo, tabPageIndex);

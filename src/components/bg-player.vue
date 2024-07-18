@@ -9,75 +9,96 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
-    <qt-view sid="bg-player" class="bg_player_box"
-      :clipChildren="true" :focusable="false" name='home_player'
-      :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
-      :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
-      <qt-view :style="{width: (playerWidth + 20) + 'px',height:(playerHeight+30) + 'px'}"
-        v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
-        <media-def-player
-          ref="playerManagerRef"
-          class="player-manager"
-          :player-left="leftNum"
-          :player-top="topNum"
-          :clipChildren="false"
-          @onPlayerPlaying="onVideoPlayerPlaying"
-          @onPlayerCompleted="onVideoPlayerCompleted"
-          @onPlayerInitialized="onPlayerInitialized"/>
+    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity" style="background-color: blue">
+      <qt-view sid="bg-player" class="bg_player_box"
+        :clipChildren="true" :focusable="false" name='home_player'
+        :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
+        :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
+        <qt-view :style="{width: (playerBoxWidth) + 'px',height:(playerBoxHeight) + 'px'}"
+          v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
+          <media-def-player
+            ref="playerManagerRef"
+            class="player-manager"
+            :player-left="playerLeft"
+            :player-top="playerTop"
+            :clipChildren="false"
+            @onPlayerPlaying="onVideoPlayerPlaying"
+            @onPlayerCompleted="onVideoPlayerCompleted"
+            @onPlayerInitialized="onPlayerInitialized"/>
+        </qt-view>
+        <!--  -->
+        <qt-view class="item_player_focus_bg" 
+          :style="{width:(bgPlayerType==2? playerWidth: playerWidth + 30) + 'px',
+          height:(bgPlayerType==2? playerHeight: playerHeight + 20) + 'px',
+          left: bgPlayerType==2? playerLeft : playerLeft - 15,
+          top: bgPlayerType==2? playerTop : playerTop - 10}"
+          :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
+          <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
+            :borderRadius="bgPlayerType==2?0:20"
+            :focusable="false" :width="(bgPlayerType==2? playerWidth: playerWidth + 30)" 
+            :height="(bgPlayerType==2? playerHeight: playerHeight + 20)" :transitionTime="600"/>
+        </qt-view>
+        <!-- 背景视频遮罩 -->
+        <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2" 
+          :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"/>
+        <!-- 小窗播放列表 -->
+        <qt-view class="item_cell_list_front"
+          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
+          <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
+            :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
+            :bringFocusChildToFront="false"
+            :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
+            :singleSelectPosition="currentPlayIndex"
+            @item-click="onItemClick"  @item-focused="onItemFocus">
+            <!-- 小窗列表 文字类型 10001-->
+            <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
+              :style="{width: playerListWidth + 'px'}"
+              :clipChildren="true" eventClick eventFocus :focusScale="1">
+                <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
+                  :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,40,0]"/>
+                <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+                  <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+                </qt-view>
+            </qt-view>
+            <!-- 小窗列表 图片类型 10002-->
+            <qt-view :type="10002" name="iclf_item2" class="iclf_item2" :focusable="true" :enableFocusBorder="true"
+              :style="{width: playerListWidth + 'px'}"
+              :clipChildren="true" eventClick eventFocus :focusScale="1">
+                <qt-image src="${thumbnail}" :focusable="false" class="iclf_item_thumbnail" :style="{width: (playerListWidth - 2) + 'px'}"/>
+                <qt-view class="iclf_item_thumbnail_mask" :gradientBackground="{colors:['#00000000','#E6000000']}" :focusable="false"
+                  :style="{width: playerListWidth + 'px'}" :showOnState="['normal']" :duplicateParentState="true"/>
+                <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
+                  <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
+                </qt-view>
+            </qt-view>
+          </qt-list-view>
+        </qt-view>
       </qt-view>
-      <!--  -->
-      <qt-view class="item_player_focus_bg" :style="{width:(playerWidth + 30) + 'px',height:(playerHeight + 20) + 'px'}"
-        :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
-        <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
-          :focusable="false" :width="(playerWidth+30)" :height="(playerHeight+20)" :transitionTime="800"/>
+    </div>
+    <qt-view class="bg_player_video_info" :focusable="false" :visible="videoInfo.isShow">
+      <qt-view class="bgvi_t" :focusable="false" >
+        <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false" 
+          class="bgvi_t_text" :duplicateParentState="true" :text="`${videoInfo.score} ${videoInfo.sort}`" />
+        <span class="bgvi_t_tag" :focusable="false" >{{ videoInfo.tag }}</span>
       </qt-view>
-      <!-- 背景视频遮罩 -->
-      <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"/>
-      <!-- 小窗播放列表 -->
-      <qt-view class="item_cell_list_front"
-        :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
-        <qt-list-view ref="listViewRef" :clipChildren="true" padding="0,0,0,1" v-if="listInit" :visible="bgPlayerType===1"
-          :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}"
-          :bringFocusChildToFront="false"
-          :autoscroll='[currentPlayIndex,playerListHeight * 0.5 - 96 * 0.5]'
-          :singleSelectPosition="currentPlayIndex"
-          @item-click="onItemClick"  @item-focused="onItemFocus">
-          <!-- 小窗列表 文字类型 10001-->
-          <qt-view :type="10001" name="iclf_item" class="iclf_item" :focusable="true" :enableFocusBorder="true"
-            :style="{width: playerListWidth + 'px'}"
-            :clipChildren="true" eventClick eventFocus :focusScale="1">
-              <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="26" gravity="left|center" :lines="2" :maxLines="2"
-                :duplicateParentState="true"  class="iclf_item_text"  text="${title}" :paddingRect="[50,0,40,0]"/>
-              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
-              </qt-view>
-          </qt-view>
-          <!-- 小窗列表 图片类型 10002-->
-          <qt-view :type="10002" name="iclf_item2" class="iclf_item2" :focusable="true" :enableFocusBorder="true"
-            :style="{width: playerListWidth + 'px'}"
-            :clipChildren="true" eventClick eventFocus :focusScale="1">
-              <qt-image src="${thumbnail}" :focusable="false" class="iclf_item_thumbnail" :style="{width: (playerListWidth - 2) + 'px'}"/>
-              <qt-view class="iclf_item_thumbnail_mask" :gradientBackground="{colors:['#00000000','#E6000000']}" :focusable="false"
-                :style="{width: playerListWidth + 'px'}" :showOnState="['normal']" :duplicateParentState="true"/>
-              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 16px;" :focusable="false"/>
-              </qt-view>
-          </qt-view>
-        </qt-list-view>
+      <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false" 
+        class="bgvi_b_text" :duplicateParentState="true" 
+        :text="`${videoInfo.desc}`" />
+      <qt-view class="bgvi_btn" :focusable="true" >
+        <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
+          class="bgvi_btn_text" :duplicateParentState="true" text="看全集" />
       </qt-view>
     </qt-view>
-    </div>
   </qt-view>
 </template>
 
 <script lang="ts">
 import { useESRouter } from "@extscreen/es3-router"
-import { ref, defineComponent, nextTick } from "vue";
-import { QTIListView,QTListViewItem } from "@quicktvui/quicktvui3";
+import { ref, defineComponent, nextTick, reactive } from "vue";
+import { QTIListView,QTListViewItem,VirtualView } from "@quicktvui/quicktvui3";
 import { ESPlayerPlayMode,ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { ESMediaItemList,ESMediaItem } from "@extscreen/es3-player-manager";
-import { useESLog } from "@extscreen/es3-core";
+import { useESLog, useESToast } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
@@ -104,13 +125,16 @@ export default defineComponent({
   },
   setup(props,ctx) {
     const router = useESRouter()
+    const toast = useESToast()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
-    let playerWidth = ref<number>(1920)
-    let playerHeight = ref<number>(1080)
+    let playerWidth = ref<number>(0)
+    let playerHeight = ref<number>(0)
     let playerListWidth = ref<number>(478)
     let playerListHeight = ref<number>(0)
     let bgPlayerType = ref(CoveredPlayerType.TYPE_UNDEFINED)
+    let playerLeft = ref<number>(0)
+    let playerTop = ref<number>(0)
     const listViewRef = ref<QTIListView>()
     let listDataRec: Array<QTListViewItem> = [];
     const playerManagerRef = ref()
@@ -139,6 +163,13 @@ export default defineComponent({
     let bottomNum = ref(0)
     const log = useESLog()
     let zIndex = ref(0)
+    let videoInfo = reactive({
+      tag: '独家',
+      score: '9.7分',
+      sort: '治愈/泡面/萌系/美食/原创',
+      desc: '每个人都有不可告人的一面。这是一个世界各国均暗地里进行激烈情 报战的时代。奥斯塔尼亚（Ostania）···',
+      isShow: false
+    })
 
     const playAtIndex = (index : number)=> {
       let list = recordPlayerList
@@ -154,9 +185,11 @@ export default defineComponent({
       }
     }
     const doChangeParent = (cellReplaceSID : string, playerType:number, boxWidth:number, boxHeight:number,playerWidth1:number,
-      playerHeight1:number,playerListData:any, playIndex:number,interceptor?:ESIPlayerInterceptor) => {
-        leftNum.value = playerType == 2 ? 0 : 15
-        topNum.value = playerType == 2 ? 0 : 10
+      playerHeight1:number,playerListData:any, playIndex:number,pLeft: number, pRight: number,interceptor?:ESIPlayerInterceptor) => {
+        // leftNum.value = playerType == 2 ? 0 : 15
+        // topNum.value = playerType == 2 ? 0 : 10
+        playerLeft.value = pLeft
+        playerTop.value = pRight
         mediaInterceptor = interceptor
         clearTimeout(delayShowTimer)
         bgPlayerType.value = playerType
@@ -171,8 +204,8 @@ export default defineComponent({
           // log.e('BG-PLAYER',`doChangeParent 首次初始化播放器`)
         }
         let item0 = playerListData[0]
+        setVideoInfo(item0)
         initPlayBg(item0.cover)
-        toast.showShortToast(item0.cover)
         currentPlayIndex.value = playIndex
         delayShowTimer = setTimeout(()=>{
           initComponent(playerListData,playerType)
@@ -425,18 +458,27 @@ export default defineComponent({
         }
       }
     }
+    const setVideoInfo = (obj:any) => {
+      videoInfo.desc = obj.desc
+      videoInfo.score = obj.score
+      videoInfo.sort = obj.sort
+      videoInfo.tag = obj.tag
+      // toast.showToast(videoInfo.tag)
+      videoInfo.isShow = obj.isShow
+    }
     return {
-      bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,
+      bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,
       playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
-      playerWidth,playerHeight,playerIsInitialized,
+      playerWidth,playerHeight,playerIsInitialized,playerLeft,playerTop,
       listViewRef,onItemClick,currentPlayIndex,onItemFocus,onClickCellItem,
       requestDismissCover,setCurBg,setBgImage,
       initPlayBg, delayShowPlayer,playerInit,
       onVideoPlayerPlaying,onVideoPlayerCompleted,onPlayerInitialized,
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
-      keepPlayerInvisible,zIndex
+      keepPlayerInvisible,zIndex,
+      setVideoInfo
     };
   },
 });
@@ -446,7 +488,7 @@ export default defineComponent({
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
  flex-direction: row;justify-content: center;align-items: center;position: absolute}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
-.bg_player_box{width: 1920px;height: 1080px;background-color: transparent;position: absolute;border-radius: 20px;top: 0;left: 0;}
+.bg_player_box{background-color: transparent;position: absolute;border-radius: 20px;}
 .playerBox{
   /* background-color: rgba(0, 0, 0, 0.1); */
   background-color: transparent;
@@ -455,11 +497,8 @@ export default defineComponent({
   focus-border-color: #fff;
   focus-border-width: 2px;
   focus-border-radius: 0;
-  position: relative;
 }
 .player-manager{
-  width: 1920px;
-  height: 1080px;
   background-color: transparent;
   align-items: center;
   position: absolute;
@@ -468,9 +507,6 @@ export default defineComponent({
 }
 .home_bg_player_view_mask{
   background-color: rgba(0,0,0,0.5);
-  width: 1920px;
-  height: 1080px;
-  top: 0;
   position: absolute;
 }
 .item_cell_bg_img{
@@ -561,6 +597,58 @@ export default defineComponent({
   left: 0;
   top: 38px;
   z-index: 24;
+}
+
+.bg_player_video_info{
+  width: 1140px;
+  height: 150px;
+  background-color: transparent;
+  position: absolute;
+  left: 732px;
+  bottom: 30px;
+}
+.bgvi_t{
+  width: 1140px;
+  height: 38px;
+  flex-direction: row;
+}
+.bgvi_t_text{
+  width: 440px;
+  color: #FF9F0A;
+  height: 38px;
+}
+.bgvi_t_tag{
+  width: 63px;
+  height: 30px;
+  color: #fff;
+  font-size: 24px;
+  text-align: center;
+  line-height: 30px;
+  background-color: #0A84FF;
+  align-self: center;
+  border-radius: 2px;
+}
+.bgvi_b_text{
+  width: 900px;
+  height: 90px;
+  color: #636363;
+  margin-top: 12px;
+}
+.bgvi_btn{
+  position: absolute;
+  right: 0;
+  bottom: 21px;
+  width: 146px;
+  height: 49px;
+  border-radius: 24.5px;
+  background-color: #252525;
+  focus-background-color: #fff;
+}
+.bgvi_btn_text{
+  width: 146px;
+  height: 49px;
+  color: #BFBFBF;
+  focus-color: #333;
 }
 
 </style>
