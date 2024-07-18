@@ -2,9 +2,9 @@ import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
 import { RequestManager } from "../request/RequestManager";
-import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,IselectionPosterTypes} from './types'
+import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,selectionPosterTypes} from './types'
 // @ts-ignore
-import { getSelectionSection,getSelectionMoreSection,getSelectionPoster } from '../../pages/detail2/index.ts'
+import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs } from '../../pages/detail2/index.ts'
 
 import homeIcon from '../../assets/ic_header_home.png'
 import homeIconf from '../../assets/ic_header_home_focus.png'
@@ -96,7 +96,67 @@ export class Detail2Base {
     return [
       getSelectionSection({
         id: 'd2SelectionSection1',
-        tabList: []
+        tabList: [
+          getSelectionSectionTabs({
+            id: 'd2SelectionSection1-1', tName: '选集',
+            tabList:[
+              getSelectionSectionTabs({
+                id: 'd2SelectionSection1-1-1', tName: '1~20', type: selectionPosterTypes.btn,
+                itemList: new Array(10).fill(1).map((_,index)=>{
+                  return getSelectionPoster({
+                    id: 'd2SelectionSection1-1-1'+index, _type: selectionPosterTypes.btn,
+                    title: `第${index}集`, poster: '',
+                  })
+                })
+              }),
+              getSelectionSectionTabs({
+                id: 'd2SelectionSection1-1-2', tName: '20~40', type: selectionPosterTypes.btn,
+                itemList: new Array(10).fill(1).map((_,index)=>{
+                  const toIndex = index+20
+                  return getSelectionPoster({
+                    id: 'd2SelectionSection1-1-2'+toIndex, _type: selectionPosterTypes.btn,
+                    title: `第${toIndex}集`, poster: '',
+                  })
+                })
+              })
+            ]
+          }),
+          getSelectionSectionTabs({
+            id: 'd2SelectionSection1-2', tName: '系列',
+            itemList: new Array(10).fill(1).map((_,index)=>{
+              return getSelectionPoster({
+                id: 'd2SelectionSection1-2'+index, _type: selectionPosterTypes.btn,
+                title: `复仇者联盟系列: ${index}`,
+                poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
+              })
+            })
+          }),
+          getSelectionSectionTabs({
+            id: 'd2SelectionSection1-3', tName: '花絮',
+            tabList:[
+              getSelectionSectionTabs({
+                id: 'd2SelectionSection1-3-1', tName: '预告花絮',
+                itemList: new Array(10).fill(1).map((_,index)=>{
+                  return getSelectionPoster({
+                    id: 'd2SelectionSection1-3-1'+index,
+                    title: '预告花絮'+index,
+                    poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
+                  })
+                })
+              }),
+              getSelectionSectionTabs({
+                id: 'd2SelectionSection1-3-2', tName: '精彩看点',
+                itemList: new Array(10).fill(1).map((_,index)=>{
+                  return getSelectionPoster({
+                    id: 'd2SelectionSection1-3-2'+index,
+                    title: '精彩看点 '+index,
+                    poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
+                  })
+                })
+              }),
+            ]
+          })
+        ]
       }),
       getSelectionMoreSection({
         id: 'd2SelectionSection2',
@@ -104,7 +164,7 @@ export class Detail2Base {
         itemList: new Array(10).fill(1).map((_,index)=>{
           return getSelectionPoster({
             id: 'd2SelectionSection2'+index,
-            title: '复仇者联盟: 终局之战',
+            title: (index===2?'福尔摩斯小姐：伦敦厄运 Enola Holmes':'权力的游戏')+index,
             subTitle: '2024-02-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
           })
@@ -116,7 +176,7 @@ export class Detail2Base {
         itemList: new Array(10).fill(1).map((_,index)=>{
           return getSelectionPoster({
             id: 'd2SelectionSection3'+index,
-            title: '生化危机: 死亡岛',
+            title: '生化危机: 死亡岛'+index,
             subTitle: '2024-03-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png',
           })

@@ -10,7 +10,7 @@
       :list-data="waterfallData"
     >
       <template v-slot:list-item>
-        <qt-poster :borderRadius="20"/>
+        <Hposter :borderRadius="20" :type="hPosterType"/>
       </template>
       <template v-slot:section>
         <D2SelectionSection :type="D2SelectionsSectionTypes.selection" />
@@ -26,6 +26,8 @@ import D2SelectionSection from './D2SelectionSection.vue'
 // @ts-ignore
 import { D2SelectionsSectionTypes } from '../index.ts'
 import d2Api from '../../../api/details2/index'
+import Hposter from '../../../components/Hposter/index.vue'
+import { hPosterType } from '../../../components/Hposter/configs'
 
 const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()

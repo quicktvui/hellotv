@@ -3,8 +3,8 @@
   <div class="rtm_list" flexStyle="${style}" :clipChildren="true">
     <qt-waterfall
       ref="waterfall" class="rtm_waterfall" tvItemListName="itemList"
-      flexStyle="${style}" enablePlaceholder :makeChildVisibleClampForward="80"
-      :makeChildVisibleClampBackward="15"
+      flexStyle="${style}" enablePlaceholder 
+      :makeChildVisibleClampBackward="15" :makeChildVisibleClampForward="80"
       :endHintEnabled="false" sid="RankTabMoreListWaterfallSid"
       @onItemClick="onItemClickFn"
       @onItemFocused="onItemFocused"
