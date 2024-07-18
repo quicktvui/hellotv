@@ -107,7 +107,7 @@ export function buildFilterAdapter(allFilterList: Array<FilterConditionList>, fa
       type: 1,
       filterLineStyle: { height: _filter_text_height },
       list: filterList,
-      defaultSelectPosition: fastFilterList?.defaultSelectPosition ?? -1 > -1 ? 0 : row.defaultSelectPosition,
+      defaultSelectPosition: (fastFilterList?.defaultSelectPosition ?? -1) > -1 ? 0 : row.defaultSelectPosition,
       isFastList: false,
       decoration: {
         left: 30,

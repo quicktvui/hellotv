@@ -5,7 +5,7 @@
     <qt-image class="filter-content-item-h-img" src="${poster}" :focusable="false"/>
     
     <!-- 角标 -->
-    <qt-view class="filter-content-item-h-corner">
+    <qt-view class="filter-content-item-h-corner" :focusable="false">
       <!-- 文字 -->
       <qt-text class="filter-content-item-h-corner-text" text="VIP | 新番" flexStyle="${corner.style}" gravity="center" :focusable="false"></qt-text>
       <!-- 图片 -->
@@ -30,8 +30,6 @@
 
   </qt-view>
 </template>
-
-<script lang="ts" setup></script>
 
 <style scoped>
 .filter-content-item-h {

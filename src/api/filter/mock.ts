@@ -8,10 +8,6 @@ export const leftExpand = [
     showName: "电影",
   },
   {
-    id: "1764924767380697091",
-    showName: "纪录片",
-  },
-  {
     id: "1764924767380697092",
     showName: "国创",
   },
@@ -566,53 +562,6 @@ export const leftTags = {
         allName: "排序方式",
       },
     ],
-  },
-  "1764924767380697091": {
-    entryTag: {
-      id: "1755197938868670466",
-      tagName: "玩具",
-      status: null,
-      showName: "纪录片",
-      showType: "1",
-      normalImage: "",
-    },
-    tags: [
-      {
-        id: "1755197971454218241",
-        tagName: "科普",
-        status: null,
-        showName: "科普",
-        showType: "2",
-        normalImage:
-          "http://cms.hmon.tv/common/static/file/2024/04/24/c53da169-4378-4681-8b01-1c19343e4fad.png",
-        focusImage:
-          "http://cms.hmon.tv/common/static/file/2024/04/24/250b4fdc-043e-4820-9b65-a4ca5b5d371c.png",
-        selectImage:
-          "http://cms.hmon.tv/common/static/file/2024/04/24/36e24412-a12d-4c33-b90d-2261c97677e5.png",
-      },
-      {
-        id: "1755198123132833793",
-        tagName: "早教",
-        status: null,
-        showName: "早教",
-        showType: "1",
-        normalImage: "",
-        focusImage: "",
-        selectImage: "",
-      },
-      {
-        id: "1755198145777881089",
-        tagName: "动画",
-        status: null,
-        showName: "动画",
-        showType: "1",
-        normalImage: "",
-        focusImage: "",
-        selectImage: "",
-      },
-    ],
-    status: 1,
-    filterList: [],
   },
   "1764924767380697092": {
     entryTag: {
