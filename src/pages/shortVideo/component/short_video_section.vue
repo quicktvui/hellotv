@@ -1,6 +1,6 @@
 <template>
   <tv-item class="short_video_section" ref="short_video_section"  name="short_video_section"
-    :clipChildren="false" :focusable="false" keyName="_id"
+    :clipChildren="false" :focusable="false"
     :type="1009"
     @item-bind="onItemBind"
     @item-unbind="onItemRecycled"
