@@ -9,10 +9,12 @@
       sid="bg_player_replace_child_sid">
     </replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity" style="background-color: blue">
+    <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
       <qt-view sid="bg-player" class="bg_player_box"
         :clipChildren="true" :focusable="false" name='home_player'
-        :gradientBackground="{type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
+        :gradientBackground="bgPlayerType==2? 
+        {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [0, 0, 0, 0]}:
+        {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
         :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
         <qt-view :style="{width: (playerBoxWidth) + 'px',height:(playerBoxHeight) + 'px'}"
           v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
@@ -362,6 +364,7 @@ export default defineComponent({
         list: [mediaItem_0]
       }
       playerManagerRef.value?.playMediaList(playList);
+      playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
     }
     const release = () => {
       log.e('BG-PLAYER',`release called`)
@@ -488,11 +491,11 @@ export default defineComponent({
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
  flex-direction: row;justify-content: center;align-items: center;position: absolute}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
-.bg_player_box{background-color: transparent;position: absolute;border-radius: 20px;}
+.bg_player_box{background-color: transparent;position: absolute;border-radius: 0;}
 .playerBox{
   /* background-color: rgba(0, 0, 0, 0.1); */
   background-color: transparent;
-  border-radius: 20px;
+  border-radius: 0;
   focus-border-style: solid;
   focus-border-color: #fff;
   focus-border-width: 2px;

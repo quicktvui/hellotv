@@ -113,14 +113,22 @@ export default defineComponent({
     const onItemRecycled = (e) => {}
     const loadMore = (e) => {
       pageNo.value = pageNo.value + 1
-      context.emit("load-more", pageNo.value, currentSectionIndex.value)
+      context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
     }
-    const onItemBind = (e) => {}
+    const onItemBind = (e) => {
+      if(e.item){
+        e.item.tabList.length < 1 ?  currentTabIndex.value = -1 : currentTabIndex.value = 0
+        if(e.item.itemList.length < 1){
+          context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
+        }
+      }
+    }
     const onItemFocused = (e) => {
       if(e.hasFocus) currentSectionIndex.value = e.parentPosition
     }
     const onTabItemFocused = (e) => {
-      if(e.hasFocus){
+      if(e.hasFocus && currentTabIndex.value != e.position){
+        currentTabIndex.value = e.position
         pageNo.value = 1
         singleSelectPosition.value = e.position
       }
