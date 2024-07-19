@@ -169,7 +169,7 @@ export default defineComponent({
     TagsContentItemV,
     TagsContentItemH
   },
-  emits:['unBlockFocus', 'setLeftNextFocus'],
+  emits:['unBlockFocus', 'setLeftNextFocus', 'setContentLoadOver'],
   setup(props, context) {
     const screenPageSize = computed(()=>{return FilterConfig.screenPageSize})
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
@@ -455,18 +455,16 @@ export default defineComponent({
         if (screenContentList && screenContentList.length > 0) {
           if (curPageNum === 1) {
             screenRightContentData = screen_right_content.value!.init(screenContentList)
+            // 通知上层组件内容加载完成
+            context.emit('setContentLoadOver', true)
             // gridview 滚动到顶部并设置 selected
             if (screenRightContentData && screenRightContentData.length > 0) {
               screen_right_content.value?.scrollToSelected(0, true)
             }
-
             if (type !== 3) {
               loading.value = false
-            }else{
-              const delay = isClick ? 300 : 0
-              setTimeout(()=>{
-                filterClickLoading.value = false
-              },delay)
+            } else {
+              setTimeout(() => filterClickLoading.value = false, isClick ? 300 : 0)
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {

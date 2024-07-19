@@ -23,7 +23,10 @@
         </qt-list-view>
 
         <!-- 左侧列表 -->
-        <div v-if="isShowLeftList" class="screen-left-root-css" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }">
+        <div v-if="isShowLeftList" class="screen-left-root-css"
+          :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :descendantFocusability="leftLoadOver ? 1 : 2"
+        >
           <!-- 背景 -->
           <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
             :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
@@ -35,9 +38,7 @@
           <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
             class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
             :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
-            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid"
-            :blockFocusDirections="['down']"
-            @item-focused="leftTagsItemFocus"
+            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid" @item-focused="leftTagsItemFocus"
           >
             <!-- 文字标题 -->
             <tags-text-item :type="1"/>
@@ -52,8 +53,8 @@
         <tags-content ref="tags_content" class="screen-right-root-css"
           :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
           :clipChildren="false" :clipPadding="false"
-          :blockFocusDirections="isShowLeftList?[]:['left','right']"
-          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus'/>
+          :blockFocusDirections="isShowLeftList ? [] : ['left', 'right']" :descendantFocusability="contentLoadOver ? 1 : 2"
+          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus' @setContentLoadOver='setContentLoadOver'/>
       </qt-view>
     </scroll-view>
   </div>
@@ -104,12 +105,16 @@ export default defineComponent({
     const screen_root = ref()
     const tags_content = ref()
     const leftNextFocusRightSid = ref()
+    const leftLoadOver = ref(true) // 左侧列表是否加载完成
+    const contentLoadOver = ref(true) // 右侧内容是否加载完成
     //全局变量
     let title = ref("")
     let title_img = ref("")
     let defaultTagPosition = ref(0)
     let defaultTagSelectPos = ref(0)
     //局部变量
+    let isInit = true
+    let showLeftExpand = false
     let leftExpandSwitchTimer: any = -1
     let leftTagSwitchTimer: any = -1
     let curTagPosition:number = -1 //左侧列表当前 tag位置
@@ -121,7 +126,6 @@ export default defineComponent({
     let defaultFilters:Array<string> = []
     let defaultFastTag:string = "" //默认选中的快速标签
     let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
-    let showLeftExpand = false
 
     let leftExpandTriggerTask = [
       {
@@ -210,6 +214,7 @@ export default defineComponent({
       if (e.isFocused && e.position !== curLeftExpandPos) {
         curLeftExpandPos = e.position
         defaultTagPosition.value = -1
+        leftLoadOver.value = false
         leftNextFocusRightSid.value = 'screen_right_content'
         leftExpandSwitchTimer && clearTimeout(leftExpandSwitchTimer)
         leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id, true), 300)
@@ -238,6 +243,8 @@ export default defineComponent({
               //设置左侧列表数据
               leftTags.value!.init(tags)
               leftTags.value?.setItemSelected(0, true)
+              leftLoadOver.value = true
+
               //初始化筛选条件
               tags_content.value.init()
               //设置默认选中tag
@@ -270,6 +277,9 @@ export default defineComponent({
       if (curTagPosition !== e.position) {
         tags_content.value.loading = true
         tags_content.value.empty = false
+
+        // 首次打开页面不屏蔽右侧内容焦点
+        isInit ? isInit = false : contentLoadOver.value = false
       }
 
       leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
@@ -300,6 +310,11 @@ export default defineComponent({
       leftNextFocusRightSid.value = sid
     }
 
+    // 修改右侧内容加载状态
+    function setContentLoadOver(b: boolean) {
+      contentLoadOver.value = b
+    }
+
     function onBackPressed(){
       if (tags_content.value.screenItemContentFocus && tags_content.value.scrollY > 100){
         blockRootFocus()
@@ -320,6 +335,7 @@ export default defineComponent({
       unBlockRootFocus,
       leftExpandFocus,
       setLeftNextFocus,
+      setContentLoadOver,
 
       title,
       title_img,
@@ -338,7 +354,9 @@ export default defineComponent({
       leftExpandTriggerTask,
       leftExpandRef,
       defaultTagSelectPos,
-      leftNextFocusRightSid
+      leftNextFocusRightSid,
+      contentLoadOver,
+      leftLoadOver
     }
   }
 })
