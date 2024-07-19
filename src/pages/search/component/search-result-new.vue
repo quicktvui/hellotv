@@ -22,6 +22,7 @@
              dataStrategy="always" :autoHandleBackKey="autoHandleBackKey"
              :qt-tab-section-enable="qtTabSectionEnable"
              :tabContentSwitchDelay="200"
+             singleContent
              :custom-pool="{ name: 'search' }"
              :custom-item-pool="{ name: 'search_items' }"
              :contentNextFocus="{ left: isShowCenterSearch ? 'search_center_view_list' : 'grid_view', up: 'tabList' }"
@@ -271,7 +272,7 @@ export default defineComponent({
       gridSectionIsScroll.value = isScroll
       if(isScroll > 0){
         autoHandleBackKey.value = false
-      } 
+      }
       else {
         autoHandleBackKey.value = true
       }

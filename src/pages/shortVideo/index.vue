@@ -1,5 +1,8 @@
 <template>
   <qt-view class="short_video" ref="short_video" sid="short_video_waterfall">
+    <bg-player class="bgPlayerRef" ref="bgPlayerRef" :clipChildren="false" 
+      :defaultBgParentOpacity="1"/>
+
     <!-- 顶部按钮 -->
     <top-btns-view :logo-right="true" style="left: -24px;">
       <template #btnItem>
@@ -9,11 +12,7 @@
           :focusable="true" :icon-left="true" @click="onClick"/>
       </template>
     </top-btns-view>
-
-    <bg-player class="bgPlayerRef" ref="bgPlayerRef" :clipChildren="false" 
-      :defaultBgParentOpacity="1"
-      :border-radius="8"
-    />
+     
     <qt-waterfall class="short_video_waterfall"
       @onItemClick="onItemClick"
       @onItemFocused="onItemFocused"
@@ -29,21 +28,7 @@
         <short-video-section :type="1009" @loadMore="loadMore"/>
       </template>
     </qt-waterfall>
-    
-    <qt-view class="bg_player_video_info" :focusable="false" >
-      <qt-view class="bgvi_t" :focusable="false" >
-        <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false" 
-          class="bgvi_t_text" :duplicateParentState="true" :text="`${videoInfo.score} ${videoInfo.sort}`" />
-        <span class="bgvi_t_tag" :focusable="false" >{{ videoInfo.tag }}</span>
-      </qt-view>
-      <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false" 
-        class="bgvi_b_text" :duplicateParentState="true" 
-        :text="`${videoInfo.desc}`" />
-      <qt-view class="bgvi_btn" :focusable="true" >
-        <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
-          class="bgvi_btn_text" :duplicateParentState="true" text="看全集" />
-      </qt-view>
-    </qt-view>
+
   </qt-view>
 </template>
   
@@ -115,26 +100,6 @@
       }
       const onItemFocused = async (parentPosition, position, isFocused, item, e) => {
         if(isFocused){
-          clearTimeout(delayDealwithplayerTimer)
-          if(item.name == 'tab_list_section_item' && currentSecondTabIndex.value != position){
-            currentSecondTabIndex.value = position
-            // let listSID = waterfallDatas.value[0].listSID
-            let listSID =  waterfallRef.value?.getSection(parentPosition)!.listSID
-            // let tabListSID =  waterfallRef.value?.getSection(parentPosition)!.tabListSID
-            let data = await appApi.getShortVideoPageData('mock数据',1,10)
-            VirtualView.call(listSID,'setListData',data)
-            bgPlayerRef.value.doChangeParent('', 2,
-              1140, 640, 1140, 640,
-              [{  
-                cover: data[0].poster,
-                id: data[0].id,
-                isRequestUrl: false,
-                url: data[0].url,
-              }],
-              0
-            )
-            currentListItemIndex.value = 0
-          }
           if(item.name == 'list_section_item' && currentListItemIndex.value != position){
             currentListItemIndex.value = position
             bgPlayerRef.value.initPlayBg(item.poster)
@@ -150,11 +115,30 @@
           }
         }
       }
-      const loadMore = async (pageNo: number, sectionIndex: number) => {
+      const loadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
         let data = await appApi.getShortVideoPageData('mock数据',pageNo,10)
         if(data.length > 0){
           let listSID =  waterfallRef.value?.getSection(sectionIndex)!.listSID
-          VirtualView.call(listSID,'addListData',data)
+          if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
+          else VirtualView.call(listSID,'setListData',data)
+        }
+        if(!bgPlayerRef.value.playerInit && pageNo == 1){
+          // clearTimeout(delayDealwithplayerTimer)
+          bgPlayerRef.value.doChangeParent('', 2,
+            1920, 1080, 1140, 640,
+            [{  
+              cover: data[0].poster,
+              id: data[0].id,
+              isRequestUrl: false,
+              url: data[0].url,
+              tag: data[0].videoInfo.tag ??'',
+              score: data[0].videoInfo.score ??'',
+              sort: data[0].videoInfo.sort ??'',
+              desc: data[0].videoInfo.desc ??'',
+              isShow: true
+            }],
+            0,732,135
+          )
         }
       }
       const onClick = (e) => {
@@ -186,6 +170,8 @@
   })
   </script>
   
-  <style scoped src="./css/short_video.css"></style>
+<style scoped src="./css/short_video.css">
+
+</style>
   
   
