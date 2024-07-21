@@ -71,6 +71,7 @@ export default defineComponent({
     const globalApi = useGlobalApi()
     let recordPlayerList: Array<any> = []
     let playerIsInitialized = ref(false)
+
     const onClick = (e)=>{
       const name = e.target.attributes.name
     }
@@ -94,7 +95,6 @@ export default defineComponent({
         setSize()
         playByIndex(0)
       },2000)
-
     }
 
     const initComponent = (playerListData: any,playerType:number)=>{
@@ -186,7 +186,7 @@ export default defineComponent({
       onBackPressed,
 
       playerHeight,
-      playerWidth
+      playerWidth,
     }
   }
 })

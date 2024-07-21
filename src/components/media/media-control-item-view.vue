@@ -1,12 +1,12 @@
 <template>
   <qt-view class="media-control-item-root-css"
-           eventClick eventFocus
+           eventClick
+           eventFocus
            :sateBackgroundPadding="[30, 30]"
            autoWidth
            :focusable="true">
     <qt-text class="media-control-item-txt-css"
              :focusable="false"
-             autoWidth
              gravity="center"
              :ellipsizeMode="3"
              :duplicateParentState="true"
@@ -49,6 +49,7 @@ export default defineComponent({
 
 .media-control-item-root-css .media-control-item-txt-css {
   height: 72px;
+  width: 210px;
   color:#BFBFBF;
   focus-color:#000000;
 }

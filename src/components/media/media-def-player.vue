@@ -30,7 +30,8 @@ import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { defineComponent } from "@vue/runtime-core"
 import { ESKeyEvent, ESLogLevel, useESLog } from "@extscreen/es3-core"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
-import { markRaw, onMounted, ref } from "vue"
+import { markRaw, onMounted, ref,h } from "vue"
+import { defList } from "./adapter/ControlDataAdapter"
 import MediaManagerView from "./media-manager-view.vue"
 
 const TAG = "MediaDefPlayer"
@@ -57,8 +58,10 @@ export default defineComponent({
       type:Number,
       default:0
     },
-    list:Array
-
+    menuList:{
+      type:Array,
+      default:defList()
+    }
   },
   emits: [
     "onPlayerPlayMedia",
@@ -79,7 +82,7 @@ export default defineComponent({
     let progressTimer: NodeJS.Timeout
     onMounted(()=>{
       if (props.isShowPlayerController){
-        playerViewList = [markRaw(MediaManagerView)]
+        playerViewList = [markRaw(h(MediaManagerView,{menuList:props.menuList}))]
 
         playerViewListRef.value = playerViewList
         // setTimeout(()=>{
@@ -155,6 +158,7 @@ export default defineComponent({
       }
       context.emit('onPlayerInitialized')
     }
+
     function initialize() {
       playerManager.value?.initialize()
     }

@@ -1,3 +1,4 @@
+import { ESPlayerDefinition } from "@extscreen/es3-player"
 import FilterConfig from "../pages/filter/build_data/FilterConfig";
 import bg_play from "./home/mock/bg_play";
 import { IGlobalApi } from "./IGlobalApi";
@@ -123,6 +124,7 @@ export function createGlobalApi(): IGlobalApi {
     const urls = bg_play;
     return Promise.resolve({
       url: urls[id],
+      definition:ESPlayerDefinition.ES_PLAYER_DEFINITION_SD
     });
   }
 
