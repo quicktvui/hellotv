@@ -45,6 +45,7 @@
         <qt-grid-view :v-show='!filterClickLoading' ref="screen_right_content" name="screen_right_content" sid="screen_right_content"
           class="screen-right-content" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
           :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
+          :autofocusPosition="isFirstLoad ? 0 : -1"
           :triggerTask="switchData(filterTriggerTask)"
           :cachePool="{name:'filter_content',size:{1:40,}}"
           :blockFocusDirections="['right','down']"
@@ -168,7 +169,7 @@ export default defineComponent({
     TagsContentItemV,
     TagsContentItemH
   },
-  emits:['unBlockFocus', 'setLeftNextFocus'],
+  emits:['unBlockFocus', 'setLeftNextFocus', 'setContentLoadOver'],
   setup(props, context) {
     const screenPageSize = computed(()=>{return FilterConfig.screenPageSize})
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
@@ -249,10 +250,13 @@ export default defineComponent({
       if (e.isFocused){
         context.emit('setLeftNextFocus', 'screen_right_content')
 
-        // 手动隐藏筛选项
+        // 手动滚动页面
         if (showFilter.value && e.position >= spanCount.value) {
           showFilter.value = false
-          screen_right_scroll_content.value?.scrollToWithOptions(0, filterHeight.value, 300)
+          screen_right_scroll_content.value?.scrollToWithOptions(0, getFilterHeight(), 300)
+        } else if (showFilter.value && getCurRecordFilter().length > 0) {
+          showFilter.value = false
+          screen_right_scroll_content.value?.scrollToWithOptions(0, getScrollHeight(), 300)
         }
 
         const focusValue = focusList[0]
@@ -287,12 +291,13 @@ export default defineComponent({
           return
         }
 
-        filterClickLoading.value = true
         const parentPosition = e.parentPosition
         const itemPosition = e.position
         if (parentPosition === curFilterParentPosition && itemPosition === curFilterItemPosition){
           return
         }
+
+        filterClickLoading.value = true
         curFilterParentPosition = parentPosition
         curFilterItemPosition = itemPosition
         //更新当前值
@@ -374,9 +379,10 @@ export default defineComponent({
         empty.value = false
       }
       isFirstRequest = true
-      filterVisible.value = false
       if (type === 3) {//筛选
         showFilter.value = true
+        // TODO: 有筛选条件展开按钮时需要取消注释, 待兼容
+        // filterVisible.value = false
         curTags = getCurScreenCondition() //获取筛选条件
         if (isClick){
           setFilterTriggerTask()
@@ -386,7 +392,6 @@ export default defineComponent({
           setRecordTip()
           setFilterHeight(FilterConfig.filterMoreLimit)
           setFilterTriggerTask()
-          setTimeout(() => filterVisible.value = true, 300)
         }
         let filterList: Array<QTListViewItem> = []
         if (!isLoadMore && !isClick) {
@@ -394,9 +399,12 @@ export default defineComponent({
         }
         nextTick(() => {
           if (!isLoadMore && !isClick) {
-            setTimeout(() => {
+            filterVisible.value = true
+            nextTick(() => {
+              curFilterParentPosition = -1
+              screen_right_selected_tags.value?.setVisibility(QTIViewVisibility.INVISIBLE)
               screenRightFiltersData = screen_right_filters.value!.init(filterList)
-            }, 300)
+            })
           }
           setTimeout(() => {
             setScreenResultData(curPageNum, curType, curTags,isClick)
@@ -412,11 +420,13 @@ export default defineComponent({
             screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
           }
         }
-        filterTriggerTask.value = []
-        curTags = tagNames
-        filterVisible.value = false
 
-        setScreenResultData(curPageNum, curType, curTags,isClick)
+        curTags = tagNames
+        showFilter.value = false
+        filterVisible.value = false
+        filterTriggerTask.value = []
+
+        setScreenResultData(curPageNum, curType, curTags, isClick)
       }
     }
 
@@ -445,20 +455,16 @@ export default defineComponent({
         if (screenContentList && screenContentList.length > 0) {
           if (curPageNum === 1) {
             screenRightContentData = screen_right_content.value!.init(screenContentList)
-            // 设置默认焦点
-            if (isFirstLoad.value && screenRightContentData && screenRightContentData.length > 0) {
-              screen_right_content.value?.setItemFocused(0)
-            } else {
+            // 通知上层组件内容加载完成
+            context.emit('setContentLoadOver', true)
+            // gridview 滚动到顶部并设置 selected
+            if (screenRightContentData && screenRightContentData.length > 0) {
               screen_right_content.value?.scrollToSelected(0, true)
             }
-
             if (type !== 3) {
               loading.value = false
-            }else{
-              const delay = isClick ? 300 : 0
-              setTimeout(()=>{
-                filterClickLoading.value = false
-              },delay)
+            } else {
+              setTimeout(() => filterClickLoading.value = false, isClick ? 300 : 0)
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {

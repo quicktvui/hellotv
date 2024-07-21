@@ -26,17 +26,22 @@
       </div>
     </div>
   
-    <div class="d2_info_actions" :focusable="false" :clipChildren="false">
-      <template v-for="(actionItem,actionIndex) in dideoDesData.actions" :key="actionItem.id+''+actionIndex">
+    <ul 
+      class="d2_info_actions" sid="d2InfoActionsSid" :focusable="false" 
+      :clipChildren="false" horizontal :initPosition="{
+        focusPosition: 0, scrollToPosition: 0
+      }"
+    >
+      <li v-for="(actionItem,actionIndex) in dideoDesData.actions" :key="actionItem.id+''+actionIndex" :type="actionItem.type">
         <D2InfoAction1 v-if="actionItem.type==IvideoDesActionTypes.btn" :pData="actionItem" />
         <D2InfoAction2 v-if="actionItem.type==IvideoDesActionTypes.btn2" :pData="actionItem" />
         <D2InfoAction3 v-if="actionItem.type==IvideoDesActionTypes.img" :pData="actionItem" />
-      </template>
-    </div>
+      </li>
+    </ul>
   </div>
 </template>
 <script lang='ts' setup>
-import { StyleValue, ref } from 'vue';
+import { StyleValue, nextTick, ref } from 'vue';
 // @ts-ignore
 import api from '../../../api/details2/index.ts'
 import { IvideoDes, Itag, IvideoDesActionTypes } from '../../../api/details2/types';

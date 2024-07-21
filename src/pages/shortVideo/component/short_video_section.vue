@@ -1,30 +1,32 @@
 <template>
-  <qt-view class="short_video_section" ref="short_video_section"  name="short_video_section" 
+  <tv-item class="short_video_section" ref="short_video_section"  name="short_video_section"
     :clipChildren="false" :focusable="false"
     :type="1009"
     @item-bind="onItemBind"
     @item-unbind="onItemRecycled"
-    @item-focused="onItemFocused"
-    @item-attached="onSectionAttached">
+    @item-focused="onItemFocused">
 
     <div class="list_section_root" :focusable="false"
       flexStyle="${style}"
-      :blockFocusDirections="[]"
+      :blockFocusDirections="['left','right']"
       :clipChildren="true"
       :useAdvancedFocusSearch="true"
       :bringFocusChildToFront="true">
       <!-- :singleSelectPosition="singleSelectPosition"
       :focusMemory="true" :skipRequestFocus="false" :enableSelectOnFocus="false" -->
-      <qt-list-view class="tab_list_section" name="tab_list_section" :focusable="false" :useDiff="false"
+      <qt-list-view class="tab_list_section" name="tab_list_section" ref="tab_list_section" :focusable="false" :useDiff="false"
         list="${tabList}" 
-        
+        :setSelectChildPosition="0"
         horizontal
         :clipChildren="false" 
         flexStyle="${tabListStyle}"
         sid="${tabListSID}"
         @item-focused="onTabItemFocused"
         :pauseTaskOnHide="true"
-        :blockFocusDirections="[]"
+        :blockFocusDirections="['left','right']"
+        :enablePlaceholder="false"
+        :enableKeepFocus="true"
+        :enableSelectOnFocus="true"
         autofocusPosition="${autofocusTabPosition}">
 
         <!-- tab list item -->
@@ -32,6 +34,8 @@
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
             class="tab_list_section_item_text" :duplicateParentState="true" text="${title}" />
         </qt-view>
+
+        <slot name="tab-list-section-item"/>
 
       </qt-list-view>
 
@@ -48,11 +52,11 @@
         @item-focused="onListItemFocused"
         :enablePlaceholder="false"
         :pauseTaskOnHide="true"
-        :blockFocusDirections="[]"
+        :blockFocusDirections="['left','right']"
         autofocusPosition="${autofocusListPosition}">
 
         <!-- list item -->
-        <qt-view :type="10090" name="list_section_item" ref="list_section_item" class="list_section_item" :focusable="true" 
+        <qt-view :type="10090" name='${name}' ref="list_section_item" class="list_section_item" :focusable="true" 
           :clipChildren="false" eventClick eventFocus :enableFocusBorder="true" flexStyle="${style}">
 
           <img src="${poster}" class="lsi_img" :focusable="false" :postDelay="300"/>
@@ -73,15 +77,17 @@
           </qt-view>
 
         </qt-view>
+        <slot name="list-section-item"/>
+        
       </qt-list-view>
     </div>
-  </qt-view>
+  </tv-item>
 </template>
 
 <script lang="ts">
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, watch } from "vue"
-import {} from "@quicktvui/quicktvui3"
+import {QTIListView} from "@quicktvui/quicktvui3"
 import { useESLog, useESToast } from "@extscreen/es3-core"
 import { useGlobalApi } from "../../../api/UseApi"
 
@@ -102,14 +108,21 @@ export default defineComponent({
     let pageNo = ref(1)
     let singleSelectPosition = ref(0)
     let currentSectionIndex = ref(0)
-    let currentTabIndex = ref(0)
+    let currentTabIndex = ref(-1)
+    let tab_list_section = ref<QTIListView>()
     const onItemRecycled = (e) => {}
     const loadMore = (e) => {
       pageNo.value = pageNo.value + 1
-      context.emit("load-more", pageNo.value, currentSectionIndex.value)
+      context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
     }
-    const onSectionAttached = (e) => {}
-    const onItemBind = (e) => {}
+    const onItemBind = (e) => {
+      if(e.item){
+        e.item.tabList.length < 1 ?  currentTabIndex.value = -1 : currentTabIndex.value = 0
+        if(e.item.itemList.length < 1){
+          context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
+        }
+      }
+    }
     const onItemFocused = (e) => {
       if(e.hasFocus) currentSectionIndex.value = e.parentPosition
     }
@@ -125,9 +138,9 @@ export default defineComponent({
       }
     }
     return {
-      short_video_section,singleSelectPosition,
+      short_video_section,singleSelectPosition,tab_list_section,
       onTabItemFocused,onListItemFocused,
-      onItemRecycled,onSectionAttached,onItemBind,onItemFocused,loadMore,
+      onItemRecycled,onItemBind,onItemFocused,loadMore,
     }
   }
 })

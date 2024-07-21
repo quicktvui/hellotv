@@ -65,6 +65,19 @@
       focus-icon="ic_top_search.png"
       @click="onClick"
       @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="短视频"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_sv_btn"
+      ref="top_sv_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search.png"
+      @click="onClick"
+      @focus="onFocus"/>
 
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem"
@@ -149,6 +162,11 @@ export default defineComponent({
         case 'top_my_btn':
           router.push({
               name: 'my',
+              params: {}
+          });
+        case 'top_sv_btn':
+          router.push({
+              name: 'short_video',
               params: {}
           });
           break;

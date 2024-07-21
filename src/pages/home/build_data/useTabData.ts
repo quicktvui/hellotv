@@ -10,6 +10,7 @@ import {
 import { TabSectionItem } from "./tab_content/impl/TabSectionItem";
 import { TabPlayItem } from "./tab_content/impl/TabPlayItem";
 import myHistory from "../components/history";
+import { QTTab, QTTabPageData, QTWaterfallSection, QTWaterfallItem } from "@quicktvui/quicktvui3";
 
 /**
  * 转换瀑布流TAB数据
@@ -37,6 +38,24 @@ export function buildO2MTabData(sourceData: Array<any>) {
       innerArgs: item.actionRedirect?.innerArgs
     }
     tabs.push(tab)
+  })
+  tabs.push({
+    id: 'short_video',
+    menuCode: 'short_video',
+    menuName: '短视频',
+    menuType: '0',
+    imageWidth: undefined,
+    imageHeight: undefined,
+    image: undefined,
+    selectImage: undefined,
+    focusImage: undefined,
+    focusCornerImage: undefined,
+    cornerImage: undefined,
+    defaultHome: undefined,
+    backgroundImage: undefined,
+    redirectType: undefined,
+    action: undefined,
+    innerArgs: undefined
   })
   return buildTransferTabAdapter(tabs)
 }
@@ -136,6 +155,51 @@ export function buildO2MTabContentData(sourceData: any, pageNo: number = 1, tabI
 
 export function getSectionPosLabelObject(sectionPosLabel: string): TabContentLabel {
   return getPosLabel(sectionPosLabel)
+}
+
+// build 首页短视频板块数据
+export function buildHomeShortVideoAdapter(tabId: string, tabPageIndex?: number): QTTabPageData {
+  let section: QTWaterfallSection = {
+    _id: 'shortVideo1',
+    type: 1009,
+    style: {
+      width: 1920,
+      height: 860,
+    },
+    tabListStyle: {
+      width: 1920,
+      height: 60,
+      marginTop: 0,
+      marginLeft: 0,
+      marginBottom: 20,
+    },
+    listStyle: {
+      width: 540,
+      height: 780,
+      marginLeft: 90
+    },
+    tabListSID: 'shortVideoTabListSID',
+    listSID: 'shortVideoListSID',
+    autofocusTabPosition: -1,
+    autofocusListPosition: -1,
+    decoration: {
+      top: 220,
+      left: 0,
+    },
+    tabList: [
+      {type: 10091,title: '推荐', decoration: {left: 90}, name: 'tab_list_section_item'},
+      {type: 10091,title: '日历', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '历史', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '收藏', decoration: {}, name: 'tab_list_section_item'},
+    ],
+    itemList: []
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    data: [section]
+  }
+  return tabPage
 }
 
 function getParameter(parameter) {

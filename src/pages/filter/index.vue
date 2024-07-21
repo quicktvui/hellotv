@@ -12,18 +12,21 @@
     </top-btns-view>
 
     <scroll-view name="screenScroll" ref="contentScrollRef" class="screen-scroll"
-      :focusable="false" :horizontal="true" :onScrollEnable="true" makeChildVisibleType="none">
+      :focusable="false" :horizontal="true" :onScrollEnable="true" makeChildVisibleType="none" :initialContentOffset="leftRootWidth">
       <qt-view class="screen-content" :focusable="false" :clipChildren="true">
         <!-- 左侧扩展 -->
         <qt-list-view ref="leftExpandRef" class="screen-content-left-expand" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
           :focusable="false" :enableFocusBorder="true" :listenHasFocusChange="true" :triggerTask="leftExpandTriggerTask"
-          :autofocusPosition="leftExpandPos" nextFocusRightSID="screen_left_tags"
-          @item-focused="leftExpandFocus">
+          :blockFocusDirections="['down']" nextFocusRightSID="screen_left_tags" @item-focused="leftExpandFocus"
+        >
           <tags-text-item :type="1" />
         </qt-list-view>
 
         <!-- 左侧列表 -->
-        <div v-if="isShowLeftList" class="screen-left-root-css" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }">
+        <div v-if="isShowLeftList" class="screen-left-root-css"
+          :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :descendantFocusability="leftLoadOver ? 1 : 2"
+        >
           <!-- 背景 -->
           <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
             :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
@@ -35,9 +38,7 @@
           <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
             class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
             :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
-            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid"
-            :blockFocusDirections="['down']"
-            @item-focused="leftTagsItemFocus"
+            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid" @item-focused="leftTagsItemFocus"
           >
             <!-- 文字标题 -->
             <tags-text-item :type="1"/>
@@ -52,8 +53,8 @@
         <tags-content ref="tags_content" class="screen-right-root-css"
           :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
           :clipChildren="false" :clipPadding="false"
-          :blockFocusDirections="isShowLeftList?[]:['left','right']"
-          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus'/>
+          :blockFocusDirections="isShowLeftList ? [] : ['left', 'right']" :descendantFocusability="contentLoadOver ? 1 : 2"
+          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus' @setContentLoadOver='setContentLoadOver'/>
       </qt-view>
     </scroll-view>
   </div>
@@ -72,7 +73,6 @@ import {useGlobalApi} from "../../api/UseApi";
 import {
   buildTagsData,
   getDefaultTagSelectIndex,
-  getFilterConditionData,
   getRootTag,
   setRootTag
 } from "./build_data/useTagsData";
@@ -89,7 +89,6 @@ export default defineComponent({
   setup(props, context) {
     const contentScrollRef = ref()
     const leftExpandRef = ref()
-    const leftExpandPos = ref(0)
     const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
     const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
     const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
@@ -106,12 +105,16 @@ export default defineComponent({
     const screen_root = ref()
     const tags_content = ref()
     const leftNextFocusRightSid = ref()
+    const leftLoadOver = ref(true) // 左侧列表是否加载完成
+    const contentLoadOver = ref(true) // 右侧内容是否加载完成
     //全局变量
     let title = ref("")
     let title_img = ref("")
     let defaultTagPosition = ref(0)
     let defaultTagSelectPos = ref(0)
     //局部变量
+    let isInit = true
+    let showLeftExpand = false
     let leftExpandSwitchTimer: any = -1
     let leftTagSwitchTimer: any = -1
     let curTagPosition:number = -1 //左侧列表当前 tag位置
@@ -123,7 +126,6 @@ export default defineComponent({
     let defaultFilters:Array<string> = []
     let defaultFastTag:string = "" //默认选中的快速标签
     let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
-    let showLeftExpand = false
 
     let leftExpandTriggerTask = [
       {
@@ -174,15 +176,12 @@ export default defineComponent({
       }
       
       // 设置默认坐标
-      setTimeout(() => {
-        contentScrollRef.value.scrollTo(leftRootWidth.value, 0, 0)
-        nextTick(async() => {
-          const leftExpandData = await getLeftExpandData()
-          showLeftExpand = leftExpandData.length ? true : false
-          leftExpandRef.value?.init(leftExpandData)
-          getTagsData(screenId)
-        })
-      }, 300)
+      nextTick(async() => {
+        const leftExpandData = await getLeftExpandData()
+        showLeftExpand = leftExpandData.length ? true : false
+        leftExpandRef.value?.init(leftExpandData)
+        getTagsData(screenId)
+      })
     }
 
     /**
@@ -214,16 +213,18 @@ export default defineComponent({
     function leftExpandFocus(e) {
       if (e.isFocused && e.position !== curLeftExpandPos) {
         curLeftExpandPos = e.position
+        defaultTagPosition.value = -1
+        leftLoadOver.value = false
         leftNextFocusRightSid.value = 'screen_right_content'
         leftExpandSwitchTimer && clearTimeout(leftExpandSwitchTimer)
-        leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id), 300)
+        leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id, true), 300)
       }
     }
 
     /**
      * 获取左侧列表数据
      */
-    function getTagsData(id: string){
+    function getTagsData(id: string, needRequestContent: boolean = false){
       globalApi.getScreenLeftTags(id).then(res=>{
         if (res){
           if (isShowLeftList.value){
@@ -242,16 +243,21 @@ export default defineComponent({
               //设置左侧列表数据
               leftTags.value!.init(tags)
               leftTags.value?.setItemSelected(0, true)
+              leftLoadOver.value = true
+
               //初始化筛选条件
               tags_content.value.init()
               //设置默认选中tag
               if (!showLeftExpand) {
                 defaultTagPosition.value = getDefaultTagSelectIndex()
               } else {
-                defaultTagPosition.value = -1
                 tags_content!.value.loading = true
                 tags_content!.value.rightScrollTo(0, 0)
-                tags_content!.value.getScreenByTags(1, 3, "", 0, false, false)
+                if (needRequestContent) {
+                  curTagPosition = 0
+                  tags_content!.value.filterVisible = false
+                  tags_content!.value.getScreenByTags(1, 3, "", 0, false, false)
+                }
               }
             } else {
               //初始化筛选条件
@@ -266,43 +272,47 @@ export default defineComponent({
     }
 
     function leftTagsItemFocus(e){
-      if (e.isFocused){
-        if (log.isLoggable(ESLogLevel.DEBUG)) {
-          log.d("leftTagsItemFocus--", e)
-        }
-        if (curTagPosition !== e.position) {
-          tags_content.value.showFilter = true
-          tags_content.value.loading = true
-          tags_content.value.empty = false
-        }
-        leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
-        leftTagSwitchTimer = setTimeout(()=>{
-          const name = e.name
-          switch(name){
-            case "screen-left-item-tag":
-              const position = e.position
-              if (curTagPosition === position) {
-                tags_content.value.loading = false
-                return
-              }
-              curTagPosition = position
-              const item = e.item
-              const type = item.type
-              curType = type
-              let tagName = getRootTag()+","+item.tagName
-              if(type === 3){
-                tagName= ""
-              }
-              tags_content!.value.getScreenByTags(1,type,tagName,position,false,false)
-              break;
-          }
-        },300)
+      if (!e.isFocused) return
+      
+      if (curTagPosition !== e.position) {
+        tags_content.value.loading = true
+        tags_content.value.empty = false
+
+        // 首次打开页面不屏蔽右侧内容焦点
+        isInit ? isInit = false : contentLoadOver.value = false
       }
+
+      leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
+      leftTagSwitchTimer = setTimeout(() => {
+        switch (e.name) {
+          case "screen-left-item-tag":
+            const position = e.position
+            if (curTagPosition === position) {
+              tags_content.value.loading = false
+              return
+            }
+            curTagPosition = position
+            const item = e.item
+            const type = item.type
+            curType = type
+            let tagName = getRootTag()+","+item.tagName
+            if(type === 3){
+              tagName= ""
+            }
+            tags_content!.value.getScreenByTags(1, type, tagName, position, false, false)
+            break;
+        }
+      }, 300)
     }
 
     // 设置左侧列表焦点向右位置
     function setLeftNextFocus(sid: string) {
       leftNextFocusRightSid.value = sid
+    }
+
+    // 修改右侧内容加载状态
+    function setContentLoadOver(b: boolean) {
+      contentLoadOver.value = b
     }
 
     function onBackPressed(){
@@ -325,6 +335,7 @@ export default defineComponent({
       unBlockRootFocus,
       leftExpandFocus,
       setLeftNextFocus,
+      setContentLoadOver,
 
       title,
       title_img,
@@ -342,9 +353,10 @@ export default defineComponent({
       contentScrollRef,
       leftExpandTriggerTask,
       leftExpandRef,
-      leftExpandPos,
       defaultTagSelectPos,
-      leftNextFocusRightSid
+      leftNextFocusRightSid,
+      contentLoadOver,
+      leftLoadOver
     }
   }
 })

@@ -21,6 +21,7 @@
         @onTabClick="onTabClick"
         :tabContentSwitchDelay="300"
         :tabContentResumeDelay="300"
+        :useDiff=false
         sid='homeTabs'
         :custom-pool="{ name: 'home' }"
         :custom-item-pool="{ name: 'homeItems' }"
@@ -75,6 +76,9 @@
         <template v-slot:waterfall-vue-section>
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
         </template>
+        <template v-slot:waterfall-section>
+          <short-video-section :type="1009" @loadMore="listSectionLoadMore"/>
+        </template>
       </qt-tabs>
 
       <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
@@ -92,7 +96,7 @@ import {
   QTITab, QTIView, QTTab, QTTabEventParams, QTTabItem,
   QTTabPageData, QTTabPageState, QTWaterfallItem,
   QTWaterfallSection,
-  QTWaterfallSectionType
+  QTWaterfallSectionType,VirtualView
 } from '@quicktvui/quicktvui3'
 import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
 import { useLaunch } from "../../../tools/launch/useApi";
@@ -116,6 +120,7 @@ import myHistory from './history/index'
 import MyTemplates from '../../my/MyTemplates.vue'
 // @ts-ignore
 import myDataManager from '../../my/index.ts'
+import shortVideoSection from "../../shortVideo/component/short_video_section.vue";
 
 const TAG = "WATERFALL-TABS"
 
@@ -124,7 +129,8 @@ export default defineComponent({
   components: {
     PageNoFrameItem,MyItemHistory,MyItemHistoryImg,MyTemplates,
     PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
-    TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground
+    TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground,
+    shortVideoSection
   },
   props: {
     isShowTop: {
@@ -253,7 +259,7 @@ export default defineComponent({
             }
 
             if (pageNo <= 1) {
-              buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage)
+              buildPlayerData(tabPageIndex, tabPage.data[0].itemList, tabPage, tabId)
               if(tabPageIndex === myHistory.tabPageIndex){
                 myHistory.initData(tabPageIndex, tabPage).then((_tabPage)=>{
                   tabRef.value?.setPageData(tabPageIndex, _tabPage)
@@ -281,7 +287,34 @@ export default defineComponent({
       tab.pageNo = pageNo
     }
     // 加载数据时获取小窗 小窗列表 背景播放数据
-    async function buildPlayerData(pageIndex: number, itemList: any, tabPage: QTTabPageData) {
+    async function buildPlayerData(pageIndex: number, itemList: any, tabPage: QTTabPageData, tabId: string) {
+      if(tabId == 'short_video') {
+        let obj: any = {}
+        let key = '' + pageIndex
+        obj.playerType = CoveredPlayerType.TYPE_BG
+        tabPage.bindingPlayer = 'bg_player_replace_child_sid'
+        if (recordPlayerDataMap.get(key) == undefined) {
+          obj.pageIndex = pageIndex
+          obj.sid = 'bg_player_replace_child_sid'
+          obj.playerWidth = 1140
+          obj.playerHeight = 640
+          obj.itemIndex = 0
+          obj.data = [{
+            id: itemList[0].id,
+            title: itemList[0].title,
+            cover: itemList[0].poster,
+            url: itemList[0].url,
+            isRequestUrl:false,
+            tag: itemList[0].videoInfo.tag ??'',
+            score: itemList[0].videoInfo.score ??'',
+            sort: itemList[0].videoInfo.sort ??'',
+            desc: itemList[0].videoInfo.desc ??'',
+            isShow: true
+          }]
+          recordPlayerDataMap.set(key, obj)
+        }
+        return
+      }
       for (let i = 0; i < itemList.length; i++) {
         const el = itemList[i];
         let obj: any = {}
@@ -438,6 +471,10 @@ export default defineComponent({
     }
     function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
       if (isFocused) {
+        if(item.name == 'tab_list_section_item' || item.name == 'list_section_item'){
+          dealwithListSectionItemFocused(pageIndex, sectionIndex, itemIndex, isFocused, item)
+          return
+        }
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG && sectionIndex === 0) {
           if (recordPlayerData.pageIndex == pageIndex && recordPlayerData.itemIndex == itemIndex) {
             log.i("BG-PLAYER", `return on same item`)
@@ -480,19 +517,19 @@ export default defineComponent({
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               width, height, width, height,
-              playData, 0, mediaInterceptor
+              playData, 0, 15,10, mediaInterceptor
             )
           } else if (flag == CoveredPlayerType.TYPE_CELL_LIST) {
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
               width, height, 860, height,
-              playData, 0, mediaInterceptor
+              playData, 0, 15,10,mediaInterceptor
             )
           } else if (flag == CoveredPlayerType.TYPE_BG) {
             bgPlayerType.value = flag
             bg_player.value?.doChangeParent(parentSID, flag,
-              1920, 1080, 1920, 1080,
-              playData, 0, mediaInterceptor
+              1920, 1080, width, height,
+              playData, 0, width < 1920 ? 732 : 0,  width < 1920 ? 220 : 0, mediaInterceptor
             )
             bg_player.value?.delayShowPlayer()
           }
@@ -514,6 +551,7 @@ export default defineComponent({
       log.d("BG-PLAYER", '-------onTabPageChanged----------->>>',
         ' pageIndex:' + pageIndex
       )
+      bg_player.value.setVideoInfo({isShow:false})
       bgPlayerType.value = -1
       currentSectionAttachedIndex.value = -1
       delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
@@ -538,6 +576,35 @@ export default defineComponent({
           bg_player.value?.stop()
           isOneTimeStop = true
         }, 2000)
+      }
+    }
+
+    const listSectionLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
+      let data = await globalApi.getShortVideoPageData('mock数据',pageNo,10)
+      if(data.length > 0){
+        let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
+        let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
+        if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
+        else VirtualView.call(listSID,'setListData',data)
+      }
+    }
+    const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
+      if(item.name == 'list_section_item'){
+        if(item.url == recordPlayerDataMap.get('' + pageIndex).data[0].url) return
+        clearTimeout(delayDealwithplayerTimer)
+        bg_player.value.initPlayBg(item.poster)
+        bg_player.value.showCoverImmediately()
+        bg_player.value.stopIfNeed()
+        bg_player.value.setVideoInfo({
+          desc:  item.videoInfo.desc,
+          score: item.videoInfo.score,
+          sort: item.videoInfo.sort,
+          tag: item.videoInfo.tag,
+          isShow: true
+        })
+        delayDealwithplayerTimer = setTimeout( () => {
+          bg_player.value.play(item)
+        }, 300)
       }
     }
 
@@ -574,7 +641,8 @@ export default defineComponent({
       onTabEvent,
       onTabClick,
       onTabPageSectionAttached,
-      delayStopPlayer
+      delayStopPlayer,
+      listSectionLoadMore,dealwithListSectionItemFocused
     }
   }
 })
