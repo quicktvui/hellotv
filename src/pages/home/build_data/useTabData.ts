@@ -18,27 +18,27 @@ import { QTTab, QTTabPageData, QTWaterfallSection, QTWaterfallItem } from "@quic
  */
 export function buildO2MTabData(sourceData: Array<any>) {
   const tabs: Array<Tab> = []
-  // sourceData.forEach((item, index) => {
-  //   const tab: Tab = {
-  //     id: item.id,
-  //     menuCode: item.menuCode,
-  //     menuName: item.menuName,
-  //     menuType: item.menuType,
-  //     imageWidth: item.imageWidth,
-  //     imageHeight: item.imageHeight,
-  //     image: item.image,
-  //     selectImage: item.currentImage,
-  //     focusImage: item.focusImage,
-  //     focusCornerImage: item.focusCornerImage,
-  //     cornerImage: item.cornerImage,
-  //     defaultHome: item.defaultHome,
-  //     backgroundImage: item.backgroundImage,
-  //     redirectType: item.actionRedirect?.redirectType,
-  //     action: item.actionRedirect?.action,
-  //     innerArgs: item.actionRedirect?.innerArgs
-  //   }
-  //   tabs.push(tab)
-  // })
+  sourceData.forEach((item, index) => {
+    const tab: Tab = {
+      id: item.id,
+      menuCode: item.menuCode,
+      menuName: item.menuName,
+      menuType: item.menuType,
+      imageWidth: item.imageWidth,
+      imageHeight: item.imageHeight,
+      image: item.image,
+      selectImage: item.currentImage,
+      focusImage: item.focusImage,
+      focusCornerImage: item.focusCornerImage,
+      cornerImage: item.cornerImage,
+      defaultHome: item.defaultHome,
+      backgroundImage: item.backgroundImage,
+      redirectType: item.actionRedirect?.redirectType,
+      action: item.actionRedirect?.action,
+      innerArgs: item.actionRedirect?.innerArgs
+    }
+    tabs.push(tab)
+  })
   tabs.push({
     id: 'short_video',
     menuCode: 'short_video',
