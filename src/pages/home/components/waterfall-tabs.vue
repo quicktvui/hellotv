@@ -186,6 +186,7 @@ export default defineComponent({
     //tab
     let tabItemList: Array<QTTabItem>
     let delayStopPlayerTimer: any = -1
+    let currentShortVideoPlayUrl = ref('')
 
     function onESCreate(params) {
       isOneTime = true
@@ -312,6 +313,7 @@ export default defineComponent({
             desc: itemList[0].videoInfo.desc ??'',
             isShow: true
           }]
+          currentShortVideoPlayUrl.value = itemList[0].url
           recordPlayerDataMap.set(key, obj)
         }
         return
@@ -605,7 +607,8 @@ export default defineComponent({
     }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       if(item.name == 'list_section_item'){
-        if(item.url == recordPlayerDataMap.get('' + pageIndex).data[0].url) return
+        if(item.url == currentShortVideoPlayUrl.value) return
+        currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
         bg_player.value.initPlayBg(item.poster)
         bg_player.value.showCoverImmediately()
