@@ -50,15 +50,16 @@ const play =(item:any)=>{
   });
   
 }
-onMounted(()=>{
-  if(!playerIsInitialized.value){
-    PlayerManagerRef.value?.initialize()
-  };
-  PlayerManagerRef.value?.setPlayMediaListMode(3)
-  playByIndex(0)
-})
+
 defineExpose({
-  onESCreate(){},
+  init(){
+    if(!playerIsInitialized.value){
+      PlayerManagerRef.value?.initialize()
+    };
+    PlayerManagerRef.value?.setPlayMediaListMode(3)
+    PlayerManagerRef.value?.setFullWindow()
+    playByIndex(0)
+  },
   onKeyDown (keyEvent):boolean{
     console.log('-lsj-onKeyDown-v')
     return PlayerManagerRef.value?.onKeyDown(keyEvent)

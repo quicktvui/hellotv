@@ -98,7 +98,8 @@ export type TselectionTabType = ReturnType<typeof getSelectionSectionTabs>;
 
 class Detail2Ui {
 
-  playList:any = []
+  private playList:any[] = []
+  private monitors = new Set<(arg:object)=>void>()
   
   selectionSpace = 0
 
@@ -110,6 +111,8 @@ class Detail2Ui {
   tab2Sid = ''
   tabListSid = ''
 
+  changePlayList(fn:()=>void){
+  }
   getTab2(tabItem:ItabListItem){
     const tabs2Section = detail2Ui.getShowTab(tabItem)
     
