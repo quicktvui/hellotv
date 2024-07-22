@@ -76,6 +76,7 @@
 </template>
 
 <script lang="ts">
+import { ESEventBus } from "@extscreen/es3-core/dist/src/eventbus/ESEventBus"
 import {
   ESPlayerDefinition,
   ESPlayerPlayMode,
@@ -85,13 +86,21 @@ import {
 import { ESIPlayerManager, ESMediaItem } from "@extscreen/es3-player-manager"
 import { QTISeekBar,QTSeekBarMode } from "@quicktvui/quicktvui3"
 import { defineComponent } from "@vue/runtime-core"
-import { ESKeyCode, ESKeyEvent, ESLogLevel, useESLog, useESToast } from "@extscreen/es3-core"
+import {
+  ESKeyCode,
+  ESKeyEvent,
+  ESLogLevel,
+  useESEventBus,
+  useESLog,
+  useESToast
+} from "@extscreen/es3-core"
 import { onMounted, ref } from "vue"
 import playIcon from '../../assets/def_media/ic_def_media_player_play.png'
 import pauseIcon from '../../assets/def_media/ic_def_media_player_pause.png'
 import BuildConfig from "../../build/BuildConfig"
 import { s_to_hs } from "../../tools/formatDate"
 import {
+  bottomMenuClickEventBusName,
   buildDefinitions, buildModes,
   buildPlayRates, decodeDefinition,
   getCurDefinitionIndex, getCurModeIndex,
@@ -132,6 +141,7 @@ export default defineComponent({
   setup(props, context) {
     const log = useESLog()
     const toast =useESToast()
+    const eventBus:ESEventBus = useESEventBus()
     //进度条
     const mediaManagerSeekBarRef = ref<QTISeekBar>()
     //底部按钮
@@ -468,6 +478,10 @@ export default defineComponent({
      */
     function onItemClicked(name,e,isSameLocation?:number){
       switch(name){
+        case PlayMenuNameFlag.NEXT:
+        case PlayMenuNameFlag.EPISODES:
+          eventBus.emit(bottomMenuClickEventBusName,e)
+          break;
         case PlayMenuNameFlag.RATE:
           curControlRef = mediaControlSpeedRateRef
           curMenuClickPosition = e.position

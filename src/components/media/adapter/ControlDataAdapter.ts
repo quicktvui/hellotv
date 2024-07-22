@@ -7,6 +7,7 @@ import xuanJiFocusIcon from '../../../assets/def_media/ic_def_media_menu_xuanji_
 import settingIcon from '../../../assets/def_media/ic_def_media_menu_setting.png'
 import settingFocusIcon from '../../../assets/def_media/ic_def_media_menu_setting_focus.png'
 
+export const bottomMenuClickEventBusName = "onBottomMenuPlayClicked"
 export enum PlayMenuNameFlag{
   NEXT = "next",
   EPISODES = "episodes",
@@ -19,7 +20,7 @@ export enum PlayMenuNameFlag{
 }
 
 export const defList = ()=>[
-  {type:2,nameFlag:PlayMenuNameFlag.EPISODES,iconNormal:xuanJiIcon,iconFocus:xuanJiFocusIcon,name:'选集',decoration:{right:30}},
+  // {type:2,nameFlag:PlayMenuNameFlag.EPISODES,iconNormal:xuanJiIcon,iconFocus:xuanJiFocusIcon,name:'选集',decoration:{right:30}},
   {type:1,nameFlag:PlayMenuNameFlag.RATE,name:'倍速 2.0x',decoration:{right:30}},
   {type:1,nameFlag:PlayMenuNameFlag.DEFINITION,name:'标清',decoration:{right:30}},
   {type:2,nameFlag:PlayMenuNameFlag.SETTING,iconNormal:settingIcon,iconFocus:settingFocusIcon,name:'设置'},
