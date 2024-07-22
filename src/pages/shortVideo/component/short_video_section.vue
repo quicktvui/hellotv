@@ -30,6 +30,10 @@
         autofocusPosition="${autofocusTabPosition}">
 
         <!-- tab list item -->
+        <qt-view class="tab_list_section_item" :type="10090" :clipChildren="false" :focusable="false">
+          <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false" 
+            class="tab_list_section_item_text" style="color: #FFFFFF;" :duplicateParentState="true" text="${title}" />
+        </qt-view>
         <qt-view class="tab_list_section_item" name='${name}' :type="10091" :clipChildren="false" :focusable="true" eventFocus eventClick>
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
             class="tab_list_section_item_text" :duplicateParentState="true" text="${title}" />

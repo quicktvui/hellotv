@@ -86,7 +86,7 @@ export function createGlobalApi(): IGlobalApi {
       return Promise.resolve(tabPage);
     } else if (tabId === 'multilevelTab' && pageNo < 2) {
       let tabPage = buildHomeMultilevelTabAdapter(tabId, tabPageIndex)
-      tabPage.data[0].itemList = buildMultilevelTabItemAdapter(shortVideoList)
+      tabPage.data[0].itemList = buildMultilevelTabItemAdapter(shortVideoList.slice(0, 5))
       return Promise.resolve(tabPage)
     }
     //此处可更换接口请求数据
@@ -251,7 +251,7 @@ export function createGlobalApi(): IGlobalApi {
         //模拟结束
         return Promise.resolve(buildMultilevelTabItemAdapter([]));
       }
-      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList));
+      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList.splice(5, pageSize)));
     }
   }
 

@@ -250,7 +250,8 @@ export function buildHomeMultilevelTabAdapter(tabId: string, tabPageIndex?: numb
       left: 0,
     },
     tabList: [
-      {type: 10091,title: '动画', decoration: { left: 90 }, name: 'tab_list_section_item'},
+      {type: 10090,title: '排行榜', decoration: { left: 90 }},
+      {type: 10091,title: '动画', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '游戏', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '生活', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '影视', decoration: {}, name: 'tab_list_section_item'},

@@ -590,7 +590,7 @@ export default defineComponent({
       }
     }
     const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
-      let data = await globalApi.getMultilevelTabPageData('mock数据',pageNo,10)
+      let data = await globalApi.getMultilevelTabPageData('mock数据', pageNo, 5)
       if(data.length > 0){
         let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
         let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID

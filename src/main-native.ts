@@ -14,7 +14,7 @@ import { createESADPlayer } from "@extscreen/es3-ad-player";
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: "detail2", //ranking 排行榜 detail2
+  main: "home", //ranking 排行榜 detail2
   error: "error",
   limit: 5,
   routes: routes,
