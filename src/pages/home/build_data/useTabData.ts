@@ -57,6 +57,24 @@ export function buildO2MTabData(sourceData: Array<any>) {
     action: undefined,
     innerArgs: undefined
   })
+  tabs.push({
+    id: 'multilevelTab',
+    menuCode: 'multilevelTab',
+    menuName: '多级Tab',
+    menuType: '0',
+    imageWidth: undefined,
+    imageHeight: undefined,
+    image: undefined,
+    selectImage: undefined,
+    focusImage: undefined,
+    focusCornerImage: undefined,
+    cornerImage: undefined,
+    defaultHome: undefined,
+    backgroundImage: undefined,
+    redirectType: undefined,
+    action: undefined,
+    innerArgs: undefined
+  })
   return buildTransferTabAdapter(tabs)
 }
 
@@ -191,6 +209,53 @@ export function buildHomeShortVideoAdapter(tabId: string, tabPageIndex?: number)
       {type: 10091,title: '日历', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '历史', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '收藏', decoration: {}, name: 'tab_list_section_item'},
+    ],
+    itemList: []
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    data: [section]
+  }
+  return tabPage
+}
+
+// build 首页多级Tab板块数据
+export function buildHomeMultilevelTabAdapter(tabId: string, tabPageIndex?: number): QTTabPageData {
+  let section: QTWaterfallSection = {
+    _id: 'multilevelTab1',
+    type: 1010,
+    style: {
+      width: 1920,
+      height: 860,
+    },
+    tabListStyle: {
+      width: 1920,
+      height: 60,
+      marginTop: 0,
+      marginLeft: 0,
+      marginBottom: 20,
+    },
+    listStyle: {
+      width: 1740,
+      height: 380,
+      marginLeft: 90
+    },
+    tabListSID: 'multilevelTabSID',
+    listSID: 'multilevelTabListSID',
+    autofocusTabPosition: -1,
+    autofocusListPosition: -1,
+    decoration: {
+      top: 220,
+      left: 0,
+    },
+    tabList: [
+      {type: 10091,title: '动画', decoration: { left: 90 }, name: 'tab_list_section_item'},
+      {type: 10091,title: '游戏', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '生活', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '影视', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '知识', decoration: {}, name: 'tab_list_section_item'},
+      {type: 10091,title: '美食', decoration: {}, name: 'tab_list_section_item'}
     ],
     itemList: []
   }

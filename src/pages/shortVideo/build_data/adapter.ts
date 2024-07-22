@@ -60,6 +60,27 @@ export function buildShortVideoItemAdapter(list: Array<ShortVideoItem>): Array<Q
   return data
 }
 
+export function buildMultilevelTabItemAdapter(list: Array<ShortVideoItem>): Array<QTWaterfallItem> {
+  let data: Array<QTWaterfallItem> = []
+  list.forEach((item, index) => {
+    const poster: any = {
+      _id: item.id + '',
+      type: 10090,
+      decoration: {
+        right: 30
+      },
+      style: {
+        width: 321,
+        height: 277,
+      },
+      name: 'list_section_item',
+      ...item,
+    }
+    data.push(poster)
+  })
+  return data
+}
+
 class shortVideoManager{
   private bgPlayerRef: any
   setBgPlayerFef(ref : any) {

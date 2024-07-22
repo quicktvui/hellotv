@@ -25,7 +25,7 @@ import {
   tabContentUrl,
   tabListUrl,
 } from "./RequestUrl";
-import { buildO2MTabContentData, buildO2MTabData, buildHomeShortVideoAdapter } from "../pages/home/build_data/useTabData";
+import { buildO2MTabContentData, buildO2MTabData, buildHomeShortVideoAdapter, buildHomeMultilevelTabAdapter } from "../pages/home/build_data/useTabData";
 
 /*****
  ***************搜索 *********
@@ -47,7 +47,7 @@ import { SearchTab } from "../pages/search/build_data/impl/SearchTab";
 import { SearchResult } from "../pages/search/build_data/impl/SearchResult";
 
 /***** *************** 短视频 **************/
-import { buildShortVideoItemAdapter } from "../pages/shortVideo/build_data/adapter";
+import { buildMultilevelTabItemAdapter, buildShortVideoItemAdapter } from "../pages/shortVideo/build_data/adapter";
 import { ShortVideoItem } from "../pages/shortVideo/build_data/interface";
 import shortVideoList from "./shortVideo/mock/short_video_data";
 import { leftExpand, leftTags } from "./filter/mock";
@@ -84,6 +84,10 @@ export function createGlobalApi(): IGlobalApi {
       let tabPage = buildHomeShortVideoAdapter(tabId,tabPageIndex)
       tabPage.data[0].itemList = buildShortVideoItemAdapter(shortVideoList)
       return Promise.resolve(tabPage);
+    } else if (tabId === 'multilevelTab' && pageNo < 2) {
+      let tabPage = buildHomeMultilevelTabAdapter(tabId, tabPageIndex)
+      tabPage.data[0].itemList = buildMultilevelTabItemAdapter(shortVideoList)
+      return Promise.resolve(tabPage)
     }
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {
@@ -228,11 +232,7 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   /********************************短视频相关*****************************/
-  function getShortVideoPageData(
-    keyword: string,
-    pageNo: number,
-    pageSize: number
-  ): Promise<Array<QTWaterfallItem>> {
+  function getShortVideoPageData(keyword: string, pageNo: number, pageSize: number): Promise<Array<QTWaterfallItem>> {
     //此处可更换接口请求数据
     if (BuildConfig.useMockData || true) {
       if (pageNo > 2) {
@@ -240,6 +240,18 @@ export function createGlobalApi(): IGlobalApi {
         return Promise.resolve(buildShortVideoItemAdapter([]));
       }
       return Promise.resolve(buildShortVideoItemAdapter(shortVideoList));
+    }
+  }
+
+  /********************************多级Tab相关*****************************/
+  function getMultilevelTabPageData(keyword: string, pageNo: number, pageSize: number): Promise<Array<QTWaterfallItem>> {
+    //此处可更换接口请求数据
+    if (BuildConfig.useMockData || true) {
+      if (pageNo > 2) {
+        //模拟结束
+        return Promise.resolve(buildMultilevelTabItemAdapter([]));
+      }
+      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList));
     }
   }
 
@@ -262,5 +274,6 @@ export function createGlobalApi(): IGlobalApi {
     getScreenLeftTags,
     getScreenContentByTags,
     getShortVideoPageData,
+    getMultilevelTabPageData
   };
 }

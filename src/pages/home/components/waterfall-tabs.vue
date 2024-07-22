@@ -78,6 +78,7 @@
         </template>
         <template v-slot:waterfall-section>
           <short-video-section :type="1009" @loadMore="listSectionLoadMore"/>
+          <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
         </template>
       </qt-tabs>
 
@@ -588,6 +589,15 @@ export default defineComponent({
         else VirtualView.call(listSID,'setListData',data)
       }
     }
+    const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
+      let data = await globalApi.getMultilevelTabPageData('mock数据',pageNo,10)
+      if(data.length > 0){
+        let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
+        let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
+        if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
+        else VirtualView.call(listSID,'setListData',data)
+      }
+    }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       if(item.name == 'list_section_item'){
         if(item.url == recordPlayerDataMap.get('' + pageIndex).data[0].url) return
@@ -642,7 +652,7 @@ export default defineComponent({
       onTabClick,
       onTabPageSectionAttached,
       delayStopPlayer,
-      listSectionLoadMore,dealwithListSectionItemFocused
+      listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused
     }
   }
 })
