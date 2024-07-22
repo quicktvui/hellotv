@@ -3,11 +3,11 @@ import type {
 } from "@quicktvui/quicktvui3";
 import { QTWaterfallSectionType, QTWaterfallItemType } from "@quicktvui/quicktvui3";
 import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabListItem } from '../../api/details2/types'
-import { selectionPosterTypes } from '../../api/details2/types'
+import { tabTypes, posterTypes } from '../../api/details2/types'
 import { getPosterConfig } from '../../components/Hposter/configs'
 
 export const D2SelectionsSectionTypes = {
-  selection: 1
+  selection: 1, more: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST
 }
 
 const sWaterfallWidth = 1920
@@ -17,7 +17,7 @@ const dSectionSpace = 96
 const dSectionTitleSize = 42
 const dSectionTitleBottom = 30
 
-export const getSelectionPoster = (sData:IselectionPoster):QTWaterfallItem => {
+export const getSelectionPoster = (sData:IselectionPoster) => {
   const config = getPosterConfig({
     ...sData, titleLines: (sData.title||'').length>11?2:1
   })
@@ -30,75 +30,45 @@ export const getSelectionPoster = (sData:IselectionPoster):QTWaterfallItem => {
   }
 }
 
-export const selectionTypes = {
-  selection: 1, more: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST
-}
 export const ids = {
   selection: 'selection'
 }
 export const getSelectionSectionTabs = (data:ItabListItem) => {
-  const space = data._config?.space || dSectionSpace
-  const type = data.type||selectionPosterTypes.text
-  let tHeight = 90
-  if(data.tabList?.[0]?.type === selectionPosterTypes.btn){
-    tHeight = 120;
+  const type = data.type||tabTypes.text
+  let right = 0
+  if(tabTypes.btn){
+    right = 20
   }
-  const firstListItem = data.itemList?.[0]
-  let listItemHeight = firstListItem?.style.height||0
-  if(firstListItem?.type === selectionPosterTypes.btn){
-    listItemHeight = 120
+  if(tabTypes.smallText){
+    right = 40
   }
   return {
     ...data, type,
-    decoration: {
-      right: type===selectionPosterTypes.btn?20:0,
-      top: type===selectionPosterTypes.btn?25:0,
-    },
-    tabStyle: {
-      width: sWaterfallWidth - space,
-      height: tHeight
-    },
-    listStyle: {
-      width: sWaterfallWidth - space,
-      height: listItemHeight
-    }
+    decoration: { right }
   }
 }
 export const getSelectionSection = (data:IselectionSection):QTWaterfallSection => {
   const space = data._config?.space || dSectionSpace
-  const titleSize = dSectionTitleSize
-  const titleBottom = dSectionTitleBottom
+  detail2Ui.selectionSpace = space
 
-  detail2Ui.setSelections(data)
-  const firstShowTab = data.tabList[0]||{}
-  const firstShowList = firstShowTab.tabList?firstShowTab.tabList[0]:firstShowTab
-  const tabStyle = {width: sWaterfallWidth - space, height: 60}
-  const sectionheight = tabStyle.height + (firstShowTab.tabStyle?.height||0) + (firstShowList.listStyle?.height||0)
-  return {
-    _id: ids.selection+data.id, type: selectionTypes.selection,
-    title: data.title,
-    titleStyle: {
-      width: 1000, height: data.title?titleSize+10:0,
-      fontSize: data.title?titleSize:0,
-      marginBottom: data.title?titleBottom:0
-    },
-    decoration: { top: 10, left: space, right: 0, bottom: 30 },
-    style: { 
-      width: sWaterfallWidth - space,
-      height: sectionheight, minHeight: sectionheight//460
-    },
-    itemList: [],
-    tabStyle, tabList: data.tabList,
-    firstShowTab: firstShowTab.tabList?firstShowTab:{},
-    firstShowList 
-  }
+  const section = getBlankSection(60, space-20)
+  section._id = data.id
+  section.listSID = ids.selection+data.id
+  section.type = D2SelectionsSectionTypes.selection
+  section.itemList = (data.tabList as any)||[]
+  section.decoration.top = 10
+  section.decoration.bottom = 25
+
+  detail2Ui.tabSid = section.listSID
+
+  return section
 }
 export const getSelectionMoreSection = (data:IselectionBaseSection):QTWaterfallSection => {
   const space = data._config?.space || dSectionSpace
   const titleSize = dSectionTitleSize
   const titleBottom = dSectionTitleBottom
   return {
-    _id: ids.selection+data.id, type: selectionTypes.more,
+    _id: ids.selection+data.id, type: D2SelectionsSectionTypes.more,
     title: data.title,
     titleStyle: {
       width: 1000,
@@ -106,40 +76,107 @@ export const getSelectionMoreSection = (data:IselectionBaseSection):QTWaterfallS
       fontSize: data.title?titleSize:0,
       marginBottom: data.title?titleBottom:0
     },
-    decoration: { top: 0, left: space, right: 0, bottom: 30 },
+    decoration: { top: 0, left: space, right: 0, bottom: dSectionTitleBottom },
     style: { width: sWaterfallWidth - space, height: 330, },
     itemList: data.itemList
   }
 }
 
+export const getBlankSection = (height = 0, space = 0) => {
+  return {
+    _id: Math.random()+'', type: -1000, title: '',
+    titleStyle: { width: 0, height: 0, fontSize: 0, marginBottom: 0 },
+    decoration: { top: 0, left: space, right: 0, bottom: 0 },
+    style: { width: sWaterfallWidth - space, height, minHeight: height },
+    itemList:[],
+    listSID: 'listSID'+Math.random()
+  }
+}
+
 export type TposterType = ReturnType<typeof getSelectionPoster>;
+export type TselectionTabType = ReturnType<typeof getSelectionSectionTabs>;
 
 class Detail2Ui {
-  private deep1:number = -1;
-  private deep2:number = -1;
-  private selectionData?: IselectionSection
+  
+  selectionSpace = 0
 
-  /**
-   * 缓存选集列表数据
-   */
-  setSelections(data:IselectionSection){
-    this.selectionData = data
+  selectTabIndex = 0
+  selectTab2Index = 0
+  selectTabListIndex = 0
+
+  tabSid = ''
+  tab2Sid = ''
+  tabListSid = ''
+
+  getTab2(tabItem:ItabListItem){
+    const tabs2Section = detail2Ui.getShowTab(tabItem)
+    
+    let tabs2Item:any = null
+    if(tabItem.tabList){
+      tabs2Item = tabs2Section.itemList[detail2Ui.selectTab2Index]
+    } else {
+      tabs2Item = tabItem
+    }
+    const tab2ContentSection = detail2Ui.getShowTabList(tabs2Item as any)
+    return { tabs2Section, tab2ContentSection }
   }
-  /**
-   * 获取指定索引的选集数据
-   */
-  getSelection(indexs:{deep1:number;deep2:number}){
-    if(this.deep1>-1){
-      const res1 = this.selectionData?.tabList[this.deep1]
-      if(res1 && this.deep2>-1){
-        const res2 = res1.tabList?.[this.deep2]
-        return res2?.tabList||res2?.itemList
+
+  getShowTab(data:ItabListItem){
+    const section = getBlankSection(0, this.selectionSpace)
+    section.type = D2SelectionsSectionTypes.selection
+
+    if(data){
+      section._id = data.id
+      section.listSID = ids.selection+data.id
+      let tabItem:ItabListItem|null = null
+      if(data.tabList){
+        tabItem = data.tabList[0]
+        section.itemList = data.tabList as any
       }
-      return res1?.tabList||res1?.itemList
+      if(tabItem){
+        if(tabItem.type === tabTypes.btn){
+          section.style.height = 66
+          section.style.minHeight = 66
+          section.decoration.bottom = 15
+        }
+        if(tabItem.type === tabTypes.smallText){
+          section.style.height = 40
+          section.style.minHeight = 40
+          section.decoration.bottom = 25
+          section.decoration.left = this.selectionSpace-15
+        }
+      }
     }
     
-    this.deep1 = indexs.deep1??this.deep1
-    this.deep2 = indexs.deep2??this.deep2
+    this.tab2Sid = section.listSID
+    return section
+  }
+  getShowTabList(data:ItabListItem){
+    const section = getBlankSection(0, this.selectionSpace)
+    section.type = D2SelectionsSectionTypes.selection
+
+    if(data){
+      section._id = data.id
+      section.listSID = ids.selection+data.id
+      let listItem:TposterType|null = null
+      if(data.itemList){
+        listItem = data.itemList[0]
+        section.itemList = data.itemList as any
+      }
+      if(listItem){
+        if(listItem.type === posterTypes.bigBtn){
+          section.style.height = 120
+          section.style.minHeight = 120
+        } else {
+          section.style.height = listItem.style.height
+          section.style.minHeight = listItem.style.height
+        }
+        section.decoration.bottom = dSectionTitleBottom
+      }
+    }
+    
+    this.tabListSid = section.listSID
+    return section
   }
 }
 export const detail2Ui = new Detail2Ui()

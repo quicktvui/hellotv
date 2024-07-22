@@ -1,16 +1,14 @@
 <template>
-  <Hposter :borderRadius="20" :type="selectionPosterTypes.hPoster" />
-  <qt-view :type="selectionPosterTypes.btn" class="d2sli_list_btn_item" autoWidth :clipChildren="false" :focusable="true"
+  <qt-view :type="posterTypes.bigBtn" class="d2sli_list_btn_item" autoWidth :clipChildren="false" :focusable="true"
     :focusScale="1.08">
     <qt-text 
-      text="${title.text}" class="d2sli_list_item_btn_txt" :focusable="false" 
+      text="${title.text}" class="d2sli_list_btn_item_txt" :focusable="false" 
       duplicateParentState gravity="center" :ellipsizeMode="2" :lines="1"
     ></qt-text>
   </qt-view>
 </template>
 <script lang='ts' setup>
-import { selectionPosterTypes } from '../../../api/details2/types'
-import Hposter from '../../../components/Hposter/index.vue'
+import { posterTypes } from '../../../api/details2/types'
 
 </script>
 <style scoped>
@@ -27,7 +25,7 @@ import Hposter from '../../../components/Hposter/index.vue'
   focus-background-color: #ffffff;
 }
 
-.d2sli_list_item_btn_txt {
+.d2sli_list_btn_item_txt {
   width: 267px;
   height: 120px;
   color: #BFBFBF;
