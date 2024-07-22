@@ -77,7 +77,7 @@
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
         </template>
         <template v-slot:waterfall-section>
-          <short-video-section :type="1009" @loadMore="listSectionLoadMore"/>
+          <short-video-section :type="1009" :isHorizontal="false" @loadMore="listSectionLoadMore"/>
           <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
         </template>
       </qt-tabs>
@@ -586,7 +586,12 @@ export default defineComponent({
         let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
         let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
         if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
-        else VirtualView.call(listSID,'setListData',data)
+        else {
+          VirtualView.call(listSID,'setListData',[])
+          setTimeout(() => {
+            VirtualView.call(listSID,'setListData',data)
+          },500)
+        }
       }
     }
     const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
