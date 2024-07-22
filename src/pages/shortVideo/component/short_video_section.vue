@@ -30,6 +30,10 @@
         autofocusPosition="${autofocusTabPosition}">
 
         <!-- tab list item -->
+        <qt-view class="tab_list_section_item" :type="10090" :clipChildren="false" :focusable="false">
+          <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false" 
+            class="tab_list_section_item_text" style="color: #FFFFFF;" :duplicateParentState="true" text="${title}" />
+        </qt-view>
         <qt-view class="tab_list_section_item" name='${name}' :type="10091" :clipChildren="false" :focusable="true" eventFocus eventClick>
           <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
             class="tab_list_section_item_text" :duplicateParentState="true" text="${title}" />
@@ -39,8 +43,43 @@
 
       </qt-list-view>
 
-      <!-- 一行滚动板块 -->
-      <qt-list-view class="list_section" name="list_section" :focusable="false" :useDiff="false"
+      <!-- 一行滚动板块 横向 -->
+      <qt-list-view v-if="$props.isHorizontal" class="list_section" name="list_section" horizontal :focusable="false" :useDiff="false"
+        list="${itemList}" 
+        :clipChildren="false" 
+        :skipRequestFocus="false"
+        :resetOnDetach="true" 
+        flexStyle="${listStyle}"
+        sid="${listSID}"
+        :endHintEnabled="false"
+        @loadMore="loadMore"
+        @item-focused="onListItemFocused"
+        :enablePlaceholder="false"
+        :pauseTaskOnHide="true"
+        :blockFocusDirections="['left','right']"
+        autofocusPosition="${autofocusListPosition}">
+
+        <!-- list item -->
+        <qt-view name='${name}' ref="list_section_item" class="content-item-h" flexStyle="${style}"
+          :type="10090" :focusable="true" eventFocus eventClick>
+          <!-- 海报图 -->
+          <qt-image class="content-item-h-img" src="${poster}" :focusable="false"/>
+          <!-- 主标题 -->
+          <qt-view class="content-item-h-title" autoHeight :focusable="false" duplicateParentState>
+            <qt-text class="content-item-h-title-text" autoHeight text="${title}" :maxLines="2" :ellipsizeMode="2" :focusable="false" duplicateParentState></qt-text>
+          </qt-view>
+          <!-- 副标题 -->
+          <qt-text class="content-item-h-title-sub" text="更新至第6话" :focusable="false"></qt-text>
+          <!-- 推荐语 -->
+          <qt-text class="content-item-h-title-sub" text="奇境入梦，我在其中" :focusable="false"></qt-text>
+        </qt-view>
+
+        <slot name="list-section-item"/>
+        
+      </qt-list-view>
+
+      <!-- 一行滚动板块 纵向 -->
+      <qt-list-view v-else class="list_section" name="list_section" :focusable="false" :useDiff="false"
         list="${itemList}" 
         :clipChildren="false" 
         :skipRequestFocus="false"
@@ -98,6 +137,10 @@ export default defineComponent({
       type: Boolean,
       default: false
     },
+    isHorizontal: {
+      type: Boolean,
+      default: false
+    }
   },
   emits: ["load-more"],
   setup(props, context) {
@@ -145,4 +188,5 @@ export default defineComponent({
   }
 })
 </script>
+
 <style src="../css/short_video_section.css"></style>

@@ -26,7 +26,7 @@
   </tv-list>
 </template>
 <script lang='ts' setup>
-import { ref } from 'vue';
+import { ref, onBeforeUnmount } from 'vue';
 // @ts-ignore
 import { rankingUi } from '../index.ts'
 import { EventBus } from "@extscreen/es3-vue"
@@ -62,7 +62,7 @@ const onItemClickFn = (e)=> {
   }
 }
 
-EventBus.$on('DispatchKeyEvent', (keyEvent) => {
+const dispatchKeyEventFn = (keyEvent) => {
   if (keyEvent && keyEvent.action === 0) {
     // console.log('lsj--onKeyDown')
   } else if (keyEvent && keyEvent.action === 1) {
@@ -73,7 +73,11 @@ EventBus.$on('DispatchKeyEvent', (keyEvent) => {
       VirtualView.call('RankSortListSid', 'scrollToPosition', [0])
     }
   }
-});
+}
+EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
+onBeforeUnmount(()=>{
+  EventBus.$off('DispatchKeyEvent',dispatchKeyEventFn)
+})
 </script>
 <style scoped>
 .rtcs_list {

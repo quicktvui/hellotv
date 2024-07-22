@@ -20,7 +20,7 @@
 <script lang='ts' setup>
 // @ts-ignore
 import { rankingUi } from '../index.ts'
-import { StyleValue, computed, onMounted, ref } from 'vue';
+import { StyleValue, computed, onBeforeUnmount, ref } from 'vue';
 import { VirtualView, QTWaterfallVisibleType, QTWaterfallSectionType } from '@quicktvui/quicktvui3';
 import type { QTWaterfallSection, QTIWaterfall } from '@quicktvui/quicktvui3';
 import { EventBus } from "@extscreen/es3-vue"
@@ -57,7 +57,7 @@ const onItemFocused = (sectionIndex, posterIndex, isFocus, data) => {
   isLoseFocused = Number(isFocus)
 }
 
-EventBus.$on('DispatchKeyEvent', (keyEvent) => {
+const dispatchKeyEventFn = (keyEvent) => {
   if (keyEvent && keyEvent.action === 1 && toRouteName === cRouteName) {
     if(isLoseFocused === 0){//waterfall失去焦点
       rankingUi.changeData({
@@ -86,7 +86,11 @@ EventBus.$on('DispatchKeyEvent', (keyEvent) => {
       }
     }
   }
-});
+}
+EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
+onBeforeUnmount(()=>{
+  EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
+})
 const onItemClickFn = (sectionIndex, posterIndex, data, e)=> {
   if(e.item._router){
     router.push({

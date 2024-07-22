@@ -25,7 +25,7 @@ export const pageHeight = 1080
 export const transRankingTabList = (arr:IrankingTabItem[], configs:IrankingConfig):QTTabItem[] => {
   return arr.map((item,index) => {
     return { 
-      _id: (item.id||'tab')+index,text: item.text, type: 1, titleSize: 30, 
+      _id: (item.id||'tab')+index,text: item.text, type: 1, titleSize: 30,
       decoration: {
         left: index===0 ? configs.pageSpace - 25 : 0,
         right: index===arr.length-1 ? configs.pageSpace : 0
@@ -236,6 +236,8 @@ export const transRankingMoreContent = (data:IrankingMoreContent, configs:Iranki
     return {
       _id: item.id, listSID: ids.listSID+item.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST,
+      enableFirstFocusAtStart: true,
+      // firstFocusChild:{up:0},
       title: isFirst?'':item.rankName,
       titleStyle: titleStyle,
       itemList: item.list.map((mlItem,mlIndex)=>{

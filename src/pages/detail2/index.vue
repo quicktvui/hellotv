@@ -1,7 +1,8 @@
 <template>
 <div class="d_page2">
+  <D2Video ref="D2VideoRef" />
+
   <template v-if="!isLoading">
-    <D2Video ref="D2VideoRef" />
     <div v-show="isShowDes" class="d_page2_cover" :clipChildren="false">
       <D2Top v-if="pConfig.isShowTop" />
       <D2Info />
@@ -35,6 +36,7 @@ defineExpose({
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
       isLoading.value = false
+      D2VideoRef.value?.init()
 
       setTimeout(() => {
         isShowDes.value = false
