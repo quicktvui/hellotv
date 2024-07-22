@@ -54,6 +54,7 @@ import { ref } from "vue"
 import { useGlobalApi } from "../api/UseApi"
 import BgPlayerImg from "../components/bg-player-img.vue"
 import ImgTextBtnView from "../components/img-text-btn-view.vue"
+import { encodeDefinition } from "../components/media/adapter/ControlDataAdapter"
 import MediaDefPlayer from "../components/media/media-def-player.vue"
 import { createESHomeBGPlayerMediaInterceptor } from "./home/play_interceptor/createESHomeBGPlayerMediaInterceptor"
 
@@ -128,6 +129,17 @@ export default defineComponent({
           title:item.title,
           subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
           interceptors:[mediaInterceptor],
+        }
+      }else{
+        const url = item.url
+        mediaItem_0 = {
+          mediaSourceList: {
+            index: 0,
+            list: [{
+              uri: url,
+              definition: encodeDefinition()
+            }]
+          },
         }
       }
       playList = {
