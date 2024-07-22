@@ -97,6 +97,8 @@ export type TposterType = ReturnType<typeof getSelectionPoster>;
 export type TselectionTabType = ReturnType<typeof getSelectionSectionTabs>;
 
 class Detail2Ui {
+
+  playList:any = []
   
   selectionSpace = 0
 

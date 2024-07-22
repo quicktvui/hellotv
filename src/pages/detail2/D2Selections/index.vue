@@ -36,7 +36,6 @@ const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
 const onItemClickFn = ()=> {}
 const onItemFocusedFn = (e) => {
-  console.log(e.parentPosition, '--lsj--onItemFocusedFn', e.position)
   if(e.parentPosition===0 && e.position !== detail2Ui.selectTabIndex){
     detail2Ui.selectTabIndex = e.position
     
