@@ -21,6 +21,7 @@
 
 <script lang="ts">
 import {
+  ESIPlayerInterceptor,
   ESPlayerInterceptError,
   ESPlayerInterceptResult, ESPlayerPlayMode,
   ESPlayerWindowType
@@ -31,7 +32,9 @@ import { defineComponent } from "@vue/runtime-core"
 import { ESKeyEvent, ESLogLevel, useESLog } from "@extscreen/es3-core"
 import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
 import { markRaw, onMounted, ref,h } from "vue"
+import BuildConfig from "../../build/BuildConfig"
 import { defList } from "./adapter/ControlDataAdapter"
+import { ESDefMediaList } from "./impl/ESDefMediaList"
 import MediaManagerView from "./media-manager-view.vue"
 
 const TAG = "MediaDefPlayer"
@@ -80,10 +83,11 @@ export default defineComponent({
     let playerViewList = []
     let playerViewListRef = ref([])
     let progressTimer: NodeJS.Timeout
+    let playerIsInitialized = ref(false)
+    let playInterceptors:ESIPlayerInterceptor | undefined
     onMounted(()=>{
       if (props.isShowPlayerController){
         playerViewList = [markRaw(h(MediaManagerView,{menuList:props.menuList}))]
-
         playerViewListRef.value = playerViewList
         // setTimeout(()=>{
         //   const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
@@ -91,6 +95,12 @@ export default defineComponent({
         // },6000)
       }
     })
+
+    const initPlayData = (playDatas:Array<ESDefMediaList>,interceptors?:ESIPlayerInterceptor)=>{
+      playInterceptors = interceptors
+
+      if(!playerIsInitialized.value) initialize()
+    }
 
     const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -156,11 +166,21 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-----------onPlayerInitialized------------->>>>')
       }
+      playerIsInitialized.value = true
       context.emit('onPlayerInitialized')
     }
 
     function initialize() {
       playerManager.value?.initialize()
+    }
+    function playMediaItemById(id: string) {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '-----------playMediaItemById------------->>>>', id)
+      }
+      playerManager.value?.playMediaById(id)
+    }
+    function playMediaItemByIndex(index: number) {
+      if (!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
     }
     function setFullWindow(){
       playerManager.value?.setFullWindow()
@@ -235,6 +255,8 @@ export default defineComponent({
       onPlayerInterceptError,
       onPlayerInitialized,
       initialize,
+      playMediaItemByIndex,
+      playMediaItemById,
       setFullWindow,
       setSmallWindow,
       getWindowType,

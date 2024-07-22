@@ -133,6 +133,9 @@ export default defineComponent({
       }else{
         const url = item.url
         mediaItem_0 = {
+          id:item.id,
+          title:item.title,
+          subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
           mediaSourceList: {
             index: 0,
             list: [{
@@ -144,7 +147,7 @@ export default defineComponent({
       }
       playList = {
         index: 0,
-        list: [mediaItem_0]
+        list: [mediaItem_0],
       }
       PlayerManagerRef.value?.playMediaList(playList);
     }
