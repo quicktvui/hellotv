@@ -69,7 +69,7 @@ export const getPosterConfig = (data:IposterData) => {
     coverStyle.height = imgHeight
   }
   return {
-    _id: data.id, type: hPosterType, coverStyle,
+    _id: data.id, id:data.id, type: hPosterType, coverStyle,
     focus: { enable: true, scale: 1.1, border: true },
     decoration: {
       left: 0, top: 0, right: 48, bottom: 0

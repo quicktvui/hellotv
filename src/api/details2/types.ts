@@ -49,8 +49,11 @@ export interface IvideoDes {
 
 
 //选集相关类型定义--------------------------------
-export const selectionPosterTypes = {
-  hPoster: 20001, btn: 1, text: 2
+export const posterTypes = {
+  hPoster: 20001, btn: 1, bigBtn: 4
+} as const;
+export const tabTypes = {
+  btn: 1, text: 2, smallText: 3
 } as const;
 
 export interface IselectionPoster {
@@ -60,7 +63,7 @@ export interface IselectionPoster {
   poster:string;//预览图
   corner?:string;//角标
   imgCorner?:string;//图片角标
-  _type?:Tvalues<typeof selectionPosterTypes>;
+  _type?:Tvalues<typeof posterTypes>;
   _router?:{
     url:string;params:object
   };
@@ -78,8 +81,8 @@ export interface IselectionBaseSection {
 }
 export interface ItabListItem {
   id:string;
-  type?: Tvalues<typeof selectionPosterTypes>;
-  tName?:string;//标签项tab-bar名称
+  type?: Tvalues<typeof tabTypes>;
+  name?:string;//标签项tab-bar名称
   itemList?:TposterType[];//标签项对应的格子列表数据
   tabList?: Array<ItabListItem>;//下一级标签页列表 itemList和tabList只能同时存在一个
   _config?: { space?:number };

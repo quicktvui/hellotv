@@ -2,7 +2,7 @@ import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
 import { RequestManager } from "../request/RequestManager";
-import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,selectionPosterTypes} from './types'
+import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,posterTypes,tabTypes} from './types'
 // @ts-ignore
 import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs } from '../../pages/detail2/index.ts'
 
@@ -98,23 +98,23 @@ export class Detail2Base {
         id: 'd2SelectionSection1',
         tabList: [
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-1', tName: '选集',
+            id: 'd2SelectionSection1-1', name: '选集',
             tabList:[
               getSelectionSectionTabs({
-                id: 'd2SelectionSection1-1-1', tName: '1~20', type: selectionPosterTypes.btn,
+                id: 'd2SelectionSection1-1-1', name: '1~20', type: tabTypes.btn,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
-                    id: 'd2SelectionSection1-1-1'+index, _type: selectionPosterTypes.btn,
+                    id: 'd2SelectionSection1-1-1'+index, _type: posterTypes.bigBtn,
                     title: `第${index}集`, poster: '',
                   })
                 })
               }),
               getSelectionSectionTabs({
-                id: 'd2SelectionSection1-1-2', tName: '20~40', type: selectionPosterTypes.btn,
+                id: 'd2SelectionSection1-1-2', name: '20~40', type: tabTypes.btn,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   const toIndex = index+20
                   return getSelectionPoster({
-                    id: 'd2SelectionSection1-1-2'+toIndex, _type: selectionPosterTypes.btn,
+                    id: 'd2SelectionSection1-1-2'+toIndex, _type: posterTypes.bigBtn,
                     title: `第${toIndex}集`, poster: '',
                   })
                 })
@@ -122,20 +122,20 @@ export class Detail2Base {
             ]
           }),
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-2', tName: '系列',
+            id: 'd2SelectionSection1-2', name: '系列',
             itemList: new Array(10).fill(1).map((_,index)=>{
               return getSelectionPoster({
-                id: 'd2SelectionSection1-2'+index, _type: selectionPosterTypes.btn,
+                id: 'd2SelectionSection1-2'+index, _type: posterTypes.bigBtn,
                 title: `复仇者联盟系列: ${index}`,
                 poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
               })
             })
           }),
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-3', tName: '花絮',
+            id: 'd2SelectionSection1-3', name: '花絮',
             tabList:[
               getSelectionSectionTabs({
-                id: 'd2SelectionSection1-3-1', tName: '预告花絮',
+                id: 'd2SelectionSection1-3-1', name: '预告花絮', type: tabTypes.smallText,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-1'+index,
@@ -145,7 +145,7 @@ export class Detail2Base {
                 })
               }),
               getSelectionSectionTabs({
-                id: 'd2SelectionSection1-3-2', tName: '精彩看点',
+                id: 'd2SelectionSection1-3-2', name: '精彩看点', type: tabTypes.smallText,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-2'+index,
