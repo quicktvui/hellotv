@@ -481,6 +481,8 @@ export default defineComponent({
         case PlayMenuNameFlag.NEXT:
         case PlayMenuNameFlag.EPISODES:
           eventBus.emit(bottomMenuClickEventBusName,e)
+          viewState = IMediaViewState.STATE_MENU_RATE_VIEW_DISMISS
+          resetShowViewState()
           break;
         case PlayMenuNameFlag.RATE:
           curControlRef = mediaControlSpeedRateRef
