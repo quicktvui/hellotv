@@ -1,12 +1,14 @@
 <template>
 <div class="d_page2">
-  <D2Video />
-  <div class="d_page2_cover" v-if="!isLoading" :clipChildren="false">
-    <D2Top v-if="pConfig.isShowTop" />
-    <D2Info />
-    <D2Selections />
-    <D2DesDrawer />
-  </div>
+  <template v-if="!isLoading">
+    <D2Video ref="D2VideoRef" />
+    <div v-show="isShowDes" class="d_page2_cover" :clipChildren="false">
+      <D2Top v-if="pConfig.isShowTop" />
+      <D2Info />
+      <D2Selections />
+      <D2DesDrawer />
+    </div>
+  </template>
   <div class="d2_loading_box" v-show="isLoading">
     <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false" />
   </div>
@@ -25,13 +27,37 @@ import { IDetail2Config } from '../../api/details2/types';
 
 const pConfig = ref<Partial<IDetail2Config>>({});
 const isLoading = ref(true)
+const D2VideoRef = ref()
 
+const isShowDes = ref(true)
 defineExpose({
   onESCreate(params){
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
       isLoading.value = false
+
+      setTimeout(() => {
+        isShowDes.value = false
+      }, 10000);
     })
+  },
+  onKeyDown (keyEvent){
+    console.log('lsj--onKeyDown')
+    return D2VideoRef.value?.onKeyDown(keyEvent)
+  },
+  onKeyUp (keyEvent){
+    console.log('lsj--onKeyUp')
+    return D2VideoRef.value?.onKeyUp(keyEvent)
+  },
+  onBackPressed (){
+    if(!D2VideoRef.value?.onBackPressed()){
+      if(!isShowDes.value){
+        isShowDes.value = true
+        return false
+      }
+      return true
+    }
+    return false
   }
 })
 </script>
