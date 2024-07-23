@@ -65,7 +65,7 @@ export function buildMultilevelTabItemAdapter(list: Array<ShortVideoItem>): Arra
   list.forEach((item, index) => {
     const poster: any = {
       _id: item.id + '',
-      type: 10090,
+      type: 10091,
       decoration: {
         right: 30
       },

@@ -154,6 +154,7 @@
         return false
       }
       const onESDestroy = () => {
+        bgPlayerRef.value?.reset()
       }
       const onBackPressed = () => {
         router.back()

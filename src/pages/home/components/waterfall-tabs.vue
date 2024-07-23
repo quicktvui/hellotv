@@ -77,7 +77,7 @@
           <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
         </template>
         <template v-slot:waterfall-section>
-          <short-video-section :type="1009" @loadMore="listSectionLoadMore"/>
+          <short-video-section :type="1009" :isHorizontal="false" @loadMore="listSectionLoadMore"/>
           <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
         </template>
       </qt-tabs>
@@ -186,6 +186,7 @@ export default defineComponent({
     //tab
     let tabItemList: Array<QTTabItem>
     let delayStopPlayerTimer: any = -1
+    let currentShortVideoPlayUrl = ref('')
 
     function onESCreate(params) {
       isOneTime = true
@@ -312,6 +313,7 @@ export default defineComponent({
             desc: itemList[0].videoInfo.desc ??'',
             isShow: true
           }]
+          currentShortVideoPlayUrl.value = itemList[0].url
           recordPlayerDataMap.set(key, obj)
         }
         return
@@ -586,7 +588,12 @@ export default defineComponent({
         let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
         let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
         if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
-        else VirtualView.call(listSID,'setListData',data)
+        else {
+          VirtualView.call(listSID,'setListData',[])
+          setTimeout(() => {
+            VirtualView.call(listSID,'setListData',data)
+          },500)
+        }
       }
     }
     const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
@@ -600,7 +607,8 @@ export default defineComponent({
     }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       if(item.name == 'list_section_item'){
-        if(item.url == recordPlayerDataMap.get('' + pageIndex).data[0].url) return
+        if(item.url == currentShortVideoPlayUrl.value) return
+        currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
         bg_player.value.initPlayBg(item.poster)
         bg_player.value.showCoverImmediately()

@@ -198,6 +198,7 @@ export function buildHomeShortVideoAdapter(tabId: string, tabPageIndex?: number)
     },
     tabListSID: 'shortVideoTabListSID',
     listSID: 'shortVideoListSID',
+    autoSelectTabPosition: 0,
     autofocusTabPosition: -1,
     autofocusListPosition: -1,
     decoration: {
@@ -243,6 +244,7 @@ export function buildHomeMultilevelTabAdapter(tabId: string, tabPageIndex?: numb
     },
     tabListSID: 'multilevelTabSID',
     listSID: 'multilevelTabListSID',
+    autoSelectTabPosition: 1,
     autofocusTabPosition: -1,
     autofocusListPosition: -1,
     decoration: {
