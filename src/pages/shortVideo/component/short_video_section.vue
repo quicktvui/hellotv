@@ -15,12 +15,12 @@
       <!-- :singleSelectPosition="singleSelectPosition"
       :focusMemory="true" :skipRequestFocus="false" :enableSelectOnFocus="false" -->
       <qt-list-view class="tab_list_section" name="tab_list_section" ref="tab_list_section" :focusable="false" :useDiff="false"
-        list="${tabList}" 
+        list="${tabList}"
         setSelectChildPosition="${autoSelectTabPosition}"
         singleSelectPosition="${autoSelectTabPosition}"
         autoSelectPosition="${autoSelectTabPosition}"
         horizontal
-        :clipChildren="false" 
+        :clipChildren="false"
         flexStyle="${tabListStyle}"
         sid="${tabListSID}"
         @item-focused="onTabItemFocused"
@@ -33,24 +33,24 @@
 
         <!-- tab list item -->
         <qt-view class="tab_list_section_item" :type="10090" :clipChildren="false" :focusable="false">
-          <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false" 
+          <qt-text autoWidth gravity="center" :lines="1" :fontSize="36" :focusable="false"
             class="tab_list_section_item_text" style="color: #FFFFFF;" :duplicateParentState="true" text="${title}" />
         </qt-view>
         <qt-view class="tab_list_section_item" name='${name}' :type="10091" :clipChildren="false" :focusable="true" eventFocus eventClick>
-          <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
+          <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false"
             class="tab_list_section_item_text" :duplicateParentState="true" text="${title}" />
         </qt-view>
 
         <slot name="tab-list-section-item"/>
 
       </qt-list-view>
-      
+
       <qt-list-view class="list_section" name="list_section" :focusable="false" :useDiff="false"
-        list="${itemList}" 
+        list="${itemList}"
         :horizontal="isHorizontal?true:null"
-        :clipChildren="false" 
+        :clipChildren="false"
         :skipRequestFocus="false"
-        :resetOnDetach="true" 
+        :resetOnDetach="true"
         flexStyle="${listStyle}"
         sid="${listSID}"
         :endHintEnabled="false"
@@ -62,7 +62,7 @@
         autofocusPosition="${autofocusListPosition}">
 
         <!-- list item -->
-        <qt-view :type="10090" name='${name}' ref="list_section_item" class="list_section_item" :focusable="true" 
+        <qt-view :type="10090" name='${name}' ref="list_section_item" class="list_section_item" :focusable="true"
           :clipChildren="false" eventClick eventFocus :enableFocusBorder="true" flexStyle="${style}">
 
           <img src="${poster}" class="lsi_img" :focusable="false" :postDelay="300"/>
@@ -75,11 +75,11 @@
                 :duplicateParentState="true"  class="lsi_r_t_text"  text="${title}" :paddingRect="[37,12,12,0]"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
                 <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#E25D8A'" :gap="-1" style="margin-left: 12px;" :focusable="false"/>
-              </qt-view>  
+              </qt-view>
             </qt-view>
             <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="18" gravity="left|center" :lines="2" :maxLines="1"
               :duplicateParentState="true"  class="lsi_r_b_text"  text="派大星过大年" :paddingRect="[12,0,0,0]"/>
-            
+
           </qt-view>
 
         </qt-view>
@@ -99,7 +99,7 @@
           <qt-text class="content-item-h-title-sub" text="奇境入梦，我在其中" :focusable="false"></qt-text>
         </qt-view>
         <slot name="list-section-item"/>
-        
+
       </qt-list-view>
     </div>
   </tv-item>

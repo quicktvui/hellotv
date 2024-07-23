@@ -25,7 +25,13 @@ import {
   tabContentUrl,
   tabListUrl,
 } from "./RequestUrl";
-import { buildO2MTabContentData, buildO2MTabData, buildHomeShortVideoAdapter, buildHomeMultilevelTabAdapter } from "../pages/home/build_data/useTabData";
+import {
+  buildO2MTabContentData,
+  buildO2MTabData,
+  buildHomeShortVideoAdapter,
+  buildHomeMultilevelTabAdapter,
+  build4KWorldAdapter
+} from "../pages/home/build_data/useTabData"
 
 /*****
  ***************搜索 *********
@@ -87,6 +93,9 @@ export function createGlobalApi(): IGlobalApi {
     } else if (tabId === 'multilevelTab' && pageNo < 2) {
       let tabPage = buildHomeMultilevelTabAdapter(tabId, tabPageIndex)
       tabPage.data[0].itemList = buildMultilevelTabItemAdapter(shortVideoList.slice(0, 5))
+      return Promise.resolve(tabPage)
+    }else if(tabId === "4k_world" && pageNo < 2){
+      let tabPage = build4KWorldAdapter(tabId, tabPageIndex)
       return Promise.resolve(tabPage)
     }
     //此处可更换接口请求数据

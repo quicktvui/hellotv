@@ -79,6 +79,7 @@
         <template v-slot:waterfall-section>
           <short-video-section :type="1009" :isHorizontal="false" @loadMore="listSectionLoadMore"/>
           <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
+          <world-4k-section :type="1020" />
         </template>
       </qt-tabs>
 
@@ -92,6 +93,7 @@ import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
 import ThemeConfig from "../../../build/ThemeConfig"
 import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/createESHomeBGPlayerMediaInterceptor"
+import World4kSection from "./tab/world-4k-section.vue"
 import WaterfallBackground from "./waterfall-background.vue";
 import {
   QTITab, QTIView, QTTab, QTTabEventParams, QTTabItem,
@@ -128,6 +130,7 @@ const TAG = "WATERFALL-TABS"
 export default defineComponent({
   name: "waterfall-tabs",
   components: {
+    World4kSection,
     PageNoFrameItem,MyItemHistory,MyItemHistoryImg,MyTemplates,
     PagePlaceHolderItem, itemCellPlayer, bgPlayer, loading,
     TabTextIconItem, TabIconItem, PageStateImageItem, TabImageItem, WaterfallBackground,
@@ -448,7 +451,7 @@ export default defineComponent({
     let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList: any) {
       const isSwitchCellBg = sectionList[0].isSwitchCellBg
-      if (isSwitchCellBg === "0") {
+      if (!isSwitchCellBg || isSwitchCellBg === "0") {
         const bg = globalApi.getTabBg(tabItemList[pageIndex]._id)
         wTabBg.value?.setImg(bg, "", true, false)
       }
@@ -493,7 +496,7 @@ export default defineComponent({
             }, 300)
           }
         } else {
-          if (item.item.focusScreenImage && sectionIndex === 0) {//第一个板块且是格子切换背景
+          if (item.item?.focusScreenImage && sectionIndex === 0) {//第一个板块且是格子切换背景
             const cellBg = item.item.focusScreenImage
             wTabBg.value?.setImg(cellBg, "", true, false)
           } else {

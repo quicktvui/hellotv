@@ -40,6 +40,12 @@ export function buildO2MTabData(sourceData: Array<any>) {
     tabs.push(tab)
   })
   tabs.push({
+    id: '4k_world',
+    menuCode: '4k_world',
+    menuName: '4K世界',
+    menuType: '0',
+  })
+  tabs.push({
     id: 'short_video',
     menuCode: 'short_video',
     menuName: '短视频',
@@ -248,7 +254,7 @@ export function buildHomeMultilevelTabAdapter(tabId: string, tabPageIndex?: numb
     autofocusTabPosition: -1,
     autofocusListPosition: -1,
     decoration: {
-      top: 220,
+      top: 230,
       left: 0,
     },
     tabList: [
@@ -266,6 +272,65 @@ export function buildHomeMultilevelTabAdapter(tabId: string, tabPageIndex?: numb
     useDiff: false,
     isEndPage: true,
     data: [section]
+  }
+  return tabPage
+}
+// build 首页 4K 数据
+export function build4KWorldAdapter(tabId: string, tabPageIndex?: number): QTTabPageData {
+  //
+  //
+  //
+  //https://cdn.midjourney.com/3008c8fe-8cc8-448e-9c6b-fc579d5d42c0/0_0.png
+  //https://cdn.midjourney.com/2d377140-7150-4f29-96d3-305cb71b0bfc/0_2.png
+  //https://cdn.midjourney.com/0dbbd04f-0622-4079-a875-09b09e33c4ce/0_0.png
+  let section:QTWaterfallSection = {
+    _id:'4k_world01',
+    type:1020,
+    title:"",
+    style: {
+      width: 1920,
+      height: 855,
+    },
+    decoration:{top:200},
+    defaultSelectP:1,
+    autoscroll:[1,253],//[position,offset]
+    itemList:[
+      { type:1,
+        style:{width:1413,height:795},
+        decoration:{left:46,right:92},
+        title:"动物世界",
+        titleIcon:"",
+        subTitle:"\"这个星球上的邻居\"",
+        subTitleShow:true,
+        imgBg:"https://i1.hdslb.com/bfs/archive/2556572703c7038308ab678c16d3d092fe884785.jpg",
+        url:"",
+      },
+      { type:1,
+        style:{width:1413,height:795},
+        decoration:{right:92},
+        title:"这里是中国",
+        titleIcon:"",
+        subTitle:"\"从山川到湖泊，从云海到日落\"",
+        subTitleShow:true,
+        imgBg:"https://img0.baidu.com/it/u=2788130620,4197126272&fm=253&fmt=auto&app=138&f=JPEG?w=889&h=500",
+        url:"",
+      },
+      { type:1,
+        style:{width:1413,height:795},
+        decoration:{right:46},
+        title:"放松 ｜ 漫步 ｜ 街景",
+        titleIcon:"",
+        subTitle:"\"与你缓步丈量世界\"",
+        subTitleShow:true,
+        imgBg:"https://pic.rmb.bdstatic.com/8737b0d6a6ee98305fa140b7e831aa2e.jpeg",
+        url:"",
+      },
+    ],
+  }
+  const tabPage: QTTabPageData = {
+    useDiff:false,
+    isEndPage:true,
+    data:[section]
   }
   return tabPage
 }
