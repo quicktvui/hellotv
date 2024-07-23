@@ -30,10 +30,15 @@ import { ESMediaItemList } from "@extscreen/es3-player-manager/dist/src/core/ESM
 import { ESVideoPlayer } from "@extscreen/es3-video-player"
 import { defineComponent } from "@vue/runtime-core"
 import { ESKeyEvent, ESLogLevel, useESLog } from "@extscreen/es3-core"
-import { ESIPlayerManager, ESMediaItem, ESPlayerManager } from "@extscreen/es3-player-manager"
-import { markRaw, onMounted, ref,h } from "vue"
+import {
+  ESIPlayerManager,
+  ESMediaItem,
+  ESPlayerManager,
+  useESPlayerManagerPlayModeManager
+} from "@extscreen/es3-player-manager"
+import { markRaw, ref,h } from "vue"
 import BuildConfig from "../../build/BuildConfig"
-import { defList } from "./adapter/ControlDataAdapter"
+import { buildPlayData, defList } from "./adapter/ControlDataAdapter"
 import { ESDefMediaList } from "./impl/ESDefMediaList"
 import MediaManagerView from "./media-manager-view.vue"
 
@@ -51,7 +56,7 @@ export default defineComponent({
     },
     isShowPlayerController:{
       type:Boolean,
-      default:true
+      default:false
     },
     playerLeft:{
       type:Number,
@@ -81,25 +86,29 @@ export default defineComponent({
     const playerList = [markRaw(ESVideoPlayer)]
     const playerListRef = ref(playerList)
     let playerViewList = []
-    let playerViewListRef = ref([])
+    if(props.isShowPlayerController){
+      playerViewList = [markRaw(h(MediaManagerView,{menuList:props.menuList}))]
+    }
+    let playerViewListRef = ref(playerViewList)
     let progressTimer: NodeJS.Timeout
     let playerIsInitialized = ref(false)
-    let playInterceptors:ESIPlayerInterceptor | undefined
-    onMounted(()=>{
-      if (props.isShowPlayerController){
-        playerViewList = [markRaw(h(MediaManagerView,{menuList:props.menuList}))]
-        playerViewListRef.value = playerViewList
-        // setTimeout(()=>{
+    let playInterceptors:Array<ESIPlayerInterceptor> | undefined
+    const playModeManager = useESPlayerManagerPlayModeManager()
+    // onMounted(()=>{
         //   const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
         //   mRef.setShowView(true)
-        // },6000)
-      }
-    })
+    // })
 
-    const initPlayData = (playDatas:Array<ESDefMediaList>,interceptors?:ESIPlayerInterceptor)=>{
+    const initPlayData = (playDatas:Array<ESDefMediaList>,playMode?: ESPlayerPlayMode,interceptors?:Array<ESIPlayerInterceptor>):ESMediaItemList=>{
       playInterceptors = interceptors
-
+      const list:ESMediaItemList = buildPlayData(playDatas,interceptors)
       if(!playerIsInitialized.value) initialize()
+      if (playMode){
+        playModeManager.setPlayMode(playMode)
+      }else{
+        playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
+      }
+      return list
     }
 
     const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
@@ -108,6 +117,7 @@ export default defineComponent({
       }
       context.emit('onPlayerPlayMedia', mediaItem)
     }
+
     const onPlayerPlaying = () => {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '-----------onPlayerPlaying------------->>>>')
@@ -254,6 +264,7 @@ export default defineComponent({
       onPlayerInterceptSuccess,
       onPlayerInterceptError,
       onPlayerInitialized,
+      initPlayData,
       initialize,
       playMediaItemByIndex,
       playMediaItemById,

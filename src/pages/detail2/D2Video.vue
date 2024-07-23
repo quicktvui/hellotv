@@ -5,6 +5,7 @@
     ref="PlayerManagerRef"
     class="d2_video_media"
     :initPlayerWindowType="2"
+    :is-show-player-controller="true"
     @onPlayerInitialized="onPlayerInitialized"
   />
 </div>
@@ -48,7 +49,7 @@ const play =(item:any)=>{
     index: 0,
     list: [mediaItem_0]
   });
-  
+
 }
 
 defineExpose({

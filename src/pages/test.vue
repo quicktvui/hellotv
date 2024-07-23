@@ -7,6 +7,7 @@
       @onPlayerPlaying="onVideoPlayerPlaying"
       @onPlayerCompleted="onVideoPlayerCompleted"
       @onPlayerInitialized="onPlayerInitialized"
+      :is-show-player-controller="true"
     />
     <bg-player-img ref="itemCellBgImgRef"
                    class="media-test-img-bg-css"
@@ -84,29 +85,32 @@ export default defineComponent({
       const playData = [{
         id:'1532310053293928449',
         title:'特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
         cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
-        url:"",
+        url:[{playUrl:"",
+          definition:""}],
         isRequestUrl:true
       }]
       let imgBg = playData[0].cover
       setBgImage(imgBg)
+      const playList:ESMediaItemList = PlayerManagerRef.value?.initPlayData(playData,3,[mediaInterceptor])
+      setSize()
+      PlayerManagerRef.value?.playMediaList(playList);
+      PlayerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
+      // setTimeout(()=>{
+      //   initComponent(playData,2)
 
-      setTimeout(()=>{
-        initComponent(playData,2)
-        setSize()
-        playByIndex(0)
-      },2000)
+        // playByIndex(0)
+      // },2000)
     }
 
     const initComponent = (playerListData: any,playerType:number)=>{
       recordPlayerList=[]
       recordPlayerList = JSON.parse(JSON.stringify(playerListData))
-      if(!playerIsInitialized.value) initPlayer();
+      if(!playerIsInitialized.value)  PlayerManagerRef.value?.initialize()
       PlayerManagerRef.value?.setPlayMediaListMode(3)
     }
-    const initPlayer = () => {
-      PlayerManagerRef.value?.initialize()
-    }
+
     const setSize = ()=>{
       PlayerManagerRef.value?.setFullWindow()
       PlayerManagerRef.value?.setSize(playerWidth.value, playerHeight.value)
@@ -139,6 +143,10 @@ export default defineComponent({
           mediaSourceList: {
             index: 0,
             list: [{
+              uri: url,
+              definition: encodeDefinition()
+            },
+              {
               uri: url,
               definition: encodeDefinition()
             }]

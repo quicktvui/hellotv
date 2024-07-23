@@ -219,7 +219,7 @@ export default defineComponent({
      */
     function requestFocus():void{
       setTimeout(()=>{
-        mediaManagerSeekBarRef.value?.requestFocus()
+        mediaManagerSeekBarRef.value!.requestFocus()
       },500)
     }
     onMounted(()=>{

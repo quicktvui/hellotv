@@ -1,11 +1,20 @@
-import { ESPlayerDefinition, ESPlayerPlayMode, ESPlayerRate } from "@extscreen/es3-player"
+import {
+  ESIPlayerInterceptor,
+  ESPlayerDefinition,
+  ESPlayerPlayMode,
+  ESPlayerRate
+} from "@extscreen/es3-player"
+import { ESMediaItem, ESMediaItemList } from "@extscreen/es3-player-manager"
+import { ESMediaSource } from "@extscreen/es3-player/dist/src/core/ESMediaSource"
 import { QTListViewItem } from "@quicktvui/quicktvui3"
 import { QTListViewItemDecoration } from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration"
 import { ref } from "vue"
+import { IMediaUrl } from "../../../api/media/IMediaUrl"
 import xuanJiIcon from '../../../assets/def_media/ic_def_media_menu_xuanji.png'
 import xuanJiFocusIcon from '../../../assets/def_media/ic_def_media_menu_xuanji_focus.png'
 import settingIcon from '../../../assets/def_media/ic_def_media_menu_setting.png'
 import settingFocusIcon from '../../../assets/def_media/ic_def_media_menu_setting_focus.png'
+import { ESDefMediaList } from "../impl/ESDefMediaList"
 
 export const bottomMenuClickEventBusName = "onBottomMenuPlayClicked"
 export enum PlayMenuNameFlag{
@@ -44,6 +53,49 @@ export const useMenuList = ()=>{
     }
   }
 
+}
+
+export function buildPlayData(playDatas:Array<ESDefMediaList>,interceptors?:Array<ESIPlayerInterceptor>):ESMediaItemList{
+  let playList: ESMediaItemList = {
+    index: 0,
+    list: []
+  }
+  if (playDatas && playDatas.length > 0){
+    playDatas.map((item,index)=>{
+      const isRequestUrl = item.isRequestUrl
+      let mediaItem_0: ESMediaItem
+      if (isRequestUrl){
+        mediaItem_0 = {
+          id:item.id,
+          title:item.title,
+          subTitle:item.subTitle,
+          interceptors:interceptors,
+        }
+      }else{
+        mediaItem_0 = {
+          id:item.id,
+          title:item.title,
+          subTitle:item.subTitle,
+          mediaSourceList: {
+            index: 0,
+            list: buildUrls(item.url??[])
+          },
+        }
+      }
+      playList.list.push(mediaItem_0)
+    })
+  }
+  return playList
+}
+
+function buildUrls(mediaUrlList:IMediaUrl[]):Array<ESMediaSource>{
+  let list:Array<ESMediaSource> = []
+  for (let i = 0; i < mediaUrlList.length; i++) {
+    const item = mediaUrlList[i]
+    const mItem:ESMediaSource = {uri:item.playUrl,definition:Number(item.definition)??1}
+    list.push(mItem)
+  }
+  return list
 }
 
 export function buildPlayRates(rateList: Array<ESPlayerRate>): Array<QTListViewItem>{
@@ -208,3 +260,4 @@ function getCurIndex(item:any,list:Array<any>){
   }
   return -1
 }
+
