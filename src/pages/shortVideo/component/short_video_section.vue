@@ -67,8 +67,8 @@
 
           <img src="${poster}" class="lsi_img" :focusable="false" :postDelay="300"/>
 
-          <qt-view class="lsi_r" :duplicateParentState="true">
-            <qt-view class="lsi_r_t" :duplicateParentState="true">
+          <qt-view class="lsi_r" :duplicateParentState="true" :focusable="false">
+            <qt-view class="lsi_r_t" :duplicateParentState="true" :focusable="false">
               <qt-text :focusable="false" :ellipsizeMode="2" :showOnState="['normal']" :fontSize="24" gravity="left|top" :lines="2" :maxLines="2"
                 :duplicateParentState="true"  class="lsi_r_t_text"  text="${title}" :paddingRect="[12,12,12,0]"/>
               <qt-text :focusable="false" :ellipsizeMode="2" :showOnState="['selected','focused']" :fontSize="24" gravity="left|top" :lines="2" :maxLines="2"

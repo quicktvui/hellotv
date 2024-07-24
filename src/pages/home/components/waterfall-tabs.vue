@@ -1,89 +1,90 @@
 <template>
   <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
-       :clipPadding="false">
+      :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
     <bg-player class="bg_player" ref="bg_player" :clipChildren="false" style="position: absolute;" />
-      <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
-        v-if="isShowTop" :blockFocusDirections="['left', 'right', 'up']">
-        <slot name="buttonsHeader"/>
-      </div>
-      <qt-tabs
-        ref="tabRef"
-        :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
-        tabNavBarClass="qt-tabs-waterfall-tab-css"
-        tabPageClass="qt-tabs-waterfall-css"
-        :horizontalFadingEdgeEnabled="true"
-        :fadingEdgeLength="400"
-        tabNavBarSid="tabNavBarSid"
-        :triggerTask="tabsTriggerTask"
-        :outOfDateTime="5 * 60 * 1000"
-        @onTabClick="onTabClick"
-        :tabContentSwitchDelay="300"
-        :tabContentResumeDelay="300"
-        :useDiff=false
-        sid='homeTabs'
-        :custom-pool="{ name: 'home' }"
-        :custom-item-pool="{ name: 'homeItems' }"
-        @onTabPageChanged="onTabPageChanged"
-        @onTabMoveToTopStart="onTabMoveToTopStart"
-        @onTabMoveToTopEnd="onTabMoveToTopEnd"
-        @onTabMoveToBottomStart="onTabMoveToBottomStart"
-        @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
-        @onTabPageScrollToEnd="onTabPageScrollToEnd"
-        @onTabPageScrollToStart="onTabPageScrollToStart"
-        @onTabPageItemClick="onTabPageItemClick"
-        @onTabPageItemFocused="onTabPageItemFocused"
-        @onTabPageLoadData="onTabPageLoadData"
-        @onTabPageScroll="onTabPageScroll"
-        @onTabEvent='onTabEvent'
-        @onTabPageSectionAttached="onTabPageSectionAttached"
-        class="qt-tabs-css">
-        <template v-slot:tab-item>
-          <tab-image-item :type="1"/>
-          <tab-icon-item :type="2" cornerIconLeft/>
-          <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
-        </template>
-        <template v-slot:waterfall-item>
-          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
-                     :focusTitleColor="focusTextColor"
-                     :focusSubTitleColor="focusTextColor"
-                     :floatTitleBgColor="floatTitleBgColor"
-                     :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
-          </qt-poster>
-          <page-state-image-item :type="1"/>
-          <page-no-frame-item :type="2"/>
-          <page-place-holder-item :type="3"/>
-          <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
-          <my-item-history :type="121" />
-          <my-item-history-img :type="122" />
-          <MyTemplates :focusable="false"/>
-        </template>
-        <template v-slot:waterfall-list-item>
-          <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
-                     :focusTitleColor="focusTextColor"
-                     :focusSubTitleColor="focusTextColor"
-                     :floatTitleBgColor="floatTitleBgColor"
-                     :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
 
-          </qt-poster>
-          <page-state-image-item :type="1"/>
-          <page-no-frame-item :type="2"/>
-          <page-place-holder-item :type="3"/>
-          <my-item-history :type="121" />
-          <my-item-history-img :type="122" />
-        </template>
-        <template v-slot:waterfall-vue-section>
-          <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
-        </template>
-        <template v-slot:waterfall-section>
-          <short-video-section :type="1009" :isHorizontal="false" @loadMore="listSectionLoadMore"/>
-          <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
-          <world-4k-section :type="1020" />
-        </template>
-      </qt-tabs>
+    <div ref="buttonsHeaderDiv" name="buttonsHeaderDiv" class="buttons-header-css" :clipChildren="false"
+      v-if="isShowTop" :blockFocusDirections="['left', 'right', 'up']">
+      <slot name="buttonsHeader"/>
+    </div>
+    
+    <qt-tabs
+      ref="tabRef"
+      :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
+      tabNavBarClass="qt-tabs-waterfall-tab-css"
+      tabPageClass="qt-tabs-waterfall-css"
+      :horizontalFadingEdgeEnabled="true"
+      :fadingEdgeLength="400"
+      tabNavBarSid="tabNavBarSid"
+      :triggerTask="tabsTriggerTask"
+      :outOfDateTime="5 * 60 * 1000"
+      @onTabClick="onTabClick"
+      :tabContentSwitchDelay="300"
+      :tabContentResumeDelay="300"
+      :useDiff=false
+      sid='homeTabs'
+      :custom-pool="{ name: 'home' }"
+      :custom-item-pool="{ name: 'homeItems' }"
+      @onTabPageChanged="onTabPageChanged"
+      @onTabMoveToTopStart="onTabMoveToTopStart"
+      @onTabMoveToTopEnd="onTabMoveToTopEnd"
+      @onTabMoveToBottomStart="onTabMoveToBottomStart"
+      @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+      @onTabPageScrollToEnd="onTabPageScrollToEnd"
+      @onTabPageScrollToStart="onTabPageScrollToStart"
+      @onTabPageItemClick="onTabPageItemClick"
+      @onTabPageItemFocused="onTabPageItemFocused"
+      @onTabPageLoadData="onTabPageLoadData"
+      @onTabPageScroll="onTabPageScroll"
+      @onTabEvent='onTabEvent'
+      @onTabPageSectionAttached="onTabPageSectionAttached"
+      class="qt-tabs-css">
+      <template v-slot:tab-item>
+        <tab-image-item :type="1"/>
+        <tab-icon-item :type="2" cornerIconLeft/>
+        <tab-text-icon-item :type="3" cornerIconLeft textIconLeft/>
+      </template>
+      <template v-slot:waterfall-item>
+        <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
+                    :focusTitleColor="focusTextColor"
+                    :focusSubTitleColor="focusTextColor"
+                    :floatTitleBgColor="floatTitleBgColor"
+                    :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
+        </qt-poster>
+        <page-state-image-item :type="1"/>
+        <page-no-frame-item :type="2"/>
+        <page-place-holder-item :type="3"/>
+        <item-cell-player :type="10008" ref="item_cell_player" :clipChildren="false"/>
+        <my-item-history :type="121" />
+        <my-item-history-img :type="122" />
+        <MyTemplates :focusable="false"/>
+      </template>
+      <template v-slot:waterfall-list-item>
+        <qt-poster :type="10001" :borderRadius="20" :rippleColor="'#157AFC'"
+                    :focusTitleColor="focusTextColor"
+                    :focusSubTitleColor="focusTextColor"
+                    :floatTitleBgColor="floatTitleBgColor"
+                    :focusBgColor="{ colors: focusBgColor, cornerRadii4: [0, 0, 20, 20] }">
 
-      <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
+        </qt-poster>
+        <page-state-image-item :type="1"/>
+        <page-no-frame-item :type="2"/>
+        <page-place-holder-item :type="3"/>
+        <my-item-history :type="121" />
+        <my-item-history-img :type="122" />
+      </template>
+      <template v-slot:waterfall-vue-section>
+        <!-- <loading :isFullScreen="true" :width="120" :height="120" /> -->
+      </template>
+      <template v-slot:waterfall-section>
+        <short-video-section :type="1009" :isHorizontal="false" @loadMore="listSectionLoadMore"/>
+        <short-video-section :type="1010" :isHorizontal="true" @loadMore="multilevelTabLoadMore"/>
+        <world-4k-section :type="1020" />
+      </template>
+    </qt-tabs>
+    <!-- <loading style="position: absolute;z-index: 999;" :is-full-screen="true"/> -->
   </qt-view>
 </template>
 
@@ -465,6 +466,16 @@ export default defineComponent({
           " item: ", item
         )
       }
+      if(item.name == 'list_section_item'){
+        let currentTabItem = tabItemList[pageIndex]
+        if(currentTabItem._id == 'short_video'){
+          let obj = {
+            item: item
+          }
+          launch.launch(obj)
+        }
+        return
+      }
       if(myHistory.checkName(e.name)){
         launch.launch({...item, item: { ...(item.item||{}), ...myHistory.getRouter(e.name) }})
       } else {
@@ -609,7 +620,8 @@ export default defineComponent({
       }
     }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
-      if(item.name == 'list_section_item'){
+      let currentTabItem = tabItemList[pageIndex]
+      if(item.name == 'list_section_item' && currentTabItem._id == 'short_video'){
         if(item.url == currentShortVideoPlayUrl.value) return
         currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
