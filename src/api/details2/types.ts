@@ -9,7 +9,8 @@ type Tvalues<T> = T[ keyof T ]
 
 export interface IDetail2Config {
   isShowTop:boolean;
-  topMode: TtopModes
+  topMode: TtopModes;
+  desTopDistance:number;//视频节目信息距离顶部的距离
 }
 
 // top------
@@ -45,9 +46,10 @@ export interface IvideoDesAction {
   [k:string]:any
 }
 export interface IvideoDes {
-  title: string; topDistance?:number;
-  tags: Array<Itag>;
-  actions: Array<IvideoDesAction>;
+  id:string|number;//视频唯一id
+  title: string;//视频标题
+  tags?: Array<Itag>;//视频类型标签
+  actions?: Array<IvideoDesAction>;//视频信息展示模块的动作按钮列表
   des?:string;//视频简介信息
 }
 
@@ -62,19 +64,20 @@ export const tabTypes = {
 
 export interface IselectionPoster {
   id:string;
-  title?:string;
-  subTitle?:string;
-  poster:string;//预览图
+  title?:string;//选集标签中显示的标题
+  subTitle?:string;//选集标签中显示的副标题
+  poster:string;//选集标签中显示的预览图
   videoUrl?:string;
-  corner?:string;//角标
-  imgCorner?:string;//图片角标
-  _type?:Tvalues<typeof posterTypes>;
+  corner?:string;//选集标签中显示的角标
+  imgCorner?:string;//选集标签中显示的图片角标
+  _type?:Tvalues<typeof posterTypes>;//选集标签中展示的格子类型
   _router?:{
     url:string;params:object
   };
-  _config?: {
+  _config?: {//选集标签中显示的格子合模型配置数据
     imgWidth?: number, imgHeight?:number
-  }
+  },
+  videoData: IvideoDes//视频信息数据
 }
 export interface IselectionBaseSection {
   id:string;
