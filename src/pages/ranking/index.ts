@@ -360,7 +360,6 @@ class RankingUi {
   setData(tabRef:QTITab, pageIndex:number){
     rankApi.getContentData(pageIndex).then(res=>{
       const {sections} = transRankingSections(res, rankApi.getConfig())
-      console.log(pageIndex, '--lsj--', sections)
       tabRef.setPageData(pageIndex, {
         useDiff: false, isEndPage: true, disableScrollOnFirstScreen: false,
         data: sections
