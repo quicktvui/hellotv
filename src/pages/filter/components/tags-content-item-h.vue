@@ -43,7 +43,7 @@
 .filter-content-item-h-img {
   width: 321px;
   height: 180px;
-  background-color: grey;
+  background-color: transparent;
   border-radius: 9px;
   focus-border-radius: 9px;
   margin-bottom: 15px;

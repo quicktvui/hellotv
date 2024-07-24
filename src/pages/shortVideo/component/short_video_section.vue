@@ -88,7 +88,9 @@
         <qt-view name='${name}' ref="list_section_item" class="content-item-h" flexStyle="${style}"
           :type="10091" :focusable="true" eventFocus eventClick>
           <!-- 海报图 -->
-          <qt-image class="content-item-h-img" src="${poster}" :focusable="false"/>
+          <qt-view class="content-item-h-img" :focusable="false" :enableFocusBorder="true" duplicateParentState>
+            <qt-image class="content-item-h-img" src="${poster}" :focusable="false" :postDelay="300"/>
+          </qt-view>
           <!-- 主标题 -->
           <qt-view class="content-item-h-title" autoHeight :focusable="false" duplicateParentState>
             <qt-text class="content-item-h-title-text" autoHeight text="${title}" :maxLines="2" :ellipsizeMode="2" :focusable="false" duplicateParentState></qt-text>
