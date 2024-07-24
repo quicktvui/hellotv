@@ -5,7 +5,7 @@
   <template v-if="!isLoading">
     <div v-show="isShowDes" class="d_page2_cover" :clipChildren="false">
       <D2Top v-if="pConfig.isShowTop" />
-      <D2Info />
+      <D2Info @clickAction="clickActionFn"/>
       <D2Selections />
       <D2DesDrawer />
     </div>
@@ -23,43 +23,79 @@ import D2Info from './D2Info/index.vue'
 import D2Selections from './D2Selections/index.vue'
 import D2DesDrawer from './D2DesDrawer.vue'
 // @ts-ignore
-import api from '../../api/details2/index.ts'
-import { IDetail2Config } from '../../api/details2/types';
+import { detail2Ui } from './index.ts'
+import api from '../../api/details2/index'
+import { IDetail2Config, IvideoDesActions } from '../../api/details2/types';
+import { useESRouter } from '@extscreen/es3-router'
 
 const pConfig = ref<Partial<IDetail2Config>>({});
 const isLoading = ref(true)
 const D2VideoRef = ref()
 
+const router = useESRouter()
+router.afterEach((to, from, failure) => {
+  if(to.name !== 'detail2'){
+    clearTimeout(timerOutId)
+  }
+})
+
 const isShowDes = ref(true)
+let timerOutId:any = null
+const starTime = ()=>{
+  clearTimeout(timerOutId)
+  timerOutId = setTimeout(() => {
+    isShowDes.value = false
+  }, 10000);
+}
+const clickActionFn = (actionItem)=>{
+  if(actionItem.action === IvideoDesActions.fullScreen){
+    clearTimeout(timerOutId)
+    isShowDes.value = false
+  }
+  if(actionItem.action === IvideoDesActions.des){}
+  if(actionItem.action === IvideoDesActions.ranking){
+    router.push({
+      name: 'ranking',
+      params: {}
+    })
+  }
+  if(actionItem.action === IvideoDesActions.vip){}
+}
 defineExpose({
   onESCreate(params){
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
       isLoading.value = false
-      D2VideoRef.value?.init()
-
-      setTimeout(() => {
-        isShowDes.value = false
-      }, 10000);
+      starTime()
     })
   },
   onKeyDown (keyEvent){
-    console.log('lsj--onKeyDown')
-    return D2VideoRef.value?.onKeyDown(keyEvent)
+    if(!isShowDes.value){
+      return D2VideoRef.value?.onKeyDown(keyEvent)
+    }else{
+      starTime()
+    }
   },
   onKeyUp (keyEvent){
-    console.log('lsj--onKeyUp')
-    return D2VideoRef.value?.onKeyUp(keyEvent)
+    if(!isShowDes.value){
+      return D2VideoRef.value?.onKeyUp(keyEvent)
+    }
   },
   onBackPressed (){
-    if(!D2VideoRef.value?.onBackPressed()){
-      if(!isShowDes.value){
+    if(!isShowDes.value){
+      const press = D2VideoRef.value?.onBackPressed()
+      if(!press){
         isShowDes.value = true
-        return false
+        starTime()
       }
       return true
+    }else{
+      router.back()
     }
-    return false
+  },
+  onESDestroy(){
+    clearTimeout(timerOutId)
+    detail2Ui.clear()
   }
 })
 </script>
@@ -76,7 +112,7 @@ defineExpose({
   top: 0.01px;
   width: 1920px;
   height: 1080px;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.1);
   z-index: 2;
 }
 .d2_loading_box{

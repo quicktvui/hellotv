@@ -31,8 +31,12 @@ export interface Itag {
 export const IvideoDesActionTypes = {
   btn: 1, btn2: 2, img: 3
 }
+export const IvideoDesActions = {
+  fullScreen:'1', des:'2', ranking: '3', vip: '4'
+} as const;
 export interface IvideoDesAction {
   id: number|string, txt:string; type: number;
+  action:Tvalues<typeof IvideoDesActions>;
   color?:string; bgColor?:string; gradientBg?:object;gradientBgf?:object;
   gap?:number;//间隙
   icon?:any; iconf?: any; img?:any;
@@ -61,6 +65,7 @@ export interface IselectionPoster {
   title?:string;
   subTitle?:string;
   poster:string;//预览图
+  videoUrl?:string;
   corner?:string;//角标
   imgCorner?:string;//图片角标
   _type?:Tvalues<typeof posterTypes>;

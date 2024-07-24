@@ -1,5 +1,5 @@
 <template>
-<div class="d2_info_action3" :focusable="true" :style="pData.foLayoutStyle" :focusScale="1.05">
+<div class="d2_info_action3" :focusable="true" :style="pData.foLayoutStyle" :focusScale="1.05" eventClick eventFocus>
   <img class="d2_info_action3_img" :src="pData.img" :style="pData.foImgStyle" :focusable="false" duplicateParentState></img>
   <!-- <img showOnState="focused" class="d2_info_action3_imgf" :src="pData.iconf||pData.icon" :style="pData.foImgStyle" :focusable="false" duplicateParentState></img> -->
 </div>
