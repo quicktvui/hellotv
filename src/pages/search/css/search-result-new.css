@@ -71,7 +71,7 @@
   width: 396px;
   height: 222px;
   border-radius: 9px;
-  background-color: transparent;
+  background-color: rgba(0,0,0,0.1);
   focus-border-radius: 9px;
 }
 
