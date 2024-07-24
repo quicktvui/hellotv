@@ -342,14 +342,14 @@ class RankingUi {
         } else if(bgPlayerRef) {
           this.bgPlayerRef = bgPlayerRef//初始化背景
           bgPlayerRef.doChangeParent('', 2,
-            1140, 640, 1140, 640,
+            1920, 1080, 1140, 640,
             [{ 
               cover: sData.previewImg,
               id: sData.id,
               isRequestUrl: false,
               url: sData.previewVedio||''//"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
             }],
-            0
+            0, 723,135
           )
         }
       }

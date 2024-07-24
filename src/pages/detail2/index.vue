@@ -89,8 +89,9 @@ defineExpose({
         starTime()
       }
       return true
+    }else{
+      router.back()
     }
-    return false
   },
   onESDestroy(){
     clearTimeout(timerOutId)

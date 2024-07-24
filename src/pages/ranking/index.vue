@@ -112,8 +112,7 @@ defineExpose({
 }
 .bg_player {
   position: absolute;
-  left: 732px;
-  top: 135px;
+  background-color: transparent;
 }
 .ranking_page_top {
   background-color: transparent;
