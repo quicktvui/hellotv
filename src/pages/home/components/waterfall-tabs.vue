@@ -608,11 +608,10 @@ export default defineComponent({
       }, 2100)
     }
 
-    const listSectionLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
+    const listSectionLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number, pageIndex: number) => {
       let data = await globalApi.getShortVideoPageData('mock数据',pageNo,10)
       if(data.length > 0){
-        let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
-        let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
+        let listSID = tabRef.value?.getPageSection(pageIndex,sectionIndex)!.listSID
         if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
         else {
           VirtualView.call(listSID,'setListData',[])
@@ -622,11 +621,10 @@ export default defineComponent({
         }
       }
     }
-    const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {
+    const multilevelTabLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number, pageIndex: number) => {
       let data = await globalApi.getMultilevelTabPageData('mock数据', pageNo, 5)
       if(data.length > 0){
-        let curPageIndex = tabRef.value?.getCurrentPageIndex()??0
-        let listSID = tabRef.value?.getPageSection(curPageIndex,sectionIndex)!.listSID
+        let listSID = tabRef.value?.getPageSection(pageIndex,sectionIndex)!.listSID
         if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
         else VirtualView.call(listSID,'setListData',data)
       }

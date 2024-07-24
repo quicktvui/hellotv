@@ -137,21 +137,24 @@ export default defineComponent({
     let currentSectionIndex = ref(0)
     let currentTabIndex = ref(-1)
     let tab_list_section = ref<QTIListView>()
+    let currentPageIndex = ref(-1)
     const onItemRecycled = (e) => {}
     const loadMore = (e) => {
       pageNo.value = pageNo.value + 1
-      context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
+      context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
     }
     const onItemBind = (e) => {
+      console.log(e,"onItemBindonItemBindonItemBindonItemBindonItemBind")
       if(e.item){
+        if(e.pageIndex != 'undefined') currentPageIndex.value = e.pageIndex
         if(e.item.tabList.length < 1){
           currentTabIndex.value = -1
         }else{
           // VirtualView.call(e.item.tabListSID,'setSelectChildPosition',[0,true])
-          currentTabIndex.value = 0
+          currentTabIndex.value = e.item.autoSelectTabPosition
         }
         if(e.item.itemList.length < 1){
-          context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
+          context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
         }
       }
     }
@@ -164,7 +167,7 @@ export default defineComponent({
         pageNo.value = 1
         singleSelectPosition.value = e.position
         // VirtualView.call(e.listSID,'setSelectChildPosition',[0,true])
-        context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value)
+        context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
       }
     }
     const onListItemFocused = (e) => {
