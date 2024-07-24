@@ -66,9 +66,9 @@ export class Detail2Base {
     return {
       logo: { title: '云视听', titleIcon:logo },
       btns: [
-        { id: 1, text: '搜索：亨利·卡维尔', lIcon:searchIcon, lIconf: searchIconf },
-        { id: 2, text: '首页', lIcon:homeIcon, lIconf:homeIconf },
-        { id: 3, text: '全部电影', lIcon:homeIcon, lIconf:homeIconf },
+        { id: 1, text: '搜索：亨利·卡维尔', lIcon:searchIcon, lIconf: searchIconf, router:{route:{name: 'search'}} },
+        { id: 2, text: '首页', lIcon:homeIcon, lIconf:homeIconf, router:{route:{name: 'home'},isReplace:true} },
+        { id: 3, text: '全部电影', lIcon:homeIcon, lIconf:homeIconf, router:{route:{name: 'screen_main_view'}} },
       ]
     }
   }
@@ -88,17 +88,17 @@ export class Detail2Base {
         { id: 6, txt: '会员专享', mode: 'btn' },
       ],
       actions: [
-        { id: 1, txt: '全屏观看', type: 1, icon: fullIcon, iconf: fullIconf },
-        { id: 2, txt: '视频详情', type: 1, icon: fullIcon, iconf: fullIconf, gradientBg:{colors:['#00C7FF','#0057FF'], cornerRadii4: [9, 9, 9, 9],orientation:6},gradientBgf:{colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6} },
-        { id: 3, txt: '热门电影榜', type: 1, icon: fullIcon, iconf: fullIconf },
+        { id: 1, txt: '全屏观看', type: 1, action: '1', icon: fullIcon, iconf: fullIconf },
+        // { id: 2, txt: '视频详情', type: 1, action: '2', icon: fullIcon, iconf: fullIconf, gradientBg:{colors:['#00C7FF','#0057FF'], cornerRadii4: [9, 9, 9, 9],orientation:6},gradientBgf:{colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6} },
+        { id: 3, txt: '热门电影榜', type: 1, action: '3', icon: fullIcon, iconf: fullIconf },
         { 
-          id: 4, txt: '开通会员', type: 2, icon: vipIconf,
+          id: 4, txt: '开通会员', type: 2, icon: vipIconf, action: '4',
           gradientBg: {colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6},
           vipDuration: '月度会员', price: 100, oPrice: 200
         },
-        { 
-          id: 4, txt: '开通会员', type: 3, img: logo2
-        }
+        // { 
+        //   id: 4, txt: '开通会员', type: 3, img: logo2, action: '4',
+        // }
       ]
     }
   }

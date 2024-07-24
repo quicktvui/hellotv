@@ -31,12 +31,19 @@ import d2Api from '../../../api/details2/index'
 import Hposter from '../../../components/Hposter/index.vue'
 import { hPosterType } from '../../../components/Hposter/configs'
 import { VirtualView } from '@quicktvui/quicktvui3'
+import { useESRouter } from '@extscreen/es3-router';
 
+const router = useESRouter()
 const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
 const onItemClickFn = (parentPosition, position, item, e)=> {
   if(parentPosition===2){
     detail2Ui.$emit(e.index)
+  } else if(parentPosition>2){
+    router.replace({
+        name: 'detail2',
+        params: {}
+    })
   }
 }
 const onItemFocusedFn = (e) => {

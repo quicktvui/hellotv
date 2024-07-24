@@ -49,6 +49,7 @@ import D2InfoAction1 from './D2InfoAction1.vue'
 import D2InfoAction2 from './D2InfoAction2.vue'
 import D2InfoAction3 from './D2InfoAction3.vue'
 
+const emits = defineEmits(['clickAction'])
 const dideoDesData = ref<IvideoDes>({
   topDistance: 0, title: '', tags: [], actions: []
 })
@@ -77,7 +78,7 @@ const getTagSplitStyle = (tagItem:Itag):StyleValue => {
   }
 }
 const clickActionFn = (actionItem)=>{
-  console.log(actionItem, '--lsj=args')
+  emits('clickAction', actionItem)
 }
 api.getVideoDes().then(res=>{
   dideoDesData.value = res

@@ -6,7 +6,8 @@
           <div
             v-for="(item,index) in btns" :key="item.id+''+index" 
             :style="getBtnStyle(item)" class="top_menu_btn" :focusable="true"
-            :focusScale="1.05"
+            :focusScale="1.05" eventClick eventFocus
+            @click="clickBtn(index, item)"
           >
             <div v-if="item.lIcon" class="top_menu_btn_icon_box" :focusable="false" duplicateParentState>
               <!-- lIconf selected -->
@@ -35,6 +36,7 @@ const props = withDefaults(defineProps<ITopMenuBarConfig>(), {
   topMode: 'rightLogo', btns: ()=>[]
 })
 
+const emits = defineEmits(['clickItem'])
 const fontSize = 24
 const btnPadding = 18
 const iconMarginRight = 9
@@ -43,6 +45,9 @@ const getBtnStyle = (item:ITopMenuBarBtns):StyleValue => {
   return {
     width: item.text.length*fontSize + (item.lIcon?btnIconSize:0) + (item.rIcon?btnIconSize:0) + (btnPadding*2) + 'px'
   }
+}
+const clickBtn = (index,item)=>{
+  emits('clickItem', index,item)
 }
 </script>
 <style scoped lang="less">

@@ -9,6 +9,10 @@ export type TtopModes = Tvalues<typeof topModes>;
 export interface ITopMenuBarBtns {
   id:number|string; text:string; lIcon?:any, rIcon?: any;
   lIconf?:any, rIconf?: any;
+  router?:{
+    isReplace?:boolean;
+    route:object
+  }
 }
 
 export interface ItopMenuBarLogo {
