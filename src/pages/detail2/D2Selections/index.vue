@@ -34,7 +34,11 @@ import { VirtualView } from '@quicktvui/quicktvui3'
 
 const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
-const onItemClickFn = ()=> {}
+const onItemClickFn = (parentPosition, position, item, e)=> {
+  if(parentPosition===2){
+    detail2Ui.$emit(e.index)
+  }
+}
 const onItemFocusedFn = (e) => {
   if(e.parentPosition===0 && e.position !== detail2Ui.selectTabIndex){
     detail2Ui.selectTabIndex = e.position
@@ -70,6 +74,8 @@ d2Api.getSelectionsData().then(res=>{
     res.splice(1, 0, tabObj.tabs2Section)
     //第三层tab-list
     res.splice(2, 0, tabObj.tab2ContentSection)
+
+    detail2Ui.$emit()
   }
   waterfallData.value = res
 })

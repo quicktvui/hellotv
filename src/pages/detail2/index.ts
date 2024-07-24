@@ -118,9 +118,12 @@ class Detail2Ui {
   $off(fn:(arg:object)=>void){
     this.monitors.delete(fn)
   }
+  $emit(selectTabListIndex = 0){
+    this.selectTabListIndex = selectTabListIndex
+    this.monitors.forEach(fn=>fn(this.playList))
+  }
   changePlayList(newList:any[]){
     this.playList = newList
-    this.monitors.forEach(fn=>fn(newList))
   }
   getTab2(tabItem:ItabListItem){
     const tabs2Section = detail2Ui.getShowTab(tabItem)

@@ -1,5 +1,5 @@
 <template>
-<div class="d2_info_action2" :focusable="true" :style="pData.foLayoutStyle" :focusScale="1.05" :clipChildren="false">
+<div class="d2_info_action2" :focusable="true" :style="pData.foLayoutStyle" :focusScale="1.05" :clipChildren="false" eventClick eventFocus>
   <div v-if="pData.gradientBg||pData.gradientBgf" class="d2_info_action_bg" :style="pData.foLayoutStyle" :focusable="false" duplicateParentState>
     <div :showOnState="['normal','selected']" class="d2_info_action_bg_n" :gradientBackground="pData.gradientBg" :style="pData.foLayoutStyle" :focusable="false" duplicateParentState></div>
     <div showOnState="focused" class="d2_info_action_bg_f" :gradientBackground="pData.gradientBgf||pData.gradientBg" :style="pData.foLayoutStyle" :focusable="false" duplicateParentState></div>

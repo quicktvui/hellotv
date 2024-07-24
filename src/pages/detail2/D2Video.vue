@@ -17,13 +17,6 @@ import { detail2Ui } from './index.ts'
 import d2Api from '../../api/details2/index'
 
 const playData = ref<any[]>([])
-// [{
-//   id:'1532310053293928449',
-//   title:'特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
-//   cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
-//   url:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
-//   isRequestUrl:false
-// }]
 const PlayerManagerRef = ref()
 const playerIsInitialized= ref(false)
 const onPlayerInitialized = ()=>{
@@ -45,7 +38,9 @@ const initPlay = ()=>{
     PlayerManagerRef.value?.initialize()
     PlayerManagerRef.value?.setPlayMediaListMode(3)
     PlayerManagerRef.value?.setFullWindow()
-  };
+  }else{
+    PlayerManagerRef.value.reset()
+  }
   playByIndex(detail2Ui.selectTabListIndex)
 }
 detail2Ui.$on((playList)=>{

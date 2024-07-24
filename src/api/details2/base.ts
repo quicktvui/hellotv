@@ -138,7 +138,7 @@ export class Detail2Base {
             itemList: new Array(10).fill(1).map((_,index)=>{
               return getSelectionPoster({
                 id: 'd2SelectionSection1-2'+index, _type: posterTypes.bigBtn,
-                title: `复仇者联盟系列: ${index}`, videoUrl: videos[index%4],
+                title: `复仇者联盟系列: ${index}`, videoUrl: videos[(index+1)%4],
                 poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
               })
             })
@@ -151,7 +151,7 @@ export class Detail2Base {
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-1'+index,
-                    title: '预告花絮'+index, videoUrl: videos[index%4],
+                    title: '预告花絮'+index, videoUrl: videos[(index+2)%4],
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
                   })
                 })
@@ -161,7 +161,7 @@ export class Detail2Base {
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-2'+index,
-                    title: '精彩看点 '+index, videoUrl: videos[index%4],
+                    title: '精彩看点 '+index, videoUrl: videos[(index+3)%4],
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
                   })
                 })
@@ -199,9 +199,9 @@ export class Detail2Base {
 
   getMediaDataOfInterceptor(vData:TposterType){
     return {
-      id:vData.id,
-      title:vData.title.text,
-      subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+      id: vData.id,
+      title: vData.title.text||'',
+      subTitle: vData.subTitle.text||'',
       videoUrl: vData.videoUrl,
       interceptors:[{
         id:"d2PlayerMediaInterceptor",

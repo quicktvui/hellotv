@@ -32,30 +32,46 @@ const isLoading = ref(true)
 const D2VideoRef = ref()
 
 const isShowDes = ref(true)
+let timerOutId:any = null
+const starTime = ()=>{
+  clearTimeout(timerOutId)
+  timerOutId = setTimeout(() => {
+    isShowDes.value = false
+  }, 10000);
+}
 defineExpose({
   onESCreate(params){
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
       isLoading.value = false
+      starTime()
     })
   },
   onKeyDown (keyEvent){
-    return D2VideoRef.value?.onKeyDown(keyEvent)
+    if(!isShowDes.value){
+      return D2VideoRef.value?.onKeyDown(keyEvent)
+    }else{
+      starTime()
+    }
   },
   onKeyUp (keyEvent){
-    return D2VideoRef.value?.onKeyUp(keyEvent)
+    if(!isShowDes.value){
+      return D2VideoRef.value?.onKeyUp(keyEvent)
+    }
   },
   onBackPressed (){
-    if(!D2VideoRef.value?.onBackPressed()){
-      if(!isShowDes.value){
+    if(!isShowDes.value){
+      const press = D2VideoRef.value?.onBackPressed()
+      if(!press){
         isShowDes.value = true
-        return false
+        starTime()
       }
       return true
     }
     return false
   },
   onESDestroy(){
+    clearTimeout(timerOutId)
     detail2Ui.clear()
   }
 })

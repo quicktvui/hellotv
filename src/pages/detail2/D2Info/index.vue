@@ -33,9 +33,9 @@
       }"
     >
       <li v-for="(actionItem,actionIndex) in dideoDesData.actions" :key="actionItem.id+''+actionIndex" :type="actionItem.type">
-        <D2InfoAction1 v-if="actionItem.type==IvideoDesActionTypes.btn" :pData="actionItem" />
-        <D2InfoAction2 v-if="actionItem.type==IvideoDesActionTypes.btn2" :pData="actionItem" />
-        <D2InfoAction3 v-if="actionItem.type==IvideoDesActionTypes.img" :pData="actionItem" />
+        <D2InfoAction1 v-if="actionItem.type==IvideoDesActionTypes.btn" :pData="actionItem" @click="clickActionFn(actionItem)"/>
+        <D2InfoAction2 v-if="actionItem.type==IvideoDesActionTypes.btn2" :pData="actionItem" @click="clickActionFn(actionItem)"/>
+        <D2InfoAction3 v-if="actionItem.type==IvideoDesActionTypes.img" :pData="actionItem" @click="clickActionFn(actionItem)"/>
       </li>
     </ul>
   </div>
@@ -76,7 +76,9 @@ const getTagSplitStyle = (tagItem:Itag):StyleValue => {
     color: tagItem.color
   }
 }
-
+const clickActionFn = (actionItem)=>{
+  console.log(actionItem, '--lsj=args')
+}
 api.getVideoDes().then(res=>{
   dideoDesData.value = res
 })
