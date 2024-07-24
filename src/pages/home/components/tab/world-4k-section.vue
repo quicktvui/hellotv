@@ -11,10 +11,11 @@
                   :clipPadding="false"
                   makeChildVisibleType="center"
                   :enableSelectOnFocus="true"
-                  setSelectChildPosition="${defaultSelectP}"
+                  autoscroll="${autoscroll}">
+<!--      setSelectChildPosition="${defaultSelectP}"
                   singleSelectPosition="${defaultSelectP}"
                   autoSelectPosition="${defaultSelectP}"
-                  autoscroll="${autoscroll}">
+                  -->
       <world-4k-list-item :type="1"/>
     </qt-list-view>
   </tv-item>

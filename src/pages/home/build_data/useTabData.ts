@@ -293,11 +293,11 @@ export function build4KWorldAdapter(tabId: string, tabPageIndex?: number): QTTab
     },
     decoration:{top:200},
     defaultSelectP:1,
-    autoscroll:[1,253],//[position,offset]
+    autoscroll:[10000,253],//[position,offset]
     itemList:[
       { type:1,
         style:{width:1413,height:795},
-        decoration:{left:46,right:92},
+        decoration:{right:92},
         title:"动物世界",
         titleIcon:"",
         subTitle:"\"这个星球上的邻居\"",
@@ -317,7 +317,7 @@ export function build4KWorldAdapter(tabId: string, tabPageIndex?: number): QTTab
       },
       { type:1,
         style:{width:1413,height:795},
-        decoration:{right:46},
+        decoration:{right:92},
         title:"放松 ｜ 漫步 ｜ 街景",
         titleIcon:"",
         subTitle:"\"与你缓步丈量世界\"",
