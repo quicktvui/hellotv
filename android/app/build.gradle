@@ -97,7 +97,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.8.0-beta12'
+    implementation 'com.extscreen.runtime:official:2.8.3.1'
     implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
 
     if (INCLUDE_SO) {
@@ -109,6 +109,9 @@ dependencies {
     }
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'eskit.sdk.support:player-manager:3.1.4-beta3'
+    implementation "com.extscreen:hippy4tv-support:1.7.1921-beta5"
+    implementation 'eskit.sdk.support:ui-support:2.1.65-beta15'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }
 
