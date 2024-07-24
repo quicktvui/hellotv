@@ -20,7 +20,7 @@
 <script lang='ts' setup>
 // @ts-ignore
 import { rankingUi } from '../index.ts'
-import { StyleValue, computed, onBeforeUnmount, ref } from 'vue';
+import { StyleValue, onMounted, onBeforeUnmount, ref } from 'vue';
 import { VirtualView, QTWaterfallVisibleType, QTWaterfallSectionType } from '@quicktvui/quicktvui3';
 import type { QTWaterfallSection, QTIWaterfall } from '@quicktvui/quicktvui3';
 import { EventBus } from "@extscreen/es3-vue"
@@ -32,11 +32,7 @@ const cRouteName = route.name
 let toRouteName = cRouteName
 const waterfall = ref<QTIWaterfall>()
 // const waterfallDatas = qtRef<QTWaterfallSection[]>()
-waterfall.value?.init({
-  width: 1920,
-  height: 385,
-  visibleType: QTWaterfallVisibleType.QT_WATERFALL_VISIBLE_TYPE_NORMAL
-})
+
 let fSectionIndex = -1
 let fPrevSectionIndex = -1
 let isLoseFocused = -1
@@ -45,6 +41,13 @@ router.afterEach((to, from, failure) => {
   toRouteName = to.name
 })
 
+onMounted(()=>{
+  waterfall.value?.init({
+    width: 1920,
+    height: 385,
+    visibleType: QTWaterfallVisibleType.QT_WATERFALL_VISIBLE_TYPE_NORMAL
+  })
+})
 const onItemFocused = (sectionIndex, posterIndex, isFocus, data) => {
   if(isFocus){
     rankingUi.changeData({

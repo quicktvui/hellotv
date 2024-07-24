@@ -275,7 +275,6 @@ export const transRankingSections = (data:IrankingMoreContent, configs:IrankingC
   }
 }
 
-const catchData = new Map<number, Array<QTWaterfallSection>>()
 interface Iindex {
   pageIndex?:number;
   sectionIndex?:number;
@@ -360,7 +359,6 @@ class RankingUi {
 
   setData(tabRef:QTITab, pageIndex:number){
     rankApi.getContentData(pageIndex).then(res=>{
-
       const {sections} = transRankingSections(res, rankApi.getConfig())
       tabRef.setPageData(pageIndex, {
         useDiff: false, isEndPage: true, disableScrollOnFirstScreen: false,
@@ -372,6 +370,17 @@ class RankingUi {
       this.tabRef = tabRef
     }
     this.pageIndex = pageIndex
+  }
+
+  clear(){
+    this.pageIndex = -1
+    this.tabRef = undefined
+    this.bgPlayerRef = undefined
+    this.showPageIndex = -1
+    this.showSectionIndex = 0
+    this.showItemIndex = 0
+    this.catchRawValue = new Map()
+    this.prevIndexStr = ''
   }
 }
 

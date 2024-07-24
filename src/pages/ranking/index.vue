@@ -72,7 +72,7 @@ defineExpose({
       rankApi.getTabData().then(res=>{
         const tab: QTTab = {
           defaultFocusIndex: showIndex.value,
-          defaultIndex: 0,
+          defaultIndex: showIndex.value,
           itemList: transRankingTabList(res, rankApi.getConfig())
         }
         tabRef.value?.initTab(tab)
@@ -83,6 +83,9 @@ defineExpose({
         tabRef.value?.initPage(waterfallData)
       })
     })
+  },
+  onESDestroy(){
+    rankingUi.clear()
   }
 })
 </script>

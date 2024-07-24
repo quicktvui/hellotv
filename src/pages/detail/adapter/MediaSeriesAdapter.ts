@@ -7,7 +7,7 @@ import {
 } from "@quicktvui/quicktvui3";
 import { IMedia } from "../../../api/media/IMedia";
 import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
-import ThemeConfig from "../../../build/ThemeConfig";
+import ThemeConfig from "../../../build/ThemeConfig";//src/build/ThemeConfig
 
 export function buildMediaSeriesType(media: IMedia): QTMediaSeriesType {
   let type: QTMediaSeriesType = QTMediaSeriesType.QT_MEDIA_SERIES_TYPE_LEFT_RIGHT;
