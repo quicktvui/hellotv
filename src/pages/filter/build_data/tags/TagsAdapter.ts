@@ -60,7 +60,7 @@ export function buildTagContentsAdapter(tagContents: Array<TagContent>, pageNum?
   tagContents.forEach((content,index)=>{
     const gridItem:QTGridViewItem ={
       type: type ?? 1,
-      poster: type === 1 ? content.poster : 'http://qcloudimg.a311.ottcn.com/data_center/files/2024/01/15/bccb38a7-5f1a-4228-9901-91f77a96bbe7.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198',
+      poster: content.poster,
       corner:{
         style:{
           width:0,

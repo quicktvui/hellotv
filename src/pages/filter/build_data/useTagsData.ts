@@ -218,7 +218,7 @@ export function buildScreenContent(tagContents: Array<any>, pageNum?: number, po
     const tagContent:TagContent = {
       id: content.id,
       title: content.assetTitle,
-      poster: posterMode && posterMode === 1 ? content.coverV : content.coverH,
+      poster: posterMode && posterMode === 1 ? content.coverV : content.coverH ?? content.coverV,
       score: content.doubanScore,
       cornerImg: content.cornerImage,
       actionRedirect: content.actionRedirect

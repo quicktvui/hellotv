@@ -2,8 +2,10 @@
   <qt-view class="filter-content-item-h" :focusable="true" :focusScale="1.06" eventFocus eventClick>
 
     <!-- 海报图 -->
-    <qt-image class="filter-content-item-h-img" src="${poster}" :focusable="false"/>
-    
+    <qt-view class="filter-content-item-h-img" :focusable="false" :enableFocusBorder="true" duplicateParentState>
+      <qt-image class="filter-content-item-h-img" src="${poster}" :focusable="false" :postDelay="300"/>
+    </qt-view>
+
     <!-- 角标 -->
     <qt-view class="filter-content-item-h-corner" :focusable="false">
       <!-- 文字 -->
@@ -43,6 +45,7 @@
   height: 180px;
   background-color: grey;
   border-radius: 9px;
+  focus-border-radius: 9px;
   margin-bottom: 15px;
 }
 
