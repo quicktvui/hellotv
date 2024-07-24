@@ -23,7 +23,8 @@ import D2Info from './D2Info/index.vue'
 import D2Selections from './D2Selections/index.vue'
 import D2DesDrawer from './D2DesDrawer.vue'
 // @ts-ignore
-import api from '../../api/details2/index.ts'
+import { detail2Ui } from './index.ts'
+import api from '../../api/details2/index'
 import { IDetail2Config } from '../../api/details2/types';
 
 const pConfig = ref<Partial<IDetail2Config>>({});
@@ -36,19 +37,12 @@ defineExpose({
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
       isLoading.value = false
-      D2VideoRef.value?.init()
-
-      setTimeout(() => {
-        isShowDes.value = false
-      }, 10000);
     })
   },
   onKeyDown (keyEvent){
-    console.log('lsj--onKeyDown')
     return D2VideoRef.value?.onKeyDown(keyEvent)
   },
   onKeyUp (keyEvent){
-    console.log('lsj--onKeyUp')
     return D2VideoRef.value?.onKeyUp(keyEvent)
   },
   onBackPressed (){
@@ -60,6 +54,9 @@ defineExpose({
       return true
     }
     return false
+  },
+  onESDestroy(){
+    detail2Ui.clear()
   }
 })
 </script>
@@ -76,7 +73,7 @@ defineExpose({
   top: 0.01px;
   width: 1920px;
   height: 1080px;
-  background-color: rgba(0,0,0,0.9);
+  background-color: rgba(0,0,0,0.1);
   z-index: 2;
 }
 .d2_loading_box{

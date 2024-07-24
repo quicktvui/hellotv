@@ -1,6 +1,5 @@
 <template>
 <div class="d2_video">
-  <!-- <img :src="bigImg" class="d2_video_poster"/> -->
   <media-def-player
     ref="PlayerManagerRef"
     class="d2_video_media"
@@ -13,60 +12,51 @@
 <script lang='ts' setup>
 import { onMounted, ref } from 'vue';
 import mediaDefPlayer from '../../components/media/media-def-player.vue'
-const bigImg = 'http://qcloudimg.moss.huan.tv/project/lexue_education/lexue/2020/10/16/f4d06569c526405bae3c865afdbcd11f.jpg'
-const playData = [{
-  id:'1532310053293928449',
-  title:'特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
-  cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
-  url:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
-  isRequestUrl:false
-}]
+// @ts-ignore
+import { detail2Ui } from './index.ts'
+import d2Api from '../../api/details2/index'
+
+const playData = ref<any[]>([])
+// [{
+//   id:'1532310053293928449',
+//   title:'特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+//   cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+//   url:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
+//   isRequestUrl:false
+// }]
 const PlayerManagerRef = ref()
 const playerIsInitialized= ref(false)
 const onPlayerInitialized = ()=>{
   playerIsInitialized.value = true
 }
 const playByIndex= (index:number)=>{
-  let list = JSON.parse(JSON.stringify(playData))
-  let item = list[index]
-  play(item)
-}
-
-const play =(item:any)=>{
-  let mediaItem_0 = {
-    id:item.id,
-    title:item.title,
-    subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
-    mediaSourceList: {
+  let dataItem = JSON.parse(JSON.stringify(playData.value[index]))
+  if(dataItem){
+    let mediaItem_0 = d2Api.getMediaDataOfInterceptor(dataItem)
+    PlayerManagerRef.value?.playMediaList({
       index: 0,
-      list: [{
-        uri: item.url,
-        definition: 1
-      }]
-    },
+      list: [mediaItem_0]
+    });
   }
-  PlayerManagerRef.value?.playMediaList({
-    index: 0,
-    list: [mediaItem_0]
-  });
-
 }
 
-defineExpose({
-  init(){
-    if(!playerIsInitialized.value){
-      PlayerManagerRef.value?.initialize()
-    };
+const initPlay = ()=>{
+  if(!playerIsInitialized.value){
+    PlayerManagerRef.value?.initialize()
     PlayerManagerRef.value?.setPlayMediaListMode(3)
     PlayerManagerRef.value?.setFullWindow()
-    playByIndex(0)
-  },
+  };
+  playByIndex(detail2Ui.selectTabListIndex)
+}
+detail2Ui.$on((playList)=>{
+  playData.value = playList
+  initPlay()
+})
+defineExpose({
   onKeyDown (keyEvent):boolean{
-    console.log('-lsj-onKeyDown-v')
     return PlayerManagerRef.value?.onKeyDown(keyEvent)
   },
   onKeyUp (keyEvent):boolean{
-    console.log('-lsj-onKeyUp-v')
     return PlayerManagerRef.value?.onKeyUp(keyEvent)
   },
   onBackPressed ():boolean{

@@ -27,6 +27,7 @@ export const getSelectionPoster = (sData:IselectionPoster) => {
   return {
     ...config,
     _router: sData._router,
+    videoUrl: sData.videoUrl
   }
 }
 
@@ -99,7 +100,7 @@ export type TselectionTabType = ReturnType<typeof getSelectionSectionTabs>;
 class Detail2Ui {
 
   private playList:any[] = []
-  private monitors = new Set<(arg:object)=>void>()
+  private monitors = new Set<(arg:any[])=>void>()
   
   selectionSpace = 0
 
@@ -111,7 +112,15 @@ class Detail2Ui {
   tab2Sid = ''
   tabListSid = ''
 
-  changePlayList(fn:()=>void){
+  $on(fn:(arg:any[])=>void){
+    this.monitors.add(fn)
+  }
+  $off(fn:(arg:object)=>void){
+    this.monitors.delete(fn)
+  }
+  changePlayList(newList:any[]){
+    this.playList = newList
+    this.monitors.forEach(fn=>fn(newList))
   }
   getTab2(tabItem:ItabListItem){
     const tabs2Section = detail2Ui.getShowTab(tabItem)
@@ -180,8 +189,22 @@ class Detail2Ui {
       }
     }
     
+    this.changePlayList(section.itemList)
     this.tabListSid = section.listSID
     return section
+  }
+  clear(){
+    this.monitors.clear()
+    this.playList = []
+    this.selectionSpace = 0
+
+    this.selectTabIndex = 0
+    this.selectTab2Index = 0
+    this.selectTabListIndex = 0
+
+    this.tabSid = ''
+    this.tab2Sid = ''
+    this.tabListSid = ''
   }
 }
 export const detail2Ui = new Detail2Ui()

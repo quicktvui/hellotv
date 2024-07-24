@@ -61,6 +61,7 @@ export interface IselectionPoster {
   title?:string;
   subTitle?:string;
   poster:string;//预览图
+  videoUrl?:string;
   corner?:string;//角标
   imgCorner?:string;//图片角标
   _type?:Tvalues<typeof posterTypes>;

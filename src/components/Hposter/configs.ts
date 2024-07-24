@@ -131,3 +131,4 @@ export const getPosterConfig = (data:IposterData) => {
     }
   }
 }
+export type ThPosterConfigType = ReturnType<typeof getPosterConfig>;
