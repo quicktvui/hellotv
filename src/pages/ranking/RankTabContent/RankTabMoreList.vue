@@ -1,6 +1,6 @@
 <template>
   <!-- :clipBounds="{left:100,top:100,right:100,bottom:100}" -->
-  <div class="rtm_list" flexStyle="${style}" :clipChildren="true">
+  <div class="rtm_list" flexStyle="${style}" :clipChildren="true" :type="3">
     <qt-waterfall
       ref="waterfall" class="rtm_waterfall" tvItemListName="itemList"
       flexStyle="${style}" enablePlaceholder 
@@ -10,7 +10,7 @@
       @onItemFocused="onItemFocused"
     >
       <template v-slot:list-item>
-        <qt-poster :borderRadius="20"/>
+        <qt-poster :borderRadius="20" />
       </template>
     </qt-waterfall>
     <!-- :makeChildVisibleClampForward="70" -->
