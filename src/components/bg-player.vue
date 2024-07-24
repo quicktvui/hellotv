@@ -509,7 +509,7 @@ export default defineComponent({
 .bg_player{width: 1920px;height: 1080px;background-color: transparent;
  flex-direction: row;justify-content: center;align-items: center;position: absolute}
 .bg_player_replace_child{width: 1920px;height: 1080px;background-color: transparent;position: absolute;}
-.bg_player_box{background-color: transparent;position: absolute;border-radius: 0;}
+.bg_player_box{background-color: transparent;position: absolute;border-radius: 0;left: 0;top: 0;}
 .playerBox{
   /* background-color: rgba(0, 0, 0, 0.1); */
   background-color: transparent;
