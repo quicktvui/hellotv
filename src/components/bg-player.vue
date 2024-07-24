@@ -34,7 +34,7 @@
           height:(bgPlayerType==2? playerHeight: playerHeight + 20) + 'px',
           left: bgPlayerType==2? playerLeft : playerLeft - 15,
           top: bgPlayerType==2? playerTop : playerTop - 10}"
-          :focusable="true" :enableFocusBorder="true" @click="onClickCellItem">
+          :focusable="bgPlayerType==2?false:true" :enableFocusBorder="true" @click="onClickCellItem">
           <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
             :borderRadius="bgPlayerType==2?0:20"
             :focusable="false" :width="(bgPlayerType==2? playerWidth: playerWidth + 30)" 
@@ -86,7 +86,7 @@
       <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false" 
         class="bgvi_b_text" :duplicateParentState="true" 
         :text="`${videoInfo.desc}`" />
-      <qt-view class="bgvi_btn" :focusable="true" >
+      <qt-view class="bgvi_btn" :focusable="true" name="bgvi_btn" :nextFocusName="{ left: 'list_section' }" @click="toDetail">
         <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
           class="bgvi_btn_text" :duplicateParentState="true" text="看全集" />
       </qt-view>
@@ -487,6 +487,9 @@ export default defineComponent({
       // toast.showToast(videoInfo.tag)
       videoInfo.isShow = obj.isShow
     }
+    const toDetail = () => {
+      router.push({name: 'detail2'})
+    }
     return {
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,start,
@@ -499,7 +502,7 @@ export default defineComponent({
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
       keepPlayerInvisible,zIndex,
-      setVideoInfo
+      setVideoInfo,toDetail
     };
   },
 });

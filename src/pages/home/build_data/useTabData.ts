@@ -40,6 +40,12 @@ export function buildO2MTabData(sourceData: Array<any>) {
     tabs.push(tab)
   })
   tabs.push({
+    id: 'short_video2',
+    menuCode: 'short_video2',
+    menuName: '短视频2',
+    menuType: '0',
+  })
+  tabs.push({
     id: '4k_world',
     menuCode: '4k_world',
     menuName: '4K世界',
@@ -50,37 +56,14 @@ export function buildO2MTabData(sourceData: Array<any>) {
     menuCode: 'short_video',
     menuName: '短视频',
     menuType: '0',
-    imageWidth: undefined,
-    imageHeight: undefined,
-    image: undefined,
-    selectImage: undefined,
-    focusImage: undefined,
-    focusCornerImage: undefined,
-    cornerImage: undefined,
-    defaultHome: undefined,
-    backgroundImage: undefined,
-    redirectType: undefined,
-    action: undefined,
-    innerArgs: undefined
   })
   tabs.push({
     id: 'multilevelTab',
     menuCode: 'multilevelTab',
     menuName: '多级Tab',
     menuType: '0',
-    imageWidth: undefined,
-    imageHeight: undefined,
-    image: undefined,
-    selectImage: undefined,
-    focusImage: undefined,
-    focusCornerImage: undefined,
-    cornerImage: undefined,
-    defaultHome: undefined,
-    backgroundImage: undefined,
-    redirectType: undefined,
-    action: undefined,
-    innerArgs: undefined
   })
+  
   return buildTransferTabAdapter(tabs)
 }
 
@@ -203,7 +186,9 @@ export function buildHomeShortVideoAdapter(tabId: string, tabPageIndex?: number)
       marginLeft: 90
     },
     tabListSID: 'shortVideoTabListSID',
+    tabListNextFocusName: {right:'bgvi_btn'},
     listSID: 'shortVideoListSID',
+    listNextFocusName: {right:'bgvi_btn'},
     autoSelectTabPosition: 0,
     autofocusTabPosition: -1,
     autofocusListPosition: -1,
@@ -217,6 +202,42 @@ export function buildHomeShortVideoAdapter(tabId: string, tabPageIndex?: number)
       {type: 10091,title: '历史', decoration: {}, name: 'tab_list_section_item'},
       {type: 10091,title: '收藏', decoration: {}, name: 'tab_list_section_item'},
     ],
+    itemList: []
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    data: [section]
+  }
+  return tabPage
+}
+
+// build 首页短视频板块2数据
+export function buildHomeShortVideo2Adapter(tabId: string, tabPageIndex?: number): QTTabPageData {
+  let section: QTWaterfallSection = {
+    _id: 'shortVideo2',
+    type: 1009,
+    style: {
+      width: 1920,
+      height: 860,
+    },
+    tabListStyle: {
+      width: 1920,
+      height: 0,
+    },
+    listStyle: {
+      width: 540,
+      height: 780,
+      marginLeft: 90
+    },
+    listSID: 'shortVideoListSID',
+    listNextFocusName: {right:'bgvi_btn'},
+    autofocusListPosition: -1,
+    decoration: {
+      top: 220,
+      left: 0,
+    },
+    tabList: [],
     itemList: []
   }
   const tabPage: QTTabPageData = {

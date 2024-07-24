@@ -31,7 +31,7 @@
                'icon-is-txt-top':iconTop,
                'icon-is-txt-bottom':iconBottom
              }]"
-             :style="textStyle ? textStyle :{color:color, focusColor:focusColor, position:'static', width:'60px',height:'60px'}"/>
+             :style="textStyle ? textStyle :{color:color, focusColor:focusColor, position:'static', width:'90px',height:'60px'}"/>
   </div>
 
 </template>

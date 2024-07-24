@@ -23,7 +23,7 @@
 .tab_list_section_item_text{
   height: 50px;
   color: rgba(255,255,255,0.7);
-  select-color:#FF4e46;
+  select-color:#157AFC;
   focus-color:white;
 }
 .list_section{
@@ -55,8 +55,8 @@
   width: 284px;
   height: 72px;
   color: #BFBFBF;
-  select-color: #E25D8A;
-  focus-color: #E25D8A;
+  select-color: #157AFC;
+  focus-color: #157AFC;
   background-color: transparent;
   position: absolute;
   left: 0;

@@ -8,7 +8,7 @@
 
     <div class="list_section_root" :focusable="false"
       flexStyle="${style}"
-      :blockFocusDirections="['left','right']"
+      :blockFocusDirections="[]"
       :clipChildren="true"
       :useAdvancedFocusSearch="true"
       :bringFocusChildToFront="true">
@@ -25,10 +25,11 @@
         sid="${tabListSID}"
         @item-focused="onTabItemFocused"
         :pauseTaskOnHide="true"
-        :blockFocusDirections="['left','right']"
+        :blockFocusDirections="[]"
         :enablePlaceholder="false"
         :enableKeepFocus="true"
         :enableSelectOnFocus="true"
+        nextFocusName="${tabListNextFocusName}"
         autofocusPosition="${autofocusTabPosition}">
 
         <!-- tab list item -->
@@ -56,9 +57,10 @@
         :endHintEnabled="false"
         @loadMore="loadMore"
         @item-focused="onListItemFocused"
+        nextFocusName="${listNextFocusName}"
         :enablePlaceholder="false"
         :pauseTaskOnHide="true"
-        :blockFocusDirections="['left','right']"
+        :blockFocusDirections="[]"
         autofocusPosition="${autofocusListPosition}">
 
         <!-- list item -->
@@ -74,7 +76,7 @@
               <qt-text :focusable="false" :ellipsizeMode="2" :showOnState="['selected','focused']" :fontSize="24" gravity="left|top" :lines="2" :maxLines="2"
                 :duplicateParentState="true"  class="lsi_r_t_text"  text="${title}" :paddingRect="[37,12,12,0]"/>
               <qt-view class="play_Mark" :focusable="false" :showOnState="['selected','focused']" :duplicateParentState="true">
-                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#E25D8A'" :gap="-1" style="margin-left: 12px;" :focusable="false"/>
+                <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#157AFC'" :gap="-1" style="margin-left: 12px;" :focusable="false"/>
               </qt-view>
             </qt-view>
             <qt-text :focusable="false" :ellipsizeMode="2" :fontSize="18" gravity="left|center" :lines="2" :maxLines="1"

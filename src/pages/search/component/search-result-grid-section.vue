@@ -155,7 +155,7 @@
 .srgsl_item_text{
   height: 50px;
   color: rgba(255,255,255,0.7);
-  select-color:#FF4e46;
+  select-color:#157AFC;
   focus-color:white;
 }
 </style>

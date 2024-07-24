@@ -30,7 +30,8 @@ import {
   buildO2MTabData,
   buildHomeShortVideoAdapter,
   buildHomeMultilevelTabAdapter,
-  build4KWorldAdapter
+  build4KWorldAdapter,
+  buildHomeShortVideo2Adapter
 } from "../pages/home/build_data/useTabData"
 
 /*****
@@ -97,6 +98,10 @@ export function createGlobalApi(): IGlobalApi {
     }else if(tabId === "4k_world" && pageNo < 2){
       let tabPage = build4KWorldAdapter(tabId, tabPageIndex)
       return Promise.resolve(tabPage)
+    }else if(tabId === 'short_video2' && pageNo < 2){
+      let tabPage = buildHomeShortVideo2Adapter(tabId,tabPageIndex)
+      tabPage.data[0].itemList = buildShortVideoItemAdapter(shortVideoList)
+      return Promise.resolve(tabPage);
     }
     //此处可更换接口请求数据
     if (BuildConfig.useMockData) {

@@ -21,7 +21,9 @@ export function buildShortVideoAdapter(): QTWaterfallSection {
       height: 880,
     },
     tabListSID: 'shortVideoTabListSID',
+    tabListNextFocusName: {right:'bgvi_btn'},
     listSID: 'shortVideoListSID',
+    listNextFocusName: {right:'bgvi_btn'},
     autofocusTabPosition: 0,
     autofocusListPosition: -1,
     decoration: {
