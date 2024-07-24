@@ -83,6 +83,9 @@ defineExpose({
         tabRef.value?.initPage(waterfallData)
       })
     })
+  },
+  onESDestroy(){
+    rankingUi.clear()
   }
 })
 </script>
