@@ -626,7 +626,12 @@ export default defineComponent({
       if(data.length > 0){
         let listSID = tabRef.value?.getPageSection(pageIndex,sectionIndex)!.listSID
         if(pageNo > 1) VirtualView.call(listSID,'addListData',data)
-        else VirtualView.call(listSID,'setListData',data)
+        else {
+          VirtualView.call(listSID,'setListData',[])
+          setTimeout(() => {
+            VirtualView.call(listSID,'setListData',data)
+          },500)
+        }
       }
     }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {

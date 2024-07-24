@@ -254,13 +254,14 @@ export function createGlobalApi(): IGlobalApi {
 
   /********************************多级Tab相关*****************************/
   function getMultilevelTabPageData(keyword: string, pageNo: number, pageSize: number): Promise<Array<QTWaterfallItem>> {
+    console.log('huan-xxx', pageNo, pageSize)
     //此处可更换接口请求数据
     if (BuildConfig.useMockData || true) {
       if (pageNo > 2) {
         //模拟结束
         return Promise.resolve(buildMultilevelTabItemAdapter([]));
       }
-      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList.splice(5, pageSize)));
+      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList.slice((pageNo-1)*pageSize, pageSize)));
     }
   }
 
