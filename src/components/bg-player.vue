@@ -96,11 +96,11 @@
 
 <script lang="ts">
 import { useESRouter } from "@extscreen/es3-router"
-import { ref, defineComponent, nextTick, reactive } from "vue";
+import { ref, defineComponent, nextTick, reactive, onMounted } from "vue";
 import { QTIListView,QTListViewItem,VirtualView } from "@quicktvui/quicktvui3";
 import { ESPlayerPlayMode,ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { ESMediaItemList,ESMediaItem } from "@extscreen/es3-player-manager";
-import { useESLog, useESToast } from "@extscreen/es3-core";
+import { useESEventBus, useESLog, useESToast } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
@@ -128,6 +128,7 @@ export default defineComponent({
   setup(props,ctx) {
     const router = useESRouter()
     const toast = useESToast()
+    const esEventBus = useESEventBus()
     let playerBoxWidth = ref<number>(0)
     let playerBoxHeight = ref<number>(0)
     let playerWidth = ref<number>(0)
@@ -172,7 +173,16 @@ export default defineComponent({
       desc: '每个人都有不可告人的一面。这是一个世界各国均暗地里进行激烈情 报战的时代。奥斯塔尼亚（Ostania）···',
       isShow: false
     })
-
+    let lifeCycle = ""
+    onMounted((()=>{
+      esEventBus.on("bg-player-life-cycle",updateLifeCycle)
+    }))
+    function updateLifeCycle(lifeCycleName:string){
+      lifeCycle = lifeCycleName
+      if (lifeCycleName === 'onESDestroy'){
+        esEventBus.off("bg-player-life-cycle")
+      }
+    }
     const playAtIndex = (index : number)=> {
       let list = recordPlayerList
       currentPlayIndex.value = index
@@ -192,6 +202,7 @@ export default defineComponent({
         // topNum.value = playerType == 2 ? 0 : 10
         playerLeft.value = pLeft
         playerTop.value = pRight
+        // toast.showToast(playerLeft.value+'wowo'+playerTop.value)
         mediaInterceptor = interceptor
         clearTimeout(delayShowTimer)
         bgPlayerType.value = playerType
@@ -199,10 +210,10 @@ export default defineComponent({
         if(isAnyPlaying.value){
           stop()
         }
-        let delayToPlay = 0
+        let delayToPlay = 300
         if(!playerInit.value){
           playerInit.value = true
-          delayToPlay += 2000
+          delayToPlay += 1699
           // log.e('BG-PLAYER',`doChangeParent 首次初始化播放器`)
         }
         let item0 = playerListData[0]
@@ -212,13 +223,17 @@ export default defineComponent({
         delayShowTimer = setTimeout(()=>{
           initComponent(playerListData,playerType)
           setSize(boxWidth,boxHeight,playerWidth1,playerHeight1)
-          playAtIndex(playIndex)
+          if (lifeCycle !== "onESStop"){
+            playAtIndex(playIndex)
+          }
         },delayToPlay)
     }
 
     const keepPlayerInvisible = (stopIfNeed : boolean = true)=>{
       log.e('DebugReplaceChild',`+++++keepPlayerInvisible pauseIfNeed:${stopIfNeed}`)
       // clearTimeout(delayShowPlayerTimer)
+      playerLeft.value = 0
+      playerTop.value = 0
       if(stopIfNeed){
         if(isAnyPlaying.value){
           isAnyPlaying.value = false
@@ -386,10 +401,13 @@ export default defineComponent({
       }
     }
     const pause = () => {
-      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.stop()
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.pause()
       if(isAnyPlaying.value) {
         isAnyPlaying.value = false
       }
+    }
+    const start = () => {
+      if(!BuildConfig.isLowEndDev) playerManagerRef.value?.start(0)
     }
     const resume = () => {
       //FIXME 这里使用了start方法，应该是resume?
@@ -405,7 +423,7 @@ export default defineComponent({
       if(pauseOnCoverShow.value){
         pause()
       }else{
-        requestDismissCover(1500)
+        requestDismissCover(1300)
       }
     }
 
@@ -442,12 +460,12 @@ export default defineComponent({
       listViewRef.value?.setItemSelected(nextIndex,true)
       initPlayBg(item.cover)
       showCoverImmediately()
-      stop()
       delayUpdateItemTimer = setTimeout(() => {
+        stop()
         currentPlayIndex.value = nextIndex
         play(item)
         playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
-      },300)
+      },600)
     }
     const onPlayerInitialized = () => {
       // decode.setDecode(ESPlayerDecode.ES_PLAYER_DECODE_HARDWARE)
@@ -471,7 +489,7 @@ export default defineComponent({
     }
     return {
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
-      playerManagerRef,release,stop,pause,resume,initPlayer,play,
+      playerManagerRef,release,stop,pause,resume,initPlayer,play,start,
       playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
       playerWidth,playerHeight,playerIsInitialized,playerLeft,playerTop,
       listViewRef,onItemClick,currentPlayIndex,onItemFocus,onClickCellItem,
