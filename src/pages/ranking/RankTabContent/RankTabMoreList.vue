@@ -1,6 +1,6 @@
 <template>
   <!-- :clipBounds="{left:100,top:100,right:100,bottom:100}" -->
-  <div class="rtm_list" flexStyle="${style}" :clipChildren="true" :type="3">
+  <div class="rtm_list" flexStyle="${style}" :clipChildren="true" :type="rankingContentTypes.more">
     <qt-waterfall
       ref="waterfall" class="rtm_waterfall" tvItemListName="itemList"
       flexStyle="${style}" enablePlaceholder 
@@ -25,6 +25,8 @@ import { VirtualView, QTWaterfallVisibleType, QTWaterfallSectionType } from '@qu
 import type { QTWaterfallSection, QTIWaterfall } from '@quicktvui/quicktvui3';
 import { EventBus } from "@extscreen/es3-vue"
 import { useESRouter, useESRoute } from '@extscreen/es3-router';
+// @ts-ignore
+import { rankingContentTypes } from '../index.ts'
 
 const router = useESRouter()
 const route = useESRoute()

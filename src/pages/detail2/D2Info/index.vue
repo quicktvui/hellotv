@@ -1,12 +1,12 @@
 <template>
-  <div class="d2_info" :style="getStyle()" :clipChildren="false">
+  <div class="d2_info" :style="getStyle()" :clipChildren="false" v-if="dideoDesData">
     <!-- autoWidth autoHeight -->
     <text-view 
       class="d2_info_title" :ellipsizeMode="2" :lines="1" gravity="centerVertical"
       :text="dideoDesData.title" :focusable="false" typeface="bold"
     />
     
-    <div class="d2_info_tag_list" :focusable="false">
+    <div class="d2_info_tag_list" :focusable="false" v-if="dideoDesData.tags">
       <div 
         v-for="(tagItem,tagIndex) in dideoDesData.tags" :key="tagItem.id+''+tagIndex"
         class="d2_info_tag_list_item" :class="'d2_info_tag_list_item_'+tagItem.mode"
@@ -26,7 +26,8 @@
       </div>
     </div>
   
-    <ul 
+    <ul
+      v-if="dideoDesData.actions"
       class="d2_info_actions" sid="d2InfoActionsSid" :focusable="false" 
       :clipChildren="false" horizontal :initPosition="{
         focusPosition: 0, scrollToPosition: 0
@@ -48,15 +49,16 @@ import { IvideoDes, Itag, IvideoDesActionTypes } from '../../../api/details2/typ
 import D2InfoAction1 from './D2InfoAction1.vue'
 import D2InfoAction2 from './D2InfoAction2.vue'
 import D2InfoAction3 from './D2InfoAction3.vue'
+// @ts-ignore
+import { detail2Ui } from '../index.ts'
 
 const emits = defineEmits(['clickAction'])
-const dideoDesData = ref<IvideoDes>({
-  topDistance: 0, title: '', tags: [], actions: []
-})
+const configs = api.getConfig()
+const dideoDesData = ref<IvideoDes>()
 
 const getStyle = ():StyleValue=>{
   return {
-    marginTop: (dideoDesData.value.topDistance||0)+'px',
+    marginTop: (configs.desTopDistance||0)+'px',
     // opacity: dideoDesData.value.title?1:0
   }
 }
@@ -80,8 +82,11 @@ const getTagSplitStyle = (tagItem:Itag):StyleValue => {
 const clickActionFn = (actionItem)=>{
   emits('clickAction', actionItem)
 }
-api.getVideoDes().then(res=>{
-  dideoDesData.value = res
+detail2Ui.$on((vList)=>{
+  const vData = vList[detail2Ui.selectTabListIndex]
+  api.getVideoDes(vData).then(res=>{
+    dideoDesData.value = res
+  })
 })
 </script>
 <style scoped lang="less">

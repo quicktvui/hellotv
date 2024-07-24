@@ -27,7 +27,8 @@ export const getSelectionPoster = (sData:IselectionPoster) => {
   return {
     ...config,
     _router: sData._router,
-    videoUrl: sData.videoUrl
+    videoUrl: sData.videoUrl,
+    videoData: sData.videoData
   }
 }
 
