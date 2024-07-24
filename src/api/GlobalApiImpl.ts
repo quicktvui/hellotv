@@ -261,7 +261,7 @@ export function createGlobalApi(): IGlobalApi {
         //模拟结束
         return Promise.resolve(buildMultilevelTabItemAdapter([]));
       }
-      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList.slice((pageNo-1)*pageSize, pageSize)));
+      return Promise.resolve(buildMultilevelTabItemAdapter(shortVideoList.slice((pageNo-1)*pageSize, pageNo*pageSize)));
     }
   }
 
