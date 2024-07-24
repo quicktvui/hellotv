@@ -43,9 +43,9 @@ const isShowDes = ref(true)
 let timerOutId:any = null
 const starTime = ()=>{
   clearTimeout(timerOutId)
-  timerOutId = setTimeout(() => {
-    isShowDes.value = false
-  }, 10000);
+  // timerOutId = setTimeout(() => {
+  //   isShowDes.value = false
+  // }, 10000);
 }
 const clickActionFn = (actionItem)=>{
   if(actionItem.action === IvideoDesActions.fullScreen){
