@@ -139,12 +139,19 @@ export default defineComponent({
     let tab_list_section = ref<QTIListView>()
     let currentPageIndex = ref(-1)
     const onItemRecycled = (e) => {}
+
+    let timer: any = -1
+
     const loadMore = (e) => {
-      pageNo.value = pageNo.value + 1
-      context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
+      clearTimeout(timer)
+      timer = setTimeout(() => {
+        pageNo.value++
+        context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)        
+      }, 500);
     }
+
     const onItemBind = (e) => {
-      console.log(e,"onItemBindonItemBindonItemBindonItemBindonItemBind")
+      pageNo.value = 1
       if(e.item){
         if(e.pageIndex != 'undefined') currentPageIndex.value = e.pageIndex
         if(e.item.tabList.length < 1){
@@ -154,26 +161,34 @@ export default defineComponent({
           currentTabIndex.value = e.item.autoSelectTabPosition
         }
         if(e.item.itemList.length < 1){
+          pageNo.value = 1
           context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
         }
       }
     }
+
     const onItemFocused = (e) => {
       if(e.hasFocus) currentSectionIndex.value = e.parentPosition
     }
+
     const onTabItemFocused = (e) => {
       if(e.hasFocus && currentTabIndex.value != e.position){
         currentTabIndex.value = e.position
         pageNo.value = 1
         singleSelectPosition.value = e.position
-        // VirtualView.call(e.listSID,'setSelectChildPosition',[0,true])
-        context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
+        clearTimeout(timer)
+        timer = setTimeout(() => {
+          // VirtualView.call(e.listSID,'setSelectChildPosition',[0,true])
+          context.emit("load-more", pageNo.value, currentSectionIndex.value, currentTabIndex.value, currentPageIndex.value)
+        }, 500);
       }
     }
+
     const onListItemFocused = (e) => {
       if(e.hasFocus){
       }
     }
+
     return {
       short_video_section,singleSelectPosition,tab_list_section,
       onTabItemFocused,onListItemFocused,
