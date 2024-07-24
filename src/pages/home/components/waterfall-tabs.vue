@@ -191,6 +191,9 @@ export default defineComponent({
     let tabItemList: Array<QTTabItem>
     let delayStopPlayerTimer: any = -1
     let currentShortVideoPlayUrl = ref('')
+    let delayResumeTimer: any = -1
+    let isCelling = ref(false)
+    let isOnEsStop = ref(false)
 
     function onESCreate(params) {
       isOneTime = true
@@ -215,8 +218,18 @@ export default defineComponent({
         isOneTime = false
         return
       } else {
-        if (bgPlayerType.value != -1) {
-          bg_player.value?.resume()
+        if (!isOnEsStop.value) {
+          if (bgPlayerType.value != -1) bg_player?.value.start()
+        }else{
+          isOnEsStop.value = false
+          if (bgPlayerType.value != -1 && !isCelling.value) {
+            delayResumeTimer && clearTimeout(delayResumeTimer)
+            bg_player?.value.setCurBg()
+            delayResumeTimer = setTimeout(() => {
+              bg_player.value?.resume()
+              bg_player?.value.requestDismissCover()
+            }, 601)
+          }
         }
       }
       myDataManager.isShow = true
@@ -224,19 +237,20 @@ export default defineComponent({
     }
 
     function onESStop() {
-      delayStopPlayer()
+      isOnEsStop.value = true
+      bg_player.value?.pause()
+      bg_player.value?.stop()
       myDataManager.isShow = false
     }
 
     function onESPause() {
-      bg_player.value?.stop()
+      bg_player?.value.pause()
       myDataManager.isShow = false
     }
 
     function onESDestroy() {
       bg_player.value?.reset()
       delayStopPlayer()
-
       myDataManager.clear()
     }
 
@@ -374,15 +388,18 @@ export default defineComponent({
           ' params:', params
         )
       }
+      isCelling.value = true
       if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
         bg_player?.value.pause()
         bg_player?.value.keepPlayerInvisible(false)
         bg_player.value.initPlayBg("")
       } else {
+        bg_player?.value.pause()
+        bg_player?.value.setCurBg()
         delayPauseTimer && clearTimeout(delayPauseTimer)
         delayPauseTimer = setTimeout(() => {
-          bg_player?.value.pause()
-          bg_player?.value.setCurBg()
+          bg_player?.value.stop()
+          // bg_player?.value.setCurBg()
           bg_player?.value.showCoverImmediately(true)
         }, 900)
       }
@@ -421,13 +438,14 @@ export default defineComponent({
           ' params:', params
         )
       }
+      isCelling.value = false
       if (bgPlayerType.value != -1) {
         if (bgPlayerType.value == CoveredPlayerType.TYPE_BG) {
           bg_player?.value.setCurBg()
           bg_player.value.delayShowPlayer(200)
         }
         bg_player?.value.resume()
-        bg_player?.value.requestDismissCover()
+        bg_player?.value.requestDismissCover(1300)
       }
     }
     function onTabPageScrollToEnd(pageIndex: number) {
@@ -447,9 +465,7 @@ export default defineComponent({
     }
 
     // waterfall item 加载之前回调  处理小窗及背景播放逻辑
-    let delayOnTabPageSectionAttachedTimer: any = -1
     let delayDealwithplayerTimer: any = -1
-    let currentSectionAttachedIndex = ref(-1)
     function onTabPageSectionAttached(pageIndex: number, sectionList: any) {
       const isSwitchCellBg = sectionList[0].isSwitchCellBg
       if (!isSwitchCellBg || isSwitchCellBg === "0") {
@@ -570,8 +586,7 @@ export default defineComponent({
       )
       bg_player.value.setVideoInfo({isShow:false})
       bgPlayerType.value = -1
-      currentSectionAttachedIndex.value = -1
-      delayOnTabPageSectionAttachedTimer && clearTimeout(delayOnTabPageSectionAttachedTimer)
+      bg_player.value?.pause()
       bg_player?.value.keepPlayerInvisible(true)
 
       myDataManager.updateData()
@@ -586,14 +601,11 @@ export default defineComponent({
 
     function delayStopPlayer() { // 当第一个tab 为播放内容时  由于初始化播放器第一次初始化慢  判断是否第一个 延迟暂停播放器
       delayStopPlayerTimer && clearTimeout(delayStopPlayerTimer)
-      bg_player.value?.stop()
+      bg_player.value?.pause()
       bg_player.value?.setBgImage("")
-      if (!isOneTimeStop) {
-        delayStopPlayerTimer = setTimeout(() => {
-          bg_player.value?.stop()
-          isOneTimeStop = true
-        }, 2000)
-      }
+      delayStopPlayerTimer = setTimeout(() => {
+        bg_player.value?.stop()
+      }, 2100)
     }
 
     const listSectionLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number) => {

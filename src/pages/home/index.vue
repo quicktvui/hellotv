@@ -11,6 +11,7 @@
 </template>
 
 <script lang="ts">
+import { useESEventBus, useESLog } from "@extscreen/es3-core"
 import {defineComponent} from "@vue/runtime-core";
 import {ref} from "vue";
 import TopBtnsView from "../../components/top-btns-view.vue";
@@ -32,8 +33,13 @@ export default defineComponent({
   },
   setup(props, context) {
     const waterfallTabs = ref()
+    const esEventBus = useESEventBus()
     function onESCreate(params) {
       waterfallTabs.value?.onESCreate(params)
+    }
+
+    function onESRestart(){
+      waterfallTabs.value?.onESRestart()
     }
 
     function onESStart() {
@@ -44,14 +50,19 @@ export default defineComponent({
     }
 
     function onESResume() {
+      esEventBus.emit("bg-player-life-cycle","onESResume")
+      waterfallTabs.value?.onESResume()
       waterfallTabs.value?.onESResume()
     }
 
     function onESStop() {
+      esEventBus.emit("bg-player-life-cycle","onESStop")
       waterfallTabs.value?.onESStop()
     }
 
     function onESDestroy() {
+      esEventBus.emit("bg-player-life-cycle","onESDestroy")
+      waterfallTabs.value?.onESDestroy()
       waterfallTabs.value?.onESDestroy()
     }
 
@@ -63,9 +74,7 @@ export default defineComponent({
       onESStop,
       onESPause,
       onESDestroy,
-      onESRestart(){
-        waterfallTabs.value?.onESRestart()
-      }
+      onESRestart,
     }
   }
 })
