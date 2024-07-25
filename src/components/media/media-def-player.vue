@@ -38,7 +38,7 @@ import {
 } from "@extscreen/es3-player-manager"
 import { markRaw, ref,h } from "vue"
 import BuildConfig from "../../build/BuildConfig"
-import { buildPlayData, defList } from "./adapter/ControlDataAdapter"
+import { buildMediaItemList, buildPlayData, defList } from "./adapter/ControlDataAdapter"
 import { ESDefMediaList } from "./impl/ESDefMediaList"
 import MediaManagerView from "./media-manager-view.vue"
 
@@ -113,6 +113,11 @@ export default defineComponent({
         playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       }
       return list
+    }
+
+    const loadMoreMediaList =(index:number=0,playDatas:Array<ESDefMediaList>)=>{
+      const list:Array<ESMediaItem> = buildMediaItemList(index,playDatas,playInterceptors)
+      playerManager.value?.addMediaToIndex(index,list)
     }
 
     const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
@@ -277,6 +282,7 @@ export default defineComponent({
       getWindowType,
       setSize,
       playMediaList,
+      loadMoreMediaList,
       setPlayMediaListMode,
       start,
       pause,

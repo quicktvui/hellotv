@@ -66,6 +66,7 @@ export function buildPlayData(playDatas:Array<ESDefMediaList>,interceptors?:Arra
       if (isRequestUrl){
         mediaItem_0 = {
           id:item.id,
+          index:index,
           title:item.title,
           subTitle:item.subTitle,
           interceptors:interceptors,
@@ -74,6 +75,7 @@ export function buildPlayData(playDatas:Array<ESDefMediaList>,interceptors?:Arra
         mediaItem_0 = {
           id:item.id,
           title:item.title,
+          index:index,
           subTitle:item.subTitle,
           mediaSourceList: {
             index: 0,
@@ -85,6 +87,38 @@ export function buildPlayData(playDatas:Array<ESDefMediaList>,interceptors?:Arra
     })
   }
   return playList
+}
+
+export function buildMediaItemList(startIndex:number=0,playDatas:Array<ESDefMediaList>,interceptors?:Array<ESIPlayerInterceptor>):Array<ESMediaItem>{
+  const itemList: Array<ESMediaItem> = []
+  if (playDatas && playDatas.length > 0){
+    playDatas.map((item,index)=>{
+      const isRequestUrl = item.isRequestUrl
+      let mediaItem_0: ESMediaItem
+      if (isRequestUrl){
+        mediaItem_0 = {
+          id:item.id,
+          index:index+startIndex,
+          title:item.title,
+          subTitle:item.subTitle,
+          interceptors:interceptors,
+        }
+      }else{
+        mediaItem_0 = {
+          id:item.id,
+          title:item.title,
+          index:index+startIndex,
+          subTitle:item.subTitle,
+          mediaSourceList: {
+            index: 0,
+            list: buildUrls(item.url??[])
+          },
+        }
+      }
+      itemList.push(mediaItem_0)
+    })
+  }
+  return itemList
 }
 
 function buildUrls(mediaUrlList:IMediaUrl[]):Array<ESMediaSource>{

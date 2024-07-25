@@ -103,6 +103,7 @@ import { ESPlayerPlayMode,ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { ESMediaItemList,ESMediaItem } from "@extscreen/es3-player-manager";
 import { useESEventBus, useESLog, useESToast, ESKeyEvent } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
+import { encodeDefinition } from "./media/adapter/ControlDataAdapter"
 import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
 import BuildConfig from "../build/BuildConfig";
@@ -370,7 +371,8 @@ export default defineComponent({
           mediaSourceList: {
             index: 0,
             list: [{
-              uri: url
+              uri: url,
+              definition:encodeDefinition()
             }]
           },
         }

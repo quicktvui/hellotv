@@ -8,7 +8,6 @@
       @onPlayerCompleted="onVideoPlayerCompleted"
       @onPlayerInitialized="onPlayerInitialized"
       :is-show-player-controller="true"
-      :menu-list="mList"
     />
     <bg-player-img ref="itemCellBgImgRef"
                    class="media-test-img-bg-css"
@@ -58,6 +57,7 @@ import { useGlobalApi } from "../api/UseApi"
 import BgPlayerImg from "../components/bg-player-img.vue"
 import ImgTextBtnView from "../components/img-text-btn-view.vue"
 import { encodeDefinition, PlayMenuNameFlag } from "../components/media/adapter/ControlDataAdapter"
+import { ESDefMediaList } from "../components/media/impl/ESDefMediaList"
 import MediaDefPlayer from "../components/media/media-def-player.vue"
 import { createESHomeBGPlayerMediaInterceptor } from "./home/play_interceptor/createESHomeBGPlayerMediaInterceptor"
 
@@ -76,7 +76,52 @@ export default defineComponent({
     const globalApi = useGlobalApi()
     let recordPlayerList: Array<any> = []
     let playerIsInitialized = ref(false)
-    const mList = [{ type: 1, nameFlag: PlayMenuNameFlag.NEXT, name: '下一集', decoration: { right: 30 } }]
+    let timer:any = -1
+    const playReadData:Array<ESDefMediaList> = [
+      {
+      id:'1532310053293928449',
+      title:'111特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+      subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+      cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+      url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
+        definition:"1"}],
+      isRequestUrl:true
+    },
+      {
+        id:'1532309801724030977',
+        title:'222特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+        cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+        url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4",
+          definition:"1"}],
+        isRequestUrl:true
+      },
+      {
+        id:'1532309549910470658',
+        title:'333特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+        cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+        url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/5fc2d6dd-0566-4c70-a4ba-be6e47e39252.mp4",
+          definition:"1"}],
+        isRequestUrl:true
+      },
+      {
+        id:'1532309298302431233',
+        title:'444特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+        cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+        url:[],
+        isRequestUrl:true
+      },
+      {
+        id:'1532309046590320641',
+        title:'555特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
+        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
+        cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
+        url:[],
+        isRequestUrl:true
+      },]
+    let curCount = 0
     const onClick = (e)=>{
       const name = e.target.attributes.name
     }
@@ -86,28 +131,27 @@ export default defineComponent({
     onMounted(()=>{
       EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
     })
+
     const onESCreate = (params)=>{
       mediaInterceptor = createESHomeBGPlayerMediaInterceptor(globalApi)
-      const playData = [{
-        id:'1532310053293928449',
-        title:'特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
-        subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
-        cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
-        url:[{playUrl:"",
-          definition:""}],
-        isRequestUrl:true
-      }]
-      let imgBg = playData[0].cover
+      let imgBg = playReadData[0].cover
       setBgImage(imgBg)
-      const playList:ESMediaItemList = PlayerManagerRef.value?.initPlayData(playData,3,[mediaInterceptor])
+      const playList:ESMediaItemList = PlayerManagerRef.value?.initPlayData([],4,[mediaInterceptor])
       setSize()
       PlayerManagerRef.value?.playMediaList(playList);
       PlayerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
-      // setTimeout(()=>{
-      //   initComponent(playData,2)
+      timer = setInterval(()=>{
+        if (curCount > 6 && timer){
+          clearInterval(timer)
+          return
+        }
+        PlayerManagerRef.value?.loadMoreMediaList(curCount,playReadData.slice(curCount,curCount+2))
+        if (curCount === 0){
+          PlayerManagerRef.value?.playMediaItemByIndex(0)
+        }
+        curCount+=2
+      },5000)
 
-        // playByIndex(0)
-      // },2000)
     }
 
     const initComponent = (playerListData: any,playerType:number)=>{
@@ -201,16 +245,12 @@ export default defineComponent({
     }
 
     const dispatchKeyEventFn = (keyEvent:ESKeyEvent)=>{
-      log.e("XRG","=======keyEvent.action======"+keyEvent.action+"====keyEvent.keyCode==="+keyEvent.keyCode)
-      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_DOWN){
-        log.e("XRG","=============111")
+      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_DOWN){
         return true
       }
-      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_UP){
-        log.e("XRG","=============222")
+      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_UP){
         return true
       }
-      log.e("XRG","=============333")
     }
     onBeforeUnmount(()=>{
       EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
@@ -228,7 +268,6 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       onBackPressed,
-      mList,
       playerHeight,
       playerWidth,
     }
