@@ -491,8 +491,12 @@ export default defineComponent({
     const toDetail = () => {
       router.push({name: 'detail2'})
     }
-    const onKeyDown = (keyCode: number) => {
-      return playerManagerRef.value?.onKeyDown( keyCode )
+    const onKeyDown = (keyEvent :ESKeyEvent):boolean => {
+
+      return playerManagerRef.value?.onKeyDown(keyEvent)
+    }
+    const onKeyUp = (keyEvent :ESKeyEvent):boolean => {
+      return playerManagerRef.value?.onKeyUp(keyEvent)
     }
     return {
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
@@ -506,7 +510,7 @@ export default defineComponent({
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
       keepPlayerInvisible,zIndex,
-      setVideoInfo,toDetail,onKeyDown
+      setVideoInfo,toDetail,onKeyDown,onKeyUp
     };
   },
 });

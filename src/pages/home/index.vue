@@ -69,6 +69,9 @@ export default defineComponent({
     const onKeyDown = ({ keyCode }: ESKeyEvent) => {
       waterfallTabs.value?.onKeyDown({keyCode})
     }
+    const onKeyUp = ({ keyCode }: ESKeyEvent) => {
+      waterfallTabs.value?.onKeyUp({keyCode})
+    }
 
     function onBackPressed() {
       waterfallTabs.value?.onBackPressed()
@@ -84,6 +87,7 @@ export default defineComponent({
       onESDestroy,
       onESRestart,
       onKeyDown,
+      onKeyUp,
       onBackPressed
     }
   }

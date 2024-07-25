@@ -9,7 +9,7 @@
       v-if="isShowTop" :blockFocusDirections="['left', 'right', 'up']">
       <slot name="buttonsHeader"/>
     </div>
-    
+
     <qt-tabs
       ref="tabRef"
       :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
@@ -324,7 +324,7 @@ export default defineComponent({
           obj.pageIndex = pageIndex
           obj.sid = 'bg_player_replace_child_sid'
           obj.playerWidth = tabId == 'short_video2' ? 1920 : 1140
-          obj.playerHeight = tabId == 'short_video2' ? 1080 : 640 
+          obj.playerHeight = tabId == 'short_video2' ? 1080 : 640
           obj.itemIndex = 0
           obj.data = [{
             id: itemList[0].id,
@@ -685,29 +685,40 @@ export default defineComponent({
         autoHandleBackKey.value = true
         changeBgPlayerZindex('front')
       }
-      
-    } 
+
+    }
     const onBackPressed = () => {
       if(isBgPlayerFront.value){
         changeBgPlayerZindex('after')
         return
       }
-      router.back() 
+      router.back()
     }
-    const onKeyDown = ({ keyCode }: ESKeyEvent) => {
+    const onKeyDown = (keyEvent :ESKeyEvent) => {
       if(isBgPlayerFront.value){
         descendantFocusability.value = 2
-        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && currentPlayerIndex.value < 1){
+        if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && currentPlayerIndex.value < 1){
           toast.showToast('已经是第一个')
           return
         }
-        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_DOWN || keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP){
+        if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_DOWN || keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP){
           descendantFocusability.value = 1
           return
         }
-        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyCode == ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyCode == ESKeyCode.ES_KEYCODE_DPAD_CENTER){
-          toast.showToast(bg_player.value.onKeyDown(keyCode)+'')
-          if(bg_player.value.onKeyDown(keyCode)){
+        if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_CENTER){
+          toast.showToast(bg_player.value.onKeyDown(keyEvent)+'')
+          if(bg_player.value.onKeyDown(keyEvent)){
+            descendantFocusability.value = 1
+            return true
+          }
+        }
+      }
+    }
+
+    const onKeyUp = (keyEvent:ESKeyEvent)=>{
+      if(isBgPlayerFront.value){
+        if(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_CENTER){
+          if(bg_player.value.onKeyDown(keyEvent)){
             return true
           }
         }
@@ -750,7 +761,7 @@ export default defineComponent({
       delayStopPlayer,
       listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused,
       changeBgPlayerZindex,autoHandleBackKey,
-      onBackPressed,onKeyDown,descendantFocusability
+      onBackPressed,onKeyDown,onKeyUp,descendantFocusability
     }
   }
 })
