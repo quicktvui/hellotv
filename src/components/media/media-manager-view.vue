@@ -479,10 +479,9 @@ export default defineComponent({
     function onItemClicked(name,e,isSameLocation?:number){
       switch(name){
         case PlayMenuNameFlag.NEXT:
-        case PlayMenuNameFlag.EPISODES:
-          eventBus.emit(bottomMenuClickEventBusName,e)
-          viewState = IMediaViewState.STATE_MENU_RATE_VIEW_DISMISS
-          resetShowViewState()
+          if (player) {
+            player.playNextMedia()
+          }
           break;
         case PlayMenuNameFlag.RATE:
           curControlRef = mediaControlSpeedRateRef
@@ -539,6 +538,11 @@ export default defineComponent({
             isPlayerPlaying.value = true
           }
           resetShowViewState(IMediaViewState.STATE_MANAGER_VIEW_DISMISS)
+          break;
+        default:
+          eventBus.emit(bottomMenuClickEventBusName,e)
+          viewState = IMediaViewState.STATE_MENU_RATE_VIEW_DISMISS
+          resetShowViewState()
           break;
       }
     }
@@ -678,6 +682,11 @@ export default defineComponent({
               mediaManagerSeekBarRef.value?.startSeek(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT)
             }
             return true
+          }
+          break;
+        case ESKeyCode.ES_KEYCODE_DPAD_DOWN:
+          if (isPlayerViewStateDismiss()){
+            setPlayerViewStateShow()
           }
           break;
       }

@@ -35,9 +35,8 @@ export const defList = ()=>[
   {type:2,nameFlag:PlayMenuNameFlag.SETTING,iconNormal:settingIcon,iconFocus:settingFocusIcon,name:'设置'},
 ]
 export const resultMap:Map<String, number> = new Map<String, number>()
-export function initMenuList(list: [] | undefined){
+export function initMenuList(list=defList()){
   if (list && list.length > 0){
-    const list = defList()
     list.map((item,index)=>{
       resultMap.set(item.nameFlag,index)
     })

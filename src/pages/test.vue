@@ -8,6 +8,7 @@
       @onPlayerCompleted="onVideoPlayerCompleted"
       @onPlayerInitialized="onPlayerInitialized"
       :is-show-player-controller="true"
+      :menu-list="mList"
     />
     <bg-player-img ref="itemCellBgImgRef"
                    class="media-test-img-bg-css"
@@ -49,13 +50,14 @@
 import { ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { ESMediaItem, ESMediaItemList } from "@extscreen/es3-player-manager"
 import { useESRouter } from "@extscreen/es3-router"
+import { EventBus } from "@extscreen/es3-vue"
 import { defineComponent } from "@vue/runtime-core"
-import { ESKeyEvent, useESLog } from "@extscreen/es3-core"
-import { ref } from "vue"
+import { ESKeyCode, ESKeyEvent, useESLog, useESToast, ESKeyAction } from "@extscreen/es3-core"
+import { onMounted, onBeforeUnmount, ref } from "vue"
 import { useGlobalApi } from "../api/UseApi"
 import BgPlayerImg from "../components/bg-player-img.vue"
 import ImgTextBtnView from "../components/img-text-btn-view.vue"
-import { encodeDefinition } from "../components/media/adapter/ControlDataAdapter"
+import { encodeDefinition, PlayMenuNameFlag } from "../components/media/adapter/ControlDataAdapter"
 import MediaDefPlayer from "../components/media/media-def-player.vue"
 import { createESHomeBGPlayerMediaInterceptor } from "./home/play_interceptor/createESHomeBGPlayerMediaInterceptor"
 
@@ -64,6 +66,7 @@ export default defineComponent({
   components: { BgPlayerImg, MediaDefPlayer, ImgTextBtnView },
   setup(props, context) {
     const log = useESLog()
+    const toast = useESToast()
     const router = useESRouter()
     const PlayerManagerRef = ref()
     const itemCellBgImgRef = ref()
@@ -73,13 +76,16 @@ export default defineComponent({
     const globalApi = useGlobalApi()
     let recordPlayerList: Array<any> = []
     let playerIsInitialized = ref(false)
-
+    const mList = [{ type: 1, nameFlag: PlayMenuNameFlag.NEXT, name: '下一集', decoration: { right: 30 } }]
     const onClick = (e)=>{
       const name = e.target.attributes.name
     }
     const onFocus = (e)=>{
       const name = e.target.attributes.name
     }
+    onMounted(()=>{
+      EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
+    })
     const onESCreate = (params)=>{
       mediaInterceptor = createESHomeBGPlayerMediaInterceptor(globalApi)
       const playData = [{
@@ -194,6 +200,21 @@ export default defineComponent({
       return true
     }
 
+    const dispatchKeyEventFn = (keyEvent:ESKeyEvent)=>{
+      log.e("XRG","=======keyEvent.action======"+keyEvent.action+"====keyEvent.keyCode==="+keyEvent.keyCode)
+      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_DOWN){
+        log.e("XRG","=============111")
+        return true
+      }
+      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_UP){
+        log.e("XRG","=============222")
+        return true
+      }
+      log.e("XRG","=============333")
+    }
+    onBeforeUnmount(()=>{
+      EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
+    })
     return {
       PlayerManagerRef,
       itemCellBgImgRef,
@@ -207,7 +228,7 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       onBackPressed,
-
+      mList,
       playerHeight,
       playerWidth,
     }
