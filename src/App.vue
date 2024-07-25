@@ -63,6 +63,8 @@ export default defineComponent({
       initESLog()
       initDefaultThemeColor()
       network.addListener(connectivityChangeListener)
+      Native.callNative('FastListModule', 'setFadeEnabled', true);
+      Native.callNative('FastListModule', 'setFadeDuration', 500);
       switchDev()
       return Promise.resolve()
         .then(() => request.init(es, develop, device, runtime, log))

@@ -2,7 +2,9 @@
   <tv-item class="world-4k-section-root-css" flexStyle="${style}" @item-click="onItemClicked"
            :clipChildren="false"
            :clipPadding="false" >
-    <qt-list-view class="world-4k-section-list-css" horizontal infiniteMode
+    <qt-list-view class="world-4k-section-list-css" horizontal :infiniteParams='{
+        scrollOffset:253,
+    }'
                   flexStyle="${style}"
                   list="${itemList}"
                   padding="0,30,0,30"
@@ -11,7 +13,7 @@
                   :clipPadding="false"
                   makeChildVisibleType="center"
                   :enableSelectOnFocus="true"
-                  autoscroll="${autoscroll}">
+                  >
 <!--      setSelectChildPosition="${defaultSelectP}"
                   singleSelectPosition="${defaultSelectP}"
                   autoSelectPosition="${defaultSelectP}"
