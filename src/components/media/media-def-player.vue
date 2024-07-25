@@ -98,6 +98,10 @@ export default defineComponent({
         //   const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
         //   mRef.setShowView(true)
     // })
+    const isMenuShow =  ():boolean=>{
+      const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
+      return mRef.isViewShow()
+    }
 
     const initPlayData = (playDatas:Array<ESDefMediaList>,playMode?: ESPlayerPlayMode,interceptors?:Array<ESIPlayerInterceptor>):ESMediaItemList=>{
       playInterceptors = interceptors
@@ -283,6 +287,7 @@ export default defineComponent({
       onKeyDown,
       onKeyUp,
       onBackPressed,
+      isMenuShow,
       playerListRef,
       playerViewListRef,
 

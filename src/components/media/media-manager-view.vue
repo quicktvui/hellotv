@@ -723,6 +723,10 @@ export default defineComponent({
       return false
     }
 
+    function isViewShow():boolean{
+      return isFullWindow.value && isShowManagerView.value
+    }
+
     return {
       mediaManagerSeekBarRef,
       mediaControlSpeedRateRef,
@@ -769,6 +773,7 @@ export default defineComponent({
       onPlayerPlayMedia,
       onPlayerPlaying,
       onPlayerPaused,
+      isViewShow,
     }
   }
 })
