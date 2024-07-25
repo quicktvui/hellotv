@@ -291,23 +291,26 @@ class RankingUi {
   private catchRawValue:Map<number, IrankingMoreContent> = new Map()
   private prevIndexStr:string = ''
 
+  playBg(data){
+    this.bgPlayerRef.initPlayBg(data.previewImg)
+    this.bgPlayerRef.showCoverImmediately()
+    this.bgPlayerRef.stopIfNeed()
+    if(data.previewVedio){
+      this.bgPlayerRef.play({
+        cover: data.previewImg,
+        id: data._id,
+        isRequestUrl: false,
+        url: data.previewVedio
+      })
+    }
+  }
   updateCurrent(rwaData:IrankingContentItem, section){
     if(this.showPageIndex>-1){
       const oldSectin = this.tabRef?.getPageSection(this.showPageIndex, 0);
       const newSection = getCurrentSection(rwaData, section, undefined, oldSectin)
       if(oldSectin?._id && this.bgPlayerRef){
         VirtualView.updateChild(this.tabSid,oldSectin?._id, newSection)
-        this.bgPlayerRef.initPlayBg(newSection.previewImg)
-        this.bgPlayerRef.showCoverImmediately()
-        this.bgPlayerRef.stopIfNeed()
-        if(newSection.previewVedio){
-          this.bgPlayerRef.play({
-            cover: newSection.previewImg,
-            id: newSection._id,
-            isRequestUrl: false,
-            url: newSection.previewVedio
-          })
-        }
+        this.playBg(newSection)
       }
     }
   }
@@ -349,7 +352,7 @@ class RankingUi {
               isRequestUrl: false,
               url: sData.previewVedio||''//"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
             }],
-            0, 723,135
+            0, 730,135
           )
         }
       }
@@ -359,7 +362,6 @@ class RankingUi {
   }
 
   setData(tabRef:QTITab, pageIndex:number){
-    console.log(tabRef, '--lsj--tabRef')
     rankApi.getContentData(pageIndex).then(res=>{
       const {sections} = transRankingSections(res, rankApi.getConfig())
       tabRef.setPageData(pageIndex, {
@@ -373,6 +375,17 @@ class RankingUi {
       this.tabSid = (tabRef as any).$attrs?.sid
     }
     this.pageIndex = pageIndex
+  }
+
+  stop(){
+    // this.bgPlayerRef.reset()
+    this.bgPlayerRef.pause()
+    this.bgPlayerRef.stop()
+  }
+  reStart(){
+    // this.bgPlayerRef.start()
+    const itemData = this.tabRef?.getPageSection(this.showPageIndex, 0);
+    this.playBg(itemData)
   }
 
   clear(){

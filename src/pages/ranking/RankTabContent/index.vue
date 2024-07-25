@@ -2,6 +2,9 @@
 <div class="rt_content">
   <div class="rtc_video_box" :focusable="false" :type="rankingContentTypes.info" flexStyle="${style}">
     <RankTabVideoInfo :focusable="false"/>
+    <div class="rtc_video_shadow" :focusable="false">
+      <!-- <img src="../../../assets/ranking/shadow_bg.png" class="rtc_video_shadow_img" :focusable="false"/> -->
+    </div>
   </div>
   
   <RankSortList :focusable="false" :type="rankingContentTypes.sort"/>
@@ -28,5 +31,14 @@ import { rankingContentTypes } from '../index.ts'
   display: flex;
   flex-direction: row;
 }
-
+.rtc_video_shadow {
+  width: 1150px;
+  height: 650px;
+  background-color: transparent;
+}
+.rtc_video_shadow_img {
+  width: 1150px;
+  height: 650px;
+  background-color: transparent;
+}
 </style>

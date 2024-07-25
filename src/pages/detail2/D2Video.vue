@@ -45,10 +45,10 @@ const initPlay = (playList) => {
 }
 detail2Ui.$on((playList=[]) => {
   if(detail2Ui.isChangedTab()){
-    console.log('lsj--initPlay')
+    console.log('lsj--1')
     initPlay(playList)
   } else {
-    console.log('lsj--playMediaItemByIndex')
+    console.log('lsj--2')
     PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
   }
 })
