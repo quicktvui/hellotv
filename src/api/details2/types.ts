@@ -43,6 +43,9 @@ export interface IvideoDesAction {
   icon?:any; iconf?: any; img?:any;
   foLayoutStyle?: { width: string; height:string; };//强制覆盖样式
   foImgStyle?: { width: string; height:string; };//强制覆盖图片样式
+  router?:{
+    name: string; params?:object;
+  }
   [k:string]:any
 }
 export interface IvideoDes {
@@ -51,6 +54,9 @@ export interface IvideoDes {
   tags?: Array<Itag>;//视频类型标签
   actions?: Array<IvideoDesAction>;//视频信息展示模块的动作按钮列表
   des?:string;//视频简介信息
+  playNumber?:number;//播放量
+  status?:string;//视频状态 已完结 7月20日更新
+  actors?:string;//演员信息
 }
 
 

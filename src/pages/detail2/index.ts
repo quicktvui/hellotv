@@ -126,6 +126,9 @@ class Detail2Ui {
   changePlayList(newList:any[]){
     this.playList = newList
   }
+  getCurrentPlay(){
+    return this.playList[this.selectTabListIndex]
+  }
   getTab2(tabItem:ItabListItem){
     const tabs2Section = detail2Ui.getShowTab(tabItem)
     

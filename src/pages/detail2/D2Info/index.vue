@@ -82,11 +82,13 @@ const getTagSplitStyle = (tagItem:Itag):StyleValue => {
 const clickActionFn = (actionItem)=>{
   emits('clickAction', actionItem)
 }
-detail2Ui.$on((vList)=>{
-  const vData = vList[detail2Ui.selectTabListIndex]
-  api.getVideoDes(vData).then(res=>{
-    dideoDesData.value = res
-  })
+detail2Ui.$on(()=>{
+  const vData = detail2Ui.getCurrentPlay()
+  if(vData){
+    api.getVideoDes(vData).then(res=>{
+      dideoDesData.value = res
+    })
+  }
 })
 </script>
 <style scoped lang="less">

@@ -2,10 +2,6 @@
 <div class="rt_content">
   <div class="rtc_video_box" :focusable="false" :type="rankingContentTypes.info" flexStyle="${style}">
     <RankTabVideoInfo :focusable="false"/>
-    <div class="rtc_video_preview" :focusable="false">
-      <!-- <RankTabVideo showIf="${isVedio==true}" :focusable="false"/> -->
-      <!-- <RankTabPreviewImg showIf="${isVedio==false}" :focusable="false"/> -->
-    </div>
   </div>
   
   <RankSortList :focusable="false" :type="rankingContentTypes.sort"/>
@@ -33,10 +29,4 @@ import { rankingContentTypes } from '../index.ts'
   flex-direction: row;
 }
 
-.rtc_video_preview {
-  width: 1140px;
-  height: 640px;
-  position: relative;
-  background-color: transparent;
-}
 </style>

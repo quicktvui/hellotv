@@ -282,7 +282,8 @@ interface Iindex {
 }
 class RankingUi {
   private pageIndex:number = -1
-  private tabRef?:QTITab
+  private tabRef?:QTITab;
+  private tabSid:string='';
   private bgPlayerRef:any
   private showPageIndex:number = -1
   private showSectionIndex:number = 0
@@ -290,12 +291,12 @@ class RankingUi {
   private catchRawValue:Map<number, IrankingMoreContent> = new Map()
   private prevIndexStr:string = ''
 
-  updateCurrent(rwaData:IrankingContentItem){
-    if(this.pageIndex>-1){
-      const oldSectin = this.tabRef?.getPageSection(this.pageIndex, 0);
-      const newSection = getCurrentSection(rwaData, undefined, undefined, oldSectin)
+  updateCurrent(rwaData:IrankingContentItem, section){
+    if(this.showPageIndex>-1){
+      const oldSectin = this.tabRef?.getPageSection(this.showPageIndex, 0);
+      const newSection = getCurrentSection(rwaData, section, undefined, oldSectin)
       if(oldSectin?._id && this.bgPlayerRef){
-        VirtualView.updateChild('rankingTabsSid',oldSectin?._id, newSection)
+        VirtualView.updateChild(this.tabSid,oldSectin?._id, newSection)
         this.bgPlayerRef.initPlayBg(newSection.previewImg)
         this.bgPlayerRef.showCoverImmediately()
         this.bgPlayerRef.stopIfNeed()
@@ -332,12 +333,12 @@ class RankingUi {
       this.prevIndexStr = cIndexStr
     }
     try {
-      const section = this.catchRawValue.get(this.showPageIndex)
-      const sData = section?.moreList[this.showSectionIndex]?.list[this.showItemIndex]
-      // console.log(sData?.id, '--lsj--sData', this.prevIndexStr)
+      const sectionMore = this.catchRawValue.get(this.showPageIndex)
+      const section = sectionMore?.moreList[this.showSectionIndex]
+      const sData = section?.list[this.showItemIndex]
       if(sData){
         if(this.bgPlayerRef){
-          this.updateCurrent(sData) //更新背景
+          this.updateCurrent(sData, section) //更新背景
         } else if(bgPlayerRef) {
           this.bgPlayerRef = bgPlayerRef//初始化背景
           bgPlayerRef.doChangeParent('', 2,
@@ -358,6 +359,7 @@ class RankingUi {
   }
 
   setData(tabRef:QTITab, pageIndex:number){
+    console.log(tabRef, '--lsj--tabRef')
     rankApi.getContentData(pageIndex).then(res=>{
       const {sections} = transRankingSections(res, rankApi.getConfig())
       tabRef.setPageData(pageIndex, {
@@ -366,8 +368,9 @@ class RankingUi {
       })
       this.catchRawValue.set(pageIndex, res)
     })
-    if(!this.tabRef){
+    if(!this.tabRef && tabRef){
       this.tabRef = tabRef
+      this.tabSid = (tabRef as any).$attrs?.sid
     }
     this.pageIndex = pageIndex
   }
