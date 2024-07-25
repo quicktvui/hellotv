@@ -81,7 +81,7 @@
       <qt-view class="bgvi_t" :focusable="false" >
         <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false" 
           class="bgvi_t_text" :duplicateParentState="true" :text="`${videoInfo.score} ${videoInfo.sort}`" />
-        <span class="bgvi_t_tag" :focusable="false" >{{ videoInfo.tag }}</span>
+        <span class="bgvi_t_tag" :focusable="false" v-if="videoInfo.tag?true:false">{{ videoInfo.tag }}</span>
       </qt-view>
       <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false" 
         class="bgvi_b_text" :duplicateParentState="true" 

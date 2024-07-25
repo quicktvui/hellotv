@@ -194,6 +194,7 @@ export default defineComponent({
     let delayResumeTimer: any = -1
     let isCelling = ref(false)
     let isOnEsStop = ref(false)
+    let isBgPlayerFront = ref(false)
 
     function onESCreate(params) {
       isOneTime = true
@@ -308,7 +309,7 @@ export default defineComponent({
     }
     // 加载数据时获取小窗 小窗列表 背景播放数据
     async function buildPlayerData(pageIndex: number, itemList: any, tabPage: QTTabPageData, tabId: string) {
-      if(tabId == 'short_video') {
+      if(tabId == 'short_video' || tabId == 'short_video2') {
         let obj: any = {}
         let key = '' + pageIndex
         obj.playerType = CoveredPlayerType.TYPE_BG
@@ -316,8 +317,8 @@ export default defineComponent({
         if (recordPlayerDataMap.get(key) == undefined) {
           obj.pageIndex = pageIndex
           obj.sid = 'bg_player_replace_child_sid'
-          obj.playerWidth = 1140
-          obj.playerHeight = 640
+          obj.playerWidth = tabId == 'short_video2' ? 1920 : 1140
+          obj.playerHeight = tabId == 'short_video2' ? 1080 : 640 
           obj.itemIndex = 0
           obj.data = [{
             id: itemList[0].id,
@@ -325,10 +326,10 @@ export default defineComponent({
             cover: itemList[0].poster,
             url: itemList[0].url,
             isRequestUrl:false,
-            tag: itemList[0].videoInfo.tag ??'',
-            score: itemList[0].videoInfo.score ??'',
-            sort: itemList[0].videoInfo.sort ??'',
-            desc: itemList[0].videoInfo.desc ??'',
+            tag: tabId == 'short_video2'? '' : itemList[0].videoInfo.tag ??'',
+            score: tabId == 'short_video2'? '' : itemList[0].videoInfo.score ??'',
+            sort: tabId == 'short_video2'? '' : itemList[0].videoInfo.sort ??'',
+            desc: tabId == 'short_video2'? '' : itemList[0].videoInfo.desc ??'',
             isShow: true
           }]
           currentShortVideoPlayUrl.value = itemList[0].url
@@ -565,6 +566,7 @@ export default defineComponent({
               playData, 0, width < 1920 ? 732 : 0,  width < 1920 ? 220 : 0, mediaInterceptor
             )
             bg_player.value?.delayShowPlayer()
+            changeBgPlayerZindex(pageIndex)
           }
         }
         else if (sectionData && sectionData.isSwitchCellBg === '1') {
@@ -636,7 +638,7 @@ export default defineComponent({
     }
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       let currentTabItem = tabItemList[pageIndex]
-      if(item.name == 'list_section_item' && currentTabItem._id == 'short_video'){
+      if(item.name == 'list_section_item' && (currentTabItem._id == 'short_video' || currentTabItem._id == 'short_video2')){
         if(item.url == currentShortVideoPlayUrl.value) return
         currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
@@ -644,10 +646,10 @@ export default defineComponent({
         bg_player.value.showCoverImmediately()
         bg_player.value.stopIfNeed()
         bg_player.value.setVideoInfo({
-          desc:  item.videoInfo.desc,
-          score: item.videoInfo.score,
-          sort: item.videoInfo.sort,
-          tag: item.videoInfo.tag,
+          desc:  currentTabItem._id == 'short_video2' ? '' : item.videoInfo.desc,
+          score: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.score,
+          sort: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.sort,
+          tag: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.tag,
           isShow: true
         })
         delayDealwithplayerTimer = setTimeout( () => {
@@ -655,6 +657,12 @@ export default defineComponent({
         }, 300)
       }
     }
+    const changeBgPlayerZindex = (pageIndex: number) => {
+      let currentTabItem = tabItemList[pageIndex]
+      if(currentTabItem._id == 'short_video2'){
+        
+      }
+    } 
 
     return {
       waterfall_tab_root,
@@ -690,7 +698,8 @@ export default defineComponent({
       onTabClick,
       onTabPageSectionAttached,
       delayStopPlayer,
-      listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused
+      listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused,
+      changeBgPlayerZindex
     }
   }
 })
