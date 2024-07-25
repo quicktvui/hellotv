@@ -101,7 +101,7 @@ import { ref, defineComponent, nextTick, reactive, onMounted } from "vue";
 import { QTIListView,QTListViewItem,VirtualView } from "@quicktvui/quicktvui3";
 import { ESPlayerPlayMode,ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { ESMediaItemList,ESMediaItem } from "@extscreen/es3-player-manager";
-import { useESEventBus, useESLog, useESToast } from "@extscreen/es3-core";
+import { useESEventBus, useESLog, useESToast, ESKeyEvent } from "@extscreen/es3-core";
 import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayItem"
 import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
@@ -491,6 +491,9 @@ export default defineComponent({
     const toDetail = () => {
       router.push({name: 'detail2'})
     }
+    const onKeyDown = (keyCode: number) => {
+      return playerManagerRef.value?.onKeyDown( keyCode )
+    }
     return {
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,start,
@@ -503,7 +506,7 @@ export default defineComponent({
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
       keepPlayerInvisible,zIndex,
-      setVideoInfo,toDetail
+      setVideoInfo,toDetail,onKeyDown
     };
   },
 });

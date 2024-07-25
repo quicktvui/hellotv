@@ -13,6 +13,7 @@ import login from './pages/login/index.vue'
 import activity2 from './pages/activity2/index.vue'
 import my from './pages/my/index.vue'
 import detail2 from './pages/detail2/index.vue'
+import D2Introduction from './pages/detail2/D2Introduction.vue'
 import ranking from './pages/ranking/index.vue'
 import shortVideo from './pages/shortVideo/index.vue'
 import test from './pages/test.vue'
@@ -85,6 +86,10 @@ const routes = [
   ,
   {
     name: 'short_video', path: '/short_video', component: shortVideo
-  }
+  },
+  {
+    path: '/d2Introduction', name: 'd2Introduction', component: D2Introduction,
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
 ]
 export default routes

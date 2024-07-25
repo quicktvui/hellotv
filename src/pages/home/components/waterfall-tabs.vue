@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
+  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root" :descendantFocusability="descendantFocusability"
       :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
@@ -103,7 +103,7 @@ import {
   QTWaterfallSection,
   QTWaterfallSectionType,VirtualView
 } from '@quicktvui/quicktvui3'
-import { ESLogLevel, useESDevice, useESLog, useESToast } from '@extscreen/es3-core'
+import { ESLogLevel, useESDevice, useESLog, useESToast, ESKeyEvent, ESKeyCode } from '@extscreen/es3-core'
 import { useLaunch } from "../../../tools/launch/useApi";
 import { useGlobalApi } from "../../../api/UseApi";
 import BuildConfig from "../../../build/BuildConfig";
@@ -199,6 +199,8 @@ export default defineComponent({
     let isOnEsStop = ref(false)
     let isBgPlayerFront = ref(false)
     let autoHandleBackKey = ref(true)
+    let currentPlayerIndex = ref(0)
+    let descendantFocusability = ref(1)
 
     function onESCreate(params) {
       isOneTime = true
@@ -594,7 +596,7 @@ export default defineComponent({
       bgPlayerType.value = -1
       bg_player.value?.pause()
       bg_player?.value.keepPlayerInvisible(true)
-
+      changeBgPlayerZindex('after')
       myDataManager.updateData()
       if(pageIndex === myHistory.tabPageIndex){
         myHistory.updateData(tabRef)
@@ -644,6 +646,7 @@ export default defineComponent({
       let currentTabItem = tabItemList[pageIndex]
       if(item.name == 'list_section_item' && (currentTabItem._id == 'short_video' || currentTabItem._id == 'short_video2')){
         if(item.url == currentShortVideoPlayUrl.value) return
+        currentPlayerIndex.value = itemIndex
         currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
         bg_player.value.initPlayBg(item.poster)
@@ -669,12 +672,14 @@ export default defineComponent({
         let currentTabItem = tabItemList[curTabIndex]
         if(currentTabItem._id == 'short_video2'){
           delayPlayerShowFrontTimer = setTimeout(() => {
+            descendantFocusability.value = 2
             autoHandleBackKey.value = false
             bg_player.value.zIndex = 999
             isBgPlayerFront.value = true
           },8000)
         }
       }else if(type == 'after'){
+        descendantFocusability.value = 1
         bg_player.value.zIndex = 0
         isBgPlayerFront.value = false
         autoHandleBackKey.value = true
@@ -688,6 +693,25 @@ export default defineComponent({
         return
       }
       router.back() 
+    }
+    const onKeyDown = ({ keyCode }: ESKeyEvent) => {
+      if(isBgPlayerFront.value){
+        descendantFocusability.value = 2
+        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && currentPlayerIndex.value < 1){
+          toast.showToast('已经是第一个')
+          return
+        }
+        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_DOWN || keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP){
+          descendantFocusability.value = 1
+          return
+        }
+        if(keyCode == ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyCode == ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyCode == ESKeyCode.ES_KEYCODE_DPAD_CENTER){
+          toast.showToast(bg_player.value.onKeyDown(keyCode)+'')
+          if(bg_player.value.onKeyDown(keyCode)){
+            return true
+          }
+        }
+      }
     }
 
     return {
@@ -725,7 +749,8 @@ export default defineComponent({
       onTabPageSectionAttached,
       delayStopPlayer,
       listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused,
-      changeBgPlayerZindex,autoHandleBackKey,onBackPressed
+      changeBgPlayerZindex,autoHandleBackKey,
+      onBackPressed,onKeyDown,descendantFocusability
     }
   }
 })

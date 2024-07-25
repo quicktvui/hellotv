@@ -11,7 +11,7 @@
 </template>
 
 <script lang="ts">
-import { useESEventBus, useESLog } from "@extscreen/es3-core"
+import { useESEventBus, useESLog, ESKeyEvent } from "@extscreen/es3-core"
 import {defineComponent} from "@vue/runtime-core";
 import {ref} from "vue";
 import TopBtnsView from "../../components/top-btns-view.vue";
@@ -66,6 +66,10 @@ export default defineComponent({
       waterfallTabs.value?.onESDestroy()
     }
 
+    const onKeyDown = ({ keyCode }: ESKeyEvent) => {
+      waterfallTabs.value?.onKeyDown({keyCode})
+    }
+
     function onBackPressed() {
       waterfallTabs.value?.onBackPressed()
     }
@@ -79,6 +83,7 @@ export default defineComponent({
       onESPause,
       onESDestroy,
       onESRestart,
+      onKeyDown,
       onBackPressed
     }
   }

@@ -41,7 +41,7 @@ const bgPlayerRef = ref()
 const tabRef = ref<QTITab>()
 const loading = ref(true)
 const configs = ref<Partial<IrankingConfig>>({});
-const showIndex = ref(2)
+const initShowIndex = ref(0)
 
 const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
   if(pageNo > 0) return//没有分页数据
@@ -55,7 +55,7 @@ const onTabPageChanged = (pageIndex: number, data: any) => {
   if(isInited){
     rankingUi.changeData({ pageIndex, sectionIndex:0, itemIndex:0 }, bgPlayerRef.value)
   }else{
-    if(pageIndex===showIndex.value){
+    if(pageIndex===initShowIndex.value){
       isInited = true
       rankingUi.changeData({ pageIndex, sectionIndex:0, itemIndex:0 }, bgPlayerRef.value)
     }
@@ -71,8 +71,8 @@ defineExpose({
 
       rankApi.getTabData().then(res=>{
         const tab: QTTab = {
-          defaultFocusIndex: showIndex.value,
-          defaultIndex: showIndex.value,
+          defaultFocusIndex: initShowIndex.value,
+          defaultIndex: initShowIndex.value,
           itemList: transRankingTabList(res, rankApi.getConfig())
         }
         tabRef.value?.initTab(tab)

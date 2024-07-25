@@ -1,6 +1,6 @@
 import fullIcon from '../../assets/ic_media_full_button_normal.png'
 import fullIconf from '../../assets/ic_media_full_button_focused.png'
-import vipIconf from '../../assets/my/vip_f.png'
+// import vipIconf from '../../assets/my/vip_f.png'
 // import logo2 from '../../assets/ic_seekbar.png'
 
 import { IvideoDes } from './types'
@@ -17,7 +17,10 @@ export const videos = [
 export const getDefaultVideoData = (title:string):IvideoDes => {
   return {
     title: title, id: tUid.cleateId(),
-    des: `${title};${title};${title};${title};${title};${title};${title};${title};`,
+    des: `${title};${title};${title};${title};${title};${title};${title};${title};
+    ${title};${title};${title};${title};${title};${title};${title};${title};`,
+    status: '已完结', playNumber: 1000,
+    actors: '灶门炭治郎：花江夏树 灶门称豆子：鬼头明里 我妻善逸：下野纮 嘴平伊之助：松冈祯丞 富冈义勇：樱井孝宏fdjlsa',
     tags: [
       { id: 1, txt: '8.1分', gap: 10, color: 'red' },
       { id: 2, txt: '剧情', mode: 'tag', gap: 10, color: 'orangered', bgColor:'rgba(228, 120, 19, 0.1)', borderColor:'rgba(236, 11, 11, 0.1)' },
@@ -28,13 +31,13 @@ export const getDefaultVideoData = (title:string):IvideoDes => {
     ],
     actions: [
       { id: 1, txt: '全屏观看', type: 1, action: '1', icon: fullIcon, iconf: fullIconf },
-      { id: 2, txt: '视频详情', type: 1, action: '2', icon: fullIcon, iconf: fullIconf, gradientBg:{colors:['#00C7FF','#0057FF'], cornerRadii4: [9, 9, 9, 9],orientation:6},gradientBgf:{colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6} },
-      { id: 3, txt: '热门电影榜', type: 1, action: '3', icon: fullIcon, iconf: fullIconf },
-      { 
-        id: 4, txt: '开通会员', type: 2, icon: vipIconf, action: '4',
-        gradientBg: {colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6},
-        vipDuration: '月度会员', price: 100, oPrice: 200
-      },
+      { id: 2, txt: '视频详情', type: 1, action: '2', router:{name:'d2Introduction'}, icon: fullIcon, iconf: fullIconf, gradientBg:{colors:['#00C7FF','#0057FF'], cornerRadii4: [9, 9, 9, 9],orientation:6},gradientBgf:{colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6} },
+      { id: 3, txt: '热门电影榜', type: 1, action: '3', router:{name:'ranking'}, icon: fullIcon, iconf: fullIconf },
+      // { 
+      //   id: 4, txt: '开通会员', type: 2, icon: vipIconf, action: '4',
+      //   gradientBg: {colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6},
+      //   vipDuration: '月度会员', price: 100, oPrice: 200
+      // },
       // { 
       //   id: 4, txt: '开通会员', type: 3, img: logo2, action: '4',
       // }

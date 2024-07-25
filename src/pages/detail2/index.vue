@@ -51,15 +51,13 @@ const clickActionFn = (actionItem)=>{
   if(actionItem.action === IvideoDesActions.fullScreen){
     clearTimeout(timerOutId)
     isShowDes.value = false
-  }
-  if(actionItem.action === IvideoDesActions.des){}
-  if(actionItem.action === IvideoDesActions.ranking){
+  } else if(actionItem.router){
+    const currentPlay = detail2Ui.getCurrentPlay()?.videoData||{}
     router.push({
-      name: 'ranking',
-      params: {}
+      name: actionItem.router.name,//'d2Introduction',
+      params:{...currentPlay, ...(actionItem.router.params||{})}
     })
   }
-  if(actionItem.action === IvideoDesActions.vip){}
 }
 defineExpose({
   onESCreate(params){

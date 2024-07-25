@@ -1,5 +1,6 @@
 import { RequestManager } from "../request/RequestManager";
 import { IrankingConfig, IrankingTabItem, rankingTypes, IrankingMoreContent } from "./types";
+import { tUid } from '../../tools/common'
 
 export const imgs = ["http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170700015.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170900046.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171100011.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171500023.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170300055.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170500026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230522181700013.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170800035.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171000032.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171100050.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164100051.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230317114200036.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164800025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165000026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165800057.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320170000045.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164000026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230317114300029.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164700025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164900027.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165800007.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165900054.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323155800049.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323155900025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160000053.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160100058.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160300026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160400041.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140400007.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140500013.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329154400033.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140600032.png"]
 const getImg = ()=>{
@@ -52,14 +53,14 @@ export class RankBaseApi {
     
     if(pageIndex === 0){
       return {
-        id: 'rankingContent'+pageIndex, type: rankingTypes.sort,
+        id: tUid.cleateId()+'rankingContent'+pageIndex, type: rankingTypes.sort,
         moreList: [
           {
-            id: 'rankingSortContent_'+pageIndex+'1', rankName: '',
+            id: tUid.cleateId()+'rankingSortContent_'+pageIndex+'1', rankName: '',
             list: new Array(10).fill(1).map((_,index)=>{
               const pimg = getImg()
               return {
-                id: 'rankingSortContentItem_'+ pageIndex + '1' + index,
+                id: tUid.cleateId()+'rankingSortContentItem_'+ pageIndex + '1' + index,
                 previewImg: pimg,
                 previewVedio: index===0?'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4':'',
                 poster: pimg,
@@ -80,14 +81,14 @@ export class RankBaseApi {
       }
     }
     return {
-      id: 'rankingContent'+pageIndex, type: rankingTypes.more,//102 680
+      id: tUid.cleateId()+'rankingContent'+pageIndex, type: rankingTypes.more,//102 680
       moreList: ['会员榜','翻剧榜','国创榜','电影榜','电视剧榜','纪录片榜','综艺榜'].map((mlItem,mlIndex)=>{
         return {
-          id: 'rankingMoreContent_' + pageIndex+mlIndex, rankName: mlItem,
+          id: tUid.cleateId()+'rankingMoreContent_' + pageIndex+mlIndex, rankName: mlItem,
           list: new Array(10).fill(1).map((_,index)=>{
             const pimg = getImg()
             return {
-              id: 'rankingMoreContentItem_' + pageIndex+mlIndex+ index,
+              id: tUid.cleateId()+'rankingMoreContentItem_' + pageIndex+mlIndex+ index,
               previewImg: pimg, previewVedio: '',
               poster: pimg,
               bgTags: [{id:'1',txt:'会员抢先'}],
