@@ -87,6 +87,7 @@ export class Detail2Base {
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-1-1'+index, _type: posterTypes.bigBtn,
                     title: `第${index}集`, poster: '', videoUrl: videos[index%4],
+                    subTitle: 'subTitle',
                     videoData: getDefaultVideoData('福尔摩斯小姐：伦敦厄运'+index)
                   })
                 })

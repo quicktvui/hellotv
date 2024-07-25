@@ -105,6 +105,9 @@ class Detail2Ui {
   
   selectionSpace = 0
 
+  private prevSelectTabIndex=-1
+  private prevSelectTab2Index=-1
+  private currentPlayPath:any[] = []
   selectTabIndex = 0
   selectTab2Index = 0
   selectTabListIndex = 0
@@ -120,8 +123,19 @@ class Detail2Ui {
     this.monitors.delete(fn)
   }
   $emit(selectTabListIndex = 0){
-    this.selectTabListIndex = selectTabListIndex
-    this.monitors.forEach(fn=>fn(this.playList))
+    const playPath = [this.selectTabIndex,this.selectTab2Index,selectTabListIndex]
+    if(playPath.join()!=this.currentPlayPath.join()){
+
+      this.selectTabListIndex = selectTabListIndex
+      this.monitors.forEach(fn=>fn(this.playList))
+
+      this.prevSelectTabIndex = this.selectTabIndex
+      this.prevSelectTab2Index = this.selectTab2Index
+      this.currentPlayPath = playPath
+    }
+  }
+  isChangedTab(){
+    return this.prevSelectTabIndex!==this.selectTabIndex || this.prevSelectTab2Index!==this.selectTab2Index
   }
   changePlayList(newList:any[]){
     this.playList = newList

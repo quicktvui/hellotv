@@ -73,11 +73,13 @@ defineExpose({
     }else{
       starTime()
     }
+    return false
   },
   onKeyUp (keyEvent){
     if(!isShowDes.value){
       return D2VideoRef.value?.onKeyUp(keyEvent)
     }
+    return false
   },
   onBackPressed (){
     if(!isShowDes.value){
@@ -86,7 +88,6 @@ defineExpose({
         isShowDes.value = true
         starTime()
       }
-      return true
     }else{
       router.back()
     }
@@ -110,7 +111,7 @@ defineExpose({
   top: 0.01px;
   width: 1920px;
   height: 1080px;
-  background-color: rgba(0,0,0,0.1);
+  background-color: rgba(0,0,0,0.8);
   z-index: 2;
 }
 .d2_loading_box{
