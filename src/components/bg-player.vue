@@ -12,7 +12,7 @@
     <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
       <qt-view sid="bg-player" class="bg_player_box"
         :clipChildren="true" :focusable="false" name='home_player'
-        :gradientBackground="bgPlayerType==2? 
+        :gradientBackground="bgPlayerType==2?
         {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [0, 0, 0, 0]}:
         {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
         :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
@@ -24,12 +24,13 @@
             :player-left="playerLeft"
             :player-top="playerTop"
             :clipChildren="false"
+            :is-show-player-controller="true"
             @onPlayerPlaying="onVideoPlayerPlaying"
             @onPlayerCompleted="onVideoPlayerCompleted"
             @onPlayerInitialized="onPlayerInitialized"/>
         </qt-view>
         <!--  -->
-        <qt-view class="item_player_focus_bg" 
+        <qt-view class="item_player_focus_bg"
           :style="{width:(bgPlayerType==2? playerWidth: playerWidth + 30) + 'px',
           height:(bgPlayerType==2? playerHeight: playerHeight + 20) + 'px',
           left: bgPlayerType==2? playerLeft : playerLeft - 15,
@@ -37,11 +38,11 @@
           :focusable="bgPlayerType==2?false:true" :enableFocusBorder="true" @click="onClickCellItem">
           <bg-player-img ref="itemCellBgImgRef" class="item_cell_bg_img" :clipChildren="false"
             :borderRadius="bgPlayerType==2?0:20"
-            :focusable="false" :width="(bgPlayerType==2? playerWidth: playerWidth + 30)" 
+            :focusable="false" :width="(bgPlayerType==2? playerWidth: playerWidth + 30)"
             :height="(bgPlayerType==2? playerHeight: playerHeight + 20)" :transitionTime="600"/>
         </qt-view>
         <!-- 背景视频遮罩 -->
-        <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2" 
+        <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"
           :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"/>
         <!-- 小窗播放列表 -->
         <qt-view class="item_cell_list_front"
@@ -79,15 +80,15 @@
     </div>
     <qt-view class="bg_player_video_info" :focusable="false" :visible="videoInfo.isShow && zIndex < 1">
       <qt-view class="bgvi_t" :focusable="false" >
-        <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false" 
+        <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false"
           class="bgvi_t_text" :duplicateParentState="true" :text="`${videoInfo.score} ${videoInfo.sort}`" />
         <span class="bgvi_t_tag" :focusable="false" v-if="videoInfo.tag?true:false">{{ videoInfo.tag }}</span>
       </qt-view>
-      <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false" 
-        class="bgvi_b_text" :duplicateParentState="true" 
+      <qt-text autoWidth gravity="left|top" :lines="2" :maxLines=2 :fontSize="30" :focusable="false"
+        class="bgvi_b_text" :duplicateParentState="true"
         :text="`${videoInfo.desc}`" />
       <qt-view class="bgvi_btn" :focusable="true" name="bgvi_btn" :nextFocusName="{ left: 'list_section' }" @click="toDetail">
-        <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false" 
+        <qt-text autoWidth gravity="center" :lines="1" :fontSize="30" :focusable="false"
           class="bgvi_btn_text" :duplicateParentState="true" text="看全集" />
       </qt-view>
     </qt-view>
