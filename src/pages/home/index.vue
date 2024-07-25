@@ -66,6 +66,10 @@ export default defineComponent({
       waterfallTabs.value?.onESDestroy()
     }
 
+    function onBackPressed() {
+      waterfallTabs.value?.onBackPressed()
+    }
+
     return {
       waterfallTabs,
       onESCreate,
@@ -75,6 +79,7 @@ export default defineComponent({
       onESPause,
       onESDestroy,
       onESRestart,
+      onBackPressed
     }
   }
 })
