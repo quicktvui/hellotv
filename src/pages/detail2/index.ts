@@ -226,6 +226,9 @@ class Detail2Ui {
     this.tabSid = ''
     this.tab2Sid = ''
     this.tabListSid = ''
+    this.prevSelectTabIndex =-1
+    this.prevSelectTab2Index =-1
+    this.currentPlayPath = []
   }
 }
 export const detail2Ui = new Detail2Ui()

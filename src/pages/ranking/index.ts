@@ -291,17 +291,22 @@ class RankingUi {
   private catchRawValue:Map<number, IrankingMoreContent> = new Map()
   private prevIndexStr:string = ''
 
-  playBg(data){
-    this.bgPlayerRef.initPlayBg(data.previewImg)
-    this.bgPlayerRef.showCoverImmediately()
-    this.bgPlayerRef.stopIfNeed()
-    if(data.previewVedio){
-      this.bgPlayerRef.play({
-        cover: data.previewImg,
-        id: data._id,
-        isRequestUrl: false,
-        url: data.previewVedio
-      })
+  playBg(data, isSetImg=true){
+    if(data){
+      if(isSetImg){
+        this.bgPlayerRef.initPlayBg(data.previewImg)
+      }
+      this.bgPlayerRef.initPlayBg(data.previewImg)
+      this.bgPlayerRef.showCoverImmediately()
+      this.bgPlayerRef.stopIfNeed()
+      if(data.previewVedio){
+        this.bgPlayerRef.play({
+          cover: data.previewImg,
+          id: data._id,
+          isRequestUrl: false,
+          url: data.previewVedio
+        })
+      }
     }
   }
   updateCurrent(rwaData:IrankingContentItem, section){
@@ -381,11 +386,16 @@ class RankingUi {
     // this.bgPlayerRef.reset()
     this.bgPlayerRef.pause()
     this.bgPlayerRef.stop()
+    const itemData = this.tabRef?.getPageSection(this.showPageIndex, 0);
+    if(itemData){
+      this.bgPlayerRef.initPlayBg(itemData.previewImg)
+    }
   }
   reStart(){
-    // this.bgPlayerRef.start()
+    // this.bgPlayerRef?.resume()
+    // this.bgPlayerRef?.start()
     const itemData = this.tabRef?.getPageSection(this.showPageIndex, 0);
-    this.playBg(itemData)
+    this.playBg(itemData, false)
   }
 
   clear(){
