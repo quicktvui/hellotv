@@ -77,7 +77,7 @@
         </qt-view>
       </qt-view>
     </div>
-    <qt-view class="bg_player_video_info" :focusable="false" :visible="videoInfo.isShow">
+    <qt-view class="bg_player_video_info" :focusable="false" :visible="videoInfo.isShow && zIndex < 1">
       <qt-view class="bgvi_t" :focusable="false" >
         <qt-text autoWidth gravity="left|center" :lines="1" :fontSize="30" :focusable="false" 
           class="bgvi_t_text" :duplicateParentState="true" :text="`${videoInfo.score} ${videoInfo.sort}`" />

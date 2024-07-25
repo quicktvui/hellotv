@@ -25,6 +25,7 @@
       :tabContentResumeDelay="300"
       :useDiff=false
       sid='homeTabs'
+      :autoHandleBackKey="autoHandleBackKey"
       :custom-pool="{ name: 'home' }"
       :custom-item-pool="{ name: 'homeItems' }"
       @onTabPageChanged="onTabPageChanged"
@@ -125,6 +126,7 @@ import MyTemplates from '../../my/MyTemplates.vue'
 // @ts-ignore
 import myDataManager from '../../my/index.ts'
 import shortVideoSection from "../../shortVideo/component/short_video_section.vue";
+import { useESRouter } from "@extscreen/es3-router"
 
 const TAG = "WATERFALL-TABS"
 
@@ -171,6 +173,7 @@ export default defineComponent({
     const log = useESLog()
     const launch = useLaunch()
     const toast = useESToast()
+    const router = useESRouter()
     const deviceManager = useESDevice()
     const globalApi = useGlobalApi()
     const tabRef = ref<QTITab>()
@@ -195,6 +198,7 @@ export default defineComponent({
     let isCelling = ref(false)
     let isOnEsStop = ref(false)
     let isBgPlayerFront = ref(false)
+    let autoHandleBackKey = ref(true)
 
     function onESCreate(params) {
       isOneTime = true
@@ -566,7 +570,7 @@ export default defineComponent({
               playData, 0, width < 1920 ? 732 : 0,  width < 1920 ? 220 : 0, mediaInterceptor
             )
             bg_player.value?.delayShowPlayer()
-            changeBgPlayerZindex(pageIndex)
+            changeBgPlayerZindex('front')
           }
         }
         else if (sectionData && sectionData.isSwitchCellBg === '1') {
@@ -657,12 +661,34 @@ export default defineComponent({
         }, 300)
       }
     }
-    const changeBgPlayerZindex = (pageIndex: number) => {
-      let currentTabItem = tabItemList[pageIndex]
-      if(currentTabItem._id == 'short_video2'){
-        
+    let delayPlayerShowFrontTimer: any = -1
+    const changeBgPlayerZindex = (type: string) => {
+      clearTimeout(delayPlayerShowFrontTimer)
+      let curTabIndex = tabRef.value?.getCurrentPageIndex()??0
+      if(type == 'front'){
+        let currentTabItem = tabItemList[curTabIndex]
+        if(currentTabItem._id == 'short_video2'){
+          delayPlayerShowFrontTimer = setTimeout(() => {
+            autoHandleBackKey.value = false
+            bg_player.value.zIndex = 999
+            isBgPlayerFront.value = true
+          },8000)
+        }
+      }else if(type == 'after'){
+        bg_player.value.zIndex = 0
+        isBgPlayerFront.value = false
+        autoHandleBackKey.value = true
+        changeBgPlayerZindex('front')
       }
+      
     } 
+    const onBackPressed = () => {
+      if(isBgPlayerFront.value){
+        changeBgPlayerZindex('after')
+        return
+      }
+      router.back() 
+    }
 
     return {
       waterfall_tab_root,
@@ -699,7 +725,7 @@ export default defineComponent({
       onTabPageSectionAttached,
       delayStopPlayer,
       listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused,
-      changeBgPlayerZindex
+      changeBgPlayerZindex,autoHandleBackKey,onBackPressed
     }
   }
 })
