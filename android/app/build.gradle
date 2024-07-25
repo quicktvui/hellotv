@@ -110,7 +110,7 @@ dependencies {
 
     implementation 'com.github.bumptech.glide:glide:4.9.0'
     implementation 'eskit.sdk.support:player-manager:3.1.4-beta3'
-    implementation "com.extscreen:hippy4tv-support:1.7.1921-beta5"
+    implementation "com.extscreen:hippy4tv-support:1.7.1921-beta6"
     implementation 'eskit.sdk.support:ui-support:2.1.65-beta15'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 }
