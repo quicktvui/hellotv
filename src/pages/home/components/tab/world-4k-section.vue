@@ -4,6 +4,7 @@
            :clipPadding="false" >
     <qt-list-view class="world-4k-section-list-css" horizontal :infiniteParams='{
         scrollOffset:253,
+        minChildScale:0.86
     }'
                   flexStyle="${style}"
                   list="${itemList}"
