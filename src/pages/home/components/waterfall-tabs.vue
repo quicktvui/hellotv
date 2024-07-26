@@ -145,6 +145,7 @@ export default defineComponent({
       default: true
     }
   },
+  emits: ["changeBgPlayerZindex"],
   setup(props, context) {
     const focusBgColor = ThemeConfig.tabContentBgGradientFocusColor
     const focusTextColor = ThemeConfig.tabContentFocusColor
@@ -505,11 +506,12 @@ export default defineComponent({
           }
           launch.launch(obj)
         }else if(currentTabItem._id == 'short_video2'){
+          isBgPlayerFront.value = true
           clearTimeout(delayPlayerShowFrontTimer)
           context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
           autoHandleBackKey.value = false
           bg_player.value.zIndex = 999
-          isBgPlayerFront.value = true
+          
         }
         return
       }
