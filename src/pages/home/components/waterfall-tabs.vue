@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root" :descendantFocusability="descendantFocusability"
+  <qt-view class="waterfall-tab-root-css" :clipChildren="false" ref="waterfall_tab_root"
       :clipPadding="false">
       <waterfall-background ref="wTabBg"/>
       <!-- 背景播放及小窗播放组件 -->
@@ -11,7 +11,7 @@
     </div>
 
     <qt-tabs
-      ref="tabRef" :visible="!isBgPlayerFront"
+      ref="tabRef" :visible="bgPlayerLevel == 'after'"
       :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
       tabNavBarClass="qt-tabs-waterfall-tab-css"
       tabPageClass="qt-tabs-waterfall-css"
@@ -145,7 +145,7 @@ export default defineComponent({
       default: true
     }
   },
-  emits: ["changeBgPlayerZindex"],
+  emits: ["changeBgPlayerLevel"],
   setup(props, context) {
     const focusBgColor = ThemeConfig.tabContentBgGradientFocusColor
     const focusTextColor = ThemeConfig.tabContentFocusColor
@@ -198,10 +198,9 @@ export default defineComponent({
     let delayResumeTimer: any = -1
     let isCelling = ref(false)
     let isOnEsStop = ref(false)
-    let isBgPlayerFront = ref(false)
+    let bgPlayerLevel = ref('after')
     let autoHandleBackKey = ref(true)
     let currentPlayerIndex = ref(0)
-    let descendantFocusability = ref(1)
 
     function onESCreate(params) {
       isOneTime = true
@@ -245,7 +244,7 @@ export default defineComponent({
     }
 
     function onESStop() {
-      changeBgPlayerZindex('after')
+      restoreBgPlayerLevelState('after')
       isOnEsStop.value = true
       bg_player.value?.pause()
       bg_player.value?.stop()
@@ -258,7 +257,7 @@ export default defineComponent({
     }
 
     function onESDestroy() {
-      changeBgPlayerZindex('after')
+      restoreBgPlayerLevelState('after')
       bg_player.value?.reset()
       delayStopPlayer()
       myDataManager.clear()
@@ -506,11 +505,8 @@ export default defineComponent({
           }
           launch.launch(obj)
         }else if(currentTabItem._id == 'short_video2'){
-          isBgPlayerFront.value = true
           clearTimeout(delayPlayerShowFrontTimer)
-          context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
-          autoHandleBackKey.value = false
-          bg_player.value.zIndex = 999
+          restoreBgPlayerLevelState('front')
         }
         return
       }
@@ -587,7 +583,7 @@ export default defineComponent({
               playData, 0, width < 1920 ? 732 : 0,  width < 1920 ? 220 : 0, obj.playType??1, mediaInterceptor
             )
             bg_player.value?.delayShowPlayer()
-            changeBgPlayerZindex('front')
+            changeBgPlayerLevel('front')
           }
         }
         else if (sectionData && sectionData.isSwitchCellBg === '1') {
@@ -612,7 +608,7 @@ export default defineComponent({
       currentPlayerIndex.value = 0
       bg_player.value?.pause()
       bg_player?.value.keepPlayerInvisible(true)
-      changeBgPlayerZindex('after')
+      changeBgPlayerLevel('after')
       myDataManager.updateData()
       if(pageIndex === myHistory.tabPageIndex){
         myHistory.updateData(tabRef)
@@ -631,7 +627,7 @@ export default defineComponent({
         bg_player.value?.stop()
       }, 2100)
     }
-
+    // 一行滚动 short_video 加载数据回调
     const listSectionLoadMore = async (pageNo: number, sectionIndex: number, tabIndex: number, pageIndex: number) => {
       let data = await globalApi.getShortVideoPageData('mock数据',pageNo,10)
       if(data.length > 0){
@@ -676,6 +672,7 @@ export default defineComponent({
         }
       }
     }
+    // 处理短视频列表focus事件
     const dealwithListSectionItemFocused = (pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
       let currentTabItem = tabItemList[pageIndex]
       if(item.name == 'list_section_item' && (currentTabItem._id == 'short_video' || currentTabItem._id == 'short_video2')){
@@ -695,7 +692,7 @@ export default defineComponent({
             isShow: true
           })
         }else if (currentTabItem._id == 'short_video2') {
-          changeBgPlayerZindex('after')
+          changeBgPlayerLevel('after')
         }
         delayDealwithplayerTimer = setTimeout( () => {
           bg_player.value.playMediaItemByIndex(itemIndex)
@@ -703,29 +700,32 @@ export default defineComponent({
       }
     }
     let delayPlayerShowFrontTimer: any = -1
-    const changeBgPlayerZindex = (type: string) => {
-      clearTimeout(delayPlayerShowFrontTimer)
+    // 改变bgplayer 层级
+    const changeBgPlayerLevel = (type: string) => {
       if(type == 'front'){
         let curTabIndex = tabRef.value?.getCurrentPageIndex()??0
         let currentTabItem = tabItemList[curTabIndex]
         if(currentTabItem._id == 'short_video2'){
+          clearTimeout(delayPlayerShowFrontTimer)
           delayPlayerShowFrontTimer = setTimeout(() => {
-            context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
-            autoHandleBackKey.value = false
-            bg_player.value.zIndex = 999
-            isBgPlayerFront.value = true
+            restoreBgPlayerLevelState(type)
           },8000)
         }
       }else if(type == 'after'){
-        bg_player.value.zIndex = 0
-        isBgPlayerFront.value = false
-        autoHandleBackKey.value = true
-        changeBgPlayerZindex('front')
-        context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
+        restoreBgPlayerLevelState(type)
+        changeBgPlayerLevel('front')
       }
     }
+    // 改变bgplayer层级  公共改变bgplayer层级状态
+    const restoreBgPlayerLevelState = (type: string) => {
+      clearTimeout(delayPlayerShowFrontTimer)
+      bgPlayerLevel.value = type
+      bg_player.value!.bgPlayerLevel = type
+      autoHandleBackKey.value = type == 'after' ? true : false
+      context.emit("changeBgPlayerLevel", bgPlayerLevel.value)
+    }
     const onBackPressed = () => {
-      if(isBgPlayerFront.value){
+      if(bgPlayerLevel.value == 'front'){
         let isMenuShow = bg_player.value.isMenuShow()
         if(isMenuShow){
           bg_player.value.onBackPressed()
@@ -734,13 +734,13 @@ export default defineComponent({
         let curTabIndex = tabRef.value?.getCurrentPageIndex()??0
         let listSID = tabRef.value?.getPageSection(curTabIndex,0)!.listSID
         VirtualView.call(listSID,'requestChildFocus',[currentPlayerIndex.value])
-        changeBgPlayerZindex('after')
+        changeBgPlayerLevel('after')
         return
       }
       router.back()
     }
     const onKeyDown = (keyEvent :ESKeyEvent):boolean => {
-      if(isBgPlayerFront.value){
+      if(bgPlayerLevel.value == 'front'){
         let isMenuShow = bg_player.value.isMenuShow()
         if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && !isMenuShow){
           let index = bg_player.value.getPlayingMediaIndex()
@@ -754,7 +754,7 @@ export default defineComponent({
             currentPlayerIndex.value = 0
             toast.showToast('已经是第一个')
           }
-          return
+          return true
         }
         if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_DOWN  && !isMenuShow){
           let index = bg_player.value.getPlayingMediaIndex()
@@ -768,7 +768,7 @@ export default defineComponent({
             currentPlayerIndex.value = 19
             toast.showToast('已经是最后一个')
           }
-          return
+          return true
         }
         if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_CENTER){
           if(bg_player.value.onKeyDown(keyEvent)){
@@ -776,16 +776,18 @@ export default defineComponent({
           }
         }
       }
+      return true
     }
 
     const onKeyUp = (keyEvent:ESKeyEvent):boolean=>{
-      if(isBgPlayerFront.value){
+      if(bgPlayerLevel.value == 'front'){
         if(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_CENTER){
           if(bg_player.value.onKeyUp(keyEvent)){
             return true
           }
         }
       }
+      return true
     }
 
     return {
@@ -823,8 +825,8 @@ export default defineComponent({
       onTabPageSectionAttached,
       delayStopPlayer,
       listSectionLoadMore, multilevelTabLoadMore, dealwithListSectionItemFocused,
-      changeBgPlayerZindex,autoHandleBackKey,isBgPlayerFront,
-      onBackPressed,onKeyDown,onKeyUp,descendantFocusability
+      changeBgPlayerLevel,autoHandleBackKey,bgPlayerLevel,restoreBgPlayerLevelState,
+      onBackPressed,onKeyDown,onKeyUp
     }
   }
 })

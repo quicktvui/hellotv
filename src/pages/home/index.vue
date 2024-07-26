@@ -1,8 +1,8 @@
 <template>
   <div class="home-root-css" ref="root">
-    <waterfall-tabs ref="waterfallTabs" @changeBgPlayerZindex="changeBgPlayerZindex">
+    <waterfall-tabs ref="waterfallTabs" @changeBgPlayerLevel="changeBgPlayerLevel">
       <template #buttonsHeader>
-        <top-btns-view :logo-right="true" down-sid="tabNavBarSid" :visible="!isBgPlayerFront">
+        <top-btns-view :logo-right="true" down-sid="tabNavBarSid" :visible="bgPlayerLevel == 'after'">
         </top-btns-view>
       </template>
     </waterfall-tabs>
@@ -34,7 +34,7 @@ export default defineComponent({
   setup(props, context) {
     const waterfallTabs = ref()
     const esEventBus = useESEventBus()
-    let isBgPlayerFront = ref(false)
+    let bgPlayerLevel = ref('after')
     function onESCreate(params) {
       waterfallTabs.value?.onESCreate(params)
     }
@@ -76,12 +76,12 @@ export default defineComponent({
       waterfallTabs.value?.onBackPressed()
     }
 
-    function changeBgPlayerZindex(isShow:boolean) {
-      isBgPlayerFront.value = isShow
+    function changeBgPlayerLevel(type:string) {
+      bgPlayerLevel.value = type
     }
 
     return {
-      waterfallTabs,isBgPlayerFront,changeBgPlayerZindex,
+      waterfallTabs,bgPlayerLevel,changeBgPlayerLevel,
       onESCreate,
       onESStart,
       onESResume,
