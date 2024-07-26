@@ -12,9 +12,9 @@
     <div class='bg_player' sid='default_bg_parent' :opacity="defaultBgParentOpacity">
       <qt-view sid="bg-player" class="bg_player_box"
         :clipChildren="true" :focusable="false" name='home_player'
-        :gradientBackground="bgPlayerType==2?
+        :gradientBackground="showBgColor?(bgPlayerType==2?
         {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [0, 0, 0, 0]}:
-        {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}"
+        {type: 0, shape: 0,colors: ['#0D1F41', '#1B2143'],cornerRadii4: [20, 20, 20, 20]}):undefined"
         :style="{width:playerBoxWidth + 'px',height:playerBoxHeight + 'px'}">
         <qt-view :style="{width: (playerBoxWidth) + 'px',height:(playerBoxHeight) + 'px'}"
           v-if="playerInit" :focusable="false" :fillParent="true" class="playerBox" :clipChildren="false">
@@ -125,7 +125,10 @@ export default defineComponent({
     defaultBgParentOpacity:{
       type:Number, default: 0
     },
-    borderRadius: Number
+    borderRadius: Number,
+    showBgColor:{
+      type:Boolean, default:true
+    }
   },
   setup(props,ctx) {
     const router = useESRouter()

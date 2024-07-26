@@ -4,6 +4,7 @@
     class="bg_player" ref="bgPlayerRef" :clipChildren="false" 
     :defaultBgParentOpacity="1"
     :border-radius="8"
+    :showBgColor="false"
   />
   <qt-tabs
     ref="tabRef" sid="rankingTabsSid"
@@ -36,6 +37,7 @@ import type {
 } from "@quicktvui/quicktvui3";
 // @ts-ignore
 import { transRankingTabList, pageHeight, pageWidth, rankingUi } from './index.ts'
+// import { useESRouter } from '@extscreen/es3-router';
 
 const bgPlayerRef = ref()
 const tabRef = ref<QTITab>()
@@ -84,6 +86,12 @@ defineExpose({
       })
     })
   },
+  onESStop(){
+    rankingUi.stop()
+  },
+  onESRestart(){
+    rankingUi.reStart()
+  },
   onESDestroy(){
     rankingUi.clear()
   }
@@ -110,7 +118,7 @@ defineExpose({
 .ranking_page {
   width: 1920px;
   height: 1080px;
-  background-color: transparent;
+  background-color: #0E0E0E;
   /* #0E0E0E */
 }
 .bg_player {

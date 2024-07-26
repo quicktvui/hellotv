@@ -37,7 +37,7 @@
 </script>
 <style scoped>
 .rtv_info {
-  width: 636px;
+  width: 630px;
   height: 560px;
   background-color: transparent;
 }

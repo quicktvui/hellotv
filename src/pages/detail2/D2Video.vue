@@ -7,7 +7,7 @@
   </div>
 </template>
 <script lang='ts' setup>
-import { onMounted, ref } from 'vue';
+import { onBeforeUnmount, ref } from 'vue';
 import mediaDefPlayer from '../../components/media/media-def-player.vue'
 import { defList,PlayMenuNameFlag } from '../../components/media/adapter/ControlDataAdapter'
 // @ts-ignore
@@ -45,12 +45,15 @@ const initPlay = (playList) => {
 }
 detail2Ui.$on((playList=[]) => {
   if(detail2Ui.isChangedTab()){
-    console.log('lsj--initPlay')
     initPlay(playList)
   } else {
-    console.log('lsj--playMediaItemByIndex')
     PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
   }
+})
+onBeforeUnmount(()=>{
+  PlayerManagerRef.value?.pause()
+  PlayerManagerRef.value?.stop()
+  // PlayerManagerRef.value?.release()
 })
 defineExpose({
   onKeyDown(keyEvent): boolean {
