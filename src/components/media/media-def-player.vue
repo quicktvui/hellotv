@@ -204,10 +204,9 @@ export default defineComponent({
     function playMediaItemByIndex(index: number) {
       if (!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
     }
-    function getPlayingMediaIndex() {
-      if (!BuildConfig.isLowEndDev) playerManager.value?.getPlayingMediaIndex()
+    function getPlayingMediaIndex():number {
+      return  playerManager.value!.getPlayingMediaIndex()
     }
-
 
     function setFullWindow(){
       playerManager.value?.setFullWindow()
