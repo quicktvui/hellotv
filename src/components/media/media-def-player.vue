@@ -87,7 +87,8 @@ export default defineComponent({
     const playerListRef = ref(playerList)
     let playerViewList = []
     if(props.isShowPlayerController){
-      playerViewList = [markRaw(h(MediaManagerView,{menuList:props.menuList}))]
+      const view = h(MediaManagerView,{menuList:props.menuList})
+      playerViewList = [markRaw(view.type)]
     }
     let playerViewListRef = ref(playerViewList)
     let progressTimer: NodeJS.Timeout
@@ -100,6 +101,7 @@ export default defineComponent({
     // })
     const isMenuShow =  ():boolean=>{
       const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
+      console.log("XRG===mRef",mRef)
       return mRef.isViewShow()
     }
 
