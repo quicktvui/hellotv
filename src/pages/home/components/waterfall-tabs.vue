@@ -328,7 +328,7 @@ export default defineComponent({
           obj.sid = 'bg_player_replace_child_sid'
           obj.playerWidth = tabId == 'short_video2' ? 1920 : 1140
           obj.playerHeight = tabId == 'short_video2' ? 1080 : 640
-          obj.playType = tabId == 'short_video2' ? 2 : 1
+          obj.playType = 2
           obj.itemIndex = 0
           for (let i = 0; i < itemList.length; i++) {
             const el = itemList[i];
@@ -336,7 +336,7 @@ export default defineComponent({
               id: el.id,
               title: el.title,
               cover: el.poster,
-              url: tabId == 'short_video2'? [{playUrl:el.url,definition:"1"}] : el.url,
+              url: [{playUrl:el.url,definition:"1"}],
               isRequestUrl:false,
               tag: tabId == 'short_video2'? '' : el.videoInfo.tag ??'',
               score: tabId == 'short_video2'? '' : el.videoInfo.score ??'',
@@ -504,6 +504,12 @@ export default defineComponent({
             item: item
           }
           launch.launch(obj)
+        }else if(currentTabItem._id == 'short_video2'){
+          clearTimeout(delayPlayerShowFrontTimer)
+          context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
+          autoHandleBackKey.value = false
+          bg_player.value.zIndex = 999
+          isBgPlayerFront.value = true
         }
         return
       }
@@ -677,29 +683,22 @@ export default defineComponent({
         currentShortVideoPlayUrl.value = item.url
         clearTimeout(delayDealwithplayerTimer)
         bg_player.value.initPlayBg(item.poster)
+        bg_player.value.showCoverImmediately()
+        bg_player.value.stopIfNeed()
         if(currentTabItem._id == 'short_video'){
-          bg_player.value.showCoverImmediately()
-          bg_player.value.stopIfNeed()
           bg_player.value.setVideoInfo({
-            // desc:  currentTabItem._id == 'short_video2' ? '' : item.videoInfo.desc,
-            // score: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.score,
-            // sort: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.sort,
-            // tag: currentTabItem._id == 'short_video2' ? '' : item.videoInfo.tag,
             desc:  item.videoInfo.desc,
             score: item.videoInfo.score,
             sort: item.videoInfo.sort,
             tag: item.videoInfo.tag,
             isShow: true
           })
-          delayDealwithplayerTimer = setTimeout( () => {
-            bg_player.value.play(item)
-          }, 300)
         }else if (currentTabItem._id == 'short_video2') {
           changeBgPlayerZindex('after')
-          delayDealwithplayerTimer = setTimeout( () => {
-            bg_player.value.playMediaItemByIndex(itemIndex)
-          }, 300)
         }
+        delayDealwithplayerTimer = setTimeout( () => {
+          bg_player.value.playMediaItemByIndex(itemIndex)
+        }, 300)
       }
     }
     let delayPlayerShowFrontTimer: any = -1
@@ -729,12 +728,12 @@ export default defineComponent({
         let isMenuShow = bg_player.value.isMenuShow()
         if(isMenuShow){
           bg_player.value.onBackPressed()
-        }else{
-          let curTabIndex = tabRef.value?.getCurrentPageIndex()??0
-          let listSID = tabRef.value?.getPageSection(curTabIndex,0)!.listSID
-          VirtualView.call(listSID,'requestChildFocus',[currentPlayerIndex.value])
-          changeBgPlayerZindex('after')
+          return
         }
+        let curTabIndex = tabRef.value?.getCurrentPageIndex()??0
+        let listSID = tabRef.value?.getPageSection(curTabIndex,0)!.listSID
+        VirtualView.call(listSID,'requestChildFocus',[currentPlayerIndex.value])
+        changeBgPlayerZindex('after')
         return
       }
       router.back()
