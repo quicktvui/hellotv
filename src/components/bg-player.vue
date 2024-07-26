@@ -179,6 +179,7 @@ export default defineComponent({
       isShow: false
     })
     let lifeCycle = ""
+    let play_type = ref(1)
     onMounted((()=>{
       esEventBus.on("bg-player-life-cycle",updateLifeCycle)
     }))
@@ -188,26 +189,26 @@ export default defineComponent({
         esEventBus.off("bg-player-life-cycle")
       }
     }
-    const playAtIndex = (index : number)=> {
+    const playAtIndex = (index : number, playType = 1)=> {
       let list = recordPlayerList
       currentPlayIndex.value = index
       if(list && list.length > index && index > -1){
         currentPlayIndex.value = index
         let item = list[index]
-
-        play(item)
+        console.log("111",list)
+        console.log("",playType)
+        if(playType == 2) play2(list)
+        else  play(item)
         if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       }else{
         log.e('BG-PLAYER',`playAtIndex error list size = 0,index ${index} `)
       }
     }
     const doChangeParent = (cellReplaceSID : string, playerType:number, boxWidth:number, boxHeight:number,playerWidth1:number,
-      playerHeight1:number,playerListData:any, playIndex:number,pLeft: number, pRight: number,interceptor?:ESIPlayerInterceptor) => {
-        // leftNum.value = playerType == 2 ? 0 : 15
-        // topNum.value = playerType == 2 ? 0 : 10
+      playerHeight1:number,playerListData:any, playIndex:number,pLeft: number, pRight: number,playType:number,interceptor?:ESIPlayerInterceptor) => {
         playerLeft.value = pLeft
         playerTop.value = pRight
-        // toast.showToast(playerLeft.value+'wowo'+playerTop.value)
+        play_type.value = playType??1
         mediaInterceptor = interceptor
         clearTimeout(delayShowTimer)
         bgPlayerType.value = playerType
@@ -219,7 +220,6 @@ export default defineComponent({
         if(!playerInit.value){
           playerInit.value = true
           delayToPlay += 1699
-          // log.e('BG-PLAYER',`doChangeParent 首次初始化播放器`)
         }
         let item0 = playerListData[0]
         setVideoInfo(item0)
@@ -229,7 +229,7 @@ export default defineComponent({
           initComponent(playerListData,playerType)
           setSize(boxWidth,boxHeight,playerWidth1,playerHeight1)
           if (lifeCycle !== "onESStop"){
-            playAtIndex(playIndex)
+            playAtIndex(playIndex, playType)
           }
         },delayToPlay)
     }
@@ -268,7 +268,7 @@ export default defineComponent({
       if(delayShowTimer) clearTimeout(delayShowTimer)
       if(delayShowItemCellBgImgTimer) clearTimeout(delayShowItemCellBgImgTimer)
       recordPlayerList = JSON.parse(JSON.stringify(playerListData))
-      if(!playerIsInitialized.value) initPlayer();
+      if(!playerIsInitialized.value && play_type.value == 1) initPlayer();
 
       if(playerType == CoveredPlayerType.TYPE_CELL){
         setPlayMediaListMode(3)
@@ -387,6 +387,30 @@ export default defineComponent({
       playerManagerRef.value?.playMediaList(playList);
       playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
     }
+    // 走播放器媒体列表相关播放模式
+    const play2 =(list: any) => {
+      const playList:ESMediaItemList = playerManagerRef.value?.initPlayData([],3,[mediaInterceptor])
+      playList.value?.playMediaList(playList);
+      setTimeout(() => {
+        loadMoreMediaList(0,list)
+        playMediaItemByIndex(0)
+      }, 200);
+    }
+    const loadMoreMediaList = (start:number, list:any) => {
+      playerManagerRef.value?.loadMoreMediaList(start,list)
+    }
+    const playMediaItemByIndex = (index:number) => {
+      playerManagerRef.value?.playMediaItemByIndex(index)
+    }
+
+    const getPlayingMediaIndex = (): number => {
+      return playerManagerRef.value?.getPlayingMediaIndex()
+    }
+
+    const isMenuShow = (): boolean => {
+      return playerManagerRef.value?.isMenuShow()
+    }
+
     const release = () => {
       log.e('BG-PLAYER',`release called`)
       if(!BuildConfig.isLowEndDev) playerManagerRef.value?.release()
@@ -497,11 +521,13 @@ export default defineComponent({
       router.push({name: 'detail2'})
     }
     const onKeyDown = (keyEvent :ESKeyEvent):boolean => {
-
       return playerManagerRef.value?.onKeyDown(keyEvent)
     }
     const onKeyUp = (keyEvent :ESKeyEvent):boolean => {
       return playerManagerRef.value?.onKeyUp(keyEvent)
+    }
+    const onBackPressed = () => {
+      playerManagerRef.value?.onBackPressed()
     }
     return {
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,
@@ -515,7 +541,8 @@ export default defineComponent({
       initComponent, setSize, showCoverImmediately,
       playAtIndex,doChangeParent,bgPlayerType,listInit,pauseOnCoverShow,isAnyPlaying,stopIfNeed,
       keepPlayerInvisible,zIndex,
-      setVideoInfo,toDetail,onKeyDown,onKeyUp
+      setVideoInfo,toDetail,onKeyDown,onKeyUp,
+      loadMoreMediaList,playMediaItemByIndex,getPlayingMediaIndex,isMenuShow,onBackPressed
     };
   },
 });

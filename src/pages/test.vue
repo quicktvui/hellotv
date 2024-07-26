@@ -81,11 +81,13 @@ export default defineComponent({
       {
       id:'1532310053293928449',
       title:'111特斯拉自动驾驶遭遇“水土不服”？懂车帝原创全面评测Model 3',
-      subTitle:'2020年 12月 17日完结 ｜ 100万+播放',
       cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
-      url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
-        definition:"1"}],
-      isRequestUrl:true
+      url:[{
+        playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
+        definition:"1"
+      }
+      ],
+      isRequestUrl:false
     },
       {
         id:'1532309801724030977',
@@ -94,7 +96,7 @@ export default defineComponent({
         cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
         url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4",
           definition:"1"}],
-        isRequestUrl:true
+        isRequestUrl:false
       },
       {
         id:'1532309549910470658',

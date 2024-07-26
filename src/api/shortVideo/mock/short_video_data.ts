@@ -151,7 +151,13 @@ export default [
     corner: "角标 10",
     redirectType: 1,
     action: 'esapp://action/start?es_pkg=es.tv.huan.hellotv&from=es.tv.huan.hellotv&splash=0&args={"params":{"mediaId":"","startPosition":"NaN"},"url":"series_view"}',
-    innerArgs: '{"params":{"mediaId":"","startPosition":"NaN"},"url":"series_view"}'
+    innerArgs: '{"params":{"mediaId":"","startPosition":"NaN"},"url":"series_view"}',
+    videoInfo: {
+      tag: '首播',
+      score: '9.2分',
+      sort: '原创/文化/人文/历史',
+      desc: '“中华文明视频索引”《如果国宝会说话》，是由中宣部指导、中央广播电视总台、国家文物局联合摄···'
+    }
   }
 ]
 
