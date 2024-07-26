@@ -3,7 +3,7 @@
   <div class="rtc_video_box" :focusable="false" :type="rankingContentTypes.info" flexStyle="${style}">
     <RankTabVideoInfo :focusable="false"/>
     <div class="rtc_video_shadow" :focusable="false">
-      <!-- <img src="../../../assets/ranking/shadow_bg.png" class="rtc_video_shadow_img" :focusable="false"/> -->
+      <img src="../../../assets/ranking/shadow_bg.png" class="rtc_video_shadow_img" :focusable="false"/>
     </div>
   </div>
   
