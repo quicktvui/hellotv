@@ -112,6 +112,9 @@ export default defineComponent({
       }else{
         playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
       }
+      if (!playDatas || playDatas.length === 0){
+        playerManager.value?.playMediaList(list);
+      }
       return list
     }
 
