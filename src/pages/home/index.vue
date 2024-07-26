@@ -52,7 +52,6 @@ export default defineComponent({
     function onESResume() {
       esEventBus.emit("bg-player-life-cycle","onESResume")
       waterfallTabs.value?.onESResume()
-      waterfallTabs.value?.onESResume()
     }
 
     function onESStop() {
@@ -63,14 +62,13 @@ export default defineComponent({
     function onESDestroy() {
       esEventBus.emit("bg-player-life-cycle","onESDestroy")
       waterfallTabs.value?.onESDestroy()
-      waterfallTabs.value?.onESDestroy()
     }
 
-    const onKeyDown = ({ keyCode }: ESKeyEvent) => {
-      waterfallTabs.value?.onKeyDown({keyCode})
+    const onKeyDown = (keyEvent: ESKeyEvent) => {
+      waterfallTabs.value?.onKeyDown(keyEvent)
     }
-    const onKeyUp = ({ keyCode }: ESKeyEvent) => {
-      waterfallTabs.value?.onKeyUp({keyCode})
+    const onKeyUp = (keyEvent: ESKeyEvent) => {
+      waterfallTabs.value?.onKeyUp(keyEvent)
     }
 
     function onBackPressed() {

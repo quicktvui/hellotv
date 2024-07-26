@@ -14,10 +14,6 @@
                   makeChildVisibleType="center"
                   :enableSelectOnFocus="true"
                   >
-<!--      setSelectChildPosition="${defaultSelectP}"
-                  singleSelectPosition="${defaultSelectP}"
-                  autoSelectPosition="${defaultSelectP}"
-                  -->
       <world-4k-list-item :type="1"/>
     </qt-list-view>
   </tv-item>
