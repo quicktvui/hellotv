@@ -204,6 +204,11 @@ export default defineComponent({
     function playMediaItemByIndex(index: number) {
       if (!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
     }
+    function getPlayingMediaIndex() {
+      if (!BuildConfig.isLowEndDev) playerManager.value?.getPlayingMediaIndex()
+    }
+
+
     function setFullWindow(){
       playerManager.value?.setFullWindow()
     }
@@ -287,6 +292,7 @@ export default defineComponent({
       playMediaList,
       loadMoreMediaList,
       setPlayMediaListMode,
+      getPlayingMediaIndex,
       start,
       pause,
       resume,
