@@ -2,9 +2,10 @@ import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
 import { QTWaterfallSectionType, QTWaterfallItemType } from "@quicktvui/quicktvui3";
-import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabListItem } from '../../api/details2/types'
+import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabListItem,IvideoParams,IvideoDes,Id2BaseSection } from '../../api/details2/types'
 import { tabTypes, posterTypes } from '../../api/details2/types'
 import { getPosterConfig } from '../../components/Hposter/configs'
+import d2Api from '../../api/details2/index'
 
 export const D2SelectionsSectionTypes = {
   selection: 1, more: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST
@@ -98,10 +99,15 @@ export const getBlankSection = (height = 0, space = 0) => {
 export type TposterType = ReturnType<typeof getSelectionPoster>;
 export type TselectionTabType = ReturnType<typeof getSelectionSectionTabs>;
 
+interface IpathLinked {
+  index:number;
+  next?:IpathLinked
+}
 class Detail2Ui {
 
-  private playList:any[] = []
-  private monitors = new Set<(arg:any[])=>void>()
+  vdata?:IvideoDes// 详情页主视频信息
+  playList:Id2BaseSection[] = []
+  private monitors = new Set<(list:any[],vdata?:IvideoDes)=>void>()
   
   selectionSpace = 0
 
@@ -111,34 +117,79 @@ class Detail2Ui {
   selectTabIndex = 0
   selectTab2Index = 0
   selectTabListIndex = 0
+  tabPath = new Map<number, IpathLinked>()
 
   tabSid = ''
   tab2Sid = ''
   tabListSid = ''
 
-  $on(fn:(arg:any[])=>void){
+  /**
+   * 设置初始详情页数据
+   * @param vParams 
+   */
+  async setVideo(vParams: IvideoParams){
+    const vData = await d2Api.getDetailVideoData(vParams)
+    this.vdata = vData
+    const selectionList = await d2Api.getMediaSelectionList(vData)
+    this.playList = selectionList
+
+    // 通过 vData.id 查询所在tab位置并设置初始位置
+    this.selectTabIndex = 0
+    this.selectTab2Index = 0
+    this.selectTabListIndex = 0
+    
+    this.setTabPath()
+  }
+
+  setTabPath(){
+    this.tabPath.set(this.selectTabIndex, {
+      index: this.selectTabIndex,
+      next: {
+        index: this.selectTab2Index,
+        next: {
+          index: this.selectTabListIndex
+        }
+      }
+    })
+  }
+  
+  $on(fn:(list:Id2BaseSection[],vdata?:IvideoDes)=>void){
     this.monitors.add(fn)
   }
-  $off(fn:(arg:object)=>void){
+  $off(fn:(list:Id2BaseSection[],vdata?:IvideoDes)=>void){
     this.monitors.delete(fn)
   }
-  $emit(selectTabListIndex = 0){
+  $emit(){
+    this.monitors.forEach(fn=>fn(this.playList,this.vdata))
+  }
+
+  /**
+   * 切换视频
+   */
+  changeVideo(selectTabListIndex){
     const playPath = [this.selectTabIndex,this.selectTab2Index,selectTabListIndex]
     if(playPath.join()!=this.currentPlayPath.join()){
 
       this.selectTabListIndex = selectTabListIndex
-      this.monitors.forEach(fn=>fn(this.playList))
+      this.$emit()
 
       this.prevSelectTabIndex = this.selectTabIndex
       this.prevSelectTab2Index = this.selectTab2Index
       this.currentPlayPath = playPath
+      this.setTabPath()
     }
   }
+  
   isChangedTab(){
     return this.prevSelectTabIndex!==this.selectTabIndex || this.prevSelectTab2Index!==this.selectTab2Index
   }
-  changePlayList(newList:any[]){
-    this.playList = newList
+  addPlayList(newList:any[] = []){
+    this.playList = this.playList.concat(newList)
+  }
+  changePlayList(newList?:any[]){
+    if(newList){
+      this.playList = newList
+    }
   }
   getCurrentPlay(){
     return this.playList[this.selectTabListIndex]
@@ -188,7 +239,7 @@ class Detail2Ui {
   }
   getShowTabList(data:ItabListItem){
     const section = getBlankSection(0, this.selectionSpace)
-    section.type = D2SelectionsSectionTypes.selection
+    section.type = D2SelectionsSectionTypes.selection//1007 vue-section
 
     if(data){
       section._id = data.id
@@ -208,6 +259,12 @@ class Detail2Ui {
         }
         section.decoration.bottom = dSectionTitleBottom
       }
+    }
+    if(data.isSelectionTab){
+      section.type = 1007
+      section.decoration.left=0
+      section.style.height = 270
+      section.style.minHeight = 270
     }
     
     this.changePlayList(section.itemList)
@@ -229,6 +286,8 @@ class Detail2Ui {
     this.prevSelectTabIndex =-1
     this.prevSelectTab2Index =-1
     this.currentPlayPath = []
+    this.vdata = undefined
+    this.tabPath = new Map<number, IpathLinked>()
   }
 }
 export const detail2Ui = new Detail2Ui()

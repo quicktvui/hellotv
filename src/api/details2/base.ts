@@ -2,7 +2,7 @@ import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
 import { RequestManager } from "../request/RequestManager";
-import {IDetail2Config,IAnyobj, Id2TopData, IvideoDes,posterTypes,tabTypes} from './types'
+import {IDetail2Config, Id2TopData, IvideoDes,posterTypes,tabTypes,IvideoParams,ImediaSelection,Id2BaseSection} from './types'
 // @ts-ignore
 import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs,TposterType } from '../../pages/detail2/index.ts'
 import {
@@ -11,7 +11,8 @@ import {
   ESPlayerInterceptResult
 } from "@extscreen/es3-player"
 import { ESMediaItem } from "@extscreen/es3-player-manager"
-import { getDefaultVideoData, videos } from './mock'
+import { getMockVideoData } from './mock'
+import { tUid } from '../../tools/common'
 
 import homeIcon from '../../assets/ic_header_home.png'
 import homeIconf from '../../assets/ic_header_home_focus.png'
@@ -28,7 +29,7 @@ const delayFn = ()=>{
 }
 export class Detail2Base {
   requestManager: RequestManager | undefined;
-  pageData: IAnyobj | undefined;
+  pageData: {[k:string]:any} | undefined;
 
   init(...params: any[]): Promise<any> {
     this.requestManager = params[0]
@@ -38,7 +39,7 @@ export class Detail2Base {
    * 加载初始化数据
    * @param routerParams 当前页面的路由参数对象
    */
-  async initPageData(routerParams: IAnyobj): Promise<any> {
+  async initPageData(routerParams:object): Promise<any> {
     await delayFn()
     return {}
   }
@@ -65,54 +66,54 @@ export class Detail2Base {
     }
   }
   /**
-   * 获取视频介绍信息数据
+   * 获取视频详情数据
    */
-  async getVideoDes(data:TposterType):Promise<IvideoDes>{
-    // console.log(data.videoData.id)
-    return data.videoData
+  async getDetailVideoData(data: IvideoParams):Promise<IvideoDes>{
+    // console.log(data.videoData.id) todo:通过参数id获取详情视频数据
+    const res = getMockVideoData(0)
+    return res
   }
 
-  async getSelectionsData():Promise<QTWaterfallSection[]>{
+  /**
+   * 获取视频选集列表信息，支持分页
+   * @param vdata 视频数据
+   * @param pageNo 选集分页的第几页
+   * @param pageSize 选集分页的每页的条数
+   */
+  async getMediaSelectionList(vdata:IvideoDes, pageNo=1, pageSize=10):Promise<ImediaSelection[]>{
+    // console.log(vdata.id)
+    let isLast = Math.floor(vdata.selectionTotalSize / pageSize) <= pageNo;
+    let size = isLast ? vdata.selectionTotalSize - (pageNo * pageSize) : pageSize;
 
+    return new Array(size).fill(1).map((_, index)=>{
+      return {
+        showVip: pageNo===2,
+        vip: { enable: pageNo===2, text: 'VIP' },
+        title: '第' + (pageNo * pageSize + index) + '集',
+        videoData: getMockVideoData(index)
+      }
+    });
+  }
+  
+  /**
+   * 获取选集/系列/更多信息等标签页，配置数据
+   */
+  async getSelectionsData():Promise<QTWaterfallSection[]>{
     return [
       getSelectionSection({
         id: 'd2SelectionSection1',
         tabList: [
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-1', name: '选集',
-            tabList:[
-              getSelectionSectionTabs({
-                id: 'd2SelectionSection1-1-1', name: '1~20', type: tabTypes.btn,
-                itemList: new Array(10).fill(1).map((_,index)=>{
-                  return getSelectionPoster({
-                    id: 'd2SelectionSection1-1-1'+index, _type: posterTypes.bigBtn,
-                    title: `第${index}集`, poster: '', videoUrl: videos[index%4],
-                    subTitle: 'subTitle',
-                    videoData: getDefaultVideoData('福尔摩斯小姐：伦敦厄运'+index)
-                  })
-                })
-              }),
-              getSelectionSectionTabs({
-                id: 'd2SelectionSection1-1-2', name: '20~40', type: tabTypes.btn,
-                itemList: new Array(10).fill(1).map((_,index)=>{
-                  const toIndex = index+20
-                  return getSelectionPoster({
-                    id: 'd2SelectionSection1-1-2'+toIndex, _type: posterTypes.bigBtn,
-                    title: `第${toIndex}集`, poster: '', videoUrl: videos[index%4],
-                    videoData: getDefaultVideoData('福尔摩斯小姐：伦敦厄运'+toIndex)
-                  })
-                })
-              })
-            ]
+            id: 'd2SelectionSection1-1', name: '选集', isSelectionTab:true
           }),
           getSelectionSectionTabs({
             id: 'd2SelectionSection1-2', name: '系列',
             itemList: new Array(10).fill(1).map((_,index)=>{
               return getSelectionPoster({
                 id: 'd2SelectionSection1-2'+index, _type: posterTypes.bigBtn,
-                title: `复仇者联盟系列: ${index}`, videoUrl: videos[(index+1)%4],
+                title: `复仇者联盟系列: ${index}`,
                 poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                videoData: getDefaultVideoData(`复仇者联盟系列: ${index}`)
+                videoData: getMockVideoData(index)
               })
             })
           }),
@@ -123,10 +124,9 @@ export class Detail2Base {
                 id: 'd2SelectionSection1-3-1', name: '预告花絮', type: tabTypes.smallText,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
-                    id: 'd2SelectionSection1-3-1'+index,
-                    title: '预告花絮'+index, videoUrl: videos[(index+2)%4],
+                    id: 'd2SelectionSection1-3-1'+index, title: '预告花絮'+index,
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                    videoData: getDefaultVideoData('预告花絮'+index)
+                    videoData: getMockVideoData(index)
                   })
                 })
               }),
@@ -134,10 +134,9 @@ export class Detail2Base {
                 id: 'd2SelectionSection1-3-2', name: '精彩看点', type: tabTypes.smallText,
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
-                    id: 'd2SelectionSection1-3-2'+index,
-                    title: '精彩看点 '+index, videoUrl: videos[(index+3)%4],
+                    id: 'd2SelectionSection1-3-2'+index, title: '精彩看点 '+index,
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                    videoData: getDefaultVideoData('精彩看点'+index)
+                    videoData: getMockVideoData(index)
                   })
                 })
               }),
@@ -151,10 +150,9 @@ export class Detail2Base {
         itemList: new Array(10).fill(1).map((_,index)=>{
           return getSelectionPoster({
             id: 'd2SelectionSection2'+index,
-            title: (index===2?'福尔摩斯小姐：伦敦厄运 Enola Holmes':'权力的游戏')+index,
-            subTitle: '2024-02-08上映', videoUrl: videos[index%4],
+            title: '权力的游戏'+index, subTitle: '2024-02-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-            videoData: getDefaultVideoData(index===2?'福尔摩斯小姐：伦敦厄运 Enola Holmes':'权力的游戏')
+            videoData: getMockVideoData(index)
           })
         })
       }),
@@ -164,30 +162,41 @@ export class Detail2Base {
         itemList: new Array(10).fill(1).map((_,index)=>{
           return getSelectionPoster({
             id: 'd2SelectionSection3'+index,
-            title: '生化危机: 死亡岛'+index,
-            subTitle: '2024-03-08上映', videoUrl: videos[index%4],
+            title: '生化危机: 死亡岛'+index, subTitle: '2024-03-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png',
-            videoData: getDefaultVideoData('生化危机: 死亡岛'+index)
+            videoData: getMockVideoData(index)
           })
         })
       })
     ]
   }
 
-  getMediaDataOfInterceptor(vData:TposterType){
+  /**
+   * 视频播放地址鉴权转换函数
+   */
+  getMediaDataOfInterceptor(vData:Id2BaseSection){
     return {
-      id: vData.id,
-      title: vData.title.text||'',
-      subTitle: vData.subTitle.text||'',
-      videoUrl: vData.videoUrl,
+      id: vData.videoData.id,
+      title: vData.videoData.title,
+      subTitle: vData.videoData.subTitle,
+      videoUrl: vData.videoData.vUrl,
       interceptors:[{
-        id:"d2PlayerMediaInterceptor",
+        id: tUid.cleateId('d2-interceptors'),
         type:ESPlayerInterceptorType.ES_PLAYER_INTERCEPTOR_TYPE_MEDIA_ITEM,
         async intercept(...params:Array<any>):Promise<ESPlayerInterceptResult>{
           const mediaItem = params[0] as ESMediaItem
           let mediaSourceList: ESMediaSourceList = {
             index: 0,
-            list: [{ uri: mediaItem.videoUrl, definition: 1 }]
+            list: [
+              // { uri: mediaItem.videoUrl, definition: 0 },//标清
+              { uri: mediaItem.videoUrl, definition: 1 },//标清
+              { uri: mediaItem.videoUrl, definition: 2 },//高清
+              // { uri: mediaItem.videoUrl, definition: 3 },//超清
+              // { uri: mediaItem.videoUrl, definition: 4 },//原画
+              // { uri: mediaItem.videoUrl, definition: 5 },//蓝光
+              // { uri: mediaItem.videoUrl, definition: 6 },//4k
+              // { uri: mediaItem.videoUrl, definition: 7 },//2k
+            ]
           }
           let result: ESPlayerInterceptResult = {
             result: {
@@ -201,3 +210,15 @@ export class Detail2Base {
     }
   }
 }
+
+// getSelectionSectionTabs({
+//   id: 'd2SelectionSection1-1-1', name: '1~20', type: tabTypes.btn,
+//   isSelect:true,
+//   itemList: new Array(10).fill(1).map((_,index)=>{
+//     return getSelectionPoster({
+//       id: 'd2SelectionSection1-1-1'+index, _type: posterTypes.bigBtn,
+//       title: `第${index}集`, poster: '',
+//       subTitle: 'subTitle', videoData: getDefaultVideoData(tUid.cleateId())
+//     })
+//   })
+// })

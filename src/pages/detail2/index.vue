@@ -25,7 +25,7 @@ import D2DesDrawer from './D2DesDrawer.vue'
 // @ts-ignore
 import { detail2Ui } from './index.ts'
 import api from '../../api/details2/index'
-import { IDetail2Config, IvideoDesActions } from '../../api/details2/types';
+import { IDetail2Config, IvideoDesActions,IvideoParams } from '../../api/details2/types';
 import { useESRouter } from '@extscreen/es3-router'
 
 const pConfig = ref<Partial<IDetail2Config>>({});
@@ -60,11 +60,15 @@ const clickActionFn = (actionItem)=>{
   }
 }
 defineExpose({
-  onESCreate(params){
+  onESCreate(params:IvideoParams){
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
-      isLoading.value = false
-      starTime()
+
+      detail2Ui.setVideo({id: 'd2'+Math.random()}).then(()=>{
+        isLoading.value = false
+        detail2Ui.$emit()
+        starTime()
+      })
     })
   },
   onKeyDown (keyEvent){

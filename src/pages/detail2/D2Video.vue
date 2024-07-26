@@ -25,12 +25,14 @@ const onPlayerInitialized = () => {
   playerIsInitialized.value = true
 }
 const playByIndex = (playList=[]) => {
-  PlayerManagerRef.value?.playMediaList({
-    index: detail2Ui.selectTabListIndex,
-    list: playList.map(dataItem=>{
-      return d2Api.getMediaDataOfInterceptor(dataItem)
-    })
-  });
+  if(playList.length){
+    PlayerManagerRef.value?.playMediaList({
+      index: detail2Ui.selectTabListIndex,
+      list: playList.map(dataItem=>{
+        return d2Api.getMediaDataOfInterceptor(dataItem)
+      })
+    });
+  }
 }
 
 const initPlay = (playList) => {
@@ -39,17 +41,22 @@ const initPlay = (playList) => {
     PlayerManagerRef.value?.setPlayMediaListMode(4)
     PlayerManagerRef.value?.setFullWindow()
   } else {
-    PlayerManagerRef.value.reset()
+    PlayerManagerRef.value?.reset()
   }
   playByIndex(playList)
 }
+
+let prevListLength = detail2Ui.playList.length
+
 detail2Ui.$on((playList=[]) => {
-  if(detail2Ui.isChangedTab()){
+  if(detail2Ui.isChangedTab() || prevListLength != playList.length){
     initPlay(playList)
+    prevListLength = playList.length
   } else {
     PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
   }
 })
+
 onBeforeUnmount(()=>{
   PlayerManagerRef.value?.pause()
   PlayerManagerRef.value?.stop()

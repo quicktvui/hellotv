@@ -54,7 +54,7 @@ import { detail2Ui } from '../index.ts'
 
 const emits = defineEmits(['clickAction'])
 const configs = api.getConfig()
-const dideoDesData = ref<IvideoDes>()
+const dideoDesData = ref<IvideoDes>(detail2Ui.getCurrentPlay().videoData)
 
 const getStyle = ():StyleValue=>{
   return {
@@ -83,11 +83,9 @@ const clickActionFn = (actionItem)=>{
   emits('clickAction', actionItem)
 }
 detail2Ui.$on(()=>{
-  const vData = detail2Ui.getCurrentPlay()
-  if(vData){
-    api.getVideoDes(vData).then(res=>{
-      dideoDesData.value = res
-    })
+  const newData = detail2Ui.getCurrentPlay().videoData
+  if(!dideoDesData.value || dideoDesData.value.id !== newData.id){
+    dideoDesData.value = newData
   }
 })
 </script>

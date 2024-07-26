@@ -17,6 +17,9 @@
       <template v-slot:section>
         <D2SelectionSection :type="D2SelectionsSectionTypes.selection" />
       </template>
+      <template v-slot:vue-section>
+        <D2SelectSeries />
+      </template>
     </qt-waterfall>
   </div>
 </template>
@@ -32,24 +35,22 @@ import Hposter from '../../../components/Hposter/index.vue'
 import { hPosterType } from '../../../components/Hposter/configs'
 import { VirtualView } from '@quicktvui/quicktvui3'
 import { useESRouter } from '@extscreen/es3-router';
+import D2SelectSeries from './D2SelectSeries.vue'
 
 const router = useESRouter()
 const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
 const onItemClickFn = (parentPosition, position, item, e)=> {
   if(parentPosition===2){
-    detail2Ui.$emit(e.index)
+    detail2Ui.changeVideo(e.index)
   } else if(parentPosition>2){
-    router.replace({
-        name: 'detail2',
-        params: {}
-    })
+    router.replace({ name: 'detail2', params: {} })
   }
 }
 const onItemFocusedFn = (e) => {
   if(e.parentPosition===0 && e.position !== detail2Ui.selectTabIndex){
     detail2Ui.selectTabIndex = e.position
-    
+
     const tabObj = detail2Ui.getTab2(e.item)
     //第二层tab
     waterfallData.value[1] = tabObj.tabs2Section
@@ -81,8 +82,6 @@ d2Api.getSelectionsData().then(res=>{
     res.splice(1, 0, tabObj.tabs2Section)
     //第三层tab-list
     res.splice(2, 0, tabObj.tab2ContentSection)
-
-    detail2Ui.$emit()
   }
   waterfallData.value = res
 })
