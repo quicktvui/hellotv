@@ -32,8 +32,7 @@ export default defineComponent({
     const log = useESLog()
     const toast = useESToast()
     const onItemClicked = (e)=>{
-      log.e("XRG",e)
-      toast.showToast("XRG==="+e)
+      // toast.showToast("XRG==="+e)
     }
     return {onItemClicked}
   }

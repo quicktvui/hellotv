@@ -101,7 +101,6 @@ export default defineComponent({
     // })
     const isMenuShow =  ():boolean=>{
       const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
-      console.log("XRG===mRef",mRef)
       return mRef.isViewShow()
     }
 

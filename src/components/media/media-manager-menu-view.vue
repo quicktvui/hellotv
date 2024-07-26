@@ -106,7 +106,7 @@ export default defineComponent({
   padding-left: 100px;
   right: 0;
   top:0;
-  background-color: #669966;
+  background-color: transparent;
 }
 
 .media-manager-speed-title-css {

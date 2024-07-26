@@ -511,7 +511,6 @@ export default defineComponent({
           context.emit("changeBgPlayerZindex", isBgPlayerFront.value)
           autoHandleBackKey.value = false
           bg_player.value.zIndex = 999
-          
         }
         return
       }
@@ -740,7 +739,7 @@ export default defineComponent({
       }
       router.back()
     }
-    const onKeyDown = (keyEvent :ESKeyEvent) => {
+    const onKeyDown = (keyEvent :ESKeyEvent):boolean => {
       if(isBgPlayerFront.value){
         let isMenuShow = bg_player.value.isMenuShow()
         if(keyEvent.keyCode == ESKeyCode.ES_KEYCODE_DPAD_UP && !isMenuShow){
@@ -779,10 +778,10 @@ export default defineComponent({
       }
     }
 
-    const onKeyUp = (keyEvent:ESKeyEvent)=>{
+    const onKeyUp = (keyEvent:ESKeyEvent):boolean=>{
       if(isBgPlayerFront.value){
         if(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_LEFT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_CENTER){
-          if(bg_player.value.onKeyDown(keyEvent)){
+          if(bg_player.value.onKeyUp(keyEvent)){
             return true
           }
         }
