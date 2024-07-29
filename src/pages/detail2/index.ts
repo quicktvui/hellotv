@@ -117,6 +117,7 @@ class Detail2Ui {
   selectTabIndex = 0
   selectTab2Index = 0
   selectTabListIndex = 0
+  selectionPositoin = 0//选集的位置
   tabPath = new Map<number, IpathLinked>()
 
   tabSid = ''
@@ -261,14 +262,16 @@ class Detail2Ui {
       }
     }
     if(data.isSelectionTab){
+      this.selectionPositoin = this.selectTabIndex
       section.type = 1007
       section.decoration.left=0
       section.style.height = 270
       section.style.minHeight = 270
+      this.tabListSid = section.listSID//todo
+    } else {
+      this.tabListSid = section.listSID
     }
-    
     this.changePlayList(section.itemList)
-    this.tabListSid = section.listSID
     return section
   }
   clear(){
@@ -288,6 +291,7 @@ class Detail2Ui {
     this.currentPlayPath = []
     this.vdata = undefined
     this.tabPath = new Map<number, IpathLinked>()
+    this.selectionPositoin = 0
   }
 }
 export const detail2Ui = new Detail2Ui()

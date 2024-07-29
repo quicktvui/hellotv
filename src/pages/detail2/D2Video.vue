@@ -3,7 +3,9 @@
     <media-def-player 
       ref="PlayerManagerRef" class="d2_video_media" :initPlayerWindowType="2"
       :is-show-player-controller="true" @onPlayerInitialized="onPlayerInitialized" 
-      />
+      @onPlayerPlayMedia="onPlayerPlayMedia"
+      :menuList="menuList"
+    />
   </div>
 </template>
 <script lang='ts' setup>
@@ -19,6 +21,7 @@ const menuList = [
   ...defList(),
 ]
 
+let playIndex=-1
 const PlayerManagerRef = ref()
 const playerIsInitialized = ref(false)
 const onPlayerInitialized = () => {
@@ -34,13 +37,21 @@ const playByIndex = (playList=[]) => {
     });
   }
 }
-
+const onPlayerPlayMedia = (mItem)=>{
+  const mIndex = detail2Ui.playList.findIndex(dpItem=>dpItem.videoData.id===mItem.id)
+  if(playIndex != mIndex){
+    playIndex = mIndex
+    detail2Ui.changeVideo(mIndex)
+  }
+}
 const initPlay = (playList) => {
   if (!playerIsInitialized.value) {
     PlayerManagerRef.value?.initialize()
     PlayerManagerRef.value?.setPlayMediaListMode(4)
     PlayerManagerRef.value?.setFullWindow()
   } else {
+    // PlayerManagerRef.value?.pause()
+    // PlayerManagerRef.value?.stop()
     PlayerManagerRef.value?.reset()
   }
   playByIndex(playList)
@@ -49,15 +60,20 @@ const initPlay = (playList) => {
 let prevListLength = detail2Ui.playList.length
 
 detail2Ui.$on((playList=[]) => {
-  if(detail2Ui.isChangedTab() || prevListLength != playList.length){
-    initPlay(playList)
-    prevListLength = playList.length
-  } else {
-    PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
+  if(playIndex != detail2Ui.selectTabListIndex){
+    playIndex = detail2Ui.selectTabListIndex
+    if(detail2Ui.isChangedTab() || prevListLength != playList.length){
+      // if(prevListLength>0){todo}
+      initPlay(playList)
+      prevListLength = playList.length
+    } else {
+      PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
+    }
   }
 })
 
 onBeforeUnmount(()=>{
+  playIndex =  -1
   PlayerManagerRef.value?.pause()
   PlayerManagerRef.value?.stop()
   // PlayerManagerRef.value?.release()

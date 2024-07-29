@@ -23,18 +23,25 @@ import d2Api from '../../../api/details2/index'
 // @ts-ignore
 import { detail2Ui } from '../index.ts'
 
+let catchMList:any[] = []
 let pageSize: number = 20;//每页加载多少条数据
 let totalCount: number = detail2Ui.vdata?.selectionTotalSize||0;
 const d2SelectSeries2 = ref<ESIMediaSeries>()
 const onItemClick = (ev) => {
-  console.log(ev.data, '---lsj--s-s-onItemClick')
+  // console.log(ev.data.videoData, '---lsj--s-s-onItemClick')
+  detail2Ui.changePlayList(catchMList)
+  detail2Ui.changeVideo(ev.position)
 }
 const onLoadData = (e) => {
   let page = e.page; // 要加载的页数
   if(detail2Ui.vdata){
     d2Api.getMediaSelectionList(detail2Ui.vdata, page, pageSize).then(mList=>{
-      console.log(mList, '--lsj--mlist')
       d2SelectSeries2.value?.setPageData(page, mList);
+      if(!catchMList.length){
+        catchMList = mList
+      }else{
+        catchMList = catchMList.concat(mList)
+      }
     })
   }
 }
@@ -50,11 +57,11 @@ const groupParams = {
   groupMarginLeft: 0,
   textColor: {
     normal: "#FFFFFF",
-    focused: "#FFFFFF",
-    selected: "#40b883",
+    focused: "#000000",
+    selected: "#FF5E90",
   },
   focusBackground: {
-    color: ['#40b883', '#40b883'],
+    color: ['#ffffff', '#ffffff'],
     //   orientation: 'LEFT_RIGHT',
     //   cornerRadius: [40, 40, 40, 40],
     //   padding: [34, 6]
@@ -68,10 +75,14 @@ const commonParams = {
   itemGap: 48,
   // contentHeight: 80
 }
-
+detail2Ui.$on(()=>{
+  console.log(detail2Ui.tabPath.get(detail2Ui.selectionPositoin), '--lsj-selectionPositoin')
+})
 onMounted(()=>{
   if(totalCount){
     d2SelectSeries2.value?.setInitData(totalCount,pageSize)
+    d2SelectSeries2.value?.setSelected(1)
+    d2SelectSeries2.value?.setGroupSelected(0)
   }
 })
 </script>
