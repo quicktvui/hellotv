@@ -64,7 +64,7 @@ defineExpose({
     api.initPageData(params).then(()=>{
       pConfig.value = api.getConfig()
 
-      detail2Ui.setVideo({id: 'd2'+Math.random()}).then(()=>{
+      detail2Ui.setVideo(params).then(()=>{
         isLoading.value = false
         detail2Ui.$emit()
         starTime()

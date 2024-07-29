@@ -357,7 +357,7 @@ class RankingUi {
               isRequestUrl: false,
               url: sData.previewVedio||''//"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/d477660a-3eb6-4c7f-b82b-0b61c035505c.mp4",
             }],
-            0, 723,135,1
+            0, 730,135,1
           )
         }
       }

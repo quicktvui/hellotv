@@ -39,7 +39,7 @@ export class Detail2Base {
    * 加载初始化数据
    * @param routerParams 当前页面的路由参数对象
    */
-  async initPageData(routerParams:object): Promise<any> {
+  async initPageData(routerParams:IvideoParams): Promise<any> {
     await delayFn()
     return {}
   }

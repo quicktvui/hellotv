@@ -62,7 +62,8 @@ export interface IvideoDes {
   [k:string]:any;
 }
 export interface IvideoParams {
-  id:string|number;//视频唯一id
+  packageId?:string|number;//媒资集合/包的唯一id
+  id?:string|number;//当前播放视频唯一id
 }
 
 //选集相关类型定义--------------------------------
