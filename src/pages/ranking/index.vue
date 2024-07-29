@@ -66,6 +66,7 @@ const onTabPageChanged = (pageIndex: number, data: any) => {
 
 defineExpose({
   onESCreate(params){
+    bgPlayerRef.value?.changeShadow(true)
     rankApi.initPageData(params).then(()=>{
       loading.value = false
 
