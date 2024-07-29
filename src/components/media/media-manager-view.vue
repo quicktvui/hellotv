@@ -39,6 +39,7 @@
      <!-- 底部按钮组-->
       <div class="media-manager-setting-root-css">
         <media-control-view
+          v-if="isShowList"
           ref="mediaControlViewRef"
           name="mediaControlView"
           :menu-list="menuList"
@@ -135,9 +136,6 @@ export default defineComponent({
                 'definition-view':MediaManagerMenuView,
                 'mode-view':MediaManagerMenuView,
                 MediaControlView },
-  props: {
-    menuList:Array
-  },
   setup(props, context) {
     const log = useESLog()
     const toast =useESToast()
@@ -206,6 +204,16 @@ export default defineComponent({
     // 底部菜单列表 点击位置
     let curMenuClickPosition = -1
     let bottomViewFocus = false
+    //菜单数据
+    let menuList = ref<Array<any>>()
+    //初始菜单创建标志
+    let isShowList = ref(true)
+    function setMenuList(menuL:any){
+      menuList.value = menuL
+      //初始化底部菜单列表
+      initMenuList(menuList.value)
+      isShowList.value = true
+    }
 
     /**
      * 设置 view 是否展示
@@ -224,7 +232,7 @@ export default defineComponent({
     }
     onMounted(()=>{
       //初始化底部菜单列表
-      initMenuList(props.menuList)
+      // initMenuList(menuList.value)
       //初始化进度条
       mediaManagerSeekBarRef.value?.setSeekBarMode(QTSeekBarMode.QT_SEEK_BAR_MODE_SINGLE)
       mediaManagerSeekBarRef.value?.setProgressHeight(18)
@@ -783,6 +791,9 @@ export default defineComponent({
       onPlayerPlaying,
       onPlayerPaused,
       isViewShow,
+      setMenuList,
+      menuList,
+      isShowList
     }
   }
 })

@@ -36,7 +36,7 @@ import {
   ESPlayerManager,
   useESPlayerManagerPlayModeManager
 } from "@extscreen/es3-player-manager"
-import { markRaw, ref,h } from "vue"
+import { markRaw, ref, onMounted } from "vue"
 import BuildConfig from "../../build/BuildConfig"
 import { buildMediaItemList, buildPlayData, defList } from "./adapter/ControlDataAdapter"
 import { ESDefMediaList } from "./impl/ESDefMediaList"
@@ -87,18 +87,19 @@ export default defineComponent({
     const playerListRef = ref(playerList)
     let playerViewList = []
     if(props.isShowPlayerController){
-      const view = h(MediaManagerView,{menuList:props.menuList})
-      playerViewList = [markRaw(view.type)]
+      playerViewList = [markRaw(MediaManagerView)]
     }
     let playerViewListRef = ref(playerViewList)
     let progressTimer: NodeJS.Timeout
     let playerIsInitialized = ref(false)
     let playInterceptors:Array<ESIPlayerInterceptor> | undefined
     const playModeManager = useESPlayerManagerPlayModeManager()
-    // onMounted(()=>{
-        //   const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
-        //   mRef.setShowView(true)
-    // })
+    onMounted(()=>{
+      if(props.isShowPlayerController){
+        const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
+        mRef.setMenuList(props.menuList)
+      }
+    })
     const isMenuShow =  ():boolean=>{
       const mRef:any =  playerManager.value?.getPlayerView("media-manager-view")
       return mRef.isViewShow()
