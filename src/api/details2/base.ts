@@ -75,7 +75,7 @@ export class Detail2Base {
   }
 
   /**
-   * 获取视频选集列表信息，支持分页
+   * 获取视频所在选集的列表信息，支持分页
    * @param vdata 视频数据
    * @param pageNo 选集分页的第几页
    * @param pageSize 选集分页的每页的条数
@@ -89,7 +89,7 @@ export class Detail2Base {
       return {
         showVip: pageNo===2,
         vip: { enable: pageNo===2, text: 'VIP' },
-        title: '第' + (pageNo * pageSize + index) + '集',
+        title: '第' + (pageNo * pageSize + (index+1)) + '集',
         videoData: getMockVideoData(index)
       }
     });

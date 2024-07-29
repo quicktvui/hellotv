@@ -39,7 +39,7 @@ const playByIndex = (playList=[]) => {
 }
 const onPlayerPlayMedia = (mItem)=>{
   const mIndex = detail2Ui.playList.findIndex(dpItem=>dpItem.videoData.id===mItem.id)
-  if(playIndex != mIndex){
+  if(mIndex > -1 && playIndex != mIndex){
     playIndex = mIndex
     detail2Ui.changeVideo(mIndex)
   }

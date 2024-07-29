@@ -6,6 +6,7 @@ import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabLis
 import { tabTypes, posterTypes } from '../../api/details2/types'
 import { getPosterConfig } from '../../components/Hposter/configs'
 import d2Api from '../../api/details2/index'
+import { tUid } from "../../tools/common";
 
 export const D2SelectionsSectionTypes = {
   selection: 1, more: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST
@@ -56,7 +57,6 @@ export const getSelectionSection = (data:IselectionSection):QTWaterfallSection =
 
   const section = getBlankSection(60, space-20)
   section._id = data.id
-  section.listSID = ids.selection+data.id
   section.type = D2SelectionsSectionTypes.selection
   section.itemList = (data.tabList as any)||[]
   section.decoration.top = 10
@@ -87,12 +87,12 @@ export const getSelectionMoreSection = (data:IselectionBaseSection):QTWaterfallS
 
 export const getBlankSection = (height = 0, space = 0) => {
   return {
-    _id: Math.random()+'', type: -1000, title: '',
+    _id: tUid.cleateId('_id'), type: -1000, title: '',
     titleStyle: { width: 0, height: 0, fontSize: 0, marginBottom: 0 },
     decoration: { top: 0, left: space, right: 0, bottom: 0 },
     style: { width: sWaterfallWidth - space, height, minHeight: height },
     itemList:[],
-    listSID: 'listSID'+Math.random()
+    listSID: tUid.cleateId('listSID')
   }
 }
 
@@ -113,7 +113,7 @@ class Detail2Ui {
 
   private prevSelectTabIndex=-1
   private prevSelectTab2Index=-1
-  private currentPlayPath:any[] = []
+  currentPlayPath:any[] = []
   selectTabIndex = 0
   selectTab2Index = 0
   selectTabListIndex = 0
@@ -131,24 +131,27 @@ class Detail2Ui {
   async setVideo(vParams: IvideoParams){
     const vData = await d2Api.getDetailVideoData(vParams)
     this.vdata = vData
+
     const selectionList = await d2Api.getMediaSelectionList(vData)
     this.playList = selectionList
-
-    // 通过 vData.id 查询所在tab位置并设置初始位置
-    this.selectTabIndex = 0
-    this.selectTab2Index = 0
-    this.selectTabListIndex = 0
-    
+  }
+  /**
+   * 初始化选集索引位置 
+   */
+  initIndex(tabIndex, tab2Index, listIndex){
+    this.selectTabIndex = tabIndex
+    this.selectTab2Index = tab2Index
+    this.selectTabListIndex = listIndex
+    this.currentPlayPath = [tabIndex,tab2Index,listIndex]
     this.setTabPath()
   }
-
   setTabPath(){
     this.tabPath.set(this.selectTabIndex, {
       index: this.selectTabIndex,
       next: {
         index: this.selectTab2Index,
         next: {
-          index: this.selectTabListIndex
+          index: this.selectTabListIndex,
         }
       }
     })
@@ -167,17 +170,17 @@ class Detail2Ui {
   /**
    * 切换视频
    */
-  changeVideo(selectTabListIndex){
-    const playPath = [this.selectTabIndex,this.selectTab2Index,selectTabListIndex]
+  changeVideo(stlIndex){
+    const playPath = [this.selectTabIndex,this.selectTab2Index,stlIndex]
     if(playPath.join()!=this.currentPlayPath.join()){
 
-      this.selectTabListIndex = selectTabListIndex
+      this.selectTabListIndex = stlIndex
+      this.currentPlayPath = playPath
+      this.setTabPath()
       this.$emit()
 
       this.prevSelectTabIndex = this.selectTabIndex
       this.prevSelectTab2Index = this.selectTab2Index
-      this.currentPlayPath = playPath
-      this.setTabPath()
     }
   }
   
@@ -211,10 +214,8 @@ class Detail2Ui {
   getShowTab(data:ItabListItem){
     const section = getBlankSection(0, this.selectionSpace)
     section.type = D2SelectionsSectionTypes.selection
-
     if(data){
       section._id = data.id
-      section.listSID = ids.selection+data.id
       let tabItem:ItabListItem|null = null
       if(data.tabList){
         tabItem = data.tabList[0]
@@ -244,7 +245,6 @@ class Detail2Ui {
 
     if(data){
       section._id = data.id
-      section.listSID = ids.selection+data.id
       let listItem:TposterType|null = null
       if(data.itemList){
         listItem = data.itemList[0]
@@ -267,11 +267,11 @@ class Detail2Ui {
       section.decoration.left=0
       section.style.height = 270
       section.style.minHeight = 270
-      this.tabListSid = section.listSID//todo
+      this.tabListSid = ''
     } else {
       this.tabListSid = section.listSID
+      this.changePlayList(section.itemList)
     }
-    this.changePlayList(section.itemList)
     return section
   }
   clear(){
