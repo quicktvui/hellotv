@@ -36,7 +36,7 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
   const { width, height, left } = aConfig
   return {
     _key: data.id,
-    type: 1001, // data.type || 
+    type: 1001, // data.type ||
     assetTitle: data.h_modeName,//'今天',//i < 10 ? '今天' : (i < 20 ? '一周内' : '更早'),
     decoration: {
       left,
@@ -48,25 +48,31 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
     }
   }
 }
-const imgSrc = 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750'
 
-const dContentWidth = 1570
+const dContentWidth = 1600//1550
 const dLeft = 20
 const dItemTop = 20
 const dWidth = 330
 const dHeight = 186
 const dBottomNum = 10
-const dTitleFontSize = 30
+
 const dFloatTitleFontSize = 24
-const dSubTitleFontSize = 24
+
+const dTitleFontSize = 30
 const dTitleHeight = 60
 const dTitleMarginTop = 60
-const dTitlePaddingLeft = 16
+const dTitlePaddingLeft = 10
+
 const dDeleteWidth = 176
 const dDeleteHeight = 68
 const dDeleteSize = 36
+const dTitleReactTop = 10
+const dTitleReactBottom = 3
+
+const dSubTitleFontSize = 24
 const dSubTitleHeight = 50
-const dPadding = 5
+const dPadding = 0.1
+const borderRadius = 16
 
 const getSubTitle = (data: IHistoryContentEntity) => {
   if (!data) return ''
@@ -75,7 +81,7 @@ const getSubTitle = (data: IHistoryContentEntity) => {
     if (!subTitle && data.playCount) {
       subTitle = data.playCount
       if (!isNaN(Number(data.playCount))) {
-        subTitle = `观看至${data.playCount}集`
+        subTitle = `看至第${data.playCount}集`
       }
       let progress = ''
       if (data.allTime && data.allTime > 0) {
@@ -95,10 +101,15 @@ const getSubTitle = (data: IHistoryContentEntity) => {
 const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster => {
   const { width, height, left, ratio } = aConfig
   let subTitle = getSubTitle(data)
-  let subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
-  // if (subTitle) {
-  //   subTitleHeight = Math.ceil(dSubTitleHeight * ratio)
-  // }
+  let subTitleHeight = 0//aConfig.subTitleHeight||Math.ceil(dSubTitleHeight * ratio)
+  let titleReactBottom = 0
+  if (subTitle) {
+    subTitleHeight = aConfig.subTitleHeight||Math.ceil(dSubTitleHeight * ratio)
+    titleReactBottom = dTitleReactBottom
+  }
+  const styleWidth = width + dPadding * 2
+  const mTitleHeight = subTitle?aConfig.titleHeight:aConfig.titleHeight
+  const titleBoxHeight = mTitleHeight + dTitleReactTop + titleReactBottom + (subTitle?subTitleHeight:0)
   return {
     _key: data.id,
     id: data.id,
@@ -116,7 +127,7 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       bottom: dBottomNum
     },
     focus: {
-      scale: 1.06,//1.06
+      scale: 1.006,//1.06
       enable: true
     },
     delete: {
@@ -126,19 +137,16 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
         fontSize: aConfig.deleteSize,
       }
     },
-    titleRect: [aConfig.titlePaddingLeft, 10, 0, 10],
-    titleEllipsizeMode: subTitle?3:2,
-    titleLines: subTitle?1:2,
+    titleRect: [aConfig.titlePaddingLeft, 0, aConfig.titlePaddingLeft, 0],
     title: {
       text: data.assetLongTitle,
       enable: true,
       style: {
-        width,
-        height: subTitle?aConfig.titleHeight:aConfig.titleHeight*2,
-        fontSize: aConfig.titleSize,
-      },
+        width, height: mTitleHeight, fontSize: aConfig.titleSize,
+        marginTop: dTitleReactTop, marginBottom: titleReactBottom,
+      }
     },
-    subTitleRect: [aConfig.titlePaddingLeft, 0, 0, 0],
+    subTitleRect: [aConfig.titlePaddingLeft, 0, aConfig.titlePaddingLeft, 0],
     subTitle: {
       text: subTitle,//`观看至1集 不足1%`,
       enable: !!subTitle,
@@ -150,14 +158,14 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
     },
     floatTitle: {
       text: data.description1 || '',
-      enable: true,
+      enable: !!data.description1,
       style: {
         width,
         height: aConfig.titleHeight,
         paddingLeft: aConfig.titlePaddingLeft,
         fontSize: aConfig.floatTitleSize,
       },
-      background: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 8, 8], orientation: 4 }
+      background: { colors: ['#e5000000', '#00000000'], cornerRadii4: [0, 0, 16, 16], orientation: 4 }
     },
     shimmer: {
       enable: true,
@@ -181,24 +189,24 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       }
     },
     style: {
-      width: width + dPadding * 2,
-      height: height + aConfig.titleHeight + subTitleHeight
+      width: styleWidth,
+      height: height + titleBoxHeight + dPadding
     },
+    focusStyleBg: {width: styleWidth, height: height + titleBoxHeight-borderRadius+5},
     focusTitle: {
       text: data.assetLongTitle,
       enable: true,
       style: {
-        width,
-        height: aConfig.titleHeight
+        width, height: mTitleHeight
       }
     },
-    imgCover: {
-      style: {
-        width: width,
-        height: 7,
-        marginTop: height,
-        marginLeft: dPadding,
-      }
+    titleStyle:{
+      width: styleWidth, height: titleBoxHeight,
+      marginTop: height+dPadding+1
+    },
+    titleFocusStyle:{
+      width: styleWidth, height: titleBoxHeight,
+      marginTop: height-borderRadius+dPadding+1
     }
   }
 }
@@ -231,17 +239,16 @@ const getDateType = (timeStr: string = '') => {
 }
 export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWidth: number = dContentWidth, options: Iconfig, isEdit = false) => {
   const left = options.contentSpace && options.contentSpace > 0 ? options.contentSpace : dLeft
-  const width = Math.floor((contentWidth - left) / options.contentColumn) - (left * 2);
+  const width = Math.floor((contentWidth - (30+40)) / options.contentColumn) - (left * 2);
   const ratio = width / dWidth
 
   const height = options.contentItemHeight || Math.min(Math.floor(dHeight * ratio), 350)
 
-  const titleHeight = Math.ceil(dTitleHeight * ratio)
-  const bottomNum = titleHeight + dBottomNum
-  const rows = Math.ceil(dataList.length / options.contentColumn)
-  let titleSize = Math.ceil(dTitleFontSize * ratio)
+  const titleHeight = options.contentTitleHeight || Math.ceil(dTitleHeight * ratio)
+  // const rows = Math.ceil(dataList.length / options.contentColumn)
+  let titleSize = options.contentTitleSize || Math.ceil(dTitleFontSize * ratio)
   let floatTitleSize = Math.ceil(dFloatTitleFontSize * ratio)
-  let subTitleSize = Math.ceil(dSubTitleFontSize * ratio)
+  let subTitleSize = options.contentSubTitleSize || Math.ceil(dSubTitleFontSize * ratio)
   let titleMarginTop = Math.ceil(dTitleMarginTop * ratio)
   let titlePaddingLeft = Math.ceil(dTitlePaddingLeft * ratio)
   const deleteHeight = Math.ceil(dDeleteHeight * ratio)
@@ -250,7 +257,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
 
   const configOption = {
     width, height, left, titleSize, floatTitleSize, subTitleSize, titleHeight, titleMarginTop, titlePaddingLeft,
-    deleteHeight, deleteWidth, deleteSize, ratio
+    deleteHeight, deleteWidth, deleteSize, ratio, subTitleHeight:options.contentSubTitleHeight
   }
 
   dateTypes.moreNum = 0;
@@ -259,7 +266,8 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
   const isDateType = !!dataList[0]?.playTime
   const arr: Array<QTGridViewItem> = []
 
-  const drowsHeight = height + bottomNum + dItemTop + dPadding
+  // const drowsHeight = height + titleHeight + dBottomNum + dItemTop + dPadding*2
+  let drowsHeight = 0
   let dataHeight = 0//rows * rowsHeight
   let rowsHeight = 0
 
@@ -272,7 +280,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
       }
     }
     const isCategory = !!dataItem.h_modeName//i % 10 === 0;
-    let poster: any = null
+    let poster: QTPoster|null = null
     if (isCategory) {
       poster = getContentCategoryConfig(configOption, dataItem)
     } else {
@@ -280,6 +288,10 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
     }
     poster.editMode = isEdit
     arr.push(poster)
+
+    if(!drowsHeight&&poster){
+      drowsHeight = (poster.decoration?.top||0) + (poster.decoration?.bottom||0) + (poster.style.height||0)
+    }
 
     if(i === 0 || (i % options.contentColumn == 1)){
       rowsHeight = drowsHeight

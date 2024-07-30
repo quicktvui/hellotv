@@ -87,7 +87,6 @@ defineExpose({
 
 <style>
 .h_tab {
-    /* width: 1570px; */
     height: 90px;
     background-color: transparent;
 }

@@ -90,6 +90,7 @@ defineExpose({
     width: 1500px;
     height: 100px;
     color: #666;
+    font-size: 30px;
     background-color: transparent;
 }
 
@@ -110,6 +111,7 @@ defineExpose({
     width: 300px;
     height: 60px;
     color: #666;
+    font-size: 30px;
     background-color: transparent;
 }
 

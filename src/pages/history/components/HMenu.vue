@@ -4,6 +4,7 @@
         :blockFocusDirections="blockFocusDirections"
     >
         <!-- :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" -->
+        <div class="h_menu_shadow" :gradientBackground="{colors:['#02261C','#00000000'], orientation: 6}"></div>
         <qt-view 
             class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
             :gradientBackground="cBgColor"
@@ -12,7 +13,7 @@
                 :focusable="false"></qt-text>
             <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" />
             <qt-list-view 
-                class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
+                class="menu_list" ref="listRef" sid="h_menu_list_sid" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
                 :focusable="false" :requestFocus="true"
             >
@@ -100,7 +101,7 @@ const menuItemFocusedBg = computed(()=>{
 })
 
 defineExpose({
-    async initData() {
+    async initData(fIndex:number=0) {
         mPosition = -1
         let list = await api.getMenuList().catch(()=>{
             return null
@@ -117,7 +118,9 @@ defineExpose({
         }
         if(isShow.value){
             listRef.value?.init(getMenuList(menuApiList));
-            onTabSelect({ position: 0,hasFocus:true })
+            nextTick(()=>{
+                listRef.value?.setItemFocused(fIndex)
+            })
         }
         return isShow.value
     },
@@ -130,31 +133,36 @@ defineExpose({
         listRef.value?.setItemFocused(mPosition>=0?mPosition:0)
     }
 })
-// id:tag.id,
-// typeName:tag.showType,
-// isShowScreen:false,
-// tagName:tag.tagName,
-// showName:tag.showName,
-// normalImg:tag.normalImage,
-// selectedImg:tag.selectImage,
-// focusedImg:tag.focusImage
 </script>
 <style scoped>
 .h_menu {
+    position: relative;
     width: 350px;
     height: 1080;
     display: flex;
     flex-direction: column;
     background-color: transparent;
 }
+.h_menu_shadow{
+    position: absolute;
+    right: 0.01px;
+    top: 0.01px;
+    z-index: 1;
+    width: 20px;
+    height: 1080px;
+    background-color: transparent;
+}
 .h_menu_rightTop,.h_menu_rightBootom{
     justify-content: flex-end;
 }
 .h_menu_inner {
-    width: 340px;
-    height: 1080;
     position: absolute;
-    /* background-color: #434a50; */
+    left: 0.01px;
+    top: 0.01px;
+    z-index: 2;
+    width: 310px;
+    height: 1080px;
+    position: absolute;
     background-color: transparent;
 }
 
@@ -164,6 +172,7 @@ defineExpose({
     font-size: 50px;
     margin-top: 80px;
     margin-left: 80px;
+    color: #ffffff;
     background-color: transparent;
 }
 

@@ -44,7 +44,7 @@ const dMenuWidth = 350
 const dContentHeight = 900
 const contentHeight = ref(dContentHeight)
 const dTabFilterHeight = 100
-const dContentWidth = 1570
+const dContentWidth = 1600
 const contentWidth = ref(dContentWidth)
 const isNoMenu = ref(false)
 
@@ -117,7 +117,7 @@ const setDataCallBackFn = (boo) => {
 }
 
 function onESCreate(params) {
-    HistoryMenuRef.value?.initData().then(res => {
+    HistoryMenuRef.value?.initData(Number(params.focusMenuIndex||0)).then(res => {
         if (res) {
             contentWidth.value = dContentWidth
         } else {

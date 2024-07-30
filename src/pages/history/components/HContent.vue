@@ -1,14 +1,16 @@
 <template>
   <div class="h_content" ref="hContentRef" :focusable="false" :height="pHeight" :width="pWidth"
-    :blockFocusDirections="rBlockFocusDirections" :clipChildren="false" :nextFocusName="gvNextFocusName">
-    <!-- :nextFocusName="{ up: 'h_tab_name' }" :disablePlaceholder="true" -->
+    :blockFocusDirections="rBlockFocusDirections" :clipChildren="false" >
+    <!-- :nextFocusName="{ up: 'h_tab_name' }" :disablePlaceholder="true" ['down']-->
     <qt-grid-view v-show="pageState !== pageStates.empty" class="grid_view" ref="gridViewRef" :height="pHeight"
       :width="pWidth" name="content_grid_name" @item-click="onItemClick" :clipChildren="false" :clipPadding="false"
-      :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="0,0,0,20" :pageSize="0"
-      :blockFocusDirections="['down']" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
-      @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enableSelectOnFocus="false" 
-      :enablePlaceholder="false" :requestFocus="isRequestFocus" 
-      @item-focused="onItemFocuseFn" :singleSelectPosition="singleSelectPositionNum"
+      :spanCount="pConfig.contentColumn" :areaWidth="pWidth" :focusable="false" padding="30,0,40,20" :pageSize="0"
+      :blockFocusDirections="rBlockFocusDirections" :openPage="true" :preloadNo="1" :listenBoundEvent="true" :loadMore="loadMoreFn"
+      @item-bind="onItemBind" @scroll-state-changed="onScrollStateChanged" :enableSelectOnFocus="false"
+      :enablePlaceholder="true" :requestFocus="isRequestFocus"
+      @item-focused="onItemFocuseFn" :selected="false"
+      :enableStatesOnFocus="enableStatesOnFocusArr"
+      :nextFocusName="gvNextFocusName"
     >
       <!-- @scroll-state-changed="onScrollStateChanged" -->
       <qt-view type="1001" class="content_type" :focusable="false">
@@ -16,17 +18,17 @@
           class="content_type_name" text="${assetTitle}" />
       </qt-view>
       <HContentPoster :type="10001" :clipChildren="false" />
-      <qt-text showIf="${editMode==false}" :type="1003" class="screen-right-content-no-more" gravity="center"
+      <qt-text showIf="${editMode==false}" :type="1003" class="history-right-content-no-more" gravity="center"
         :focusable="false" text="已经到底啦，按【返回键】回到顶部"></qt-text>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
       <template v-slot:loading>
-        <qt-view class="screen-right-content-more-loading" :type="1002" name="loading" :focusable="false">
-          <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false" />
+        <qt-view class="history-right-content-more-loading" :type="1002" name="loading" :focusable="false" disablePlaceholder>
+          <!-- <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false" /> -->
         </qt-view>
       </template>
 
     </qt-grid-view>
-    <qt-view v-show="isShowScreenLoading" class="screen-right-content-loading" :clipChildren="false" :focusable="false">
+    <qt-view v-show="isShowScreenLoading" class="history-right-content-loading" :clipChildren="false" :focusable="false">
       <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false" />
       <qt-text v-show="screenLoadingTxt" class="loading_txt" :text="screenLoadingTxt" gravity="center"
         :focusable="false"></qt-text>
@@ -48,7 +50,7 @@ import api from '../../../api/history/index.ts'
 import HistoryEmpty from './HistoryEmpty.vue'
 import { useESRouter } from "@extscreen/es3-router";
 import HContentPoster from './HContentPoster/index.vue'
-// import { Native } from "@extscreen/es3-vue";
+import { Native } from "@extscreen/es3-vue";
 import { IcurrentItemParams } from "../../../api/history/baseApi";
 import { Iconfig } from "../config";
 
@@ -83,18 +85,24 @@ let isInit = true
 let prevItemIndex: string | number = -1
 let isReStartload = false
 const isRequestFocus = ref(true)
-
-const gvNextFocusName = ref({up: 'h_tab_name'})
+const isEnableSelectOnFocus = ref(true)
+const gvNextFocusName = ref<any>({left: 'h_menu_list_name'})//up: 'h_tab_name',
 
 const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
 const onItemBind = () => { }
+let isLockRouter = false
+router.afterEach((to,from)=>{
+  if(to.name==='history'&&isLockRouter){
+    isLockRouter = false
+  }
+})
 const onItemClick = (arg) => {
   if (isEdit.value) {
     if (isShowScreenLoading.value) return //正在删除，防止重复点击
     isShowScreenLoading.value = true
     screenLoadingTxt.value = '正在删除...'
     api.deleteContent(preCurrentMenu, preCurrentFilter, {
-      index: arg.position,
+      index: arg.index,
       item: arg.item
     }).then(res => {
       isShowScreenLoading.value = false
@@ -119,17 +127,17 @@ const onItemClick = (arg) => {
     })
     // toast.showLongToast(arg.item._key + '--' + arg.item.type)
   } else {
-    // console.log('lsj-go-player', arg.item)
-    if (props.detailPageName) {
-      prevItemIndex = arg.item?.id//.position
+    if (props.detailPageName && !isLockRouter) {
+      isLockRouter = true
+      prevItemIndex = arg.item?.id
       router.push({
         name: props.detailPageName, //'series_view',
         params: {
-          mediaId: arg.item.metaId,
-          playId: arg.item.playCount,//第几集
-          playPosition: arg.item.currentPlayTime || 0//播放进度时间
+          pid: arg.item?.customProp.packageid,
+          keyId: arg.item?.customProp.classkeyid,
+          classId: arg.item?.customProp.classid
         }
-      });
+      })
     }
   }
 }
@@ -137,32 +145,23 @@ const onScrollStateChanged = (ev) => {
   contentScrollY = ev.offsetY
 }
 
-const dSingleSelectPositionNum = -1
-const singleSelectPositionNum = ref(dSingleSelectPositionNum)
+const dEnableStatesOnFocusArr = []
+const editEnableStatesOnFocusArr = ['selected']
+const enableStatesOnFocusArr = ref<string[]>(dEnableStatesOnFocusArr)
 let lastFocusedId = -1
 let lastFocusedPosition = -1
 const onItemFocuseFn = (arg) => {
   if (arg.hasFocus) {
     lastFocusedId = arg.item?.id
-    lastFocusedPosition = arg.position
-    
-    if(isEdit.value){
-      singleSelectPositionNum.value = arg.position
-    }
+    lastFocusedPosition = arg.index
   } else {
     lastFocusedId = -1
     lastFocusedPosition = -1
-    nextTick(()=>{
-      if(lastFocusedPosition==-1&&isEdit.value){
-        singleSelectPositionNum.value = lastFocusedPosition
-      }
-    })
   }
 }
 // 加载更多数据
 let prePageNo = 0
 const loadMoreFn = (pageNo: number) => {
-  // console.log('lsj-loadmore', pageNo,prePageNo)
   if (prePageNo === pageNo) { return }
   prePageNo = pageNo
   if (pageState.value === pageStates.noMore) {
@@ -237,6 +236,8 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   lastApiId = currentMenu?.index + '-' + currentFilter?.index
   clearTimeout(timeOutId)
   timeOutId = setTimeout(async () => {
+    // enableStatesOnFocusArr.value = editEnableStatesOnFocusArr//dEnableStatesOnFocusArr
+
     gridViewRef.value?.blockRootFocus()
     const res = await getFirstContentListApi(currentMenu, currentFilter)
     if (lastApiId == res._apiId) {
@@ -253,11 +254,12 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
           })
           isRequestFocus.value = false
           isInit = false
+          prevItemIndex = -1
         } else if (prevItemIndex != -1) {
+          prevItemIndex = -1
           const pos = res.data.findIndex(item => item.id == prevItemIndex)
           nextTick(() => {
             gridViewRef.value?.scrollToFocused(pos == -1 ? 0 : pos)
-            prevItemIndex = -1
           })
         }
       } else {
@@ -280,31 +282,44 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
     props.setDataCallBack((res.data?.length || 0) > 0)
     gridViewRef.value?.unBlockRootFocus()
     isFirst = false
+
+    // enableStatesOnFocusArr.value = dEnableStatesOnFocusArr
   }, 300);
 }
 
 defineExpose({
   setData,
-  clearData() {
-    api.clearContent(preCurrentMenu, preCurrentFilter).catch(() => { })
+  async clearData() {
+    isShowScreenLoading.value = true
+    await api.clearContent(preCurrentMenu, preCurrentFilter).catch(() => { })
     isEdit.value = false
     pageState.value = pageStates.empty
     gridDataRec!.splice(0)
+    isShowScreenLoading.value = false
+    enableStatesOnFocusArr.value = dEnableStatesOnFocusArr
+    emits('emContentClearAll')
   },
   changeEditState(boo: boolean) {
+    isEnableSelectOnFocus.value = boo
     if (isEdit.value !== boo) {
       if (boo) {
         rBlockFocusDirections.value = ['left', 'right', 'down']
-        gvNextFocusName.value = { 'up': 'clear_btn_name' }
-
-        singleSelectPositionNum.value = lastFocusedPosition
+        gvNextFocusName.value = {left: 'h_menu_list_name_no'}//up: 'clear_btn_name'
+        enableStatesOnFocusArr.value = editEnableStatesOnFocusArr
+        // @ts-ignore
+        // gridViewRef.value?.tv_list?.setItemCustomState(lastFocusedPosition, 'selected', true)
       } else {
         rBlockFocusDirections.value = []
-        gvNextFocusName.value = {up: 'h_tab_name'}
-
-        singleSelectPositionNum.value = dSingleSelectPositionNum
+        gvNextFocusName.value = {left: 'h_menu_list_name'}//up: 'h_tab_name'
+        enableStatesOnFocusArr.value = dEnableStatesOnFocusArr
+        // @ts-ignore
+        // gridViewRef.value?.tv_list?.setItemCustomState(lastFocusedPosition, 'selected', false)
+        // lastFocusedPosition
       }
       isEdit.value = boo
+      if(gridDataRec && gridDataRec.length){
+        gridDataRec[gridDataRec.length-1].editMode = boo
+      }
     }
     if (!boo && pageState.value === pageStates.empty) {
       emits('emInitNoData')
@@ -327,8 +342,10 @@ defineExpose({
     rBlockFocusDirections.value = []
   },
   reStartload(currentMenu: IcurrentItemParams, currentFilter: IcurrentItemParams) {//从详情页面返回时，有时需要重载页面数据
-    if (isReStartload) {
+    if (isReStartload && api.checkIsChangedData(currentMenu)) {
       setData(currentMenu, currentFilter, true)
+    } else {
+      prevItemIndex = -1
     }
   },
   checkFocus() {
@@ -347,8 +364,6 @@ defineExpose({
 </script>
 <style scoped>
 .h_content {
-  /* width: 1570px; */
-  /* height: 900px; */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -356,8 +371,6 @@ defineExpose({
 }
 
 .grid_view {
-  /* width: 1570px;
-    height: 900px; */
   background-color: transparent;
 }
 
@@ -373,16 +386,16 @@ defineExpose({
   background-color: transparent;
 }
 
-.screen-right-content-no-more {
-  width: 1570px;
+.history-right-content-no-more {
+  width: 1600px;
   height: 80px;
   font-size: 30px;
   color: rgba(255, 255, 255, 0.6);
   background-color: transparent;
 }
 
-.screen-right-content-more-loading {
-  width: 1570px;
+.history-right-content-more-loading {
+  width: 1600px;
   height: 80px;
   display: flex;
   align-items: center;
@@ -390,17 +403,18 @@ defineExpose({
   background-color: transparent;
 }
 
-.screen-right-content-loading {
-  width: 1570px;
-  height: 880px;
+.history-right-content-loading {
+  width: 1600px;
+  height: 980px;
   position: absolute;
-  left: 0;
-  top: 0;
+  left: 0.01px;
+  top: 0.01px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   background-color: transparent;
+  z-index: 999;
 }
 
 .loading_txt {
