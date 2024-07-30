@@ -23,9 +23,11 @@ function getRandomInt(min, max) {
 }
 export const getMockVideoData = (index:number):IvideoDes => {
   const title = titles[getRandomInt(0, titles.length)] + Math.random()
+  const vId = tUid.cleateId()+index
+  const vPackageId = tUid.cleateId('packageId')+index
   return {
-    title: title, id: tUid.cleateId()+index,
-    vUrl: videos[index % videos.length],
+    id: vId, packageId: vPackageId,
+    title: title, vUrl: videos[index % videos.length],
     vPoster: imgs[getRandomInt(0, imgs.length)],
     subTitle: '副标题'+title,
     showTime: '2024-01-10',
@@ -45,7 +47,7 @@ export const getMockVideoData = (index:number):IvideoDes => {
     actions: [
       { id: 1, txt: '全屏观看', type: 1, action: '1', icon: fullIcon, iconf: fullIconf },
       { id: 2, txt: '视频详情', type: 1, action: '2', router:{name:'d2Introduction'}, icon: fullIcon, iconf: fullIconf, gradientBg:{colors:['#00C7FF','#0057FF'], cornerRadii4: [9, 9, 9, 9],orientation:6},gradientBgf:{colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6} },
-      { id: 3, txt: '热门电影榜', type: 1, action: '3', router:{name:'ranking'}, icon: fullIcon, iconf: fullIconf },
+      { id: 3, txt: '热门电影榜', type: 1, action: '3', router:{name:'ranking', params:{vPackageId:vPackageId,vId: vId,rTypeId: '1',rType2Id:'1'}}, icon: fullIcon, iconf: fullIconf },
       // { 
       //   id: 4, txt: '开通会员', type: 2, icon: vipIconf, action: '4',
       //   gradientBg: {colors:['#FFE398','#EEB364'], cornerRadii4: [9, 9, 9, 9],orientation:6},

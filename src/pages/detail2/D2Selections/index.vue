@@ -44,7 +44,7 @@ const onItemClickFn = (parentPosition, position, item, e)=> {
   if(parentPosition===2){
     detail2Ui.changeVideo(e.index)
   } else if(parentPosition>2){
-    router.replace({ name: 'detail2', params: {} })
+    router.replace({ name: 'detail2', params: item.videoData })
   }
 }
 const onItemFocusedFn = (e) => {

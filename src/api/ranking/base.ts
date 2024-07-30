@@ -1,5 +1,5 @@
 import { RequestManager } from "../request/RequestManager";
-import { IrankingConfig, IrankingTabItem, rankingTypes, IrankingMoreContent } from "./types";
+import { IrankingConfig, IrankingTabItem, rankingTypes, IrankingMoreContent, IrankingRouteParams } from "./types";
 import { tUid } from '../../tools/common'
 
 export const imgs = ["http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170700015.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170900046.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171100011.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171500023.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170300055.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170500026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230522181700013.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170800035.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171000032.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314171100050.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164100051.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230317114200036.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164800025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165000026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165800057.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320170000045.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164000026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230317114300029.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164700025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320164900027.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165800007.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230320165900054.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323155800049.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323155900025.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160000053.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160100058.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160300026.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img5/20230323160400041.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140400007.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140500013.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329154400033.png","http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230329140600032.png"]
@@ -20,7 +20,7 @@ export class RankBaseApi {
    * 加载初始化数据
    * @param routerParams 当前页面的路由参数对象
    */
-  async initPageData(routerParams: {[k:string]:any}): Promise<any> {
+  async initPageData(routerParams: IrankingRouteParams): Promise<any> {
     return new Promise(resolve=>{
       setTimeout(() => {
         resolve({})
@@ -49,8 +49,7 @@ export class RankBaseApi {
   /**
    * 获取内容数据
    */
-  async getContentData(pageIndex: number):Promise<IrankingMoreContent>{
-    
+  async getContentData(pageIndex: number,tApiData:IrankingTabItem):Promise<IrankingMoreContent>{
     if(pageIndex === 0){
       return {
         id: tUid.cleateId()+'rankingContent'+pageIndex, type: rankingTypes.sort,

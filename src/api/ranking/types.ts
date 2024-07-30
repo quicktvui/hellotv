@@ -53,3 +53,11 @@ export interface IrankingMoreContent {
   type: Tvalues<typeof rankingTypes>;
   moreList: IrankingContent[];
 }
+
+// 路由参数
+export interface IrankingRouteParams {
+  vPackageId?:string|number,//媒资集合/媒资包的唯一id
+  vId?:string|number,//视频/媒资id
+  rTypeId?:string|number,//视频/媒资所属的排行榜类型id
+  rType2Id?:string|number,//视频/媒资所属的排行榜的二级分类id
+}
