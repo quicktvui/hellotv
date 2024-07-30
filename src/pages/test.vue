@@ -8,6 +8,7 @@
       @onPlayerCompleted="onVideoPlayerCompleted"
       @onPlayerInitialized="onPlayerInitialized"
       :is-show-player-controller="true"
+      :menu-list="menuList"
     />
     <bg-player-img ref="itemCellBgImgRef"
                    class="media-test-img-bg-css"
@@ -54,9 +55,14 @@ import { defineComponent } from "@vue/runtime-core"
 import { ESKeyCode, ESKeyEvent, useESLog, useESToast, ESKeyAction } from "@extscreen/es3-core"
 import { onMounted, onBeforeUnmount, ref } from "vue"
 import { useGlobalApi } from "../api/UseApi"
+import settingIcon from "../assets/def_media/ic_def_media_menu_setting.png"
+import settingFocusIcon from "../assets/def_media/ic_def_media_menu_setting_focus.png"
 import BgPlayerImg from "../components/bg-player-img.vue"
 import ImgTextBtnView from "../components/img-text-btn-view.vue"
-import { encodeDefinition, PlayMenuNameFlag } from "../components/media/adapter/ControlDataAdapter"
+import {
+  encodeDefinition,
+  PlayMenuNameFlag
+} from "../components/media/adapter/ControlDataAdapter"
 import { ESDefMediaList } from "../components/media/impl/ESDefMediaList"
 import MediaDefPlayer from "../components/media/media-def-player.vue"
 import { createESHomeBGPlayerMediaInterceptor } from "./home/play_interceptor/createESHomeBGPlayerMediaInterceptor"
@@ -87,7 +93,7 @@ export default defineComponent({
         definition:"1"
       }
       ],
-      isRequestUrl:false
+      isRequestUrl:true
     },
       {
         id:'1532309801724030977',
@@ -105,7 +111,7 @@ export default defineComponent({
         cover:'http://cms.hmon.tv/common/static/file/2024/05/31/ce5b63bc-5f2f-4171-871c-b709b9cb822a.png',
         url:[{playUrl:"http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/5fc2d6dd-0566-4c70-a4ba-be6e47e39252.mp4",
           definition:"1"}],
-        isRequestUrl:true
+        isRequestUrl:false
       },
       {
         id:'1532309298302431233',
@@ -130,18 +136,18 @@ export default defineComponent({
     const onFocus = (e)=>{
       const name = e.target.attributes.name
     }
-    onMounted(()=>{
-      EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
-    })
-
+    let menuList = [{type:1,nameFlag:PlayMenuNameFlag.NEXT,name:'下一个',decoration:{right:30}},
+      {type:1,nameFlag:PlayMenuNameFlag.RATE,name:'倍速 2.0x',decoration:{right:30}},
+      {type:1,nameFlag:PlayMenuNameFlag.DEFINITION,name:'标清',decoration:{right:30}},
+      {type:2,nameFlag:PlayMenuNameFlag.SETTING,iconNormal:settingIcon,iconFocus:settingFocusIcon,name:'设置'}]
+    let isSetMenuListOk = ref(false)
     const onESCreate = (params)=>{
       mediaInterceptor = createESHomeBGPlayerMediaInterceptor(globalApi)
       let imgBg = playReadData[0].cover
       setBgImage(imgBg)
-      const playList:ESMediaItemList = PlayerManagerRef.value?.initPlayData([],4,[mediaInterceptor])
+      const list = PlayerManagerRef.value?.initPlayData([],4,[mediaInterceptor])
+      PlayerManagerRef.value?.playMediaList(list);
       setSize()
-      PlayerManagerRef.value?.playMediaList(playList);
-      PlayerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       timer = setInterval(()=>{
         if (curCount > 6 && timer){
           clearInterval(timer)
@@ -245,18 +251,6 @@ export default defineComponent({
       router.back()
       return true
     }
-
-    const dispatchKeyEventFn = (keyEvent:ESKeyEvent)=>{
-      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_DOWN){
-        return true
-      }
-      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT && keyEvent.action === ESKeyAction.ES_KEY_ACTION_UP){
-        return true
-      }
-    }
-    onBeforeUnmount(()=>{
-      EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
-    })
     return {
       PlayerManagerRef,
       itemCellBgImgRef,
@@ -272,6 +266,8 @@ export default defineComponent({
       onBackPressed,
       playerHeight,
       playerWidth,
+      menuList,
+      isSetMenuListOk
     }
   }
 })
