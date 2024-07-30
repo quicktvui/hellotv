@@ -48,8 +48,8 @@
         <img
           :visible="isShowShadow"
           v-if="playerWidth&&playerHeight" 
-          src="../assets/ranking/shadow_bg.png" class="bg_player_shadow_img" :focusable="false"
-          :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"/>
+          src="../assets/ranking/bg_shadow.png" class="bg_player_shadow_img" :focusable="false"
+          :style="{width:(playerWidth+2) + 'px',height:(playerHeight+2) + 'px',left: (playerLeft-1),top: (playerTop-1)}"/>
         <!-- 小窗播放列表 -->
         <qt-view class="item_cell_list_front"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
