@@ -33,4 +33,5 @@ withDefaults(defineProps<{
 .hc_title_box {
   position: absolute;
 }
+/* #FF5E90 */
 </style>

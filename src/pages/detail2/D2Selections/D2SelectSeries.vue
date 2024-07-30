@@ -28,7 +28,7 @@ let pageSize: number = 20;//每页加载多少条数据
 let totalCount: number = detail2Ui.vdata?.selectionTotalSize||0;
 const d2SelectSeries2 = ref<ESIMediaSeries>()
 const onItemClick = (ev) => {
-  // console.log(ev.data.videoData, '---lsj--s-s-onItemClick')
+  // console.log(ev.data.videoData, '---lsj--s-s-onItemClick',catchMList)
   detail2Ui.changePlayList(catchMList)
   detail2Ui.changeVideo(ev.position)
 }
@@ -39,6 +39,7 @@ const onLoadData = (e) => {
       d2SelectSeries2.value?.setPageData(page, mList);
       if(!catchMList.length){
         catchMList = mList
+        setSelect()
       }else{
         catchMList = catchMList.concat(mList)
       }
@@ -75,14 +76,23 @@ const commonParams = {
   itemGap: 48,
   // contentHeight: 80
 }
-detail2Ui.$on(()=>{
-  console.log(detail2Ui.tabPath.get(detail2Ui.selectionPositoin), '--lsj-selectionPositoin')
-})
+const setSelect = ()=>{
+  const currentTab = detail2Ui.currentPlayPath[0]
+  if(currentTab == detail2Ui.selectionPositoin){
+    const selectionPath = detail2Ui.tabPath.get(detail2Ui.selectionPositoin)
+    if(selectionPath){
+      d2SelectSeries2.value?.setGroupSelected(selectionPath.next?.index||0)
+      d2SelectSeries2.value?.setSelected(selectionPath.next?.next?.index||0)
+    }
+  } else {
+    // d2SelectSeries2.value?.setGroupSelected(-1)
+    d2SelectSeries2.value?.setSelected(-1)
+  }
+}
+detail2Ui.$on(setSelect)
 onMounted(()=>{
   if(totalCount){
     d2SelectSeries2.value?.setInitData(totalCount,pageSize)
-    d2SelectSeries2.value?.setSelected(1)
-    d2SelectSeries2.value?.setGroupSelected(0)
   }
 })
 </script>

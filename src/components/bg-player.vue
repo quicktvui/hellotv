@@ -44,6 +44,12 @@
         <!-- 背景视频遮罩 -->
         <qt-view class="home_bg_player_view_mask" :visible="bgPlayerType===2"
           :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"/>
+        <!-- 背景视频阴影 -->
+        <img
+          :visible="isShowShadow"
+          v-if="playerWidth&&playerHeight" 
+          src="../assets/ranking/shadow_bg.png" class="bg_player_shadow_img" :focusable="false"
+          :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"/>
         <!-- 小窗播放列表 -->
         <qt-view class="item_cell_list_front"
           :style="{width:playerListWidth + 'px',height:playerListHeight + 'px'}">
@@ -125,7 +131,9 @@ export default defineComponent({
     defaultBgParentOpacity:{
       type:Number, default: 0
     },
-    borderRadius: Number,
+    borderRadius: {
+      type: Number, default:0
+    },
     showBgColor:{
       type:Boolean, default:true
     }
@@ -530,7 +538,12 @@ export default defineComponent({
     const onBackPressed = () => {
       playerManagerRef.value?.onBackPressed()
     }
+    const isShowShadow = ref(false)//是否显示边框阴影
     return {
+      isShowShadow,
+      changeShadow(boo:boolean){//设置边框阴影
+        isShowShadow.value = boo
+      },
       bg_player_replace_child,itemCellBgImgRef,reset,bg_root,leftNum,topNum,bottomNum,videoInfo,bgPlayerLevel,
       playerManagerRef,release,stop,pause,resume,initPlayer,play,start,
       playerBoxWidth,playerBoxHeight,playerListWidth,playerListHeight,
@@ -715,5 +728,8 @@ export default defineComponent({
   color: #BFBFBF;
   focus-color: #333;
 }
-
+.bg_player_shadow_img{
+  position: absolute;
+  background-color: transparent;
+}
 </style>

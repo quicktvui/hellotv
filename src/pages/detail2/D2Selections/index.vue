@@ -48,20 +48,23 @@ const onItemClickFn = (parentPosition, position, item, e)=> {
   }
 }
 const onItemFocusedFn = (e) => {
-  if(e.parentPosition===0 && e.position !== detail2Ui.selectTabIndex){
-    detail2Ui.selectTabIndex = e.position
+  if(e.hasFocus){
+    if(e.parentPosition===0 && e.position !== detail2Ui.selectTabIndex){
+      detail2Ui.selectTabIndex = e.position
 
-    const tabObj = detail2Ui.getTab2(e.item)
-    //第二层tab
-    waterfallData.value[1] = tabObj.tabs2Section
-    //第三层tab-list
-    waterfallData.value[2] = tabObj.tab2ContentSection
-  }
-  if(e.parentPosition===1 && detail2Ui.selectTab2Index !== e.position){
-    detail2Ui.selectTab2Index = e.position
-    // //第三层tab-list
-    const tabContent = detail2Ui.getShowTabList(e.item as any)
-    waterfallData.value[2] = tabContent
+      const tabObj = detail2Ui.getTab2(e.item)
+      //第二层tab
+      waterfallData.value[1] = tabObj.tabs2Section
+      //第三层tab-list
+      waterfallData.value[2] = tabObj.tab2ContentSection
+      resetPosition(e.position)
+    }
+    if(e.parentPosition===1 && detail2Ui.selectTab2Index !== e.position){
+      detail2Ui.selectTab2Index = e.position
+      // //第三层tab-list
+      const tabContent = detail2Ui.getShowTabList(e.item as any)
+      waterfallData.value[2] = tabContent
+    }
   }
 }
 let isInitBind = false
@@ -73,7 +76,30 @@ const onItemBindFn = (e) => {
     VirtualView.call(detail2Ui.tabListSid, 'setSelectChildPosition', [detail2Ui.selectTabListIndex])
   }
 }
+/**
+ * 重置选中位置
+ */
+const resetPosition = (tabIndex)=>{
+  const cpTab = detail2Ui.currentPlayPath[0]
+  const cpTabListIndex = detail2Ui.currentPlayPath[2]
+  if(cpTab !== tabIndex){
+    setTimeout(() => {
+      VirtualView.call(detail2Ui.tabListSid, 'setSelectChildPosition', [-1])
+    }, 0);
+  } else {
+    VirtualView.call(detail2Ui.tabListSid, 'setSelectChildPosition', [cpTabListIndex])
+  }
+}
+detail2Ui.$on(()=>{
+  const cpTab = detail2Ui.currentPlayPath[0]
+  if(cpTab != detail2Ui.selectionPositoin){
+    VirtualView.call(detail2Ui.tabListSid, 'setSelectChildPosition', [detail2Ui.selectTabListIndex])
+  }
+})
 d2Api.getSelectionsData().then(res=>{
+  // 通过 vData.id 查询所在tab位置并设置初始位置
+  // detail2Ui.vdata?.id
+  detail2Ui.initIndex(0, 0, 0)
   const tabSection = res[0]
   if(tabSection){
     const tab = tabSection.itemList[detail2Ui.selectTabIndex]
