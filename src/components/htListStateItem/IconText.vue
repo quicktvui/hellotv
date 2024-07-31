@@ -1,24 +1,24 @@
 <template>
     <qt-view class="list_item" eventFocus :focusable="true"
-        :clipChildren="false" :sateBackgroundPadding="[10, 10]" :focusScale="1.06">
+        :clipChildren="false" :sateBackgroundPadding="[10, 10]" :focusScale="1.06" flexStyle="${iStyle}">
         <qt-view class="list_item_bg" :duplicateParentState="true" showOnState="focused" :focusable="false"
-            :gradientBackground="focusedBg" />
+            :gradientBackground="focusedBg" flexStyle="${iStyle}"/>
 
-        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="normal">
+        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="normal" flexStyle="${txtStyle}">
             <img src="../../assets/ic_screen_normal.png" :focusable="false"/>
             <qt-text 
                 class="list_item_icon_txt" autoWidth :style="custemStyle.normal" gravity="center"
                 :focusable="false" text="${showName}" :ellipsizeMode="3" :lines="1"
             />
         </qt-view>
-        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="focused">
+        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="focused" flexStyle="${txtStyle}">
             <img src="../../assets/ic_screen_select.png" :focusable="false"/>
             <qt-text 
                 class="list_item_icon_txt" autoWidth :style="custemStyle.focused" gravity="center"
                 :focusable="false" text="${showName}" :ellipsizeMode="3" :lines="1"
             />
         </qt-view>
-        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="selected">
+        <qt-view class="list_item_icon_box" :duplicateParentState="true" showOnState="selected" flexStyle="${txtStyle}">
             <img src="../../assets/ic_screen_select.png" :focusable="false"/>
             <qt-text 
                 class="list_item_icon_txt" autoWidth :style="custemStyle.selected" gravity="center"
@@ -51,8 +51,6 @@ const props = withDefaults(defineProps<{
 <style scoped>
 .list_item{
     position: relative;
-    width: 340px;
-    height: 106px;
     background-color: transparent;
     /* justify-content: center; */
     align-items: center;
@@ -60,15 +58,11 @@ const props = withDefaults(defineProps<{
 }
 .list_item_bg{
     position: absolute;
-    width: 340px;
-    height: 106px;
     background-color: transparent;
 }
 
 .list_item_icon_box{
     position: absolute;
-    width: 280px;
-    height: 106px;
     display: flex;
     justify-content: flex-end;
     align-items: center;

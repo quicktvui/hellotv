@@ -92,7 +92,6 @@ defineExpose({
 }
 
 .hc-navbar {
-    /* width: 1540px; */
     height: 90px;
     margin-left: 30px;
     background-color: transparent;

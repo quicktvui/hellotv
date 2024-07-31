@@ -22,7 +22,7 @@
                 <PosterTitle :showOnState="['focused','selected']" flexName="titleFocusStyle" />
                 <PosterTitle showOnState="normal" />
             </div>
-            <div :focusable="false" :duplicateParentState="true" class="content_box_cover" flexStyle="${focusStyleBg}" enableBlackBorder></div>
+            <div :focusable="false" :duplicateParentState="true" class="content_box_cover" flexStyle="${focusStyleBgBorder}" enableBlackBorder></div>
         </div>
         
         <div
@@ -36,7 +36,7 @@
             />
         </div>
 <!-- focused&selected -->
-        <div showOnState="selected" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${focusStyleBg}">
+        <div showOnState="selected" class="history-item-cover" :focusable="false" :duplicateParentState="true" flexStyle="${focusStyleBgBorder}" :enableBlackBorder="false">
             <div class="history-delete-btn_box" flexStyle="${delete.style}" :duplicateParentState="true" :focusable="false">
                 <qt-text 
                     class="history-delete-btn" gravity="center" fontSize="${delete.style.fontSize}"
@@ -126,6 +126,7 @@ export default defineComponent({
     border-radius: 16px;
     background-color: transparent;
     focus-background-color: #ffffff;
+    select-border-color: transparent;
 }
 .content_box_info{
     position: absolute;
@@ -159,8 +160,8 @@ export default defineComponent({
 
 .history-item-cover {
   position: absolute;
-  left: 0.01px;
-  top: 0.01px;
+  left: -1px;
+  top: -1px;
   border-radius: 16px;
   display: flex;
   flex-direction: row;
@@ -169,6 +170,8 @@ export default defineComponent({
   align-items: center;
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 999;
+  /* focus-border-style: solid;
+  focus-border-color: rgba(0, 0, 0, 0.5); */
 }
 .history-delete-btn-focus {
   position: absolute;
@@ -188,12 +191,13 @@ export default defineComponent({
 }
 .content_box_cover{
     position: absolute;
-    left: 0.01px;
-    top: 0.01px;
+    left: -1px;
+    top: -1px;
     z-index: 3;
     border-radius: 16px;
     background-color: transparent;
     focus-border-style: solid;
-    focus-border-color: #FFFFFF;
+    focus-border-color: #ffffff;
+    select-border-color: transparent;
 }
 </style>

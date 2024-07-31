@@ -2,20 +2,23 @@
     <div 
         v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
         :blockFocusDirections="blockFocusDirections"
+        :style="mStyle"
     >
         <!-- :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" -->
-        <div class="h_menu_shadow" :gradientBackground="{colors:['#02261C','#00000000'], orientation: 6}"></div>
+        <div class="h_menu_shadow" :gradientBackground="{colors:[props.bgColor[0],'#00000000'], orientation: 6}"></div>
         <qt-view 
             class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
             :gradientBackground="cBgColor"
+            :style="mInnerStyle"
         >
             <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
                 :focusable="false"></qt-text>
-            <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" />
+            <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" :style="mTitleStyle"/>
             <qt-list-view 
                 class="menu_list" ref="listRef" sid="h_menu_list_sid" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
                 :focusable="false" :requestFocus="true"
+                :style="mListStyle"
             >
                 <!-- 纯文字标题 :requestFocus="true" :nextFocusName="cNextFocusName"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
@@ -28,7 +31,7 @@
     </div>
 </template>
 <script lang='ts' setup>
-import { computed, nextTick, ref } from 'vue';
+import { StyleValue, computed, nextTick, ref } from 'vue';
 import {
     QTIListView
 } from '@quicktvui/quicktvui3';
@@ -42,6 +45,7 @@ import { getMenuList } from '../index.ts';
 import api from '../../../api/history/index.ts'
 // @ts-ignore
 import { layouts } from '../config.ts'
+import dConfig from '../config'
 
 const props = withDefaults(defineProps<{
     menuStyle?: {
@@ -99,7 +103,18 @@ const menuItemFocusedBg = computed(()=>{
     }
     return { colors: props.focusedBg, cornerRadii4: [0, 8, 8, 0], orientation: 6 }
 })
-
+const mStyle = computed<StyleValue>(() => {
+    return { width: dConfig.menuWidth+'px' }
+})
+const mInnerStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mListStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mTitleStyle = computed<StyleValue>(()=>{
+    return { width: dConfig.menuWidth+'px' }
+})
 defineExpose({
     async initData(fIndex:number=0) {
         mPosition = -1
@@ -137,8 +152,7 @@ defineExpose({
 <style scoped>
 .h_menu {
     position: relative;
-    width: 350px;
-    height: 1080;
+    height: 1080px;
     display: flex;
     flex-direction: column;
     background-color: transparent;
@@ -160,7 +174,6 @@ defineExpose({
     left: 0.01px;
     top: 0.01px;
     z-index: 2;
-    width: 310px;
     height: 1080px;
     position: absolute;
     background-color: transparent;
@@ -177,14 +190,12 @@ defineExpose({
 }
 
 .menu-title-image {
-    width: 320px;
     height: 60px;
     margin: 10px;
     background-color: transparent;
 }
 
 .menu_list {
-    width: 340px;
     height: 900px;
     margin-top: 35px;
     background-color: transparent;

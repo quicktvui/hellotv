@@ -19,16 +19,16 @@
       </qt-view>
       <HContentPoster :type="10001" :clipChildren="false" />
       <qt-text showIf="${editMode==false}" :type="1003" class="history-right-content-no-more" gravity="center"
-        :focusable="false" text="已经到底啦，按【返回键】回到顶部"></qt-text>
+        :focusable="false" text="已经到底啦，按【返回键】回到顶部" :style="{width:pWidth+'px'}"></qt-text>
       <!--分页加载 Loading 1002  name="loading" type="1003" -->
       <template v-slot:loading>
-        <qt-view class="history-right-content-more-loading" :type="1002" name="loading" :focusable="false" disablePlaceholder>
+        <qt-view class="history-right-content-more-loading" :type="1002" name="loading" :focusable="false" disablePlaceholder :style="{width:pWidth+'px'}">
           <!-- <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width: 40px;" :focusable="false" /> -->
         </qt-view>
       </template>
 
     </qt-grid-view>
-    <qt-view v-show="isShowScreenLoading" class="history-right-content-loading" :clipChildren="false" :focusable="false">
+    <qt-view v-if="isShowScreenLoading" class="history-right-content-loading" :clipChildren="false" :focusable="false" :style="loadingStyle">
       <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable="false" />
       <qt-text v-show="screenLoadingTxt" class="loading_txt" :text="screenLoadingTxt" gravity="center"
         :focusable="false"></qt-text>
@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang='ts' setup>
-import { nextTick, ref } from "vue";
+import { StyleValue, computed, nextTick, ref } from "vue";
 import {
   QTIListView
 } from '@quicktvui/quicktvui3';
@@ -287,6 +287,9 @@ const setData = async (currentMenu: IcurrentItemParams, currentFilter: IcurrentI
   }, 300);
 }
 
+const loadingStyle = computed<StyleValue>(()=>{
+  return {width:props.pWidth+'px' }
+})
 defineExpose({
   setData,
   async clearData() {
@@ -387,7 +390,6 @@ defineExpose({
 }
 
 .history-right-content-no-more {
-  width: 1600px;
   height: 80px;
   font-size: 30px;
   color: rgba(255, 255, 255, 0.6);
@@ -395,7 +397,6 @@ defineExpose({
 }
 
 .history-right-content-more-loading {
-  width: 1600px;
   height: 80px;
   display: flex;
   align-items: center;
@@ -404,7 +405,6 @@ defineExpose({
 }
 
 .history-right-content-loading {
-  width: 1600px;
   height: 980px;
   position: absolute;
   left: 0.01px;

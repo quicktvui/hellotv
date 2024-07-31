@@ -4,7 +4,7 @@ import {
   QTIListView, QTListViewItem, QTPoster, QTGridViewItem
 } from '@quicktvui/quicktvui3';
 import { IHistoryContentEntity, IHistoryFilterEntity, IHistoryMenuEntity } from '../../api/history/modelEntity';
-import { Iconfig } from './config';
+import configs, { Iconfig, pageWidth } from './config';
 
 export const getMenuList = (menuList: IHistoryMenuEntity[] = []) => {
   return menuList.map((item, index) => {
@@ -13,7 +13,10 @@ export const getMenuList = (menuList: IHistoryMenuEntity[] = []) => {
       showName: item.name,
       normalImg: item.img, //'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750',
       selectedImg: item.selectedImg, //'http://qcloudimg.a311.ottcn.com/data_center/files/2023/11/02/2ba8e63e-c29f-48f8-9955-02229c78ec85.jpg',
-      focusedImg: item.focusedImg //'http://qcloudimg.a311.ottcn.com/data_center/files/2024/01/15/bccb38a7-5f1a-4228-9901-91f77a96bbe7.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198'
+      focusedImg: item.focusedImg, //'http://qcloudimg.a311.ottcn.com/data_center/files/2024/01/15/bccb38a7-5f1a-4228-9901-91f77a96bbe7.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198'
+      iStyle:{ width: configs.menuWidth-10, height: 106 },
+      txtStyle:{ width: 280, height: 106 },
+      imgStyle:{ width: 280, height: 86 }
     }
   })
 }
@@ -48,8 +51,7 @@ export const getContentCategoryConfig = (aConfig, data: IHistoryContentEntity): 
     }
   }
 }
-
-const dContentWidth = 1600//1550
+const dContentWidth = pageWidth - configs.menuWidth
 const dLeft = 20
 const dItemTop = 20
 const dWidth = 330
@@ -192,7 +194,12 @@ const getContentItemConfig = (aConfig, data: IHistoryContentEntity): QTPoster =>
       width: styleWidth,
       height: height + titleBoxHeight + dPadding
     },
-    focusStyleBg: {width: styleWidth, height: height + titleBoxHeight-borderRadius+5},
+    focusStyleBg: {
+      width: styleWidth, height: height + titleBoxHeight-borderRadius+5,
+    },
+    focusStyleBgBorder: {
+      width: styleWidth+2, height: height + titleBoxHeight-borderRadius+7
+    },
     focusTitle: {
       text: data.assetLongTitle,
       enable: true,

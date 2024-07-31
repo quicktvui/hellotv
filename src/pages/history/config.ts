@@ -1,6 +1,7 @@
 import { IHistoryMenuEntity } from "../../api/history/modelEntity";
 import ThemeConfig from "../../build/ThemeConfig";
 
+export const pageWidth = 1920
 export const layouts = {
     lt: 'leftTop', lb: 'leftBootom', rt: 'rightTop', rb: 'rightBootom'
 }
@@ -11,9 +12,9 @@ export const menuListItemTypes = {
 export interface Iconfig {
     layout: string;
     detailPageName:string;
-    title?: string;
+    title?: string;//菜单标题
     titleImg?: string;
-    menuStyle?: {
+    menuStyle?: {//菜单按钮颜色
         normal: { color: string }
         focused: { color: string }
         selected: { color: string }
@@ -31,22 +32,23 @@ export interface Iconfig {
     clearAllIsReset?:boolean //删除数据时，如果当前内容区全部删除后是否重新加载数据
     bgColor?:string|object //整体背景色 #000000 整体渐变背景色 {colors:['#252930', '#252930']}
     menuBgColor?:string[]//菜单背景色
-    menuFocusedItemBg?:string[];
+    menuFocusedItemBg?:string[];//菜单按钮焦点状态背景色
     contentTitleHeight?:number;
     contentTitleSize?:number;
     contentSubTitleSize?:number;
-    contentSubTitleHeight?:number
+    contentSubTitleHeight?:number,
+    menuWidth:number//菜单宽度
 }
 const configs:Iconfig = {
     layout: layouts.lt,
     title: '全部记录',
-    menuBgColor: ['#024739','#023D30'],
+    // menuBgColor: ['#024739','#023D30'],
     // titleImg: 'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750',
-    menuStyle: {
-        normal: { color: '#FFFFFF' },
-        focused: { color: '#042F1F' },
-        selected: { color: '#00FFA7' }
-    },
+    // menuStyle: {
+    //     normal: { color: '#FFFFFF' },
+    //     focused: { color: '#042F1F' },
+    //     selected: { color: '#00FFA7' }
+    // },
     menuList: [
       { id: 0, name: "观看历史", type: menuListItemTypes.txt },
       { id: 1, name: "我的收藏", type: menuListItemTypes.icon },
@@ -65,5 +67,6 @@ const configs:Iconfig = {
     contentSubTitleHeight: 40,
     bgColor: ThemeConfig.rootBgColor,
     menuFocusedItemBg: ThemeConfig.btnGradientFocusColor,
+    menuWidth: 320,
 }
 export default configs
