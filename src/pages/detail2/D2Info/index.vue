@@ -55,7 +55,7 @@ import { useESRouter } from '@extscreen/es3-router';
 
 const emits = defineEmits(['clickAction'])
 const configs = api.getConfig()
-const dideoDesData = ref<IvideoDes>(detail2Ui.getCurrentPlay().videoData)
+const dideoDesData = ref<IvideoDes|undefined>(detail2Ui.vdata)
 const router = useESRouter()
 
 const getStyle = ():StyleValue=>{

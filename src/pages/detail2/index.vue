@@ -82,7 +82,6 @@ defineExpose({
 
       detail2Ui.setVideo(params).then(()=>{
         isLoading.value = false
-        detail2Ui.$emit()
         starTime()
       })
     })

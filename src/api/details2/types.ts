@@ -46,8 +46,9 @@ export interface IvideoDesAction {
   [k:string]:any
 }
 export interface IvideoDes {
-  packageId:string|number;//媒资集合/包的唯一id
+  packageId:string|number;//媒资集合/包/专辑的唯一id
   id:string|number;//视频唯一id
+  classId:string|number;//分类id
   title: string;//视频标题
   vUrl:string;//视频播放地址
   selectionTotalSize:number;//视频总集数
@@ -60,10 +61,11 @@ export interface IvideoDes {
   playNumber?:number;//播放量
   status?:string;//视频状态 已完结 7月20日更新
   actors?:string;//演员信息
+  palyCount?:number;//上次播放到了第几集
   [k:string]:any;
 }
 export interface IvideoParams {
-  packageId?:string|number;//媒资集合/媒资包的唯一id
+  packageId?:string|number;//媒资集合/媒资包/专辑的唯一id
   id?:string|number;//当前播放视频唯一id
 }
 

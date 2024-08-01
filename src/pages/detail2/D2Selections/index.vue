@@ -99,8 +99,9 @@ detail2Ui.$on(()=>{
 d2Api.getSelectionsData().then(res=>{
   // 通过 vData.id 查询所在tab位置并设置初始位置
   // detail2Ui.vdata?.id
-  detail2Ui.initIndex(0, 0, 0)
   const tabSection = res[0]
+  detail2Ui.initIndex(tabSection)
+  detail2Ui.$emit()
   if(tabSection){
     const tab = tabSection.itemList[detail2Ui.selectTabIndex]
     const tabObj = detail2Ui.getTab2(tab as any)

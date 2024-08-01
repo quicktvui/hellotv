@@ -4,7 +4,7 @@ import type {
 import { RequestManager } from "../request/RequestManager";
 import {IDetail2Config, Id2TopData, IvideoDes,posterTypes,tabTypes,IvideoParams,ImediaSelection,Id2BaseSection} from './types'
 // @ts-ignore
-import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs,TposterType } from '../../pages/detail2/index.ts'
+import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs,TposterType, getSelectionSeriesPoster } from '../../pages/detail2/index.ts'
 import {
   ESIPlayerInterceptor, ESMediaSourceList,
   ESPlayerInterceptorType,
@@ -20,16 +20,16 @@ import logo from '../../assets/ic_media_vip_button_focused.png'
 import searchIcon from '../../assets/ic_top_search.png'
 import searchIconf from '../../assets/ic_top_search_focus.png'
 
-const delayFn = ()=>{
+const delayFn = (num=1000)=>{
   return new Promise(resolve=>{
     setTimeout(() => {
       resolve(true)
-    }, 1000);
+    }, num);
   })
 }
 export class Detail2Base {
   requestManager: RequestManager | undefined;
-  pageData: {[k:string]:any} | undefined;
+  pageData: {[k:string]:any} = {}
 
   init(...params: any[]): Promise<any> {
     this.requestManager = params[0]
@@ -40,7 +40,10 @@ export class Detail2Base {
    * @param routerParams 当前页面的路由参数对象
    */
   async initPageData(routerParams:IvideoParams): Promise<any> {
-    await delayFn()
+    await delayFn()//通过参数id获取详情视频数据
+    this.pageData = {
+      media: getMockVideoData(1)
+    }
     return {}
   }
   /**
@@ -69,9 +72,9 @@ export class Detail2Base {
    * 获取视频详情数据
    */
   async getDetailVideoData(data: IvideoParams):Promise<IvideoDes>{
-    // console.log(data.videoData.id) todo:通过参数id获取详情视频数据
-    const res = getMockVideoData(0)
-    return res
+    // console.log(data.videoData.id) 通过参数id获取详情视频数据
+    // const res = getMockVideoData(0)
+    return this.pageData.media
   }
 
   /**
@@ -86,12 +89,13 @@ export class Detail2Base {
     let size = isLast ? vdata.selectionTotalSize - (pageNo * pageSize) : pageSize;
 
     return new Array(size).fill(1).map((_, index)=>{
-      return {
-        showVip: pageNo===2,
-        vip: { enable: pageNo===2, text: 'VIP' },
-        title: '第' + (pageNo * pageSize + (index+1)) + '集',
-        videoData: getMockVideoData(index)
-      }
+      return getSelectionSeriesPoster({
+        id: tUid.cleateId(),
+        poster:'',
+        corner: pageNo===2?'VIP':'',
+        title: '第' + ((pageNo-1) * pageSize + index) + '集',
+        videoData: pageNo===1&&index==1 ? this.pageData.media : getMockVideoData(index)
+      })
     });
   }
   
@@ -104,7 +108,7 @@ export class Detail2Base {
         id: 'd2SelectionSection1',
         tabList: [
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-1', name: '选集', isSelectionTab:true
+            id: 'd2SelectionSection1-1', name: '选集', isSelectionTab:true//选集数据需要在getMediaSelectionList方法中单独获取
           }),
           getSelectionSectionTabs({
             id: 'd2SelectionSection1-2', name: '系列',

@@ -23,28 +23,22 @@ import d2Api from '../../../api/details2/index'
 // @ts-ignore
 import { detail2Ui } from '../index.ts'
 
-let catchMList:any[] = []
 let pageSize: number = 20;//每页加载多少条数据
 let totalCount: number = detail2Ui.vdata?.selectionTotalSize||0;
 const d2SelectSeries2 = ref<ESIMediaSeries>()
 const onItemClick = (ev) => {
   // console.log(ev.data.videoData, '---lsj--s-s-onItemClick',catchMList)
-  detail2Ui.changePlayList(catchMList)
+  detail2Ui.changePlayList(detail2Ui.selectionList)
   detail2Ui.changeVideo(ev.position)
 }
 const onLoadData = (e) => {
-  let page = e.page; // 要加载的页数
-  if(detail2Ui.vdata){
-    d2Api.getMediaSelectionList(detail2Ui.vdata, page, pageSize).then(mList=>{
-      d2SelectSeries2.value?.setPageData(page, mList);
-      if(!catchMList.length){
-        catchMList = mList
-        setSelect()
-      }else{
-        catchMList = catchMList.concat(mList)
-      }
-    })
-  }
+  let page = e.page+1; // 要加载的页数
+  detail2Ui.getMediaSelectionList(page, pageSize).then(mList=>{
+    d2SelectSeries2.value?.setPageData(e.page, mList);
+    if(page===1){
+      setSelect()
+    }
+  })
 }
 const scrollParams = {
   scrollType: 0,//0 1
