@@ -55,7 +55,8 @@ export default defineComponent({
 .world-4k-list-item-img-css {
   position: absolute;
   width:1413px;height:795px;
-  background-color: #F4D297;
+  border-radius: 8px;
+  background-color: rgba(255,255,255,0.3);
 }
 
 .world-4k-list-item-txt-icon-css {
