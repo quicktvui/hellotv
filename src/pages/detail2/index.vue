@@ -27,6 +27,7 @@ import { detail2Ui } from './index.ts'
 import api from '../../api/details2/index'
 import { IDetail2Config, IvideoDesActions,IvideoParams } from '../../api/details2/types';
 import { useESRouter } from '@extscreen/es3-router'
+import { VirtualView } from '@quicktvui/quicktvui3'
 
 const pConfig = ref<Partial<IDetail2Config>>({});
 const isLoading = ref(true)
@@ -40,6 +41,19 @@ router.afterEach((to, from, failure) => {
 })
 
 const isShowDes = ref(true)
+const changeIsShowDes = (boo:boolean)=>{
+  if(boo==false){
+    clearTimeout(timerOutId)
+  }
+  isShowDes.value = boo
+  if(isShowDes.value){
+    // d2InfoActionsSid
+    VirtualView.call('d2InfoActionsSid', 'requestChildFocus',[0])
+  }
+  if(boo==true){
+    starTime()
+  }
+}
 let timerOutId:any = null
 const starTime = ()=>{
   clearTimeout(timerOutId)
@@ -49,13 +63,15 @@ const starTime = ()=>{
 }
 const clickActionFn = (actionItem)=>{
   if(actionItem.action === IvideoDesActions.fullScreen){
-    clearTimeout(timerOutId)
-    isShowDes.value = false
+    changeIsShowDes(false)
   } else if(actionItem.router){
     const currentPlay = detail2Ui.getCurrentPlay()?.videoData||{}
     router.push({
       name: actionItem.router.name,//'d2Introduction',
-      params:{...currentPlay, ...(actionItem.router.params||{})}
+      params:{
+        _v_id:currentPlay.id, _v_packageId: currentPlay.packageId,
+        ...(actionItem.router.params||{})
+      }
     })
   }
 }
@@ -89,8 +105,7 @@ defineExpose({
     if(!isShowDes.value){
       const press = D2VideoRef.value?.onBackPressed()
       if(!press){
-        isShowDes.value = true
-        starTime()
+        changeIsShowDes(true)
       }
     }else{
       router.back()

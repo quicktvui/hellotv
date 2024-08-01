@@ -2,19 +2,23 @@
     <div 
         v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
         :blockFocusDirections="blockFocusDirections"
+        :style="mStyle"
     >
         <!-- :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" -->
+        <div class="h_menu_shadow" :gradientBackground="{colors:[props.bgColor[0],'#00000000'], orientation: 6}"></div>
         <qt-view 
             class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
             :gradientBackground="cBgColor"
+            :style="mInnerStyle"
         >
             <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
                 :focusable="false"></qt-text>
-            <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" />
+            <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" :style="mTitleStyle"/>
             <qt-list-view 
-                class="menu_list" ref="listRef" sid="h_menu_list_name" name='h_menu_list_name'
+                class="menu_list" ref="listRef" sid="h_menu_list_sid" name='h_menu_list_name'
                 :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
                 :focusable="false" :requestFocus="true"
+                :style="mListStyle"
             >
                 <!-- 纯文字标题 :requestFocus="true" :nextFocusName="cNextFocusName"-->
                 <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
@@ -27,7 +31,7 @@
     </div>
 </template>
 <script lang='ts' setup>
-import { computed, nextTick, ref } from 'vue';
+import { StyleValue, computed, nextTick, ref } from 'vue';
 import {
     QTIListView
 } from '@quicktvui/quicktvui3';
@@ -41,6 +45,7 @@ import { getMenuList } from '../index.ts';
 import api from '../../../api/history/index.ts'
 // @ts-ignore
 import { layouts } from '../config.ts'
+import dConfig from '../config'
 
 const props = withDefaults(defineProps<{
     menuStyle?: {
@@ -98,9 +103,20 @@ const menuItemFocusedBg = computed(()=>{
     }
     return { colors: props.focusedBg, cornerRadii4: [0, 8, 8, 0], orientation: 6 }
 })
-
+const mStyle = computed<StyleValue>(() => {
+    return { width: dConfig.menuWidth+'px' }
+})
+const mInnerStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mListStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mTitleStyle = computed<StyleValue>(()=>{
+    return { width: dConfig.menuWidth+'px' }
+})
 defineExpose({
-    async initData() {
+    async initData(fIndex:number=0) {
         mPosition = -1
         let list = await api.getMenuList().catch(()=>{
             return null
@@ -117,7 +133,9 @@ defineExpose({
         }
         if(isShow.value){
             listRef.value?.init(getMenuList(menuApiList));
-            onTabSelect({ position: 0,hasFocus:true })
+            nextTick(()=>{
+                listRef.value?.setItemFocused(fIndex)
+            })
         }
         return isShow.value
     },
@@ -130,31 +148,34 @@ defineExpose({
         listRef.value?.setItemFocused(mPosition>=0?mPosition:0)
     }
 })
-// id:tag.id,
-// typeName:tag.showType,
-// isShowScreen:false,
-// tagName:tag.tagName,
-// showName:tag.showName,
-// normalImg:tag.normalImage,
-// selectedImg:tag.selectImage,
-// focusedImg:tag.focusImage
 </script>
 <style scoped>
 .h_menu {
-    width: 350px;
-    height: 1080;
+    position: relative;
+    height: 1080px;
     display: flex;
     flex-direction: column;
+    background-color: transparent;
+}
+.h_menu_shadow{
+    position: absolute;
+    right: 0.01px;
+    top: 0.01px;
+    z-index: 1;
+    width: 20px;
+    height: 1080px;
     background-color: transparent;
 }
 .h_menu_rightTop,.h_menu_rightBootom{
     justify-content: flex-end;
 }
 .h_menu_inner {
-    width: 340px;
-    height: 1080;
     position: absolute;
-    /* background-color: #434a50; */
+    left: 0.01px;
+    top: 0.01px;
+    z-index: 2;
+    height: 1080px;
+    position: absolute;
     background-color: transparent;
 }
 
@@ -164,18 +185,17 @@ defineExpose({
     font-size: 50px;
     margin-top: 80px;
     margin-left: 80px;
+    color: #ffffff;
     background-color: transparent;
 }
 
 .menu-title-image {
-    width: 320px;
     height: 60px;
     margin: 10px;
     background-color: transparent;
 }
 
 .menu_list {
-    width: 340px;
     height: 900px;
     margin-top: 35px;
     background-color: transparent;

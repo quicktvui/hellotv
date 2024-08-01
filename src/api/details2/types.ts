@@ -46,6 +46,7 @@ export interface IvideoDesAction {
   [k:string]:any
 }
 export interface IvideoDes {
+  packageId:string|number;//媒资集合/包的唯一id
   id:string|number;//视频唯一id
   title: string;//视频标题
   vUrl:string;//视频播放地址
@@ -62,7 +63,7 @@ export interface IvideoDes {
   [k:string]:any;
 }
 export interface IvideoParams {
-  packageId?:string|number;//媒资集合/包的唯一id
+  packageId?:string|number;//媒资集合/媒资包的唯一id
   id?:string|number;//当前播放视频唯一id
 }
 

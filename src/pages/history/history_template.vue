@@ -1,32 +1,31 @@
 <template>
     <qt-view class="history" :skipRequestFocus="true"
-        :class="['history_' + configs.layout, isShowFilter ? '' : 'history_no_filter', isNoMenu ? 'history_no_menu' : '']"
         ref="historyRootRef" :focusable="false" :gradientBackground="bgColor">
         <!-- :descendantFocusability="2" 2：锁定， 1：放开 :skipRequestFocus="true"-->
         <HistoryMenu ref="HistoryMenuRef" class="menu" :title="configs.title" :titleImg="configs.titleImg"
             :isFilter="isShowFilter" :layout="configs.layout" :focusedBg="configs.menuFocusedItemBg"
             :menuStyle="configs.menuStyle" :menuList="configs.menuList" @emChangeMenu="emChangeMenuFn"
-            :bgColor="configs.menuBgColor" />
+            :bgColor="configs.menuBgColor" :style="menuStyle"/>
         <HTop ref="HTopRef" class="top" @emClear="emClearFn" @emEditStateChange="emEditStateChangeFn"
-            :pWidth="contentWidth" :isLoaded="isLoaded" />
-        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth" />
+            :pWidth="contentWidth" :isLoaded="isLoaded" :style="topStyle"/>
+        <HistoryTab ref="HistoryTabRef" class="tab" @emSelectTab="emSelectTabFn" :pWidth="contentWidth" :style="tabStyle"/>
         <HistoryContent 
             ref="HistoryContentRef" class="content" :detailPageName="configs.detailPageName"
             :emptyTxt="configs.emptyTxt" :pConfig="configs" :setDataCallBack="setDataCallBackFn"
             @emContentClearAll="emContentClearAllFn" :pHeight="contentHeight" :pWidth="contentWidth"
-            @emInitNoData="emInitNoDataFn"
+            @emInitNoData="emInitNoDataFn" :style="contentStyle"
         />
     </qt-view>
 </template>
 
 <script lang="ts" setup>
-import { computed, nextTick, ref } from 'vue';
+import { StyleValue, computed, nextTick, ref } from 'vue';
 import HistoryMenu from './components/HMenu.vue'
 import HistoryContent from './components/HContent.vue'
 import HistoryTab from './components/HTab.vue'
 import HTop from './components/HTop.vue'
 import { useESToast } from '@extscreen/es3-core';
-import dConfig, { Iconfig } from './config'
+import dConfig, { Iconfig, layouts, pageWidth } from './config'
 
 // const props = defineProps<Iconfig>();
 const configs: Iconfig = { ...dConfig }//hw_deepMergeObj({},dConfig)
@@ -40,11 +39,10 @@ const HistoryContentRef = ref()
 const toast = useESToast()
 const isShowFilter = ref(true)
 // const isShowMenu = ref(true)
-const dMenuWidth = 350
 const dContentHeight = 900
 const contentHeight = ref(dContentHeight)
 const dTabFilterHeight = 100
-const dContentWidth = 1570
+const dContentWidth = pageWidth-configs.menuWidth
 const contentWidth = ref(dContentWidth)
 const isNoMenu = ref(false)
 
@@ -117,11 +115,11 @@ const setDataCallBackFn = (boo) => {
 }
 
 function onESCreate(params) {
-    HistoryMenuRef.value?.initData().then(res => {
+    HistoryMenuRef.value?.initData(Number(params.focusMenuIndex||0)).then(res => {
         if (res) {
             contentWidth.value = dContentWidth
         } else {
-            contentWidth.value = dContentWidth + dMenuWidth
+            contentWidth.value = pageWidth
             emChangeMenuFn()
         }
         isNoMenu.value = !res
@@ -136,6 +134,70 @@ const emContentClearAllFn = () => {
         emInitNoDataFn()
     }
 }
+const menuStyle = computed<StyleValue>(()=>{
+    let res:StyleValue = { left: 0, top: 0}
+    if(dConfig.layout === layouts.rt){
+        res = {left: dContentWidth+'px', top: 0}
+    }
+    if(dConfig.layout === layouts.rb){
+        res = {left: dContentWidth+'px',top: 0}
+    }
+    return res
+})
+const topStyle = computed<StyleValue>(()=>{
+    let res:StyleValue = { left: configs.menuWidth+'px', top: 0}
+    if(dConfig.layout === layouts.lb){
+        res = {left: configs.menuWidth+'px', top: 0}
+    }
+    if(dConfig.layout === layouts.rt){
+        res = {left: 0, top: 0}
+    }
+    if(dConfig.layout === layouts.rb){
+        res = { left: 0, top: 0}
+    }
+    if(isNoMenu.value){
+        res.left = 0
+    }
+    return res
+})
+const tabStyle = computed<StyleValue>(()=>{
+    let res:StyleValue = {left: configs.menuWidth+'px', top: '100px'}
+    if(dConfig.layout === layouts.lb){
+        res = {left: configs.menuWidth+'px', top: '980px'}
+    }
+    if(dConfig.layout === layouts.rt){
+        res = {left: 0,top: '100px'}
+    }
+    if(dConfig.layout === layouts.rb){
+        res = { left: 0,top: '980px' }
+    }
+    if(!isShowFilter.value){
+        return  res.display = 'none'
+    }
+    if(isNoMenu.value){
+        res.left = 0
+    }
+    return res
+})
+const contentStyle = computed<StyleValue>(()=>{
+    let res:StyleValue = {left: configs.menuWidth+'px', top: '200px'}
+    if(dConfig.layout === layouts.lb){
+        res = {left: configs.menuWidth+'px',top: '100px'}
+    }
+    if(dConfig.layout === layouts.rt){
+        res = {left: '0px', top: '200px'}
+    }
+    if(dConfig.layout === layouts.rb){
+        res = { left: '0px', top: '100px' }
+    }
+    if(!isShowFilter.value){
+        res.top = '100px'
+    }
+    if(isNoMenu.value){
+        res.left = 0
+    }
+    return res
+})
 defineExpose({
     onESCreate,
     onKeyDown(keyEvent) {
@@ -171,124 +233,25 @@ defineExpose({
 
 .menu {
     position: absolute;
-    left: 0;
-    top: 0;
     z-index: 10;
     background-color: transparent;
 }
 
 .top {
     position: absolute;
-    left: 350px;
-    top: 0;
     z-index: 9;
     background-color: transparent;
 }
 
 .tab {
     position: absolute;
-    left: 350px;
-    top: 100px;
     z-index: 8;
     background-color: transparent;
 }
 
 .content {
     position: absolute;
-    left: 350px;
-    top: 200px;
     z-index: 1;
     background-color: transparent;
-}
-
-.history_leftBootom {
-    .top {
-        left: 350px;
-        top: 0;
-    }
-
-    .tab {
-        left: 350px;
-        top: 980px;
-    }
-
-    .content {
-        left: 350px;
-        top: 100px;
-    }
-}
-
-.history_rightTop {
-    .menu {
-        left: 1575px;
-        top: 0;
-    }
-
-    .top {
-        left: 0;
-        top: 0;
-    }
-
-    .tab {
-        left: 0;
-        top: 100px;
-    }
-
-    .content {
-        left: 0;
-        top: 200px;
-    }
-}
-
-.history_rightBootom {
-    .menu {
-        left: 1575px;
-        top: 0;
-    }
-
-    .top {
-        left: 0;
-        top: 0;
-    }
-
-    .tab {
-        left: 0;
-        top: 980px;
-    }
-
-    .content {
-        left: 0;
-        top: 100px;
-    }
-}
-
-.history_no_filter {
-    .tab {
-        display: none;
-    }
-
-    .content {
-        top: 100px;
-    }
-}
-
-.history_no_filter.history_rightTop {
-    .content {
-        top: 100px;
-    }
-}
-
-.history_no_menu {
-    .top {
-        left: 0;
-    }
-
-    .tab {
-        left: 0;
-    }
-
-    .content {
-        left: 0;
-    }
 }
 </style>

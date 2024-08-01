@@ -31,7 +31,7 @@ import bgPlayer, { CoveredPlayerType } from "../../components/bg-player.vue"
 // import RankTab from './RankTab.vue'
 import RankTabContent from './RankTabContent/index.vue'
 import rankApi from '../../api/ranking/index'
-import { IrankingConfig } from '../../api/ranking/types'
+import { IrankingConfig,IrankingRouteParams } from '../../api/ranking/types'
 import type {
   QTITab, QTWaterfall, QTTab
 } from "@quicktvui/quicktvui3";
@@ -45,10 +45,12 @@ const loading = ref(true)
 const configs = ref<Partial<IrankingConfig>>({});
 const initShowIndex = ref(0)
 
-const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
+let tabList:any[] = []//tab按钮列表数据
+
+const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean, ...arg) => {
   if(pageNo > 0) return//没有分页数据
   if(tabRef.value){
-    rankingUi.setData(tabRef.value, pageIndex)
+    rankingUi.setData(tabRef.value, pageIndex, tabList[pageIndex])
   }
 }
 
@@ -65,7 +67,7 @@ const onTabPageChanged = (pageIndex: number, data: any) => {
 }
 
 defineExpose({
-  onESCreate(params){
+  onESCreate(params:IrankingRouteParams){
     bgPlayerRef.value?.changeShadow(true)
     rankApi.initPageData(params).then(()=>{
       loading.value = false
@@ -73,6 +75,7 @@ defineExpose({
       configs.value = rankApi.getConfig()
 
       rankApi.getTabData().then(res=>{
+        tabList = res
         const tab: QTTab = {
           defaultFocusIndex: initShowIndex.value,
           defaultIndex: initShowIndex.value,
@@ -95,6 +98,7 @@ defineExpose({
   },
   onESDestroy(){
     rankingUi.clear()
+    tabList = []
   }
 })
 </script>

@@ -35,6 +35,26 @@ export interface IHistoryContentEntity {
     } 
     [k:string]: any
 }
+export interface IHistoryApiEntity {
+    classid: string//"1800010005"
+    classkeyid: number//2857 分类id
+    classname: string//"动画动漫" 板块名称
+    creationtime?: number//1717408952000 创建时间
+    currentplaytime: number//1 当前播放时间
+    id: string;//"337929219"
+    musicvideoid: number;//490180 视频id
+    musicvideoname: string;//"五灵碎片" 视频名称
+    packageid: number;//25953 产品包id
+    packagename: string;//"猪猪侠五灵卫士2" 产品包名称
+    parentkeyid?: string;//"2857"
+    playcount: number;//1播放到第几集
+    portraitImgUrl?: string;//"http://lexueimg.cedock.com/eduImg/upload/img4/20240311105100052.jpg"
+    poster: string;// 图片 "http://lexueimg.cedock.com/eduImg/upload/img5/20240311105100052.jpg"
+    status?: string//"ADD"
+    type?: string;//"product"
+    userId?: string;//"4E25E13948A6151A6AF4F072FAE65317"
+    [k:string]: any
+}
 
 // Dto
 export interface IHistoryMenuDto {

@@ -1,5 +1,5 @@
 <template>
-  <div class="d2_info" :style="getStyle()" :clipChildren="false" v-if="dideoDesData">
+  <div class="d2_info" :style="getStyle()" :clipChildren="false" v-if="dideoDesData" :blockFocusDirections="['left','right']">
     <!-- autoWidth autoHeight -->
     <text-view 
       class="d2_info_title" :ellipsizeMode="2" :lines="1" gravity="centerVertical"
@@ -16,12 +16,12 @@
       </div>
     </div>
 
-    <div class="d2_info_des" v-if="dideoDesData.des" :focusable="true" :focusScale="1.05">
+    <div class="d2_info_des" v-if="dideoDesData.des" :focusable="false">
       <text-view 
         class="d2_info_des_txt" :ellipsizeMode="2" :lines="1" gravity="centerVertical"
         :text="dideoDesData.des" :focusable="false" typeface="bold"
       />
-      <div class="d2_info_des_more_box" :focusable="false" duplicateParentState>
+      <div class="d2_info_des_more_box" :focusable="true" :focusScale="1.05" @click="clickMore">
         <span class="d2_info_des_more" :focusable="false" duplicateParentState>更多</span>
       </div>
     </div>
@@ -51,10 +51,12 @@ import D2InfoAction2 from './D2InfoAction2.vue'
 import D2InfoAction3 from './D2InfoAction3.vue'
 // @ts-ignore
 import { detail2Ui } from '../index.ts'
+import { useESRouter } from '@extscreen/es3-router';
 
 const emits = defineEmits(['clickAction'])
 const configs = api.getConfig()
 const dideoDesData = ref<IvideoDes>(detail2Ui.getCurrentPlay().videoData)
+const router = useESRouter()
 
 const getStyle = ():StyleValue=>{
   return {
@@ -78,6 +80,12 @@ const getTagSplitStyle = (tagItem:Itag):StyleValue => {
     paddingLeft: (tagItem.gap||0)+'px', paddingRight: (tagItem.gap||0)+'px',
     color: tagItem.color
   }
+}
+const clickMore = ()=>{
+  router.push({
+    name: 'd2Introduction',//'d2Introduction',
+    params: dideoDesData.value
+  })
 }
 const clickActionFn = (actionItem)=>{
   emits('clickAction', actionItem)
