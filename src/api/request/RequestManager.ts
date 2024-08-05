@@ -234,6 +234,7 @@ export function createRequestManager(): RequestManager {
           })
         }
       }).catch(error => {
+        console.error('request fail url:'+url, error)
         reject({
           code: '-1',
           message: '发生错误，请稍后重试！' + error
