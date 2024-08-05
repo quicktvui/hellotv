@@ -2,7 +2,7 @@ import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
 import { QTWaterfallSectionType, QTWaterfallItemType } from "@quicktvui/quicktvui3";
-import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabListItem,IvideoParams,IvideoDes,Id2BaseSection } from '../../api/details2/types'
+import type { IselectionPoster, IselectionBaseSection, IselectionSection,ItabListItem,IvideoParams,IvideoDes,Id2BaseSection, ImediaSelection } from '../../api/details2/types'
 import { tabTypes, posterTypes } from '../../api/details2/types'
 import { getPosterConfig } from '../../components/Hposter/configs'
 import d2Api from '../../api/details2/index'
@@ -18,6 +18,15 @@ const sWaterfallHeight = 470
 const dSectionSpace = 96
 const dSectionTitleSize = 42
 const dSectionTitleBottom = 30
+
+export const getSelectionSeriesPoster = (sData:IselectionPoster) => {
+  return {
+    showVip: !!sData.corner, id: sData.id,
+    vip: { enable: !!sData.corner, text: sData.corner||'' },
+    title: sData.title||'',
+    videoData: sData.videoData
+  }
+}
 
 export const getSelectionPoster = (sData:IselectionPoster) => {
   const config = getPosterConfig({
@@ -124,6 +133,19 @@ class Detail2Ui {
   tab2Sid = ''
   tabListSid = ''
 
+  //选集数据
+  selectionList:ImediaSelection[]=[]
+  selectionListIndex:number=0
+  async getMediaSelectionList(pageNo=1, pageSize=10){
+    if(this.selectionListIndex === pageNo){
+      return this.selectionList
+    }
+    this.selectionListIndex = pageNo
+    const selectionList = await d2Api.getMediaSelectionList(this.vdata as IvideoDes,pageNo, pageSize)
+    this.selectionList = this.selectionList.concat(selectionList)
+    return this.selectionList
+  }
+
   /**
    * 设置初始详情页数据
    * @param vParams 
@@ -132,17 +154,50 @@ class Detail2Ui {
     const vData = await d2Api.getDetailVideoData(vParams)
     this.vdata = vData
 
-    const selectionList = await d2Api.getMediaSelectionList(vData)
+    const selectionList = await this.getMediaSelectionList()
     this.playList = selectionList
+  }
+
+  checkItemListOfVdata(iList:TposterType[]){
+    for(let i = 0; i < iList.length; i++){
+      const item = iList[i]
+      if(item.videoData.id === this.vdata?.id){
+        this.selectTabListIndex = i;
+        return true
+      }
+    }
+    return false;
   }
   /**
    * 初始化选集索引位置 
    */
-  initIndex(tabIndex, tab2Index, listIndex){
-    this.selectTabIndex = tabIndex
-    this.selectTab2Index = tab2Index
-    this.selectTabListIndex = listIndex
-    this.currentPlayPath = [tabIndex,tab2Index,listIndex]
+  initIndex(sSection:QTWaterfallSection){
+    for1:for (let i = 0; i < sSection.itemList.length; i++) {
+      const item = sSection.itemList[i];
+      if(item.isSelectionTab){
+        if(this.checkItemListOfVdata(this.selectionList as any)){ 
+          this.selectTabIndex = i
+          break for1
+        }
+      } else if(item.tabList){
+        for (let j = 0; j < item.tabList.length; j++) {
+          const itItem = item.tabList[j]
+          if(itItem.itemList){
+            if(this.checkItemListOfVdata(itItem.itemList as any)){
+              this.selectTabIndex = i
+              this.selectTab2Index = j;
+              break for1
+            }
+          }
+        }
+      } else if(item.itemList){
+        if(this.checkItemListOfVdata(item.itemList as any)){
+          this.selectTabIndex = i
+          break for1
+        }
+      }
+    }
+    this.currentPlayPath = [this.selectTabIndex,this.selectTab2Index,this.selectTabListIndex]
     this.setTabPath()
   }
   setTabPath(){
@@ -292,6 +347,9 @@ class Detail2Ui {
     this.vdata = undefined
     this.tabPath = new Map<number, IpathLinked>()
     this.selectionPositoin = 0
+
+    this.selectionList = []
+    this.selectionListIndex = 0
   }
 }
 export const detail2Ui = new Detail2Ui()

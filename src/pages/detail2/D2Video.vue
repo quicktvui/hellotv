@@ -27,7 +27,7 @@ const playerIsInitialized = ref(false)
 const onPlayerInitialized = () => {
   playerIsInitialized.value = true
 }
-const playByIndex = (playList=[]) => {
+const playByIndex = (playList:any[]=[]) => {
   if(playList.length){
     PlayerManagerRef.value?.playMediaList({
       index: detail2Ui.selectTabListIndex,
@@ -67,6 +67,7 @@ detail2Ui.$on((playList=[]) => {
       initPlay(playList)
       prevListLength = playList.length
     } else {
+      PlayerManagerRef.value?.pause()
       PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
     }
   }

@@ -26,7 +26,7 @@ export const getMockVideoData = (index:number):IvideoDes => {
   const vId = tUid.cleateId()+index
   const vPackageId = tUid.cleateId('packageId')+index
   return {
-    id: vId, packageId: vPackageId,
+    id: vId, packageId: vPackageId,classId:tUid.cleateId('classId')+index,
     title: title, vUrl: videos[index % videos.length],
     vPoster: imgs[getRandomInt(0, imgs.length)],
     subTitle: '副标题'+title,
