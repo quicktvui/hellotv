@@ -40,7 +40,7 @@
     "@extscreen/es3-video-player": "1.0.32",
     "@extscreen/es3-vue": "0.0.14",
     "@extscreen/es3-vue-style-parser": "0.0.8",
-    "@quicktvui/quicktvui3": "^1.1.37-beta.1",
+    "@quicktvui/quicktvui3": "1.1.37-beta.3",
     "@vue/devtools-api": "^6.5.0",
     "@vue/runtime-core": "^3.2.21",
     "@vue/shared": "^3.2.21",
