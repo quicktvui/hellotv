@@ -4,13 +4,20 @@ import {LaunchKey} from "./useApi";
 import {ESNativeRouter, Router} from "@extscreen/es3-router";
 import {ESLog, ESLogLevel} from "@extscreen/es3-core";
 
+export const launchRedirectType = {
+    router: 1, out: 2
+}
+
+  
 export interface Launch {
 
     install(app: ESApp): void
 
     init(...params: any[]): Promise<any>;
 
-    launch(item:any): void
+    launch(item:any): void;
+    jumpLogin(item?:any): void;
+    jumpVipPay(item?:any): void
 }
 
 export function createLaunch(): Launch {
@@ -61,6 +68,13 @@ export function createLaunch(): Launch {
         }
     }
 
+    function jumpLogin(item?:any) {
+        //统一跳转登录的页面，每个业务各自实现具体逻辑
+    }
+    function jumpVipPay(item?:any) {
+        //统一跳转支付的页面，每个业务各自实现具体逻辑
+    }
+    
     return {
         install: function (app: ESApp) {
             const instance = this
@@ -68,5 +82,10 @@ export function createLaunch(): Launch {
         },
         init,
         launch,
+        jumpLogin,
+        jumpVipPay
     }
 }
+
+const launch = createLaunch()
+export default launch

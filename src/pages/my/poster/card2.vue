@@ -7,15 +7,19 @@
       <text-view 
       class="my_poster_card2_text my_poster_card2_text_f" :focusable="false" autoWidth autoHeight 
       textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1" :postDelay="200"
-      gravity="center" text="${focusTitle.text}" />
-      <img class="my_poster_card2_icon" :focusable="false" src="${focusedImageSrc}" />
+      gravity="center" text="${focusTitle.text}" typeface="bold"/>
+      <div class="my_poster_card2_icon_box">
+        <img class="my_poster_card2_icon" flexStyle="${icon.style}" :focusable="false" src="${focusedImageSrc}" />
+      </div>
     </div>
     <div :showOnState="['normal']" class="my_poster_card_name2_inner" flexStyle="${style}" :focusable="false" :duplicateParentState="true">
       <text-view 
       class="my_poster_card2_text" :focusable="false" autoWidth autoHeight 
       textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1" :postDelay="200"
-      gravity="center" text="${title.text}" />
-      <img class="my_poster_card2_icon" :focusable="false" src="${image.src}" />
+      gravity="center" text="${title.text}" typeface="bold"/>
+      <div class="my_poster_card2_icon_box">
+        <img class="my_poster_card2_icon" flexStyle="${icon.style}" :focusable="false" src="${image.src}" />
+      </div>
     </div>
   </div>
 </template>
@@ -36,7 +40,7 @@
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  border-radius: 20px;
+  border-radius: 16px;
   border-style: solid;
   border-width: 1px;
   border-color: transparent;
@@ -50,22 +54,31 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: #2A2F39;
-  border-radius: 20px;
+  background-color: rgba(255,255,255,0.15);
+  border-radius: 16px;
   border-style: solid;
   border-width: 1px;
-  border-color: #696A80;
+  border-color: rgba(255,255,255,0.5);
 }
 .my_poster_card2_text{
   margin-bottom: 20px;
+  color: #ffffff;
   background-color: transparent;
 }
+.my_poster_card2_icon_box{
+  width: 147px;
+  height: 147px;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
 .my_poster_card2_icon{
-  width: 120px;
-  height: 128px;
+  /* width: 120px;
+  height: 128px; */
   background-color: transparent;
 }
 .my_poster_card2_text_f{
-  color: #ffffff;
+  color: #023B2B;
 }
 </style>

@@ -18,9 +18,9 @@
           </div>
         </div>
         <!-- ${image.src} -->
-        <text-view class="poster_into_title" :focusable="false" autoWidth
+        <text-view class="poster_into_title" :focusable="false" autoWidth duplicateParentState
           textSize="${title.style.fontSize}" :ellipsizeMode="2" :lines="1" :postDelay="200" gravity="center|center"
-          text="${title.text}" showIf="${title.enable}" />
+          text="${title.text}" showIf="${title.enable}" typeface="bold"/>
       </div>
     </div>
   </item-frame>
@@ -37,11 +37,11 @@
   left: 0;
   top: 0;
   z-index: 1;
-  background-color: #2A2F39;
-  border-radius: 20px;
+  background-color: rgba(255,255,255,0.15);
+  border-radius: 16px;
   border-style: solid;
   border-width: 1px;
-  border-color: #696A80;
+  border-color: rgba(255,255,255,0.5);
 }
 .poster_into_content_box_bg{
   position: absolute;
@@ -49,7 +49,7 @@
   top: 0;
   z-index: 2;
   background-color: transparent;
-  border-radius: 20px;
+  border-radius: 16px;
 }
 .poster_into_content_box{
   position: absolute;
@@ -62,7 +62,7 @@
   justify-content: center;
   align-items: center;
   background-color: transparent;
-  border-radius: 20px;
+  border-radius: 16px;
 }
 .poster_into_content_box_info{
   display: flex;
@@ -76,6 +76,7 @@
   background-color: transparent;
   height: 50px;
   color: #ffffff;
+  focus-color: #023B2B;
 }
 
 .poster_into_icon_box{

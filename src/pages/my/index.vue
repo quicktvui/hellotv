@@ -17,7 +17,6 @@
 </template>
 <script lang='ts' setup>
 import { CSSProperties, reactive, computed, ref, onBeforeUnmount } from 'vue';
-// import { useLoginDataSource, useUserManager } from "../../api/UseApi"
 import MyTemplates from './MyTemplates.vue'
 // @ts-ignore
 import myApi from '../../api/my/index.ts'
@@ -62,23 +61,7 @@ const contentStyle = computed<CSSProperties>(() => {
 const contentData = qtRef<QTWaterfallSection[]>()
 
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
-  if(item._redirectType == activity_redirectTypes.innerRouter && item._router){
-    if(item._router.url === 'logout'){
-      userManager.clearUserInfo()
-    } else {
-      const route = {
-        name: item._router.url, //'series_view',
-          params: item._router.params?{...item._router.params}:undefined
-      }
-      if(item._router.isReplace){
-        router.replace(route);
-      } else {
-        router.push(route);
-      }
-    }
-  } else if(item._redirectType == activity_redirectTypes.innerApp && item._action){
-    nRouter.launch([['-d', item._action]])
-  }
+  myDataManager.routerLaunch(item)
 }
 
 let isUserChange = false
@@ -99,9 +82,12 @@ const updateData = async () => {
     getUserData(userinfo, newInfo)//因为使用了双向绑定，所以这里不需要再使用主动更新ui
 
     // 更新历史数据
-    const historyRes = await myApi.getHistorys()
-    const hisSection = transHistorySection(false, historyRes)
-    contentData.value[1] = hisSection
+    const historyRes = await myApi.getHistorys(true)
+    if(historyRes){
+      const hisSection = transHistorySection(false, historyRes)
+      contentData.value[1] = hisSection
+    }
+    
 
     isUserChange = false
     isLoading.value = false

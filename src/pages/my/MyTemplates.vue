@@ -7,6 +7,7 @@
     <MyPosterBtn />
     <MyPosterCard2 />
     <MyPosterPoster2 />
+    <MyPosterLogoutBtn />
   </div>
 </template>
 <script lang='ts' setup>
@@ -18,6 +19,7 @@ import MyPosterUser from './poster/user.vue'
 import MyPosterBtn from './poster/btn.vue'
 import MyPosterCard2 from './poster/card2.vue'
 import MyPosterPoster2 from './poster/poster2.vue'
+import MyPosterLogoutBtn from './poster/logoutBtn.vue'
 defineExpose({})
 </script>
 <style scoped>

@@ -1,12 +1,15 @@
 <template>
-  <item-frame :type="101" layout="${layout}" flexStyle="${style}" focusScale="${focus.scale}" :focusable="true" eventClick
+  <item-frame 
+    :type="101" layout="${layout}" flexStyle="${style}" :focusable="true" eventClick
+    focusScale="${focus.scale}" :placeholderScale="1.001" 
     eventFocus name="my_poster_name" class="qt-ui-poster-root-css" itemShowShimmer="${shimmer.enable}"
-    hideShadow="${shadow.enable}" shimmerSize="${size}">
+    hideShadow="${shadow.enable}" shimmerSize="${size}" :clipChildren="false"
+  >
     <!-- :enableBlackBorder="false" -->
-    <div :focusable="false" duplicateParentState="${editMode==false}" class="content_box" flexStyle="${style}">
-      <div showIf="${editMode==false}" :focusable="false" :duplicateParentState="true" class="content_box_bg"
+    <div :focusable="false" duplicateParentState class="content_box" flexStyle="${style}" :clipChildren="false">
+      <div :focusable="false" :duplicateParentState="true" class="content_box_bg"
         flexStyle="${bgStyle}" :enableBlackBorder="false"></div>
-      <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${innerStyle}">
+      <div :focusable="false" :duplicateParentState="true" class="content_box_info" flexStyle="${style}">
         <img class="my_poster_img_css" :duplicateParentState="true" :postDelay="300" :focusable="false"
           enableFocusBorder="${focus.border}" flexStyle="${image.style}" src="${image.src}" />
         <div showIf="${floatTitle.enable}" flexStyle="${image.style}" class="float_title_box" :focusable="false"
@@ -39,15 +42,17 @@
             :duplicateParentState="true" :focusable="false" textSize="${title.style.fontSize}"
             ellipsizeMode="${titleEllipsizeMode}" lines="${titleLines}" gravity="center|left"
             flexStyle="${title.style}" text="${focusTitle.text}" showIf="${focusTitle.enable}"
-            class="poster_title_f_text" :paddingRect="[5,0,0,0]"
+            class="poster_title_f_text" :paddingRect="[10,0,10,0]"
           />
           <text-view class="poster_subtitle" :focusable="false" fontSize="${subTitle.style.fontSize}"
             :ellipsizeMode="2" :lines="1" gravity="centerVertical|left" flexStyle="${subTitle.style}"
             :duplicateParentState="true" text="${subTitle.text}" visibility="${subTitle}"
-            :paddingRect="[5,0,0,0]"
+            :paddingRect="[10,0,10,0]"
           />
         </div>
       </div>
+      <div :focusable="false" :duplicateParentState="true" class="content_box_cover"
+        flexStyle="${coverStyle}" :enableBlackBorder="true"></div>
     </div>
   </item-frame>
 </template>
@@ -102,34 +107,48 @@ export default defineComponent({
 /* ------- */
 .content_box {
   position: relative;
-  border-radius: 20px;
+  border-radius: 16px;
   background-color: transparent;
 }
 
 .content_box_bg {
-  border-radius: 20px;
+  position: absolute;
+  left: 0.01px;
+  top: 0.01px;
+  z-index: 1;
+  border-radius: 16px;
   background-color: transparent;
-  focus-background-color: #ffffff;
+  focus-background-color: #FFFFFF;
 }
 
 .content_box_info {
   position: absolute;
-  left: 0;
-  top: 0;
-  z-index: 1;
-  border-radius: 20px;
+  left: 0.01px;
+  top: 0.01px;
+  z-index: 2;
+  border-radius: 16px;
   background-color: transparent;
 }
-
+.content_box_cover{
+  position: absolute;
+  left: 0.01px;
+  top: 0.01px;
+  z-index: 3;
+  border-radius: 16px;
+  background-color: transparent;
+  focus-border-style: solid;
+  /* focus-border-width: 8px; */
+  focus-border-color: #FFFFFF;
+}
 .my_poster_img_css {
   /* rgba(255, 255, 255, 0.1) */
   background-color: transparent;
   z-index: 1;
-  border-radius: 20px;
-  /* focus-border-width: 8px; */
-  focus-border-color: #ffffff;
+  border-radius: 16px;
+  /* focus-border-width: 8px;
+  focus-border-color: #FEE100;
   focus-border-style: solid;
-  focus-border-radius: 20px;
+  focus-border-radius: 16px; */
 }
 
 .float_title_box {
@@ -169,20 +188,21 @@ export default defineComponent({
   position: absolute;
   left: 0;
   top: 0;
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   z-index: 2;
-  color: #000000;
+  color: #023B2B;
   /* margin-top: -30px; */
-  border-bottom-left-radius: 20px;
-  border-bottom-right-radius: 20px;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 }
 .poster_title_f_text{
-  color: #000000;
+  color: #023B2B;
 }
 
 /* #666666 */
 .poster_subtitle {
-  color: #92949A;
+  color: #ffffff;
   background-color: transparent;
+  focus-color: #023B2B;
 }
 </style>

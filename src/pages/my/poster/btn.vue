@@ -10,6 +10,7 @@
     <text-view 
       class="my_poster_btn_txt" :focusable="false" autoWidth autoHeight :duplicateParentState="true"
       :ellipsizeMode="2" :lines="1" :postDelay="200" gravity="center" text="${title.text}"
+      typeface="bold"
     />
   </div>
   </div>
@@ -35,11 +36,11 @@
   left: 0;
   top: 0;
   z-index: 1;
-  background-color: #2A2F39;
+  background-color: rgba(255,255,255,0.15);
   border-style: solid;
   border-width: 1px;
-  border-color: #696A80;
-  border-radius: 20px;
+  border-color: rgba(255,255,255,0.5);
+  border-radius: 16px;
 }
 .my_poster_btn_inner{
   position: absolute;
@@ -50,10 +51,11 @@
   flex-direction: row;
   justify-content: center;
   align-items: center;
-  border-radius: 20px;
+  border-radius: 16px;
 }
 .my_poster_btn_txt{
   color: #ffffff;
-  /* focus-color: #000000; */
+  font-size: 36px;
+  focus-color: #023B2B;
 }
 </style>

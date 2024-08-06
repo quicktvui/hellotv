@@ -1,13 +1,16 @@
 import {
   QTPoster, QTWaterfallItem,
   QTWaterfallSection,
-  QTWaterfallSectionType, QTITab, QTTabPageData, QTTabPageState
+  QTWaterfallSectionType, QTITab, QTTabPageData, QTTabPageState,
+  VirtualView
 } from '@quicktvui/quicktvui3';
 import { Ref } from 'vue'
 import myApi from '../../api/my/index';
 import userManager from '../../api/login/user/UserManager'
 import {UserChangeListener} from '../../api/login/user/UserChangeListener'
 import { UserInfo } from "../login/build_data/UserInfo"
+// import { Native } from "@extscreen/es3-vue"
+import launch from '../../tools/launch/Launch';
 
 export const activity_redirectTypes = {
   innerRouter: 1,//跳转到当前app内部页面
@@ -18,7 +21,8 @@ export const activity_redirectTypes = {
 const dcornerGradientBg = { colors: ['#FFE398', '#EEB364'], cornerRadii4: [0, 8, 0, 8], orientation: 2, }
 
 export const posterTypes = {
-  poster: 101, card: 102, info: 103, user: 104, btn: 105, card2: 106, poster2: 107
+  poster: 101, card: 102, info: 103, user: 104, btn: 105, card2: 106, poster2: 107,
+  logout: 108
 }
 export interface IBlockItemData {
   id: string
@@ -39,10 +43,11 @@ export interface IBlockItemData {
   gradientBb?: typeof dcornerGradientBg;//背景色-渐变色
   _router?: { //当前app内部路由地址
     url: string; params?: object,
-    isReplace?:boolean//是否替换当前页
+    isReplace?:boolean;//是否替换当前页
+    [k: string]: any
   }
   _action?: string; // 内部其他app地址
-  _redirectType?: number;//跳转类型，取值见activity_redirectTypes
+  _redirectType?: number|string;//跳转类型，取值见activity_redirectTypes
   _layout?: { x?: number; y?: number; width?: number; height?: number };
   [k: string]: any
 }
@@ -63,6 +68,7 @@ interface Ioptions { //Partial
 }
 interface IblockOptions {
   blockTitleFontSize?: number;
+  blockTitleTop?:number;
   columns?: number;
   space?: number;
   posterBottom?: number;
@@ -76,6 +82,8 @@ interface IBlockData {
   options?: IblockOptions
 }
 
+const titleTop = 15
+
 const dWidth = 408
 const dHeight = 228
 const whRatio = dHeight / dWidth
@@ -87,7 +95,7 @@ const dFloatTitleFontSize = 24
 const dSubTitleFontSize = 24
 const dSpace = 48//36
 const dBlockTitleFontSize = 44
-const dPadding = 1
+const dPadding = 0
 const dColumns = 4
 const dIconWidth = 80
 const dIconHeight = 80
@@ -119,7 +127,8 @@ const getSubTitle = (data: IBlockItemData) => {
   return subTitle
 }
 export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={}): QTPoster => {
-  const space = options.space || dSpace
+  const itemPadding = options.itemPadding || dPadding
+  let space = options.space==undefined?dSpace:options.space
   const contentWidth = dPageWidth - dPageMarginSpace - (dPageMarginSpace - space)
 
   const subTitle = getSubTitle(data)
@@ -133,9 +142,8 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
   if (!posterHeight) {
     posterHeight = posterWidth * whRatio
   }
-  const imgWidth = posterWidth - (dPadding * 2)
+  const imgWidth = posterWidth
   const imgHeight = posterHeight
-  posterHeight += dPadding * 2
 
   const ratio = imgWidth / dWidth
   const titleFontSize = data._titleFontSize || (dTitleFontSize  * ratio)
@@ -144,14 +152,15 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
   const posterSubTitleHeight = subTitleFontSize + 20
   const iconWidth = dIconWidth * ratio;
   const iconHeight = dIconHeight * ratio
-  const posterType = options.posterType || data.posterType || dPosterType
-  if (posterType === posterTypes.poster||posterType === posterTypes.poster2) {
+  const posterType = options.posterType || data.posterType || dPosterType || posterTypes.poster
+  if (posterType === posterTypes.poster||posterType === posterTypes.poster2) {//||posterType==posterTypes.info
     if (data.title) {
       posterHeight += posterTitleHeight
     }
     if (subTitle) {
       posterHeight += posterSubTitleHeight
     }
+    posterHeight += titleTop
   }
 
   const titleboxHeight = (data.title ? posterTitleHeight : 0) + (subTitle ? posterSubTitleHeight : 0)
@@ -160,7 +169,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     _id: data._sectionItemId || data.id,
     _router: data._router,
     _action: data._action,
-    avatarStyle: data.avatarStyle, tip: data.tip,
+    tip: data.tip,
     focusedImageSrc: data.focusedImage||data.img,
     focusedBgColor: data.focusedBgColor,
     item: {
@@ -171,7 +180,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     cornerNum, _isShowCornerNum: cornerNum !== '0',
     _isCornerNum: data.cornerNum ? true : false,
     focus: { enable: true, scale: 1.001, border: false, },
-    type: posterType || posterTypes.poster,//10001
+    type: posterType,//10001
     editMode: false,
     decoration: {
       left: 0,
@@ -182,11 +191,10 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
       width: posterWidth,
       height: posterHeight,
     },
-    innerStyle: {
-      width: imgWidth,
-      height: posterHeight - (dPadding * 2),
-      marginLeft: dPadding,
-      marginTop: dPadding
+    imageBgStyle:{
+      width: imgWidth + itemPadding*2,
+      height: imgHeight + itemPadding*2,
+      marginTop: -itemPadding, marginLeft: -itemPadding,
     },
     image: {
       src: data.img,
@@ -218,7 +226,7 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
       style: {
         width: imgWidth,
         height: data.title ? posterTitleHeight : 0,
-        fontSize: titleFontSize
+        fontSize: titleFontSize,
       }
     },
     focusTitle: {
@@ -228,14 +236,20 @@ export const getPosterConfig = (data: IBlockItemData, options: IblockOptions={})
     titleBoxStyle: {
       width: posterWidth,
       height: titleboxHeight,
-      marginTop: imgHeight
+      marginTop: imgHeight+titleTop
     },
     titleFocuseBoxStyle: {
       width: posterWidth,
       height: titleboxHeight,
-      marginTop: imgHeight - 20
+      marginTop: imgHeight - 16,
+      paddingTop: 5,
     },
     bgStyle: {
+      width: posterWidth,// + itemPadding*2,
+      height: (posterHeight - 20),// + itemPadding,
+      // marginTop: -(itemPadding+1), marginLeft: -(itemPadding+1),
+    },
+    coverStyle: {
       width: posterWidth,
       height: posterHeight - 20,
     },
@@ -273,7 +287,8 @@ export interface ImySectionRes {
   sectionHeight:number
 }
 export const getMysection = (data: IBlockData, sectionType: number = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX): ImySectionRes => {
-  const space = data.options?.space || dSpace
+  const itemPadding = data.options?.itemPadding || dPadding
+  let space = data.options?.space==undefined?dSpace:data.options.space
   const contentWidth = dPageWidth - dPageMarginSpace - (dPageMarginSpace - space)
   let sectionHeight = 0
   const itemList = data.list.map((item, index) => {
@@ -287,11 +302,12 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
     type: sectionType,//QT_WATERFALL_SECTION_TYPE_FLEX
     title: data.title || '',
     titleStyle: {
-      marginTop: 0,
-      marginBottom: data.title ? 20 : 1,
+      marginTop: data.options?.blockTitleTop||0,
+      marginBottom: data.title ? data.options?.blockTitleBottom||(20) : 1,
       fontSize: blockTitleFontSize,
       height: data.title ? blockTitleFontSize : 1,
       width: 1000,
+      marginLeft: 1,
     },
     //3.构造section中item列表数据
     itemList,
@@ -315,36 +331,44 @@ export const getMysection = (data: IBlockData, sectionType: number = QTWaterfall
 }
 
 import recordIcon2 from '../../assets/my/record2.png'
-import recordIconf from '../../assets/my/record3.png'
+// import recordIconf from '../../assets/my/record3.png'
 export const transHistorySection = (_ = false, historyRes: ImySectionRes) => {
-  const isLogin =  userManager.getUserInfo()
+  // const isLogin =  userManager.getUserInfo()
   historyRes.section.itemList = historyRes.section.itemList.slice(0, 3)
   historyRes.section.itemList.push(getPosterConfig({
-    id: historyRes.section._id || '' + historyRes.section.itemList.length,
-    _router: { url: 'history' },
+    id: 'my_history_all_btn', _id: 'my_history_all_btn',//historyRes.section._id || '' + historyRes.section.itemList.length,
+    _router: { url: 'history', isMyRouter: true, isNoCheckLogin:true },
     _redirectType: activity_redirectTypes.innerRouter,
-    img: recordIcon2, focusedImage: recordIconf,
-    focusedBgColor: {colors:['#FF0057FF','#FF00C7FF'], cornerRadii4: [20, 20, 20, 20],orientation:6},
-    title: isLogin ? '全部记录' : '登陆同步云端历史', _iconHeight: 120, _iconWidth:120,
-    _layout: { width: 408, height: 228 }
+    img: recordIcon2, focusedImage: recordIcon2,
+    focusedBgColor: {colors:['#ffffff','#ffffff'], cornerRadii4: [16, 16, 16, 16],orientation:6},
+    title: '全部记录',//isLogin ? '全部记录' : '登录同步云端历史',
+    _iconHeight: 88, _iconWidth: 88,
+    _layout: { width: 408, height: 228 }, subTitle: '-'
   }, {
     space: historyRes.options?.space,
-    posterType: posterTypes.info
+    posterType: posterTypes.info,
+    itemPadding: historyRes.options?.itemPadding
   }))
   return historyRes.section
 }
 export const transMoreSectin = (_ = false, sections: ImySectionRes[]) => {
+  const isLogin = !!userManager.getUserInfo()
   return sections.map(item => {
+    if(item.options?.posterType === posterTypes.logout){
+      // item.section.itemList[0].editMode = isLogin
+      item.section.itemList[0].type = isLogin?108:-101
+    }
     return item.section
   })
 }
 
 import dAvatar from '../../assets/my/avatar.png'
+import { Native } from '@extscreen/es3-vue';
 const userConfig = {
-  btn: '立即登陆', nickName: '未登陆', tip: '登录后查看更多账号信息',
-  router: { url: 'login', isReplace: false },
-  loginBtn: '退出登陆', loginTip: '',
-  loginRouter: { url: 'logout', isReplace: false },
+  btn: '立即登录', nickName: '未登录', tip: '登录后查看更多账号信息',
+  router: { url: myApi.loginRouter, isMyRouter: true },//{ url: 'login', isReplace: false },
+  loginBtn: '退出登录', loginTip: '',
+  loginRouter: { url: 'logout', isReplace: false, isMyRouter: true },
 }
 export const getUserData = (userinfo, newInfo:UserInfo|null)=>{
   if(newInfo){
@@ -352,24 +376,22 @@ export const getUserData = (userinfo, newInfo:UserInfo|null)=>{
     userinfo.title.text = newInfo?.nickName
     userinfo.subTitle.text = userConfig.loginBtn
     userinfo._router = userConfig.loginRouter,
-    userinfo.avatarStyle = {width: 200, height: 200}
     userinfo.tip = userConfig.loginTip
   } else {
     userinfo.image.src = dAvatar
     userinfo.title.text = userConfig.nickName
     userinfo.subTitle.text = userConfig.btn
     userinfo._router = userConfig.router
-    userinfo.avatarStyle = {width: 83, height: 92}
     userinfo.tip = userConfig.tip
   }
+  userinfo.item.innerArgs = userinfo._router?JSON.stringify(userinfo._router):""
   return userinfo
 }
 export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => {
   const info =  userManager.getUserInfo()
   orederRes.section.itemList.unshift(getPosterConfig({
-    id: orederRes.section._id || '' + orederRes.section.itemList.length,
-    img: info?.userIcon||dAvatar, 
-    avatarStyle: info?{width: 200, height: 200}:{width: 83, height: 92},
+    id: (orederRes.section._id || 'my_userinfo' )+ orederRes.section.itemList.length,
+    img: info?.userIcon||dAvatar,
     title: info?info.nickName:userConfig.nickName, tip: info?userConfig.loginTip:userConfig.tip,
     subTitle: info?userConfig.loginBtn:userConfig.btn,
     _layout: { width: 600-48, height: 314 },
@@ -382,46 +404,80 @@ export const transOrderSection = (isLogin = false, orederRes: ImySectionRes) => 
   return orederRes.section
 }
 
+const transVipSectin = (res:ImySectionRes) => {
+  return res.section
+}
 class MyDataManager {
   tabPageIndex = -1
   isUserChange = false
   isShow = false
   tabRef?:Ref<QTITab|undefined>
+  lastRouter:string = ''
+  triggerRouterId = ''
 
-  async getData(){
+  async getData():Promise<QTWaterfallSection[]>{
+    // const isLogin = !!userManager.getUserInfo()
+
     const orderRes = await myApi.getOrderInfo()
     const historyRes = await myApi.getHistorys()
+    // const vipRes = await myApi.getVipConfig()
     const moreRes = await myApi.getMoreList()
-    return [
+    // const vipSection = transVipSectin(vipRes)
+    const res = [
       transOrderSection(false, orderRes),
-      transHistorySection(false, historyRes),
-      ...transMoreSectin(false, moreRes)
+      transHistorySection(false, <ImySectionRes>historyRes)
     ]
+    // if(isLogin){ res.push(vipSection) }
+    return res.concat(transMoreSectin(false, moreRes));
   }
   async updateUser(){
     if(this.tabRef){
       const userinfo = this.tabRef.value?.getPageItem(this.tabPageIndex,0,0)
       const newInfo =  userManager.getUserInfo()
-      if(userinfo){
-        this.isUserChange = false
-        this.tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, getUserData(userinfo,newInfo))
+      if(userinfo?._id){
+        const newUserData = getUserData(userinfo,newInfo)
+        //this.tabRef.value?.getDataManager().updateItem(this.tabPageIndex,0,0,newUserData)
+        //VirtualView.updateChild('homeTabs', userinfo?._id, newUserData)
+        // Native.callNative('ExtendModule','callUIFunctionWithPromise', 'homeTabs','searchReplaceItem',[userinfo?._id,getUserData(userinfo,newInfo)])
+        Native.callNative('ExtendModule','searchReplaceItem', userinfo?._id,getUserData(userinfo,newInfo))
       }
+      // this.tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, getUserData(userinfo,newInfo))
     }
   }
   async updateHistory(){
     if(this.tabRef){
-      const historyRes = await myApi.getHistorys()
-      const hisSection = transHistorySection(false, historyRes)
-      // tabRef.value?.updatePageItem(this.tabPageIndex, 0, 0, {})
-      this.tabRef.value?.updatePageSection(this.tabPageIndex, 1, hisSection)
-      // console.log(this.tabPageIndex, '--lsj--MyDataManager-setData')
+      const historyRes = await myApi.getHistorys(true)
+      if(historyRes){
+        const hisSection = transHistorySection(false, historyRes)
+        // if(hisSection._id){
+        //   // VirtualView.updateChild('homeTabs', hisSection._id, hisSection)
+        //   // Native.callNative('ExtendModule','callUIFunction', 'homeTabs', 'searchReplaceItem', [hisSection._id,hisSection])
+        //   Native.callNative('ExtendModule','callUIFunctionWithPromise', 'homeTabs','searchReplaceItem',[hisSection?._id,hisSection])
+        // }
+        this.tabRef.value?.updatePageSection(this.tabPageIndex, 1, hisSection)
+        if(this.triggerRouterId && this.lastRouter=='history'){
+          this.lastRouter = ''
+          this.tabRef?.value?.setAutoFocus(this.triggerRouterId, 0)
+        }
+      }
     }
   }
   async updateData(){
-    if(this.tabPageIndex>=0 && this.tabRef && this.isUserChange && this.isShow){
+    if(this.tabPageIndex>=0 && this.tabRef && this.isShow){
       const cIndex = await this.tabRef.value?.getCurrentTabIndex()
       if(cIndex === this.tabPageIndex){
-        await this.updateUser()
+        if(this.isUserChange){
+          this.isUserChange = false
+          this.checkRouter()
+          this.updateUser()
+
+          myApi.getMoreList().then(moreRes=>{
+            const moreSections = transMoreSectin(false, moreRes)
+            moreSections.forEach((mSectionItem,msIndex)=>{
+              this.tabRef?.value?.updatePageSection(this.tabPageIndex, msIndex+2, mSectionItem)
+            })
+          })
+        }
         this.updateHistory()
       }
     }
@@ -438,7 +494,6 @@ class MyDataManager {
     }
     tabRef.value?.setPageData(tabIndex, tabPage)
     this.tabPageIndex = tabIndex
-
     tabRef.value?.setPageState(tabIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
     userManager.addUserChangeListener(userChangeListener)
     this.tabRef = tabRef
@@ -450,6 +505,26 @@ class MyDataManager {
   }
   logout(){
     userManager.clearUserInfo()
+  }
+  routerLaunch(item:any){
+    this.lastRouter = item._router?.url||''
+    this.triggerRouterId = item.id||item._id
+    if(item._router?.isNoCheckLogin){
+      launch.launch(item)
+    } else {
+      if(userManager.isLogin()){
+        if(item._router?.isVipRouter){
+          launch.jumpVipPay()
+        } else {
+          launch.launch(item)
+        }
+      } else {
+        launch.jumpLogin()
+      }
+    }
+  }
+  checkRouter(){
+    // console.log(this.lastRouter, '--lsj-this.lastRouter')
   }
 }
 const myDataManager = new MyDataManager()
