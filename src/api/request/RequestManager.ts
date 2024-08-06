@@ -186,6 +186,7 @@ export function createRequestManager(): RequestManager {
           }
         })
         .catch((err) => {
+          console.error(`http get error on ${url}`,err)
           reject({
             code: "-1",
             message: "发生错误，请稍后重试！",
@@ -233,6 +234,7 @@ export function createRequestManager(): RequestManager {
           })
         }
       }).catch(error => {
+        console.error(`http post error on ${url}`,error)
         reject({
           code: '-1',
           message: '发生错误，请稍后重试！' + error
