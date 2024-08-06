@@ -1,6 +1,6 @@
 <template>
-  <qt-view class="search_keyboard" :style="{width:keyboardWidth+'px'}" @childFocus="childFocus"
-           :gradientBackground="{colors:['#00FFFFFF', '#0DFFFFFF']}">
+  <qt-view class="search_keyboard" :style="{ width: keyboardWidth + 'px' }" @childFocus="childFocus"
+           :gradientBackground="{ colors: ['#00FFFFFF', '#0DFFFFFF'] }">
 
     <qt-view class="search_keyboard_input_root" :focusable="false">
       <qt-image :src="ic_search" class="search_keyboard_search_icon" :focusable="false" />
@@ -14,7 +14,7 @@
 
     <!-- 清空，退格按钮-->
     <qt-view class="search_keyboard_input_option_btns" >
-      <search-btn :next-focus-names="{ down: 'grid_view'}"
+      <search-btn :next-focus-names="{ down: 'grid_view' }"
                   @click="clearBtnClick" search-btn-class="search_keyboard_option_btn"
                   :icon-width="24" :icon-height="30" :icon-normal="ic_search_input_clear"
                   :icon-focus="ic_search_input_clear_focus" search-txt-class="btn_text"
@@ -36,6 +36,9 @@
                eventClick
                eventFocus
                :clipChildren="false">
+        <div class="search_keyboard_item_focus"
+             :gradientBackground="{ orientation: 6, colors: ['#FF0057FF', '#FF00C7FF'], cornerRadius: 8 }"
+             showOnState="focused" :duplicateParentState="true"></div>
         <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="center" :fontSize="40" :focusable="false"
                 class="search_keyboard_item_text" text="${text}" />
       </qt-view>
@@ -79,13 +82,13 @@ export default defineComponent({
       { text: "3", type: 1 }, { text: "4", type: 1 }, { text: "5", type: 1 }, { text: "6", type: 1 },
       { text: "7", type: 1 }, { text: "8", type: 1 }, { text: "9", type: 1 }, { text: "0", type: 1 }
     ]
-    onMounted(()=>{
-      nextTick(()=>{
+    onMounted(() => {
+      nextTick(() => {
         listDataRec = grid_view.value!.init(keyboardItems)
       })
     })
     const clearBtnClick = () => {
-      if (inputText.value === "")return
+      if (inputText.value === "") return
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = ""
       }
@@ -97,7 +100,7 @@ export default defineComponent({
       }
     }
     const deleteBtnClick = () => {
-      if (inputText.value === "")return
+      if (inputText.value === "") return
       let value = ""
       if (inputText.value && inputText.value.length > 0) {
         inputText.value = inputText.value.slice(0, inputText.value.length - 1)

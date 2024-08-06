@@ -68,13 +68,22 @@
   height: 860px;
   background-color: transparent;
 }
+
+.search_center_item_focus{
+  height: 84px;
+  background-color: transparent;
+  border-radius: 8px;
+  position: absolute;
+  left: 0.01;
+}
+
 .search_center_item{
   height: 84px;
   padding-left: 82px;
   flex-direction: row;
   align-items: center;
   background-color: transparent;
-  focus-background-color: #f5f5f5;
+  /* focus-background-color: #f5f5f5; */
   border-radius: 8px;
 }
 
@@ -84,8 +93,8 @@
   border-radius: 6px;
   background-color: pink;
   margin-right: 20px;
-  focus-background-color: black;
-  select-background-color: #FC1103;
+  focus-background-color: white;
+  select-background-color: #157AFC;
 }
 
 .search_center_item_text{
@@ -93,8 +102,7 @@
   width: 350px;
   height: 84px;
   color: rgba(255, 255, 255, .5);
-  focus-color:rgba(0, 0, 0, 1);
+  focus-color: rgba(255, 255, 255, 1);
   select-color: rgba(255, 255, 255, 1);
   background-color: transparent;
 }
-

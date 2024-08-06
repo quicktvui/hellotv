@@ -12,6 +12,11 @@ export const _filter_line_top_gap:number = 30
 export const _filter_line_bottom_gap:number = 30
 export const _filter_tag_gap:number = 12
 export const _filter_record_height:number = FilterConfig.filterRecordHeight
+export function getFilterMoreItem(): Array<QTListViewItem>{
+  return _filter_more_item
+}
+
+let _filter_more_item: Array<QTListViewItem> = []
 
 export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
  const tagList:Array<QTListViewItem> = []
@@ -45,30 +50,32 @@ export function buildTagContentEnd():QTGridViewItem{
   return endList
 }
 
-export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:number):Array<QTGridViewItem>{
+export function buildTagContentsAdapter(tagContents: Array<TagContent>, pageNum?:number, type?: number): Array<QTGridViewItem> {
   const tagContentList: Array<QTGridViewItem> = []
   const decoration: ESListViewItemDecoration = {
     top:18,
-    bottom:18,
+    bottom: type === 1 ? 18 : 35,
   }
+
   tagContents.forEach((content,index)=>{
     const gridItem:QTGridViewItem ={
-      type:1,
-      poster:content.poster,
+      type: type ?? 1,
+      poster: content.poster,
       corner:{
         style:{
           width:0,
           height:0
         },
-        src:content.cornerImg
+        src: content.cornerImg,
       },
-      score:content.score,
-      title:content.title,
-      item:content.actionRedirect,
+      score: content.score,
+      title: content.title,
+      item: content.actionRedirect,
       decoration
     }
     tagContentList.push(gridItem)
   })
+
   //添加结束提示，首页小于 10条不加载结束提示
   if (tagContents.length > 0
     && ((tagContents.length < FilterConfig.screenPageSize && pageNum !== 1)
@@ -78,39 +85,51 @@ export function buildTagContentsAdapter(tagContents:Array<TagContent>,pageNum?:n
   return tagContentList
 }
 
-export function buildFilterAdapter(allFilterList:Array<FilterConditionList>,fastFilterList?:FilterConditionList):Array<QTListViewItem>{
+export function buildFilterAdapter(allFilterList: Array<FilterConditionList>, fastFilterList?: FilterConditionList, moreLimit?: number): Array<QTListViewItem> {
   const resListView: Array<QTListViewItem> = []
-  if (allFilterList && allFilterList.length>0){
-    allFilterList.forEach((itemList,itemListIndex)=>{
-      const itemFilterList:Array<QTListViewItem>=[]
-      const defaultSelectPosition = (fastFilterList && fastFilterList.defaultSelectPosition > -1) ? 0 : itemList.defaultSelectPosition
-      itemList.list?.forEach((item,index)=>{
-        const decoration: ESListViewItemDecoration = {
-          right:index === itemList.length-1 ? 80 : 18
+
+  // 普通筛选
+  allFilterList.forEach((row, rowIndex) => {
+    const filterList: Array<QTListViewItem> = []
+    row.list?.forEach((item, index) => {
+      filterList.push({
+        type: 11,
+        filterShowName: item.filterShowName,
+        filterTagName: item.filterTagName,
+        selected: item.selected,
+        decoration: {
+          right: (index === row.list!.length - 1) ? 80 : 18
         }
-        const itemFilter:QTListViewItem = {
-          type:11,
-          filterShowName:item.filterShowName,
-          filterTagName:item.filterTagName,
-          selected:item.selected,
-          decoration
-        }
-        itemFilterList.push(itemFilter)
       })
-      const filterList = {
-        type:1,
-        filterLineStyle:{height:_filter_text_height},
-        list:itemFilterList,
-        defaultSelectPosition:defaultSelectPosition,
-        isFastList:false,
-        decoration:{
-          bottom:(itemListIndex !== (allFilterList.length -1)) ? _filter_tag_gap : 0,
-          left:30
-        }
+    })
+
+    resListView.push({
+      type: 1,
+      filterLineStyle: { height: _filter_text_height },
+      list: filterList,
+      defaultSelectPosition: (fastFilterList?.defaultSelectPosition ?? -1) > -1 ? 0 : row.defaultSelectPosition,
+      isFastList: false,
+      decoration: {
+        left: 30,
+        bottom: (rowIndex !== (allFilterList.length - 1)) ? _filter_tag_gap : 0
       }
-      resListView.push(filterList)
+    })
+  })
+
+  // 更多筛选项
+  const limit = moreLimit ?? -1
+  // 判断是否需要添加更多筛选按钮
+  if (limit > 0 && resListView.length > limit) {
+    _filter_more_item = resListView.splice(limit, resListView.length - 1)
+    resListView.push({
+      type: 3,
+      decoration: {
+        left: 30
+      },
     })
   }
+
+  // 快速筛选
   if (fastFilterList && fastFilterList.list && fastFilterList.list.length > 0){
     resListView.push({
       type:2,
@@ -162,7 +181,7 @@ export function buildFilterAdapter(allFilterList:Array<FilterConditionList>,fast
         left:50
       }
     })
-
   }
+
   return resListView
 }

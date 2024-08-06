@@ -22,7 +22,8 @@ export function buildTabPageStateImageItem(tabContentItem: TabSectionItem,cellTy
     image: image,
     selectedImage: tabContentItem.nonFocusImage,
     focusedImage: tabContentItem.focusImage,
-    item: tabContentItem//
+    isShowPlayMark:tabContentItem.isBgPlayer,
+    item: tabContentItem,//
   }
   item.isBgPlayer = tabContentItem.isBgPlayer
   return item

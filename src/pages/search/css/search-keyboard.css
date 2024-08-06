@@ -54,6 +54,15 @@
   text-align: center;
   justify-content: center;
 }
+
+.search_keyboard_option_btn_focus {
+  width: 160px;
+  height: 60px;
+  background-color: transparent;
+  border-radius: 99px;
+  position: absolute;
+}
+
 .search_keyboard_option_btn {
   width: 160px;
   height: 60px;
@@ -63,7 +72,7 @@
   text-align: center;
   align-items: center;
   background-color: rgba(255,255,255,0.1);
-  focus-background-color: rgba(255,255,255,1);
+  /* focus-background-color: rgba(255,255,255,1); */
 }
 
 .search_keyboard_option_btn .delete_btn_icon{
@@ -71,32 +80,41 @@
   height: 32px;
   position: absolute;
 }
+
 .search_keyboard_option_btn .btn_text{
   color: rgba(255, 255, 255, .5);
-  focus-color: rgba(0, 0, 0, 1);
+  focus-color: white;
   margin-left: 10px;
   width: 70px;
   height: 60px;
 }
-
 
 .search_keyboard_list {
   width: 480px;
   height: 480px;
   background-color: transparent;
 }
+
+.search_keyboard_item_focus {
+  width: 80px;
+  height: 80px;
+  background-color: transparent;
+  border-radius: 8px;
+  position: absolute;
+}
+
 .search_keyboard_item{
   width: 80px;
   height: 80px;
   background-color: transparent;
-  focus-background-color:#fff;
+  /* focus-background-color:#fff; */
   border-radius: 8px;
 }
+
 .search_keyboard_item_text{
   width: 80px;
   height: 80px;
   color: #fff;
-  focus-color: rgba(0, 0, 0, 1);
+  /* focus-color: rgba(0, 0, 0, 1); */
   border-radius: 8px;
 }
-

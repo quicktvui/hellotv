@@ -2,16 +2,16 @@
   <qt-column class="qt-collapse-item-definition"
              :focusable="false">
     <span class="qt-collapse-item-definition-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">清晰度</span>
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">清晰度</span>
     <div class="qt-collapse-item-definition-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-list-view
         ref="definitionListViewRef" horizontal
         v-show="isCollapseExpand"
         sid='collapse-item-definition'
         :autofocusPosition="selectedIndex"
-        :blockFocusDirections="['up','down']"
+        :blockFocusDirections="['up', 'down']"
         class="qt-collapse-item-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
@@ -23,10 +23,10 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESLog} from "@extscreen/es3-core";
-import {ref} from "vue";
-import {QTIListView, QTListViewItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESLog } from "@extscreen/es3-core";
+import { ref } from "vue";
+import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
 
 const TAG = 'QTCollapseItem'
@@ -138,7 +138,7 @@ export default defineComponent({
 
 .qt-collapse-item-definition-title {
   width: 1740px;
-  height: 30px;
+  height: 32px;
   font-size: 27px;
   color: white;
   margin-left: 90px;

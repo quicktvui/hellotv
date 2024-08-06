@@ -1,3 +1,4 @@
+import { QTTabPageData } from "@quicktvui/quicktvui3/dist/src/tab/QTTabPageData"
 import {TabContentPlate} from "./impl/TabContentPlate";
 import {
   QTListViewItemDecoration,
@@ -78,7 +79,6 @@ export function buildTabContentPlate(tabContentPlate: TabContentPlate, isFirstPl
     isSwitchCellBg:tabContentPlate.isSwitchCellBg,
     itemList: tabContentPlate.sectionList as Array<QTWaterfallItem>
   }
-
   switch (plate.type) {
     case QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX://默认
       break
@@ -187,58 +187,6 @@ function buildTabContentPlateStyle(tabContentPlate: TabContentPlate): QTWaterfal
   return style
 }
 
-/**
- *  build Section
- * @param id id
- * @param sectionWidth section 宽
- * @param sectionHeight section 高
- * @param cellType section 类型 @line
- * @param posX
- * @param posY
- * @param playLogoSwitch
- * @param poster
- * @param posterTitle
- * @param posterTitleStyle?
- * @param nonFocusImage?
- * @param focusImage?
- * @param cornerContent?
- * @param cornerColor?
- * @param cornerGradient?
- * @param playData?
- * @param redirectType?
- * @param action?
- * @param innerArgs?
- * @param isBgPlayer
- * @param focusScreenImage
- */
-export function buildSectionData(id: string, sectionWidth: number, sectionHeight: number,
-                                 cellType: string = TabSectionItemType.TAB_CONTENT_ITEM_DEFAULT, posX: number, posY: number, playLogoSwitch: string = '0', poster: string, posterTitle: string, posterTitleStyle?: string, nonFocusImage?: string, focusImage?: string, cornerContent?: string, cornerColor?: string, cornerGradient?: string, playData?: Array<any>,
-                                 redirectType?: string, action?: string, innerArgs?: string, isBgPlayer?: boolean, focusScreenImage?: string):TabSectionItem{
-  return {
-    id,
-    width:sectionWidth,
-    height:sectionHeight,
-    poster,
-    posterTitle,
-    cellType,
-    posX,
-    posY,
-    posterTitleStyle,
-    playLogoSwitch,
-    nonFocusImage,
-    focusImage,
-    cornerContent,
-    cornerColor,
-    cornerGradient,
-    playData,
-    redirectType,
-    action,
-    innerArgs,
-    isBgPlayer,
-    focusScreenImage
-  }
-}
-
 export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfallItem{
   let item: QTWaterfallItem
   switch (itemSection.cellType) {
@@ -262,6 +210,16 @@ export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfal
       item = buildTabPageCellPlayerItem(itemSection,tabIndex)
       item.type = TabSectionType.TYPE_ITEM_SECTION_CELL_PLAYER
       break;
+    case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY://历史-文字
+      // item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item = buildPoster(itemSection)
+      item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY
+      break;
+    case TabSectionItemType.TAB_CONTENT_ITEM_HISTORY_IMG://历史-图片
+      // item = buildTabPageCellPlayerItem(itemSection,tabIndex)
+      item = buildPoster(itemSection)
+      item.type = TabSectionType.TAB_CONTENT_ITEM_HISTORY_IMG
+      break;
     default :
       item = buildPoster(itemSection)
       break;
@@ -277,12 +235,12 @@ export function buildSectionItem(itemSection:TabSectionItem,tabIndex):QTWaterfal
  * @param disableScrollOnFirstScreen
  * @param plateList
  */
-export function buildQTTabContent( disableScrollOnFirstScreen:boolean=false, plateList:Array<QTWaterfallSection>){
+export function buildQTTabContent( disableScrollOnFirstScreen:boolean=false, plateList:Array<QTWaterfallSection>):QTTabPageData{
   return {
     useDiff:false,
     disableScrollOnFirstScreen,
     data: plateList,
-    bindingPlayer:null,
+    bindingPlayer:"",
   }
 }
 

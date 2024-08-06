@@ -3,43 +3,99 @@
     <img-text-btn-view
       v-if="!$slots.btnItem"
       :icon-left="true"
+      text="我的"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_my_btn"
+      ref="top_my_btn"
+      icon="ic_top_screen.png"
+      focus-icon="ic_top_screen.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
       text="筛选"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_screen_btn"
       ref="top_screen_btn"
       icon="ic_top_screen.png"
-      focus-icon="ic_top_screen_focus.png"
+      focus-icon="ic_top_screen.png"
       @click="onClick"
       @focus="onFocus"/>
     <img-text-btn-view
       v-if="!$slots.btnItem"
       :icon-left="true"
       text="搜索"
+      :nextFocusDownSID="downSid"
       :focusable="true"
       style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
       name="top_search_btn"
       ref="top_search_btn"
       icon="ic_top_search.png"
-      focus-icon="ic_top_search_focus.png"
+      focus-icon="ic_top_search.png"
       @click="onClick"
       @focus="onFocus"/>
-<!--  <img-text-btn-view-->
-<!--      v-if="!$slots.btnItem"-->
-<!--      :icon-left="true"-->
-<!--      text="多级列表"-->
-<!--      :focusable="true"-->
-<!--      :textStyle="{ width: '120px', height:'60px',color:'#ffffff',focusColor:'#000000'}"-->
-<!--      style="width: 205px;height: 60px;margin-left: 10px;margin-right: 10px"-->
-<!--      name="top_tv_box_btn"-->
-<!--      ref="top_tv_box_btn"-->
-<!--      icon="ic_top_search.png"-->
-<!--      focus-icon="ic_top_search_focus.png"-->
-<!--      @click="onClick"-->
-<!--      @focus="onFocus"/>-->
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="历史"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_history_btn"
+      ref="top_history_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="活动"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_activity_btn"
+      ref="top_activity_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="短视频"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 195px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_sv_btn"
+      ref="top_sv_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search.png"
+      @click="onClick"
+      @focus="onFocus"/>
+    <img-text-btn-view
+      v-if="!$slots.btnItem"
+      :icon-left="true"
+      text="排行榜"
+      :nextFocusDownSID="downSid"
+      :focusable="true"
+      style="width: 195px;height: 60px;margin-left: 10px;margin-right: 10px"
+      name="top_ranking_btn"
+      ref="top_ranking_btn"
+      icon="ic_top_search.png"
+      focus-icon="ic_top_search.png"
+      @click="onClick"
+      @focus="onFocus"/>
+
     <slot name="btnItem"></slot>
     <img v-if="!$slots.logoItem"
-      :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]" :style="logoStyle" :src="logo">
+      :class="['logo_default_css',{'logo_left':logoLeft,'logo_right':logoRight}]"
+         :style="logoStyle" :src="logo">
     <slot name="logoItem"></slot>
   </div>
 </template>
@@ -56,7 +112,11 @@ export default defineComponent({
     parentStyle:Object,
     logoStyle:Object,
     logoLeft:Boolean,
-    logoRight:Boolean
+    logoRight:Boolean,
+    downSid:{
+      type:String,
+      default:""
+    }
   },
   emits: ['focus', 'click'],
   setup(props, context) {
@@ -99,6 +159,35 @@ export default defineComponent({
                 name: 'live',
                 params: {}
             });
+          break;
+        case 'top_history_btn':
+          router.push({
+              name: 'history',
+              params: {}
+          });
+          break;
+        case 'top_activity_btn':
+          router.push({
+              name: 'activity2',
+              params: {}
+          });
+          break;
+        case 'top_my_btn':
+          router.push({
+              name: 'my',
+              params: {}
+          });
+        case 'top_sv_btn':
+          router.push({
+              name: 'short_video',
+              params: {}
+          });
+          break;
+        case 'top_ranking_btn':
+          router.push({
+              name: 'ranking',
+              params: {}
+          });
           break;
       }
     }

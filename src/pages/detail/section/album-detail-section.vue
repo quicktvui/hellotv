@@ -1,13 +1,16 @@
 <template>
   <qt-column class="album-detail-section-root"
-             :style="{height: sectionHeight}"
-             :scrollOverride="{down:0,up:-1080}"
+             :style="{ height: sectionHeight }"
+             :scrollOverride="{ down: 0, up: -1080 }"
              :clipChildren="false"
              :clipPadding="false">
     <!-- 简介-->
     <media-introduction
       ref="introductionRef"
       @onIntroductionFocus="onIntroductionFocus"/>
+
+    <!-- 资源位 -->
+    <media-resource v-show="showMediaResource" :resourceUrl="mediaResource" @onClick="onMediaResourceClicked"/>
 
     <!-- 菜单 -->
     <media-menu ref="menuRef"/>
@@ -31,19 +34,20 @@
 </template>
 
 <script lang="ts">
-
-import {defineComponent} from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 import media_introduction from '../component/media-introduction.vue'
+import media_resource from '../component/media-resource.vue'
 import media_menu from '../component/media-menu.vue'
 import media_list from '../component/media-list.vue'
 import media_player_placeholder from '../component/media-player-placeholder.vue'
-import {IMedia} from "../../../api/media/IMedia";
-import {ref} from "vue";
-import {IMediaIntroduction} from "../component/IMediaIntroduction";
-import {IMediaPlaceholder} from "../component/IMediaPlaceholder";
-import {IMediaListView} from "../component/IMediaListView";
-import {QTMediaSeries} from "@quicktvui/quicktvui3";
-import {IMediaItemListType} from "../../../api/media/IMediaItemListType";
+import config from "../config";
+import { IMedia } from "../../../api/media/IMedia";
+import { ref } from "vue";
+import { IMediaIntroduction } from "../component/IMediaIntroduction";
+import { IMediaPlaceholder } from "../component/IMediaPlaceholder";
+import { IMediaListView } from "../component/IMediaListView";
+import { QTMediaSeries } from "@quicktvui/quicktvui3";
+import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
 import { IMediaMenuView } from "../component/IMediaMenuView"
 
 const TAG = 'AlbumDetail'
@@ -62,10 +66,13 @@ export default defineComponent({
   components: {
     'media-introduction': media_introduction,
     'media-player-placeholder': media_player_placeholder,
+    'media-resource': media_resource,
     'media-menu': media_menu,
     'media-list': media_list
   },
   setup(props, context) {
+    const showMediaResource = config.showMediaResource
+    const mediaResource = 'http://qcloudimg.moss.huan.tv/project/lexue_education/lexue/2023/08/29/ed22d94f6a674b9c99cbda74f0db5fd1.png'
     const introductionRef = ref<IMediaIntroduction>()
     const placeholderRef = ref<IMediaPlaceholder>()
     const mediaListRef = ref<IMediaListView>()
@@ -127,6 +134,10 @@ export default defineComponent({
       context.emit("onIntroductionFocus", focused)
     }
 
+    function onMediaResourceClicked() {
+      console.log('huan-onMediaResourceClicked')
+    }
+
     function show(value: boolean) {
       placeholderRef.value?.show(value)
     }
@@ -156,11 +167,11 @@ export default defineComponent({
       menuRef.value?.release()
     }
 
-    function setAutofocus(enable:boolean){
+    function setAutofocus(enable: boolean) {
       placeholderRef.value?.setAutofocus(enable)
     }
 
-    function requestCurrentMediaFocus(){
+    function requestCurrentMediaFocus() {
       mediaListRef.value?.requestFocus(mediaListRef.value?.getSelectedPosition() ?? -1)
     }
 
@@ -172,9 +183,12 @@ export default defineComponent({
     return {
       menuRef,
       sectionHeight,
+      showMediaResource,
+      mediaResource,
       introductionRef,
       placeholderRef,
       mediaListRef,
+      onMediaResourceClicked,
       show,
       showPlaceholderMediaInfo,
       initMedia,
@@ -209,5 +223,4 @@ export default defineComponent({
   background-color: transparent;
   position: absolute;
 }
-
 </style>

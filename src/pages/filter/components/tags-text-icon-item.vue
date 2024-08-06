@@ -8,14 +8,15 @@
        :focusScale="1.06">
     <qt-view class="screen-left-item-tags-bg" :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
              :duplicateParentState="true" showOnState="focused" :focusable="false"
-         :gradientBackground="{colors:['#F5F5F5','#F5F5F5'], cornerRadii4: [0, 8, 8, 0], orientation: 6}"/>
+         :gradientBackground="{colors:['#0057FF','#00C7FF'], cornerRadii4: [0, 20, 20, 0], orientation: 6}"/>
 
     <qt-view class="screen-left-item-tags-icon-div" :duplicateParentState="true" :focusable="false">
       <img class="screen-left-item-tags-icon" :duplicateParentState="true" showOnState="normal" :src="iconNormal" />
       <img class="screen-left-item-tags-icon" :duplicateParentState="true" showOnState="focused" :src="iconFocus" />
       <img class="screen-left-item-tags-icon" :duplicateParentState="true" showOnState="selected" :src="iconSelected" />
     </qt-view>
-    <qt-text class="screen-left-item-tags-text" :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
+    <qt-text class="screen-left-item-tags-text"
+             :style="{width:(leftRootWidth-20)+'px',height:leftItemHeight+'px'}"
              :focusable="false"
              gravity="center"
              autoWidth
@@ -40,7 +41,7 @@ export default defineComponent({
     const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
     const leftItemHeight = computed(()=>{return FilterConfig.leftItemHeight})
     const iconNormal = ref(require("../../../assets/ic_screen_normal.png").default)
-    const iconFocus = ref(require("../../../assets/ic_screen_focus.png").default)
+    const iconFocus = ref(require("../../../assets/ic_screen_select.png").default)
     const iconSelected = ref(require("../../../assets/ic_screen_select.png").default)
 
 

@@ -1,0 +1,203 @@
+<template>
+    <div 
+        v-show="isShow" class="h_menu" :class="'h_menu_'+layout" :focusable="false" :clipChildren="false" 
+        :blockFocusDirections="blockFocusDirections"
+        :style="mStyle"
+    >
+        <!-- :nextFocusName="{ right: 'h_tab_name', left: 'h_tab_name' }" -->
+        <div class="h_menu_shadow" :gradientBackground="{colors:[props.bgColor[0],'#00000000'], orientation: 6}"></div>
+        <qt-view 
+            class="h_menu_inner" :focusable="false" :clipChildren="false" :clipPadding="false" overflow="visible"
+            :gradientBackground="cBgColor"
+            :style="mInnerStyle"
+        >
+            <qt-text v-if="title" :text="title" class="menu-title" gravity="centerVertical"
+                :focusable="false"></qt-text>
+            <qt-image v-else-if="titleImg" :src="titleImg" class="menu-title-image" :focusable="false" :style="mTitleStyle"/>
+            <qt-list-view 
+                class="menu_list" ref="listRef" sid="h_menu_list_sid" name='h_menu_list_name'
+                :clipChildren="false" :clipPadding="false" @item-focused="onTabSelect"
+                :focusable="false" :requestFocus="true"
+                :style="mListStyle"
+            >
+                <!-- 纯文字标题 :requestFocus="true" :nextFocusName="cNextFocusName"-->
+                <ListText type="1" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
+                <!-- 图片标题-->
+                <ListStateImg type="2" />
+                <!-- 带 Icon 文字标题-->
+                <ListIconText type="3" :custemStyle="menuStyle" :focusedBg="menuItemFocusedBg" />
+            </qt-list-view>
+        </qt-view>
+    </div>
+</template>
+<script lang='ts' setup>
+import { StyleValue, computed, nextTick, ref } from 'vue';
+import {
+    QTIListView
+} from '@quicktvui/quicktvui3';
+import ListText from '../../../components/htListStateItem/Text.vue'
+import ListIconText from '../../../components/htListStateItem/IconText.vue'
+import ListStateImg from '../../../components/htListStateItem/StateImg.vue'
+import { IHistoryMenuEntity } from '../../../api/history/modelEntity';
+// @ts-ignore
+import { getMenuList } from '../index.ts';
+// @ts-ignore
+import api from '../../../api/history/index.ts'
+// @ts-ignore
+import { layouts } from '../config.ts'
+import dConfig from '../config'
+
+const props = withDefaults(defineProps<{
+    menuStyle?: {
+        normal: { color: string }
+        focused: { color: string }
+        selected: { color: string }
+    }
+    title?: string;
+    titleImg?: string;
+    menuList?: IHistoryMenuEntity[]
+    bgColor?:string[]
+    focusedBg?:string[]
+    isNoMenu:boolean
+    layout:string
+    isFilter:boolean
+}>(), {
+    focusedBg: ()=> ['#F5F5F5','#F5F5F5'],
+    bgColor: ()=> ['#0CFFFFFF','#00FFFFFF'],
+    isNoMenu: false,
+})
+
+const listRef = ref<QTIListView>();
+const isShow = ref(true)
+
+//导航切换时的回调，当前选中导航的info(e)
+const emits = defineEmits(['emChangeMenu'])
+let menuApiList: any[] = []
+let mPosition = -1
+const onTabSelect = (arg: any) => {
+    if(!arg.hasFocus) { return }
+    if (mPosition !== arg.position) {
+        emits('emChangeMenu', arg.position, menuApiList[arg.position])
+    }
+    mPosition = arg.position
+};
+
+const cBgColor = computed(()=>{
+    return {colors:props.bgColor, orientation: 4}
+})
+// const cNextFocusName = computed(()=>{
+//     if(props.isFilter){
+//         return { right: 'h_tab_name', left: 'h_tab_name' }
+//     }//content_grid_name
+//     return { right: 'history_poster_name', left: 'history_poster_name' }
+// })
+const blockFocusDirections = computed(()=>{
+    if(props.layout == layouts.rt || props.layout == layouts.rb){
+        return ['right', 'down']
+    }
+    return ['left', 'down']
+})
+const menuItemFocusedBg = computed(()=>{
+    if(props.layout == layouts.rt || props.layout == layouts.rb){
+        return { colors: props.focusedBg, cornerRadii4: [8, 0, 0, 8], orientation: 6 }
+    }
+    return { colors: props.focusedBg, cornerRadii4: [0, 8, 8, 0], orientation: 6 }
+})
+const mStyle = computed<StyleValue>(() => {
+    return { width: dConfig.menuWidth+'px' }
+})
+const mInnerStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mListStyle = computed<StyleValue>(()=>{
+    return { width: (dConfig.menuWidth-10)+'px' }
+})
+const mTitleStyle = computed<StyleValue>(()=>{
+    return { width: dConfig.menuWidth+'px' }
+})
+defineExpose({
+    async initData(fIndex:number=0) {
+        mPosition = -1
+        let list = await api.getMenuList().catch(()=>{
+            return null
+        })
+        if (list && list.data?.length) {
+            menuApiList = list.data
+            isShow.value = list.data.length>0
+        } else if (props.menuList) {
+            menuApiList = props.menuList
+            isShow.value = props.menuList.length>0
+        }else{
+            menuApiList = []
+            isShow.value = false
+        }
+        if(isShow.value){
+            listRef.value?.init(getMenuList(menuApiList));
+            nextTick(()=>{
+                listRef.value?.setItemFocused(fIndex)
+            })
+        }
+        return isShow.value
+    },
+    setItemFocused(pos:number = 0){
+        nextTick(()=>{
+            listRef.value?.setItemFocused(pos)
+        })
+    },
+    checkFocus(){
+        listRef.value?.setItemFocused(mPosition>=0?mPosition:0)
+    }
+})
+</script>
+<style scoped>
+.h_menu {
+    position: relative;
+    height: 1080px;
+    display: flex;
+    flex-direction: column;
+    background-color: transparent;
+}
+.h_menu_shadow{
+    position: absolute;
+    right: 0.01px;
+    top: 0.01px;
+    z-index: 1;
+    width: 20px;
+    height: 1080px;
+    background-color: transparent;
+}
+.h_menu_rightTop,.h_menu_rightBootom{
+    justify-content: flex-end;
+}
+.h_menu_inner {
+    position: absolute;
+    left: 0.01px;
+    top: 0.01px;
+    z-index: 2;
+    height: 1080px;
+    position: absolute;
+    background-color: transparent;
+}
+
+.menu-title {
+    height: 60px;
+    line-height: 60px;
+    font-size: 50px;
+    margin-top: 80px;
+    margin-left: 80px;
+    color: #ffffff;
+    background-color: transparent;
+}
+
+.menu-title-image {
+    height: 60px;
+    margin: 10px;
+    background-color: transparent;
+}
+
+.menu_list {
+    height: 900px;
+    margin-top: 35px;
+    background-color: transparent;
+}
+</style>

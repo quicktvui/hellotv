@@ -27,5 +27,11 @@ export interface Tab {
   //背景图
   backgroundImage?: string
   //文字标题图标
-  textIcon?:string
+  textIcon?: string
+  // 跳转类型
+  redirectType?: string
+  // 外部跳转参数
+  action?: string
+  // 内部跳转参数
+  innerArgs?: string
 }

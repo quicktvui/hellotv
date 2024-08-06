@@ -3,50 +3,57 @@
        @focus="onFocus"
        @click="onClick"
        ref="menuItemRef"
-       class="menu-button-item-icon-css">
+       :class="`menu-button-item-icon-css${suffix}`" :style="style" >
 
     <div showOnState="focused"
-         class="menu-button-item-focused"
+         :class="`menu-button-item-focused${suffix}`"
+         :style="style"
          :duplicateParentState="true"
          :gradientBackground="focusedGradientBg"/>
 
-    <div class="menu-button-item-img-root-css"
-         :duplicateParentState="true">
-      <img class="menu-button-item-img-css"
+    <div :class="`menu-button-item-img-root-css${suffix}`" :duplicateParentState="true">
+      <img :class="`menu-button-item-img-css${suffix}`"
            v-show="isMediaTypeFree && focused"
            :duplicateParentState="true"
            :focusable="false"
-           :src="focusIcon"/>
-      <img class="menu-button-item-img-css"
+           :src="icon"/>
+      <img :class="`menu-button-item-img-css${suffix}`"
            v-show="!isMediaTypeFree && focused"
            :duplicateParentState="true"
            :focusable="false"
            :src="vipFocusIcon"/>
-      <img class="menu-button-item-img-css"
+      <img :class="`menu-button-item-img-css${suffix}`"
            v-show="!focused"
            :duplicateParentState="true"
            :focusable="false"
            :src="icon"/>
     </div>
-    <span class="menu-button-item-text-css"
-          :style="{focusColor:textFocusColor}"
+    <span :class="`menu-button-item-text-css${suffix}`"
+          :style="{ focusColor: textFocusColor }"
           :duplicateParentState="true">{{ text }}</span>
   </div>
 </template>
 
 <script lang="ts">
-
-import {defineComponent} from "@vue/runtime-core";
-import {inject, Ref, ref, watch} from "vue";
-import {Native} from "@extscreen/es3-vue";
-import {ESGradient} from "@extscreen/es3-component";
-import {IMediaAuthorization} from "../../../api/media/IMediaAuthorization";
-import {mediaAuthorizationKey} from "../injectionSymbols";
-import {IMediaAuthType} from "../../../api/media/IMediaAuthType";
+import { defineComponent } from "@vue/runtime-core";
+import { inject, Ref, ref, watch } from "vue";
+import { Native } from "@extscreen/es3-vue";
+import { ESGradient } from "@extscreen/es3-component";
+import { IMediaAuthorization } from "../../../api/media/IMediaAuthorization";
+import { mediaAuthorizationKey } from "../injectionSymbols";
+import { IMediaAuthType } from "../../../api/media/IMediaAuthType";
 
 export default defineComponent({
   name: "media-menu-button",
   props: {
+    suffix: {
+      type: String,
+      default: ''
+    },
+    style: {
+      type: Object,
+      default: {}
+    },
     icon: {
       type: String,
       default: ''
@@ -68,11 +75,12 @@ export default defineComponent({
     const focused = ref(false)
     const menuItemRef = ref()
 
-    let goldenBg: ESGradient = {colors: ['#FFEEB364', '#FFFFE398'], orientation: 3, cornerRadius: 12}
-    let whiteBg: ESGradient = {colors: ['#F5F5F5', '#F5F5F5'], orientation: 3, cornerRadius: 12}
+    let cornerRadius = props.suffix === '-small' ? 36 : 12
+    let goldenBg: ESGradient = { colors: ['#FFFFE398', '#FFEEB364'], orientation: 6, cornerRadius: cornerRadius }
+    let whiteBg: ESGradient = { colors: ['#FF0057FF', '#FF00C7FF'], orientation: 6, cornerRadius: cornerRadius }
     const focusedGradientBg = ref<ESGradient>(whiteBg)
 
-    const textFocusColor = ref<string>('#000000')
+    const textFocusColor = ref<string>('#FFFFFF')
 
     const isMediaTypeFree = ref<boolean>(true);
 
@@ -85,14 +93,14 @@ export default defineComponent({
         if (mediaAuthorization?.value.type == IMediaAuthType.MEDIA_AUTH_TYPE_FREE) {
           isMediaTypeFree.value = true
           focusedGradientBg.value = whiteBg
-          textFocusColor.value = '#000000'
+          textFocusColor.value = '#FFFFFF'
         } else {
           isMediaTypeFree.value = false
           focusedGradientBg.value = goldenBg
           textFocusColor.value = '#603314'
         }
       },
-      {flush: 'post'}
+      { flush: 'post' }
     )
 
     function onFocus(e) {
@@ -136,6 +144,20 @@ export default defineComponent({
   display: flex;
   margin-right: 16px;
 }
+
+.menu-button-item-icon-css-small {
+  width: 160px;
+  height: 70px;
+  border-radius: 36px;
+  background-color: rgba(255, 255, 255, 0.1);
+  focus-background-color: #FFF5F5F5;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  margin-right: 16px;
+}
+
 .menu-button-item-focused {
   width: 140px;
   height: 140px;
@@ -144,9 +166,23 @@ export default defineComponent({
   position: absolute;
 }
 
+.menu-button-item-focused-small {
+  width: 160px;
+  height: 70px;
+  border-radius: 36px;
+  background-color: transparent;
+  position: absolute;
+}
+
 .menu-button-item-img-css {
   width: 46px;
   height: 46px;
+  position: absolute;
+}
+
+.menu-button-item-img-css-small {
+  width: 30px;
+  height: 30px;
   position: absolute;
 }
 
@@ -162,9 +198,24 @@ export default defineComponent({
   margin-top: 15px;
 }
 
+.menu-button-item-text-css-small {
+  color: rgba(255, 255, 255, 0.6);
+  focus-color: black;
+  align-self: center;
+  font-size: 28px;
+  text-align: center;
+  font-weight: 400;
+  margin-left: 10px;
+}
+
 .menu-button-item-img-root-css {
   width: 46px;
   height: 46px;
 }
 
+.menu-button-item-img-root-css-small {
+  width: 30px;
+  height: 30px;
+  align-items: center;
+}
 </style>

@@ -61,7 +61,7 @@ export function createRequestManager(): RequestManager {
       runtime: runtimeParams,
     }
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.d(TAG, '-----------initRequestBaseParams-------------->>>>' + requestParams)
+      log.d(TAG, '-----------initRequestBaseParams-------------->>>>' + JSON.stringify(requestParams))
     }
     return Promise.resolve()
   }
@@ -186,6 +186,7 @@ export function createRequestManager(): RequestManager {
           }
         })
         .catch((err) => {
+          console.error(`http get error on ${url}`,err)
           reject({
             code: "-1",
             message: "发生错误，请稍后重试！",
@@ -202,8 +203,7 @@ export function createRequestManager(): RequestManager {
       }
       //每次请求更新用户信息
       requestParams.user = initUserRequestParams()
-      //
-      let requestData = {...requestParams, ...data, ...requestParams.param}
+      let requestData = {...requestParams, ...data}
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '################### REQUEST START ########################')
         log.d(TAG, 'requestUrl:' + requestUrl)
@@ -234,7 +234,7 @@ export function createRequestManager(): RequestManager {
           })
         }
       }).catch(error => {
-        console.error('request fail url:'+url, error)
+        console.error(`http post error on ${url}`,error)
         reject({
           code: '-1',
           message: '发生错误，请稍后重试！' + error

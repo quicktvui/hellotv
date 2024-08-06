@@ -37,6 +37,6 @@ export default defineComponent({
   background-color: transparent;
   z-index: 899;
   position: absolute;
-  border-radius: 8px;
+  border-radius: 20px;
 }
 </style>

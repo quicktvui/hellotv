@@ -18,35 +18,35 @@ const singleTabTop_OffsetY = 60
 const searchResultSpanCount = 6
 
 
-export function buildSearchResultAdapter(searchResultPageData: SearchResult,pageNo: number,singleTab:boolean):QTTabPageData{
+export function buildSearchResultAdapter(searchResultPageData: SearchResult, pageNo: number, singleTab: boolean): QTTabPageData {
   let tabPage: QTTabPageData = {
     useDiff: false,
     data: []
   }
-  if (searchResultPageData){
+  if (searchResultPageData) {
     const title = searchResultPageData.plateName
     let section: QTWaterfallSection = {
-      _id:searchResultPageData.id,
+      _id: searchResultPageData.id,
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       title,
-      titleStyle:!!title ? { width: 1920, height: plateTitleHeight,  marginBottom: 20, marginLeft: 90 ,fontSize:38} : { width: 1920, height: 0 },
+      titleStyle: !!title ? { width: 1920, height: plateTitleHeight, marginBottom: 20, marginLeft: 90, fontSize: 38 } : { width: 1920, height: 0 },
       style: {
         width: 1920,
         height: -1,
       },
       decoration: {
-        top: pageNo == 1 ?( singleTab ? (firstPlate_Top - singleTabTop_OffsetY) : firstPlate_Top ): 0,
+        top: pageNo == 1 ? (singleTab ? (firstPlate_Top - singleTabTop_OffsetY) : firstPlate_Top) : 0,
         left: 0,
       },
       itemList: buildSearchResultItemAdapter(searchResultPageData.itemList)
     }
-    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize){
-      let endSection:QTWaterfallSection = buildSearchEndSection('5');
-      tabPage =  {
+    if (section.itemList && section.itemList.length < SearchConfig.searchResultPageSize && pageNo > 1) { // 搜索结果只有首屏时，不展示底部提示
+      let endSection: QTWaterfallSection = buildSearchEndSection('5');
+      tabPage = {
         useDiff: false,
-        data: [section,endSection]
+        data: [section, endSection]
       }
-    }else{
+    } else {
       tabPage = {
         useDiff: false,
         data: [section]
@@ -56,93 +56,106 @@ export function buildSearchResultAdapter(searchResultPageData: SearchResult,page
   return tabPage
 }
 
-export function buildSearchResultItemAdapter(list:Array<SearchResultItem>):Array<QTWaterfallItem>{
+export function buildSearchResultItemAdapter(list: Array<SearchResultItem>): Array<QTWaterfallItem> {
   let data: Array<QTWaterfallItem> = []
-  list.forEach((item,index)=>{
-    const poster: QTPoster = {
-      _id:item.id+"i",
-      focus: {
-        enable: true,
-        scale: 1.03,
-        border: true
-      },
-      type:20,
+  list.forEach((item, index) => {
+    const poster: any = {
+      _id: item.id + '',
+      type: 20,
+      title: item.title,
+      poster: item.poster,
       decoration: {
-        left: (index %  searchResultSpanCount) === 0 ? 90 : 40,
+        // left: (index % searchResultSpanCount) === 0 ? 90 : 40,
+        // left: (index % 4) === 0 ? 90 : 40,
+        left: 40,
         bottom: 40
       },
-      title: {
-        text: item.title,
-        enable: true,
-        style: {
-          width: 260,
-        }
-      },
-      subTitle:{
-        text: "",
-        enable: false,
-        style: {
-          width: 260,
-        }
-      },
-      focusTitle: {
-        text: item.title,
-        enable: true,
-        style: {
-          width: 260,
-        }
-      },
-      floatTitle: {
-        text: '',
-        enable: false,
-        style: {
-          width: 260,
-        },
-        background: {colors: ['#e5000000', '#00000000'], orientation: 4}
-      },
-      shimmer: {
-        enable: false,
-      },
-      ripple: {
-        enable: false,
-        src:"",
-        style: {
-          right: 0,
-          bottom: 0,
-          marginRight: -12,
-        }
-      },
-      image: {
-        src: item.poster,
-        enable: true,
-        style: {
-          width: 260,
-          height: 368
-        }
-      },
-      corner: {
-        text: item.corner,
-        enable: true,
-        style: {
-          width: 260,
-          height: 30
-        },
-        background: {
-          colors: ['#A06419', '#CDA048'],
-          cornerRadii4: [0, 8, 0, 8],
-          orientation: 2
-        }
-      },
       style: {
-        width: 260,
-        height: 428,
+        width: 396,
+        height: 320,
       },
-      titleStyle: {
-        width: 260,
-        height: 120,
-        marginTop: 368-60,
-      },
-      titleFocusStyle: {width: 260, marginTop: 368 - 72},
+      // focus: {
+      //   enable: true,
+      //   scale: 1.03,
+      //   border: true
+      // },
+      // type: 20,
+      // decoration: {
+      //   left: (index % searchResultSpanCount) === 0 ? 90 : 40,
+      //   bottom: 40
+      // },
+      // title: {
+      //   text: item.title,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // subTitle: {
+      //   text: "",
+      //   enable: false,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // focusTitle: {
+      //   text: item.title,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //   }
+      // },
+      // floatTitle: {
+      //   text: '',
+      //   enable: false,
+      //   style: {
+      //     width: 260,
+      //   },
+      //   background: { colors: ['#e5000000', '#00000000'], orientation: 4 }
+      // },
+      // shimmer: {
+      //   enable: false,
+      // },
+      // ripple: {
+      //   enable: false,
+      //   src: "",
+      //   style: {
+      //     right: 0,
+      //     bottom: 0,
+      //     marginRight: -12,
+      //   }
+      // },
+      // image: {
+      //   src: item.poster,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //     height: 368
+      //   }
+      // },
+      // corner: {
+      //   text: item.corner,
+      //   enable: true,
+      //   style: {
+      //     width: 260,
+      //     height: 30
+      //   },
+      //   background: {
+      //     colors: ['#A06419', '#CDA048'],
+      //     cornerRadii4: [0, 8, 0, 8],
+      //     orientation: 2
+      //   }
+      // },
+      // style: {
+      //   width: 260,
+      //   height: 428,
+      // },
+      // titleStyle: {
+      //   width: 260,
+      //   height: 120,
+      //   marginTop: 368 - 60,
+      // },
+      // titleFocusStyle: { width: 260, marginTop: 368 - 72 },
       item,
     }
     data.push(poster)
@@ -159,8 +172,8 @@ function buildSearchEndSection(sectionId: string): QTWaterfallSection {
       width: 1920,
       height: 100,
     },
-    titleStyle:{
-      fontSize:30
+    titleStyle: {
+      fontSize: 30
     },
     itemList: []
   }

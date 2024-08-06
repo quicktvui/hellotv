@@ -11,37 +11,34 @@
        @click="onClick"
        @focus="onFocus"
        :listenHasFocusChange="true">
-    <div showOnState="selected" :duplicateParentState="true" :gradientBackground="defaultGradientBg"
-         class="bg-css"/>
-    <div showOnState="normal" :duplicateParentState="true" :gradientBackground="selectedGradientBg"
+    <div showOnState="normal" :duplicateParentState="true" :gradientBackground="defaultGradientBg"
          class="bg-css"/>
     <div showOnState="focused" :duplicateParentState="true" :gradientBackground="focusedGradientBg"
          class="bg-css"/>
-    <div :style="iconRootStyle ? iconRootStyle :{width: imgWidth, height: imgHeight, backgroundColor: 'transparent'}"
+    <div :style="iconRootStyle ? iconRootStyle :{width: `${imgWidth}px`, height: `${imgHeight}px`, backgroundColor: 'transparent'}"
          duplicateParentState v-if="icon">
       <img duplicateParentState :src="src" showOnState="normal" v-if="icon"
-           :style="{ width:imgWidth, height:imgHeight,borderRadius:imgBorderRadius}" />
-      <img duplicateParentState :src="src" showOnState="selected" v-if="icon"
-           :style="{ width:imgWidth, height:imgHeight,borderRadius:imgBorderRadius}" />
+           :style="{ width:`${imgWidth}px`, height:`${imgHeight}px`,borderRadius:`${imgBorderRadius}px`}" />
       <img duplicateParentState :src="focusSrc" showOnState="focused" v-if="focusIcon"
-           :style="{ width:imgWidth, height:imgHeight,borderRadius:imgBorderRadius}" />
+           :style="{ width:`${imgWidth}px`, height:`${imgHeight}px`,borderRadius:`${imgBorderRadius}px`}" />
     </div>
 
     <qt-text duplicateParentState gravity="center" :fontSize="fontSize" v-if="text"
-             :text="text" :focusable="false" :select="true" :ellipsizeMode="3"
+             :text="text" :focusable="false" :select="true" :ellipsizeMode="3" :lines="1"
              :class="[{
                'icon-is-txt-left':iconLeft,
                'icon-is-txt-right':iconRight,
                'icon-is-txt-top':iconTop,
                'icon-is-txt-bottom':iconBottom
              }]"
-             :style="textStyle ? textStyle :{color, focusColor, position:'static', width:'60px',height:'60px'}"/>
+             :style="textStyle ? textStyle :{color:color, focusColor:focusColor, position:'static', width:'90px',height:'60px'}"/>
   </div>
 
 </template>
 
 <script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "@vue/runtime-core";
+import ThemeConfig from "../build/ThemeConfig"
 
 export default defineComponent({
   name: "img-text-btn-view",
@@ -53,16 +50,7 @@ export default defineComponent({
     defaultGradientBg: {
       type: Object,
       default: () => {
-        return {colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadii4: [100,100,100,100]} //cornerRadii4[左上, 右上, 右下, 左下]
-      }
-    },
-    /**
-     * 背景渐进色 选中状态
-     */
-    selectedGradientBg: {
-      type: Object,
-      default: () => {
-        return {colors: ['#1AFFFFFF', '#1AFFFFFF'], orientation: 6, cornerRadius: 100}
+        return {colors: ThemeConfig.btnGradientColor, orientation: 6, cornerRadii4: [30,30,30,30]} //cornerRadii4[左上, 右上, 右下, 左下]
       }
     },
     /**
@@ -71,7 +59,7 @@ export default defineComponent({
     focusedGradientBg: {
       type: Object,
       default: () => {
-        return {colors: ['#FFF5F5F5', '#FFF5F5F5'], orientation: 6, cornerRadius: 100}
+        return {colors: ThemeConfig.btnGradientFocusColor, orientation: 6, cornerRadius: 30}
       }
     },
     iconRootStyle:Object,
@@ -109,22 +97,22 @@ export default defineComponent({
      * 图片宽度
      */
     imgWidth: {
-      type: String,
-      default: '30px'
+      type: Number,
+      default: 30
     },
     /**
      * 图片高
      */
     imgHeight: {
-      type: String,
-      default: '30'
+      type: Number,
+      default: 30
     },
     /**
      * 图片圆角
      */
     imgBorderRadius: {
-      type: String,
-      default: '0px'
+      type: Number,
+      default: 0
     },
     /**
      * 内容
@@ -141,25 +129,14 @@ export default defineComponent({
       default:28
     },
     textStyle:Object,
-
-
-    fontMarginLeft: {
-      type: String,
-      default: '5px'
-    },
-    fontMarginTop:{
-      type: String,
-      default: '0px'
-    }
-
   },
   emits: ['focus', 'click'],
   setup(props, context) {
+    const color = ThemeConfig.textColor
+    const focusColor = ThemeConfig.textFocusColor
     let data = reactive({
       src:"",
       focusSrc:"",
-      color: __THEME__.textColor,
-      focusColor:__THEME__.textFocusColor,
     })
     watch([() => props.icon,() => props.focusIcon],(newValue,oldValue)=>{
       const isIconNetUrl = newValue[0]?.startsWith('http')
@@ -193,6 +170,8 @@ export default defineComponent({
       onESStop,
       onClick,
       onFocus,
+      color,
+      focusColor,
       ...toRefs(data),
     }
   }
@@ -207,7 +186,7 @@ export default defineComponent({
   align-items: center;
 }
 .img-text-btn-root-default{
-  border-radius: 100px;
+  border-radius: 30px;
 }
 .img-text-btn-root-css .bg-css{
   background-color: transparent;

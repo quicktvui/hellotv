@@ -1,12 +1,13 @@
 import {QTTabPageData, QTWaterfallItem, QTWaterfallSection} from "@quicktvui/quicktvui3";
 import { TabContentLabel } from "./impl/TabContentLabel"
 import {TabContentPlate} from "./impl/TabContentPlate";
+import { TabContentSection } from "./impl/TabContentSection"
 import {buildEndSection} from "./page";
 import {TabSectionItem} from "./impl/TabSectionItem";
+import { TabSectionItemType } from "./tab_content_type/TabSectionItemType"
 import {
   buildPlateData,
   buildQTTabContent,
-  buildSectionData,
   buildSectionItem,
   buildTabContentPlate, tabPlateAllHeight,
   tabPlateTitleGap,
@@ -40,11 +41,11 @@ export function buildTransferTabContentAdapter(tabContent:TabContent,pageNo:numb
   //首次获得焦点是否禁止移动
   const disableScrollOnFirstScreen = tabContent.disableScrollOnFirstScreen
   //获取当前导航Tab下Plate原始数据
-  const plateSourceData = tabContent.plates
+  const plateSourceData:Array<TabContentSection> = tabContent.plates
   //创建plateList板块集合列表
   const plateList: Array<QTWaterfallSection> = []
   if (plateSourceData && plateSourceData.length>0){
-    plateSourceData.map((plateItem,plateIndex:number)=>{
+    plateSourceData.map((plateItem:TabContentSection,plateIndex:number)=>{
       //获取板块高度
       let plateHeight:number = buildPlateHeight(plateItem)
       plateHeightSum += plateHeight
@@ -115,12 +116,12 @@ function buildPlateHeight(plateItem):number{
  * build板块中section列表
  * @param plateItem
  */
-function buildSectionList(plateItem,plateIndex?:number,tabIndex?:number):Array<QTWaterfallItem>{
+function buildSectionList(plateItem:TabContentSection,plateIndex?:number,tabIndex?:number):Array<QTWaterfallItem>{
   //获取plate 板块中section格子列表
-  const sectionList:Array<any> = plateItem.plateDetails
+  const sectionList:Array<TabSectionItem> = plateItem.plateDetails
   let tabSectionList:Array<QTWaterfallItem> = []
   const showPlateName = plateItem.showPlateName === '1'
-  sectionList.forEach((item,index:number)=>{
+  sectionList.forEach((item:TabSectionItem,index:number)=>{
     const qtWaterfallItem:QTWaterfallItem = buildWaterfallItem(item,showPlateName,tabIndex)
     //为每个格子添加具体的位置
     qtWaterfallItem.sectionPosLabel = `${tabIndex}_${plateIndex}_${index}`
@@ -134,11 +135,12 @@ function buildSectionList(plateItem,plateIndex?:number,tabIndex?:number):Array<Q
  * @param sectionItem
  * @param showPlateName
  */
-function buildWaterfallItem(sectionItem,showPlateName,tabIndex): QTWaterfallItem {
+function buildWaterfallItem(sectionItem:TabSectionItem,showPlateName,tabIndex): QTWaterfallItem {
   const posY = sectionItem.posY + (showPlateName? tabPlateTitleGap :0)
-  const itemSection:TabSectionItem = buildSectionData(sectionItem.id,sectionItem.width,sectionItem.height,sectionItem.cellType,sectionItem.posX,posY,sectionItem.playLogoSwitch,sectionItem.poster,sectionItem.posterTitle,sectionItem.posterTitleStyle,sectionItem.nonFocusImage,sectionItem.focusImage,sectionItem.cornerContent,sectionItem.cornerColor,sectionItem.cornerGradient,sectionItem.playData,
-    sectionItem.redirectType,sectionItem.action,sectionItem.innerArgs,sectionItem.isBgPlayer,sectionItem.focusScreenImage)
-  return buildSectionItem(itemSection,tabIndex)
+  sectionItem.posY = posY
+  sectionItem.cellType = sectionItem.cellType ?? TabSectionItemType.TAB_CONTENT_ITEM_DEFAULT
+  sectionItem.playLogoSwitch = sectionItem.playLogoSwitch??"0"
+  return buildSectionItem(sectionItem,tabIndex)
 }
 
 export function getPosLabel(sectionPosLabel:string):TabContentLabel{
