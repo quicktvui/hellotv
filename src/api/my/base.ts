@@ -173,7 +173,6 @@ export class MyBase {
             id: '5',
             title: '日志上报', _titleFontSize: 36,
             focusedBgColor, _layout: { height: 120 },
-            _redirectType: launchRedirectType.lexue,
           },
           {
             id: '6',
@@ -191,6 +190,18 @@ export class MyBase {
           columns: 4,// 指定 columns 创建板块数据
           space: 33
         }
+      }),
+      getMysection({
+        id: '4logout', title: '',
+        list: [
+          {
+            id: '0',
+            title: '退出登录', _layout: { height: 140 },
+            _redirectType: launchRedirectType.router,
+            _router: { url: 'logout',isMyRouter: true, isNoCheckLogin:true,params:{} }
+          }
+        ],
+        options: { columns: 1, space: 0, posterType: posterTypes.logout }
       })
     ]
   }

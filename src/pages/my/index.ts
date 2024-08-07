@@ -352,12 +352,11 @@ export const transHistorySection = (_ = false, historyRes: ImySectionRes) => {
   return historyRes.section
 }
 export const transMoreSectin = (_ = false, sections: ImySectionRes[]) => {
-  const isLogin = !!userManager.getUserInfo()
+  // const isLogin = !!userManager.getUserInfo()
   return sections.map(item => {
-    if(item.options?.posterType === posterTypes.logout){
-      // item.section.itemList[0].editMode = isLogin
-      item.section.itemList[0].type = isLogin?108:-101
-    }
+    // if(item.options?.posterType === posterTypes.logout){
+    //   item.section.itemList[0].type = isLogin?108:-101
+    // }
     return item.section
   })
 }
@@ -506,20 +505,21 @@ class MyDataManager {
   logout(){
     userManager.clearUserInfo()
   }
-  routerLaunch(item:any){
+  routerLaunch(item:any, _launch?:any){
+    const rlaunch = _launch||launch
     this.lastRouter = item._router?.url||''
     this.triggerRouterId = item.id||item._id
     if(item._router?.isNoCheckLogin){
-      launch.launch(item)
+      rlaunch.launch(item)
     } else {
       if(userManager.isLogin()){
         if(item._router?.isVipRouter){
-          launch.jumpVipPay()
+          rlaunch.jumpVipPay()
         } else {
-          launch.launch(item)
+          rlaunch.launch(item)
         }
       } else {
-        launch.jumpLogin()
+        rlaunch.jumpLogin()
       }
     }
   }

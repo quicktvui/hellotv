@@ -29,10 +29,9 @@ import { useESRouter, useESNativeRouter } from '@extscreen/es3-router';
 import logo from '../../assets/cell-list-focus-img.png'
 import userManager from '../../api/login/user/UserManager'
 import {UserChangeListener} from '../../api/login/user/UserChangeListener'
+import { useLaunch } from "../../tools/launch/useApi";
 
-const router = useESRouter()
-const nRouter = useESNativeRouter()
-
+const launch = useLaunch()
 const cHeaderHeight = 80
 const isLoading = ref(true)
 const configs = reactive<Iconfig>({})
@@ -61,7 +60,7 @@ const contentStyle = computed<CSSProperties>(() => {
 const contentData = qtRef<QTWaterfallSection[]>()
 
 const onItemClick = (parentPosition, position, item:IBlockItemData)=>{
-  myDataManager.routerLaunch(item)
+  myDataManager.routerLaunch(item, launch)
 }
 
 let isUserChange = false

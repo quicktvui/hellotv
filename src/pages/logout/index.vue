@@ -68,7 +68,7 @@ defineExpose({
   background-size: cover;
   justify-content: center;
   /* #3A4578 */
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0,0,0,0.9);
   /* border-radius: 20px; */
   background-size: cover;
 }
