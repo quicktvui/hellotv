@@ -57,6 +57,7 @@ export const getMockVideoData = (index:number):IvideoDes => {
       //   id: 4, txt: '开通会员', type: 3, img: logo2, action: '4',
       // }
     ],
-    selectionTotalSize: 1000
+    selectionTotalSize: 1000,
+    palyCount: 18
   }
 }

@@ -120,8 +120,10 @@ export default defineComponent({
       return list
     }
 
-    const loadMoreMediaList =(index:number=0,playDatas:Array<ESDefMediaList>)=>{
-      const list:Array<ESMediaItem> = buildMediaItemList(index,playDatas,playInterceptors)
+    const loadMoreMediaList =(index:number=0,playDatas:Array<ESDefMediaList>,list?:ESMediaItem[])=>{
+      if(!list){
+        list = buildMediaItemList(index,playDatas,playInterceptors)
+      }
       playerManager.value?.addMediaToIndex(index,list)
     }
 

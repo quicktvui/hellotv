@@ -8,6 +8,7 @@ export interface IDetail2Config {
   isShowTop:boolean;
   topMode: TtopModes;
   desTopDistance:number;//视频节目信息距离顶部的距离
+  videoSectionPageSize:number;//视频选集列表分页的每页数量
 }
 
 // top------
@@ -61,7 +62,7 @@ export interface IvideoDes {
   playNumber?:number;//播放量
   status?:string;//视频状态 已完结 7月20日更新
   actors?:string;//演员信息
-  palyCount?:number;//上次播放到了第几集
+  palyCount?:number;//上次播放到了第几集，从0开始计算
   [k:string]:any;
 }
 export interface IvideoParams {
@@ -89,6 +90,7 @@ export interface ImediaSelection extends Id2BaseSection {
 
 export interface IselectionPoster extends Id2BaseSection {
   id:string;//选集数据/tab栏数据id
+  classId:string;//所在分类的id，必须和它所处环境的分类的id保持一致
   title?:string;//选集标签中显示的标题
   subTitle?:string;//选集标签中显示的副标题
   poster:string;//选集标签中显示的预览图
@@ -98,7 +100,7 @@ export interface IselectionPoster extends Id2BaseSection {
   _router?:{ url:string;params:object };
   _config?: {//选集标签中显示的格子合模型配置数据
     imgWidth?: number, imgHeight?:number
-  }
+  };
 }
 export interface IselectionBaseSection {
   id:string;
@@ -109,7 +111,7 @@ export interface IselectionBaseSection {
   }
 }
 export interface ItabListItem {
-  id:string;
+  id:string; pId:string;//父类id/父分类id，必须和父级分类的id保持一致
   type?: Tvalues<typeof tabTypes>;//ui板块展示类型
   name?:string;//标签项tab-bar名称
   itemList?:TposterType[];//标签项对应的格子列表数据

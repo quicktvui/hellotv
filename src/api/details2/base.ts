@@ -52,7 +52,7 @@ export class Detail2Base {
   getConfig(): IDetail2Config {
     return {
       isShowTop: true, topMode: 'rightLogo',
-      desTopDistance: 40
+      desTopDistance: 40, videoSectionPageSize: 20
     }
   }
   /**
@@ -83,18 +83,22 @@ export class Detail2Base {
    * @param pageNo 选集分页的第几页
    * @param pageSize 选集分页的每页的条数
    */
-  async getMediaSelectionList(vdata:IvideoDes, pageNo=1, pageSize=10):Promise<ImediaSelection[]>{
+  async getMediaSelectionList(vdata:IvideoDes, pageNo:number, pageSize:number):Promise<ImediaSelection[]>{
     // console.log(vdata.id)
+    if(!pageNo || !pageSize) return []
+    if(pageNo * pageSize > vdata.selectionTotalSize){
+      return []//没有更多数据了
+    }
     let isLast = Math.floor(vdata.selectionTotalSize / pageSize) <= pageNo;
-    let size = isLast ? vdata.selectionTotalSize - (pageNo * pageSize) : pageSize;
-
+    let size = isLast ? vdata.selectionTotalSize - ((pageNo-1) * pageSize) : pageSize;
     return new Array(size).fill(1).map((_, index)=>{
       return getSelectionSeriesPoster({
         id: tUid.cleateId(),
+        classId: 'd2SelectionSection1-1',//这里要填写选集tab的id
         poster:'',
         corner: pageNo===2?'VIP':'',
-        title: '第' + ((pageNo-1) * pageSize + index) + '集',
-        videoData: pageNo===1&&index==1 ? this.pageData.media : getMockVideoData(index)
+        title: '第' + ((pageNo-1) * pageSize + (index+1)) + '集',
+        videoData: getMockVideoData(index)
       })
     });
   }
@@ -108,39 +112,46 @@ export class Detail2Base {
         id: 'd2SelectionSection1',
         tabList: [
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-1', name: '选集', isSelectionTab:true//选集数据需要在getMediaSelectionList方法中单独获取
+            id: 'd2SelectionSection1-1', name: '选集', isSelectionTab:true,//选集数据需要在getMediaSelectionList方法中单独获取
+            pId: 'd2SelectionSection1'
           }),
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-2', name: '系列',
+            id: 'd2SelectionSection1-2', name: '系列', pId: 'd2SelectionSection1',
             itemList: new Array(10).fill(1).map((_,index)=>{
               return getSelectionPoster({
                 id: 'd2SelectionSection1-2'+index, _type: posterTypes.bigBtn,
                 title: `复仇者联盟系列: ${index}`,
+                classId: 'd2SelectionSection1-2',
                 poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                videoData: getMockVideoData(index)
+                videoData: getMockVideoData(index),
+                _router: { url:'detail2',params:{} }
               })
             })
           }),
           getSelectionSectionTabs({
-            id: 'd2SelectionSection1-3', name: '花絮',
+            id: 'd2SelectionSection1-3', name: '花絮', pId:'d2SelectionSection1',
             tabList:[
               getSelectionSectionTabs({
                 id: 'd2SelectionSection1-3-1', name: '预告花絮', type: tabTypes.smallText,
+                pId: 'd2SelectionSection1-3',
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-1'+index, title: '预告花絮'+index,
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                    videoData: getMockVideoData(index)
+                    videoData: getMockVideoData(index),
+                    classId: 'd2SelectionSection1-3-1'
                   })
                 })
               }),
               getSelectionSectionTabs({
                 id: 'd2SelectionSection1-3-2', name: '精彩看点', type: tabTypes.smallText,
+                pId: 'd2SelectionSection1-3',
                 itemList: new Array(10).fill(1).map((_,index)=>{
                   return getSelectionPoster({
                     id: 'd2SelectionSection1-3-2'+index, title: '精彩看点 '+index,
                     poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-                    videoData: getMockVideoData(index)
+                    videoData: getMockVideoData(index),
+                    classId: 'd2SelectionSection1-3-2'
                   })
                 })
               }),
@@ -156,7 +167,8 @@ export class Detail2Base {
             id: 'd2SelectionSection2'+index,
             title: '权力的游戏'+index, subTitle: '2024-02-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170400041.png',
-            videoData: getMockVideoData(index)
+            videoData: getMockVideoData(index),
+            classId: 'd2SelectionSection2'
           })
         })
       }),
@@ -168,7 +180,8 @@ export class Detail2Base {
             id: 'd2SelectionSection3'+index,
             title: '生化危机: 死亡岛'+index, subTitle: '2024-03-08上映',
             poster: 'http://lexueimg.educdn.huan.tv/eduImg/upload/img4/20230314170600002.png',
-            videoData: getMockVideoData(index)
+            videoData: getMockVideoData(index),
+            classId: 'd2SelectionSection3'
           })
         })
       })
@@ -178,41 +191,7 @@ export class Detail2Base {
   /**
    * 视频播放地址鉴权转换函数
    */
-  getMediaDataOfInterceptor(vData:Id2BaseSection){
-    return {
-      id: vData.videoData.id,
-      title: vData.videoData.title,
-      subTitle: vData.videoData.subTitle,
-      videoUrl: vData.videoData.vUrl,
-      interceptors:[{
-        id: tUid.cleateId('d2-interceptors'),
-        type:ESPlayerInterceptorType.ES_PLAYER_INTERCEPTOR_TYPE_MEDIA_ITEM,
-        async intercept(...params:Array<any>):Promise<ESPlayerInterceptResult>{
-          const mediaItem = params[0] as ESMediaItem
-          let mediaSourceList: ESMediaSourceList = {
-            index: 0,
-            list: [
-              // { uri: mediaItem.videoUrl, definition: 0 },//标清
-              { uri: mediaItem.videoUrl, definition: 1 },//标清
-              { uri: mediaItem.videoUrl, definition: 2 },//高清
-              // { uri: mediaItem.videoUrl, definition: 3 },//超清
-              // { uri: mediaItem.videoUrl, definition: 4 },//原画
-              // { uri: mediaItem.videoUrl, definition: 5 },//蓝光
-              // { uri: mediaItem.videoUrl, definition: 6 },//4k
-              // { uri: mediaItem.videoUrl, definition: 7 },//2k
-            ]
-          }
-          let result: ESPlayerInterceptResult = {
-            result: {
-              mediaSourceList: mediaSourceList
-            }
-          }
-          return Promise.resolve(result)
-        },
-        release(){}
-      }],
-    }
-  }
+  async authenticationVideo(video:IvideoDes){}
 }
 
 // getSelectionSectionTabs({

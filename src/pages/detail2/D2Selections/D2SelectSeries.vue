@@ -4,6 +4,7 @@
     :scrollParam="scrollParams" :groupParam="groupParams" :commonParam="commonParams"
     :display="true" @load-data="onLoadData" @item-click="onItemClick"
     :focusable="false" :custom-item="true"
+    @group-item-focused="onGroupItemFocused"
   >
     <qt-view 
       class="d2ss_item" autoWidth :clipChildren="false" 
@@ -21,33 +22,43 @@ import { ref, onMounted } from 'vue';
 import type {ESIMediaSeries} from "@extscreen/es3-component";
 import d2Api from '../../../api/details2/index'
 // @ts-ignore
-import { detail2Ui } from '../index.ts'
+import { dVideoSectionPageSize, detail2Ui, getPageIndex,getPageNo } from '../index.ts'
 
-let pageSize: number = 20;//每页加载多少条数据
+let pageSize: number = d2Api.getConfig().videoSectionPageSize||dVideoSectionPageSize;//每页加载多少条数据
 let totalCount: number = detail2Ui.vdata?.selectionTotalSize||0;
 const d2SelectSeries2 = ref<ESIMediaSeries>()
+
+let prevSelectionIndex=0
 const onItemClick = (ev) => {
-  // console.log(ev.data.videoData, '---lsj--s-s-onItemClick',catchMList)
-  detail2Ui.changePlayList(detail2Ui.selectionList)
-  detail2Ui.changeVideo(ev.position)
+  prevSelectionIndex = ev.position
+  detail2Ui.selectionIndex = ev.position
+  const pageNo = getPageNo(ev.position)
+  const pIndex = getPageIndex(ev.position)
+  const newList = detail2Ui.selectionList.get(pageNo)
+  if(newList){
+    detail2Ui.changePlayList(newList)
+    detail2Ui.changeVideo(pIndex)
+    detail2Ui.selectionPageNo = pageNo
+  }
+}
+const onGroupItemFocused = (ev) => {
+  // console.log(ev.position+1, '--lsj-onGroupItemFocused')
 }
 const onLoadData = (e) => {
-  let page = e.page+1; // 要加载的页数
-  detail2Ui.getMediaSelectionList(page, pageSize).then(mList=>{
+  // e.page是从0开始的，但是分页需要从1开始
+  detail2Ui.getMediaSelectionList(e.page+1).then(mList=>{
     d2SelectSeries2.value?.setPageData(e.page, mList);
-    if(page===1){
-      setSelect()
-    }
   })
 }
 const scrollParams = {
   scrollType: 0,//0 1
-  pageDisplayCount: 10,
+  pageDisplayCount: pageSize,
   paddingForPageLeft: 0,
   paddingForPageRight: 0,
 }
 const groupParams = {
-  groupSize: 10,
+  groupSize: pageSize,
+  scrollTargetOffset: 2,
   // groupUp: true,
   groupMarginLeft: 0,
   textColor: {
@@ -58,25 +69,32 @@ const groupParams = {
   focusBackground: {
     color: ['#ffffff', '#ffffff'],
     //   orientation: 'LEFT_RIGHT',
-    //   cornerRadius: [40, 40, 40, 40],
-    //   padding: [34, 6]
+    cornerRadius: [9, 9, 9, 9],
+    padding: [0,0]
   },
   mark: {
     color: '#00FFFFFF'
+  },
+  itemWidth: 180, itemHeight: 66, itemGap: 25,
+  background:{
+    color:['#33666666',"#33666666"],
+    cornerRadius: [9,9,9,9],
+    padding: [0,0],
   }
 }
 const commonParams = {
   contentWidth: 1720,//1824
   itemGap: 48,
+  initPosition: 0
   // contentHeight: 80
 }
 const setSelect = ()=>{
   const currentTab = detail2Ui.currentPlayPath[0]
   if(currentTab == detail2Ui.selectionPositoin){
-    const selectionPath = detail2Ui.tabPath.get(detail2Ui.selectionPositoin)
-    if(selectionPath){
-      d2SelectSeries2.value?.setGroupSelected(selectionPath.next?.index||0)
-      d2SelectSeries2.value?.setSelected(selectionPath.next?.next?.index||0)
+    if(prevSelectionIndex !== detail2Ui.selectionIndex){
+      console.log('lsj-scrollTo', detail2Ui.selectionIndex)
+      d2SelectSeries2.value?.scrollTo(detail2Ui.selectionIndex)
+      d2SelectSeries2.value?.setSelected(detail2Ui.selectionIndex)
     }
   } else {
     // d2SelectSeries2.value?.setGroupSelected(-1)
