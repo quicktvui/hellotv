@@ -17,7 +17,7 @@ import D2Introduction from './pages/detail2/D2Introduction.vue'
 import ranking from './pages/ranking/index.vue'
 import shortVideo from './pages/shortVideo/index.vue'
 import test from './pages/test.vue'
-
+import logout from './pages/logout/index.vue'
 
 const routes = [
   {
