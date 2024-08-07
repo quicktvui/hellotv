@@ -2,77 +2,99 @@
   <div class="d2_video">
     <media-def-player 
       ref="PlayerManagerRef" class="d2_video_media" :initPlayerWindowType="2"
-      :is-show-player-controller="true" @onPlayerInitialized="onPlayerInitialized" 
+      :is-show-player-controller="true" :menuList="menuList"
       @onPlayerPlayMedia="onPlayerPlayMedia"
-      :menuList="menuList"
+      @onPlayerCompleted="onPlayerCompletedFn"
     />
   </div>
 </template>
 <script lang='ts' setup>
-import { onBeforeUnmount, ref } from 'vue';
+import { onBeforeUnmount, ref, onMounted } from 'vue';
 import mediaDefPlayer from '../../components/media/media-def-player.vue'
 import { defList,PlayMenuNameFlag } from '../../components/media/adapter/ControlDataAdapter'
 // @ts-ignore
-import { detail2Ui } from './index.ts'
-import d2Api from '../../api/details2/index'
+import { detail2Ui, getMediaList,getSelectionIndex } from './index.ts'
+
+const PlayerManagerRef = ref()
+let playIndex=-1
+let isOver = false//是否全集播放完毕
+let isStop = false//是否播放完一个列表，暂停
 
 const menuList = [
   { type: 1, nameFlag: PlayMenuNameFlag.NEXT, name: '下一集', decoration: { right: 30 } },
   ...defList(),
 ]
 
-let playIndex=-1
-const PlayerManagerRef = ref()
-const playerIsInitialized = ref(false)
-const onPlayerInitialized = () => {
-  playerIsInitialized.value = true
-}
-const playByIndex = (playList:any[]=[]) => {
-  if(playList.length){
-    PlayerManagerRef.value?.playMediaList({
-      index: detail2Ui.selectTabListIndex,
-      list: playList.map(dataItem=>{
-        return d2Api.getMediaDataOfInterceptor(dataItem)
+const onPlayerCompletedFn = ()=>{
+  if(isStop){
+    if(detail2Ui.isSelection()){//选集
+      const pageNo = detail2Ui.selectionPageNo+1
+      const sIndex = detail2Ui.selectionIndex + 1;
+      detail2Ui.getMediaSelectionList(pageNo).then(newList=>{
+        if(newList && newList.length){
+          isStop = false
+          detail2Ui.changePlayList(newList)
+          detail2Ui.selectTab2Index = detail2Ui.selectTab2Index+1
+          detail2Ui.selectionIndex = sIndex
+          detail2Ui.selectionPageNo = pageNo
+          detail2Ui.changeVideo(0)
+        } else {
+          isOver = true
+        }
       })
-    });
+    } else {//系列
+
+    }
   }
 }
 const onPlayerPlayMedia = (mItem)=>{
-  const mIndex = detail2Ui.playList.findIndex(dpItem=>dpItem.videoData.id===mItem.id)
-  if(mIndex > -1 && playIndex != mIndex){
-    playIndex = mIndex
-    detail2Ui.changeVideo(mIndex)
+  let mIndex = detail2Ui.playList.findIndex(dpItem=>dpItem.videoData.id===mItem.id)
+  if(mIndex > -1){
+    if(playIndex != mIndex){
+      playIndex = mIndex//当前列表中的索引
+
+      if(detail2Ui.isSelection()){ // 选集
+        const sIndex = getSelectionIndex(detail2Ui.selectionPageNo, mIndex)
+        detail2Ui.selectionIndex = sIndex//设置选集中的索引
+        console.log(sIndex, '-lsj-playIndex', playIndex, mIndex)
+      }
+      if(mIndex === detail2Ui.playList.length-1){
+        isStop = true
+      }
+      detail2Ui.changeVideo(mIndex)
+    }
+  } else {
+    // 加载更多分集数据，或提示当前系列分集已经播完
   }
 }
-const initPlay = (playList) => {
-  if (!playerIsInitialized.value) {
-    PlayerManagerRef.value?.initialize()
-    PlayerManagerRef.value?.setPlayMediaListMode(4)
-    PlayerManagerRef.value?.setFullWindow()
-  } else {
+
+const playByIndex = (playList:any[]=[]) => {
+  if(playList.length){
+    playIndex = detail2Ui.playIndex
+    PlayerManagerRef.value?.playMediaList({
+      index: detail2Ui.playIndex,
+      list: getMediaList(playList),
+      // interceptors: Array<ESIPlayerInterceptor>
+    });
+  }
+}
+
+detail2Ui.$on((playList=[]) => {
+  if(detail2Ui.isChangedTab()){
     // PlayerManagerRef.value?.pause()
     // PlayerManagerRef.value?.stop()
     PlayerManagerRef.value?.reset()
-  }
-  playByIndex(playList)
-}
-
-let prevListLength = detail2Ui.playList.length
-
-detail2Ui.$on((playList=[]) => {
-  if(playIndex != detail2Ui.selectTabListIndex){
-    playIndex = detail2Ui.selectTabListIndex
-    if(detail2Ui.isChangedTab() || prevListLength != playList.length){
-      // if(prevListLength>0){todo}
-      initPlay(playList)
-      prevListLength = playList.length
-    } else {
-      PlayerManagerRef.value?.pause()
-      PlayerManagerRef.value?.playMediaItemByIndex(detail2Ui.selectTabListIndex)
+    playByIndex(playList)
+  } else {
+    if(playIndex != detail2Ui.playIndex){
+      PlayerManagerRef.value?.pause()//先暂停上次播放
+      PlayerManagerRef.value?.playMediaItemByIndex(playIndex)
     }
   }
 })
-
+onMounted(()=>{
+  PlayerManagerRef.value?.initPlayData([],1,[])// 初始化播放器
+})
 onBeforeUnmount(()=>{
   playIndex =  -1
   PlayerManagerRef.value?.pause()

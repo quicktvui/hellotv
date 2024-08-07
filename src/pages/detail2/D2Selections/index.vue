@@ -42,7 +42,11 @@ const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
 const onItemClickFn = (parentPosition, position, item, e)=> {
   if(parentPosition===2){
-    detail2Ui.changeVideo(e.index)
+    if(item._router){
+      router.replace({ name: item._router.url, params: {...(item._router.params||{}), ...(item.videoData||{})} })
+    }else{
+      detail2Ui.changeVideo(e.index)
+    }
   } else if(parentPosition>2){
     router.replace({ name: 'detail2', params: item.videoData })
   }
@@ -100,15 +104,17 @@ d2Api.getSelectionsData().then(res=>{
   // 通过 vData.id 查询所在tab位置并设置初始位置
   // detail2Ui.vdata?.id
   const tabSection = res[0]
-  detail2Ui.initIndex(tabSection)
-  detail2Ui.$emit()
   if(tabSection){
+    detail2Ui.initIndex()
+
     const tab = tabSection.itemList[detail2Ui.selectTabIndex]
     const tabObj = detail2Ui.getTab2(tab as any)
     //第二层tab
     res.splice(1, 0, tabObj.tabs2Section)
     //第三层tab-list
     res.splice(2, 0, tabObj.tab2ContentSection)
+
+    detail2Ui.$emit()
   }
   waterfallData.value = res
 })
