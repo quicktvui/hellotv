@@ -14,7 +14,9 @@ import mediaDefPlayer from '../../components/media/media-def-player.vue'
 import { defList,PlayMenuNameFlag } from '../../components/media/adapter/ControlDataAdapter'
 // @ts-ignore
 import { detail2Ui, getMediaList,getSelectionIndex } from './index.ts'
+import { useESToast } from '@extscreen/es3-core';
 
+const toast = useESToast()
 const PlayerManagerRef = ref()
 let playIndex=-1
 let isOver = false//是否全集播放完毕
@@ -40,6 +42,7 @@ const onPlayerCompletedFn = ()=>{
           detail2Ui.changeVideo(0)
         } else {
           isOver = true
+          toast.showLongToast("已经全部播放完毕")
         }
       })
     } else {//系列
@@ -56,7 +59,8 @@ const onPlayerPlayMedia = (mItem)=>{
       if(detail2Ui.isSelection()){ // 选集
         const sIndex = getSelectionIndex(detail2Ui.selectionPageNo, mIndex)
         detail2Ui.selectionIndex = sIndex//设置选集中的索引
-        console.log(sIndex, '-lsj-playIndex', playIndex, mIndex)
+      } else {
+        detail2Ui.selectionIndex = mIndex//设置选集中的索引
       }
       if(mIndex === detail2Ui.playList.length-1){
         isStop = true
@@ -87,6 +91,7 @@ detail2Ui.$on((playList=[]) => {
     playByIndex(playList)
   } else {
     if(playIndex != detail2Ui.playIndex){
+      playIndex = detail2Ui.playIndex
       PlayerManagerRef.value?.pause()//先暂停上次播放
       PlayerManagerRef.value?.playMediaItemByIndex(playIndex)
     }

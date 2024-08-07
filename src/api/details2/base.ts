@@ -86,10 +86,10 @@ export class Detail2Base {
   async getMediaSelectionList(vdata:IvideoDes, pageNo:number, pageSize:number):Promise<ImediaSelection[]>{
     // console.log(vdata.id)
     if(!pageNo || !pageSize) return []
-    if(pageNo * pageSize > vdata.selectionTotalSize){
+    if((pageNo-1) * pageSize >= vdata.selectionTotalSize){
       return []//没有更多数据了
     }
-    let isLast = Math.floor(vdata.selectionTotalSize / pageSize) <= pageNo;
+    let isLast = pageSize*pageNo >=  vdata.selectionTotalSize;
     let size = isLast ? vdata.selectionTotalSize - ((pageNo-1) * pageSize) : pageSize;
     return new Array(size).fill(1).map((_, index)=>{
       return getSelectionSeriesPoster({

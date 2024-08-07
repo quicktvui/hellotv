@@ -305,13 +305,13 @@ class Detail2Ui {
         this.selectTabIndex = idIndex.tabindex
         this.selectTab2Index = idIndex.tab2index
         this.selectTabListIndex = idIndex.index
-        this.playIndex = idIndex.index//按当前列表计算索引
+        this.playIndex = idIndex.index//根据id按当前列表计算初始焦点索引
       } else {
         this.selectTabIndex = this.selectionPositoin
         // this.selectTab2Index = idIndex.tab2index
         this.selectTabListIndex = getPageIndex(this.vdata.palyCount)
         this.playIndex = this.selectTabListIndex
-        this.selectionIndex = this.vdata.palyCount||0
+        this.selectionIndex = this.vdata.palyCount||0//按播放记录设置初始焦点索引
       }
     }
     this.currentPlayPath = [this.selectTabIndex,this.selectTab2Index,this.selectTabListIndex]
@@ -378,8 +378,9 @@ class Detail2Ui {
   addPlayList(newList:any[] = []){
     this.playList = this.playList.concat(newList)
   }
-  changePlayList(newList?:any[]){
+  changePlayList(newList?:any[], pageNo?:number){
     if(newList){
+      this.prevSelectTab2Index = pageNo??this.prevSelectTab2Index
       this.playList = newList
     }
   }
