@@ -1,7 +1,7 @@
 <template>
 <div class="logout" :focusable="false" duplicateParentState>
   <div class="logout_dailog" :focusable="false" :clipChildren="false" overflow="visible">
-    <div class="logout_info" :focusable="false" :style="{'backgroundImage': `${logout}`}">
+    <div class="logout_info" :focusable="false">
       <p class="logout_info_txt">退出将无法享受登录特权</p>
       <p class="logout_info_txt">您确定退出登录？</p>
       <!-- <text-view 
@@ -20,7 +20,7 @@
 import { useESRouter } from "@extscreen/es3-router";
 // import { ref } from "vue";
 import { useLoginDataSource } from "../../api/UseApi"
-import logout from '../../assets/my/logout.png'
+// import logout from '../../assets/my/logout.png'
 import LogOutBtn from './LogOutBtn.vue'
 
 const router = useESRouter()
@@ -68,7 +68,7 @@ defineExpose({
   background-size: cover;
   justify-content: center;
   /* #3A4578 */
-  background-color: transparent;
+  background-color: rgba(0,0,0,0.5);
   /* border-radius: 20px; */
   background-size: cover;
 }
