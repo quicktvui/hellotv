@@ -7,13 +7,18 @@
     @group-item-focused="onGroupItemFocused"
   >
     <qt-view 
-      class="d2ss_item" autoWidth :clipChildren="false" 
+      class="d2ss_item" :clipChildren="false" 
       :focusable="true" :focusScale="1.08"
     >
-      <qt-text 
-        text="${title}" class="d2ss_item_text" :focusable="false" 
-        duplicateParentState gravity="center" :ellipsizeMode="2" :lines="1"
-      ></qt-text>
+    <!-- 'selected','focused' -->
+      <div class="d2ss_play_Mark" :focusable="false" duplicateParentState showOnState="selected&focused">
+        <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF5E90'" :gap="-1" style="margin-left: 12px;" :focusable="false"/>
+      </div>
+      <!-- autoWidth -->
+      <text-view 
+        text="${title}" class="d2ss_item_text" :focusable="false" :fontSize="30"
+        duplicateParentState gravity="center" :lines="1"
+      ></text-view>
     </qt-view>
   </select-series>
 </template>
@@ -34,11 +39,16 @@ const onItemClick = (ev) => {
   detail2Ui.selectionIndex = ev.position
   const pageNo = getPageNo(ev.position)
   const pIndex = getPageIndex(ev.position)
-  const newList = detail2Ui.selectionList.get(pageNo)
-  if(newList){
-    detail2Ui.changePlayList(newList)
+  if(pageNo != detail2Ui.selectionPageNo){
+    detail2Ui.getMediaSelectionList(pageNo).then(newList=>{
+      if(newList){
+        detail2Ui.selectionPageNo = pageNo
+        detail2Ui.changePlayList(newList,pageNo)
+        detail2Ui.changeVideo(pIndex)
+      }
+    })
+  } else {
     detail2Ui.changeVideo(pIndex)
-    detail2Ui.selectionPageNo = pageNo
   }
 }
 const onGroupItemFocused = (ev) => {
@@ -92,7 +102,8 @@ const setSelect = ()=>{
   const currentTab = detail2Ui.currentPlayPath[0]
   if(currentTab == detail2Ui.selectionPositoin){
     if(prevSelectionIndex !== detail2Ui.selectionIndex){
-      console.log('lsj-scrollTo', detail2Ui.selectionIndex)
+      prevSelectionIndex = detail2Ui.selectionIndex
+      // console.log(detail2Ui.selectionIndex, '--lsj-detail2Ui.selectionIndex')
       d2SelectSeries2.value?.scrollTo(detail2Ui.selectionIndex)
       d2SelectSeries2.value?.setSelected(detail2Ui.selectionIndex)
     }
@@ -117,6 +128,7 @@ onMounted(()=>{
 }
 
 .d2ss_item {
+  position: relative;
   width: 307px;
   height: 120px;
   display: flex;
@@ -133,8 +145,9 @@ onMounted(()=>{
   width: 267px;
   height: 120px;
   color: #BFBFBF;
-  font-size: 30px;
   focus-color: #0E0E0E;
   select-color: #FF5E90;
+}
+.d2ss_play_Mark{
 }
 </style>
