@@ -91,5 +91,9 @@ const routes = [
     path: '/d2Introduction', name: 'd2Introduction', component: D2Introduction,
     type: ESRouteType.ES_ROUTE_TYPE_DIALOG
   },
+  {
+    name: 'logout', path: '/logout', component: logout,
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
+  }
 ]
 export default routes
