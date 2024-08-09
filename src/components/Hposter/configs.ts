@@ -13,7 +13,8 @@ interface IposterData {
   imgWidth?:number;
   imgHeight?:number;
 
-  title?:string;//标题
+  //标题
+  title?:string;titleSelectColor?:string;
   titleSpace?:{left:number;top:number;right:number;bottom:number}//标题距离上下左右的间隙
   titleLines?:number;//标题最大行数
   subTitle?:string;//副标题
@@ -32,7 +33,6 @@ const dPosterSubTitleSize = 18
 const dTitleLines = 1
 const dFocusBorderType = focusBorderTypes.img
 const dTitleSpace = {left:8,top: 8,right:10,bottom:5,dSpace:8}
-
 export const hPosterType = 20001
 export const getPosterConfig = (data:IposterData) => {
   const imgWidth = data.imgWidth||dPosterImgWidth
@@ -50,13 +50,12 @@ export const getPosterConfig = (data:IposterData) => {
   const titleH = data.title ? titleSize*titleLines + titleSpace.dSpace : 0
   const subTitleW = imgWidth
   const subTitleH = data.subTitle ? subTitleSize + titleSpace.dSpace : 0
-  const titleStyle = {
-    width: imgWidth, height: titleH + subTitleH + titleSpace.top + titleSpace.bottom,
-    marginTop: imgHeight,
+  const titleInnerStyle = {
+    width: imgWidth, height: titleH + subTitleH + titleSpace.top + titleSpace.bottom
   }
 
   const posterWidth = imgWidth
-  const posterHeight = imgHeight + titleStyle.height
+  const posterHeight = imgHeight + titleInnerStyle.height
 
   const focusBorderType = data.focusBorderType||dFocusBorderType
   const coverStyle:any = {}
@@ -93,7 +92,7 @@ export const getPosterConfig = (data:IposterData) => {
       },
       lines: titleLines, ellipsizeMode: titleLines===1?4:2,
       paddingRect: [titleSpace.left,0,titleSpace.right,0],
-      color: '#BFBFBF', focusColor: '#BFBFBF'
+      color: '#BFBFBF', focusColor: '#ffffff', selectColor: data.titleSelectColor||'#ffffff'
     },
     subTitle: {
       text: data.subTitle,
@@ -103,7 +102,7 @@ export const getPosterConfig = (data:IposterData) => {
         fontSize: subTitleSize
       },
       paddingRect: [titleSpace.left,0,titleSpace.right,0],
-      color: '#959292', focusColor: '#959292'
+      color: '#959292', focusColor: '#ffffff', selectColor: '#ffffff'
     },
     floatTitle: {
       text: '',
@@ -124,9 +123,13 @@ export const getPosterConfig = (data:IposterData) => {
       style: {},
       background: {}
     },
-    titleStyle,
+    titleInnerStyle,
+    titleStyle: {
+      width: titleInnerStyle.width, height: titleInnerStyle.height,
+      marginTop: imgHeight,
+    },
     titleFocusStyle: {
-      width: imgWidth, height: titleH + subTitleH,
+      width: titleInnerStyle.width, height: titleInnerStyle.height,
       marginTop: imgHeight,
     }
   }

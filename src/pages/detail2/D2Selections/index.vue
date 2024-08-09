@@ -40,11 +40,13 @@ import D2SelectSeries from './D2SelectSeries.vue'
 const router = useESRouter()
 const waterfallRef = ref()
 const waterfallData = qtRef<QTWaterfallSection[]>()
+const emits = defineEmits(['clickItem'])
 const onItemClickFn = (parentPosition, position, item, e)=> {
   if(parentPosition===2){
     if(item._router){
       router.replace({ name: item._router.url, params: {...(item._router.params||{}), ...(item.videoData||{})} })
     }else{
+      emits('clickItem', e)
       detail2Ui.changeVideo(e.index)
     }
   } else if(parentPosition>2){

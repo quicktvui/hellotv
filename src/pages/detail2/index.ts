@@ -36,7 +36,7 @@ export const getSelectionSeriesPoster = (sData:IselectionPoster) => {
 
 export const getSelectionPoster = (sData:IselectionPoster) => {
   const config = getPosterConfig({
-    ...sData, titleLines: (sData.title||'').length>11?2:1
+    ...sData, titleLines: (sData.title||'').length>11?2:1, titleSelectColor:'#FF5E90'
   })
   if(sData._type){
     config.type = sData._type

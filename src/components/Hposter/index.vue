@@ -12,7 +12,11 @@
         class="hc_poster_img" :postDelay="300" enableFade :focusable="false"
         flexStyle="${image.style}" src="${image.src}"
         :style="{borderRadius: `${borderRadius}px`}"/>
-        <HposterTitle :focusable="false" duplicateParentState/>
+        <div flexStyle="${titleStyle}" class="hc_poster_title_box" :focusable="false" duplicateParentState>
+          <div class="hc_poster_title_box_innner" flexStyle="${titleInnerStyle}" showOnState="normal" duplicateParentState><HposterTitle /></div>
+          <div class="hc_poster_title_box_innner" flexStyle="${titleInnerStyle}" showOnState="focused" duplicateParentState><HposterTitle colorName="focusColor" /></div>
+          <div class="hc_poster_title_box_innner" flexStyle="${titleInnerStyle}" showOnState="selected" duplicateParentState><HposterTitle colorName="selectColor" /></div>
+        </div>
       </div>
       <div 
         class="hc_poster_cover" flexStyle="${coverStyle}" 
@@ -51,5 +55,13 @@ withDefaults(defineProps<{
   background-color: transparent;
   z-index: 10;
   focus-border-style: solid;
+}
+.hc_poster_title_box{
+  position: absolute;
+  background-color: transparent;
+}
+.hc_poster_title_box_innner {
+  position: absolute;
+  background-color: transparent;
 }
 </style>

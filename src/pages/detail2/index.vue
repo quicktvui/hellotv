@@ -6,7 +6,7 @@
     <div v-show="isShowDes" class="d_page2_cover" :clipChildren="false">
       <D2Top v-if="pConfig.isShowTop" />
       <D2Info @clickAction="clickActionFn"/>
-      <D2Selections />
+      <D2Selections @clickItem="clickSelectionItemFn"/>
       <D2DesDrawer />
     </div>
   </template>
@@ -16,7 +16,7 @@
 </div>
 </template>
 <script lang='ts' setup>
-import { ref } from 'vue'
+import { nextTick, ref } from 'vue'
 import D2Video from './D2Video.vue'
 import D2Top from './D2Top.vue'
 import D2Info from './D2Info/index.vue'
@@ -60,6 +60,11 @@ const starTime = ()=>{
   // timerOutId = setTimeout(() => {
   //   isShowDes.value = false
   // }, 10000);
+}
+const clickSelectionItemFn = ()=>{
+  nextTick(()=>{
+    changeIsShowDes(false)
+  })
 }
 const clickActionFn = (actionItem)=>{
   if(actionItem.action === IvideoDesActions.fullScreen){

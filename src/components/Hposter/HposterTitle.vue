@@ -1,12 +1,12 @@
 <template>
-  <div :flexStyle="'${'+styleName+'}'" class="hc_title_box" :focusable="false" duplicateParentState>
+  <div flexStyle="${titleInnerStyle}" :focusable="false">
     <text-view
-      :focusable="false" duplicateParentState
+      :focusable="false"
       fontSize="${title.style.fontSize}"
       ellipsizeMode="${title.ellipsizeMode}" lines="${title.lines}"
       gravity="top" paddingRect="${title.paddingRect}"
       flexStyle="${title.style}"
-      text="${title.text}" :color="'${title.'+titleColorName+'}'"
+      text="${title.text}" :textColor="'${title.'+colorName+'}'"
       showIf="${title.enable}"/>
     <text-view
       :focusable="false"
@@ -14,24 +14,17 @@
       :ellipsizeMode="2" :lines="1"
       gravity="centerVertical" paddingRect="${subTitle.paddingRect}"
       flexStyle="${subTitle.style}"
-      text="${subTitle.text}" :color="'${title.'+subTitleColorName+'}'"
+      text="${subTitle.text}" :textColor="'${subTitle.'+colorName+'}'"
       showIf="${subTitle.enable}"/>
   </div>
 </template>
 <script lang='ts' setup>
 withDefaults(defineProps<{
-  styleName?:string;
-  titleColorName?:string;
-  subTitleColorName?:string;
+  colorName?:string;
 }>(),{
-  styleName: 'titleStyle',//titleFocusStyle
-  titleColorName: 'color',
-  subTitleColorName: 'color',
+  colorName: 'color',
 })
 </script>
 <style scoped>
-.hc_title_box {
-  position: absolute;
-}
 /* #FF5E90 */
 </style>
