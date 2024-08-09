@@ -3,23 +3,22 @@
     class="d2_select_series2" ref="d2SelectSeries2" :clipChildren="false"
     :scrollParam="scrollParams" :groupParam="groupParams" :commonParam="commonParams"
     :display="true" @load-data="onLoadData" @item-click="onItemClick"
-    :focusable="false" :custom-item="true"
+    :focusable="false"
     @group-item-focused="onGroupItemFocused"
   >
-    <qt-view 
-      class="d2ss_item" :clipChildren="false" 
-      :focusable="true" :focusScale="1.08"
+    <div 
+      class="d2ss_item" :focusable="true" :focusScale="1"
     >
-    <!-- 'selected','focused' -->
-      <div class="d2ss_play_Mark" :focusable="false" duplicateParentState showOnState="selected&focused">
-        <play-mark :style="{width:'20px',height:'20px'}" :markColor="'#FF5E90'" :gap="-1" style="margin-left: 12px;" :focusable="false"/>
+    <!-- 'selected','focused' autoWidth-->
+      <div class="d2ss_play_Mark" showOnState="selected" :duplicateParentState="true">
+        <play-mark style="width: 24px;height: 25px;position: absolute;" markColor="#FF5E90"/>
       </div>
-      <!-- autoWidth -->
       <text-view 
         text="${title}" class="d2ss_item_text" :focusable="false" :fontSize="30"
-        duplicateParentState gravity="center" :lines="1"
+        duplicateParentState gravity="center" 
+        :ellipsizeMode="2" :lines="1" flexStyle="${textStyle}"
       ></text-view>
-    </qt-view>
+    </div>
   </select-series>
 </template>
 <script lang='ts' setup>
@@ -33,7 +32,7 @@ let pageSize: number = d2Api.getConfig().videoSectionPageSize||dVideoSectionPage
 let totalCount: number = detail2Ui.vdata?.selectionTotalSize||0;
 const d2SelectSeries2 = ref<ESIMediaSeries>()
 
-let prevSelectionIndex=0
+let prevSelectionIndex=-1
 const onItemClick = (ev) => {
   prevSelectionIndex = ev.position
   detail2Ui.selectionIndex = ev.position
@@ -103,7 +102,6 @@ const setSelect = ()=>{
   if(currentTab == detail2Ui.selectionPositoin){
     if(prevSelectionIndex !== detail2Ui.selectionIndex){
       prevSelectionIndex = detail2Ui.selectionIndex
-      // console.log(detail2Ui.selectionIndex, '--lsj-detail2Ui.selectionIndex')
       d2SelectSeries2.value?.scrollTo(detail2Ui.selectionIndex)
       d2SelectSeries2.value?.setSelected(detail2Ui.selectionIndex)
     }
@@ -137,17 +135,26 @@ onMounted(()=>{
   align-items: center;
   border-radius: 9px;
   margin-right: 40px;
+  padding-left: 1px;
+  padding-right: 1px;
+  font-size: 30px;
   background-color: rgba(102, 102, 102, 0.2);
   focus-background-color: #ffffff;
 }
 
 .d2ss_item_text {
-  width: 267px;
-  height: 120px;
+  /* width: 267px; */
+  /* height: 120px; */
   color: #BFBFBF;
+  font-size: 30px;
   focus-color: #0E0E0E;
   select-color: #FF5E90;
+  background-color: transparent;
 }
 .d2ss_play_Mark{
+  width: 20px;
+  height: 20px;
+  position: relative;
+  background-color: transparent;
 }
 </style>

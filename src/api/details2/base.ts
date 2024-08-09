@@ -98,6 +98,7 @@ export class Detail2Base {
         poster:'',
         corner: pageNo===2?'VIP':'',
         title: '第' + ((pageNo-1) * pageSize + (index+1)) + '集',
+        isMark: false,
         videoData: getMockVideoData(index)
       })
     });

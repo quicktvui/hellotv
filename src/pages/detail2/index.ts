@@ -27,7 +27,9 @@ export const getSelectionSeriesPoster = (sData:IselectionPoster) => {
   return {
     showVip: !!sData.corner, id: sData.id,
     vip: { enable: !!sData.corner, text: sData.corner||'' },
-    title: sData.title||'',
+    title: sData.title||'', textStyle: {
+      width: Math.min(30 * (sData.title||'').length, 260), height: 120
+    },
     videoData: sData.videoData
   }
 }
