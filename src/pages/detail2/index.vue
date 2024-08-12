@@ -34,7 +34,7 @@ const isLoading = ref(true)
 const D2VideoRef = ref()
 
 const router = useESRouter()
-router.afterEach((to, from, failure) => {
+const unAfterEach = router.afterEach((to, from, failure) => {
   if(to.name !== 'detail2'){
     clearTimeout(timerOutId)
   }
@@ -118,6 +118,7 @@ defineExpose({
   onESDestroy(){
     clearTimeout(timerOutId)
     detail2Ui.clear()
+    unAfterEach()//解除路由监听，防止多次重复监听
   }
 })
 </script>

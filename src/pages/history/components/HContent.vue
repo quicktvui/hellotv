@@ -38,7 +38,7 @@
   </div>
 </template>
 <script lang='ts' setup>
-import { StyleValue, computed, nextTick, ref } from "vue";
+import { StyleValue, computed, nextTick, onBeforeUnmount, ref } from "vue";
 import {
   QTIListView
 } from '@quicktvui/quicktvui3';
@@ -91,10 +91,13 @@ const gvNextFocusName = ref<any>({left: 'h_menu_list_name'})//up: 'h_tab_name',
 const emits = defineEmits(['emContentClearAll', 'emInitNoData'])
 const onItemBind = () => { }
 let isLockRouter = false
-router.afterEach((to,from)=>{
+const unAfterEach = router.afterEach((to,from)=>{
   if(to.name==='history'&&isLockRouter){
     isLockRouter = false
   }
+})
+onBeforeUnmount(()=>{
+  unAfterEach()
 })
 const onItemClick = (arg) => {
   if (isEdit.value) {

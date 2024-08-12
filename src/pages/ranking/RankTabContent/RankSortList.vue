@@ -41,7 +41,7 @@ let toRouteName = cRouteName
 const rtcsListRef = ref<ESIListView>()
 let isLoseFocused = -1
 
-router.afterEach((to, from, failure) => {
+const unAfterEach = router.afterEach((to, from, failure) => {
   toRouteName = to.name
 })
 
@@ -77,6 +77,7 @@ const dispatchKeyEventFn = (keyEvent) => {
 EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
 onBeforeUnmount(()=>{
   EventBus.$off('DispatchKeyEvent',dispatchKeyEventFn)
+  unAfterEach()
 })
 </script>
 <style scoped>

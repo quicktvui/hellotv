@@ -39,7 +39,7 @@ let fSectionIndex = -1
 let fPrevSectionIndex = -1
 let isLoseFocused = -1
 
-router.afterEach((to, from, failure) => {
+const unAfterEach = router.afterEach((to, from, failure) => {
   toRouteName = to.name
 })
 
@@ -95,6 +95,7 @@ const dispatchKeyEventFn = (keyEvent) => {
 EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
 onBeforeUnmount(()=>{
   EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
+  unAfterEach()
 })
 const onItemClickFn = (sectionIndex, posterIndex, data, e)=> {
   if(e.item._router){
