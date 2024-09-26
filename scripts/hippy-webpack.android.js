@@ -11,33 +11,6 @@ const pkg = require('../package.json');
 const manifest = require('../dist/android/vendor-manifest.json');
 let cssLoader = '@hippy/vue-css-loader';
 
-/**override flavor*/
-// const { execSync } = require('child_process');
-// const { getFlavorDir } = require('./libs/flavorUtil');
-// const { getFlavor } = require('../scripts/libs/flavorUtil');
-//默认 quicktvui-template-config
-// let flavorName = process.env.flavor ? process.env.flavor : "quicktvui-template-config"
-// console.log(`>>>>>>>buildFlavor flavorName : ${flavorName}\n`)
-// let flavorDir = getFlavorDir('./build/flavor', flavorName)
-// const flavor = getFlavor('./build/flavor', flavorName)
-// console.log(`>>>>>>>buildFlavor flavor : ${JSON.stringify(flavor)}\n`)
-// let flavorPath = path.resolve(flavorDir, './config.json')
-// console.log(`start dev flavorName : ${flavorName},\n path:${flavorPath},\n flavorDir:${flavorDir}\n`)
-// let os = process.platform
-// console.log(`os ：` + os)
-// if (os && os.startsWith('win')) {
-//   //不支持windows
-//   console.log(`注意！当前操作系统不支持替换src os ：` + os)
-// } else {
-//   try {
-//     let sourceSrc = path.resolve(flavorDir, './src')
-//     let destSrc = path.resolve(flavorDir, '../../../')
-//     console.log(`sourceSrc:${sourceSrc} ,destSrc path is:${destSrc}`)
-//     fs.statSync(sourceSrc)
-//     execSync(`cp -r ${path.resolve(flavorDir, './src')} ${destSrc}`)
-//   } catch (e) { console.log('replace src error:' + e) }
-// }
-
 const hippyVueCssLoaderPath = path.resolve(__dirname, '../../../packages/hippy-vue-css-loader/dist/css-loader.js');
 if (fs.existsSync(hippyVueCssLoaderPath)) {
   console.warn(`* Using the @hippy/vue-css-loader in ${hippyVueCssLoaderPath}`);
@@ -87,16 +60,6 @@ module.exports = {
       manifest,
     }),
     new HippyDynamicImportPlugin(),
-    // LimitChunkCountPlugin can control dynamic import ability
-    // Using 1 will prevent any additional chunks from being added
-    // new webpack.optimize.LimitChunkCountPlugin({
-    //   maxChunks: 1,
-    // }),
-    // use SourceMapDevToolPlugin can generate sourcemap file
-    // new webpack.SourceMapDevToolPlugin({
-    //   test: /\.(js|jsbundle|css|bundle)($|\?)/i,
-    //   filename: '[file].map',
-    // }),
   ],
   module: {
     rules: [

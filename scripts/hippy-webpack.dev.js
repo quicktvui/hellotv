@@ -1,43 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
-const watchPlugin = require('./webpack_watch.js');
+const watchPlugin = require('./webpack-watch.js');
 const HippyDynamicImportPlugin = require('@hippy/hippy-dynamic-import-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 
 const pkg = require('../package.json');
 let cssLoader = '@hippy/vue-css-loader';
-
-/**override flavor*/
-// const { execSync } = require('child_process');
-// const { getFlavorDir } = require('./libs/flavorUtil');
-// const { getFlavor } = require('../scripts/libs/flavorUtil');
-// //默认 quicktvui-template-config
-// let flavorName = process.env.flavor ? process.env.flavor : "quicktvui-template-config"
-// console.log(`>>>>>>>buildFlavor flavorName : ${flavorName}\n`)
-// let flavorDir = getFlavorDir('./build/flavor',flavorName)
-// const flavor = getFlavor('./build/flavor',flavorName)
-// console.log(`>>>>>>>buildFlavor flavor : ${JSON.stringify(flavor)}\n`)
-// let flavorPath = path.resolve(flavorDir,'./config.json')
-// console.log(`start dev flavorName : ${flavorName},\n path:${flavorPath},\n flavorDir:${flavorDir}\n`)
-//
-// let os = process.platform
-// console.log(`os ：`+os)
-// if(os && os .startsWith('win')){
-//   //不支持windows
-//   console.log(`注意！当前操作系统不支持替换src os ：`+os)
-// }else{
-//   try{
-//     let sourceSrc = path.resolve(flavorDir,'./src')
-//     let destSrc = path.resolve(flavorDir,'../../../')
-//     console.log(`sourceSrc:${sourceSrc} ,destSrc path is:${destSrc}`)
-//     fs.statSync(sourceSrc)
-//     execSync(`cp -r ${path.resolve(flavorDir,'./src')} ${destSrc}`)
-//   }catch (e){console.log('replace src error:'+e)}
-// }
-
-
 const hippyVueCssLoaderPath = path.resolve(__dirname, '../../../packages/hippy-vue-css-loader/dist/css-loader.js');
 if (fs.existsSync(hippyVueCssLoaderPath)) {
   console.warn(`* Using the @hippy/vue-css-loader in ${hippyVueCssLoaderPath}`);
@@ -45,7 +15,6 @@ if (fs.existsSync(hippyVueCssLoaderPath)) {
 } else {
   console.warn('* Using the @hippy/vue-css-loader defined in package.json');
 }
-
 
 module.exports = {
   mode: 'development',
@@ -67,8 +36,8 @@ module.exports = {
     multiple: false,
     // by default hot and liveReload option are true, you could set only liveReload to true
     // to use live reload
-    hot: true,
-    liveReload: true,
+    hot: false,
+    liveReload: false,
     client: {
       overlay: false,
     },
@@ -100,8 +69,6 @@ module.exports = {
       __VUE_PROD_DEVTOOLS__: false,
       __PLATFORM__: null,
       __DEV__: true,
-      // __CONFIG__:JSON.stringify(flavor),
-      // __THEME__:JSON.stringify(flavor.theme),
     }),
     new HippyDynamicImportPlugin(),
     // LimitChunkCountPlugin can control dynamic import ability
@@ -187,28 +154,13 @@ module.exports = {
     alias: (() => {
       const aliases = {
         src: path.resolve('./src'),
-        // '@': path.resolve('./src'),
+        // '@extscreen/es3-player-manager': path.resolve('./packages/ESPlayerManager'),
+        // '@extscreen/es3-bilibili-player': path.resolve('./packages/ESBilibiliPlayer'),
+        // vue: 'vue/dist/vue.esm-bundler.js'
+        // '@extscreen/es3-router': path.resolve('./packages/ESRouter'),
+        // '@extscreen/es3-core': path.resolve('./packages/ESCore'),
+        // '@extscreen/es3-video-player': path.resolve('./packages/ESVideoPlayer/dist/es3-video-player.mjs')
       };
-
-      // If @vue/runtime-core was built exist in packages directory then make an alias
-      // Remove the section if you don't use it
-      const hippyVueRuntimeCorePath = path.resolve(__dirname, '../node_modules/@vue/runtime-core');
-      if (fs.existsSync(path.resolve(hippyVueRuntimeCorePath, 'index.js'))) {
-        console.warn(`* Using the @vue/runtime-core in ${hippyVueRuntimeCorePath} as vue alias`);
-        aliases['@vue/runtime-core'] = hippyVueRuntimeCorePath;
-      } else {
-        console.warn('* Using the @vue/runtime-core defined in package.json');
-      }
-
-      // If @hippy/vue-next was built exist in packages directory then make an alias
-      // Remove the section if you don't use it
-      const hippyVueNextPath = path.resolve(__dirname, '../node_modules/@extscreen/es3-vue');
-      if (fs.existsSync(path.resolve(hippyVueNextPath, 'index.ts'))) {
-        console.warn(`* Using the @extscreen/es3-vue in ${hippyVueNextPath} as @extscreen/es3-vue alias`);
-        aliases['@extscreen/es3-vue'] = hippyVueNextPath;
-      } else {
-        console.warn('* Using the @extscreen/es3-vue defined in package.json');
-      }
       return aliases;
     })(),
   },
