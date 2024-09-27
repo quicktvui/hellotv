@@ -8,6 +8,7 @@
         style="width: 309px"
         ref="firstListRef"
         padding="52,72,17,0"
+        :focusable="false"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onFirstListFocus"
       >
@@ -26,9 +27,9 @@
         style="width: 400px"
         ref="secondListRef"
         padding="0,72,0,0"
-        :autofocusPosition="isInit ? 0 : -1"
         :enableSelectOnFocus="false"
-        :autoscroll="[secondListItemScrollPos, 432]"
+        :autofocusPosition="isInit ? 0 : -1"
+        :autoscroll="[secondListScrollPos, 432]"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onSecondListFocus"
       >
@@ -83,7 +84,7 @@
   </qt-view>
 </template>
 
-<script setup lang="ts">
+<script setup lang="ts" name="channelMenu">
 import { ref, onMounted } from 'vue'
 import { ESKeyEvent, ESKeyCode } from '@extscreen/es3-core'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
@@ -100,7 +101,7 @@ import icBack from '../../../../assets/live/ic-back.png'
 const isInit = ref(true)
 const firstListRef = ref<QTIListView>()
 const secondListRef = ref<QTIListView>()
-const secondListItemScrollPos = ref(0)
+const secondListScrollPos = ref(0)
 const thirdListRef = ref<QTIListView>()
 
 const showSecondList = ref(true)
@@ -140,7 +141,7 @@ function onFirstListFocus(e) {
         break
       default:
         showSecondList.value = true
-        secondListItemScrollPos.value = e.item.startIndex
+        secondListScrollPos.value = e.item.startIndex
     }
   }
 }

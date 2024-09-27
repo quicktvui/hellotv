@@ -1,11 +1,11 @@
 import { ESRouteType } from '@extscreen/es3-router'
-import liveMenu from './pages/live/components/menu/index.vue'
+import live from './pages/live/index.vue'
 
 const routes = [
   {
-    name: 'liveMenu',
-    path: '/live/menu',
-    component: liveMenu,
+    name: 'live',
+    path: '/live',
+    component: live,
     type: ESRouteType.ES_ROUTE_TYPE_PAGE
   }
 ]
