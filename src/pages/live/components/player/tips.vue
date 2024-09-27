@@ -4,24 +4,24 @@
       <qt-text
         class="player-tips-text"
         style="width: 270px; height: 120px; color: #ffffff; font-size: 100px"
-        text="008"
+        :text="playInfo.channelId"
         typeface="bold"
         gravity="center"
       ></qt-text>
-      <qt-text class="player-tips-text" style="width: 270px; font-size: 26px" text="CCTV-8高清" gravity="center"></qt-text>
+      <qt-text class="player-tips-text" style="width: 270px; font-size: 26px" :text="playInfo.channelName" gravity="center"></qt-text>
     </qt-view>
     <qt-view class="player-tips-right">
       <qt-view class="player-tips-right-box" style="margin-bottom: 8px">
         <qt-text
           class="player-tips-text"
           style="height: 48px; color: #ffffff; font-size: 38px"
-          text="我的阿勒泰03"
+          :text="playInfo.program"
           gravity="center|start"
         ></qt-text>
         <qt-text class="player-tips-text" style="font-size: 28px" text="14:13" gravity="center|end"></qt-text>
       </qt-view>
       <qt-view class="player-tips-right-box">
-        <qt-text class="player-tips-text" text="下一个节目：独播剧场-西游记16" gravity="center|start"></qt-text>
+        <qt-text class="player-tips-text" :text="playInfo.nextProgram" gravity="center|start"></qt-text>
         <qt-text class="player-tips-text" text="16:30" gravity="center|end"></qt-text>
       </qt-view>
       <qt-view class="player-tips-line"></qt-view>
@@ -35,10 +35,31 @@
 </template>
 
 <script setup lang="ts">
+import { ref } from 'vue'
 import tipsIconText from './tips-icon-text.vue'
 import icOk from '../../../../assets/live/ic-ok.png'
 import icChange from '../../../../assets/live/ic-change.png'
 import icArrowLeft from '../../../../assets/live/ic-arrow-left.png'
+
+type PlayInfo = {
+  channelId: string
+  channelName: string
+  program: string
+  nextProgram: string
+}
+
+const playInfo = ref<PlayInfo>({
+  channelId: '',
+  channelName: '',
+  program: '',
+  nextProgram: ''
+})
+
+function setPlayInfo(obj: PlayInfo) {
+  playInfo.value = obj
+}
+
+defineExpose({ setPlayInfo })
 </script>
 
 <style scoped src="../../css/player.css"></style>
