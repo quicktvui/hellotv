@@ -12,103 +12,35 @@
         @item-focused="onFirstListFocus"
       >
         <!-- 图片 -->
-        <qt-view class="menu-body-list-item" :type="1" :focusable="true" eventFocus>
-          <qt-image class="menu-body-list-item-img" :src="icService" :focusable="false"></qt-image>
-        </qt-view>
+        <firstListItemImg />
         <!-- 文字 -->
-        <qt-view class="menu-body-list-item" :type="2" :focusable="true" eventFocus>
-          <qt-text
-            class="menu-body-list-item-text"
-            text="${name}"
-            typeface="bold"
-            gravity="center"
-            :focusable="false"
-            duplicateParentState
-          ></qt-text>
-        </qt-view>
+        <firstListItemText />
         <!-- 图标、文字 -->
-        <qt-view class="menu-body-list-item" :type="3" :focusable="true" eventFocus>
-          <qt-view style="background-color: transparent; flex-direction: row; align-items: center" :focusable="false" duplicateParentState>
-            <qt-image class="menu-body-list-item-icon" :src="icMine" :focusable="false"></qt-image>
-            <qt-text
-              class="menu-body-list-item-text"
-              style="width: 144px"
-              text="${name}"
-              typeface="bold"
-              gravity="center"
-              :focusable="false"
-              duplicateParentState
-            ></qt-text>
-          </qt-view>
-        </qt-view>
+        <firstListItemIconText />
       </qt-list-view>
 
       <!-- 二级菜单 -->
-      <qt-view v-show="showSecondList">
-        <qt-list-view
-          class="menu-body-list"
-          style="width: 400px"
-          ref="secondListRef"
-          padding="0,72,0,0"
-          :autofocusPosition="isInit ? 0 : -1"
-          :enableSelectOnFocus="false"
-          :autoscroll="[secondListItemScrollPos, 432]"
-          :blockFocusDirections="['up', 'down']"
-          @item-focused="onSecondListFocus"
-        >
-          <!-- 综合 -->
-          <qt-view class="menu-body-list-item" style="width: 400px" :type="1" :focusable="true" eventFocus>
-            <qt-view
-              style="background-color: transparent; flex-direction: row; align-items: center"
-              :focusable="false"
-              duplicateParentState
-            >
-              <qt-text
-                class="menu-body-list-item-text"
-                style="width: 110px; height: 52px"
-                text="${id}"
-                gravity="center"
-                :focusable="false"
-                duplicateParentState
-              ></qt-text>
-              <qt-view style="width: 270px; background-color: transparent" :focusable="false" duplicateParentState>
-                <qt-text
-                  class="menu-body-list-item-text"
-                  style="width: 270px; height: 40px; font-size: 32px; line-height: 40px"
-                  text="${name}"
-                  gravity="center|start"
-                  :focusable="false"
-                  :lines="1"
-                  :ellipsizeMode="2"
-                  duplicateParentState
-                ></qt-text>
-                <qt-text
-                  class="menu-body-list-item-text"
-                  style="width: 230px; height: 40px; font-size: 24px"
-                  text="${program}"
-                  gravity="center|start"
-                  :focusable="false"
-                  :lines="1"
-                  :ellipsizeMode="4"
-                  duplicateParentState
-                ></qt-text>
-              </qt-view>
-            </qt-view>
-            <!-- 播放图标 -->
-            <play-mark
-              showIf="${isPlaying}"
-              style="width: 20px; height: 20px; position: absolute; right: 19px; bottom: 26px"
-              :markColor="'#FFFFFF'"
-              :gap="-1"
-              :focusable="false"
-            />
-          </qt-view>
-        </qt-list-view>
-      </qt-view>
+      <qt-list-view
+        :visibility="showSecondList ? 'visible' : 'invisible'"
+        class="menu-body-list"
+        style="width: 400px"
+        ref="secondListRef"
+        padding="0,72,0,0"
+        :autofocusPosition="isInit ? 0 : -1"
+        :enableSelectOnFocus="false"
+        :autoscroll="[secondListItemScrollPos, 432]"
+        :blockFocusDirections="['up', 'down']"
+        @item-focused="onSecondListFocus"
+      >
+        <!-- 综合 -->
+        <secondListItem />
+      </qt-list-view>
 
       <!-- 三级菜单 -->
       <qt-view v-if="showThirdList">
+        <!-- 数据列表 -->
         <qt-list-view
+          v-if="thirdListData"
           class="menu-body-list"
           style="width: 417px"
           ref="thirdListRef"
@@ -116,48 +48,14 @@
           :enableSelectOnFocus="false"
           :blockFocusDirections="['up', 'down']"
         >
-          <qt-view class="menu-body-list-item" style="width: 380px" :type="1" :focusable="true">
-            <qt-view style="background-color: transparent" :focusable="false" duplicateParentState>
-              <qt-text
-                class="menu-body-list-item-text"
-                style="width: 296px; font-size: 32px; height: 52px"
-                text="${program}"
-                gravity="center|start"
-                :focusable="false"
-                duplicateParentState
-              ></qt-text>
-              <qt-view
-                style="background-color: transparent; flex-direction: row; align-items: center"
-                :focusable="false"
-                duplicateParentState
-              >
-                <qt-text
-                  class="menu-body-list-item-text"
-                  style="width: 154px; height: 40px; font-size: 24px"
-                  text="${time}"
-                  gravity="center|start"
-                  :focusable="false"
-                  duplicateParentState
-                ></qt-text>
-                <qt-text
-                  class="menu-body-list-item-text"
-                  style="width: 96px; height: 40px; font-size: 24px"
-                  text="${tips}"
-                  gravity="center|start"
-                  :focusable="false"
-                  duplicateParentState
-                ></qt-text>
-              </qt-view>
-            </qt-view>
-            <play-mark
-              showIf="${isPlaying}"
-              style="width: 20px; height: 20px; position: absolute; right: 14px; bottom: 20px"
-              :markColor="'#FFFFFF'"
-              :gap="-1"
-              :focusable="false"
-            />
-          </qt-view>
+          <!-- 综合 -->
+          <thirdListItem />
         </qt-list-view>
+
+        <!-- 暂无数据 -->
+        <qt-view v-else class="menu-body-list" style="align-items: center; justify-content: center">
+          <qt-text class="menu-body-list-nodata" text="暂无节目信息" gravity="center"></qt-text>
+        </qt-view>
       </qt-view>
 
       <!-- 向右扩展 -->
@@ -188,10 +86,13 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue'
 import { ESKeyEvent, ESKeyCode } from '@extscreen/es3-core'
-import { QTIListView } from '@quicktvui/quicktvui3'
+import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { mockPrograms } from '../../mock/program'
-import icService from '../../../../assets/live/ic-service.png'
-import icMine from '../../../../assets/live/ic-mine.png'
+import firstListItemImg from './first-list-item-img.vue'
+import firstListItemText from './first-list-item-text.vue'
+import firstListItemIconText from './first-list-item-icon-text.vue'
+import secondListItem from './second-list-item.vue'
+import thirdListItem from './third-list-item.vue'
 import icMenuExt from '../../../../assets/live/ic-menu-ext.png'
 import icMenuExtArrow from '../../../../assets/live/ic-menu-ext-arrow.png'
 import icBack from '../../../../assets/live/ic-back.png'
@@ -204,6 +105,8 @@ const thirdListRef = ref<QTIListView>()
 
 const showSecondList = ref(true)
 const showThirdList = ref(false)
+
+let thirdListData: QTListViewItem[] = []
 
 onMounted(() => {
   firstListRef.value?.init([
@@ -242,24 +145,29 @@ function onFirstListFocus(e) {
   }
 }
 
-let curChannelId: string = ''
+let secondListActive = false
+let curChannel: QTListViewItem = {} as QTListViewItem
 function onSecondListFocus(e) {
   if (e.isFocused) {
+    secondListActive = true
+    curChannel = e.item
     isInit.value = false
-    firstListRef.value?.setItemSelected(e.item.categoryId, true)
+    firstListRef.value?.setItemSelected(curChannel.categoryId, true)
     showThirdList.value = false
-    curChannelId = e.item.id
+  } else {
+    secondListActive = false
   }
 }
 
 function onKeyDown(keyEvent: ESKeyEvent) {
   switch (keyEvent.keyCode) {
     case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
-      if (showSecondList.value && !showThirdList.value) {
+      if (secondListActive && !showThirdList.value) {
         showThirdList.value = true
-        setTimeout(() => {
-          thirdListRef.value?.init(mockPrograms[curChannelId])
-        }, 300)
+        thirdListData = mockPrograms[curChannel.id]
+        if (thirdListData) {
+          setTimeout(() => thirdListRef.value?.init(thirdListData), 300)
+        }
       }
       break
   }
@@ -268,87 +176,4 @@ function onKeyDown(keyEvent: ESKeyEvent) {
 defineExpose({ onKeyDown })
 </script>
 
-<style scoped>
-.menu {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.menu-body {
-  width: 1126px;
-  height: 1080px;
-  background-color: transparent;
-  flex-direction: row;
-}
-
-.menu-body-list {
-  width: 300px;
-  height: 1080px;
-  background-color: #1b1b1b99;
-}
-
-.menu-body-list-item {
-  width: 240px;
-  height: 108px;
-  background-color: transparent;
-  border-radius: 12px;
-  align-items: center;
-  justify-content: center;
-  focus-background-color: #3098ffff;
-}
-
-.menu-body-list-item-img {
-  width: 151px;
-  height: 37px;
-  background-color: transparent;
-}
-
-.menu-body-list-item-text {
-  width: 240px;
-  height: 108px;
-  background-color: transparent;
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 36px;
-  focus-color: #ffffff;
-  select-color: #3098ffff;
-}
-
-.menu-body-list-item-icon {
-  width: 30px;
-  height: 38px;
-  background-color: transparent;
-  margin-right: 5px;
-}
-
-.menu-body-ext {
-  width: 132px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.menu-back {
-  width: 293px;
-  height: 52px;
-  background-color: transparent;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-  right: 100px;
-  bottom: 80px;
-}
-
-.menu-back span {
-  font-size: 36px;
-  color: #ffffff;
-}
-
-.menu-back-icon {
-  width: 35px;
-  height: 35px;
-  margin-top: 4px;
-  margin-left: 2px;
-  margin-right: 2px;
-}
-</style>
+<style scoped src="../../css/menu.css"></style>
