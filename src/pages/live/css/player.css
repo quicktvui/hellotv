@@ -1,0 +1,48 @@
+.player-tips {
+  width: 900px;
+  height: 200px;
+  background-color: transparent;
+  flex-direction: row;
+  position: absolute;
+  left: 510px;
+  bottom: 47px;
+}
+
+.player-tips-left {
+  width: 274px;
+  height: 200px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+}
+
+.player-tips-right {
+  width: 626px;
+  height: 200px;
+  background-color: transparent;
+  justify-content: center;
+  padding-right: 50px;
+}
+
+.player-tips-right-box {
+  height: 40px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.player-tips-text {
+  width: 450px;
+  height: 40px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 22px;
+}
+
+.player-tips-line {
+  width: 576px;
+  height: 2px;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: 1 solid #ffffff;
+  margin-top: 13px;
+  margin-bottom: 14px;
+}

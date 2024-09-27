@@ -1,0 +1,44 @@
+<template>
+  <qt-view class="player-tips" :gradientBackground="{ colors: ['#FF2C2C2C', '#FF0F1518'], orientation: 0, cornerRadius: 30 }">
+    <qt-view class="player-tips-left">
+      <qt-text
+        class="player-tips-text"
+        style="width: 270px; height: 120px; color: #ffffff; font-size: 100px"
+        text="008"
+        typeface="bold"
+        gravity="center"
+      ></qt-text>
+      <qt-text class="player-tips-text" style="width: 270px; font-size: 26px" text="CCTV-8高清" gravity="center"></qt-text>
+    </qt-view>
+    <qt-view class="player-tips-right">
+      <qt-view class="player-tips-right-box" style="margin-bottom: 8px">
+        <qt-text
+          class="player-tips-text"
+          style="height: 48px; color: #ffffff; font-size: 38px"
+          text="我的阿勒泰03"
+          gravity="center|start"
+        ></qt-text>
+        <qt-text class="player-tips-text" style="font-size: 28px" text="14:13" gravity="center|end"></qt-text>
+      </qt-view>
+      <qt-view class="player-tips-right-box">
+        <qt-text class="player-tips-text" text="下一个节目：独播剧场-西游记16" gravity="center|start"></qt-text>
+        <qt-text class="player-tips-text" text="16:30" gravity="center|end"></qt-text>
+      </qt-view>
+      <qt-view class="player-tips-line"></qt-view>
+      <qt-view style="flex-direction: row; justify-content: space-between">
+        <tipsIconText :icon="icOk" :text="'正在播放的节目'" :textStyle="{ width: '154px' }" />
+        <tipsIconText :icon="icChange" :text="'上下换台'" :textStyle="{ width: '88px' }" />
+        <tipsIconText :icon="icArrowLeft" :text="'频道导航'" :textStyle="{ width: '88px' }" />
+      </qt-view>
+    </qt-view>
+  </qt-view>
+</template>
+
+<script setup lang="ts">
+import tipsIconText from './tips-icon-text.vue'
+import icOk from '../../../../assets/live/ic-ok.png'
+import icChange from '../../../../assets/live/ic-change.png'
+import icArrowLeft from '../../../../assets/live/ic-arrow-left.png'
+</script>
+
+<style scoped src="../../css/player.css"></style>
