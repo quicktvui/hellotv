@@ -1,9 +1,9 @@
 <template>
-  <qt-view class="player" :gradientBackground="{ colors: ['#FF2C2C2C', '#FF0F1518'], orientation: 0 }">
+  <qt-view class="player">
     <!-- 播放器 -->
     <ESPlayerManager ref="playerManager" :playerList="playerListRef" :initPlayerWindowType="2" @onPlayerPlaying="onPlayerPlaying" />
     <!-- 切台提示 -->
-    <tips v-show="showTips" ref="tipsRef" />
+    <tips :visibility="showTips ? 'visible' : 'invisible'" ref="tipsRef" />
   </qt-view>
 </template>
 
@@ -104,5 +104,6 @@ defineExpose({ onKeyDown })
   width: 1920px;
   height: 1080px;
   background-color: transparent;
+  position: absolute;
 }
 </style>

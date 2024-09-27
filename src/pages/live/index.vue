@@ -1,6 +1,9 @@
 <template>
   <qt-view class="live">
     <!-- 全屏播放 -->
+    <player ref="playerRef" />
+    <!-- 占位填充 -->
+    <qt-view style="width: 1920px; height: 1080px; background-color: transparent"></qt-view>
     <!-- 频道列表 -->
     <channelMenu v-show="showMenu" ref="menuRef" />
   </qt-view>
@@ -10,10 +13,12 @@
 import { ref } from 'vue'
 import { ESKeyEvent, ESKeyCode, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
+import player from './components/player/index.vue'
 import channelMenu from './components/menu/index.vue'
 
 const toast = useESToast()
 const router = useESRouter()
+const playerRef = ref()
 const menuRef = ref()
 const showMenu = ref(false)
 
@@ -21,16 +26,12 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   switch (keyEvent.keyCode) {
     case ESKeyCode.ES_KEYCODE_DPAD_UP:
       if (!showMenu.value) {
-        toast.showToast('播放上一个')
-      } else {
-        isBack = false
+        playerRef.value.onKeyDown(keyEvent)
       }
       break
     case ESKeyCode.ES_KEYCODE_DPAD_DOWN:
       if (!showMenu.value) {
-        toast.showToast('播放下一个')
-      } else {
-        isBack = false
+        playerRef.value.onKeyDown(keyEvent)
       }
       break
     case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
@@ -40,9 +41,18 @@ function onKeyDown(keyEvent: ESKeyEvent) {
       if (showMenu.value) {
         menuRef.value.onKeyDown(keyEvent)
       } else {
-        isBack = false
         toast.showToast('打开支付页')
       }
+      break
+    case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
+      toast.showToast('等待功能完善...')
+      break
+  }
+}
+
+function onKeyUp(keyEvent: ESKeyEvent) {
+  if (keyEvent.keyCode != ESKeyCode.ES_KEYCODE_BACK) {
+    isBack = false
   }
 }
 
@@ -61,7 +71,7 @@ function onBackPressed() {
   }
 }
 
-defineExpose({ onKeyDown, onBackPressed })
+defineExpose({ onKeyDown, onKeyUp, onBackPressed })
 </script>
 
 <style scoped>
