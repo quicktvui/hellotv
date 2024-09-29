@@ -1,5 +1,8 @@
 <template>
   <qt-view class="menu-body-list-item" style="width: 400px" :type="1" :focusable="true" eventFocus>
+    <!-- 角标 -->
+    <qt-image showIf="${isVip}" class="menu-body-list-item-corner" :src="icCornerVip"></qt-image>
+    <!-- 主体 -->
     <qt-view style="background-color: transparent; flex-direction: row; align-items: center" :focusable="false" duplicateParentState>
       <qt-text
         class="menu-body-list-item-text"
@@ -33,14 +36,12 @@
       </qt-view>
     </qt-view>
     <!-- 播放图标 -->
-    <play-mark
-      showIf="${isPlaying}"
-      style="width: 20px; height: 20px; position: absolute; right: 19px; bottom: 26px"
-      :markColor="'#FFFFFF'"
-      :gap="-1"
-      :focusable="false"
-    />
+    <play-mark showIf="${isPlaying}" class="menu-body-list-item-playmark" :markColor="'#FFFFFF'" :gap="-1" :focusable="false" />
   </qt-view>
 </template>
+
+<script setup lang="ts">
+import icCornerVip from '../../../../assets/live/ic-corner-vip.png'
+</script>
 
 <style scoped src="../../css/menu.css"></style>

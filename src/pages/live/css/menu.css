@@ -22,7 +22,7 @@
   width: 240px;
   height: 108px;
   background-color: transparent;
-  border-radius: 12px;
+  border-radius: 20px;
   align-items: center;
   justify-content: center;
   focus-background-color: #3098ffff;
@@ -49,6 +49,24 @@
   height: 38px;
   background-color: transparent;
   margin-right: 5px;
+}
+
+.menu-body-list-item-corner {
+  width: 60px;
+  height: 40px;
+  background-color: transparent;
+  position: absolute;
+  top: -6px;
+  left: 0.01px;
+}
+
+.menu-body-list-item-playmark {
+  width: 20px;
+  height: 20px;
+  background-color: transparent;
+  position: absolute;
+  right: 19px;
+  bottom: 26px;
 }
 
 .menu-body-list-nodata {

@@ -24,6 +24,7 @@ const mediaList: ESMediaItem[] = [
   {
     channelId: '001',
     channelName: 'CCTV-1高清',
+    isVip: true,
     program: '我的阿勒泰02',
     nextProgram: '边水往事08',
     mediaSourceList: {
@@ -34,6 +35,7 @@ const mediaList: ESMediaItem[] = [
   {
     channelId: '002',
     channelName: 'CCTV-2高清',
+    isVip: false,
     program: '舌尖上的中国',
     nextProgram: '大明王朝1566(28)',
     mediaSourceList: {
@@ -44,6 +46,7 @@ const mediaList: ESMediaItem[] = [
   {
     channelId: '003',
     channelName: 'CCTV-3高清',
+    isVip: false,
     program: '在中国大地上边走边看',
     nextProgram: '新闻联播',
     mediaSourceList: {
@@ -65,6 +68,7 @@ function setPlayInfo(playIndex: number) {
   tipsRef.value?.setPlayInfo({
     channelId: nextMedia.channelId,
     channelName: nextMedia.channelName,
+    isVip: nextMedia.isVip,
     program: nextMedia.program,
     nextProgram: nextMedia.nextProgram
   })

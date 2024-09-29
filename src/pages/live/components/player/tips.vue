@@ -1,5 +1,7 @@
 <template>
   <qt-view class="player-tips" :gradientBackground="{ colors: ['#FF2C2C2C', '#FF0F1518'], orientation: 0, cornerRadius: 30 }">
+    <!-- 角标 -->
+    <qt-image v-show="playInfo.isVip" class="player-tips-corner" :src="icCornerVipTips"></qt-image>
     <qt-view class="player-tips-left">
       <qt-text
         class="player-tips-text"
@@ -37,6 +39,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import tipsIconText from './tips-icon-text.vue'
+import icCornerVipTips from '../../../../assets/live/ic-corner-vip-tips.png'
 import icOk from '../../../../assets/live/ic-ok.png'
 import icChange from '../../../../assets/live/ic-change.png'
 import icArrowLeft from '../../../../assets/live/ic-arrow-left.png'
@@ -44,6 +47,7 @@ import icArrowLeft from '../../../../assets/live/ic-arrow-left.png'
 type PlayInfo = {
   channelId: string
   channelName: string
+  isVip: boolean
   program: string
   nextProgram: string
 }
@@ -51,6 +55,7 @@ type PlayInfo = {
 const playInfo = ref<PlayInfo>({
   channelId: '',
   channelName: '',
+  isVip: false,
   program: '',
   nextProgram: ''
 })

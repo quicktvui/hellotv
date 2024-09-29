@@ -8,6 +8,14 @@
   bottom: 47px;
 }
 
+.player-tips-corner {
+  width: 90px;
+  height: 40px;
+  background-color: transparent;
+  position: absolute;
+  top: -4px;
+}
+
 .player-tips-left {
   width: 274px;
   height: 200px;
