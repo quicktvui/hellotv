@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="menu-body-list-item" style="width: 400px" :type="1" :focusable="true" eventFocus>
+  <qt-view class="menu-body-list-item" style="width: 400px" :type="1" :focusable="true" eventFocus eventClick>
     <!-- 角标 -->
     <qt-image showIf="${isVip}" class="menu-body-list-item-corner" :src="icCornerVip"></qt-image>
     <!-- 主体 -->

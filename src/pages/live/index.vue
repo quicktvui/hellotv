@@ -1,18 +1,19 @@
 <template>
   <qt-view class="live">
     <!-- 全屏播放 -->
-    <player ref="playerRef" />
+    <player ref="playerRef" @closeMenu="closeMenu" />
     <!-- 占位填充 -->
     <qt-view style="width: 1920px; height: 1080px; background-color: transparent"></qt-view>
     <!-- 频道列表 -->
-    <channelMenu v-show="showMenu" ref="menuRef" />
+    <channelMenu v-show="showMenu" ref="menuRef" @loadPrograms="loadPrograms" @playMediaByIndex="playMediaByIndex" />
   </qt-view>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { onMounted, ref } from 'vue'
 import { ESKeyEvent, ESKeyCode, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
+import { mockMediaList, mockCategories, mockChannels, mockPrograms } from './mock/index'
 import player from './components/player/index.vue'
 import channelMenu from './components/menu/index.vue'
 
@@ -21,6 +22,23 @@ const router = useESRouter()
 const playerRef = ref()
 const menuRef = ref()
 const showMenu = ref(false)
+
+onMounted(() => {
+  playerRef.value.init({ mediaList: mockMediaList })
+  menuRef.value?.init({ categories: mockCategories, channels: mockChannels })
+})
+
+function loadPrograms(channelId: string, callback: (channelId: string) => {}) {
+  callback(mockPrograms[channelId])
+}
+
+function playMediaByIndex(index: number) {
+  playerRef.value?.playMediaByIndex(index)
+}
+
+function closeMenu() {
+  showMenu.value = false
+}
 
 function onKeyDown(keyEvent: ESKeyEvent) {
   switch (keyEvent.keyCode) {
@@ -45,7 +63,9 @@ function onKeyDown(keyEvent: ESKeyEvent) {
       }
       break
     case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
-      toast.showToast('等待功能完善...')
+      if (!showMenu.value) {
+        toast.showToast('等待功能完善...')
+      }
       break
   }
 }

@@ -9,6 +9,8 @@
         ref="firstListRef"
         padding="52,72,17,0"
         :focusable="false"
+        :skipRequestFocus="true"
+        :singleSelectPosition="autoSelectPosition"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onFirstListFocus"
       >
@@ -28,10 +30,12 @@
         ref="secondListRef"
         padding="0,72,0,0"
         :enableSelectOnFocus="false"
-        :autofocusPosition="isInit ? 0 : -1"
+        :skipRequestFocus="true"
+        :autofocusPosition="autofocusPosition"
         :autoscroll="[secondListScrollPos, 432]"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onSecondListFocus"
+        @item-click="onSecondListClick"
       >
         <!-- 综合 -->
         <secondListItem />
@@ -85,10 +89,9 @@
 </template>
 
 <script setup lang="ts" name="channelMenu">
-import { ref, onMounted } from 'vue'
-import { ESKeyEvent, ESKeyCode } from '@extscreen/es3-core'
+import { onMounted, onUnmounted, ref } from 'vue'
+import { ESKeyEvent, ESKeyCode, useESEventBus } from '@extscreen/es3-core'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
-import { mockPrograms } from '../../mock/program'
 import firstListItemImg from './first-list-item-img.vue'
 import firstListItemText from './first-list-item-text.vue'
 import firstListItemIconText from './first-list-item-icon-text.vue'
@@ -98,7 +101,28 @@ import icMenuExt from '../../../../assets/live/ic-menu-ext.png'
 import icMenuExtArrow from '../../../../assets/live/ic-menu-ext-arrow.png'
 import icBack from '../../../../assets/live/ic-back.png'
 
-const isInit = ref(true)
+const emits = defineEmits(['loadPrograms', 'playMediaByIndex'])
+
+const eventBus = useESEventBus()
+onMounted(() => {
+  eventBus.on('setPlayIndex', (index: number) => {
+    secondListData.forEach((el, elIndex) => {
+      if (elIndex === index) {
+        el.isPlaying = true
+        autofocusPosition.value = elIndex
+        autoSelectPosition.value = el.categoryIndex
+      } else {
+        el.isPlaying = false
+      }
+    })
+  })
+})
+onUnmounted(() => {
+  eventBus.off('setPlayIndex')
+})
+
+const autoSelectPosition = ref(1)
+const autofocusPosition = ref(0)
 const firstListRef = ref<QTIListView>()
 const secondListRef = ref<QTIListView>()
 const secondListScrollPos = ref(0)
@@ -107,29 +131,13 @@ const thirdListRef = ref<QTIListView>()
 const showSecondList = ref(true)
 const showThirdList = ref(false)
 
+let secondListData: QTListViewItem[] = []
 let thirdListData: QTListViewItem[] = []
 
-onMounted(() => {
-  firstListRef.value?.init([
-    { type: 1, name: '开通服务' },
-    { type: 2, id: 1, name: '央视频道', startIndex: 0 },
-    { type: 2, id: 2, name: '卫视频道', startIndex: 3 },
-    { type: 2, id: 3, name: '热门频道', startIndex: 6 },
-    { type: 3, name: '个人中心' }
-  ])
-  secondListRef.value?.init([
-    { type: 1, categoryId: 1, id: '001', name: 'CCTV-1高清', program: '我的阿勒泰02', isVip: true },
-    { type: 1, categoryId: 1, id: '002', name: 'CCTV-2高清', program: '舌尖上的中国' },
-    { type: 1, categoryId: 1, id: '003', name: 'CCTV-3高清', program: '在中国大地上边走边边边边边', isPlaying: true },
-    { type: 1, categoryId: 2, id: '004', name: 'CCTV-4高清', program: '边水往事08' },
-    { type: 1, categoryId: 2, id: '005', name: 'CCTV-5高清', program: '边水往事09' },
-    { type: 1, categoryId: 2, id: '006', name: 'CCTV-6高清', program: '龙的传人' },
-    { type: 1, categoryId: 3, id: '007', name: 'CCTV-7高清', program: '新闻联播' },
-    { type: 1, categoryId: 3, id: '008', name: 'CCTV-8高清', program: '国足0-7大败日本' },
-    { type: 1, categoryId: 3, id: '009', name: 'CCTV-9高清', program: '大头儿子小头爸爸' },
-    { type: 1, categoryId: 3, id: '010', name: 'CCTV-10高清', program: '家有喜事2022' }
-  ])
-})
+function init(params: { categories: QTListViewItem[]; channels: QTListViewItem[] }) {
+  firstListRef.value?.init(params.categories)
+  secondListData = secondListRef.value?.init(params.channels) as QTListViewItem[]
+}
 
 function onFirstListFocus(e) {
   if (e.isFocused) {
@@ -152,20 +160,25 @@ function onSecondListFocus(e) {
   if (e.isFocused) {
     secondListActive = true
     curChannel = e.item
-    isInit.value = false
-    firstListRef.value?.setItemSelected(curChannel.categoryId, true)
+    firstListRef.value?.setItemSelected(curChannel.categoryIndex, true)
     showThirdList.value = false
   } else {
     secondListActive = false
   }
 }
 
+function onSecondListClick(e) {
+  emits('playMediaByIndex', e.index)
+}
+
 function onKeyDown(keyEvent: ESKeyEvent) {
   switch (keyEvent.keyCode) {
     case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
       if (secondListActive && !showThirdList.value) {
+        emits('loadPrograms', curChannel.id, (programs: QTListViewItem[]) => {
+          thirdListData = programs
+        })
         showThirdList.value = true
-        thirdListData = mockPrograms[curChannel.id]
         if (thirdListData) {
           setTimeout(() => thirdListRef.value?.init(thirdListData), 300)
         }
@@ -174,7 +187,7 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   }
 }
 
-defineExpose({ onKeyDown })
+defineExpose({ init, onKeyDown })
 </script>
 
 <style scoped src="../../css/menu.css"></style>
