@@ -29,7 +29,9 @@ export const mockMediaList = [
     nextProgram: '新闻联播',
     mediaSourceList: {
       index: 0,
-      list: [{ uri: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/a87f2fd0-579c-4d4e-9bb7-4183f6bd3604.mp4' }]
+      list: [
+        { uri: 'http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2022/10/27/d4e29cbf-5b15-4523-b9c8-80f18fa76275.mp4' }
+      ]
     }
   },
   {
@@ -43,6 +45,17 @@ export const mockMediaList = [
       list: [
         { uri: 'http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2023/09/17/22edb94d-8ffc-4736-a633-3f9e38c096e8.mp4' }
       ]
+    }
+  },
+  {
+    channelId: '005',
+    channelName: 'CCTV-5高清',
+    isVip: false,
+    program: '龙的传人',
+    nextProgram: '家有喜事2022',
+    mediaSourceList: {
+      index: 0,
+      list: [{ uri: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/a87f2fd0-579c-4d4e-9bb7-4183f6bd3604.mp4' }]
     }
   }
 ]
