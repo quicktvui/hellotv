@@ -1,7 +1,7 @@
 <template>
   <qt-view class="menu-body-list-item" style="width: 400px" :type="1" :focusable="true" eventFocus eventClick>
     <!-- 角标 -->
-    <qt-image showIf="${isVip}" class="menu-body-list-item-corner" :src="icCornerVip"></qt-image>
+    <qt-image showIf="${isVip}" class="menu-body-list-item-corner" :src="icCornerVip" :focusable="false"></qt-image>
     <!-- 主体 -->
     <qt-view style="background-color: transparent; flex-direction: row; align-items: center" :focusable="false" duplicateParentState>
       <qt-text

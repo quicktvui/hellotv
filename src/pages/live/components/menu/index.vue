@@ -156,15 +156,19 @@ function onFirstListFocus(e) {
 
 let secondListActive = false
 let curChannel: QTListViewItem = {} as QTListViewItem
+let secondListTimer: any = -1
 function onSecondListFocus(e) {
-  if (e.isFocused) {
-    secondListActive = true
-    curChannel = e.item
-    firstListRef.value?.setItemSelected(curChannel.categoryIndex, true)
-    showThirdList.value = false
-  } else {
-    secondListActive = false
-  }
+  clearTimeout(secondListTimer)
+  secondListTimer = setTimeout(() => {
+    if (e.isFocused) {
+      secondListActive = true
+      curChannel = e.item
+      firstListRef.value?.setItemSelected(curChannel.categoryIndex, true)
+      showThirdList.value = false
+    } else {
+      secondListActive = false
+    }
+  }, 300)
 }
 
 function onSecondListClick(e) {
