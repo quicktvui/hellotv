@@ -38,6 +38,7 @@ function playMediaByIndex(index: number) {
 
 function closeMenu() {
   showMenu.value = false
+  menuRef.value?.onBackPressed()
 }
 
 function onKeyDown(keyEvent: ESKeyEvent) {
@@ -80,7 +81,7 @@ let isBack = false
 function onBackPressed() {
   if (showMenu.value) {
     isBack = false
-    showMenu.value = false
+    closeMenu()
   } else {
     if (isBack) {
       router.back()

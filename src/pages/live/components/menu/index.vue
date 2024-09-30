@@ -187,7 +187,12 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   }
 }
 
-defineExpose({ init, onKeyDown })
+function onBackPressed() {
+  showSecondList.value = true
+  showThirdList.value = false
+}
+
+defineExpose({ init, onKeyDown, onBackPressed })
 </script>
 
 <style scoped src="../../css/menu.css"></style>
