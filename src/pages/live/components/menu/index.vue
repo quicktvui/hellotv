@@ -10,7 +10,7 @@
         padding="52,72,17,0"
         :focusable="false"
         :skipRequestFocus="true"
-        :singleSelectPosition="autoSelectPosition"
+        :singleSelectPosition="autoselectPosition"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onFirstListFocus"
       >
@@ -29,10 +29,11 @@
         style="width: 400px"
         ref="secondListRef"
         padding="0,72,0,0"
-        :enableSelectOnFocus="false"
         :skipRequestFocus="true"
+        :enableSelectOnFocus="false"
         :autofocusPosition="autofocusPosition"
         :autoscroll="[secondListScrollPos, 432]"
+        :singleSelectPosition="secondListSelectPos"
         :blockFocusDirections="['up', 'down']"
         @item-focused="onSecondListFocus"
         @item-click="onSecondListClick"
@@ -109,8 +110,9 @@ onMounted(() => {
     secondListData.forEach((el, elIndex) => {
       if (elIndex === index) {
         el.isPlaying = true
+        autoselectPosition.value = el.categoryIndex
         autofocusPosition.value = elIndex
-        autoSelectPosition.value = el.categoryIndex
+        secondListSelectPos.value = elIndex
       } else {
         el.isPlaying = false
       }
@@ -121,11 +123,12 @@ onUnmounted(() => {
   eventBus.off('setPlayIndex')
 })
 
-const autoSelectPosition = ref(1)
+const autoselectPosition = ref(1)
 const autofocusPosition = ref(0)
 const firstListRef = ref<QTIListView>()
 const secondListRef = ref<QTIListView>()
 const secondListScrollPos = ref(0)
+const secondListSelectPos = ref(0)
 const thirdListRef = ref<QTIListView>()
 
 const showSecondList = ref(true)
