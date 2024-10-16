@@ -92,7 +92,15 @@ function onBackPressed() {
   }
 }
 
-defineExpose({ onKeyDown, onKeyUp, onBackPressed })
+function onESResume() {
+  playerRef.value?.resume()
+}
+
+function onESDestroy() {
+  playerRef.value?.stop()
+}
+
+defineExpose({ onKeyDown, onKeyUp, onBackPressed, onESResume, onESDestroy })
 </script>
 
 <style scoped>

@@ -9,7 +9,7 @@
 import { ref, onMounted, onUnmounted } from 'vue'
 import { EventBus } from '@extscreen/es3-vue'
 
-const netSpeed = ref('')
+const netSpeed = ref('0.0KB/s 正在缓冲...')
 
 onMounted(() => {
   EventBus.$on('NetSpeed', onNetWorkTipChanged)

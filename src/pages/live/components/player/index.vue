@@ -64,6 +64,27 @@ function init(params: { mediaList: [] }) {
   playerManager.value?.playMediaList({ index: 0, list: mediaList })
 }
 
+let isPaused = false
+function resume() {
+  if (isPaused) {
+    isPaused = false
+    playerManager.value?.start(0)
+    // resume 会导致页面闪
+    // playerManager.value?.resume()
+  }
+}
+
+function pause() {
+  if (!isPaused) {
+    isPaused = true
+    playerManager.value?.pause()
+  }
+}
+
+function stop() {
+  playerManager.value?.stop()
+}
+
 let showTipsTimer: any = -1
 function setPlayInfo(playIndex: number) {
   const nextMedia = mediaList[playIndex]
@@ -125,7 +146,7 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   }
 }
 
-defineExpose({ init, playMediaByIndex, onKeyDown })
+defineExpose({ init, resume, pause, stop, playMediaByIndex, onKeyDown })
 </script>
 
 <style scoped>
