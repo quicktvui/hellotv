@@ -1,23 +1,46 @@
 <template>
   <qt-view class="player">
     <!-- 播放器 -->
-    <ESPlayerManager ref="playerManager" :playerList="playerListRef" :initPlayerWindowType="2" @onPlayerPlaying="onPlayerPlaying" />
+    <ESPlayerManager
+      ref="playerManager"
+      :playerList="playerListRef"
+      :initPlayerWindowType="2"
+      @onPlayerBufferStart="onPlayerBufferStart"
+      @onPlayerBufferEnd="onPlayerBufferEnd"
+      @onPlayerPlaying="onPlayerPlaying"
+    />
+    <!-- 加载中 -->
+    <loading :visibility="showLoading ? 'visible' : 'invisible'" />
     <!-- 切台提示 -->
     <tips :visibility="showTips ? 'visible' : 'invisible'" ref="tipsRef" />
   </qt-view>
 </template>
 
 <script setup lang="ts">
-import { ref, markRaw, nextTick } from 'vue'
+import { ref, watch, markRaw, nextTick } from 'vue'
+import { Native } from '@extscreen/es3-vue'
 import { ESKeyEvent, ESKeyCode, useESEventBus } from '@extscreen/es3-core'
 import { ESPlayerManager, ESIPlayerManager, ESMediaItem } from '@extscreen/es3-player-manager'
 import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESVideoPlayer } from '@extscreen/es3-video-player'
+import loading from './loading.vue'
 import tips from './tips.vue'
 
 const emits = defineEmits(['closeMenu'])
 
 const eventBus = useESEventBus()
+
+const showLoading = ref(false)
+watch(
+  () => showLoading.value,
+  (b) => {
+    if (b) {
+      Native.callNative('ESNetworkSpeedModule', 'showNetSpeed')
+    } else {
+      Native.callNative('ESNetworkSpeedModule', 'stopNetSpeed')
+    }
+  }
+)
 
 const playerManager = ref<ESIPlayerManager>()
 const playerListRef = ref([markRaw(ESVideoPlayer)])
@@ -30,6 +53,7 @@ let curPlayIndex: number = 0
 function init(params: { mediaList: [] }) {
   mediaList = params.mediaList
   // 初始化播放器
+  showLoading.value = true
   playerManager.value?.initialize()
   playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
   playerManager.value?.playMediaList({ index: 0, list: mediaList })
@@ -55,13 +79,23 @@ function setPlayInfo(playIndex: number) {
 function playMediaByIndex(index: number) {
   if (index >= mediaList.length) return
   if (index != curPlayIndex) {
+    showLoading.value = true
     playerManager.value?.playMediaByIndex(index)
   }
   emits('closeMenu')
   setPlayInfo(index)
 }
 
+function onPlayerBufferStart() {
+  showLoading.value = true
+}
+
+function onPlayerBufferEnd() {
+  showLoading.value = false
+}
+
 function onPlayerPlaying() {
+  showLoading.value = false
   curPlayIndex = playerManager.value?.getPlayingMediaIndex() || 0
   setPlayInfo(curPlayIndex)
   eventBus.emit('setPlayIndex', curPlayIndex)
