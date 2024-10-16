@@ -8,9 +8,12 @@
       @onPlayerBufferStart="onPlayerBufferStart"
       @onPlayerBufferEnd="onPlayerBufferEnd"
       @onPlayerPlaying="onPlayerPlaying"
+      @onPlayerError="onPlayerError"
     />
     <!-- 加载中 -->
     <loading :visibility="showLoading ? 'visible' : 'invisible'" />
+    <!-- 播放失败 -->
+    <error :visibility="playerError ? 'visible' : 'invisible'" />
     <!-- 切台提示 -->
     <tips :visibility="showTips ? 'visible' : 'invisible'" ref="tipsRef" />
   </qt-view>
@@ -24,6 +27,7 @@ import { ESPlayerManager, ESIPlayerManager, ESMediaItem } from '@extscreen/es3-p
 import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESVideoPlayer } from '@extscreen/es3-video-player'
 import loading from './loading.vue'
+import error from './error.vue'
 import tips from './tips.vue'
 
 const emits = defineEmits(['closeMenu'])
@@ -42,6 +46,7 @@ watch(
   }
 )
 
+const playerError = ref(false)
 const playerManager = ref<ESIPlayerManager>()
 const playerListRef = ref([markRaw(ESVideoPlayer)])
 const tipsRef = ref()
@@ -77,9 +82,10 @@ function setPlayInfo(playIndex: number) {
 }
 
 function playMediaByIndex(index: number) {
-  if (index >= mediaList.length) return
   if (index != curPlayIndex) {
+    showTips.value = false
     showLoading.value = true
+    playerError.value = false
     playerManager.value?.playMediaByIndex(index)
   }
   emits('closeMenu')
@@ -99,6 +105,12 @@ function onPlayerPlaying() {
   curPlayIndex = playerManager.value?.getPlayingMediaIndex() || 0
   setPlayInfo(curPlayIndex)
   eventBus.emit('setPlayIndex', curPlayIndex)
+}
+
+function onPlayerError() {
+  showLoading.value = false
+  playerError.value = true
+  playerManager.value?.stop()
 }
 
 function onKeyDown(keyEvent: ESKeyEvent) {
