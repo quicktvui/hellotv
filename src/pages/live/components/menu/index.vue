@@ -27,6 +27,7 @@
         :visibility="showSecondList ? 'visible' : 'invisible'"
         class="menu-body-list"
         style="width: 400px"
+        name="secondList"
         ref="secondListRef"
         padding="0,72,0,0"
         :skipRequestFocus="true"
@@ -53,6 +54,7 @@
           padding="17,72,0,0"
           :enableSelectOnFocus="false"
           :blockFocusDirections="['up', 'down']"
+          :nextFocusName="{ left: 'secondList' }"
           @item-focused="onThirdListFocus"
           @item-click="onThirdListClick"
         >
@@ -61,7 +63,7 @@
         </qt-list-view>
 
         <!-- 暂无数据 -->
-        <qt-view v-else class="menu-body-list" style="align-items: center; justify-content: center">
+        <qt-view v-else class="menu-body-list" style="width: 417px; align-items: center; justify-content: center">
           <qt-text class="menu-body-list-nodata" text="暂无节目信息" gravity="center"></qt-text>
         </qt-view>
       </qt-view>
