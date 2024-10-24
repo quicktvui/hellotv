@@ -5,7 +5,7 @@
     <!-- 占位填充 -->
     <qt-view style="width: 1920px; height: 1080px; background-color: transparent"></qt-view>
     <!-- 频道列表 -->
-    <channelMenu v-show="showMenu" ref="menuRef" @loadPrograms="loadPrograms" @playMediaByIndex="playMediaByIndex" />
+    <channelMenu v-show="showMenu" ref="menuRef" @loadPrograms="loadPrograms" @playMediaByIndex="playMediaByIndex" @closeMenu="closeMenu" />
   </qt-view>
 </template>
 
@@ -54,7 +54,6 @@ function onKeyDown(keyEvent: ESKeyEvent) {
       }
       break
     case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
-      showMenu.value = true
       break
     case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
       if (showMenu.value) {
@@ -65,7 +64,7 @@ function onKeyDown(keyEvent: ESKeyEvent) {
       break
     case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
       if (!showMenu.value) {
-        toast.showToast('等待功能完善...')
+        showMenu.value = true
       }
       break
   }

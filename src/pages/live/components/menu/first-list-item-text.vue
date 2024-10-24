@@ -6,6 +6,8 @@
       typeface="bold"
       gravity="center"
       :focusable="false"
+      :lines="1"
+      :ellipsizeMode="2"
       duplicateParentState
     ></qt-text>
   </qt-view>

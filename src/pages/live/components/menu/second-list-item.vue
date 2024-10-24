@@ -31,6 +31,8 @@
           :focusable="false"
           :lines="1"
           :ellipsizeMode="4"
+          :horizontalFadingEdgeEnabled="true"
+          :fadingEdgeLength="10"
           duplicateParentState
         ></qt-text>
       </qt-view>

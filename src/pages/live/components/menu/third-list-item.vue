@@ -7,6 +7,10 @@
         text="${program}"
         gravity="center|start"
         :focusable="false"
+        :lines="1"
+        :ellipsizeMode="4"
+        :horizontalFadingEdgeEnabled="true"
+        :fadingEdgeLength="10"
         duplicateParentState
       ></qt-text>
       <qt-view style="background-color: transparent; flex-direction: row; align-items: center" :focusable="false" duplicateParentState>

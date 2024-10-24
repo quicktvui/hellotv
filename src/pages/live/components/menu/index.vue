@@ -53,6 +53,8 @@
           padding="17,72,0,0"
           :enableSelectOnFocus="false"
           :blockFocusDirections="['up', 'down']"
+          @item-focused="onThirdListFocus"
+          @item-click="onThirdListClick"
         >
           <!-- 综合 -->
           <thirdListItem />
@@ -91,7 +93,7 @@
 
 <script setup lang="ts" name="channelMenu">
 import { onMounted, onUnmounted, ref } from 'vue'
-import { ESKeyEvent, ESKeyCode, useESEventBus } from '@extscreen/es3-core'
+import { useESToast, ESKeyEvent, ESKeyCode, useESEventBus } from '@extscreen/es3-core'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import firstListItemImg from './first-list-item-img.vue'
 import firstListItemText from './first-list-item-text.vue'
@@ -102,8 +104,9 @@ import icMenuExt from '../../../../assets/live/ic-menu-ext.png'
 import icMenuExtArrow from '../../../../assets/live/ic-menu-ext-arrow.png'
 import icBack from '../../../../assets/live/ic-back.png'
 
-const emits = defineEmits(['loadPrograms', 'playMediaByIndex'])
+const emits = defineEmits(['loadPrograms', 'playMediaByIndex', 'closeMenu'])
 
+const toast = useESToast()
 const eventBus = useESEventBus()
 onMounted(() => {
   eventBus.on('setPlayIndex', (index: number) => {
@@ -142,8 +145,15 @@ function init(params: { categories: QTListViewItem[]; channels: QTListViewItem[]
   secondListData = secondListRef.value?.init(params.channels) as QTListViewItem[]
 }
 
+let closeTimer: any = -1
+function close() {
+  clearTimeout(closeTimer)
+  closeTimer = setTimeout(() => emits('closeMenu'), 8000)
+}
+
 function onFirstListFocus(e) {
   if (e.isFocused) {
+    close()
     showThirdList.value = false
     switch (e.item.type) {
       case 1:
@@ -161,6 +171,7 @@ let secondListActive = false
 let curChannel: QTListViewItem = {} as QTListViewItem
 let secondListTimer: any = -1
 function onSecondListFocus(e) {
+  close()
   clearTimeout(secondListTimer)
   secondListTimer = setTimeout(() => {
     if (e.isFocused) {
@@ -176,6 +187,18 @@ function onSecondListFocus(e) {
 
 function onSecondListClick(e) {
   emits('playMediaByIndex', e.index)
+}
+
+function onThirdListFocus(e) {
+  if (e.isFocused) close()
+}
+
+function onThirdListClick(e) {
+  if (e.item.isPlaying) {
+    emits('closeMenu')
+  } else {
+    toast.showToast('节目尚未开始，请您稍后再看')
+  }
 }
 
 function onKeyDown(keyEvent: ESKeyEvent) {
