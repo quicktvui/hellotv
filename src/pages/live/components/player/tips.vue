@@ -1,12 +1,8 @@
 <template>
-  <qt-view
-    class="player-tips"
-    :gradientBackground="{ colors: ['#FF2C2C2C', '#FF0F1518'], orientation: 0, cornerRadius: 30 }"
-    :focusable="true"
-  >
+  <qt-view class="player-tips" :gradientBackground="{ colors: ['#FF2C2C2C', '#FF0F1518'], orientation: 0, cornerRadius: 30 }">
     <!-- 角标 -->
     <qt-image v-show="playInfo.isVip" class="player-tips-corner" :src="icCornerVipTips"></qt-image>
-    <qt-view class="player-tips-left" duplicateParentState>
+    <qt-view class="player-tips-left">
       <qt-text
         class="player-tips-text"
         style="width: 234px; height: 120px; color: #ffffff; font-size: 100px"
@@ -21,11 +17,11 @@
         gravity="center"
         :lines="1"
         :ellipsizeMode="2"
-        duplicateParentState
+        :select="true"
       ></qt-text>
     </qt-view>
-    <qt-view class="player-tips-right" duplicateParentState>
-      <qt-view class="player-tips-right-box" style="margin-bottom: 8px" duplicateParentState>
+    <qt-view class="player-tips-right">
+      <qt-view class="player-tips-right-box" style="margin-bottom: 8px">
         <qt-text
           class="player-tips-text"
           style="height: 48px; color: #ffffff; font-size: 38px"
@@ -33,22 +29,22 @@
           gravity="center|start"
           :lines="1"
           :ellipsizeMode="3"
+          :select="true"
           :horizontalFadingEdgeEnabled="true"
           :fadingEdgeLength="10"
-          duplicateParentState
         ></qt-text>
         <qt-text class="player-tips-text" style="width: 106px; font-size: 28px" text="14:13" gravity="center|end"></qt-text>
       </qt-view>
-      <qt-view class="player-tips-right-box" duplicateParentState>
+      <qt-view class="player-tips-right-box">
         <qt-text
           class="player-tips-text"
           :text="playInfo.nextProgram"
           gravity="center|start"
           :lines="1"
           :ellipsizeMode="3"
+          :select="true"
           :horizontalFadingEdgeEnabled="true"
           :fadingEdgeLength="10"
-          duplicateParentState
         ></qt-text>
         <qt-text class="player-tips-text" style="width: 106px" text="16:30" gravity="center|end"></qt-text>
       </qt-view>
