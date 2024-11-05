@@ -121,6 +121,19 @@ module.exports = {
         use: [cssLoader, 'less-loader'],
       },
       {
+        test:/\.scss$/,
+        use:[
+          cssLoader,
+          'sass-loader',
+          {
+            loader:'sass-loader',
+            options:{
+              additionalData:`@import './src/build/public.scss';`
+            }
+          }
+        ]
+      },
+      {
         test: /\.t|js$/,
         use: [
           {
