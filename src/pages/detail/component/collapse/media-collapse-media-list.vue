@@ -32,7 +32,7 @@ import {
   buildMediaSeriesData
 } from "../../adapter/MediaSeriesAdapter";
 import { buildMediaSeriesList } from "../../adapter/DataAdapter";
-import ThemeConfig from "../../../../build/ThemeConfig";
+import ThemeConfig from "../../../../config/theme-config";
 
 const TAG = 'QTCollapseItem'
 

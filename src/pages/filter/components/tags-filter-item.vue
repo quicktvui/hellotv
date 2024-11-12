@@ -19,7 +19,7 @@
 
 <script lang="ts">
 import { computed, defineComponent } from "@vue/runtime-core"
-import ThemeConfig from "../../../build/ThemeConfig";
+import ThemeConfig from "../../../config/theme-config";
 import FilterConfig from "../build_data/FilterConfig"
 
 export default defineComponent({

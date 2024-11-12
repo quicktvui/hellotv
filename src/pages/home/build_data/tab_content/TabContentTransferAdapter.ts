@@ -15,7 +15,7 @@ import {
 } from './TabContentAdapter'
 import {TabContent} from "./impl/TabContent";
 import {tabBackgroundUrls} from "../tab/TabAdapter";
-import BuildConfig from '../../../../build/BuildConfig'
+import BuildConfig from '../../../../config/build-config'
 
 /**
  * 转换TabContent

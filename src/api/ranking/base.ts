@@ -1,4 +1,3 @@
-import { RequestManager } from "../request/RequestManager";
 import { IrankingConfig, IrankingTabItem, rankingTypes, IrankingMoreContent, IrankingRouteParams } from "./types";
 import { tUid } from '../../tools/common'
 
@@ -9,11 +8,9 @@ const getImg = ()=>{
 }
 
 export class RankBaseApi {
-  requestManager: RequestManager | undefined;
   pageData: {[k:string]:any}|undefined;
 
   init(...params: any[]): Promise<any> {
-    this.requestManager = params[0]
     return Promise.resolve()
   }
   /**

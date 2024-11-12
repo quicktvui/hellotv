@@ -2,7 +2,7 @@ import FilterConfig from "../FilterConfig"
 import {Tags} from "../impl/Tags";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import {ESListViewItemDecoration} from "@extscreen/es3-component";
-import {QTGridViewItem} from "@quicktvui/quicktvui3";
+import {QTListViewItem} from "@quicktvui/quicktvui3";
 import {TagContent} from "../impl/TagContent";
 import {FilterConditionList} from "../impl/FilterConditionList";
 
@@ -41,8 +41,8 @@ export function buildTagsAdapter(tags:Array<Tags>):Array<QTListViewItem>{
   return tagList
 }
 
-export function buildTagContentEnd():QTGridViewItem{
-  const endList: QTGridViewItem = {
+export function buildTagContentEnd():QTListViewItem{
+  const endList: QTListViewItem = {
     type:1003,
     decoration:{top:30,bottom:10},
     text:"已经到底啦，按【返回键】回到顶部"
@@ -50,15 +50,15 @@ export function buildTagContentEnd():QTGridViewItem{
   return endList
 }
 
-export function buildTagContentsAdapter(tagContents: Array<TagContent>, pageNum?:number, type?: number): Array<QTGridViewItem> {
-  const tagContentList: Array<QTGridViewItem> = []
+export function buildTagContentsAdapter(tagContents: Array<TagContent>, pageNum?:number, type?: number): Array<QTListViewItem> {
+  const tagContentList: Array<QTListViewItem> = []
   const decoration: ESListViewItemDecoration = {
     top:18,
     bottom: type === 1 ? 18 : 35,
   }
 
   tagContents.forEach((content,index)=>{
-    const gridItem:QTGridViewItem ={
+    const gridItem:QTListViewItem ={
       type: type ?? 1,
       poster: content.poster,
       corner:{

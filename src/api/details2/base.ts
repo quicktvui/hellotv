@@ -1,7 +1,6 @@
 import type {
   QTWaterfallSection, QTWaterfallItem
 } from "@quicktvui/quicktvui3";
-import { RequestManager } from "../request/RequestManager";
 import {IDetail2Config, Id2TopData, IvideoDes,posterTypes,tabTypes,IvideoParams,ImediaSelection,Id2BaseSection} from './types'
 // @ts-ignore
 import { getSelectionSection,getSelectionMoreSection,getSelectionPoster,getSelectionSectionTabs,TposterType, getSelectionSeriesPoster } from '../../pages/detail2/index.ts'
@@ -28,11 +27,9 @@ const delayFn = (num=1000)=>{
   })
 }
 export class Detail2Base {
-  requestManager: RequestManager | undefined;
   pageData: {[k:string]:any} = {}
 
   init(...params: any[]): Promise<any> {
-    this.requestManager = params[0]
     return Promise.resolve()
   }
   /**
@@ -98,7 +95,7 @@ export class Detail2Base {
       })
     });
   }
-  
+
   /**
    * 获取选集/系列/更多信息等标签页，配置数据
    */

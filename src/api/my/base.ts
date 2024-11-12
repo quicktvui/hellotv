@@ -1,4 +1,3 @@
-import { RequestManager } from "../request/RequestManager";
 import { IAnyobj, Iconfig } from './types'
 // @ts-ignore
 import { getMysection, ImySectionRes, posterTypes } from '../../pages/my/index.ts'
@@ -18,7 +17,6 @@ const delayFn = ()=>{
   })
 }
 export class MyBase {
-  requestManager: RequestManager | undefined;
   pageData: IAnyobj | undefined;
 
   /**

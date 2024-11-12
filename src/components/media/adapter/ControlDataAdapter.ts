@@ -10,10 +10,10 @@ import { QTListViewItem } from "@quicktvui/quicktvui3"
 import { QTListViewItemDecoration } from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration"
 import { ref } from "vue"
 import { IMediaUrl } from "../../../api/media/IMediaUrl"
-import xuanJiIcon from '../../../assets/def_media/ic_def_media_menu_xuanji.png'
-import xuanJiFocusIcon from '../../../assets/def_media/ic_def_media_menu_xuanji_focus.png'
-import settingIcon from '../../../assets/def_media/ic_def_media_menu_setting.png'
-import settingFocusIcon from '../../../assets/def_media/ic_def_media_menu_setting_focus.png'
+import xuanJiIcon from '../../../assets/def-media/ic_def_media_menu_xuanji.png'
+import xuanJiFocusIcon from '../../../assets/def-media/ic_def_media_menu_xuanji_focus.png'
+import settingIcon from '../../../assets/def-media/ic_def_media_menu_setting.png'
+import settingFocusIcon from '../../../assets/def-media/ic_def_media_menu_setting_focus.png'
 import { ESDefMediaList } from "../impl/ESDefMediaList"
 
 export const bottomMenuClickEventBusName = "onBottomMenuPlayClicked"

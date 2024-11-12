@@ -96,9 +96,9 @@ import {
   useESToast
 } from "@extscreen/es3-core"
 import { onMounted, ref } from "vue"
-import playIcon from '../../assets/def_media/ic_def_media_player_play.png'
-import pauseIcon from '../../assets/def_media/ic_def_media_player_pause.png'
-import BuildConfig from "../../build/BuildConfig"
+import playIcon from '../../assets/def-media/ic_def_media_player_play.png'
+import pauseIcon from '../../assets/def-media/ic_def_media_player_pause.png'
+import BuildConfig from "../../config/build-config"
 import { s_to_hs } from "../../tools/formatDate"
 import {
   bottomMenuClickEventBusName,

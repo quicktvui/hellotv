@@ -3,7 +3,6 @@ import { IHistoryMenuDto, IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEnt
 
 class HistoryApi extends HistoryBaseApi {
     init(...params: any[]): Promise<any> {
-        this.requestManager = params[0]
         return Promise.resolve()
     }
     // async getMenuList(): Promise<IHistoryMenuDto> {

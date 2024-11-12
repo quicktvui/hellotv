@@ -1,5 +1,4 @@
 import {QTTab, QTTabPageData} from "@quicktvui/quicktvui3";
-import {TabPlayItem} from "../../pages/home/build_data/tab_content/impl/TabPlayItem";
 
 export interface IHomeDataSource {
   /**

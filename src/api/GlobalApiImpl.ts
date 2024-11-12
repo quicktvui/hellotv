@@ -2,7 +2,6 @@ import { ESPlayerDefinition } from "@extscreen/es3-player"
 import FilterConfig from "../pages/filter/build_data/FilterConfig";
 import bg_play from "./home/mock/bg_play";
 import { IGlobalApi } from "./IGlobalApi";
-import { RequestManager } from "./request/RequestManager";
 import { QTTab, QTTabPageData, QTTabItem, QTWaterfallItem } from "@quicktvui/quicktvui3";
 import { Tab } from "../pages/home/build_data/tab/impl/Tab";
 import tabMockJson from "./home/mock/home_tab";
@@ -16,8 +15,9 @@ import tabPage2MockJson from "./home/mock/home_page2";
 import tabPage3MockJson from "./home/mock/home_page3";
 import { buildTransferTabContentAdapter } from "../pages/home/build_data/tab_content/TabContentTransferAdapter";
 import { ESApp } from "@extscreen/es3-vue";
+import requestManager from "./request/request-manager"
 import { GlobalApiKey } from "./UseApi";
-import BuildConfig from "../build/BuildConfig";
+import BuildConfig from "../config/build-config";
 import {
   filterContentUrl,
   filterEntryUrl,
@@ -60,9 +60,7 @@ import shortVideoList from "./shortVideo/mock/short_video_data";
 import { leftExpand, leftTags } from "./filter/mock";
 
 export function createGlobalApi(): IGlobalApi {
-  let requestManager: RequestManager;
   function init(...params: any[]): Promise<any> {
-    requestManager = params[0];
     return Promise.resolve();
   }
 
@@ -233,6 +231,7 @@ export function createGlobalApi(): IGlobalApi {
   }
 
   function getScreenContentByTags(tags, pageNum) {
+    //todo XRG 记得来修改
     const params = requestManager.getParams();
     const pageParams = {
       pageNo: pageNum,

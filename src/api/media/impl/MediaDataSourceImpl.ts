@@ -1,5 +1,5 @@
 import { ESApp } from "@extscreen/es3-vue"
-import { RequestManager } from "../../request/RequestManager"
+import requestManager from "../../request/request-manager"
 import { MediaDataSourceKey } from "../../UseApi"
 import { IMediaDataSource } from "../IMediaDataSource"
 import { IMedia } from "../IMedia"
@@ -17,10 +17,7 @@ import { MediaAuthorization } from "./MediaAuthorization"
 
 export function createMediaDataSource(): IMediaDataSource {
 
-  let requestManager: RequestManager
-
   function init(...params: any[]): Promise<any> {
-    requestManager = params[0]
     return Promise.resolve()
   }
 

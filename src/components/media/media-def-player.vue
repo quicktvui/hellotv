@@ -37,7 +37,7 @@ import {
   useESPlayerManagerPlayModeManager
 } from "@extscreen/es3-player-manager"
 import { markRaw, ref, onMounted } from "vue"
-import BuildConfig from "../../build/BuildConfig"
+import BuildConfig from "../../config/build-config"
 import { buildMediaItemList, buildPlayData, defList } from "./adapter/ControlDataAdapter"
 import { ESDefMediaList } from "./impl/ESDefMediaList"
 import MediaManagerView from "./media-manager-view.vue"

@@ -1,18 +1,15 @@
 import { ESApp } from "@extscreen/es3-vue"
 import { LoginQrCode } from "../../pages/login/build_data/LoginInfo"
 import { UserInfo } from "../../pages/login/build_data/UserInfo"
-import { RequestManager } from "../request/RequestManager"
 import { LoginDataSourceKey } from "../UseApi"
 import { ILoginDataSource } from "./ILoginDataSource"
 import { qrCode } from "./mock/qr_code"
 import { UserManager } from "./user/UserManager"
 
 export function createUserApi():ILoginDataSource{
-  let requestManager: RequestManager
   let userManager:UserManager
   function init(...params: any[]): Promise<any> {
-    requestManager = params[0]
-    userManager = params[1]
+    userManager = params[0]
     return Promise.resolve()
   }
   function getLoginBackground():Promise<string>{

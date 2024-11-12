@@ -55,7 +55,7 @@ import {
   createESPlayerMediaItemAuthInterceptor,
   createESPlayerMediaSourceListInterceptor
 } from "../player/ESPlayerMediaItemInterceptor";
-import BuildConfig from '../../../build/BuildConfig'
+import BuildConfig from '../../../config/build-config'
 
 const TAG = 'MediaPlayer'
 

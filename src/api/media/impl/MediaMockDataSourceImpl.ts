@@ -1,5 +1,4 @@
 import {ESApp} from "@extscreen/es3-vue";
-import {RequestManager} from "../../request/RequestManager";
 import {MediaDataSourceKey} from "../../UseApi";
 import {IMediaDataSource} from "../IMediaDataSource";
 import {IMedia} from "../IMedia";
@@ -18,10 +17,8 @@ export function createMediaMockDataSource(): IMediaDataSource {
 
   let mediaDetail
 
-  let requestManager: RequestManager
 
   function init(...params: any[]): Promise<any> {
-    requestManager = params[0]
     //1.----------------------------富滇风云-----------------------------------
     mediaDetailDataMap.set('1703598812798386177', MEDIA_1703598812798386177_MOCK_DATA)
     //2.----------------------------微生物的世界-----------------------------------

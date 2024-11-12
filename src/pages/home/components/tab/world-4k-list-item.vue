@@ -28,9 +28,9 @@
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog } from "@extscreen/es3-core"
-import xuanJiIcon from '../../../../assets/def_media/ic_def_media_menu_xuanji.png'
-import playIcon from '../../../../assets/def_media/ic_def_media_player_play.png'
-import ic4KSub from '../../../../assets/world_4k/ic_4k_world_subtitle.png'
+import xuanJiIcon from '../../../../assets/def-media/ic_def_media_menu_xuanji.png'
+import playIcon from '../../../../assets/def-media/ic_def_media_player_play.png'
+import ic4KSub from '../../../../assets/world-4k/ic_4k_world_subtitle.png'
 
 export default defineComponent({
   name: "world-4k-list-item",

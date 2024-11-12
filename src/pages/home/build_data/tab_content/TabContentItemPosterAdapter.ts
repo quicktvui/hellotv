@@ -1,5 +1,5 @@
 import {QTPoster, QTWaterfallItemType} from "@quicktvui/quicktvui3";
-import ThemeConfig from "../../../../build/ThemeConfig"
+import ThemeConfig from "../../../../config/theme-config"
 import {TabSectionItem} from "./impl/TabSectionItem";
 import {QTPosterTitle} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterTitle";
 import {QTPosterRipple} from "@quicktvui/quicktvui3/dist/src/poster/core/QTPosterRipple";

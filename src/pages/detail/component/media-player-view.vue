@@ -175,8 +175,8 @@ import {
 } from "../adapter/PlayerDataAdapter";
 import { IMedia } from "../../../api/media/IMedia";
 import { IMediaCollapseMediaSeriesView } from "./collapse/IMediaCollapseMediaSeriesView";
-import ThemeConfig from "../../../build/ThemeConfig";
-import BuildConfig from "../../../build/BuildConfig";
+import ThemeConfig from "../../../config/theme-config";
+import BuildConfig from "../../../config/build-config";
 
 const TAG = 'MediaPlayerView'
 

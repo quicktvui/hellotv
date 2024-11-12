@@ -5,6 +5,8 @@ export default {
   testEnv: env,
   // 使用模拟数据
   useMockData: false,
+  //版本号
+  VUE_PLUGIN_VERSION:  1,
   //是低端设备
   isLowEndDev: false,
   //ES包名

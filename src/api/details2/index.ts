@@ -1,5 +1,4 @@
-import { RequestManager } from "../request/RequestManager";
-import {IDetail2Config,IAnyobj} from './types'
+import {IDetail2Config} from './types'
 import { Detail2Base } from './base'
 
 class Detail2Api extends Detail2Base {

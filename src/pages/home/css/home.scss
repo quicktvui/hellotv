@@ -1,0 +1,14 @@
+.div-test {
+  width:1920px;
+  height: 100px;
+background-color: $text-normal-color;
+}
+
+@mixin test-root($width : 1920px,$height:1080px){
+  background-color: $text-select-color;
+  width:$width;
+  height:$height;
+}
+
+
+

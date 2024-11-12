@@ -11,8 +11,8 @@ let cssLoader = '@hippy/vue-css-loader';
 
 /**override flavor*/
 // const { execSync } = require('child_process');
-// const { getFlavorDir } = require('./libs/flavorUtil');
-// const { getFlavor } = require('../scripts/libs/flavorUtil');
+// const { getFlavorDir } = require('./libs/flavor-util');
+// const { getFlavor } = require('../scripts/libs/flavor-util');
 // //默认 quicktvui-template-config
 // let flavorName = process.env.flavor ? process.env.flavor : "quicktvui-template-config"
 // console.log(`>>>>>>>buildFlavor flavorName : ${flavorName}\n`)
@@ -146,7 +146,7 @@ module.exports = {
           {
             loader:'sass-loader',
             options:{
-              additionalData:`@import './src/build/public.scss';`
+              additionalData:`@import './src/config/public-config.scss';`
             }
           }
         ]

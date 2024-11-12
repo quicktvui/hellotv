@@ -5,7 +5,7 @@ import {
   QTWaterfallSectionType,
 } from "@quicktvui/quicktvui3";
 import { IActivityConfig, IActivityTopBtnConfig } from "../../api/activity2/types";
-import ThemeConfig from "../../build/ThemeConfig";
+import ThemeConfig from "../../config/theme-config";
 
 export const getBgColor = (bColor?: string | object) => {
   if (!bColor) return "";

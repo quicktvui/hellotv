@@ -1,4 +1,4 @@
-  import BuildConfig from "../build/BuildConfig";
+  import BuildConfig from "../config/build-config";
 
   //Home请求url
   export const tabListUrl = BuildConfig.requestBaseUrl+"/v2/zero/arrange/menu/menuZero" //tab

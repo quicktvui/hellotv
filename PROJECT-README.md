@@ -1,8 +1,8 @@
 ## 网络数据接入准备工作
-1. 在[BuildConfig.ts](./src/build/BuildConfig.ts) 中设置useMockData 为 false 使用网络数据，设置true 使用mock数据
-2. 在[BuildConfig.ts](./src/build/BuildConfig.ts) 中设置数据请求域名requestBaseUrl
+1. 在[build-config.ts](./src/config/build-config.ts) 中设置useMockData 为 false 使用网络数据，设置true 使用mock数据
+2. 在[build-config.ts](./src/config/build-config.ts) 中设置数据请求域名requestBaseUrl
 3. 在[RequestUrl.ts](./src/api/RequestUrl.ts) 中设置请求地址
-4. 在[RequestManager.ts](./src/api/request/RequestManager.ts) 中的init中初始化公共请求体，post/get方法中解析封装原始数据
+4. 在[request-manager.ts](./src/api/request/request-manager.ts) 中的init中初始化公共请求体，post/get方法中解析封装原始数据
 
 ## Project整体目录结构
 ```bash
@@ -34,8 +34,8 @@ src
 |     ├─img-text-btn-view.vue
 |     ├─qt-img-transition.vue
 |     └top-btns-view.vue
-├─build 全局配置
-|   └BuildConfig.ts
+├─config 全局配置
+|   └build-config.ts
 ├─assets 资源文件
 ├─api 全局api
 |  ├─GlobalApiImpl.ts 全局接口实现入口

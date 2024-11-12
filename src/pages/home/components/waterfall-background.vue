@@ -6,7 +6,7 @@
 import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
 import { ESITransitionImage } from "@extscreen/es3-component/dist/src/ESTransitionImageView/ESITransitionImage";
-import ThemeConfig from "../../../build/ThemeConfig"
+import ThemeConfig from "../../../config/theme-config"
 
 export default defineComponent({
   name: "waterfall-background",

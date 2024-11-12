@@ -16,8 +16,8 @@
 <script lang="ts">
 import { defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog } from "@extscreen/es3-core"
-import normalIcon from '../../assets/def_media/ic_def_media_menu_item_normal.png'
-import focusIcon from '../../assets/def_media/ic_def_media_menu_item_focus.png'
+import normalIcon from '../../assets/def-media/ic_def_media_menu_item_normal.png'
+import focusIcon from '../../assets/def-media/ic_def_media_menu_item_focus.png'
 
 export default defineComponent({
   name: "media-right-menu-item",

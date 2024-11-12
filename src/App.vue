@@ -21,14 +21,15 @@ import {
   useESEventBus
 } from "@extscreen/es3-core"
 import {ESPlayerLogLevel, useESPlayer, useESPlayerLog} from "@extscreen/es3-player";
+import requestManager from "./api/request/request-manager"
 import {
   useGlobalApi,
   useLoginDataSource,
   useMediaDataSource,
-  useRequestManager, useUserManager
+   useUserManager
 } from "./api/UseApi"
-import BuildConfig from "./build/BuildConfig";
-import ThemeConfig from "./build/ThemeConfig"
+import BuildConfig from "./config/build-config";
+import ThemeConfig from "./config/theme-config"
 import {useLaunch} from "./tools/launch/useApi";
 import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
 import HistoryApi from './api/history/index'
@@ -51,7 +52,6 @@ export default defineComponent({
     const playerLog = useESPlayerLog()
 
     //
-    const request = useRequestManager()
     const globalApi = useGlobalApi()
     const mediaDataSource = useMediaDataSource()
     const userManager = useUserManager()
@@ -67,13 +67,13 @@ export default defineComponent({
       Native.callNative('FastListModule', 'setFadeDuration', 500);
       switchDev()
       return Promise.resolve()
-        .then(() => request.init(es, develop, device, runtime, log))
-        .then(() => globalApi.init(request))
-        .then(() => loginApi.init(request,userManager))
+        .then(() => requestManager.init(es, develop, device, runtime, log))
+        .then(() => globalApi.init())
+        .then(() => loginApi.init(userManager))
         .then(() => userManager.init(loginApi,localStore,eventBus))
-        .then(() => mediaDataSource.init(request))
-        .then(() => HistoryApi.init(request, localStore))
-        .then(() => activity2Api.init(request))
+        .then(() => mediaDataSource.init())
+        .then(() => HistoryApi.init(localStore))
+        .then(() => activity2Api.init())
 
         .then(() => launch.init(log, router, nativeRouter))
         .then(() => playerManager.init({

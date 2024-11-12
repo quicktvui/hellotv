@@ -31,7 +31,7 @@ import {
   buildMediaSeriesStyleType,
   buildMediaSeriesType
 } from "../adapter/MediaSeriesAdapter";
-import ThemeConfig from "../../../build/ThemeConfig";
+import ThemeConfig from "../../../config/theme-config";
 
 const TAG = 'MediaListView'
 
@@ -50,7 +50,7 @@ export default defineComponent({
     const textSelectColor = ThemeConfig.textSelectColor
     const btnGradientColor = ThemeConfig.btnGradientColor
     const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
-    
+
     const eventbus = useESEventBus()
     const initParams = ref()
     const listViewWidth = ref<number>(0)
@@ -68,7 +68,7 @@ export default defineComponent({
     onMounted(() => {
       eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });
-    
+
     onUnmounted(() => {
       eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });

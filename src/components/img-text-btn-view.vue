@@ -38,7 +38,7 @@
 
 <script lang="ts">
 import {defineComponent, reactive, toRefs, watch} from "@vue/runtime-core";
-import ThemeConfig from "../build/ThemeConfig"
+import ThemeConfig from "../config/theme-config"
 
 export default defineComponent({
   name: "img-text-btn-view",

@@ -1,5 +1,5 @@
 import { IHistoryMenuEntity } from "../../api/history/modelEntity";
-import ThemeConfig from "../../build/ThemeConfig";
+import ThemeConfig from "../../config/theme-config";
 
 export const pageWidth = 1920
 export const layouts = {

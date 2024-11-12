@@ -81,8 +81,8 @@ import { ESMediaItem } from '@extscreen/es3-player-manager'
 import { IMediaAuthorization } from '../../api/media/IMediaAuthorization'
 import { mediaAuthorizationKey } from './injectionSymbols'
 import { useMediaDataSource } from '../../api/UseApi'
-import ThemeConfig from '../../build/ThemeConfig'
-import BuildConfig from '../../build/BuildConfig'
+import ThemeConfig from '../../config/theme-config'
+import BuildConfig from '../../config/build-config'
 
 const TAG = 'DetailPage'
 

@@ -4,7 +4,6 @@ import {
   getActivityTopBtn,
   getActivity2FlexBlock,
 } from "../../pages/activity2/index.ts";
-import { RequestManager } from "../request/RequestManager";
 import { ESLocalStorage } from "@extscreen/es3-core";
 import { IActivityConfig, IActivityTopItemBtn, topModes } from "./types";
 import homeIcon from "../../assets/ic_header_home.png";
@@ -29,13 +28,11 @@ let dImgURL =
 // api基类默认是mock数据，可以在子类中根据业务重写对应的方法调用接口返回数据
 export class Activity2BaseApi implements Iapi {
   // @ts-ignore
-  requestManager: RequestManager;
   // @ts-ignore
   localStore: ESLocalStorage;
   pageData: IAnyobj | undefined = undefined;
 
   init(...params: any[]): Promise<any> {
-    this.requestManager = params[0];
     this.localStore = params[1];
     return Promise.resolve();
   }

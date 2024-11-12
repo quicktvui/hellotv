@@ -93,7 +93,7 @@
 import { ESIPlayerInterceptor } from "@extscreen/es3-player"
 import { defineComponent } from "@vue/runtime-core";
 import { ref } from "vue";
-import ThemeConfig from "../../../build/ThemeConfig"
+import ThemeConfig from "../../../config/theme-config"
 import { createESHomeBGPlayerMediaInterceptor } from "../play_interceptor/createESHomeBGPlayerMediaInterceptor"
 import World4kSection from "./tab/world-4k-section.vue"
 import WaterfallBackground from "./waterfall-background.vue";
@@ -106,7 +106,7 @@ import {
 import { ESLogLevel, useESDevice, useESLog, useESToast, ESKeyEvent, ESKeyCode } from '@extscreen/es3-core'
 import { useLaunch } from "../../../tools/launch/useApi";
 import { useGlobalApi } from "../../../api/UseApi";
-import BuildConfig from "../../../build/BuildConfig";
+import BuildConfig from "../../../config/build-config";
 import { buildTabPage } from "../build_data/tab/tabs";
 import { tabContentTop } from "../build_data/tab_content/TabContentAdapter";
 import TabImageItem from "./tab/tab-image-item.vue";

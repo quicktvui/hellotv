@@ -7,7 +7,7 @@ import {
   buildTagsAdapter
 } from './tags/TagsAdapter'
 import {TagContent} from "./impl/TagContent";
-import {QTGridViewItem} from "@quicktvui/quicktvui3";
+import {QTListViewItem} from "@quicktvui/quicktvui3";
 import {FilterCondition} from "./impl/FilterCondition";
 import {FilterConditionList} from "./impl/FilterConditionList";
 
@@ -210,9 +210,9 @@ export function getScrollHeight(){
  * @param tagContents 标签内容数组
  * @param pageNum 页码(可选)
  * @param posterMode 海报模式(可选), 可选值为 1(竖图) 或 2(横图)
- * @returns QTGridViewItem 数组
+ * @returns QTListViewItem 数组
  */
-export function buildScreenContent(tagContents: Array<any>, pageNum?: number, posterMode?: 1 | 2):Array<QTGridViewItem>{
+export function buildScreenContent(tagContents: Array<any>, pageNum?: number, posterMode?: 1 | 2):Array<QTListViewItem>{
   const tagContentArray:Array<TagContent> = []
   tagContents.forEach((content,index)=>{
     const tagContent:TagContent = {

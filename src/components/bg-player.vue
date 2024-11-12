@@ -47,7 +47,7 @@
         <!-- 背景视频阴影 -->
         <img
           :visible="isShowShadow"
-          v-if="playerWidth&&playerHeight" 
+          v-if="playerWidth&&playerHeight"
           src="../assets/ranking/bg_shadow.png" class="bg_player_shadow_img" :focusable="false"
           :style="{width:(playerWidth+2) + 'px',height:(playerHeight+2) + 'px',left: (playerLeft-1),top: (playerTop-1)}"/>
         <!-- 小窗播放列表 -->
@@ -112,7 +112,7 @@ import { TabPlayItem } from "../pages/home/build_data/tab_content/impl/TabPlayIt
 import { encodeDefinition } from "./media/adapter/ControlDataAdapter"
 import MediaDefPlayer from "./media/media-def-player.vue"
 import QtImgTransition from "./qt-img-transition.vue";
-import BuildConfig from "../build/BuildConfig";
+import BuildConfig from "../config/build-config";
 import bgPlayerImg from "./bg-player-img.vue";
 
 export enum CoveredPlayerType{
@@ -204,12 +204,12 @@ export default defineComponent({
       if(list && list.length > index && index > -1){
         currentPlayIndex.value = index
         let item = list[index]
-        console.log("111",list)
-        console.log("",playType)
         if(playType == 2) play2(list)
         else  play(item)
         if(!BuildConfig.isLowEndDev) playerManagerRef.value?.setSize(playerWidth.value,playerHeight.value)
       }else{
+
+
         log.e('BG-PLAYER',`playAtIndex error list size = 0,index ${index} `)
       }
     }

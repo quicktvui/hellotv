@@ -2,12 +2,12 @@
   <qt-view class="screen-right-qt-view-root-css" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}">
     <scroll-view ref="screen_right_scroll_content" name="screen_right_scroll_content"
       class="screen-right-scroll-root-css" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
-      :clipChildren="false" :clipPadding="false"      
+      :clipChildren="false" :clipPadding="false"
       :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
 
       <qt-view :v-show="!loading"
         class="screen-right-qt-view-css" :style="{width:rightContentWidth+'px',height:(rightContentHeight+640)+'px'}"
-        :clipChildren="false" :clipPadding="false"      
+        :clipChildren="false" :clipPadding="false"
         :useAdvancedFocusSearch="true" :focusable="false">
 
         <!-- 筛选条件 -->
@@ -89,7 +89,7 @@
     >
       <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
-    
+
     <!-- tag筛选点击loading -->
     <qt-view v-if="!loading && filterClickLoading" class="screen-right-filter-click-loading"
       :style="{top:filterHeight,width:rightContentWidth+'px',height: (rightContentHeight-filterHeight)+'px'}"
@@ -97,7 +97,7 @@
     >
       <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
-    
+
     <!-- 空结果 -->
     <qt-view v-if="empty" class="screen-right-content-empty" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}">
       <img style="width: 560px;height: 350px;" :src="emptyImg"/>
@@ -140,14 +140,13 @@ import {
 import { getFilterMoreItem } from '../build_data/tags/TagsAdapter';
 import {
   QTIGridView,
-  QTGridViewItem,
+  QTListViewItem,
   QTIListView,
   QTIView,
   QTIViewVisibility
 } from "@quicktvui/quicktvui3";
 import TagsContentItemV from "./tags-content-item-v.vue";
 import TagsContentItemH from "./tags-content-item-h.vue";
-import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import TagsFilterItem from "./tags-filter-item.vue";
 import TagsFilterFastLine from "./tags-filter-fast-line.vue";
 import TagsFilterMoreBtn from "./tags-filter-more-btn.vue";
@@ -192,7 +191,7 @@ export default defineComponent({
     const screen_right_selected_tags = ref<QTIView>()
     const screen_right_scroll_content = ref<ESIScrollView>()
     //数据变量
-    let screenRightContentData: QTGridViewItem[] = [];
+    let screenRightContentData: QTListViewItem[] = [];
     let screenRightFiltersData: QTListViewItem[] = []
     //本地变量
     let curPageNum = 1
@@ -451,7 +450,7 @@ export default defineComponent({
 
     function setScreenResultData(pageNum: number, type: number, tagNames: string,isClick: boolean) {
       globalApi.getScreenContentByTags(tagNames, curPageNum).then((res: Array<any>) => {
-        const screenContentList: Array<QTGridViewItem> = buildScreenContent(res, curPageNum, posterMode.value)
+        const screenContentList: Array<QTListViewItem> = buildScreenContent(res, curPageNum, posterMode.value)
         if (screenContentList && screenContentList.length > 0) {
           if (curPageNum === 1) {
             screenRightContentData = screen_right_content.value!.init(screenContentList)

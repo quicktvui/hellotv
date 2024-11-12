@@ -2,7 +2,7 @@
 
 ### 设置默认源
 
-编辑配置文件`src/build/BuildConfig.ts`中`defaultSourceUrl`配置项即可。
+编辑配置文件`src/config/build-config.ts`中`defaultSourceUrl`配置项即可。
 
 ### 准备静态资源
 

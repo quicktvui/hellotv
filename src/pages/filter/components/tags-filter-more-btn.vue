@@ -10,7 +10,7 @@
 </template>
 
 <script setup>
-import ThemeConfig from "../../../build/ThemeConfig";
+import ThemeConfig from "../../../config/theme-config";
 import icExpandDown from '../../../assets/ic_expand_down.png'
 
 const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor

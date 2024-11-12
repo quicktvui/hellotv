@@ -50,7 +50,7 @@
 <script lang="ts">
 import { computed, defineComponent } from "@vue/runtime-core"
 import { ref, nextTick, watch, onMounted } from "vue"
-import { QTIGridView, QTGridViewItem } from "@quicktvui/quicktvui3"
+import { QTIGridView, QTListViewItem } from "@quicktvui/quicktvui3"
 import SearchBtn from "./search-btn.vue"
 import SearchConfig from "../build_data/SearchConfig"
 
@@ -70,8 +70,8 @@ export default defineComponent({
     const ic_search_input_delete = require("../../../assets/search/ic_search_input_delete.png").default
     const ic_search_input_delete_focus = require("../../../assets/search/ic_search_input_delete_focus.png").default
     const grid_view = ref<QTIGridView>()
-    let listDataRec: Array<QTGridViewItem> = []
-    let keyboardItems: Array<QTGridViewItem> = [
+    let listDataRec: Array<QTListViewItem> = []
+    let keyboardItems: Array<QTListViewItem> = [
       { text: "A", type: 1 }, { text: "B", type: 1 }, { text: "C", type: 1 }, { text: "D", type: 1 },
       { text: "E", type: 1 }, { text: "F", type: 1 }, { text: "G", type: 1 }, { text: "H", type: 1 },
       { text: "I", type: 1 }, { text: "J", type: 1 }, { text: "K", type: 1 }, { text: "L", type: 1 },

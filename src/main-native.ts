@@ -42,9 +42,9 @@ import { QuickTVUI } from "@quicktvui/quicktvui3";
 app.use(QuickTVUI);
 
 //---------------------------网络请求----------------------------------
-import { createRequestManager, RequestManager } from "./api/request/RequestManager";
-const requestManger: RequestManager = createRequestManager();
-app.use(requestManger);
+// import { createRequestManager, RequestManager } from "./api/request/RequestManager";
+// const requestManger: RequestManager = createRequestManager();
+// app.use(requestManger);
 //---------------------------网络接口----------------------------------
 import { IGlobalApi } from "./api/IGlobalApi";
 import { createGlobalApi } from "./api/GlobalApiImpl";
@@ -54,7 +54,7 @@ app.use(appApi);
 import { IMediaDataSource } from "./api/media/IMediaDataSource";
 import { createMediaDataSource } from "./api/media/impl/MediaDataSourceImpl";
 import { createMediaMockDataSource } from "./api/media/impl/MediaMockDataSourceImpl";
-import BuildConfig from "./build/BuildConfig";
+import BuildConfig from "./config/build-config";
 
 if (BuildConfig.useMockData) {
   const mediaDataSource: IMediaDataSource = createMediaMockDataSource();

@@ -141,7 +141,7 @@ import {
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { RouteParams, Lives, Category, Channel, Program } from './types'
 import LoadingError from '../../components/LoadingError.vue'
-import BuildConfig from '../../build/BuildConfig'
+import BuildConfig from '../../config/build-config'
 import bgPlayInfo from '../../assets/live/bg-play-info.png'
 import icOk from '../../assets/live/ic-ok.png'
 import icMenu from '../../assets/live/ic-menu.png'

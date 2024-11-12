@@ -1,7 +1,7 @@
 import {
   QTINavBar,
   QTNavBarItemType,
-  QTIListView, QTListViewItem, QTPoster, QTGridViewItem
+  QTIListView, QTListViewItem, QTPoster, QTListViewItem
 } from '@quicktvui/quicktvui3';
 import { IHistoryContentEntity, IHistoryFilterEntity, IHistoryMenuEntity } from '../../api/history/modelEntity';
 import configs, { Iconfig, pageWidth } from './config';
@@ -271,7 +271,7 @@ export const getContentList = (dataList: IHistoryContentEntity[] = [], contentWi
   dateTypes.todayNum = 0
   dateTypes.sevenDayNum = 0
   const isDateType = !!dataList[0]?.playTime
-  const arr: Array<QTGridViewItem> = []
+  const arr: Array<QTListViewItem> = []
 
   // const drowsHeight = height + titleHeight + dBottomNum + dItemTop + dPadding*2
   let drowsHeight = 0

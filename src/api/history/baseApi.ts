@@ -1,7 +1,6 @@
 import { IHistoryMenuDto, IHistoryFilterDto, IHistoryContentDto, IHistoryMenuEntity,IHistoryContentEntity,IHistoryApiEntity } from "./modelEntity"
 // import { inject, InjectionKey } from "vue";
 // import { ESApp } from "@extscreen/es3-vue";
-import { RequestManager } from "../request/RequestManager";
 import { getTestContentList, getTestFilterList } from "./mock";
 import { ESLocalStorage } from "@extscreen/es3-core";
 
@@ -13,7 +12,6 @@ export interface IcurrentItemParams {
 // api基类默认是mock数据，可以在子类中根据业务重写对应的方法调用接口返回数据
 export class HistoryBaseApi {
     // @ts-ignore
-    requestManager: RequestManager
     // @ts-ignore
     localStore: ESLocalStorage
 
@@ -24,7 +22,6 @@ export class HistoryBaseApi {
     cancelCollectionId:number|null = null
 
     init(...params: any[]): Promise<any> {
-        this.requestManager = params[0]
         this.localStore = params[1]
         return Promise.resolve()
     }
