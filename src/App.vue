@@ -13,10 +13,8 @@ import {
   useES,
   useESDevelop,
   useESDevice,
-  useESLog,
-  useESRuntime,
-  ESNetworkInfo,
-  useESNetwork,
+  useESLog, useESNetwork,
+  useESRuntime
 } from '@extscreen/es3-core'
 import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from '@extscreen/es3-player'
 import requestManager from './api/request/request-manager'

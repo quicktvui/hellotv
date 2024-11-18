@@ -25,7 +25,7 @@
   ],
   "scripts": {
     "lint": "eslint -c eslint.config.mjs",
-    "dev": "node ./scripts/env-polyfill.js hippy-dev -c ./scripts/hippy-webpack.dev.js",
+    "dev": " eslint -c eslint.config.mjs && node ./scripts/env-polyfill.js hippy-dev -c ./scripts/hippy-webpack.dev.js",
     "vendor": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android-vendor.js",
     "build": "node ./scripts/env-polyfill.js webpack --config ./scripts/hippy-webpack.android.js",
     "build-apk-debug": "node scripts/build-apk.js Debug",
@@ -48,6 +48,7 @@
     "@vue/tsconfig": "^0.4.0",
     "core-js": "^3.8.3",
     "crypto-js": "^4.2.0",
+    "eslint-plugin-check-file": "^2.8.0",
     "eslint-webpack-plugin": "4.2.0",
     "node-sass": "^9.0.0",
     "sass-loader": "^16.0.3",

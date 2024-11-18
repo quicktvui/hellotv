@@ -2,12 +2,14 @@ import globals from 'globals'
 import pluginJs from '@eslint/js'
 import tsEslint from 'typescript-eslint'
 import pluginVue from 'eslint-plugin-vue'
+import checkFile from 'eslint-plugin-check-file';
 
 
 /** @type {import('eslint').Linter.Config[]} */
 export default [
+
   { files: ['**/*.{js,ts,vue}'] },
-  { languageOptions: { globals: globals.browser } },
+  { languageOptions: { globals: globals.node } },
   pluginJs.configs.recommended,
   ...tsEslint.configs.recommended,
   ...pluginVue.configs['flat/essential'],
@@ -32,8 +34,17 @@ export default [
   },
   // vue 规则 https://eslint.vuejs.org/rules/
   {
+    plugins:{'check-file':checkFile},
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'error', // 允许使用 console
+      'check-file/no-index':'off',
+      'check-file/filename-naming-convention': [
+        'warn',
+        { 'src/*/**/*.{js,ts,vue,scss}': 'KEBAB_CASE' }
+      ],
+      'check-file/folder-naming-convention': [
+        'warn',  { 'src/**/': 'KEBAB_CASE'}
+      ],
       '@typescript-eslint/no-explicit-any': 'off', // 允许使用 any 类型
       'vue/multi-word-component-names': ['error', { 'ignores': ['index'] }],//打开 Vue 组件名称多词规则
       'vue/component-name-in-template-casing': ['error', 'kebab-case', {
