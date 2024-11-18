@@ -134,12 +134,12 @@ module.exports = {
           },
         ],
       },
+      // {
+      //   test: /\.(sc|c)ss$/,
+      //   use: [cssLoader, 'less-loader'],
+      // },
       {
-        test: /\.(le|c)ss$/,
-        use: [cssLoader, 'less-loader'],
-      },
-      {
-        test:/\.scss$/,
+        test:/\.(sc|c)ss$/,
         use:[
              cssLoader,
             'sass-loader',

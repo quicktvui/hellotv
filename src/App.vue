@@ -1,13 +1,13 @@
 <template>
-  <div id="root" :style="{backgroundColor:rootBgGradientColor ? 'transparent':rootBgColor}" :gradientBackground="{colors:rootBgGradientColor}">
-    <es-router-view/>
+  <div id='root'>
+    <es-router-view></es-router-view>
   </div>
 </template>
 
-<script lang="ts">
-import { Native } from "@extscreen/es3-vue"
-import { ref } from 'vue'
-import {defineComponent} from "@vue/runtime-core";
+<script lang='ts'>
+import { ref,defineComponent } from 'vue'
+// import { defineComponent } from '@vue/runtime-core'
+import { Native } from '@extscreen/es3-vue'
 import {
   ESLogLevel,
   useES,
@@ -17,26 +17,16 @@ import {
   useESRuntime,
   ESNetworkInfo,
   useESNetwork,
-  useESLocalStorage,
-  useESEventBus
-} from "@extscreen/es3-core"
-import {ESPlayerLogLevel, useESPlayer, useESPlayerLog} from "@extscreen/es3-player";
-import requestManager from "./api/request/request-manager"
-import {
-  useGlobalApi,
-  useLoginDataSource,
-  useMediaDataSource,
-   useUserManager
-} from "./api/UseApi"
-import BuildConfig from "./config/build-config";
-import ThemeConfig from "./config/theme-config"
-import {useLaunch} from "./tools/launch/useApi";
-import {useESNativeRouter, useESRouter} from "@extscreen/es3-router";
-import HistoryApi from './api/history/index'
-import activity2Api from './api/activity2/index'
+} from '@extscreen/es3-core'
+import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from '@extscreen/es3-player'
+import requestManager from './api/request/request-manager'
+
+import BuildConfig from './config/build-config'
+import ThemeConfig from './config/theme-config'
+import { useESRouter } from '@extscreen/es3-router'
 
 export default defineComponent({
-  name: "App",
+  name: 'App',
   setup() {
     const rootBgColor = ThemeConfig.rootBgColor
     const rootBgGradientColor = ThemeConfig.rootBgGradientColor
@@ -47,40 +37,43 @@ export default defineComponent({
     const runtime = useESRuntime()
     const playerManager = useESPlayer()
     const router = useESRouter()
-    const nativeRouter = useESNativeRouter()
-    const launch = useLaunch()
+    // const nativeRouter = useESNativeRouter()
+    // const launch = useLaunch()
     const playerLog = useESPlayerLog()
 
     //
-    const globalApi = useGlobalApi()
-    const mediaDataSource = useMediaDataSource()
-    const userManager = useUserManager()
-    const eventBus = useESEventBus()
-    const localStore = useESLocalStorage()
-    const loginApi = useLoginDataSource()
+    // const globalApi = useGlobalApi()
+    // const mediaDataSource = useMediaDataSource()
+    // const userManager = useUserManager()
+    // const eventBus = useESEventBus()
+    // const localStore = useESLocalStorage()
 
-    function onESCreate(app, params) {
+
+    // const loginApi = useLoginDataSource()
+
+    function onESCreate() {
+
       initESLog()
       initDefaultThemeColor()
       network.addListener(connectivityChangeListener)
-      Native.callNative('FastListModule', 'setFadeEnabled', true);
-      Native.callNative('FastListModule', 'setFadeDuration', 500);
+      Native.callNative('FastListModule', 'setFadeEnabled', true)
+      Native.callNative('FastListModule', 'setFadeDuration', 500)
       switchDev()
       return Promise.resolve()
         .then(() => requestManager.init(es, develop, device, runtime, log))
-        .then(() => globalApi.init())
-        .then(() => loginApi.init(userManager))
-        .then(() => userManager.init(loginApi,localStore,eventBus))
-        .then(() => mediaDataSource.init())
-        .then(() => HistoryApi.init(localStore))
-        .then(() => activity2Api.init())
-
-        .then(() => launch.init(log, router, nativeRouter))
+        // .then(() => globalApi.init())
+        // .then(() => loginApi.init(userManager))
+        // .then(() => userManager.init(loginApi,localStore,eventBus))
+        // .then(() => mediaDataSource.init())
+        // .then(() => HistoryApi.init(localStore))
+        // .then(() => activity2Api.init())
+        //
+        // .then(() => launch.init(log, router, nativeRouter))
         .then(() => playerManager.init({
           debug: true,
           display: {
             screenWidth: device.getScreenWidth(),
-            screenHeight: device.getScreenHeight(),
+            screenHeight: device.getScreenHeight()
           },
           device: {
             deviceType: runtime.getRuntimeDeviceType() ?? ''
@@ -88,31 +81,32 @@ export default defineComponent({
         }))
     }
 
-    function initDefaultThemeColor(){
+    function initDefaultThemeColor() {
       //设置默认焦点边框圆角
-      if (ThemeConfig.focusBorderCornerEnable){
-        Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', ThemeConfig.focusBorderCorner);
+      if (ThemeConfig.focusBorderCornerEnable) {
+        Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', ThemeConfig.focusBorderCorner)
       }
-      if (ThemeConfig.focusBorderColorEnable){
+      if (ThemeConfig.focusBorderColorEnable) {
         //设置默认焦点颜色
-        Native.callNative('FocusModule', 'setDefaultFocusBorderColor', ThemeConfig.focusBorderColor);
+        Native.callNative('FocusModule', 'setDefaultFocusBorderColor', ThemeConfig.focusBorderColor)
       }
-      if (ThemeConfig.focusBorderWidthEnable){
+      if (ThemeConfig.focusBorderWidthEnable) {
         //设置外边框宽度
-        Native.callNative('FocusModule', 'setDefaultFocusBorderWidth', ThemeConfig.focusBorderWidth);
+        Native.callNative('FocusModule', 'setDefaultFocusBorderWidth', ThemeConfig.focusBorderWidth)
       }
-      if (ThemeConfig.focusBorderInsetEnable){
+      if (ThemeConfig.focusBorderInsetEnable) {
         //设置焦点边框向内移动距离
-        Native.callNative('FocusModule', 'setFocusBorderInsetValue', ThemeConfig.focusBorderInsetValue);
+        Native.callNative('FocusModule', 'setFocusBorderInsetValue', ThemeConfig.focusBorderInsetValue)
       }
       //设置焦点框是否有内里黑色边框
-      Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable',ThemeConfig.focusInnerBorderEnable);
+      Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable', ThemeConfig.focusInnerBorderEnable)
 
     }
+
     const network = useESNetwork()
     const isNetworkConnected = ref<boolean>(true)
     const connectivityChangeListener = {
-      onConnectivityChange(networkInfo: ESNetworkInfo | null) {
+      onConnectivityChange() {
         isNetworkConnected.value = network.isNetworkConnected()
         if (isNetworkConnected.value) {
           router.back()
@@ -121,6 +115,7 @@ export default defineComponent({
         }
       }
     }
+
     function initESLog() {
       if (BuildConfig.debug) {
         log.setMinimumLoggingLevel(ESLogLevel.DEBUG)
@@ -130,18 +125,19 @@ export default defineComponent({
         playerLog.setMinimumLoggingLevel(ESPlayerLogLevel.WARN)
       }
     }
+
     const switchDev = () => {
       let devTotalMemory = device.getDeviceTotalMemory()
-      let devResolution = device.getResolution()
+      // let devResolution = device.getResolution()
       let devAndroidLevel = Number(device.getAndroidAPILevel())
-      let dType = runtime.getRuntimeDeviceType() ?? ''
-      if(devTotalMemory <= 1024 ||  devAndroidLevel < 22){
+      // let dType = runtime.getRuntimeDeviceType() ?? ''
+      if (devTotalMemory <= 1024 || devAndroidLevel < 22) {
         BuildConfig.isLowEndDev = true
       }
     }
 
-    function onESDestroy(){
-      userManager.offUserEvent()
+    function onESDestroy() {
+      // userManager.offUserEvent()
     }
 
     return {
@@ -151,7 +147,7 @@ export default defineComponent({
       onESDestroy
     }
   }
-});
+})
 </script>
 
 <style scoped>
@@ -161,5 +157,6 @@ export default defineComponent({
   flex: 1;
   display: flex;
   flex-direction: column;
+  background-color: red;
 }
 </style>

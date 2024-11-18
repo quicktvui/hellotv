@@ -1,7 +1,7 @@
 import { ESDevelop, ESDevice, ESLog, ESRuntime } from "@extscreen/es3-core"
 import { ES } from "@extscreen/es3-core/dist/src/es/ES"
 import BuildConfig from "../../config/build-config"
-import { UserInfo } from "../../pages/login/build_data/UserInfo"
+// import { UserInfo } from "../../pages/login/build_data/UserInfo"
 import {
   RequestBodyParams,
   RequestData,
@@ -113,15 +113,15 @@ class RequestManager{
    * 更新用户数据
    * @param userInfo
    */
-  updateUserParams(userInfo:UserInfo){
-    if (this.requestParams.user) {
-      this.requestParams.user = <RequestUserParams>{
-        userId: userInfo.userId,
-        userToken: userInfo.userToken,
-        nickname: userInfo.nickname
-      }
-    }
-  }
+  // updateUserParams(userInfo:UserInfo){
+  //   if (this.requestParams.user) {
+  //     this.requestParams.user = <RequestUserParams>{
+  //       userId: userInfo.userId,
+  //       userToken: userInfo.userToken,
+  //       nickname: userInfo.nickname
+  //     }
+  //   }
+  // }
 
   /**
    * 获取param参数
@@ -143,16 +143,16 @@ class RequestManager{
   }
 
   post<T>(url:string,data:RequestData,timeout=30000):Promise<T>{
-    const headers:Headers = new Headers()
-    headers.append("Accept", "application/json");
-    headers.append("Content-Type", "application/json");
     //更新用户信息
     this.requestParams.user = this.initUserParams()
-    let requestData = {...this.requestParams, ...data}
+    const requestData = {...this.requestParams, ...data}
     const body = JSON.stringify(requestData)
     const options:RequestInit = {
       method:'POST',
-      headers:headers,
+      headers:{
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
       body:body
     }
     return this.request(url,options,timeout)
@@ -160,7 +160,7 @@ class RequestManager{
 
   request<T>(url,requestInit:RequestInit,timeout=30000):Promise<T>{
     let rejectInstance:any = null
-    let ajaxTimer = setTimeout(() => {
+    const ajaxTimer = setTimeout(() => {
       if(rejectInstance){
         rejectInstance({ code: 502, message: 'request timeout' })
       }
@@ -179,7 +179,7 @@ class RequestManager{
             message: "服务器忙，请稍后重试！",
           });
         }
-      }).catch(e=>{
+      }).catch(()=>{
         clearTimeout(ajaxTimer)
         reject({ code: -1, message: '发生错误，请稍后重试！' })
       })

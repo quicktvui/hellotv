@@ -1,5 +1,4 @@
 //--------------------router-----------------------
-import { ILoginDataSource } from "./api/login/ILoginDataSource";
 
 import routes from "./routes";
 //--------------------ESApp-----------------------
@@ -14,7 +13,7 @@ import { createESADPlayer } from "@extscreen/es3-ad-player";
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: "home", //ranking 排行榜 detail2 history my
+  main: "test", //ranking 排行榜 detail2 history my
   error: "error",
   limit: 5,
   routes: routes,
@@ -46,34 +45,30 @@ app.use(QuickTVUI);
 // const requestManger: RequestManager = createRequestManager();
 // app.use(requestManger);
 //---------------------------网络接口----------------------------------
-import { IGlobalApi } from "./api/IGlobalApi";
-import { createGlobalApi } from "./api/GlobalApiImpl";
-const appApi: IGlobalApi = createGlobalApi();
-app.use(appApi);
+// import { IGlobalApi } from "./api/IGlobalApi";
+// import { createGlobalApi } from "./api/GlobalApiImpl";
+// const appApi: IGlobalApi = createGlobalApi();
+// app.use(appApi);
 
-import { IMediaDataSource } from "./api/media/IMediaDataSource";
-import { createMediaDataSource } from "./api/media/impl/MediaDataSourceImpl";
-import { createMediaMockDataSource } from "./api/media/impl/MediaMockDataSourceImpl";
-import BuildConfig from "./config/build-config";
+// import { IMediaDataSource } from "./api/media/IMediaDataSource";
+// import { createMediaDataSource } from "./api/media/impl/MediaDataSourceImpl";
+// import { createMediaMockDataSource } from "./api/media/impl/MediaMockDataSourceImpl";
+// import BuildConfig from "./config/build-config";
 
-if (BuildConfig.useMockData) {
-  const mediaDataSource: IMediaDataSource = createMediaMockDataSource();
-  app.use(mediaDataSource);
-} else {
-  const mediaDataSource: IMediaDataSource = createMediaDataSource();
-  app.use(mediaDataSource);
-}
+// if (BuildConfig.useMockData) {
+//   const mediaDataSource: IMediaDataSource = createMediaMockDataSource();
+//   app.use(mediaDataSource);
+// } else {
+//   const mediaDataSource: IMediaDataSource = createMediaDataSource();
+//   app.use(mediaDataSource);
+// }
 //---------------------------用户管理----------------------------------
-import userManager, { UserManager } from "./api/login/user/UserManager";
-// const userManager: UserManager = createUserManager()
-app.use(userManager);
+// import userManager, { UserManager } from "./api/login/user/UserManager";
 
-import { createUserApi } from "./api/login/UseLoginApi";
-const loginManager: ILoginDataSource = createUserApi();
-app.use(loginManager);
+// app.use(userManager);
 
 //---------------------------启动管理----------------------------------
-import { createLaunch, Launch } from "./tools/launch/Launch";
-
-const launch: Launch = createLaunch();
-app.use(launch);
+// import { createLaunch, Launch } from "./tools/launch/Launch";
+//
+// const launch: Launch = createLaunch();
+// app.use(launch);
