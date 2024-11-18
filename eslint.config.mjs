@@ -32,6 +32,8 @@ export default [
       'eslint.config.mjs'
     ]
   },
+  // eslint 规则 https://eslint.nodejs.cn/docs/latest/rules/
+  // typescript-eslint 规则 https://typescript-eslint.io/rules/
   // vue 规则 https://eslint.vuejs.org/rules/
   {
     plugins:{'check-file':checkFile},
