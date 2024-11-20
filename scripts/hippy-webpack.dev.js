@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path');
 const webpack = require('webpack');
 const watchPlugin = require('./webpack_watch.js');
-const HippyDynamicImportPlugin = require('@hippy/hippy-dynamic-import-plugin');
+const ESDynamicImportPlugin = require('@extscreen/es3-dynamic-import-plugin');
 const {CleanWebpackPlugin} = require('clean-webpack-plugin');
 const {VueLoaderPlugin} = require('vue-loader');
 
@@ -85,6 +85,7 @@ module.exports = {
     strictModuleExceptionHandling: true,
     path: path.resolve('./dist/dev/'),
     globalObject: '(0, eval)("this")',
+    publicPath: './'
   },
   plugins: [
     new VueLoaderPlugin(),
@@ -103,7 +104,7 @@ module.exports = {
       // __CONFIG__:JSON.stringify(flavor),
       // __THEME__:JSON.stringify(flavor.theme),
     }),
-    new HippyDynamicImportPlugin(),
+    new ESDynamicImportPlugin(),
     // LimitChunkCountPlugin can control dynamic import ability
     // Using 1 will prevent any additional chunks from being added
     // new webpack.optimize.LimitChunkCountPlugin({
@@ -164,16 +165,21 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            limit: true,
-            // limit: 8192,
-            // fallback: 'file-loader',
-            // name: '[name].[ext]',
-            // outputPath: 'assets/',
-          },
-        }],
+        type: 'asset/resource',
+        generator: {
+          outputPath: 'assets/',
+          publicPath: 'assets/',
+        }
+        // use: [{
+        //   loader: 'url-loader',
+        //   options: {
+        //     limit: true,
+        //     // limit: 8192,
+        //     // fallback: 'file-loader',
+        //     // name: '[name].[ext]',
+        //     // outputPath: 'assets/',
+        //   },
+        // }],
       },
       {
         test: /\.(ts)$/,
