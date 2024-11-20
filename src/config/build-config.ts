@@ -1,7 +1,7 @@
 const debug = true //true:输出日志模式，  false: 屏蔽日志模式
 const env = false // true:接口测试环境，false：接口正式环境
 export default {
-  debug: debug,
+  DEBUG: debug,
   testEnv: env,
   // 使用模拟数据
   useMockData: false,

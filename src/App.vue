@@ -1,87 +1,94 @@
 <template>
-  <div id='root'>
+  <div class='app-root-css' :gradientBackground="{colors:rootBgGradientColor}">
     <es-router-view></es-router-view>
   </div>
 </template>
 
 <script lang='ts'>
-import { ref,defineComponent } from 'vue'
-// import { defineComponent } from '@vue/runtime-core'
+import { useESRouter } from '@extscreen/es3-router'
+import { defineComponent } from 'vue'
 import { Native } from '@extscreen/es3-vue'
 import {
   ESLogLevel,
   useES,
   useESDevelop,
-  useESDevice,
+  useESDevice, useESEventBus, useESLocalStorage,
   useESLog, useESNetwork,
   useESRuntime
 } from '@extscreen/es3-core'
-import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from '@extscreen/es3-player'
+import { ESPlayerLogLevel, useESPlayerLog } from '@extscreen/es3-player'
 import requestManager from './api/request/request-manager'
+import userManager from './api/user/user-manager'
 
 import BuildConfig from './config/build-config'
 import ThemeConfig from './config/theme-config'
-import { useESRouter } from '@extscreen/es3-router'
 
 export default defineComponent({
   name: 'App',
   setup() {
-    const rootBgColor = ThemeConfig.rootBgColor
+    //全局渐进背景色
     const rootBgGradientColor = ThemeConfig.rootBgGradientColor
+
+    const router = useESRouter()
+    const network = useESNetwork()
+    const eventBus = useESEventBus()
+    const localStore = useESLocalStorage()
     const log = useESLog()
+    const playerLog = useESPlayerLog()
+
     const es = useES()
     const develop = useESDevelop()
     const device = useESDevice()
     const runtime = useESRuntime()
-    const playerManager = useESPlayer()
-    const router = useESRouter()
+
+    // const playerManager = useESPlayer()
+
     // const nativeRouter = useESNativeRouter()
     // const launch = useLaunch()
-    const playerLog = useESPlayerLog()
+
 
     //
     // const globalApi = useGlobalApi()
     // const mediaDataSource = useMediaDataSource()
-    // const userManager = useUserManager()
-    // const eventBus = useESEventBus()
-    // const localStore = useESLocalStorage()
-
-
-    // const loginApi = useLoginDataSource()
 
     function onESCreate() {
-
-      initESLog()
-      initDefaultThemeColor()
+      //添加网络监听
       network.addListener(connectivityChangeListener)
-      Native.callNative('FastListModule', 'setFadeEnabled', true)
-      Native.callNative('FastListModule', 'setFadeDuration', 500)
+      initESLog()
+      initTheme()
       switchDev()
       return Promise.resolve()
         .then(() => requestManager.init(es, develop, device, runtime, log))
+        .then(()=> userManager.init(eventBus,localStore))
         // .then(() => globalApi.init())
-        // .then(() => loginApi.init(userManager))
-        // .then(() => userManager.init(loginApi,localStore,eventBus))
+
         // .then(() => mediaDataSource.init())
         // .then(() => HistoryApi.init(localStore))
         // .then(() => activity2Api.init())
         //
         // .then(() => launch.init(log, router, nativeRouter))
-        .then(() => playerManager.init({
-          debug: true,
-          display: {
-            screenWidth: device.getScreenWidth(),
-            screenHeight: device.getScreenHeight()
-          },
-          device: {
-            deviceType: runtime.getRuntimeDeviceType() ?? ''
-          }
-        }))
+        // .then(() => playerManager.init({
+        //   debug: BuildConfig.DEBUG,
+        //   display: {
+        //     screenWidth: device.getScreenWidth(),
+        //     screenHeight: device.getScreenHeight()
+        //   },
+        //   device: {
+        //     deviceType: runtime.getRuntimeDeviceType() ?? ''
+        //   }
+        // }))
     }
 
-    function initDefaultThemeColor() {
-      //设置默认焦点边框圆角
+    /**
+     * 初始化整体样式
+     */
+    function initTheme() {
+      //淡入淡出启用
+      Native.callNative('FastListModule', 'setFadeEnabled', true)
+      //淡入淡出持续时间
+      Native.callNative('FastListModule', 'setFadeDuration', 500)
       if (ThemeConfig.focusBorderCornerEnable) {
+        //设置默认焦点边框圆角
         Native.callNative('FocusModule', 'setDefaultFocusBorderCorner', ThemeConfig.focusBorderCorner)
       }
       if (ThemeConfig.focusBorderColorEnable) {
@@ -101,45 +108,48 @@ export default defineComponent({
 
     }
 
-    const network = useESNetwork()
-    const isNetworkConnected = ref<boolean>(true)
-    const connectivityChangeListener = {
-      onConnectivityChange() {
-        isNetworkConnected.value = network.isNetworkConnected()
-        if (isNetworkConnected.value) {
-          router.back()
-        } else {
-          router.push({ name: 'network' })
-        }
-      }
-    }
-
+    /**
+     * 设置日志级别控制
+     */
     function initESLog() {
-      if (BuildConfig.debug) {
+      if (BuildConfig.DEBUG) { //调试
         log.setMinimumLoggingLevel(ESLogLevel.DEBUG)
         playerLog.setMinimumLoggingLevel(ESPlayerLogLevel.DEBUG)
-      } else {
+      } else { // 生产
         log.setMinimumLoggingLevel(ESLogLevel.WARN)
         playerLog.setMinimumLoggingLevel(ESPlayerLogLevel.WARN)
       }
     }
 
+
+    const connectivityChangeListener = {
+      onConnectivityChange() {
+        const isNetworkConnected = network.isNetworkConnected()
+        if (!isNetworkConnected) {
+         router.push({ name: 'network' })
+        }
+      }
+    }
+
+
+    /**
+     * 低端机判断
+     */
     const switchDev = () => {
       let devTotalMemory = device.getDeviceTotalMemory()
-      // let devResolution = device.getResolution()
       let devAndroidLevel = Number(device.getAndroidAPILevel())
-      // let dType = runtime.getRuntimeDeviceType() ?? ''
-      if (devTotalMemory <= 1024 || devAndroidLevel < 22) {
+      //内存小于1G 或者 Android版本小于 6.0的走低端机逻辑
+      if (devTotalMemory <= 1024 || devAndroidLevel < 23) {
         BuildConfig.isLowEndDev = true
       }
     }
 
     function onESDestroy() {
-      // userManager.offUserEvent()
+      userManager.offUserEvent()
+      network.removeListener(connectivityChangeListener)
     }
 
     return {
-      rootBgColor,
       rootBgGradientColor,
       onESCreate,
       onESDestroy
@@ -148,13 +158,13 @@ export default defineComponent({
 })
 </script>
 
-<style scoped>
-#root {
+<style lang='scss'>
+.app-root-css {
   width: 1920px;
   height: 1080px;
   flex: 1;
   display: flex;
   flex-direction: column;
-  background-color: red;
+  background-color: $gl-theme-root-bg-color;
 }
 </style>

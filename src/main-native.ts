@@ -1,5 +1,6 @@
 //--------------------router-----------------------
 
+import { createESRouter, Router } from '@extscreen/es3-router'
 import routes from "./routes";
 //--------------------ESApp-----------------------
 import application from "./App.vue";
@@ -13,13 +14,13 @@ import { createESADPlayer } from "@extscreen/es3-ad-player";
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: "test", //ranking 排行榜 detail2 history my
+  main: "home",
   error: "error",
   limit: 5,
   routes: routes,
 };
-
-const app: ESApp = createESApp(application, routerOptions);
+const router: Router = createESRouter(routerOptions);
+const app: ESApp = createESApp(application, router);
 
 app.use(ESComponent);
 

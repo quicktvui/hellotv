@@ -1,6 +1,6 @@
 const path = require('path');
 const fs = require('fs');
-const HippyDynamicImportPlugin = require('@hippy/hippy-dynamic-import-plugin');
+const ESDynamicImportPlugin = require('@extscreen/es3-dynamic-import-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
 const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
@@ -57,6 +57,8 @@ module.exports = {
     path: path.resolve(`./dist/${platform}/`),
     strictModuleExceptionHandling: true,
     globalObject: '(0, eval)("this")',
+    publicPath: './',
+    assetModuleFilename: '[hash][ext][query]'
     // CDN path can be configured to load children bundles from remote server
     // publicPath: 'https://xxx/hippy/hippyVueNextDemo/',
   },
@@ -66,6 +68,28 @@ module.exports = {
     minimizer: [new TerserPlugin({
       extractComments: false,
     })],
+    splitChunks: {
+      chunks: 'all',
+      minSize: 20000,
+      minRemainingSize: 0,
+      minChunks: 1,
+      maxAsyncRequests: 30,
+      maxInitialRequests: 30,
+      enforceSizeThreshold: 50000,
+      cacheGroups: {
+        defaultVendors: {
+          test: /[\\/]node_modules[\\/]/,
+          priority: -10,
+          reuseExistingChunk: true,
+          filename: "vendor.android.js"
+        },
+        default: {
+          minChunks: 2,
+          priority: -20,
+          reuseExistingChunk: true,
+        },
+      },
+    },
   },
   plugins: [
     new webpack.DefinePlugin({
@@ -86,7 +110,7 @@ module.exports = {
       context: path.resolve(__dirname, '..'),
       manifest,
     }),
-    new HippyDynamicImportPlugin(),
+    new ESDynamicImportPlugin(),
     // LimitChunkCountPlugin can control dynamic import ability
     // Using 1 will prevent any additional chunks from being added
     // new webpack.optimize.LimitChunkCountPlugin({
@@ -161,17 +185,22 @@ module.exports = {
       },
       {
         test: /\.(png|jpe?g|gif)$/i,
-        use: [{
-          loader: 'url-loader',
-          options: {
-            // if you would like to use base64 for picture, uncomment limit: true
-            // limit: true,
-            // limit: 8192,
-            fallback: 'file-loader',
-            name: '[name].[ext]',
-            outputPath: 'assets/',
-          },
-        }],
+        type: 'asset/resource',
+        generator: {
+          outputPath: 'assets/',
+          publicPath: 'assets/',
+        }
+        // use: [{
+        //   loader: 'url-loader',
+        //   options: {
+        //     // if you would like to use base64 for picture, uncomment limit: true
+        //     limit: true,
+        //     // limit: 8192,
+        //     fallback: 'file-loader',
+        //     name: '[name].[ext]',
+        //     outputPath: 'assets/',
+        //   },
+        // }],
       },
       {
         test: /\.(ts)$/,

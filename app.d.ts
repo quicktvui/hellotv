@@ -8,4 +8,5 @@ declare module '*.vue' {
 }
 
 type NeedToTyped = any;
+declare const __DEV__:boolean;
 

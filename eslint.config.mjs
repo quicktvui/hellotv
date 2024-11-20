@@ -38,7 +38,7 @@ export default [
   {
     plugins:{'check-file':checkFile},
     rules: {
-      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'error', // 允许使用 console
+      'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn', // 允许使用 console
       'check-file/no-index':'off',
       'check-file/filename-naming-convention': [
         'warn',
@@ -48,6 +48,10 @@ export default [
         'warn',  { 'src/**/': 'KEBAB_CASE'}
       ],
       '@typescript-eslint/no-explicit-any': 'off', // 允许使用 any 类型
+      '@typescript-eslint/no-unused-vars': ['error',{
+        //忽略生命周期中的方法检测
+        "varsIgnorePattern": "^(onESCreate|onESStart|onESRestart|onESResume|onESPause|onESStop|onESDestroy|onBackPressed|onKeyDown|onKeyUp)$",
+      }], // 允许使用 any 类型
       'vue/multi-word-component-names': ['error', { 'ignores': ['index'] }],//打开 Vue 组件名称多词规则
       'vue/component-name-in-template-casing': ['error', 'kebab-case', {
         'registeredComponentsOnly': true
