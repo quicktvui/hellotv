@@ -5,7 +5,7 @@
 </template>
 
 <script lang='ts'>
-import { useESRouter } from '@extscreen/es3-router'
+import { useESNativeRouter, useESRouter } from '@extscreen/es3-router'
 import { defineComponent } from 'vue'
 import { Native } from '@extscreen/es3-vue'
 import {
@@ -22,6 +22,7 @@ import userManager from './api/user/user-manager'
 
 import BuildConfig from './config/build-config'
 import ThemeConfig from './config/theme-config'
+import launch from './tools/launch'
 
 export default defineComponent({
   name: 'App',
@@ -30,6 +31,7 @@ export default defineComponent({
     const rootBgGradientColor = ThemeConfig.rootBgGradientColor
 
     const router = useESRouter()
+    const nativeRouter = useESNativeRouter()
     const network = useESNetwork()
     const eventBus = useESEventBus()
     const localStore = useESLocalStorage()
@@ -41,15 +43,16 @@ export default defineComponent({
     const device = useESDevice()
     const runtime = useESRuntime()
 
+
     // const playerManager = useESPlayer()
 
-    // const nativeRouter = useESNativeRouter()
+
     // const launch = useLaunch()
 
 
     //
     // const globalApi = useGlobalApi()
-    // const mediaDataSource = useMediaDataSource()
+
 
     function onESCreate() {
       //添加网络监听
@@ -60,13 +63,9 @@ export default defineComponent({
       return Promise.resolve()
         .then(() => requestManager.init(es, develop, device, runtime, log))
         .then(()=> userManager.init(eventBus,localStore))
-        // .then(() => globalApi.init())
-
-        // .then(() => mediaDataSource.init())
+        .then(() => launch.init(router,nativeRouter,develop))
         // .then(() => HistoryApi.init(localStore))
         // .then(() => activity2Api.init())
-        //
-        // .then(() => launch.init(log, router, nativeRouter))
         // .then(() => playerManager.init({
         //   debug: BuildConfig.DEBUG,
         //   display: {
@@ -121,7 +120,9 @@ export default defineComponent({
       }
     }
 
-
+    /**
+     * 网络监听
+     */
     const connectivityChangeListener = {
       onConnectivityChange() {
         const isNetworkConnected = network.isNetworkConnected()

@@ -200,6 +200,8 @@ class UserManager implements userApi {
   }
 
   loginOut(): Promise<string> {
+    //todo 退出用户登录 更换接口
+    this.clearUserInfo()
     return Promise.resolve('success')
   }
 }

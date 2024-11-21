@@ -10,7 +10,6 @@ export interface UserInfo {
   userToken?: string
   nickName?: string
   userIcon?: string
-
   [prop: string]: any
 }
 
