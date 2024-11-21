@@ -87,10 +87,10 @@ class Launch {
      }
    * @param item
    */
-  jumpType0(item: LaunchParams){
+  jumpType0(item: LaunchParams) {
     const url = item.options
-    if (url && typeof url === "string"){
-      this.launchByUrl(url, true, "", [])
+    if (url && typeof url === 'string') {
+      this.launchByUrl(url, true, '', [])
     }
   }
 
@@ -126,16 +126,16 @@ class Launch {
       if (options.params && typeof options.params === 'string') {
         params = JSON.parse(options.params)
       }
-      const activityPath = packageName + "/" + options.activityPath
+      const activityPath = packageName + '/' + options.activityPath
       switch (type) {
         case 'URL':
           this.launchByUrl(options.url, false, packageName, params)
           break
         case 'ACTIVITY':
-          this.launchByActivity(activityPath,packageName,params)
+          this.launchByActivity(activityPath, packageName, params)
           break
         case 'ACTION':
-          this.launchByAction(options.action,packageName,params)
+          this.launchByAction(options.action, packageName, params)
           break
       }
     }
@@ -160,7 +160,7 @@ class Launch {
         args.push(['-p', packageName])
       }
     }
-    this.jumpNative(args,params)
+    this.jumpNative(args, params)
   }
 
   /**
@@ -169,11 +169,11 @@ class Launch {
    * @param packageName
    * @param params
    */
-  launchByAction(action,packageName,params){
+  launchByAction(action, packageName, params) {
     const args: Array<any> = []
-    args.push(['-a', action]);
-    args.push(['-p', packageName]);
-    this.jumpNative(args,params)
+    args.push(['-a', action])
+    args.push(['-p', packageName])
+    this.jumpNative(args, params)
   }
 
   /**
@@ -182,14 +182,14 @@ class Launch {
    * @param packageName
    * @param params
    */
-  launchByActivity(activityPath,packageName,params){
+  launchByActivity(activityPath, packageName, params) {
     const args: Array<any> = []
     if (activityPath) {
-      args.push(['-n', activityPath]);
+      args.push(['-n', activityPath])
     }
     // args.push(['-a', "android.intent.action.VIEW"]);
-    args.push(['-p', packageName]);
-    this.jumpNative(args,params)
+    args.push(['-p', packageName])
+    this.jumpNative(args, params)
   }
 
   /**
@@ -197,7 +197,7 @@ class Launch {
    * @param args
    * @param params
    */
-  jumpNative(args: Array<any>=[],params=[]){
+  jumpNative(args: Array<any> = [], params = []) {
     const mParam = this.buildParams(params)
     if (mParam && mParam.length > 0) {
       args.push(mParam)
