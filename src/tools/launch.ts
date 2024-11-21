@@ -18,7 +18,7 @@ interface LaunchParams {
     action?: string,
     //"[{\"key\":\"activityKey\",\"value\":\"666\",\"type\":\"string\"},{\"key\":\"activityKey1\",\"value\":\"888\",\"type\":\"int\"}]"
     //外层type=1 params 是对象，外层 type=3 params字符串
-    params?: Object | string,
+    params?: object | string,
     //外层type=1 name 存在
     name?: string,
   }
@@ -88,7 +88,7 @@ class Launch {
    * @param item
    */
   jumpType0(item: LaunchParams){
-    let url = item.options
+    const url = item.options
     if (url && typeof url === "string"){
       this.launchByUrl(url, true, "", [])
     }
@@ -126,12 +126,12 @@ class Launch {
       if (options.params && typeof options.params === 'string') {
         params = JSON.parse(options.params)
       }
+      const activityPath = packageName + "/" + options.activityPath
       switch (type) {
         case 'URL':
           this.launchByUrl(options.url, false, packageName, params)
           break
         case 'ACTIVITY':
-          const activityPath = packageName + "/" + options.activityPath
           this.launchByActivity(activityPath,packageName,params)
           break
         case 'ACTION':
@@ -150,7 +150,7 @@ class Launch {
    */
   launchByUrl(url, isUseLocalPkg: boolean = true, packageName = '', params = []) {
     if (!url) return
-    let args: Array<any> = []
+    const args: Array<any> = []
     args.push(['-d', url])
     if (!url.includes('-p')) {
       if (isUseLocalPkg) {
@@ -170,7 +170,7 @@ class Launch {
    * @param params
    */
   launchByAction(action,packageName,params){
-    let args: Array<any> = []
+    const args: Array<any> = []
     args.push(['-a', action]);
     args.push(['-p', packageName]);
     this.jumpNative(args,params)
@@ -183,7 +183,7 @@ class Launch {
    * @param params
    */
   launchByActivity(activityPath,packageName,params){
-    let args: Array<any> = []
+    const args: Array<any> = []
     if (activityPath) {
       args.push(['-n', activityPath]);
     }
