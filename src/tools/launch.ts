@@ -126,13 +126,12 @@ class Launch {
       if (options.params && typeof options.params === 'string') {
         params = JSON.parse(options.params)
       }
-      const activityPath = packageName + '/' + options.activityPath
       switch (type) {
         case 'URL':
           this.launchByUrl(options.url, false, packageName, params)
           break
         case 'ACTIVITY':
-          this.launchByActivity(activityPath, packageName, params)
+          this.launchByActivity( packageName + '/' + options.activityPath, packageName, params)
           break
         case 'ACTION':
           this.launchByAction(options.action, packageName, params)

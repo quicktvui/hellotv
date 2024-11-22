@@ -13,13 +13,13 @@
           <img class='login-qr-code-css' v-else :src='qrCodeUrl' />
           <!--扫码提示-->
           <qt-text class='login-qr-code-tip-css'
-                   :gradient-background="{colors:['#F4F4F4','#F4F4F4'], cornerRadii4: [0, 0, 20, 20],orientation:0}"
+                   :gradientBackground="{colors:['#F4F4F4','#F4F4F4'], cornerRadii4: [0, 0, 20, 20],orientation:0}"
                    :focusable='false'
                    gravity='center'
                    :font-size='36' text='微信扫码登录' />
         </qt-view>
         <!-- 协议-->
-        <qt-view class='login-agreement-root-css' :focusable='true' :request-focus='true'
+        <qt-view class='login-agreement-root-css' :focusable='true' :requestFocus='true'
                  @click='onAgreementClick'>
           <qt-text class='login-agreement-text-css' :focusable='false' gravity='center' :font-size='30'
                    text='登录即代表您同意《用户协议》和《隐私协议》' />

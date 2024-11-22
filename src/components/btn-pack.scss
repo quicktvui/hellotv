@@ -1,0 +1,53 @@
+$btn-border-radius:$gl-theme-60-border-radius;
+$btn-background-color:rgba(255,255,255,0.13);
+$btn-focus-background-color:white;
+
+.btn-pack-root-css{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: $btn-border-radius;
+  background-color:transparent;
+}
+.show-default-bg{
+  background-color: $btn-background-color;
+  focus-background-color:$btn-focus-background-color;
+}
+
+.is-icon-left{
+  flex-direction: row;
+}
+.is-icon-top{
+  flex-direction: column;
+}
+//.is-icon-right{
+//  flex-direction: row-reverse;
+//}
+//.is-icon-bottom{
+//  flex-direction: column-reverse;
+//}
+.btn-pack-root-css .bg-css{
+  background-color: transparent;
+  position: absolute;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+}
+.btn-pack-root-css .icon-left{
+  margin-left: 8px;
+}
+//.btn-pack-root-css .icon-right{
+//  margin-right: 8px;
+//}
+.btn-pack-root-css .icon-top{
+  margin-top: 4px;
+}
+//.btn-pack-root-css .icon-bottom{
+//  margin-bottom: 4px;
+//}
+.btn-pack-root-css .text-css{
+  background-color: transparent;
+  color:$text-normal-color;
+  focus-color:$text-focus-color;
+}

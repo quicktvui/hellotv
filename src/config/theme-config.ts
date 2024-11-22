@@ -37,4 +37,7 @@ export default {
 
   //瀑布流格子浮动标题背景色
   tabContentFloatBgFocusColor: ["#0186CF", "#00000000"],
+
+  //默认60高度按钮的圆角
+  default60BorderRadius:30
 };
