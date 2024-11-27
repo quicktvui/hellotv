@@ -7,4 +7,13 @@ $home-height:1080px;
   background-color: $gl-theme-root-bg-color;
 }
 
+.logo-root-css{
+  position: absolute;
+  width: 310px;
+  height: 60px;
+  right:90px;
+  flex-direction: row-reverse;
+  background-color: transparent;
+}
+
 

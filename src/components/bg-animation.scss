@@ -1,0 +1,14 @@
+
+
+.bg-animation-root-css{
+  display: flex;
+  background-color: transparent;
+}
+
+.bg-animation-root-css .animation-css{
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+  background-color: transparent;
+}

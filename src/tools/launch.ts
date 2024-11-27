@@ -243,6 +243,26 @@ class Launch {
     }
     return param
   }
+
+  /**
+   * 跳转个人中心
+   */
+  launchMy(){
+    this.router.push({
+      name:"my",
+      params:{}
+    })
+  }
+
+  /**
+   * 跳转搜索
+   */
+  launchSearch(){
+    this.router.push({
+      name:"search",
+      params:{}
+    })
+  }
 }
 
 const launch = new Launch()

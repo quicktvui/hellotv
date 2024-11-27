@@ -20,7 +20,8 @@
     </div>
     <!--    文字内容-->
     <qt-text v-if='text' duplicateParentState typeface='bold' :font-size='fontSize' :text='text'
-             :focusable='false' :select='true' :ellipsizeMode='3' :lines='1' gravity='centerVertical'
+             :focusable='false' :select='true' :ellipsizeMode='3' :lines='1'
+             gravity='centerVertical'
              :class='["text-css",{
                "icon-left":iconLeft,
                "icon-top":iconTop
@@ -90,12 +91,16 @@ defineProps({
   //图标整体样式
   iconRootStyle: {
     type: Object,
-    default: ()=>{return { width: '30px', height: '30px', backgroundColor: 'transparent' }}
+    default: () => {
+      return { width: '30px', height: '30px', backgroundColor: 'transparent' }
+    }
   },
   //图标样式
   iconStyle: {
     type: Object,
-    default: ()=>{return { position:'absolute',width: '30px', height: '30px', borderRadius: 0 }}
+    default: () => {
+      return { position: 'absolute', width: '30px', height: '30px', borderRadius: 0 }
+    }
   },
   //按钮信息
   text: {
@@ -108,9 +113,11 @@ defineProps({
     default: 28
   },
   //字体样式
-  textStyle:{
-    type:Object,
-    default:()=>{return {position:'static', width:'70px',height:'60px'}}
+  textStyle: {
+    type: Object,
+    default: () => {
+      return { position: 'static', width: '70px', height: '60px' }
+    }
   }
 })
 

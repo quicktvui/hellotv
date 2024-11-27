@@ -1,0 +1,22 @@
+
+@import "src/components/top-view.scss";
+
+.waterfall-tabs-root-css {
+  width: 1920px;
+  height: 1080px;
+  background-color: transparent;
+}
+
+.waterfall-tabs-4k-logo {
+  top: 72px;
+  align-self: center;
+  position: absolute;
+  background-color: transparent;
+}
+
+.waterfall-top-view{
+  width: 1920px;
+  height: $top-view-height;
+  background-color: transparent;
+}
+
