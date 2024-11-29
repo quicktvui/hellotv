@@ -1,0 +1,80 @@
+//nav bar 角标大小
+%bar-corner-size {
+  width: 73px;
+  height: 22px;
+}
+
+//nav bar 标题基本样式
+%bar-title {
+  position: absolute;
+  left: 30px;
+  right: 30px;
+  top: 0.01px;
+  height: 60px;
+  background-color: transparent;
+  align-self: center;
+}
+
+.bar-text-item-root-css {
+  padding-left: 30px;
+  padding-right: 30px;
+  height: 66px;
+  flex-direction: column;
+  display: flex;
+  border-radius: 35px;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+}
+
+.bar-text-focus-bg {
+  position: absolute;
+  height: 60px;
+  left: 0.1px;
+  top: 0.1px;
+  right: 0.1px;
+  display: flex;
+  border-radius: 35px;
+  background-color: $gl-theme-btn-bg-focus-color;
+  justify-content: center;
+}
+
+.bar-text-corner-root-default {
+  @extend %bar-corner-size;
+  position: absolute;
+  top: -10px;
+  background-color: transparent;
+}
+
+.bar-text-corner-left {
+  left: 2px;
+}
+
+.bar-text-corner-right {
+  right: 2px;
+}
+
+.bar-text-corner-img {
+  @extend %bar-corner-size;
+  position: absolute;
+}
+
+.bar-text-title-normal {
+  @extend %bar-title;
+  color: $text-normal-color;
+}
+
+.bar-text-title-select-focus {
+  @extend %bar-title;
+  typeface:bold;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
+}
+
+.bar-text-select-line{
+  width: 51px;
+  height: 6px;
+  background-color: $text-select-color;
+  border-radius: 4px;
+  margin-top: 60px;
+}

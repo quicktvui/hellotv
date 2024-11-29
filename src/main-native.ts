@@ -1,5 +1,4 @@
 //--------------------router-----------------------
-
 import { createESRouter, Router } from '@extscreen/es3-router'
 import routes from "./routes";
 //--------------------ESApp-----------------------

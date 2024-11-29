@@ -151,7 +151,7 @@ class RequestManager{
       method:'POST',
       headers:{
         "Accept": "application/json",
-        "Content-Type": "application/x-www-form-urlencoded",
+        "Content-Type": "application/json",
       },
       body:body
     }

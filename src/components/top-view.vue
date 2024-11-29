@@ -20,6 +20,7 @@
       v-if='!$slots.topBtnItem'
       ref='topMyBtnRef'
       name='topMyBtn'
+      sid="topMyBtnSid"
       style='width: 200px;height: 60px;margin-left: 10px;margin-right: 10px;'
       :textStyle='{width: "120px", height: "60px"}'
       :focusable='true'
@@ -105,6 +106,5 @@ defineExpose({})
 
 </script>
 
-<style lang='scss'>
-@import "./top-view.scss";
+<style lang='scss' src='./top-view.scss'>
 </style>

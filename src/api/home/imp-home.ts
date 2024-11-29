@@ -1,6 +1,6 @@
 import {QTTab, QTTabPageData} from "@quicktvui/quicktvui3";
 
-export interface ImpHome {
+export interface HomeApi {
   /**
    * 获取瀑布流Tab数据
    */

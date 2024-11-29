@@ -118,6 +118,5 @@ defineExpose({ setImg, clearImg })
 
 </script>
 
-<style lang='scss'>
-@import "bg-animation.scss";
+<style lang='scss' src='./bg-animation.scss'>
 </style>

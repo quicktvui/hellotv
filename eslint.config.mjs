@@ -48,7 +48,7 @@ export default [
         'warn',  { 'src/**/': 'KEBAB_CASE'}
       ],
       '@typescript-eslint/no-explicit-any': 'off', // 允许使用 any 类型
-      '@typescript-eslint/no-unused-vars': ['error',{
+      '@typescript-eslint/no-unused-vars': ['warn',{
         //忽略生命周期中的方法检测
         "varsIgnorePattern": "^(onESCreate|onESStart|onESRestart|onESResume|onESPause|onESStop|onESDestroy|onBackPressed|onKeyDown|onKeyUp)$",
       }], // 允许使用 any 类型

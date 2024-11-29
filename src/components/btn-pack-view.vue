@@ -133,6 +133,6 @@ defineExpose({})
 
 </script>
 
-<style lang='scss'>
-@import "./btn-pack";
+<style lang='scss' src='./btn-pack.scss'>
+
 </style>

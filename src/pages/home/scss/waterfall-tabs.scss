@@ -1,9 +1,13 @@
+@use "../../../components/top-view" as *;
 
-@import "src/components/top-view.scss";
-
-.waterfall-tabs-root-css {
+$nav-bar-margin-top: 114px;
+%full-screen {
   width: 1920px;
   height: 1080px;
+}
+
+.waterfall-tabs-root-css {
+  @extend %full-screen;
   background-color: transparent;
 }
 
@@ -14,9 +18,30 @@
   background-color: transparent;
 }
 
-.waterfall-top-view{
+.waterfall-top-view {
   width: 1920px;
   height: $top-view-height;
   background-color: transparent;
 }
 
+.waterfall-qt-tabs-css {
+  @extend %full-screen;
+  position: absolute;
+  background-color: transparent;
+}
+
+.waterfall-nav-bar-css {
+  width: 1920px;
+  height: 80px;
+  background-color: transparent;
+  margin-top: $nav-bar-margin-top;
+  z-index: 100;
+  clip-children: false;
+}
+
+.waterfall-content-css {
+  @extend %full-screen;
+  position: absolute;
+  background-color: transparent;
+  clip-children: false;
+}

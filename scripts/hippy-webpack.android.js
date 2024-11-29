@@ -148,11 +148,10 @@ module.exports = {
         test:/\.(sc|c)ss$/,
         use:[
           cssLoader,
-          'sass-loader',
           {
             loader:'sass-loader',
             options:{
-              additionalData:`@import './src/config/public-config.scss';`
+              additionalData:`@use './src/config/public-config.scss' as *;`
             }
           }
         ]
