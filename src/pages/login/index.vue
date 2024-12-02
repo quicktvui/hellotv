@@ -100,7 +100,6 @@ defineExpose({onESCreate,onESDestroy})
 
 </script>
 
-<style lang='scss'>
-@use "./scss/login.scss";
+<style lang='scss' src='./scss/login.scss'>
 
 </style>
