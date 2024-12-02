@@ -7,6 +7,11 @@ const routes = [
     name: 'home',
     component: home,
   },
+  {
+    path: '/login',
+    name: 'login',
+    component: ()=>import("./pages/login/index"),
+  },
 
 
 ]
