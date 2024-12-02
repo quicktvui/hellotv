@@ -15,25 +15,25 @@
          {'bar-text-corner-left':cornerLeft,
          'bar-text-corner-right':cornerRight}]" :focusable='false'>
       <img class='bar-text-corner-img' :duplicateParentState='true'
-           showOnState='normal' src='${tabCorner}'>
+           showOnState='normal' src='${corner.normal}'>
       <img class='bar-text-corner-img' :duplicateParentState='true'
-           showOnState='focused' src='${tabCornerFocus}'>
+           showOnState='focused' src='${corner.focused}'>
       <img class='bar-text-corner-img' :duplicateParentState='true'
-           showOnState='selected' src='${tabCornerFocus}'>
+           showOnState='selected' src='${corner.selected}'>
     </div>
     <!--    标题-->
     <qt-text
       class='bar-text-title-normal' :duplicateParentState='true'
       autoWidth gravity='center' showOnState='normal'
       :lines='1'
-      :fontSize='42'
+      fontSize='${titleSize}'
       text='${text}'
     />
     <qt-text
       class='bar-text-title-select-focus' :duplicateParentState='true'
       autoWidth gravity='center' :showOnState="['selected','focused']"
       :lines='1'
-      :fontSize='42'
+      fontSize='${titleSize}'
       text='${text}' />
     <!--    选中下划线-->
     <div class='bar-text-select-line' :duplicateParentState='true'

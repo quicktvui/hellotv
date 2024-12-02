@@ -1,15 +1,16 @@
 import { QTTab } from '@quicktvui/quicktvui3'
+import { buildNavBarAdapter } from '../../pages/home/build-data/nav-bar/nav-bar-adapter'
 import requestManager from '../request/request-manager'
 import { tabListUrl } from '../request/request-url'
 import { HomeApi } from './imp-home'
+import BuildConfig from '../../config/build-config'
 
 class HomeManager implements HomeApi{
 
   getTabList(): Promise<QTTab> {
-    console.log("XRG===","获取tab数据 start")
-    return requestManager.post(tabListUrl,{}).then((tabList: Array<any>) => {
-      console.log("XRG",tabList)
-      return
+    const url = tabListUrl + BuildConfig.packageName
+    return requestManager.get(url).then((tabList: Array<any>) => {
+      return buildNavBarAdapter(tabList)
     })
   }
 

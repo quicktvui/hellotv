@@ -44,12 +44,13 @@
       @onTabPageSectionAttached='onTabPageSectionAttached'>
       <template v-slot:tab-item>
         <!--文字Tab导航-->
-        <bar-text-item :type='1'/>
+        <bar-text-item :type='NavBarItemType.BAR_TEXT_TYPE'/>
         <!--图片Tab导航-->
-        <bar-img-item :type='2'/>
+        <bar-img-item :type='NavBarItemType.BAR_IMG_TYPE'/>
         <!--文字 带角标Tab导航-->
-<!--        <bar-text-item :type='3' :showCorner='true' cornerRight/>-->
+<!--        <bar-text-item :type='NavBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
       </template>
+
     </qt-tabs>
 
 
@@ -60,11 +61,13 @@
 <script lang='ts' setup name='WaterfallTabs'>
 
 import { ESKeyEvent } from '@extscreen/es3-core'
-import { QTTab, QTTabEventParams, QTTabItem, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { QTITab, QTTab, QTTabEventParams, QTTabItem, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { ref } from 'vue'
 import homeManager from '../../../api/home/home-manager'
 import BgAnimation from '../../../components/bg-animation.vue'
 import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
+import NavBarItemType from '../build-data/nav-bar/nav-bar-item-type'
 //控制顶部吸顶
 const tabsTriggerTask = [
   {
@@ -110,6 +113,8 @@ const qtTabSectionEnable = {
   //共享功能waterfall-shared-item使用需设置 itemStoreEnable 为true
   itemStoreEnable: true
 }
+
+const tabRef = ref<QTITab>()
 /**
  * nav bar item 点击跳转
  * @param item
@@ -191,10 +196,13 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean)=
 const onTabPageSectionAttached = (pageIndex: number, sectionList: any)=>{
 
 }
+/**
+ * 获取导航数据
+ */
 const getTabList = ()=>{
-  console.log("XRG===","getTabList")
   homeManager.getTabList().then((tab:QTTab)=>{
-
+    tabRef.value?.initTab(tab)
+    // tabRef.value?.initPage()
   })
 }
 const onESCreate = () => {

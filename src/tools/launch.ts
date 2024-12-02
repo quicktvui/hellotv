@@ -1,7 +1,7 @@
 import { ESDevelop, ESLogLevel } from '@extscreen/es3-core'
 import { ESNativeRouter, RouteLocationRaw, Router } from '@extscreen/es3-router'
 
-interface LaunchParams {
+export interface LaunchParams {
   //0：快应用之间跳转； 1： 快应用内部跳转； 3：第三方应用跳转
   type: string | number,
   //type = 0 option是字符串；1、3：option是对象
