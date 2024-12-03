@@ -4,9 +4,11 @@ import { NavBar } from './imp-nav-bar'
 import NavBarConfig from './nav-bar-config'
 import NavBarItemType from './nav-bar-item-type'
 
-class BarsData{
-  barsData:QTTab
+class BarsData {
+  barsData: QTTab
+  barsBgUrls:Map<string,string> = new Map<string, string>()
 }
+
 const barsDataManager = new BarsData()
 export default barsDataManager
 
@@ -14,9 +16,10 @@ export default barsDataManager
  * build nav bars数据
  * @param tabs
  */
-export function buildNavBarAdapter(bars: Array<NavBar>) {
+export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
   let length = bars.length
   let defFocusIndex = 0
+  //添加我的tab
   if (NavBarConfig.tab.showMineTab && length > 1) {
     length = bars.unshift({
       id: NavBarConfig.tab.id,
@@ -38,11 +41,18 @@ export function buildNavBarAdapter(bars: Array<NavBar>) {
       right: i === (length - 1) ? NavBarConfig.tab.rightGap : NavBarConfig.tab.defaultGap,
       top: 10
     }
-    const barItem:QTTabItem = buildBarItem(bar,decoration)
+    const barItem: QTTabItem = buildBarItem(bar, decoration)
+    //添加背景图
+    barItem['backgroundImg'] = bar.backgroundImg
+    //存储背景图
+    if (bar.backgroundImg != null) {
+      barsDataManager.barsBgUrls.set(bar.id, bar.backgroundImg)
+    }
+    //添加跳转数据
+    barItem['jumpParams'] = bar.jumpParams
     barItemList.push(barItem)
   }
-
-  const mBars:QTTab = buildBars(defFocusIndex,defFocusIndex,barItemList)
+  const mBars: QTTab = buildBars(defFocusIndex, defFocusIndex, barItemList)
   barsDataManager.barsData = mBars
   return mBars
 }
@@ -96,10 +106,10 @@ export function buildBarImgItem(bar: NavBar, decoration?: ESListViewItemDecorati
   const barItem: QTTabItem = {
     _id: bar.id,
     type: NavBarItemType.BAR_IMG_TYPE,
-    text:bar.name,
-    titleSize:NavBarConfig.tab.titleSize,
-    image:bar.image,
-    decoration:decoration
+    text: bar.name,
+    titleSize: NavBarConfig.tab.titleSize,
+    image: bar.image,
+    decoration: decoration
   }
   return barItem
 }
@@ -110,10 +120,10 @@ export function buildBarImgItem(bar: NavBar, decoration?: ESListViewItemDecorati
  * @param defIndex
  * @param bars
  */
-export function buildBars(defFocusIndex:number=0,defIndex:number=0,bars:Array<QTTabItem>):QTTab{
+export function buildBars(defFocusIndex: number = 0, defIndex: number = 0, bars: Array<QTTabItem>): QTTab {
   return {
-    defaultFocusIndex:defFocusIndex,
-    defaultIndex:defIndex,
-    itemList:bars
+    defaultFocusIndex: defFocusIndex,
+    defaultIndex: defIndex,
+    itemList: bars
   }
 }

@@ -1,4 +1,4 @@
-import {QTTab, QTTabPageData} from "@quicktvui/quicktvui3";
+import { QTTab, QTTabPageData } from '@quicktvui/quicktvui3'
 
 export interface HomeApi {
   /**
@@ -7,24 +7,25 @@ export interface HomeApi {
   getTabList(): Promise<QTTab>
 
   /**
+   * 获取Tab 背景
+   * @param tabId
+   */
+  getTabBg(tabId): string | undefined
+
+  /**
    * 获取首页瀑布流指定Tab对应内容
    * @param tabId tab ID
    * @param pageNo 分页值
    * @param pageSize 每页请求个数
    */
-    getTabContent(tabId: string, pageNo: number, pageSize: number,tabPageIndex?: number): Promise<QTTabPageData>
+  getTabContent(tabId: string, pageNo: number, pageSize: number, tabPageIndex?: number): Promise<QTTabPageData>
 
   /**
    * 获取首页背景播放请求地址
    * @param id
    */
-    getHomeBgVideoAssetsUrl(id:string):Promise<object>
+  getHomeBgVideoAssetsUrl(id: string): Promise<object>
 
-  /**
-   * 获取Tab 背景
-   * @param tabId
-   */
-    getTabBg(tabId):string
 
 }
 

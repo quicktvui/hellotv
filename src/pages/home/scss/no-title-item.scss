@@ -1,21 +1,15 @@
-
-.no-frame-item-root-css{
+@use './base.scss' as *;
+.no-title-item-root-css{
   position: absolute;
   background-color: transparent;
   overflow: hidden;
   flex-direction: row-reverse;
 }
 
-.no-frame-item-img{
+.no-title-item-img{
   background-color: transparent;
   z-index: 899;
   position: absolute;
-  border-radius: 9px;
+  border-radius: $gl-theme-img-border;
 }
-.no-frame-item-corner{
-  color: white;
-  padding: 4px 8px;
-  height: 36px;
-  margin: 4px;
-  z-index: 1000
-}
+

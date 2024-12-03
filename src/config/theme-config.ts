@@ -3,7 +3,7 @@ export default {
   //是否设置全局焦点边框圆角 默认 8
   focusBorderCornerEnable: true,
   //全局焦点边框圆角
-  focusBorderCorner: 20,
+  focusBorderCorner: 16,
 
   //是否设置全局焦点边框颜色 默认白色
   focusBorderColorEnable: false,

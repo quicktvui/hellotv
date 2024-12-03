@@ -44,11 +44,21 @@
       @onTabPageSectionAttached='onTabPageSectionAttached'>
       <template v-slot:tab-item>
         <!--文字Tab导航-->
-        <bar-text-item :type='NavBarItemType.BAR_TEXT_TYPE'/>
+        <bar-text-item :type='NavBarItemType.BAR_TEXT_TYPE' />
         <!--图片Tab导航-->
-        <bar-img-item :type='NavBarItemType.BAR_IMG_TYPE'/>
+        <bar-img-item :type='NavBarItemType.BAR_IMG_TYPE' />
         <!--文字 带角标Tab导航-->
-<!--        <bar-text-item :type='NavBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
+        <!-- <bar-text-item :type='NavBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
+      </template>
+      <template v-slot:waterfall-shared-item>
+        <!-- 带边框无标题格子-->
+        <no-title-item :type='TabContentType.TYPE_ITEM_SECTION_NO_TITLE' />
+        <!-- 带标题格子(图片上/图片下)-->
+        <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_INNER_TEXT' />
+        <!-- 占位格子-->
+        <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
+        <!-- 焦点变图格子-->
+        <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
       </template>
 
     </qt-tabs>
@@ -61,13 +71,28 @@
 <script lang='ts' setup name='WaterfallTabs'>
 
 import { ESKeyEvent } from '@extscreen/es3-core'
-import { QTITab, QTTab, QTTabEventParams, QTTabItem, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { useESRouter } from '@extscreen/es3-router'
+import {
+  QTITab,
+  QTTab,
+  QTTabEventParams,
+  QTTabItem,
+  QTTabPageData,
+  QTWaterfallItem
+} from '@quicktvui/quicktvui3'
 import { ref } from 'vue'
 import homeManager from '../../../api/home/home-manager'
 import BgAnimation from '../../../components/bg-animation.vue'
+import barsDataManager from '../build-data/nav-bar/nav-bar-adapter'
 import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import NavBarItemType from '../build-data/nav-bar/nav-bar-item-type'
+import NavBarConfig from '../build-data/nav-bar/nav-bar-config'
+import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
+import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
+import NoTitleItem from './tab-content/no-title-item.vue'
+import TabContentType from '../build-data/tab-content/tab-content-item-type'
+import PlaceHolderItem from './tab-content/place-holder-item.vue'
 //控制顶部吸顶
 const tabsTriggerTask = [
   {
@@ -113,7 +138,7 @@ const qtTabSectionEnable = {
   //共享功能waterfall-shared-item使用需设置 itemStoreEnable 为true
   itemStoreEnable: true
 }
-
+const router = useESRouter()
 const tabRef = ref<QTITab>()
 /**
  * nav bar item 点击跳转
@@ -185,22 +210,37 @@ const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex
  * @param pageNo
  * @param useDiff
  */
-const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean)=>{
+const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
+  if (pageIndex >=0 && pageIndex < barsDataManager.barsData?.itemList?.length){
+    const curTab = barsDataManager.barsData.itemList[pageIndex]
+    //添加我的 导航
+    if (NavBarConfig.tab.id === curTab._id && pageNo === 0){
+      getTabContent(curTab._id,pageIndex,pageNo+1)
+    }else{
+      getTabContent(curTab._id,pageIndex,pageNo+1)
+    }
+  }
 
+}
+const getTabContent = (tabId:string,tabPageIndex:number,pageNo:number)=>{
+  homeManager.getTabContent(tabId,pageNo,NavBarConfig.tab.tabContentPageSize,tabPageIndex)
+    .then((tabPage:QTTabPageData)=>{
+
+  })
 }
 /**
  * 界面加载之前数据处理
  * @param pageIndex
  * @param sectionList
  */
-const onTabPageSectionAttached = (pageIndex: number, sectionList: any)=>{
+const onTabPageSectionAttached = (pageIndex: number, sectionList: any) => {
 
 }
 /**
  * 获取导航数据
  */
-const getTabList = ()=>{
-  homeManager.getTabList().then((tab:QTTab)=>{
+const getTabList = () => {
+  homeManager.getTabList().then((tab: QTTab) => {
     tabRef.value?.initTab(tab)
     // tabRef.value?.initPage()
   })
@@ -231,6 +271,7 @@ const onKeyUp = (keyEvent: ESKeyEvent) => {
 
 }
 const onBackPressed = () => {
+  router.back()
 }
 defineExpose({
   onESCreate,

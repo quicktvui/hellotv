@@ -1,0 +1,22 @@
+@use './base.scss' as *;
+%inner-out{
+  position: absolute;
+  background-color: transparent;
+}
+
+.inner-out-title-root-css{
+  @extend %inner-out;
+  overflow: hidden;
+  flex-direction: row-reverse;
+}
+
+.inner-out-title-img{
+  @extend %inner-out;
+  border-radius: $gl-theme-img-border;
+  z-index: 899;
+}
+.inner-out-title-text{
+  @extend %inner-out;
+  height: 60px;
+  z-index: 999;
+}

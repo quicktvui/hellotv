@@ -1,18 +1,18 @@
 <template>
-  <div class='no-frame-item-root-css'
+  <div class='no-title-item-root-css'
        layout='${layout}'
-       flexStyle='${image.style}'
+       flexStyle='${style}'
        :focusable='true'
        :clipChildren='false'
        :enableFocusBorder='true'
        eventClick eventFocus>
     <!-- 海报图-->
-    <img class='no-frame-item-img'
+    <img class='no-title-item-img'
          flexStyle='${image.style}'
-         :postDelay='100' :focusable='false' src='${image.url}'
+         :postDelay='100' :focusable='false' src='${image.normal}'
     />
     <!-- 文字角标-->
-    <qt-text showIf='${corner.enable==true}' class='no-frame-item-corner'
+    <qt-text showIf='${corner.enable==true}' class='item-corner'
              gradientBackground='${corner.background}'
              autoWidth
              typeface='bold'
@@ -33,6 +33,6 @@ defineExpose({})
 
 </script>
 
-<style lang='scss' src='../../scss/no-frame-item.scss'>
+<style lang='scss' src='../../scss/no-title-item.scss'>
 
 </style>
