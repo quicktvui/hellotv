@@ -343,7 +343,7 @@ export function buildTitleSectionItem(sectionItem: SectionItem): QTWaterfallItem
       text: sectionItem.title,
       background: {
         colors: colors,
-        cornerRadii4: [0, 0, 16, 16],
+        cornerRadii4: [0, 0, ThemeConfig.focusBorderCorner, ThemeConfig.focusBorderCorner],
         orientation: 4
       }
     },

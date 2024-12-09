@@ -49,8 +49,6 @@
 
 <script lang='ts' setup name='InnerOutTitleItem'>
 
-import ThemeConfig from '../../../../config/theme-config'
-
 defineExpose({})
 
 
