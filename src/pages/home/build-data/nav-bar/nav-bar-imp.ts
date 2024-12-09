@@ -1,10 +1,23 @@
 import { LaunchParams } from '../../../../tools/launch'
 
+/**
+ * 导航类型
+ */
+export enum BarType{
+  //文本类型
+  TYPE_TEXT = 1,
+  //图片类型
+  TYPE_IMG = 2
+}
+
+/**
+ * 导航
+ */
 export interface NavBar{
   //导航ID
   id:string
   //导航类型1：文本，2：图片
-  type:string
+  type:BarType
   //导航名称
   name:string
   //导航背景图

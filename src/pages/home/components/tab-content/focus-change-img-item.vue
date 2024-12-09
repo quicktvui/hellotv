@@ -1,11 +1,13 @@
 <template>
-  <div class='focus-change-img-root-css'
+  <item-frame class='focus-change-img-root-css'
        layout='${layout}'
        flexStyle='${style}'
        :focusable='true'
        :clipChildren='false'
        eventClick
        eventFocus
+      itemShowShimmer="${shimmer.enable}"
+      shimmerSize="${shimmer.size}"
   >
     <img class='focus-change-img-css'
          flexStyle='${image.style}'
@@ -23,7 +25,7 @@
          :duplicateParentState="true"
          :enableFocusBorder="false"
          src="${image.focused}"/>
-  </div>
+  </item-frame>
 
 </template>
 

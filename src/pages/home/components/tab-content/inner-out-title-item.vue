@@ -5,6 +5,8 @@
               :focusable="true"
               :clipChildren="false"
               name="innerItem"
+              itemShowShimmer='${shimmer.enable}'
+              shimmerSize='${shimmer.size}'
               eventClick
               eventFocus>
     <img class="inner-out-title-img"

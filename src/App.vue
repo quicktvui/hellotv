@@ -104,7 +104,8 @@ export default defineComponent({
       }
       //设置焦点框是否有内里黑色边框
       Native.callNative('FocusModule', 'setDefaultFocusInnerBorderEnable', ThemeConfig.focusInnerBorderEnable)
-
+      //设置焦点放大倍数
+      Native.callNative('FocusModule', 'setDefaultPlaceholderFocusScale', ThemeConfig.placeHolderFocusScale);
     }
 
     /**

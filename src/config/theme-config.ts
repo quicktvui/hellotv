@@ -11,17 +11,19 @@ export default {
   focusBorderColor: "#157AFC",
 
   //是否设置全局焦点边框宽度 默认 2
-  focusBorderWidthEnable: false,
+  focusBorderWidthEnable: true,
   //全局焦点边框宽度
-  focusBorderWidth: 2,
+  focusBorderWidth: 2.5,
 
   //是否设置焦点边框向内移动距离 默认 2
-  focusBorderInsetEnable: false,
+  focusBorderInsetEnable: true,
   //全局焦点边框向内移动距离
-  focusBorderInsetValue: 2,
+  focusBorderInsetValue: -5,
 
   //是否展示焦点内边框 默认展示
   focusInnerBorderEnable: true,
+  //设置放大倍数
+  placeHolderFocusScale:1.05,
 
   //渐进色设置
   //全局背景色
@@ -36,7 +38,9 @@ export default {
   tabContentBgGradientFocusColor: ["#157AFC", "#157AFC"],
 
   //瀑布流格子浮动标题背景色
-  tabContentFloatBgFocusColor: ["#0186CF", "#00000000"],
+  tabContentFloatBgFocusColor: ["#ed222222", "#00000000"],
+  //角标默认颜色
+  tabCornerColors:["#ffB67827","#ffB67827"],
 
   //默认60高度按钮的圆角
   default60BorderRadius:30

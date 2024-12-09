@@ -1,5 +1,7 @@
 import { QTTab, QTTabPageData } from '@quicktvui/quicktvui3'
 import barsDataManager, { buildNavBarAdapter } from '../../pages/home/build-data/nav-bar/nav-bar-adapter'
+import { buildTabContentAdapter } from '../../pages/home/build-data/tab-content/tab-content-adapter'
+import { TabContent } from '../../pages/home/build-data/tab-content/tab-content-imp'
 import requestManager from '../request/request-manager'
 import { replacePlaceholders, tabContentUrl, tabListUrl } from '../request/request-url'
 import { HomeApi } from './imp-home'
@@ -24,17 +26,16 @@ class HomeManager implements HomeApi{
    * @param pageSize
    * @param tabPageIndex
    */
-  getTabContent(tabId: string, pageNo: number, pageSize: number, tabPageIndex?: number): Promise<QTTabPageData> {
+  getTabContent(tabId: string, pageNo: number, limit: number, tabPageIndex: number): Promise<QTTabPageData> {
     const replacements = {
       id:tabId,
       packageName:BuildConfig.packageName,
       page:pageNo,
-      limit:pageSize
+      limit:limit
     }
     const url = replacePlaceholders(tabContentUrl,replacements)
-    return requestManager.get(url).then((tabContent:any)=>{
-      console.log(`XRG==tabId===${tabId}=`,tabContent)
-      return Promise.resolve({});
+    return requestManager.get(url).then((tabContent:TabContent)=>{
+      return buildTabContentAdapter(tabContent,pageNo,tabId,tabPageIndex)
     })
 
   }

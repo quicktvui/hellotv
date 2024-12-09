@@ -23,5 +23,4 @@ defineExpose({})
 </script>
 
 <style lang='scss' src='../../scss/place-holder-item.scss'>
-
 </style>

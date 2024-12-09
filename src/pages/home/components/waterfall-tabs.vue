@@ -54,7 +54,7 @@
         <!-- 带边框无标题格子-->
         <no-title-item :type='TabContentType.TYPE_ITEM_SECTION_NO_TITLE' />
         <!-- 带标题格子(图片上/图片下)-->
-        <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_INNER_TEXT' />
+        <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
         <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
         <!-- 焦点变图格子-->
@@ -70,14 +70,14 @@
 
 <script lang='ts' setup name='WaterfallTabs'>
 
-import { ESKeyEvent } from '@extscreen/es3-core'
+import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import {
   QTITab,
   QTTab,
   QTTabEventParams,
   QTTabItem,
-  QTTabPageData,
+  QTTabPageData, QTTabPageState,
   QTWaterfallItem
 } from '@quicktvui/quicktvui3'
 import { ref } from 'vue'
@@ -88,6 +88,7 @@ import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import NavBarItemType from '../build-data/nav-bar/nav-bar-item-type'
 import NavBarConfig from '../build-data/nav-bar/nav-bar-config'
+import TabContentConfig from '../build-data/tab-content/tab-content-config'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
@@ -139,6 +140,7 @@ const qtTabSectionEnable = {
   itemStoreEnable: true
 }
 const router = useESRouter()
+const toast = useESToast()
 const tabRef = ref<QTITab>()
 /**
  * nav bar item 点击跳转
@@ -211,22 +213,33 @@ const onTabPageItemFocused = (pageIndex: number, sectionIndex: number, itemIndex
  * @param useDiff
  */
 const onTabPageLoadData = (pageIndex: number, pageNo: number, useDiff: boolean) => {
-  if (pageIndex >=0 && pageIndex < barsDataManager.barsData?.itemList?.length){
+  if (pageIndex >= 0 && pageIndex < barsDataManager.barsData?.itemList?.length) {
     const curTab = barsDataManager.barsData.itemList[pageIndex]
     //添加我的 导航
-    if (NavBarConfig.tab.id === curTab._id && pageNo === 0){
-      getTabContent(curTab._id,pageIndex,pageNo+1)
-    }else{
-      getTabContent(curTab._id,pageIndex,pageNo+1)
+    if (NavBarConfig.tab.id === curTab._id && pageNo === 0) {
+      getTabContent(curTab._id, pageIndex, pageNo + 1)
+    } else {
+      getTabContent(curTab._id, pageIndex, pageNo + 1)
     }
   }
 
 }
-const getTabContent = (tabId:string,tabPageIndex:number,pageNo:number)=>{
-  homeManager.getTabContent(tabId,pageNo,NavBarConfig.tab.tabContentPageSize,tabPageIndex)
-    .then((tabPage:QTTabPageData)=>{
-
-  })
+const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
+  homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit, tabPageIndex)
+    .then((tabPage: QTTabPageData) => {
+      if (tabPage.data.length > 0) {
+        if (pageNo <=1){
+          tabRef.value?.setPageData(tabPageIndex, tabPage)
+        }else{
+          tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
+        }
+      }
+      if (tabPage.isLoadPageEnd || tabPage.data.length === 0){
+        tabRef.value?.setPageState(tabPageIndex,QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+      }
+    },error =>{
+      toast.showToast('加载数据失败，稍后重试！')
+    })
 }
 /**
  * 界面加载之前数据处理

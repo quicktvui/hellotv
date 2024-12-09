@@ -1,7 +1,7 @@
 import { ESListViewItemDecoration } from '@extscreen/es3-component'
 import { QTTab, QTTabItem } from '@quicktvui/quicktvui3'
-import { NavBar } from './imp-nav-bar'
 import NavBarConfig from './nav-bar-config'
+import { BarType, NavBar } from './nav-bar-imp'
 import NavBarItemType from './nav-bar-item-type'
 
 class BarsData {
@@ -24,7 +24,7 @@ export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
     length = bars.unshift({
       id: NavBarConfig.tab.id,
       name: NavBarConfig.tab.mineTabName,
-      type: '0'
+      type: BarType.TYPE_TEXT
     })
     defFocusIndex++
   }
@@ -63,16 +63,16 @@ export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
  * @param decoration
  */
 export function buildBarItem(bar: NavBar, decoration?: ESListViewItemDecoration): QTTabItem {
-  const type = Number(bar.type)
+  const type:BarType =bar.type
   let barItem: QTTabItem
   switch (type) {
-    case NavBarItemType.BAR_TEXT_TYPE: // 文字类型
+    case BarType.TYPE_TEXT: // 文本类型
       barItem = buildBarTextItem(bar, decoration)
       break
-    case NavBarItemType.BAR_IMG_TYPE: //图片类型
+    case BarType.TYPE_IMG: //图片类型
       barItem = buildBarImgItem(bar, decoration)
       break
-    default:// 默认返回 文字类型
+    default:// 默认返回 文本类型
       barItem = buildBarTextItem(bar, decoration)
       break
   }

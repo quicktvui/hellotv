@@ -1,9 +1,10 @@
 export default {
   TYPE_ITEM_SECTION_NO_TITLE : 0,//带边框无标题格子
-  TYPE_ITEM_SECTION_INNER_TEXT : 1,//标题在格子上方
-  TYPE_ITEM_SECTION_OUT_TEXT : 2,//标题在格子下方
+  TYPE_ITEM_SECTION_HAS_TITLE : 1,//带标题格子(上方/下方)
   TYPE_ITEM_SECTION_PLACE_HOLDER : 3,//占位格子
-  TAB_CONTENT_ITEM_HISTORY: 4,//历史格子-文字
-  TAB_CONTENT_ITEM_HISTORY_IMG: 5,//历史格子-图片
+  TYPE_ITEM_HISTORY_TEXT: 4,//历史格子-文字
+  TYPE_ITEM_HISTORY_IMG: 5,//历史格子-图片
   TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG : 6,//焦点变图格子
+
+
 }
