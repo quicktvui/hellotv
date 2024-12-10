@@ -1,11 +1,10 @@
 //顶部views总高度
-$top-view-height:120px;
+$top-view-height: 120px;
 //logo 宽高
-$top-logo-width:274px;
-$top-logo-height:60px;
+$top-logo-width: 274px;
+$top-logo-height: 60px;
 
-.top-view-root-css{
-  position: absolute;
+.top-view-root-css {
   width: 1920px;
   height: $top-view-height;
   background-color: transparent;
@@ -13,6 +12,7 @@ $top-logo-height:60px;
   justify-content: start;
   align-items: center;
 }
+
 .logo-right {
   flex-direction: row;
   padding-left: 80px;
@@ -23,16 +23,16 @@ $top-logo-height:60px;
   padding-right: 80px;
 }
 
-.top-view-root-css .logo-default{
+.top-view-root-css .logo-default {
   position: absolute;
   width: $top-logo-width;
   height: $top-logo-height;
 }
 
-.top-view-root-css .img-left{
+.top-view-root-css .img-left {
   left: 90px;
 }
 
-.top-view-root-css .img-right{
+.top-view-root-css .img-right {
   right: 90px;
 }
