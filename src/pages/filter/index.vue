@@ -1,43 +1,48 @@
 <template>
   <qt-view class="filter" :gradientBackground="{ colors: bgColor, orientation: 0 }">
     <!-- 顶部按钮 -->
-    <qt-view class="filter-header"></qt-view>
+    <top-view :logoRight="true" />
     <!-- 内容主体 -->
-    <qt-view class="filter-body">
+    <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表扩展项 -->
       <!-- 筛选列表 -->
       <!-- 筛选内容 -->
-      <filter-body-content ref="filterBodyContent" />
+      <filter-content ref="contentRef" />
     </qt-view>
   </qt-view>
 </template>
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useESRouter } from '@extscreen/es3-router'
 import ThemeConfig from '../../config/theme-config'
-import FilterBodyContent from './components/content/index.vue'
+import TopView from '../../components/top-view.vue'
+import FilterContent from './components/content/index.vue'
 
+const router = useESRouter()
+
+// 背景色
 const bgColor = ThemeConfig.rootBgGradientColor
-
-const filterBodyContent = ref()
+// 筛选内容
+const contentRef = ref()
 
 function onESCreate() {
-  filterBodyContent.value?.init()
+  contentRef.value?.init()
 }
 
-defineExpose({ onESCreate })
+function onBackPressed() {
+  if (contentRef.value?.onBackPressed()) {
+    router.back()
+  }
+}
+
+defineExpose({ onESCreate, onBackPressed })
 </script>
 
 <style scoped>
 .filter {
   width: 1920px;
   height: 1080px;
-  background-color: transparent;
-}
-
-.filter-header {
-  width: 1920px;
-  height: 120px;
   background-color: transparent;
 }
 

@@ -1,16 +1,23 @@
 <template>
-  <qt-view class="filter-main-contents-grid-item-h" :focusable="true">
+  <qt-view class="filter-main-contents-grid-item-h" :focusable="true" eventFocus eventClick>
+    <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-h-img"
       :style="{ borderRadius: borderRadius }"
       src="${cover}"
+      :postDelay="100"
+      :enableFocusBorder="true"
       :focusable="false"
+      :duplicateParentState="true"
     ></qt-image>
-    <qt-text class="filter-main-contents-grid-item-h-text" text="${title}" duplicateParentState></qt-text>
+    <!-- 标题 -->
     <qt-text
       class="filter-main-contents-grid-item-h-text"
-      style="font-size: 24px; color: rgba(255, 255, 255, 0.5)"
-      text="${subTitle}"
+      text="${title}"
+      :lines="1"
+      :ellipsizeMode="4"
+      :focusable="false"
+      :duplicateParentState="true"
     ></qt-text>
   </qt-view>
 </template>
@@ -23,15 +30,16 @@ const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 
 <style scoped>
 .filter-main-contents-grid-item-h {
-  width: 325px;
-  height: 263px;
+  width: 320px;
+  height: 226px;
   background-color: transparent;
 }
 
 .filter-main-contents-grid-item-h-img {
-  width: 325px;
-  height: 183px;
-  background-color: gray;
+  width: 320px;
+  height: 180px;
+  background-color: transparent;
+  margin-bottom: 11px;
 }
 
 .filter-main-contents-grid-item-h-text {
