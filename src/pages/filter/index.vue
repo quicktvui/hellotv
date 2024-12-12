@@ -6,6 +6,7 @@
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表扩展项 -->
       <!-- 筛选列表 -->
+      <filter-sidebar ref="sidebarRef" />
       <!-- 筛选内容 -->
       <filter-content ref="contentRef" />
     </qt-view>
@@ -17,16 +18,20 @@ import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import ThemeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
+import FilterSidebar from './components/sidebar/index.vue'
 import FilterContent from './components/content/index.vue'
 
 const router = useESRouter()
 
 // 背景色
 const bgColor = ThemeConfig.rootBgGradientColor
+// 筛选列表
+const sidebarRef = ref()
 // 筛选内容
 const contentRef = ref()
 
 function onESCreate() {
+  sidebarRef.value?.init()
   contentRef.value?.init()
 }
 
@@ -50,5 +55,6 @@ defineExpose({ onESCreate, onBackPressed })
   width: 1920px;
   height: 960px;
   background-color: transparent;
+  flex-direction: row;
 }
 </style>
