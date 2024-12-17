@@ -1,7 +1,7 @@
 <template>
   <qt-view class="filter" :gradientBackground="{ colors: bgColor, orientation: 0 }">
     <!-- 顶部按钮 -->
-    <top-view :logoRight="true" />
+    <top-view name="topView" :logoRight="true" />
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表扩展项 -->

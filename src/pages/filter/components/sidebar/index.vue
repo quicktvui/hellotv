@@ -1,6 +1,6 @@
 <template>
   <qt-view class="filter-sidebar">
-    <qt-list-view class="filter-sidebar-list" ref="listRef" name="sidebarList" :nextFocusName="{ right: 'contentGrid' }">
+    <qt-list-view class="filter-sidebar-list" ref="listRef" name="sidebarList" :nextFocusName="{ up: 'topView', right: 'contentGrid' }">
       <qt-view class="filter-sidebar-list-item" :type="1" :focusable="false">
         <qt-text
           class="filter-sidebar-list-item-text"
@@ -45,19 +45,19 @@ defineExpose({ init })
 
 <style scoped>
 .filter-sidebar {
-  width: 320px;
+  width: 340px;
   height: 960px;
   background-color: transparent;
 }
 
 .filter-sidebar-list {
-  width: 320px;
+  width: 340px;
   height: 960px;
   background-color: transparent;
 }
 
 .filter-sidebar-list-item {
-  width: 320px;
+  width: 340px;
   height: 106px;
   background-color: transparent;
   border-top-right-radius: 8px;
@@ -66,7 +66,7 @@ defineExpose({ init })
 }
 
 .filter-sidebar-list-item-text {
-  width: 320px;
+  width: 340px;
   height: 106px;
   background-color: transparent;
   color: rgba(255, 255, 255, 0.5);

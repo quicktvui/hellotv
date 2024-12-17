@@ -12,6 +12,7 @@
         <qt-view class="filter-main-contents">
           <qt-grid-view
             class="filter-main-contents-grid"
+            :style="{ width: gridWidth }"
             ref="gridRef"
             name="contentGrid"
             :spanCount="gridSpanCount"
@@ -19,12 +20,13 @@
             :clipChildren="false"
             :autofocusPosition="0"
             :enablePlaceholder="false"
+            :blockFocusDirections="['down']"
             @item-click="onGridItemClick"
             @item-focused="onGridItemFocused"
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h :type="1" />
+            <grid-item-h :type="1" :width="gridItemHWidth" :height="gridItemHHeight" :imgHeight="gridItemHImgHeight" />
             <!-- 竖图 -->
             <grid-item-v :type="2" />
           </qt-grid-view>
@@ -35,20 +37,35 @@
 </template>
 
 <script setup lang="ts" name="FilterContent">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
+import config from '../../config'
 import ListItem from './list-item.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
 
 const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
+// 筛选条件
 const listRef = ref<QTIListView>()
+// 筛选结果
 const gridRef = ref<QTIGridView>()
 const gridScrollY = ref<number>(0)
-const gridSpanCount = 5
+const gridWidth = ref<number>(1920)
+const gridItemHWidth = ref<number>(320)
+const gridItemHHeight = ref<number>(226)
+const gridItemHImgHeight = ref<number>(180)
+const gridSpanCount = computed(() => {
+  if (config.gridSpanCount === 4) {
+    gridWidth.value = 1580
+    gridItemHWidth.value = 325
+    gridItemHHeight.value = 229
+    gridItemHImgHeight.value = 183
+  }
+  return config.gridSpanCount
+})
 
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
@@ -99,7 +116,7 @@ function onGridItemClick() {
 
 function onGridItemFocused(evt) {
   if (evt.isFocused) {
-    if (evt.position >= gridSpanCount) {
+    if (evt.position >= gridSpanCount.value) {
       scrollRef.value?.scrollToWithOptions(0, 330, 300)
       gridScrollY.value = 1
     } else {
@@ -128,38 +145,32 @@ defineExpose({ init, onBackPressed })
 
 <style scoped>
 .filter-main {
-  width: 1920px;
   height: 960px;
   background-color: transparent;
 }
 
 .filter-main-scroll {
-  width: 1920px;
   height: 960px;
   background-color: transparent;
 }
 
 .filter-main-conditions {
-  width: 1920px;
   height: 330px;
   background-color: transparent;
   margin-bottom: 15px;
 }
 
 .filter-main-conditions-list {
-  width: 1920px;
   height: 330px;
   background-color: transparent;
 }
 
 .filter-main-contents {
-  width: 1920px;
   height: 960px;
   background-color: transparent;
 }
 
 .filter-main-contents-grid {
-  width: 1920px;
   height: 960px;
   background-color: transparent;
 }

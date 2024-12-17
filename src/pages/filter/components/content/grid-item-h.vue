@@ -1,9 +1,15 @@
 <template>
-  <qt-view class="filter-main-contents-grid-item-h" :focusable="true" eventFocus eventClick>
+  <qt-view
+    class="filter-main-contents-grid-item-h"
+    :style="{ width: $props.width, height: $props.height }"
+    :focusable="true"
+    eventFocus
+    eventClick
+  >
     <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-h-img"
-      :style="{ borderRadius: borderRadius }"
+      :style="{ width: $props.width, height: $props.imgHeight, borderRadius: borderRadius }"
       src="${cover}"
       :postDelay="100"
       :enableFocusBorder="true"
@@ -13,6 +19,7 @@
     <!-- 标题 -->
     <qt-text
       class="filter-main-contents-grid-item-h-text"
+      :style="{ width: $props.width }"
       text="${title}"
       :lines="1"
       :ellipsizeMode="4"
@@ -24,6 +31,21 @@
 
 <script setup lang="ts" name="GridItemH">
 import ThemeConfig from '../../../../config/theme-config'
+
+defineProps({
+  width: {
+    type: Number,
+    default: 320
+  },
+  height: {
+    type: Number,
+    default: 226
+  },
+  imgHeight: {
+    type: Number,
+    default: 180
+  }
+})
 
 const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 </script>
@@ -43,7 +65,7 @@ const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 }
 
 .filter-main-contents-grid-item-h-text {
-  width: 325px;
+  width: 320px;
   height: 40px;
   background-color: transparent;
   font-size: 30px;
