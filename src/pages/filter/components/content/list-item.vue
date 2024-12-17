@@ -7,6 +7,7 @@
     :useDiff="true"
     :focusMemory="false"
     :enableSelectOnFocus="false"
+    :nextFocusName="{ left: 'sidebarList' }"
     @item-click="onListItemClick"
   >
     <qt-view class="filter-main-conditions-list-row-item" :type="1" :focusable="true" eventFocus eventClick>

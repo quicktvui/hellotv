@@ -1,9 +1,10 @@
 <template>
   <qt-view class="filter-sidebar">
-    <qt-list-view class="filter-sidebar-list" ref="listRef">
-      <qt-view class="filter-sidebar-list-item" style="background-color: red" :type="1" :focusable="false">
+    <qt-list-view class="filter-sidebar-list" ref="listRef" name="sidebarList" :nextFocusName="{ right: 'contentGrid' }">
+      <qt-view class="filter-sidebar-list-item" :type="1" :focusable="false">
         <qt-text
-          style="width: 320px; height: 106px; background-color: transparent; color: #ffffff; font-size: 40px"
+          class="filter-sidebar-list-item-text"
+          style="color: #ffffff; font-size: 40px"
           text="电视剧"
           gravity="center"
           typeface="bold"

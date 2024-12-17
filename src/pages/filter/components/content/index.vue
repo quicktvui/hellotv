@@ -13,6 +13,7 @@
           <qt-grid-view
             class="filter-main-contents-grid"
             ref="gridRef"
+            name="contentGrid"
             :spanCount="gridSpanCount"
             :padding="'80,17,40,0'"
             :clipChildren="false"
