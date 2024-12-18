@@ -7,7 +7,7 @@ export const tabListUrl = BuildConfig.requestBaseUrl + '/home/tabs?packageName='
 export const tabContentUrl = BuildConfig.requestBaseUrl + '/home/tabs/${id}?packageName=${packageName}&page=${page}&limit=${limit}'
 
 //详情页接口
-export const mediaDetailUrl = BuildConfig.requestBaseUrl + '/v2/zero/media/assetlong/meta/'
+export const DetailUrl = BuildConfig.requestBaseUrl + "/album/details/"
 
 //用户接口
 
@@ -22,3 +22,5 @@ export function replacePlaceholders(template, replacements): string {
     return replacements[placeholder] || '' // 如果替换项不存在，则返回空字符串
   })
 }
+
+
