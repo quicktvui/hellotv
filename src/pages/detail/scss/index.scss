@@ -1,0 +1,17 @@
+$home-width:1920px;
+$home-height:1080px;
+
+.detail-root-css{
+  width: $home-width;
+  height: $home-height;
+  background-color: $gl-theme-root-bg-color;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.detail-waterfall-css{
+  width: $home-width;
+  height: $home-height;
+  background-color: $gl-theme-root-bg-color;
+}

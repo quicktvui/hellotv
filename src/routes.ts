@@ -1,4 +1,5 @@
 import home from './pages/home/index.vue'
+import detail from './pages/detail/index.vue'
 
 const routes = [
   {
@@ -15,7 +16,15 @@ const routes = [
     path: '/filter',
     name: 'filter',
     component: () => import('./pages/filter/index.vue')
+  },
+  {
+    path: '/detail',
+    name: 'detail',
+    component: detail,
+    // component: ()=>import("./pages/detail/index.vue"),
   }
+
+
 ]
 
 export default routes
