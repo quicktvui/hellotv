@@ -1,12 +1,12 @@
 <template>
-  <qt-view class="filter" :gradientBackground="{ colors: bgColor, orientation: 0 }">
+  <qt-view class="filter" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
     <!-- 顶部按钮 -->
     <top-view name="topView" :logoRight="true" />
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表扩展项 -->
       <!-- 筛选列表 -->
-      <filter-sidebar ref="sidebarRef" />
+      <filter-sidebar v-if="config.showSidebar" ref="sidebarRef" @onListItemFocused="onListItemFocused" />
       <!-- 筛选内容 -->
       <filter-content ref="contentRef" />
     </qt-view>
@@ -16,15 +16,14 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
-import ThemeConfig from '../../config/theme-config'
+import themeConfig from '../../config/theme-config'
+import config from './config'
 import TopView from '../../components/top-view.vue'
 import FilterSidebar from './components/sidebar/index.vue'
 import FilterContent from './components/content/index.vue'
 
 const router = useESRouter()
 
-// 背景色
-const bgColor = ThemeConfig.rootBgGradientColor
 // 筛选列表
 const sidebarRef = ref()
 // 筛选内容
@@ -33,6 +32,12 @@ const contentRef = ref()
 function onESCreate() {
   sidebarRef.value?.init()
   contentRef.value?.init()
+}
+
+function onListItemFocused(evt) {
+  if (evt.isFocused) {
+    contentRef.value?.scrollToTop()
+  }
 }
 
 function onBackPressed() {

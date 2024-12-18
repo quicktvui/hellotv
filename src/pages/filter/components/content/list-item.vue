@@ -1,6 +1,7 @@
 <template>
   <qt-list-view
     class="filter-main-conditions-list-row"
+    :style="{ width: $props.width }"
     horizontal
     list="${list}"
     singleSelectPosition="${defaultSelectedPos}"
@@ -23,6 +24,12 @@
 </template>
 
 <script setup lang="ts">
+defineProps({
+  width: {
+    type: Number,
+    default: 1920
+  }
+})
 const emits = defineEmits(['onListItemClick'])
 
 function onListItemClick(evt) {

@@ -5,17 +5,17 @@
         <!-- 筛选条件 -->
         <qt-view class="filter-main-conditions">
           <qt-list-view class="filter-main-conditions-list" ref="listRef" :padding="'80,0,40,0'" :enableSelectOnFocus="false">
-            <list-item :type="1" @onListItemClick="onListItemClick" />
+            <list-item :type="1" :width="contentWidth" @onListItemClick="onListItemClick" />
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
         <qt-view class="filter-main-contents">
           <qt-grid-view
             class="filter-main-contents-grid"
-            :style="{ width: gridWidth }"
+            :style="{ width: contentWidth }"
             ref="gridRef"
             name="contentGrid"
-            :spanCount="gridSpanCount"
+            :spanCount="cfgSpanCount"
             :padding="'80,17,40,0'"
             :clipChildren="false"
             :autofocusPosition="0"
@@ -37,35 +37,29 @@
 </template>
 
 <script setup lang="ts" name="FilterContent">
-import { ref, computed } from 'vue'
+import { ref } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
-import config from '../../config'
 import ListItem from './list-item.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
+import config from '../../config'
+
+// 配置文件
+const cfgSpanCount = ref<number>(config.gridSpanCount)
 
 const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
+const contentWidth = ref<number>(cfgSpanCount.value === 5 ? 1920 : 1580)
 // 筛选条件
 const listRef = ref<QTIListView>()
 // 筛选结果
 const gridRef = ref<QTIGridView>()
 const gridScrollY = ref<number>(0)
-const gridWidth = ref<number>(1920)
-const gridItemHWidth = ref<number>(320)
-const gridItemHHeight = ref<number>(226)
-const gridItemHImgHeight = ref<number>(180)
-const gridSpanCount = computed(() => {
-  if (config.gridSpanCount === 4) {
-    gridWidth.value = 1580
-    gridItemHWidth.value = 325
-    gridItemHHeight.value = 229
-    gridItemHImgHeight.value = 183
-  }
-  return config.gridSpanCount
-})
+const gridItemHWidth = ref<number>(cfgSpanCount.value === 5 ? 320 : 325)
+const gridItemHHeight = ref<number>(cfgSpanCount.value === 5 ? 229 : 226)
+const gridItemHImgHeight = ref<number>(cfgSpanCount.value === 5 ? 180 : 183)
 
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
@@ -116,7 +110,7 @@ function onGridItemClick() {
 
 function onGridItemFocused(evt) {
   if (evt.isFocused) {
-    if (evt.position >= gridSpanCount.value) {
+    if (evt.position >= cfgSpanCount.value) {
       scrollRef.value?.scrollToWithOptions(0, 330, 300)
       gridScrollY.value = 1
     } else {
