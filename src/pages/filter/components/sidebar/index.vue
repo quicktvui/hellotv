@@ -96,8 +96,7 @@ defineExpose({ init })
   width: 340px;
   height: 106px;
   background-color: transparent;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
+  border-radius: 8px;
   focus-background-color: #ffffff;
 }
 
