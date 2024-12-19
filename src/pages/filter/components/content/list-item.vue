@@ -1,21 +1,23 @@
 <template>
   <qt-list-view
     class="filter-main-conditions-list-row"
-    :style="{ width: $props.width }"
+    :style="{ width: $props.width, height: $props.height }"
     horizontal
     list="${list}"
     singleSelectPosition="${defaultSelectedPos}"
+    :padding="'0,0,120,0'"
     :useDiff="true"
     :focusMemory="false"
     :enableSelectOnFocus="false"
     :nextFocusName="{ left: 'sidebarList' }"
+    :blockFocusDirections="['right']"
     @item-click="onListItemClick"
   >
     <qt-view class="filter-main-conditions-list-row-item" :type="1" :focusable="true" eventFocus eventClick>
       <qt-text
         class="filter-main-conditions-list-row-item-text"
         autoWidth
-        text="${text}"
+        text="${name}"
         :focusable="false"
         :duplicateParentState="true"
       ></qt-text>
@@ -28,6 +30,10 @@ defineProps({
   width: {
     type: Number,
     default: 1920
+  },
+  height: {
+    type: Number,
+    default: 66
   }
 })
 const emits = defineEmits(['onListItemClick'])

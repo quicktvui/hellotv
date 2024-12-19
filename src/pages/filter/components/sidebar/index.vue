@@ -4,6 +4,7 @@
       class="filter-sidebar-list"
       ref="listRef"
       name="sidebarList"
+      :singleSelectPosition="1"
       :nextFocusName="{ up: 'topView', right: 'contentGrid' }"
       @item-focused="onItemFocused"
     >
@@ -12,7 +13,7 @@
         <qt-text
           class="filter-sidebar-list-item-text"
           style="color: #ffffff; font-size: 40px"
-          text="电视剧"
+          text="${name}"
           gravity="center"
           typeface="bold"
         ></qt-text>
@@ -27,7 +28,7 @@
           <qt-image style="width: 34px; height: 34px; margin-right: 16px" :src="icFilterFocus"></qt-image>
           <qt-text
             class="filter-sidebar-list-item-text"
-            text="筛选"
+            text="${name}"
             autoWidth
             gravity="center"
             :focusable="false"
@@ -39,7 +40,7 @@
       <qt-view class="filter-sidebar-list-item" :type="3" :focusable="true" eventFocus eventClick>
         <qt-text
           class="filter-sidebar-list-item-text"
-          text="${title}"
+          text="${name}"
           gravity="center"
           :focusable="false"
           :duplicateParentState="true"
@@ -52,23 +53,14 @@
 <script setup lang="ts" name="FilterSidebar">
 import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
+import { secondary } from '../../adapter/interface'
 import icFilterFocus from '../../../../assets/filter/ic_filter_focus.png'
 
 const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()
 
-function init() {
-  const listData: any[] = [
-    { type: 1, title: '电视剧' },
-    { type: 2, title: '筛选' }
-  ]
-  for (let i = 1; i <= 10; i++) {
-    listData.push({
-      type: 3,
-      title: '武侠江湖' + i
-    })
-  }
+function init(listData: secondary[]) {
   listRef.value?.init(listData)
 }
 

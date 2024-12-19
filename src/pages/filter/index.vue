@@ -6,7 +6,7 @@
     <scroll-view name="filterScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true" :initialContentOffset="210">
       <qt-view class="filter-body" :clipChildren="true">
         <!-- 筛选列表扩展项 -->
-        <filter-extend v-if="config.isLeftListExpanded" ref="extendRef" :triggerTask="triggerTask" />
+        <filter-expand v-if="config.isLeftListExpand" ref="expandRef" :triggerTask="triggerTask" />
         <!-- 筛选列表 -->
         <filter-sidebar v-if="config.isLeftList" ref="sidebarRef" @onListItemFocused="onListItemFocused" />
         <!-- 筛选内容 -->
@@ -19,17 +19,19 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
+import { buildFilters } from './adapter/index'
 import themeConfig from '../../config/theme-config'
 import config from './config'
 import TopView from '../../components/top-view.vue'
-import FilterExtend from './components/extend/index.vue'
+import FilterExpand from './components/expand/index.vue'
 import FilterSidebar from './components/sidebar/index.vue'
 import FilterContent from './components/content/index.vue'
+import filterManager from '../../api/filter/index'
 
 const router = useESRouter()
 
 // 扩展列表
-const extendRef = ref()
+const expandRef = ref()
 // 筛选列表
 const sidebarRef = ref()
 // 筛选内容
@@ -50,15 +52,26 @@ const triggerTask = [
   }
 ]
 
-function onESCreate() {
-  extendRef.value?.init()
-  sidebarRef.value?.init()
-  contentRef.value?.init()
+async function onESCreate() {
+  const filters = await filterManager.getFilters('1848555233454727169', '1848555233454727169')
+  const { primaries, secondaries, tertiaries } = buildFilters(filters)
+  // 初始化一级列表
+  expandRef.value?.init(primaries)
+  // 初始化二级列表
+  sidebarRef.value?.init(secondaries)
+  // 初始化三级列表
+  contentRef.value?.init(tertiaries)
 }
 
+let lastPosition = 1
+let listTimer: any = -1
 function onListItemFocused(evt) {
-  if (evt.isFocused) {
-    contentRef.value?.scrollToTop()
+  if (evt.isFocused && evt.position != lastPosition) {
+    clearTimeout(listTimer)
+    listTimer = setTimeout(() => {
+      lastPosition = evt.position
+      contentRef.value?.loadContents(evt.item.type === 2, evt.item.id)
+    }, 300)
   }
 }
 

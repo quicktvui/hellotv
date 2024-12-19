@@ -1,14 +1,14 @@
 <template>
-  <qt-view class="filter-extend" :gradientBackground="{ colors: ['#00000000', '#10141A'], orientation: 0 }">
+  <qt-view class="filter-expand" :gradientBackground="{ colors: ['#00000000', '#10141A'], orientation: 0 }">
     <qt-list-view
-      class="filter-extend-list"
+      class="filter-expand-list"
       ref="listRef"
       :nextFocusName="{ up: 'topView', right: 'sidebarList' }"
       @item-focused="onItemFocused"
     >
-      <qt-view class="filter-extend-list-item" :type="1" :focusable="true" eventFocus eventClick>
+      <qt-view class="filter-expand-list-item" :type="1" :focusable="true" eventFocus eventClick>
         <qt-text
-          class="filter-extend-list-item-text"
+          class="filter-expand-list-item-text"
           text="${name}"
           gravity="center|end"
           :focusable="false"
@@ -19,23 +19,17 @@
   </qt-view>
 </template>
 
-<script setup lang="ts" name="FilterExtend">
+<script setup lang="ts" name="FilterExpand">
 import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
+import { primary } from '../../adapter/interface'
 
 const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()
 
-function init() {
-  listRef.value?.init([
-    { type: 1, name: '番剧' },
-    { type: 1, name: '电影' },
-    { type: 1, name: '纪录片' },
-    { type: 1, name: '国创' },
-    { type: 1, name: '电视剧' },
-    { type: 1, name: '综艺' }
-  ])
+function init(listData: primary[]) {
+  listRef.value?.init(listData)
 }
 
 function onItemFocused(evt) {
@@ -46,19 +40,19 @@ defineExpose({ init })
 </script>
 
 <style scoped>
-.filter-extend {
+.filter-expand {
   width: 210px;
   height: 960px;
   background-color: transparent;
 }
 
-.filter-extend-list {
+.filter-expand-list {
   width: 210px;
   height: 960px;
   background-color: transparent;
 }
 
-.filter-extend-list-item {
+.filter-expand-list-item {
   width: 210px;
   height: 106px;
   background-color: transparent;
@@ -67,7 +61,7 @@ defineExpose({ init })
   focus-background-color: white;
 }
 
-.filter-extend-list-item-text {
+.filter-expand-list-item-text {
   width: 179px;
   height: 106px;
   background-color: transparent;
