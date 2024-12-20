@@ -8,8 +8,10 @@
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
             ref="listRef"
+            name="contentList"
             :padding="'80,0,40,0'"
             :enableSelectOnFocus="false"
+            @item-focused="onListItemFocused"
           >
             <list-item :type="1" :width="contentWidth" :height="cfgListRowHeight" @onListItemClick="onListItemClick" />
           </qt-list-view>
@@ -27,6 +29,7 @@
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="false"
+            :nextFocusName="{ up: 'contentList' }"
             :blockFocusDirections="['down']"
             :openPage="true"
             :listenBoundEvent="true"
@@ -67,6 +70,8 @@ import GridItemV from './grid-item-v.vue'
 import config from '../../config'
 import filterManager from '../../../../api/filter/index'
 
+const emits = defineEmits(['setNextFocusNameRight'])
+
 // 配置文件
 const cfgListRowHeight = ref<number>(config.listRowHeight)
 const cfgGridSpanCount = ref<number>(config.gridSpanCount)
@@ -104,6 +109,12 @@ function init(listData: tertiary[]) {
   loadContents(rawListData.length > 0)
 }
 
+function onListItemFocused(evt) {
+  if (evt.isFocused) {
+    emits('setNextFocusNameRight', 'contentList')
+  }
+}
+
 function onListItemClick(evt) {
   toast.showToast('调接口')
   // 更新选中状态
@@ -116,6 +127,8 @@ function onGridItemClick() {
 
 function onGridItemFocused(evt) {
   if (evt.isFocused) {
+    emits('setNextFocusNameRight', 'contentGrid')
+
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
       scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)

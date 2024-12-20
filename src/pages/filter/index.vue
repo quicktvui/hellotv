@@ -10,7 +10,7 @@
         <!-- 筛选列表 -->
         <filter-sidebar v-if="config.isLeftList" ref="sidebarRef" @onListItemFocused="onListItemFocused" />
         <!-- 筛选内容 -->
-        <filter-content ref="contentRef" />
+        <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -73,6 +73,10 @@ function onListItemFocused(evt) {
       contentRef.value?.loadContents(evt.item.type === 2, evt.item.id)
     }, 300)
   }
+}
+
+function setNextFocusNameRight(s: string) {
+  sidebarRef.value?.setNextFocusNameRight(s)
 }
 
 function onBackPressed() {

@@ -5,7 +5,7 @@
       ref="listRef"
       name="sidebarList"
       :singleSelectPosition="1"
-      :nextFocusName="{ up: 'topView', right: 'contentGrid' }"
+      :nextFocusName="{ up: 'topView', right: nextFocusNameRight }"
       @item-focused="onItemFocused"
     >
       <!-- 二级分类标题 -->
@@ -86,6 +86,7 @@ import icFilterSelected from '../../../../assets/filter/ic_filter_selected.png'
 const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()
+const nextFocusNameRight = ref<string>('contentGrid')
 
 function init(listData: secondary[]) {
   listRef.value?.init(listData)
@@ -95,7 +96,11 @@ function onItemFocused(evt) {
   emits('onListItemFocused', evt)
 }
 
-defineExpose({ init })
+function setNextFocusNameRight(s: string) {
+  nextFocusNameRight.value = s
+}
+
+defineExpose({ init, setNextFocusNameRight })
 </script>
 
 <style scoped>
