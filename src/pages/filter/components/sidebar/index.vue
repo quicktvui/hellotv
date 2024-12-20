@@ -25,7 +25,32 @@
           :focusable="false"
           :duplicateParentState="true"
         >
-          <qt-image style="width: 34px; height: 34px; margin-right: 16px" :src="icFilterFocus"></qt-image>
+          <qt-view class="filter-sidebar-list-item-img" :focusable="false" :duplicateParentState="true">
+            <qt-image
+              class="filter-sidebar-list-item-img"
+              style="position: absolute"
+              :src="icFilterNormal"
+              showOnState="normal"
+              :focusable="false"
+              :duplicateParentState="true"
+            ></qt-image>
+            <qt-image
+              class="filter-sidebar-list-item-img"
+              style="position: absolute"
+              :src="icFilterFocused"
+              showOnState="focused"
+              :focusable="false"
+              :duplicateParentState="true"
+            ></qt-image>
+            <qt-image
+              class="filter-sidebar-list-item-img"
+              style="position: absolute"
+              :src="icFilterSelected"
+              showOnState="selected"
+              :focusable="false"
+              :duplicateParentState="true"
+            ></qt-image>
+          </qt-view>
           <qt-text
             class="filter-sidebar-list-item-text"
             text="${name}"
@@ -37,7 +62,7 @@
         </qt-view>
       </qt-view>
       <!-- 普通文本 -->
-      <qt-view class="filter-sidebar-list-item" :type="3" :focusable="true" eventFocus eventClick>
+      <qt-view class="filter-sidebar-list-item" :type="9" :focusable="true" eventFocus eventClick>
         <qt-text
           class="filter-sidebar-list-item-text"
           text="${name}"
@@ -54,7 +79,9 @@
 import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
 import { secondary } from '../../adapter/interface'
-import icFilterFocus from '../../../../assets/filter/ic_filter_focus.png'
+import icFilterNormal from '../../../../assets/filter/ic_filter_normal.png'
+import icFilterFocused from '../../../../assets/filter/ic_filter_focused.png'
+import icFilterSelected from '../../../../assets/filter/ic_filter_selected.png'
 
 const emits = defineEmits(['onListItemFocused'])
 
@@ -90,6 +117,13 @@ defineExpose({ init })
   background-color: transparent;
   border-radius: 8px;
   focus-background-color: #ffffff;
+}
+
+.filter-sidebar-list-item-img {
+  width: 34px;
+  height: 34px;
+  background-color: transparent;
+  margin-right: 16px;
 }
 
 .filter-sidebar-list-item-text {

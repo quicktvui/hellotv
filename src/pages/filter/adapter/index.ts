@@ -9,7 +9,7 @@ export const buildFilters = function (rawData: Filters): { primaries: primary[];
   const secondaries: secondary[] = [
     { type: 1, id: '', name: '电视剧' },
     { type: 2, id: '', name: '筛选' },
-    ...rawData.secondary.map((item) => ({ type: 3, ...item }))
+    ...rawData.secondary.map((item) => ({ type: 9, ...item }))
   ]
 
   // 三级列表, 右侧筛选条件
