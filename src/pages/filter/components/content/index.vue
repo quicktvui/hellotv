@@ -1,9 +1,9 @@
 <template>
-  <qt-view class="filter-main">
-    <scroll-view class="filter-main-scroll" ref="scrollRef" :onScrollEnable="true" makeChildVisibleType="none">
+  <qt-view class="filter-main" :style="{ width: contentWidth }">
+    <scroll-view v-show="!isLoading" class="filter-main-scroll" ref="scrollRef" :onScrollEnable="true" makeChildVisibleType="none">
       <qt-view style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
-        <qt-view v-show="showConditions" class="filter-main-conditions">
+        <qt-view v-if="showConditions" class="filter-main-conditions">
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
@@ -43,6 +43,14 @@
         </qt-view>
       </qt-view>
     </scroll-view>
+    <!-- 全屏loading -->
+    <qt-view v-if="isLoading" class="filter-main-box" :style="{ width: contentWidth }">
+      <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
+    </qt-view>
+    <!-- 暂无数据 -->
+    <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth }">
+      <qt-image style="width: 200px; height: 200px; background-color: red"></qt-image>
+    </qt-view>
   </qt-view>
 </template>
 
@@ -68,6 +76,8 @@ const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
 const contentWidth = ref<number>(cfgGridSpanCount.value === 5 ? 1920 : 1580)
 const isInit = ref<boolean>(true)
+const isLoading = ref<boolean>(false)
+const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
 const listHeight = ref<number>(330)
@@ -80,19 +90,18 @@ const gridItemHWidth = ref<number>(cfgGridSpanCount.value === 5 ? 320 : 325)
 const gridItemHHeight = ref<number>(cfgGridSpanCount.value === 5 ? 229 : 226)
 const gridItemHImgHeight = ref<number>(cfgGridSpanCount.value === 5 ? 180 : 183)
 
-// 全局页码
+// 页码
 let page = 1
+// 筛选数据
+let rawListData: tertiary[] = []
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
 function init(listData: tertiary[]) {
-  showConditions.value = listData.length > 0
-  // 计算筛选列表高度
-  listHeight.value = listData.length * cfgListRowHeight.value
-  // 初始化筛选条件
-  listDateRef = listRef.value?.init(listData) as QTListViewItem[]
-  // 初始化筛选内容
-  loadContents(showConditions.value)
+  // 保存筛选数据
+  rawListData = listData
+  // 加载筛选内容
+  loadContents(rawListData.length > 0)
 }
 
 function onListItemClick(evt) {
@@ -125,14 +134,34 @@ function onGridScrollStateChanged(evt) {
 }
 
 // 首次加载筛选内容
-function loadContents(b: boolean, query?: string) {
-  page = 1 // 重置页码
-  showConditions.value = b
+let ininConditionTimer: any = -1
+function loadContents(reIninCondition: boolean, query?: string) {
+  isEmpty.value = false
+  isLoading.value = true
+
+  if (reIninCondition) {
+    // 计算筛选列表高度
+    listHeight.value = rawListData.length * cfgListRowHeight.value
+    // 初始化筛选条件
+    showConditions.value = true
+    clearTimeout(ininConditionTimer)
+    ininConditionTimer = setTimeout(() => {
+      listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
+    }, 300)
+  } else {
+    showConditions.value = false
+  }
+
+  // 重置页码
+  page = 1
+  // 请求数据
   filterManager.getContents(query, page, cfgGridContentLimit.value).then((contents) => {
     gridData.value = buildContents(contents)
-    // TODO: 展示图片
+    isLoading.value = false
     if (gridData.value.length === 0) {
-      toast.showToast('暂无数据')
+      isEmpty.value = true
+    } else {
+      isEmpty.value = false
     }
   })
 }
@@ -170,6 +199,15 @@ defineExpose({ init, loadContents, onBackPressed })
 .filter-main-scroll {
   height: 960px;
   background-color: transparent;
+}
+
+.filter-main-box {
+  height: 960px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0px;
 }
 
 .filter-main-conditions {
