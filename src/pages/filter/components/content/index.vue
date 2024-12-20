@@ -52,7 +52,8 @@
     </qt-view>
     <!-- 暂无数据 -->
     <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth }">
-      <qt-image style="width: 200px; height: 200px; background-color: red"></qt-image>
+      <qt-image class="filter-main-box-img" :src="icEmpty"></qt-image>
+      <qt-text class="filter-main-box-text" text="暂无数据" gravity="center"></qt-text>
     </qt-view>
   </qt-view>
 </template>
@@ -64,6 +65,7 @@ import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents } from '../../adapter/index'
 import { tertiary } from '../../adapter/interface'
+import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
@@ -214,6 +216,12 @@ defineExpose({ init, loadContents, onBackPressed })
   background-color: transparent;
 }
 
+.filter-main-box-img {
+  width: 186px;
+  height: 174px;
+  background-color: transparent;
+}
+
 .filter-main-box {
   height: 960px;
   background-color: transparent;
@@ -221,6 +229,15 @@ defineExpose({ init, loadContents, onBackPressed })
   justify-content: center;
   position: absolute;
   top: 0px;
+}
+
+.filter-main-box-text {
+  width: 140px;
+  height: 40px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 30px;
+  margin-top: 37px;
 }
 
 .filter-main-conditions {
