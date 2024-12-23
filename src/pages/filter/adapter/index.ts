@@ -1,3 +1,4 @@
+import { QTListViewItem } from '@quicktvui/quicktvui3'
 import { Filters, Contents } from 'src/api/filter/interface'
 import { gridContent, primary, secondary, tertiary } from './interface'
 
@@ -43,4 +44,17 @@ export const buildContents = function (rawData: Contents): gridContent[] {
   })
 
   return contents
+}
+
+// 封装筛选参数
+export const getContentsQuery = (filters: QTListViewItem[]): string => {
+  let query: string = ''
+
+  filters.forEach((item) => {
+    if (item.defaultSelectedPos > 0) {
+      query += ',' + item.list[item.defaultSelectedPos].name
+    }
+  })
+
+  return query
 }

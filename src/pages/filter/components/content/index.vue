@@ -63,7 +63,7 @@ import { ref } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
-import { buildContents } from '../../adapter/index'
+import { buildContents, getContentsQuery } from '../../adapter/index'
 import { tertiary } from '../../adapter/interface'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
@@ -108,7 +108,7 @@ function init(listData: tertiary[]) {
   // 保存筛选数据
   rawListData = listData
   // 加载筛选内容
-  loadContents(rawListData.length > 0)
+  loadContents('', rawListData.length > 0)
 }
 
 function onListItemFocused(evt) {
@@ -118,9 +118,10 @@ function onListItemFocused(evt) {
 }
 
 function onListItemClick(evt) {
-  toast.showToast('调接口')
   // 更新选中状态
   listDateRef[evt.parentPosition].defaultSelectedPos = evt.position
+  // 重新获取筛选结果
+  loadContents(getContentsQuery(listDateRef))
 }
 
 function onGridItemClick() {
@@ -148,13 +149,13 @@ function onGridScrollStateChanged(evt) {
   }
 }
 
-// 首次加载筛选内容
+// 加载筛选内容
 let ininConditionTimer: any = -1
-function loadContents(reIninCondition: boolean, query?: string) {
+function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
-  isLoading.value = true
 
-  if (reIninCondition) {
+  if (resetFilters) {
+    isLoading.value = true
     // 计算筛选列表高度
     listHeight.value = rawListData.length * cfgListRowHeight.value
     // 初始化筛选条件
@@ -163,7 +164,8 @@ function loadContents(reIninCondition: boolean, query?: string) {
     ininConditionTimer = setTimeout(() => {
       listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
     }, 300)
-  } else {
+  } else if (hideFilters) {
+    isLoading.value = true
     showConditions.value = false
   }
 
