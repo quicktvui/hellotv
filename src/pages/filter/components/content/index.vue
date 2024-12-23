@@ -51,7 +51,7 @@
       <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
     </qt-view>
     <!-- 暂无数据 -->
-    <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth }">
+    <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth, marginTop: listHeight / 2 }">
       <qt-image class="filter-main-box-img" :src="icEmpty"></qt-image>
       <qt-text class="filter-main-box-text" text="暂无数据" gravity="center"></qt-text>
     </qt-view>
@@ -165,6 +165,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
       listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
     }, 300)
   } else if (hideFilters) {
+    listHeight.value = 0
     isLoading.value = true
     showConditions.value = false
   }
