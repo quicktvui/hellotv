@@ -12,6 +12,11 @@ export interface secondary {
   type: number
   id: string
   name: string
+  icon?: {
+    normal: string
+    focused: string
+    selected: string
+  }
 }
 
 // 三级筛选项

@@ -8,7 +8,12 @@
         <!-- 筛选列表扩展项 -->
         <filter-expand v-if="config.isLeftListExpand" ref="expandRef" :triggerTask="triggerTask" />
         <!-- 筛选列表 -->
-        <filter-sidebar v-if="config.isLeftList" ref="sidebarRef" @onListItemFocused="onListItemFocused" />
+        <filter-sidebar
+          v-if="config.isLeftList"
+          ref="sidebarRef"
+          :singleSelectPos="singleSelectPos"
+          @onListItemFocused="onListItemFocused"
+        />
         <!-- 筛选内容 -->
         <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
@@ -34,6 +39,7 @@ const router = useESRouter()
 const expandRef = ref()
 // 筛选列表
 const sidebarRef = ref()
+const singleSelectPos = ref<number>(1)
 // 筛选内容
 const contentRef = ref()
 
@@ -63,14 +69,14 @@ async function onESCreate() {
   contentRef.value?.init(tertiaries)
 }
 
-let lastPosition = 1
+let lastPosition = singleSelectPos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastPosition) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
-      contentRef.value?.loadContents(evt.item.id, evt.item.type === 2, evt.item.type !== 2)
+      contentRef.value?.loadContents(evt.item.id, evt.item.type <= 2, evt.item.type === 9)
     }, 300)
   }
 }

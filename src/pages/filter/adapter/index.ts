@@ -1,6 +1,9 @@
 import { QTListViewItem } from '@quicktvui/quicktvui3'
 import { Filters, Contents } from 'src/api/filter/interface'
 import { gridContent, primary, secondary, tertiary } from './interface'
+import icFilterNormal from '../../../assets/filter/ic_filter_normal.png'
+import icFilterFocused from '../../../assets/filter/ic_filter_focused.png'
+import icFilterSelected from '../../../assets/filter/ic_filter_selected.png'
 
 export const buildFilters = function (rawData: Filters): { primaries: primary[]; secondaries: secondary[]; tertiaries: tertiary[] } {
   // 一级列表, 左侧扩展
@@ -9,7 +12,13 @@ export const buildFilters = function (rawData: Filters): { primaries: primary[];
   // 二级列表, 左侧筛选项
   const secondaries: secondary[] = [
     { type: 1, id: '', name: '电视剧' },
-    { type: 2, id: '', name: '筛选' },
+    // { type: 2, id: '', name: '电视剧' },
+    {
+      type: 2,
+      id: '',
+      name: '筛选',
+      icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
+    },
     ...rawData.secondary.map((item) => ({ type: 9, ...item }))
   ]
 
