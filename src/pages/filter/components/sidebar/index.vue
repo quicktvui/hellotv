@@ -11,6 +11,8 @@
       <list-item-title :type="1" />
       <!-- 筛选按钮、图标 -->
       <list-item-filter :type="2" />
+      <!-- 筛选按钮、图标样式二 -->
+      <list-item-filter-title :type="3" />
       <!-- 普通文本 -->
       <list-item-text :type="9" :textStyle="$props.listItemTextStyle" :textGravity="$props.listItemTextGravity" />
     </qt-list-view>
@@ -23,6 +25,7 @@ import { QTIListView } from '@quicktvui/quicktvui3'
 import { secondary } from '../../adapter/interface'
 import ListItemTitle from './list-item-title.vue'
 import ListItemFilter from './list-item-filter.vue'
+import ListItemFilterTitle from './list-item-filter-title.vue'
 import ListItemText from './list-item-text.vue'
 
 defineProps({

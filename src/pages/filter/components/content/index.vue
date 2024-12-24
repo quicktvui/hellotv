@@ -9,7 +9,7 @@
             :style="{ height: listHeight }"
             ref="listRef"
             name="contentList"
-            :padding="'80,0,40,0'"
+            :padding="'56,0,40,0'"
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
@@ -256,6 +256,7 @@ defineExpose({ init, loadContents, onBackPressed })
 
 .filter-main-conditions {
   background-color: transparent;
+  /* margin-top: 24px; */
   margin-bottom: 15px;
 }
 

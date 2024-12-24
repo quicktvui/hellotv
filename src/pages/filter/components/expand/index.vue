@@ -5,6 +5,7 @@
       ref="listRef"
       :singleSelectPosition="$props.singleSelectPos"
       :nextFocusName="{ up: 'topView', right: 'sidebarList' }"
+      :descendantFocusability="$props.expandAvailable ? 1 : 2"
       @item-focused="onItemFocused"
     >
       <qt-view class="filter-expand-list-item" :type="1" :focusable="true" eventFocus eventClick>
@@ -29,6 +30,10 @@ defineProps({
   singleSelectPos: {
     type: Number,
     default: 0
+  },
+  expandAvailable: {
+    type: Boolean,
+    default: true
   }
 })
 const emits = defineEmits(['onListItemFocused'])

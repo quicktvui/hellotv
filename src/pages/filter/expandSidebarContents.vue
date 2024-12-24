@@ -9,11 +9,18 @@
         <filter-expand
           ref="expandRef"
           :singleSelectPos="expandSinglePos"
+          :expandAvailable="expandAvailable"
           :triggerTask="triggerTask"
           @onListItemFocused="onExtListItemFocused"
         />
         <!-- 筛选列表 -->
-        <filter-sidebar ref="sidebarRef" :singleSelectPos="sidebarSinglePos" @onListItemFocused="onListItemFocused" />
+        <filter-sidebar
+          ref="sidebarRef"
+          :singleSelectPos="sidebarSinglePos"
+          :listItemTextStyle="{ width: `222px`, marginLeft: `98px` }"
+          :listItemTextGravity="'center|start'"
+          @onListItemFocused="onListItemFocused"
+        />
         <!-- 筛选内容 -->
         <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
@@ -37,6 +44,7 @@ const router = useESRouter()
 // 扩展列表
 const expandRef = ref()
 const expandSinglePos = ref<number>(0)
+const expandAvailable = ref<boolean>(false)
 // 筛选列表
 const sidebarRef = ref()
 const sidebarSinglePos = ref<number>(0)
@@ -91,12 +99,16 @@ function onExtListItemFocused(evt) {
 let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
-  if (evt.isFocused && evt.position != lastPosition) {
-    clearTimeout(listTimer)
-    listTimer = setTimeout(() => {
-      lastPosition = evt.position
-      contentRef.value?.loadContents(evt.item.id, evt.item.type <= 2, evt.item.type === 9)
-    }, 300)
+  if (evt.isFocused) {
+    expandAvailable.value = evt.item.type === 3
+
+    if (evt.position != lastPosition) {
+      clearTimeout(listTimer)
+      listTimer = setTimeout(() => {
+        lastPosition = evt.position
+        contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === 9)
+      }, 300)
+    }
   }
 }
 

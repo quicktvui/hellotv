@@ -51,7 +51,7 @@ function onListItemFocused(evt) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
-      contentRef.value?.loadContents(evt.item.id, evt.item.type <= 2, evt.item.type === 9)
+      contentRef.value?.loadContents(evt.item.id, evt.item.type === 2, evt.item.type === 9)
     }, 300)
   }
 }
