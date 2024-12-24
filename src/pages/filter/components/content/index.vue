@@ -35,7 +35,7 @@
             :padding="'80,17,40,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
-            :enablePlaceholder="false"
+            :enablePlaceholder="true"
             :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
             :blockFocusDirections="['down']"
             :openPage="true"
@@ -141,8 +141,10 @@ function onGridItemFocused(evt) {
 
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
-      scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
-      gridScrollY.value = 1
+      if (gridScrollY.value === 0) {
+        scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
+        gridScrollY.value = 1
+      }
     } else {
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
