@@ -59,7 +59,7 @@
 </template>
 
 <script setup lang="ts" name="FilterContent">
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
@@ -150,7 +150,11 @@ function onGridScrollStateChanged(evt) {
 }
 
 // 加载筛选内容
+// query: 查询参数
+// resetFilters: 是否需要重新初始化筛选条件组件
+// hideFilters: 是否需要隐藏筛选条件组件
 let ininConditionTimer: any = -1
+let loadingTimer: any = -1
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
 
@@ -159,10 +163,13 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
     // 计算筛选列表高度
     listHeight.value = rawListData.length * cfgListRowHeight.value
     // 初始化筛选条件
-    showConditions.value = true
+    showConditions.value = false
     clearTimeout(ininConditionTimer)
     ininConditionTimer = setTimeout(() => {
-      listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
+      showConditions.value = true
+      nextTick(() => {
+        listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
+      })
     }, 300)
   } else if (hideFilters) {
     listHeight.value = 0
@@ -175,12 +182,16 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
   // 请求数据
   filterManager.getContents(query, page, cfgGridContentLimit.value).then((contents) => {
     gridData.value = buildContents(contents)
-    isLoading.value = false
-    if (gridData.value.length === 0) {
-      isEmpty.value = true
-    } else {
-      isEmpty.value = false
-    }
+
+    clearTimeout(loadingTimer)
+    loadingTimer = setTimeout(() => {
+      isLoading.value = false
+      if (gridData.value.length === 0) {
+        isEmpty.value = true
+      } else {
+        isEmpty.value = false
+      }
+    }, 300)
   })
 }
 

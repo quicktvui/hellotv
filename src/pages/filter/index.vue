@@ -6,12 +6,18 @@
     <scroll-view name="filterScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true" :initialContentOffset="210">
       <qt-view class="filter-body" :clipChildren="true">
         <!-- 筛选列表扩展项 -->
-        <filter-expand v-if="config.isLeftListExpand" ref="expandRef" :triggerTask="triggerTask" />
+        <filter-expand
+          v-if="config.isLeftListExpand"
+          ref="expandRef"
+          :singleSelectPos="expandSinglePos"
+          :triggerTask="triggerTask"
+          @onListItemFocused="onExtListItemFocused"
+        />
         <!-- 筛选列表 -->
         <filter-sidebar
           v-if="config.isLeftList"
           ref="sidebarRef"
-          :singleSelectPos="singleSelectPos"
+          :singleSelectPos="sidebarSinglePos"
           @onListItemFocused="onListItemFocused"
         />
         <!-- 筛选内容 -->
@@ -37,9 +43,10 @@ const router = useESRouter()
 
 // 扩展列表
 const expandRef = ref()
+const expandSinglePos = ref<number>(0)
 // 筛选列表
 const sidebarRef = ref()
-const singleSelectPos = ref<number>(1)
+const sidebarSinglePos = ref<number>(1)
 // 筛选内容
 const contentRef = ref()
 
@@ -58,18 +65,39 @@ const triggerTask = [
   }
 ]
 
-async function onESCreate() {
-  const filters = await filterManager.getFilters('1848555233454727169', '1848555233454727169')
-  const { primaries, secondaries, tertiaries } = buildFilters(filters)
-  // 初始化一级列表
-  expandRef.value?.init(primaries)
-  // 初始化二级列表
-  sidebarRef.value?.init(secondaries)
-  // 初始化三级列表
-  contentRef.value?.init(tertiaries)
+function onESCreate(params: { primaryId: string }) {
+  loadFilters(params.primaryId || '1848555233454727169', true)
 }
 
-let lastPosition = singleSelectPos.value
+function loadFilters(primaryId: string, initExpand?: boolean) {
+  filterManager.getFilters(primaryId).then((filters) => {
+    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
+    // 初始化一级列表
+    if (config.isLeftListExpand && initExpand) {
+      expandRef.value?.init(primaries)
+    }
+    // 初始化二级列表
+    if (config.isLeftList) {
+      sidebarRef.value?.init(secondaries)
+    }
+    // 初始化三级列表
+    contentRef.value?.init(tertiaries)
+  })
+}
+
+let lastExtPosition = expandSinglePos.value
+let extListTimer: any = -1
+function onExtListItemFocused(evt) {
+  if (evt.isFocused && evt.position != lastExtPosition) {
+    clearTimeout(extListTimer)
+    extListTimer = setTimeout(() => {
+      lastExtPosition = evt.position
+      loadFilters(evt.item.id)
+    }, 300)
+  }
+}
+
+let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastPosition) {

@@ -5,12 +5,11 @@ import config from '../../config/build-config'
 
 class FilterManager implements FilterApi {
   // 获取筛选左侧列表
-  getFilters(primaryId: string, secondaryId: string): Promise<Filters> {
+  getFilters(primaryId: string): Promise<Filters> {
     return requestManager.get(
       replacePlaceholders(filterLeftListUrl, {
         packageName: config.packageName,
-        primaryId,
-        secondaryId
+        primaryId
       })
     )
   }

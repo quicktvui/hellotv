@@ -4,15 +4,26 @@ import { gridContent, primary, secondary, tertiary } from './interface'
 import icFilterNormal from '../../../assets/filter/ic_filter_normal.png'
 import icFilterFocused from '../../../assets/filter/ic_filter_focused.png'
 import icFilterSelected from '../../../assets/filter/ic_filter_selected.png'
+import icLeftNormal from '../../../assets/filter/ic_left_normal.png'
+import icLeftFocused from '../../../assets/filter/ic_left_focused.png'
+import icLeftSelected from '../../../assets/filter/ic_left_selected.png'
 
-export const buildFilters = function (rawData: Filters): { primaries: primary[]; secondaries: secondary[]; tertiaries: tertiary[] } {
+export const buildFilters = function (
+  primaryId: string,
+  rawData: Filters
+): { primaries: primary[]; secondaries: secondary[]; tertiaries: tertiary[] } {
   // 一级列表, 左侧扩展
   const primaries: primary[] = rawData.primary.map((item) => ({ type: 1, ...item }))
 
   // 二级列表, 左侧筛选项
   const secondaries: secondary[] = [
-    { type: 1, id: '', name: '电视剧' },
-    // { type: 2, id: '', name: '电视剧' },
+    { type: 1, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
+    // {
+    //   type: 2,
+    //   id: '',
+    //   name: primaries.find((item) => item.id === primaryId)?.name || '',
+    //   icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
+    // },
     {
       type: 2,
       id: '',

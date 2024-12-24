@@ -3,6 +3,7 @@
     <qt-list-view
       class="filter-expand-list"
       ref="listRef"
+      :singleSelectPosition="$props.singleSelectPos"
       :nextFocusName="{ up: 'topView', right: 'sidebarList' }"
       @item-focused="onItemFocused"
     >
@@ -24,6 +25,12 @@ import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
 import { primary } from '../../adapter/interface'
 
+defineProps({
+  singleSelectPos: {
+    type: Number,
+    default: 0
+  }
+})
 const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()

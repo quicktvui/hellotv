@@ -14,7 +14,7 @@ export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
 //搜索页接口
 
 //筛选页接口
-export const filterLeftListUrl = BuildConfig.requestBaseUrl + '/filter/${primaryId}/tags?packageName=${packageName}&id=${secondaryId}'
+export const filterLeftListUrl = BuildConfig.requestBaseUrl + '/filter/${primaryId}/tags?packageName=${packageName}'
 export const filterContentsUrl =
   BuildConfig.requestBaseUrl + '/filter/contents?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
 
