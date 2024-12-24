@@ -23,7 +23,7 @@
           @onListItemFocused="onListItemFocused"
         />
         <!-- 筛选内容 -->
-        <filter-content ref="contentRef" @setBlockFocusDir="setBlockFocusDir" @setNextFocusNameRight="setNextFocusNameRight" />
+        <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -114,11 +114,8 @@ function onListItemFocused(evt) {
   }
 }
 
-function setBlockFocusDir(arr: []) {
-  sidebarBlockFocusDir.value = arr
-}
-
 function setNextFocusNameRight(s: string) {
+  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

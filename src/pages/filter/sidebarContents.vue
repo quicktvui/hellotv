@@ -5,7 +5,12 @@
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表 -->
-      <filter-sidebar ref="sidebarRef" :singleSelectPos="sidebarSinglePos" @onListItemFocused="onListItemFocused" />
+      <filter-sidebar
+        ref="sidebarRef"
+        :blockFocusDir="sidebarBlockFocusDir"
+        :singleSelectPos="sidebarSinglePos"
+        @onListItemFocused="onListItemFocused"
+      />
       <!-- 筛选内容 -->
       <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
     </qt-view>
@@ -27,6 +32,7 @@ const router = useESRouter()
 // 筛选列表
 const sidebarRef = ref()
 const sidebarSinglePos = ref<number>(1)
+const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
 
@@ -57,6 +63,7 @@ function onListItemFocused(evt) {
 }
 
 function setNextFocusNameRight(s: string) {
+  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

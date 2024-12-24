@@ -79,7 +79,7 @@ import GridItemV from './grid-item-v.vue'
 import config from '../../config'
 import filterManager from '../../../../api/filter/index'
 
-const emits = defineEmits(['setBlockFocusDir', 'setNextFocusNameRight'])
+const emits = defineEmits(['setNextFocusNameRight'])
 
 // 配置文件
 const cfgListRowHeight = ref<number>(config.listRowHeight)
@@ -192,13 +192,12 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 
     clearTimeout(loadingTimer)
     loadingTimer = setTimeout(() => {
-      emits('setBlockFocusDir', gridData.value.length === 0 ? ['right'] : [])
-
       isLoading.value = false
       if (gridData.value.length === 0) {
         emits('setNextFocusNameRight', '')
         isEmpty.value = true
       } else {
+        emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
       }
     }, 300)
