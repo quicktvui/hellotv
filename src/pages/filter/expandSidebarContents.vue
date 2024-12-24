@@ -7,19 +7,13 @@
       <qt-view class="filter-body" :clipChildren="true">
         <!-- 筛选列表扩展项 -->
         <filter-expand
-          v-if="config.isLeftListExpand"
           ref="expandRef"
           :singleSelectPos="expandSinglePos"
           :triggerTask="triggerTask"
           @onListItemFocused="onExtListItemFocused"
         />
         <!-- 筛选列表 -->
-        <filter-sidebar
-          v-if="config.isLeftList"
-          ref="sidebarRef"
-          :singleSelectPos="sidebarSinglePos"
-          @onListItemFocused="onListItemFocused"
-        />
+        <filter-sidebar ref="sidebarRef" :singleSelectPos="sidebarSinglePos" @onListItemFocused="onListItemFocused" />
         <!-- 筛选内容 -->
         <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
@@ -32,7 +26,6 @@ import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { buildFilters } from './adapter/index'
 import themeConfig from '../../config/theme-config'
-import config from './config'
 import TopView from '../../components/top-view.vue'
 import FilterExpand from './components/expand/index.vue'
 import FilterSidebar from './components/sidebar/index.vue'
@@ -46,7 +39,7 @@ const expandRef = ref()
 const expandSinglePos = ref<number>(0)
 // 筛选列表
 const sidebarRef = ref()
-const sidebarSinglePos = ref<number>(1)
+const sidebarSinglePos = ref<number>(0)
 // 筛选内容
 const contentRef = ref()
 
@@ -73,13 +66,11 @@ function loadFilters(primaryId: string, initExpand?: boolean) {
   filterManager.getFilters(primaryId).then((filters) => {
     const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
     // 初始化一级列表
-    if (config.isLeftListExpand && initExpand) {
+    if (initExpand) {
       expandRef.value?.init(primaries)
     }
     // 初始化二级列表
-    if (config.isLeftList) {
-      sidebarRef.value?.init(secondaries)
-    }
+    sidebarRef.value?.init(secondaries)
     // 初始化三级列表
     contentRef.value?.init(tertiaries)
   })

@@ -17,19 +17,19 @@ export const buildFilters = function (
 
   // 二级列表, 左侧筛选项
   const secondaries: secondary[] = [
-    { type: 1, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
-    // {
-    //   type: 2,
-    //   id: '',
-    //   name: primaries.find((item) => item.id === primaryId)?.name || '',
-    //   icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
-    // },
+    // { type: 1, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
     {
       type: 2,
       id: '',
-      name: '筛选',
-      icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
+      name: primaries.find((item) => item.id === primaryId)?.name || '',
+      icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
     },
+    // {
+    //   type: 2,
+    //   id: '',
+    //   name: '筛选',
+    //   icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
+    // },
     ...rawData.secondary.map((item) => ({ type: 9, ...item }))
   ]
 
