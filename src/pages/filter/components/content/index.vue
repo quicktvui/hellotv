@@ -37,9 +37,10 @@
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
             :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
-            :blockFocusDirections="['down']"
+            :blockFocusDirections="['right', 'down']"
             :openPage="true"
             :listenBoundEvent="true"
+            :listenHasFocusChange="true"
             :loadMore="onGridLoadMore"
             @item-click="onGridItemClick"
             @item-focused="onGridItemFocused"
@@ -131,6 +132,9 @@ function init(listData: tertiary[]) {
 function onListItemFocused(evt) {
   if (evt.isFocused) {
     emits('setNextFocusNameRight', 'contentList')
+    gridScrollY.value = 0
+    gridRef.value?.scrollToSelected(0, true)
+    scrollRef.value?.scrollToWithOptions(0, 0, 300)
   }
 }
 
