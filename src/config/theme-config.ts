@@ -38,7 +38,7 @@ export default {
   tabContentBgGradientFocusColor: ["#157AFC", "#157AFC"],
 
   //瀑布流格子浮动标题背景色
-  tabContentFloatBgFocusColor: ["#ed222222", "#00000000"],
+  tabContentFloatBgColor: ["#ed222222", "#00000000"],
   //角标默认颜色
   tabCornerColors:["#ffB67827","#ffB67827"],
 
