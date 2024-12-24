@@ -15,7 +15,7 @@ const routes = [
   {
     path: '/filter',
     name: 'filter',
-    component: () => import('./pages/filter/singleContents.vue')
+    component: () => import('./pages/filter/expandSidebarContents.vue')
   },
   {
     path: '/detail',

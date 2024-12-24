@@ -49,6 +49,16 @@
             <grid-item-h :type="1" :width="gridItemHWidth" :height="gridItemHHeight" :imgHeight="gridItemHImgHeight" />
             <!-- 竖图 -->
             <grid-item-v :type="2" />
+            <!-- 到底提示 -->
+            <template #footer>
+              <qt-text
+                :type="1003"
+                :style="{ width: `${contentWidth - 160}px`, height: `100px` }"
+                text="已经到底啦 ！"
+                gravity="center"
+                :focusable="false"
+              ></qt-text>
+            </template>
           </qt-grid-view>
         </qt-view>
       </qt-view>
@@ -214,6 +224,7 @@ function onGridLoadMore() {
     gridData.value.push(...data)
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
+      gridData.value.push({ type: 1003, decoration: { bottom: 40 } })
       gridRef.value?.stopPage()
     }
   })
