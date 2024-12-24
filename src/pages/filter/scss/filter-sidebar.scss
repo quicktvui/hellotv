@@ -1,0 +1,36 @@
+.filter-sidebar {
+  width: 340px;
+  height: 960px;
+  background-color: transparent;
+}
+
+.filter-sidebar-list {
+  width: 340px;
+  height: 960px;
+  background-color: transparent;
+}
+
+.filter-sidebar-list-item {
+  width: 340px;
+  height: 106px;
+  background-color: transparent;
+  border-radius: 8px;
+  focus-background-color: #ffffff;
+}
+
+.filter-sidebar-list-item-img {
+  width: 34px;
+  height: 34px;
+  background-color: transparent;
+  margin-right: 16px;
+}
+
+.filter-sidebar-list-item-text {
+  width: 340px;
+  height: 106px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 36px;
+  focus-color: #13161b;
+  select-color: #ffffff;
+}

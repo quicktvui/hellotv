@@ -11,6 +11,7 @@ class HomeManager implements HomeApi{
 
   /**
    * 获取导航数据
+   * 
    */
   getTabList(): Promise<QTTab> {
     const url = tabListUrl + BuildConfig.packageName
