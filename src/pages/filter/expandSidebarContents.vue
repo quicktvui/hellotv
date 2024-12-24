@@ -16,13 +16,14 @@
         <!-- 筛选列表 -->
         <filter-sidebar
           ref="sidebarRef"
+          :blockFocusDir="sidebarBlockFocusDir"
           :singleSelectPos="sidebarSinglePos"
           :listItemTextStyle="{ width: `222px`, marginLeft: `98px` }"
           :listItemTextGravity="'center|start'"
           @onListItemFocused="onListItemFocused"
         />
         <!-- 筛选内容 -->
-        <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
+        <filter-content ref="contentRef" @setBlockFocusDir="setBlockFocusDir" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -48,6 +49,7 @@ const expandAvailable = ref<boolean>(false)
 // 筛选列表
 const sidebarRef = ref()
 const sidebarSinglePos = ref<number>(0)
+const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
 
@@ -110,6 +112,10 @@ function onListItemFocused(evt) {
       }, 300)
     }
   }
+}
+
+function setBlockFocusDir(arr: []) {
+  sidebarBlockFocusDir.value = arr
 }
 
 function setNextFocusNameRight(s: string) {

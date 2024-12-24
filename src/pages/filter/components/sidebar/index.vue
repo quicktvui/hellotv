@@ -1,5 +1,9 @@
 <template>
-  <qt-view class="filter-sidebar" :gradientBackground="{ colors: ['#00000000', '#10141A'], orientation: 0 }">
+  <qt-view
+    class="filter-sidebar"
+    :gradientBackground="{ colors: ['#00000000', '#10141A'], orientation: 0 }"
+    :blockFocusDirections="$props.blockFocusDir"
+  >
     <qt-list-view
       class="filter-sidebar-list"
       ref="listRef"
@@ -29,6 +33,10 @@ import ListItemFilterTitle from './list-item-filter-title.vue'
 import ListItemText from './list-item-text.vue'
 
 defineProps({
+  blockFocusDir: {
+    type: Object,
+    default: []
+  },
   singleSelectPos: {
     type: Number,
     default: 1

@@ -1,6 +1,13 @@
 <template>
-  <qt-view class="filter-main" :style="{ width: contentWidth }">
-    <scroll-view v-show="!isLoading" class="filter-main-scroll" ref="scrollRef" :onScrollEnable="true" makeChildVisibleType="none">
+  <qt-view class="filter-main" :style="{ width: contentWidth }" :focusable="false">
+    <scroll-view
+      v-show="!isLoading"
+      class="filter-main-scroll"
+      ref="scrollRef"
+      :focusable="false"
+      :onScrollEnable="true"
+      makeChildVisibleType="none"
+    >
       <qt-view style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
         <qt-view v-if="showConditions" class="filter-main-conditions">
@@ -29,7 +36,7 @@
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="false"
-            :nextFocusName="{ up: 'contentList' }"
+            :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
             :blockFocusDirections="['down']"
             :openPage="true"
             :listenBoundEvent="true"
@@ -72,7 +79,7 @@ import GridItemV from './grid-item-v.vue'
 import config from '../../config'
 import filterManager from '../../../../api/filter/index'
 
-const emits = defineEmits(['setNextFocusNameRight'])
+const emits = defineEmits(['setBlockFocusDir', 'setNextFocusNameRight'])
 
 // 配置文件
 const cfgListRowHeight = ref<number>(config.listRowHeight)
@@ -185,8 +192,11 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 
     clearTimeout(loadingTimer)
     loadingTimer = setTimeout(() => {
+      emits('setBlockFocusDir', gridData.value.length === 0 ? ['right'] : [])
+
       isLoading.value = false
       if (gridData.value.length === 0) {
+        emits('setNextFocusNameRight', '')
         isEmpty.value = true
       } else {
         isEmpty.value = false
