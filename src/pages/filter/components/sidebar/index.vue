@@ -37,8 +37,8 @@ import ListItemLine from './list-item-line.vue'
 
 defineProps({
   blockFocusDir: {
-    type: Object,
-    default: []
+    type: Array,
+    default: () => []
   },
   singleSelectPos: {
     type: Number,
@@ -46,7 +46,7 @@ defineProps({
   },
   listItemTextStyle: {
     type: Object,
-    default: {}
+    default: () => {}
   },
   listItemTextGravity: {
     type: String,
