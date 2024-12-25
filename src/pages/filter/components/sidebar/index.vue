@@ -19,6 +19,8 @@
       <list-item-filter-title :type="3" />
       <!-- 普通文本 -->
       <list-item-text :type="9" :textStyle="$props.listItemTextStyle" :textGravity="$props.listItemTextGravity" />
+      <!-- 横线 -->
+      <list-item-line :type="10" />
     </qt-list-view>
   </qt-view>
 </template>
@@ -31,6 +33,7 @@ import ListItemTitle from './list-item-title.vue'
 import ListItemFilter from './list-item-filter.vue'
 import ListItemFilterTitle from './list-item-filter-title.vue'
 import ListItemText from './list-item-text.vue'
+import ListItemLine from './list-item-line.vue'
 
 defineProps({
   blockFocusDir: {

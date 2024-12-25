@@ -32,7 +32,7 @@
             name="contentGrid"
             :listData="gridData"
             :spanCount="cfgGridSpanCount"
-            :padding="'80,17,40,0'"
+            :padding="cfgGridItemMode === 1 ? '80,17,40,0' : '80,17,0,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
@@ -94,12 +94,17 @@ const emits = defineEmits(['setNextFocusNameRight'])
 
 // 配置文件
 const cfgListRowHeight = ref<number>(config.listRowHeight)
+const cfgGridItemMode = ref<number>(config.gridItemMode)
 const cfgGridSpanCount = ref<number>(config.gridSpanCount)
 const cfgGridContentLimit = ref<number>(config.gridContentLimit)
 
 const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
-const contentWidth = ref<number>(cfgGridSpanCount.value === 5 ? 1920 : 1580)
+const contentWidth = ref<number>(
+  (cfgGridItemMode.value === 1 && cfgGridSpanCount.value === 4) || (cfgGridItemMode.value === 2 && cfgGridSpanCount.value === 5)
+    ? 1580
+    : 1920
+)
 const isInit = ref<boolean>(true)
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)

@@ -27,9 +27,10 @@ export const buildFilters = function (
     {
       type: 3,
       id: '',
-      name: primaries.find((item) => item.id === primaryId)?.name || '',
+      name: '全部' + primaries.find((item) => item.id === primaryId)?.name || '',
       icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
     },
+    { type: 10, id: '', name: 'line' },
     ...rawData.secondary.map((item) => ({ type: 9, ...item }))
   ]
 
@@ -55,7 +56,7 @@ export const buildContents = function (rawData: Contents): gridContent[] {
 
   rawData.items.forEach((item) => {
     contents.push({
-      type: 1,
+      type: 2,
       decoration: { right: 40, bottom: 40 },
       title: item.title,
       cover: item.cover,

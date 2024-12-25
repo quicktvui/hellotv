@@ -1,12 +1,24 @@
 <template>
-  <qt-view class="filter-main-contents-grid-item-v" :focusable="true">
+  <qt-view class="filter-main-contents-grid-item-v" :focusable="true" eventFocus eventClick>
+    <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-v-img"
       :style="{ borderRadius: borderRadius }"
       src="${cover}"
+      :postDelay="100"
+      :enableFocusBorder="true"
       :focusable="false"
+      :duplicateParentState="true"
     ></qt-image>
-    <qt-text class="filter-main-contents-grid-item-v-text" text="${title}" :focusable="false" duplicateParentState></qt-text>
+    <!-- 标题 -->
+    <qt-text
+      class="filter-main-contents-grid-item-v-text"
+      text="${title}"
+      :lines="1"
+      :ellipsizeMode="4"
+      :focusable="false"
+      :duplicateParentState="true"
+    ></qt-text>
   </qt-view>
 </template>
 
@@ -26,8 +38,8 @@ const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 .filter-main-contents-grid-item-v-img {
   width: 260px;
   height: 368px;
-  background-color: gray;
-  margin-bottom: 10px;
+  background-color: transparent;
+  margin-bottom: 11px;
 }
 
 .filter-main-contents-grid-item-v-text {
