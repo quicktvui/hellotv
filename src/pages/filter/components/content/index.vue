@@ -54,7 +54,7 @@
             <template #footer>
               <qt-text
                 :type="1003"
-                :style="{ width: `${contentWidth - 160}px`, height: `100px`, color: 'rgba(255,255,255,0.55)', fontSize: `28px` }"
+                :style="{ width: `${contentWidth - 150}px`, height: `100px`, color: 'rgba(255,255,255,0.55)', fontSize: `28px` }"
                 text="已经到底啦，按【返回键】回到顶部"
                 gravity="center"
                 :focusable="false"
@@ -220,6 +220,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
       } else {
         emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
+        gridRef.value?.setItemSelected(0, true)
       }
     }, 300)
   })
@@ -233,7 +234,8 @@ function onGridLoadMore() {
     gridData.value.push(...data)
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
-      gridData.value.push({ type: 1003, decoration: { bottom: 40 } })
+      // TODO
+      gridData.value.push({ type: 1003, decoration: { bottom: 30 } })
       gridRef.value?.stopPage()
     }
   })
