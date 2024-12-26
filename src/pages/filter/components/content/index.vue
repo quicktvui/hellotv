@@ -81,7 +81,7 @@ import { ref, nextTick } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
-import { buildContents, getContentsQuery } from '../../adapter/index'
+import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
 import { tertiary } from '../../adapter/interface'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
@@ -234,8 +234,9 @@ function onGridLoadMore() {
     gridData.value.push(...data)
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
-      // TODO
-      gridData.value.push({ type: 1003, decoration: { bottom: 30 } })
+      if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
+        gridData.value.push({ type: 1003, decoration: { bottom: 30 } })
+      }
       gridRef.value?.stopPage()
     }
   })

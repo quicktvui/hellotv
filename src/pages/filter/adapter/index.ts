@@ -1,6 +1,7 @@
 import { QTListViewItem } from '@quicktvui/quicktvui3'
 import { Filters, Contents } from 'src/api/filter/interface'
 import { gridContent, primary, secondary, tertiary } from './interface'
+import config from '../config'
 import icFilterNormal from '../../../assets/filter/ic_filter_normal.png'
 import icFilterFocused from '../../../assets/filter/ic_filter_focused.png'
 import icFilterSelected from '../../../assets/filter/ic_filter_selected.png'
@@ -78,4 +79,21 @@ export const getContentsQuery = (filters: QTListViewItem[]): string => {
   })
 
   return query
+}
+
+/**
+ * 判断是否需要添加到底提示
+ * @param showConditions 是否展示筛选条件
+ * @param gridDataLength 筛选内容数据条数
+ */
+export const shouldAddEndSection = (showConditions: boolean, gridDataLength: number): boolean => {
+  const cfgGridSpanCount = config.gridSpanCount
+  switch (config.gridItemMode) {
+    case 1:
+      return showConditions ? gridDataLength > cfgGridSpanCount * 2 : gridDataLength > cfgGridSpanCount * 3
+    case 2:
+      return showConditions ? gridDataLength > cfgGridSpanCount : gridDataLength > cfgGridSpanCount * 2
+    default:
+      return false
+  }
 }
