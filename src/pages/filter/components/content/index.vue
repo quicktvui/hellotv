@@ -54,8 +54,8 @@
             <template #footer>
               <qt-text
                 :type="1003"
-                :style="{ width: `${contentWidth - 160}px`, height: `100px` }"
-                text="已经到底啦 ！"
+                :style="{ width: `${contentWidth - 160}px`, height: `100px`, color: 'rgba(255,255,255,0.55)', fontSize: `28px` }"
+                text="已经到底啦，按【返回键】回到顶部"
                 gravity="center"
                 :focusable="false"
               ></qt-text>
