@@ -33,6 +33,7 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { buildFilters } from './adapter/index'
+import { SecondaryType } from './adapter/interface'
 import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterExpand from './components/expand/index.vue'
@@ -102,13 +103,13 @@ let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused) {
-    expandAvailable.value = evt.item.type === 3
+    expandAvailable.value = evt.item.type === SecondaryType.FILTER_TITLE
 
     if (evt.position != lastPosition) {
       clearTimeout(listTimer)
       listTimer = setTimeout(() => {
         lastPosition = evt.position
-        contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === 9)
+        contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === SecondaryType.TEXT)
       }, 300)
     }
   }

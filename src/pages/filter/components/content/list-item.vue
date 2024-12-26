@@ -13,7 +13,7 @@
     :blockFocusDirections="['right']"
     @item-click="onListItemClick"
   >
-    <qt-view class="filter-main-conditions-list-row-item" :type="1" :focusable="true" eventFocus eventClick>
+    <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" eventFocus eventClick>
       <qt-text
         class="filter-main-conditions-list-row-item-text"
         autoWidth
@@ -26,6 +26,8 @@
 </template>
 
 <script setup lang="ts">
+import { ListItemType } from '../../adapter/interface'
+
 defineProps({
   width: {
     type: Number,

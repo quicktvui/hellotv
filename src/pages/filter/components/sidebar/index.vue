@@ -12,15 +12,15 @@
       :nextFocusName="{ up: 'topView', right: nextFocusNameRight }"
       @item-focused="onItemFocused"
     >
-      <list-item-title :type="1" />
+      <list-item-title :type="SecondaryType.TITLE" />
       <!-- 筛选按钮、图标 -->
-      <list-item-filter :type="2" />
+      <list-item-filter :type="SecondaryType.FILTER" />
       <!-- 筛选按钮、图标样式二 -->
-      <list-item-filter-title :type="3" />
+      <list-item-filter-title :type="SecondaryType.FILTER_TITLE" />
       <!-- 普通文本 -->
-      <list-item-text :type="9" :textStyle="$props.listItemTextStyle" :textGravity="$props.listItemTextGravity" />
+      <list-item-text :type="SecondaryType.TEXT" :textStyle="$props.listItemTextStyle" :textGravity="$props.listItemTextGravity" />
       <!-- 横线 -->
-      <list-item-line :type="10" />
+      <list-item-line :type="SecondaryType.LINE" />
     </qt-list-view>
   </qt-view>
 </template>
@@ -28,7 +28,7 @@
 <script setup lang="ts" name="FilterSidebar">
 import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
-import { secondary } from '../../adapter/interface'
+import { Secondary, SecondaryType } from '../../adapter/interface'
 import ListItemTitle from './list-item-title.vue'
 import ListItemFilter from './list-item-filter.vue'
 import ListItemFilterTitle from './list-item-filter-title.vue'
@@ -58,7 +58,7 @@ const emits = defineEmits(['onListItemFocused'])
 const listRef = ref<QTIListView>()
 const nextFocusNameRight = ref<string>('contentGrid')
 
-function init(listData: secondary[]) {
+function init(listData: Secondary[]) {
   listRef.value?.init(listData)
 }
 

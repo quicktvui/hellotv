@@ -20,7 +20,7 @@
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
-            <list-item :type="1" :width="contentWidth" :height="cfgListRowHeight" @onListItemClick="onListItemClick" />
+            <list-item :type="TertiaryType.LIST" :width="contentWidth" :height="listRowHeight" @onListItemClick="onListItemClick" />
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
@@ -47,9 +47,14 @@
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h :type="1" :width="gridItemHWidth" :height="gridItemHHeight" :imgHeight="gridItemHImgHeight" />
+            <grid-item-h
+              :type="GridContentType.HORIZONTAL"
+              :width="gridItemHWidth"
+              :height="gridItemHHeight"
+              :imgHeight="gridItemHImgHeight"
+            />
             <!-- 竖图 -->
-            <grid-item-v :type="2" />
+            <grid-item-v :type="GridContentType.VERTICAL" />
             <!-- 到底提示 -->
             <template #footer>
               <qt-text
@@ -82,7 +87,7 @@ import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
-import { tertiary } from '../../adapter/interface'
+import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import GridItemH from './grid-item-h.vue'
@@ -93,7 +98,6 @@ import filterManager from '../../../../api/filter/index'
 const emits = defineEmits(['setNextFocusNameRight'])
 
 // 配置文件
-const cfgListRowHeight = ref<number>(config.listRowHeight)
 const cfgGridItemMode = ref<number>(config.gridItemMode)
 const cfgGridSpanCount = ref<number>(config.gridSpanCount)
 const cfgGridContentLimit = ref<number>(config.gridContentLimit)
@@ -111,6 +115,7 @@ const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
 const listHeight = ref<number>(330)
+const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
 // 筛选结果
 const gridRef = ref<QTIGridView>()
@@ -123,11 +128,11 @@ const gridItemHImgHeight = ref<number>(cfgGridSpanCount.value === 5 ? 180 : 183)
 // 页码
 let page = 1
 // 筛选数据
-let rawListData: tertiary[] = []
+let rawListData: Tertiary[] = []
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
-function init(listData: tertiary[]) {
+function init(listData: Tertiary[]) {
   // 保存筛选数据
   rawListData = listData
   // 加载筛选内容
@@ -177,19 +182,21 @@ function onGridScrollStateChanged(evt) {
   }
 }
 
-// 加载筛选内容
-// query: 查询参数
-// resetFilters: 是否需要重新初始化筛选条件组件
-// hideFilters: 是否需要隐藏筛选条件组件
 let ininConditionTimer: any = -1
 let loadingTimer: any = -1
+/**
+ * 加载筛选内容
+ * @param query 查询参数
+ * @param resetFilters 是否需要重新初始化筛选条件组件
+ * @param hideFilters 是否需要隐藏筛选条件组件
+ */
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
 
   if (resetFilters) {
     isLoading.value = true
     // 计算筛选列表高度
-    listHeight.value = rawListData.length * cfgListRowHeight.value
+    listHeight.value = rawListData.length * listRowHeight.value
     // 初始化筛选条件
     showConditions.value = false
     clearTimeout(ininConditionTimer)

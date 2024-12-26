@@ -21,6 +21,7 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { buildFilters } from './adapter/index'
+import { SecondaryType } from './adapter/interface'
 import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterSidebar from './components/sidebar/index.vue'
@@ -57,7 +58,7 @@ function onListItemFocused(evt) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
-      contentRef.value?.loadContents(evt.item.id, evt.item.type === 2, evt.item.type === 9)
+      contentRef.value?.loadContents(evt.item.id, evt.item.type === SecondaryType.FILTER, evt.item.type === SecondaryType.TEXT)
     }, 300)
   }
 }
