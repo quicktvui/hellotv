@@ -127,16 +127,18 @@ const gridItemHImgHeight = ref<number>(cfgGridSpanCount.value === 5 ? 180 : 183)
 
 // 页码
 let page = 1
-// 筛选数据
-let rawListData: Tertiary[] = []
+// 初始参数
+let rawParams: any = {}
+// 请求参数
+let reqQuery: string = ''
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
-function init(listData: Tertiary[]) {
+function init(primaryId: string, listData: Tertiary[]) {
   // 保存筛选数据
-  rawListData = listData
+  rawParams = { primaryId, listData }
   // 加载筛选内容
-  loadContents('', rawListData.length > 0)
+  loadContents(reqQuery, listData.length > 0)
 }
 
 function onListItemFocused(evt) {
@@ -151,8 +153,10 @@ function onListItemFocused(evt) {
 function onListItemClick(evt) {
   // 更新选中状态
   listDateRef[evt.parentPosition].defaultSelectedPos = evt.position
+  // 记录选中条件
+  rawParams.listData[evt.parentPosition].defaultSelectedPos = evt.position
   // 重新获取筛选结果
-  loadContents(getContentsQuery(listDateRef))
+  loadContents(getContentsQuery(rawParams.listData))
 }
 
 function onGridItemClick() {
@@ -196,14 +200,14 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
   if (resetFilters) {
     isLoading.value = true
     // 计算筛选列表高度
-    listHeight.value = rawListData.length * listRowHeight.value
+    listHeight.value = rawParams.listData.length * listRowHeight.value
     // 初始化筛选条件
     showConditions.value = false
     clearTimeout(ininConditionTimer)
     ininConditionTimer = setTimeout(() => {
       showConditions.value = true
       nextTick(() => {
-        listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
+        listDateRef = listRef.value?.init(rawParams.listData) as QTListViewItem[]
       })
     }, 300)
   } else if (hideFilters) {
@@ -214,8 +218,10 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 
   // 重置页码
   page = 1
+  // 重置查询参数
+  reqQuery = resetFilters ? getContentsQuery(rawParams.listData) : query
   // 请求数据
-  filterManager.getContents(query, page, cfgGridContentLimit.value).then((contents) => {
+  filterManager.getContents(rawParams.primaryId, reqQuery, page, cfgGridContentLimit.value).then((contents) => {
     gridData.value = buildContents(contents)
 
     clearTimeout(loadingTimer)
@@ -236,7 +242,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 // 函数本身返回的页码有问题, 不要用
 function onGridLoadMore() {
   // 初始化筛选内容
-  filterManager.getContents('', ++page, cfgGridContentLimit.value).then((contents) => {
+  filterManager.getContents(rawParams.primaryId, reqQuery, ++page, cfgGridContentLimit.value).then((contents) => {
     const data = buildContents(contents)
     gridData.value.push(...data)
     // 停止分页

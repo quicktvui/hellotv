@@ -16,7 +16,7 @@ export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
 //筛选页接口
 export const filterLeftListUrl = BuildConfig.requestBaseUrl + '/filter/${primaryId}/tags?packageName=${packageName}'
 export const filterContentsUrl =
-  BuildConfig.requestBaseUrl + '/filter/contents?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
+  BuildConfig.requestBaseUrl + '/filter/${primaryId}/contents?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
 
 export function replacePlaceholders(template, replacements): string {
   return template.replace(/\$\{(\w+)\}/g, (match, placeholder) => {

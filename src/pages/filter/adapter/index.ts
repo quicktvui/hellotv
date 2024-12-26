@@ -95,15 +95,15 @@ export const buildContents = function (rawData: Contents): GridContent[] {
  * @returns
  */
 export const getContentsQuery = (filters: QTListViewItem[]): string => {
-  let query: string = ''
+  let query: string[] = []
 
   filters.forEach((item) => {
     if (item.defaultSelectedPos > 0) {
-      query += ',' + item.list[item.defaultSelectedPos].name
+      query.push(item.list[item.defaultSelectedPos].name)
     }
   })
 
-  return query
+  return query.join(',')
 }
 
 /**

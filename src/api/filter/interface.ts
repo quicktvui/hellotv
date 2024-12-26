@@ -2,7 +2,7 @@ export interface FilterApi {
   // 获取筛选项列表
   getFilters(primaryId: string, secondaryId: string): Promise<Filters>
   // 获取筛选内容
-  getContents(query?: string, page?: number, limit?: number): Promise<Contents>
+  getContents(primaryId: string, query?: string, page?: number, limit?: number): Promise<Contents>
 }
 
 export interface Filters {

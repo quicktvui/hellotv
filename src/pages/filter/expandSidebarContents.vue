@@ -83,7 +83,7 @@ function loadFilters(primaryId: string, initExpand?: boolean) {
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(tertiaries)
+    contentRef.value?.init(primaryId, tertiaries)
   })
 }
 

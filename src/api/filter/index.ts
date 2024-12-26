@@ -15,10 +15,11 @@ class FilterManager implements FilterApi {
   }
 
   // 获取筛选内容
-  getContents(query?: string, page: number = 1, limit: number = 10): Promise<any> {
+  getContents(primaryId: string, query?: string, page: number = 1, limit: number = 10): Promise<any> {
     return requestManager.get(
       replacePlaceholders(filterContentsUrl, {
         packageName: config.packageName,
+        primaryId,
         query,
         page,
         limit
