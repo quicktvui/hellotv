@@ -14,13 +14,25 @@
     @item-click="onListItemClick"
   >
     <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" eventFocus eventClick>
-      <qt-text
-        class="filter-main-conditions-list-row-item-text"
-        autoWidth
-        text="${name}"
-        :focusable="false"
-        :duplicateParentState="true"
-      ></qt-text>
+      <qt-view style="height: 40px; background-color: transparent" autoWidth :focusable="false" :duplicateParentState="true">
+        <qt-text
+          class="filter-main-conditions-list-row-item-text"
+          autoWidth
+          text="${name}"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="filter-main-conditions-list-row-item-text"
+          autoWidth
+          text="${name}"
+          typeface="bold"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+      </qt-view>
     </qt-view>
   </qt-list-view>
 </template>
@@ -62,6 +74,7 @@ function onListItemClick(evt) {
 }
 
 .filter-main-conditions-list-row-item-text {
+  position: absolute;
   height: 40px;
   color: $text-normal-color;
   font-size: 30px;

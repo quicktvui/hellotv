@@ -13,6 +13,16 @@
           class="filter-expand-list-item-text"
           text="${name}"
           gravity="center|end"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="filter-expand-list-item-text"
+          text="${name}"
+          gravity="center|end"
+          typeface="bold"
+          showOnState="focused"
           :focusable="false"
           :duplicateParentState="true"
         ></qt-text>
@@ -74,6 +84,7 @@ defineExpose({ init })
 }
 
 .filter-expand-list-item-text {
+  position: absolute;
   width: 179px;
   height: 106px;
   background-color: transparent;

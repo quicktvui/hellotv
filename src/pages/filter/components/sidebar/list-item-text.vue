@@ -5,6 +5,17 @@
       text="${name}"
       :style="$props.textStyle"
       :gravity="$props.textGravity"
+      :showOnState="['normal', 'selected']"
+      :focusable="false"
+      :duplicateParentState="true"
+    ></qt-text>
+    <qt-text
+      class="filter-sidebar-list-item-text"
+      text="${name}"
+      typeface="bold"
+      :style="$props.textStyle"
+      :gravity="$props.textGravity"
+      :showOnState="'focused'"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-text>
