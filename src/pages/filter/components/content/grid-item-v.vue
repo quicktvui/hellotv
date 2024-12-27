@@ -28,7 +28,7 @@ import ThemeConfig from '../../../../config/theme-config'
 const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .filter-main-contents-grid-item-v {
   width: 260px;
   height: 414px;
@@ -47,7 +47,7 @@ const borderRadius = ThemeConfig.focusBorderCorner + 'px'
   height: 40px;
   background-color: transparent;
   font-size: 30px;
-  color: rgba(255, 255, 255, 0.55);
+  color: $text-normal-color;
   focus-color: #ffffff;
 }
 </style>

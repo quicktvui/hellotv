@@ -45,7 +45,7 @@ function onListItemClick(evt) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .filter-main-conditions-list-row {
   width: 1920px;
   height: 66px;
@@ -58,14 +58,14 @@ function onListItemClick(evt) {
   padding: 24px;
   border-radius: 30px;
   justify-content: center;
-  focus-background-color: #ffffff;
+  focus-background-color: $gl-theme-btn-bg-focus-color;
 }
 
 .filter-main-conditions-list-row-item-text {
   height: 40px;
-  color: rgba(255, 255, 255, 0.35);
+  color: $text-normal-color;
   font-size: 30px;
-  focus-color: #13161b;
-  select-color: #ffffff;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
 }
 </style>

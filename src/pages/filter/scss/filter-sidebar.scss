@@ -15,7 +15,7 @@
   height: 106px;
   background-color: transparent;
   border-radius: 8px;
-  focus-background-color: #ffffff;
+  focus-background-color: $gl-theme-btn-bg-focus-color;
 }
 
 .filter-sidebar-list-item-img {
@@ -29,10 +29,10 @@
   width: 340px;
   height: 106px;
   background-color: transparent;
-  color: rgba(255, 255, 255, 0.5);
+  color: $text-normal-color;
   font-size: 36px;
-  focus-color: #13161b;
-  select-color: #ffffff;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
 }
 
 .filter-sidebar-list-item-line {
