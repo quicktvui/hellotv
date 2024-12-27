@@ -150,11 +150,21 @@ function onListItemFocused(evt) {
   }
 }
 
+let lastParentPosition = 0
+let lastCurentPosition = 0
 function onListItemClick(evt) {
+  // 点击相同条件不触发
+  if (evt.parentPosition === lastParentPosition && evt.position === lastCurentPosition) {
+    return
+  }
+
+  lastParentPosition = evt.parentPosition
+  lastCurentPosition = evt.position
+
   // 更新选中状态
-  listDateRef[evt.parentPosition].defaultSelectedPos = evt.position
+  listDateRef[lastParentPosition].defaultSelectedPos = lastCurentPosition
   // 记录选中条件
-  rawParams.listData[evt.parentPosition].defaultSelectedPos = evt.position
+  rawParams.listData[lastParentPosition].defaultSelectedPos = lastCurentPosition
   // 重新获取筛选结果
   loadContents(getContentsQuery(rawParams.listData))
 }
