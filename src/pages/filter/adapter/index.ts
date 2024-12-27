@@ -53,7 +53,7 @@ export const buildFilters = function (
 
   // 三级列表, 右侧筛选条件
   const tertiaries: Tertiary[] = []
-  rawData.tertiary.forEach((item) => {
+  rawData.tertiary.forEach((item, index) => {
     const tertiary = {
       type: TertiaryType.LIST,
       groupKey: item.groupKey,
@@ -61,7 +61,7 @@ export const buildFilters = function (
       list: item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag })),
       defaultSelectedPos: 0
     }
-    tertiary.list.unshift({ type: ListItemType.TEXT, id: '', name: item.groupName })
+    tertiary.list.unshift({ type: ListItemType.TEXT, id: `t-${index}`, name: item.groupName })
     tertiaries.push(tertiary)
   })
 

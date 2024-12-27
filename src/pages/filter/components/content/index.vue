@@ -17,7 +17,7 @@
             :style="{ height: listHeight }"
             ref="listRef"
             name="contentList"
-            :padding="'56,0,40,0'"
+            :padding="'80,0,40,0'"
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
@@ -153,6 +153,7 @@ function init(primaryId: string, listData: Tertiary[]) {
 function onListItemFocused(evt) {
   if (evt.isFocused) {
     emits('setNextFocusNameRight', 'contentList')
+    showRecords.value = false
     gridScrollY.value = 0
     gridRef.value?.scrollToSelected(0, true)
     scrollRef.value?.scrollToWithOptions(0, 0, 300)
