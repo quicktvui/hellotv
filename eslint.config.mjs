@@ -54,8 +54,8 @@ export default [
       }], // 允许使用 any 类型
       'vue/multi-word-component-names': ['error', { 'ignores': ['index'] }],//打开 Vue 组件名称多词规则
       'vue/component-name-in-template-casing': ['error', 'kebab-case', {
-        'registeredComponentsOnly': true
-        // "ignores": []
+        'registeredComponentsOnly': true,
+        "ignores": ['ESPlayerManager']
       }], //注册组件名称引用要kebab-case 短横线+小写
       'vue/no-dupe-keys': ['error', { 'groups': [] }],//禁止props/ data/ methods/ 等使用重复名称
       'vue/attribute-hyphenation': ['error', 'never', { 'ignore': [] }],//自定义组件上使用带连字符的属性名称

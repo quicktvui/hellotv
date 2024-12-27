@@ -1,0 +1,79 @@
+
+.media-manager-root-css{
+  background-color: transparent;
+}
+
+.media-manager-bg-css {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  justify-content: flex-end;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-title-css {
+  width: 900px;
+  margin-left: 90px;
+  background-color: transparent;
+}
+.media-manager-bg-css .main-title-css {
+  max-height: 88px;
+  font-weight: bold;
+  line-height: 44px;
+  font-size: 36px;
+  max-lines: 2;
+  color:white;
+  margin-bottom: 24px;
+}
+.media-manager-bg-css .sub-title-css{
+  max-height: 30px;
+  line-height: 30px;
+  font-size: 26px;
+  max-lines: 1;
+  color:white;
+  margin-bottom: 117px;
+}
+.media-manager-bg-css .media-manager-progress-root-css {
+  width: 1920px;
+  height: 60px;
+  margin-bottom: 39px;
+  flex-direction: row;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-play-state-root-css{
+  width: 36px;
+  height:36px;
+  margin-left: 90px;
+  margin-top: 12px;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-img-play-state-css {
+  width: 36px;
+  height:36px;
+  position: absolute;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-seekbar-css {
+  width: 1700px;
+  height: 60px;
+  margin-left: 10px;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-setting-root-css {
+  margin-bottom: 54px;
+  width: 1920px;
+  height: 72px;
+  background-color: transparent;
+}
+.media-manager-bg-css  .media-manager-text-root-css {
+  position: absolute;
+  height: 72px;
+  right: 100px;
+  top: 0;
+  flex-direction: row-reverse;
+  background-color: transparent;
+}
+.media-manager-bg-css .media-manager-progress-text-css {
+  font-size: 30px;
+  height: 72px;
+  text-align: center;
+}

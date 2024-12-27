@@ -66,7 +66,7 @@ const setImg = (src: string) => {
       animationOldHideId,
       QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
       QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
-      1, 0, <number>props.transitionTime, -1, 0, false, false
+      1, 0, <number>props.transitionTime, -1, 0, false, false,{ type: 2 }
     )
     animationOldRef.value?.startAnimator(animationOldHideId)
     srcOld.value = srcNew.value
@@ -76,7 +76,7 @@ const setImg = (src: string) => {
       animationNewShowId,
       QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
       QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
-      0, 1, <number>props.transitionTime, -1, 0, false, false, { type: 6 }
+      0, 1, <number>props.transitionTime, -1, 0, false, false, { type: 2 }
     )
     animationNewRef.value?.startAnimator(animationNewShowId)
     loadImgTimer = setTimeout(() => {

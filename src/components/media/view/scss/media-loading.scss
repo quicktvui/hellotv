@@ -1,0 +1,51 @@
+
+.media-loading-component-root-css{
+  background-color: transparent;
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.media-loading-component-root-css .loading-tips{
+  height: 40px;
+  line-height: 40px;
+  text-align: center;
+  font-size: 30px;
+  color: #ffffff;
+  margin-top: 12px;
+}
+
+.media-loading-view-root-css{
+  position: absolute;
+  background-color: transparent;
+}
+.media-loading-view-root-css .try-see-tip-root-css{
+  position: absolute;
+  bottom: 54px;
+  background-color: transparent;
+  flex-direction: row;
+  height: 72px;
+  width: 800px;
+  left: 96px
+}
+.media-loading-view-root-css .try-see-tip-header-end{
+  color: white;
+  font-size: 42px;
+  line-height: 60px;
+  height: 60px;
+  text-align: center;
+}
+.media-loading-view-root-css .try-see-tip-middle{
+  color: #0E0E0E;
+  font-size: 42px;
+  line-height: 60px;
+  margin-top: 3px;
+  margin-left: 8px;
+  margin-right: 8px;
+  height: 60px;
+  width: 108px;
+  background-color: white;
+  border-radius: 30px;
+  text-align: center;
+}

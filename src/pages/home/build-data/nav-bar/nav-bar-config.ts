@@ -8,9 +8,9 @@ export default {
     //默认导航间距
     defaultGap:0,
     //最左侧导航间距
-    leftGap:70,
+    leftGap:60,
     //最右侧导航间距
-    rightGap:90,
+    rightGap:80,
     //导航字体大小
     titleSize:44
   }

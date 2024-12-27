@@ -10,7 +10,7 @@
       :focusable='true'
       :iconLeft='true'
       :normalIcon='ic_top_search_normal'
-      :focusIcon='ic_top_search_focus'
+      :focusIcon='ic_top_search_focused'
       text='搜索'
       @click='onClick'
       @focus='onFocus'
@@ -26,7 +26,7 @@
       :focusable='true'
       :iconLeft='true'
       :normalIcon='ic_top_user_normal'
-      :focusIcon='ic_top_user_focus'
+      :focusIcon='ic_top_user_focused'
       text='个人中心'
       @click='onClick'
       @focus='onFocus'
@@ -39,7 +39,6 @@
     <slot name='topLogoItem'></slot>
   </div>
 
-
 </template>
 
 <script lang='ts' setup name='TopView'>
@@ -47,9 +46,9 @@
 import launch from '../tools/launch'
 import BtnPackView from './btn-pack-view.vue'
 import ic_top_search_normal from '../assets/top-view/ic_top_search_normal.png'
-import ic_top_search_focus from '../assets/top-view/ic_top_search_focus.png'
+import ic_top_search_focused from '../assets/top-view/ic_top_search_focused.png'
 import ic_top_user_normal from '../assets/top-view/ic_top_user_normal.png'
-import ic_top_user_focus from '../assets/top-view/ic_top_user_focus.png'
+import ic_top_user_focused from '../assets/top-view/ic_top_user_focused.png'
 import ic_logo from '../assets/top-view/ic_logo.png'
 
 const emits = defineEmits([

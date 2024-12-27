@@ -1,0 +1,113 @@
+/************* menu view css ****************/
+.media-menu-root-css{
+  width: 1920px;
+  height: 72px;
+  background-color: transparent;
+}
+%menu-item{
+  border-radius: 45px;
+  background-color: $gl-theme-btn-bg-normal-color;
+  focus-background-color:$gl-theme-btn-bg-focus-color;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+}
+/************* menu icon css ****************/
+.media-menu-icon-root-css{
+  @extend %menu-item;
+}
+%icon-size{
+  width:36px;
+  height:36px;
+}
+.media-menu-icon-root-css .icon-item-root{
+  position: absolute;
+  @extend %icon-size;
+  left: 30px;
+  background-color: transparent;
+}
+.media-menu-icon-root-css .icon-item{
+  position: absolute;
+  @extend %icon-size;
+}
+.media-menu-icon-root-css .icon-item-text{
+  position: absolute;
+  height: 72px;
+  left: 75px;
+  color:$text-normal-color;
+  focus-color:$text-focus-color;
+}
+/************* menu text css ****************/
+%menu-text-item-parent-size{
+  width:210px;
+  height: 72px;
+}
+.media-menu-text-root-css{
+  @extend %menu-text-item-parent-size;
+  @extend %menu-item;
+  padding-left: 30px;
+  padding-right: 30px;
+}
+.media-menu-text-root-css .text-item{
+  @extend %menu-text-item-parent-size;
+  color:$text-normal-color;
+  focus-color:$text-focus-color;
+}
+
+/************* menu detail css ****************/
+.media-menu-detail-root-css{
+  position: absolute;
+  width: 760px;
+  height: 1080px;
+  right: 0;
+  top:0;
+  padding-left: 100px;
+  background-color: transparent;
+}
+.media-menu-detail-root-css .detail-title{
+  width: 200px;
+  height: 34px;
+  margin-top: 143px;
+  line-height: 34px;
+  text-align: left;
+  color: #FFFFFF;
+  font-size: 30px;
+  background-color: transparent;
+}
+.media-menu-detail-root-css .detail-list{
+  margin-top: 36px;
+  width: 564px;
+  height: 840px;
+  background-color: transparent;
+}
+/************* menu detail item css ******************/
+$item-width:564px;
+$item-height:102px;
+%menu-detail-parent-size{
+  width:$item-width;
+  height:$item-height;
+}
+.media-menu-detail-item-root-css{
+  @extend %menu-detail-parent-size;
+  border-radius: 9px;
+  background-color: $gl-theme-btn-bg-normal-color;
+  focus-background-color:$gl-theme-btn-bg-focus-color;
+}
+.media-menu-detail-item-root-css .item-text{
+  position: absolute;
+  @extend %menu-detail-parent-size;
+  left: 0.1px;
+  top: 0.1px;
+  color:$text-normal-color;
+  focus-color:$text-focus-color;
+  select-color:$text-select-color;
+  background-color: transparent;
+}
+.media-menu-detail-item-root-css .item-icon{
+  position: absolute;
+  width: 24px;
+  height:15px;
+  right: 30px;
+  top: 40px;
+  background-color: transparent;
+}

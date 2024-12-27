@@ -321,7 +321,7 @@ export function buildTitleSectionItem(sectionItem: SectionItem): QTWaterfallItem
   if (type === SectionItemType.TYPE_OUT) {
     height += TabContentConfig.sectionItemHeight
   } else {
-    colors = ThemeConfig.tabContentFloatBgFocusColor
+    colors = ThemeConfig.tabContentFloatBgColor
   }
   style.height = height
   return {
