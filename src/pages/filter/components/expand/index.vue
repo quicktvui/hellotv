@@ -8,7 +8,7 @@
       :descendantFocusability="$props.expandAvailable ? 1 : 2"
       @item-focused="onItemFocused"
     >
-      <qt-view class="filter-expand-list-item" :type="1" :focusable="true" eventFocus eventClick>
+      <qt-view class="filter-expand-list-item" :type="PrimaryType.TEXT" :focusable="true" eventFocus eventClick>
         <qt-text
           class="filter-expand-list-item-text"
           text="${name}"
@@ -24,7 +24,7 @@
 <script setup lang="ts" name="FilterExpand">
 import { ref } from 'vue'
 import { QTIListView } from '@quicktvui/quicktvui3'
-import { primary } from '../../adapter/interface'
+import { Primary, PrimaryType } from '../../adapter/interface'
 
 defineProps({
   singleSelectPos: {
@@ -40,7 +40,7 @@ const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()
 
-function init(listData: primary[]) {
+function init(listData: Primary[]) {
   listRef.value?.init(listData)
 }
 

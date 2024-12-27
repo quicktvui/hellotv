@@ -12,12 +12,12 @@ import {
 } from "./request-data"
 
 class RequestManager{
-  requestParams: RequestBodyParams
-  es: ES
-  develop: ESDevelop
-  device: ESDevice
-  runtime: ESRuntime
-  log: ESLog
+  requestParams: RequestBodyParams | null = null
+  es: ES | null = null
+  develop: ESDevelop | null = null
+  device: ESDevice | null = null
+  runtime: ESRuntime | null = null
+  log: ESLog | null = null
   init(...params: any[]): Promise<any>{
     this.es = params[0]
     this.develop = params[1]
@@ -49,19 +49,19 @@ class RequestManager{
   initDevelopParams():RequestDevelopParams{
     return {
       packagename: BuildConfig.packageName,
-      vercode: this.develop.getVersionCode(),
-      vername: this.develop.getVersionName(),
+      vercode: this.develop!.getVersionCode(),
+      vername: this.develop!.getVersionName(),
       dynamicCode: BuildConfig.VUE_PLUGIN_VERSION,
     }
   }
 
   initDeviceParams(): RequestDeviceParams {
-    let mac = this.device.getDeviceEthMac();
-    let es_mac = this.device.getDeviceEthMac();
+    let mac = this.device!.getDeviceEthMac();
+    let es_mac = this.device!.getDeviceEthMac();
     if (!mac) {
-      mac = this.device.getDeviceWifiMac()
+      mac = this.device!.getDeviceWifiMac()
     }
-    let wifi_mac = this.device.getDeviceWifiMac();
+    let wifi_mac = this.device!.getDeviceWifiMac();
     mac = mac.replace(/:/g, '').toLowerCase();
     if (es_mac) {
       es_mac = es_mac.replace(/:/g, '').toLowerCase();
@@ -70,22 +70,22 @@ class RequestManager{
       wifi_mac = wifi_mac.replace(/:/g, '').toLowerCase();
     }
     return {
-      brand: this.device.getBuildBrand(),
-      clientType: this.runtime.getRuntimeDeviceType() ?? '',
-      dnum: this.runtime.getRuntimeDeviceId() ?? '',
+      brand: this.device!.getBuildBrand(),
+      clientType: this.runtime!.getRuntimeDeviceType() ?? '',
+      dnum: this.runtime!.getRuntimeDeviceId() ?? '',
       mac: mac,
       esMac: es_mac,
       esWifiMac: wifi_mac,
-      manufacturer: this.device.getBuildManufacturer(),
-      model: this.device.getBuildModel(),
-      deviceVersion: this.device.getBuildVersionRelease(),
+      manufacturer: this.device!.getBuildManufacturer(),
+      model: this.device!.getBuildModel(),
+      deviceVersion: this.device!.getBuildVersionRelease(),
     }
   }
 
   initOtherParams(): RequestData {
     return {
-      channelCode: this.develop.getChannel(),
-      versionCode: this.develop.getVersionCode()
+      channelCode: this.develop!.getChannel(),
+      versionCode: this.develop!.getVersionCode()
     }
   }
 
@@ -99,12 +99,12 @@ class RequestManager{
 
   initRuntimeParams(): RequestRuntimeParams {
     return {
-      sdkVersion: this.es.getESSDKVersionCode(),
-      sdkCID: this.runtime.getRuntimeDeviceId() ?? '',
+      sdkVersion: this.es!.getESSDKVersionCode(),
+      sdkCID: this.runtime!.getRuntimeDeviceId() ?? '',
       runtimeID: '',
-      hostPackageName: this.develop.getPackageName(),
-      hostVersion: this.develop.getVersionCode(),
-      hostChannel: this.develop.getChannel(),
+      hostPackageName: this.develop!.getPackageName(),
+      hostVersion: this.develop!.getVersionCode(),
+      hostChannel: this.develop!.getChannel(),
       snCode: ''
     }
   }
@@ -127,7 +127,7 @@ class RequestManager{
    * 获取param参数
    */
   getParams(){
-    return this.requestParams.param
+    return this.requestParams!.param
   }
 
   get<T>(url:string,timeout= 30000):Promise<T>{
@@ -144,7 +144,7 @@ class RequestManager{
 
   post<T>(url:string,data:RequestData,timeout=30000):Promise<T>{
     //更新用户信息
-    this.requestParams.user = this.initUserParams()
+    this.requestParams!.user = this.initUserParams()
     const requestData = {...this.requestParams, ...data}
     const body = JSON.stringify(requestData)
     const options:RequestInit = {

@@ -15,7 +15,7 @@
 defineProps({
   textStyle: {
     type: Object,
-    default: {}
+    default: () => {}
   },
   textGravity: {
     type: String,

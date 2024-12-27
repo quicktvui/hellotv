@@ -16,6 +16,7 @@
         <!-- 筛选列表 -->
         <filter-sidebar
           ref="sidebarRef"
+          :blockFocusDir="sidebarBlockFocusDir"
           :singleSelectPos="sidebarSinglePos"
           :listItemTextStyle="{ width: `222px`, marginLeft: `98px` }"
           :listItemTextGravity="'center|start'"
@@ -32,6 +33,7 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { buildFilters } from './adapter/index'
+import { SecondaryType } from './adapter/interface'
 import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterExpand from './components/expand/index.vue'
@@ -48,6 +50,7 @@ const expandAvailable = ref<boolean>(false)
 // 筛选列表
 const sidebarRef = ref()
 const sidebarSinglePos = ref<number>(0)
+const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
 
@@ -80,7 +83,7 @@ function loadFilters(primaryId: string, initExpand?: boolean) {
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(tertiaries)
+    contentRef.value?.init(primaryId, tertiaries)
   })
 }
 
@@ -100,19 +103,20 @@ let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused) {
-    expandAvailable.value = evt.item.type === 3
+    expandAvailable.value = evt.item.type === SecondaryType.FILTER_TITLE
 
     if (evt.position != lastPosition) {
       clearTimeout(listTimer)
       listTimer = setTimeout(() => {
         lastPosition = evt.position
-        contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === 9)
+        contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === SecondaryType.TEXT)
       }, 300)
     }
   }
 }
 
 function setNextFocusNameRight(s: string) {
+  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

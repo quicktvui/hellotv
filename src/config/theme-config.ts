@@ -32,6 +32,11 @@ export default {
   btnGradientColor: ['#0FFFFFFF', '#1FFFFFFF'],
   btnGradientSelectColor: [],
   btnGradientFocusColor: ['#0057FF', '#00C7FF'],
+  
+  //普通按钮文字，文字---颜色
+  textColor: "#BFBFBF",
+  textSelectColor: "#00D9D9",
+  textFocusColor: "#0E0E0E",
 
   //瀑布流格子选中背景色
   tabContentBgGradientFocusColor: ['#157AFC', '#157AFC'],

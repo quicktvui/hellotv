@@ -5,7 +5,12 @@
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表 -->
-      <filter-sidebar ref="sidebarRef" :singleSelectPos="sidebarSinglePos" @onListItemFocused="onListItemFocused" />
+      <filter-sidebar
+        ref="sidebarRef"
+        :blockFocusDir="sidebarBlockFocusDir"
+        :singleSelectPos="sidebarSinglePos"
+        @onListItemFocused="onListItemFocused"
+      />
       <!-- 筛选内容 -->
       <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
     </qt-view>
@@ -16,6 +21,7 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { buildFilters } from './adapter/index'
+import { SecondaryType } from './adapter/interface'
 import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterSidebar from './components/sidebar/index.vue'
@@ -27,6 +33,7 @@ const router = useESRouter()
 // 筛选列表
 const sidebarRef = ref()
 const sidebarSinglePos = ref<number>(1)
+const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
 
@@ -40,7 +47,7 @@ function loadFilters(primaryId: string) {
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(tertiaries)
+    contentRef.value?.init(primaryId, tertiaries)
   })
 }
 
@@ -51,12 +58,13 @@ function onListItemFocused(evt) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
-      contentRef.value?.loadContents(evt.item.id, evt.item.type === 2, evt.item.type === 9)
+      contentRef.value?.loadContents(evt.item.id, evt.item.type === SecondaryType.FILTER, evt.item.type === SecondaryType.TEXT)
     }, 300)
   }
 }
 
 function setNextFocusNameRight(s: string) {
+  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

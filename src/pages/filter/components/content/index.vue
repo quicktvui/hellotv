@@ -1,6 +1,13 @@
 <template>
-  <qt-view class="filter-main" :style="{ width: contentWidth }">
-    <scroll-view v-show="!isLoading" class="filter-main-scroll" ref="scrollRef" :onScrollEnable="true" makeChildVisibleType="none">
+  <qt-view class="filter-main" :style="{ width: contentWidth }" :focusable="false">
+    <scroll-view
+      v-show="!isLoading"
+      class="filter-main-scroll"
+      ref="scrollRef"
+      :focusable="false"
+      :onScrollEnable="true"
+      makeChildVisibleType="none"
+    >
       <qt-view style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
         <qt-view v-if="showConditions" class="filter-main-conditions">
@@ -13,7 +20,7 @@
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
-            <list-item :type="1" :width="contentWidth" :height="cfgListRowHeight" @onListItemClick="onListItemClick" />
+            <list-item :type="TertiaryType.LIST" :width="contentWidth" :height="listRowHeight" @onListItemClick="onListItemClick" />
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
@@ -25,23 +32,39 @@
             name="contentGrid"
             :listData="gridData"
             :spanCount="cfgGridSpanCount"
-            :padding="'80,17,40,0'"
+            :padding="cfgGridItemMode === 1 ? '80,17,40,0' : '80,17,0,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
-            :enablePlaceholder="false"
-            :nextFocusName="{ up: 'contentList' }"
-            :blockFocusDirections="['down']"
+            :enablePlaceholder="true"
+            :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
+            :blockFocusDirections="['right', 'down']"
             :openPage="true"
             :listenBoundEvent="true"
+            :listenHasFocusChange="true"
             :loadMore="onGridLoadMore"
             @item-click="onGridItemClick"
             @item-focused="onGridItemFocused"
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h :type="1" :width="gridItemHWidth" :height="gridItemHHeight" :imgHeight="gridItemHImgHeight" />
+            <grid-item-h
+              :type="GridContentType.HORIZONTAL"
+              :width="gridItemHWidth"
+              :height="gridItemHHeight"
+              :imgHeight="gridItemHImgHeight"
+            />
             <!-- 竖图 -->
-            <grid-item-v :type="2" />
+            <grid-item-v :type="GridContentType.VERTICAL" />
+            <!-- 到底提示 -->
+            <template #footer>
+              <qt-text
+                :type="1003"
+                :style="{ width: `${contentWidth - 150}px`, height: `100px`, color: 'rgba(255,255,255,0.55)', fontSize: `28px` }"
+                text="已经到底啦，按【返回键】回到顶部"
+                gravity="center"
+                :focusable="false"
+              ></qt-text>
+            </template>
           </qt-grid-view>
         </qt-view>
       </qt-view>
@@ -63,8 +86,8 @@ import { ref, nextTick } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
-import { buildContents, getContentsQuery } from '../../adapter/index'
-import { tertiary } from '../../adapter/interface'
+import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
+import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import GridItemH from './grid-item-h.vue'
@@ -75,19 +98,24 @@ import filterManager from '../../../../api/filter/index'
 const emits = defineEmits(['setNextFocusNameRight'])
 
 // 配置文件
-const cfgListRowHeight = ref<number>(config.listRowHeight)
+const cfgGridItemMode = ref<number>(config.gridItemMode)
 const cfgGridSpanCount = ref<number>(config.gridSpanCount)
 const cfgGridContentLimit = ref<number>(config.gridContentLimit)
 
 const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
-const contentWidth = ref<number>(cfgGridSpanCount.value === 5 ? 1920 : 1580)
+const contentWidth = ref<number>(
+  (cfgGridItemMode.value === 1 && cfgGridSpanCount.value === 4) || (cfgGridItemMode.value === 2 && cfgGridSpanCount.value === 5)
+    ? 1580
+    : 1920
+)
 const isInit = ref<boolean>(true)
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
 const listHeight = ref<number>(330)
+const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
 // 筛选结果
 const gridRef = ref<QTIGridView>()
@@ -99,29 +127,36 @@ const gridItemHImgHeight = ref<number>(cfgGridSpanCount.value === 5 ? 180 : 183)
 
 // 页码
 let page = 1
-// 筛选数据
-let rawListData: tertiary[] = []
+// 初始参数
+let rawParams: any = {}
+// 请求参数
+let reqQuery: string = ''
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
-function init(listData: tertiary[]) {
+function init(primaryId: string, listData: Tertiary[]) {
   // 保存筛选数据
-  rawListData = listData
+  rawParams = { primaryId, listData }
   // 加载筛选内容
-  loadContents('', rawListData.length > 0)
+  loadContents(reqQuery, listData.length > 0)
 }
 
 function onListItemFocused(evt) {
   if (evt.isFocused) {
     emits('setNextFocusNameRight', 'contentList')
+    gridScrollY.value = 0
+    gridRef.value?.scrollToSelected(0, true)
+    scrollRef.value?.scrollToWithOptions(0, 0, 300)
   }
 }
 
 function onListItemClick(evt) {
   // 更新选中状态
   listDateRef[evt.parentPosition].defaultSelectedPos = evt.position
+  // 记录选中条件
+  rawParams.listData[evt.parentPosition].defaultSelectedPos = evt.position
   // 重新获取筛选结果
-  loadContents(getContentsQuery(listDateRef))
+  loadContents(getContentsQuery(rawParams.listData))
 }
 
 function onGridItemClick() {
@@ -134,8 +169,10 @@ function onGridItemFocused(evt) {
 
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
-      scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
-      gridScrollY.value = 1
+      if (gridScrollY.value === 0) {
+        scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
+        gridScrollY.value = 1
+      }
     } else {
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
@@ -149,26 +186,28 @@ function onGridScrollStateChanged(evt) {
   }
 }
 
-// 加载筛选内容
-// query: 查询参数
-// resetFilters: 是否需要重新初始化筛选条件组件
-// hideFilters: 是否需要隐藏筛选条件组件
 let ininConditionTimer: any = -1
 let loadingTimer: any = -1
+/**
+ * 加载筛选内容
+ * @param query 查询参数
+ * @param resetFilters 是否需要重新初始化筛选条件组件
+ * @param hideFilters 是否需要隐藏筛选条件组件
+ */
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
 
   if (resetFilters) {
     isLoading.value = true
     // 计算筛选列表高度
-    listHeight.value = rawListData.length * cfgListRowHeight.value
+    listHeight.value = rawParams.listData.length * listRowHeight.value
     // 初始化筛选条件
     showConditions.value = false
     clearTimeout(ininConditionTimer)
     ininConditionTimer = setTimeout(() => {
       showConditions.value = true
       nextTick(() => {
-        listDateRef = listRef.value?.init(rawListData) as QTListViewItem[]
+        listDateRef = listRef.value?.init(rawParams.listData) as QTListViewItem[]
       })
     }, 300)
   } else if (hideFilters) {
@@ -179,17 +218,22 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 
   // 重置页码
   page = 1
+  // 重置查询参数
+  reqQuery = resetFilters ? getContentsQuery(rawParams.listData) : query
   // 请求数据
-  filterManager.getContents(query, page, cfgGridContentLimit.value).then((contents) => {
+  filterManager.getContents(rawParams.primaryId, reqQuery, page, cfgGridContentLimit.value).then((contents) => {
     gridData.value = buildContents(contents)
 
     clearTimeout(loadingTimer)
     loadingTimer = setTimeout(() => {
       isLoading.value = false
       if (gridData.value.length === 0) {
+        emits('setNextFocusNameRight', '')
         isEmpty.value = true
       } else {
+        emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
+        gridRef.value?.setItemSelected(0, true)
       }
     }, 300)
   })
@@ -198,11 +242,14 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
 // 函数本身返回的页码有问题, 不要用
 function onGridLoadMore() {
   // 初始化筛选内容
-  filterManager.getContents('', ++page, cfgGridContentLimit.value).then((contents) => {
+  filterManager.getContents(rawParams.primaryId, reqQuery, ++page, cfgGridContentLimit.value).then((contents) => {
     const data = buildContents(contents)
     gridData.value.push(...data)
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
+      if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
+        gridData.value.push({ type: 1003, decoration: { bottom: 30 } })
+      }
       gridRef.value?.stopPage()
     }
   })
