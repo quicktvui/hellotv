@@ -9,8 +9,9 @@
       makeChildVisibleType="none"
     >
       <qt-view style="background-color: transparent" :clipChildren="true">
-        <!-- 筛选条件 -->
+        <!-- 筛选条件、筛选记录 -->
         <qt-view v-if="showConditions" class="filter-main-conditions">
+          <!-- 筛选条件 -->
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
@@ -21,6 +22,10 @@
             @item-focused="onListItemFocused"
           >
             <list-item :type="TertiaryType.LIST" :width="contentWidth" :height="listRowHeight" @onListItemClick="onListItemClick" />
+          </qt-list-view>
+          <!-- 筛选条件记录 -->
+          <qt-list-view v-show="showRecords" class="filter-main-conditions-list" ref="recordListRef" horizontal :padding="'80,0,40,0'">
+            <list-item-record :type="1" />
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
@@ -90,6 +95,7 @@ import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adap
 import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
+import ListItemRecord from './list-item-record.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
 import config from '../../config'
@@ -117,6 +123,9 @@ const listRef = ref<QTIListView>()
 const listHeight = ref<number>(330)
 const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
+// 筛选条件记录
+const recordListRef = ref<QTIListView>()
+const showRecords = ref<boolean>(false)
 // 筛选结果
 const gridRef = ref<QTIGridView>()
 const gridData = qtRef()
@@ -166,7 +175,7 @@ function onListItemClick(evt) {
   // 记录选中条件
   rawParams.listData[lastParentPosition].defaultSelectedPos = lastCurentPosition
   // 重新获取筛选结果
-  loadContents(getContentsQuery(rawParams.listData))
+  loadContents(getContentsQuery(rawParams.listData).join(','))
 }
 
 function onGridItemClick() {
@@ -180,10 +189,17 @@ function onGridItemFocused(evt) {
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
       if (gridScrollY.value === 0) {
+        // 筛选记录
+        const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { right: 30 } }))
+        if (records.length > 0) {
+          recordListRef.value?.init(records)
+          showRecords.value = true
+        }
         scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
         gridScrollY.value = 1
       }
     } else {
+      showRecords.value = false
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
     }
@@ -206,6 +222,7 @@ let loadingTimer: any = -1
  */
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
+  showRecords.value = false
 
   if (resetFilters) {
     isLoading.value = true
@@ -229,9 +246,10 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
   // 重置页码
   page = 1
   // 重置查询参数
-  reqQuery = resetFilters ? getContentsQuery(rawParams.listData) : query
+  reqQuery = resetFilters ? getContentsQuery(rawParams.listData).join(',') : query
   // 请求数据
   filterManager.getContents(rawParams.primaryId, reqQuery, page, cfgGridContentLimit.value).then((contents) => {
+    gridRef.value?.scrollToTop()
     gridData.value = buildContents(contents)
 
     clearTimeout(loadingTimer)

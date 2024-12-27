@@ -94,7 +94,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
  * @param filters 筛选条件列表
  * @returns
  */
-export const getContentsQuery = (filters: QTListViewItem[]): string => {
+export const getContentsQuery = (filters: QTListViewItem[]): string[] => {
   let query: string[] = []
 
   filters.forEach((item) => {
@@ -103,7 +103,7 @@ export const getContentsQuery = (filters: QTListViewItem[]): string => {
     }
   })
 
-  return query.join(',')
+  return query
 }
 
 /**
