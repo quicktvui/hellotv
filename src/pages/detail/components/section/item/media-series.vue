@@ -14,18 +14,18 @@
       ref="mediaSeriesRef" 
       class="media-series"
       :clipChildren="false" 
-      mark-color="#00D9D9" 
+      markColor="#00D9D9" 
       :focusable="false" 
       :visible="visible"
-      :text-colors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor, 
+      :textColors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor, 
         selectColor: ThemeConfig.textSelectColor }"
-      :gradient-background="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
-      :gradient-focus-background="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
+      :gradientBackground="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       :commonParam="{itemGap: 32,contentWidth: 1760}"
-      @load-data="onLoadData"
-      @item-click="onItemClick"
-      @item-focused="onItemFocused"
-      @group-item-focused="onGroupItemFocused">
+      @loadData="onLoadData"
+      @itemClick="onItemClick"
+      @itemFocused="onItemFocused"
+      @groupItemFocused="onGroupItemFocused">
       <template v-slot:default>
         <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" :focusScale="1">
           <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
@@ -63,7 +63,12 @@ import detailManager from '../../../../../api/detail/detail-manager'
 import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
 import config from '../config';
   const TAG = 'MediaSeriesView'
-  const emits = defineEmits(['onMediaSeriesListItemLoad'])
+  const emits = defineEmits([
+    'onMediaSeriesItemLoad',
+    'onMediaSeriesItemFocus',
+    'onMediaSeriesItemClick',
+    'onMediaSeriesGroupItemFocus'
+  ])
   const log = useESLog()
   const router = useESRouter()
   const mediaSeriesRef = ref<QTIMediaSeries>()
@@ -94,7 +99,7 @@ import config from '../config';
         }
         mediaSeriesRef.value?.setPageData(pageNo, buildMediaSeriesList(mediaList))
         setSelected(0)
-        emits("onMediaSeriesListItemLoad", pageNo, mediaList)
+        emits("onMediaSeriesItemLoad", pageNo, mediaList)
       }, error => {
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, "-------getMediaList----error------>>>>>", error)
@@ -105,9 +110,25 @@ import config from '../config';
     const page = event.page ?? 1
     getMediaList(m.episodesId, page)
   }
-  const onItemClick = () => {}
-  const onItemFocused = () => {}
-  const onGroupItemFocused = () => {}
+  const onItemClick = (event: QTMediaSeriesEvent) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "--------onItemClick----->>>>>", event)
+    }
+    let index = event.position;
+    let data = event.data
+    emits("onMediaSeriesItemClick", index, data)
+  }
+  const onItemFocused = (event: QTMediaSeriesEvent) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------onItemFocused----->>>>>", event)
+    }
+    let index = event.position;
+    emits("onMediaSeriesItemFocus", index)
+  }
+  const onGroupItemFocused = (event: QTMediaSeriesEvent) => {
+    let index = event.position;
+    emits("onMediaSeriesGroupItemFocus", index)
+  }
   const setSelected = (position: number): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-------选集组件----setSelected------>>>>>" + position)
@@ -115,9 +136,30 @@ import config from '../config';
     selectedIndex.value = position
     mediaSeriesRef.value?.setSelected(selectedIndex.value)
   }
-defineExpose({
+  const scrollTo = (position: number): void => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------选集组件----scrollTo------>>>>>" + position)
+    }
+    mediaSeriesRef.value?.scrollTo(position)
+  }
+  const getSelectedPosition = (): number => {return selectedIndex.value}
+  const requestFocus = (position:number): void => {
+    mediaSeriesRef.value?.requestFocus(position)
+  }
+  const release = (): void => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------选集组件----release------>>>>>")
+    }
+    dataMap.clear()
+    mediaSeriesRef.value?.release()
+  }
+  defineExpose({
     init,
-    setSelected
+    setSelected,
+    scrollTo,
+    getSelectedPosition,
+    requestFocus,
+    release
   })
 </script>
     

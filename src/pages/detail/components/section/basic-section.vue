@@ -14,11 +14,11 @@
       </player-placeholder>
       <qt-column  class="basic-section-top-info">
         <!-- 简介-->
-        <introduction
+        <media-introduction
           :blockFocusDirections="['up']"
-          ref="introductionRef"
+          ref="mediaIntroductionRef"
           @onIntroductionFocus="onIntroductionFocus">
-        </introduction>
+        </media-introduction>
         <!-- 资源位 -->
         <qt-view 
           class="resource-placeholder" 
@@ -37,10 +37,10 @@
       ref="mediaSeiresRef"
       nextFocusDownSID="releatedFirstId"
       :blockFocusDirections="['left','right']"
-      @onMediaListItemLoad="onMediaSeriesItemLoad"
-      @onMediaListItemFocused="onMediaSeriesListItemLoad"
-      @onMediaListItemClicked="onMediaSeriesItemClicked"
-      @onMediaListGroupItemClicked="onMediaSeriesGroupItemClicked">
+      @onMediaSeriesItemLoad="onMediaSeriesItemLoad"
+      @onMediaSeriesItemFocus="onMediaSeriesItemFocus"
+      @onMediaSeriesItemClick="onMediaSeriesItemClick"
+      @onMediaSeriesGroupItemFocus="onMediaSeriesGroupItemFocus">
     </media-series>
   </qt-column>
 </template>
@@ -48,19 +48,25 @@
 <script setup lang='ts' name='BasicSection'>
 import { ref } from 'vue'
 import { ESKeyEvent } from '@extscreen/es3-core'
-import { QTIViewVisibility} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaSeriesType ,IEpisodeAuthType } from '../../adapter/interface'
-import Introduction from './item/introduction.vue'
+import { QTMediaSeries} from '@quicktvui/quicktvui3'
+import { IMedia, IMediaSeriesType ,IMediaSeriesItem } from '../../adapter/interface'
+import MediaIntroduction from './item/media-introduction.vue'
 import PlayerPlaceholder from './item/player-placeholder.vue'
 import ButtonMenu from './item/button-menu.vue'
 import MediaSeries from './item/media-series.vue'
 import config from './config';
-  const emits = defineEmits(['onIntroductionFocus'])
+  const emits = defineEmits([
+    'onIntroductionFocus',
+    'onMediaSeriesItemLoad',
+    'onMediaSeriesItemFocus',
+    'onMediaSeriesItemClick',
+    'onMediaSeriesGroupItemFocus'
+  ])
   // 简介
   let sectionHeight = ref<number>(896)
   const onIntroductionFocus = (focused: boolean) => emits("onIntroductionFocus", focused)
   // 资源位
-  const introductionRef = ref()
+  const mediaIntroductionRef = ref()
   const isShowResourcePlaceholder = config.showResourcePlaceholder
   const resourcePlaceholderUrl = 'http://qcloudimg.moss.huan.tv/project/lexue_education/lexue/2023/08/29/ed22d94f6a674b9c99cbda74f0db5fd1.png'
   const onMediaResourceClicked = () => {}
@@ -72,11 +78,20 @@ import config from './config';
   const onPlayerPlaceholderClick = () => {}
   //选集
   const mediaSeiresRef = ref() 
-  const onMediaSeriesItemLoad = () => {}
-  const onMediaSeriesListItemLoad = () => {}
-  const onMediaSeriesItemClicked = () => {}
-  const onMediaSeriesGroupItemClicked = () => {}
-  async function init(media: IMedia) {
+  const onMediaSeriesItemLoad = (page: number, data: Array<IMediaSeriesItem>) => {
+    emits("onMediaSeriesItemLoad", page, data)
+  }
+  const onMediaSeriesItemFocus = (position: number) => {
+    emits("onMediaSeriesItemFocus", position)
+  }
+  const onMediaSeriesItemClick = (position: number, data: QTMediaSeries) => {
+    emits("onMediaSeriesItemClick", position, data)
+  }
+  const onMediaSeriesGroupItemFocus = (position: number) => {
+    emits("onMediaSeriesGroupItemFocus", position)
+  }
+  //**************************初始化入口**************************
+  const init = (media: IMedia) => {
     // console.log('----------initMedia---------->>>>', media)
     // if (media.itemList.enable) {
       // switch (media.itemList.type) {
@@ -96,15 +111,53 @@ import config from './config';
     // } else {
     //   sectionHeight.value = 550
     // }
-    introductionRef.value?.init(media)
+    mediaIntroductionRef.value?.init(media)
     playerPlaceholderRef.value?.init(media)
     menuRef.value?.init(media)
     mediaSeiresRef.value?.init(media)
   }
-  
+
+  const showPlayerPlaceholderImg = (value: boolean) => {
+    playerPlaceholderRef.value?.show(value)
+  } 
+  const scrollMediaSeriesTo = (position: number): void => {
+    mediaSeiresRef.value?.scrollTo(position)
+  }
+  const setMediaSeriesSelected = (position: number): void => {
+    mediaSeiresRef.value?.setSelected(position)
+  }
+  const requestPlayerPlaceholderFocus = (): void => {
+    playerPlaceholderRef.value?.requestFocus()
+  }
+  const requestFullButtonFocus = (): void => {
+    menuRef.value?.requestFullButtonFocus()
+  }
+  const release = (): void => {
+    mediaSeiresRef.value?.release()
+    menuRef.value?.release()
+  }
+  const setAutofocus = (enable: boolean) => {
+    playerPlaceholderRef.value?.setAutofocus(enable)
+  }
+  const requestCurrentMediaFocus = () => {
+    mediaSeiresRef.value?.requestFocus(mediaSeiresRef.value?.getSelectedPosition() ?? -1)
+  }
+  const getMediaSelectedPosition = (): number => {
+    return mediaSeiresRef.value?.getSelectedPosition() ?? -1
+  }
 
   defineExpose({
-    init
+    init,
+    showPlayerPlaceholderImg,
+    scrollMediaSeriesTo,
+    setMediaSeriesSelected,
+    requestPlayerPlaceholderFocus,
+    requestFullButtonFocus,
+    release,
+    setAutofocus,
+    requestCurrentMediaFocus,
+    getMediaSelectedPosition
+
   })
 </script>
 

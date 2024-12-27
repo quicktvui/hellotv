@@ -1,3 +1,6 @@
+import {ESKeyEvent} from "@extscreen/es3-core";
+import {ESPlayerWindowType} from "@extscreen/es3-player";
+import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
 // 详情
 export interface IMedia {
   //id
@@ -64,6 +67,7 @@ export enum IMediaPlayerViewState {
 }
 export const MEDIA_PLAYER_ERROR_AUTH = -2000;
 
+// 媒体播放器
 export interface IMediaPlayer extends QTIBaseView{
 
   play(media: IMedia)

@@ -32,7 +32,7 @@ import {
   }
   
   export function buildSectionList(media: IMedia): Array<QTWaterfallSection> {
-    let sectionList: Array<QTWaterfallSection> = [
+    const sectionList: Array<QTWaterfallSection> = [
       buildHeaderSection(),
       buildAlbumDetailSection(media),
       buildRecommendSection(media),

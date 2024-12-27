@@ -7,7 +7,13 @@
       horizontal
       padding="0,0,0,0"
       :enableSelectOnFocus="false">
-      <qt-view  class="menu-list-item" :style="bmliStyle" flexStyle="${style}" :type="1" :focusable="true" eventFocus eventClick>
+      <qt-view   
+        class="menu-list-item" 
+        :style="bmliStyle" 
+        flexStyle="${style}" 
+        :type="1" 
+        :focusable="true" 
+        eventFocus eventClick>
         <qt-view duplicateParentState class="menu-list-item-img" flexStyle="${iconStyle}">
           <img src="${focusIcon}" duplicateParentState showOnState="focused" flexStyle="${iconStyle}" :focusable="false"/>
           <img src="${icon}" duplicateParentState :showOnState="['normal','selected']" flexStyle="${iconStyle}" :focusable="false"/>
