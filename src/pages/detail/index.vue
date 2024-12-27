@@ -26,7 +26,7 @@
       </template>
       <template v-slot:vue-section>
         <basic-section
-          ref="albumDetailRef"
+          ref="basicSectionRef"
           @onIntroductionFocus="onIntroductionFocus"
           @onMediaListItemLoad="onMediaListItemLoad"
           @onMediaListItemFocused="onMediaListItemFocused"
@@ -36,12 +36,24 @@
           @onPlayerPlaceholderClick="onPlayerPlaceholderClick">
         </basic-section>
       </template>
-    </qt-waterfall>  
+      <template v-slot:item>
+        <recommend-item :type="10011"></recommend-item>
+      </template>
+    </qt-waterfall>
+    <!-- 播放器 -->
+    <media-player 
+      ref="mediaPlayerRef" 
+      name="media-player" 
+      class="detail-media-player-view-css"
+      @onPlayerPlayMedia="onPlayerPlayMedia"
+      @onPlayerPlaying="onPlayerPlaying"
+      @onPlayerWindowTypeChanged="onPlayerWindowTypeChanged">
+    </media-player>
   </div>
 </template>
   
 <script setup lang='ts' name='detail'>
-import { ref,nextTick } from 'vue'
+import { ref,nextTick, reactive } from 'vue'
 import {
   ESKeyCode,
   ESKeyEvent,
@@ -49,25 +61,27 @@ import {
   useESEventBus,
   useESLog,
   useESToast,
-  useESAppList
+  useESAppList,
+  toast
 } from '@extscreen/es3-core'
+import { useESRouter } from '@extscreen/es3-router'
 import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import BuildConfig from '../../config/build-config'
 import detailManager from '../../api/detail/detail-manager'
-import { IDetailInfo } from './build-data/interface/index'
-import {
-  buildRecommendationItemList,
-  buildSectionList,
-  buildWaterfall
-} from './build-data/adapter/data-adapter'
+import { IMedia, IRecommendItem, IMediaPlayer } from './adapter/interface'
+import {buildRecommendList,buildSectionList,buildWaterfall} from './adapter/index'
 import HeaderSection from './components/section/header-section.vue'
 import BasicSection from './components/section/basic-section.vue'
-
+import RecommendItem from './components/recommend-item.vue'
+import MediaPlayer from './components/media-player/index.vue'
+  const TAG = 'DetailPage'
   const log = useESLog()
+  const router = useESRouter()
   const detailRef = ref()
   let currenId = ref('')
   const waterfallRef = ref<QTIWaterfall>()
   let descendantFocusability = ref<number>(1)
+  let media: IMedia
   const qtTabSectionEnable = {
     tabEnable:false,
     flexSectionEnable:true,
@@ -138,39 +152,34 @@ import BasicSection from './components/section/basic-section.vue'
       params: ['0'],
     }
   ]
-  // waterfall 回调
-  const onScroll = () => {}
-  const onScrollStateChanged = () => {}
-  const onItemClick = () => {}
-  const onScrollYGreaterReference = () => {}
-  const onScrollYLesserReference = () => {}
-
-  // header-setion 回调
-  const onSearchButtonFocused = () => {}
-
-  // basic-setion 回调
-  const onIntroductionFocus = () => {}
-  const onMediaListItemLoad = () => {}
-  const onMediaListItemFocused = () => {}
-  const onMediaListItemClicked = () => {}
-  const onMediaListGroupItemClicked = () => {}
-  const onPlayerPlaceholderFocus = () => {}
-  const onPlayerPlaceholderClick = () => {}
-
-
-  const initWaterfall = () =>  {
-    // showLoading.value = true
-    waterfallRef.value!.init(buildWaterfall())
-    // albumDetailRef.value?.setAutofocus(true)
+  let currentPlayIndex = -1 // 当前播放视频的index
+  const mediaPlayerRef = ref<IMediaPlayer>()
+  //  生命周期
+  //  ***************************初始化入口 onESCreate***************************
+  const onESCreate = (params) => {
+    currenId.value = params && params.id ? params.id : '1584863712586579969'
+    initWaterfall()
+    getDetail()
   }
+  const onESResume = () => {}
+  const onESRestart = () => {}
+  const onESPause = () => {}
+  const onESStop = () => {}
+  const onESDestroy = () => {}
+  //初始化waterfall
+  const initWaterfall = () =>  {
+    waterfallRef.value!.init(buildWaterfall())
+    basicSectionRef.value?.setAutofocus(true)
+  }
+  //获取详情页数据
   const getDetail = () => {
-    detailManager.getMediaDetail(currenId.value).then((res:IDetailInfo) => {
+    detailManager.getMediaDetail(currenId.value).then((res:IMedia) => {
       console.log(res,'getDetailgetDetailgetDetail') 
-      // media = m
-      // sourceId = media.rawData.dataItems[0].sourceId
-      // albumDetailRef.value?.initMedia(media)
+      media = res
+      basicSectionRef.value?.init(media)
       nextTick(async () => {
         waterfallRef.value?.scrollToTop()
+        //加载waterfall 板块数据
         let sections = buildSectionList(res)
         //根据是否有选集，调整焦点滚动的距离
         // if (sections.length == 3) {
@@ -187,7 +196,6 @@ import BasicSection from './components/section/basic-section.vue'
         //   }
         // }
         waterfallRef.value?.setSectionList(sections)
-
         // 补充播放历史
         // request.post(urlGetMediaHistory, {
         //   data: {
@@ -205,28 +213,53 @@ import BasicSection from './components/section/basic-section.vue'
         //   prevPlayIndex = 0
         //   media._prevPlayIndex = prevPlayIndex
         // })
-        // mediaPlayerViewRef.value?.play(media)
-        // getMediaRecommendation(media.id,sourceId)
+        currentPlayIndex = 0
+        media._prevPlayIndex = currentPlayIndex
+        mediaPlayerRef.value?.play(media)
+        //延迟加载相关推荐列表数据更新相关推荐板块 不影响主页面展示速度
+        getRecommendList(media.id)
       })
     })
   }
-
-  //  生命周期
-  const onESCreate = (params) => {
-    currenId.value = params && params.id ? params.id : '1584863712586579969'
-    initWaterfall()
-    getDetail()
+  //获取相关推荐列表数据
+  const getRecommendList = (id: string) => {
+    detailManager.getRecommendList(id)
+      .then((recommendList: Array<IRecommendItem>) => {
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, "-------getRecommendList----success------>>>>>", recommendList)
+        }
+        const section = waterfallRef.value?.getSection(2)
+        if (section) {
+          section.itemList = buildRecommendList(recommendList)
+          waterfallRef.value?.updateSection(2, section)
+        }
+      }, error => {
+        if (log.isLoggable(ESLogLevel.DEBUG)) {
+          log.d(TAG, id + "-------getRecommendList----error------>>>>>", error)
+        }
+      })
   }
-  const onESResume = () => {
-  }
-  const onESRestart = () => {
-  }
-  const onESPause = () => {
-  }
-  const onESStop = () => {
-  }
-  const onESDestroy = () => {
-  }
+  // waterfall 回调
+  const onScroll = () => {}
+  const onScrollStateChanged = () => {}
+  const onItemClick = () => {}
+  const onScrollYGreaterReference = () => {}
+  const onScrollYLesserReference = () => {}
+  // header-setion 回调
+  const onSearchButtonFocused = () => {}
+  // basic-setion 回调
+  const basicSectionRef = ref()
+  const onIntroductionFocus = () => {}
+  const onMediaListItemLoad = () => {}
+  const onMediaListItemFocused = () => {}
+  const onMediaListItemClicked = () => {}
+  const onMediaListGroupItemClicked = () => {}
+  const onPlayerPlaceholderFocus = () => {}
+  const onPlayerPlaceholderClick = () => {}
+  // 播放器
+  const onPlayerPlayMedia = () => {}
+  const onPlayerPlaying = () => {}
+  const onPlayerWindowTypeChanged = () => {}
   //  按键
   const onKeyDown = (keyEvent: ESKeyEvent) => {
   }
@@ -234,6 +267,7 @@ import BasicSection from './components/section/basic-section.vue'
   }
   //  返回
   const onBackPressed = () => {
+    router.back()
   }
 
   defineExpose({

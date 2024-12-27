@@ -8,7 +8,8 @@ export const tabContentUrl = BuildConfig.requestBaseUrl + '/home/tabs/${id}?pack
 
 //详情页接口
 export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
-
+export const DetailMediaSeriesUrl = BuildConfig.requestBaseUrl + '/album/episodes/'
+export const RecommendListUrl = BuildConfig.requestBaseUrl + '/recommendations'
 //用户接口
 
 //搜索页接口
