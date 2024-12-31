@@ -46,11 +46,11 @@
 </template>
     
 <script setup lang='ts' name='MediaSeries'>
-import { ref } from 'vue'
-import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaSeriesItem } from '../../../adapter/interface'
+import { IMedia, IMediaItem } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
 import { 
   buildMediaSeriesType, 
@@ -71,11 +71,12 @@ import config from '../config';
   ])
   const log = useESLog()
   const router = useESRouter()
+  const eventbus = useESEventBus()
   const mediaSeriesRef = ref<QTIMediaSeries>()
   let m: IMedia
   let visible = ref(false)
   let selectedIndex = ref(0)
-  const dataMap = new Map<number, Array<IMediaSeriesItem>>()
+  const dataMap = new Map<number, Array<IMediaItem>>()
   const init = (media: IMedia) => {
     m = media
     if(media.episodes > 1) visible.value = true
@@ -86,13 +87,23 @@ import config from '../config';
       buildMediaSeriesData(media)
     )
   }
+  onMounted(() => {
+    eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
+  });
+
+  onUnmounted(() => {
+    eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
+  });
+  const onMediaSeriesLoadData = (page: number) => {
+    getMediaList(m.episodesId, page)
+  }
   const getMediaList = (episodesId: string, pageNo: number) => {
     if (dataMap.has(pageNo)) {
       //TODO 等待左图右文修改获取数据的bug
       return
     }
     detailManager.getMediaSeriesList(episodesId, pageNo, 10)
-      .then((mediaList: Array<IMediaSeriesItem>) => {
+      .then((mediaList: Array<IMediaItem>) => {
         dataMap.set(pageNo, mediaList)
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, "-------getMediaList----success------>>>>>", pageNo, mediaList)
@@ -107,6 +118,7 @@ import config from '../config';
       })
   }
   const onLoadData = (event: QTMediaSeriesEvent) => {
+    // toast.showToast(event.page+'eeeeee')
     const page = event.page ?? 1
     getMediaList(m.episodesId, page)
   }

@@ -6,6 +6,7 @@
       ref="listRef"
       horizontal
       padding="0,0,0,0"
+      @item-click="onItemClick"
       :enableSelectOnFocus="false">
       <qt-view   
         class="menu-list-item" 
@@ -35,6 +36,7 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import { IMedia } from '../../../adapter/interface'
 import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
 import ic_full_focused from '../../../../../assets/detail/ic_full_focused.png'
@@ -48,6 +50,7 @@ import ic_vip_focused from '../../../../../assets/detail/ic_vip_focused.png'
 import config from '../config';
   const emits = defineEmits(['onIntroductionFocus'])
   const router = useESRouter()
+  const eventbus = useESEventBus()
   let bmStyle = config.buttonMenuSize == 'default' ?  
     {height: '140px',marginTop: 45} : {height: '70px',marginTop: 20}
   let bmlStyle = config.buttonMenuSize == 'default' ? {height: '140px'} : {height: '70px'}
@@ -90,7 +93,10 @@ import config from '../config';
     listRef.value?.setListData(listData)
     
   }
-  const onClick = () => {
+  const onItemClick = (e) => {
+    if(e.position == 0) eventbus.emit("onMenuFullButtonClick")
+    if(e.position == 1) eventbus.emit("onMenuFavouriteButtonClick", isCollected.value)
+    if(e.position == 2) eventbus.emit("onMenuVIPButtonClick")
   }
   const onFocus = (e) => emits('onIntroductionFocus', e.isFocused) 
   defineExpose({

@@ -9,9 +9,14 @@ $home-height:1080px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .detail-waterfall-css{
+    width: $home-width;
+    height: $home-height;
+    background-color: $gl-theme-root-bg-color;
+    position: absolute;
+  }
+  .detail-media-player{
+    background-color: transparent;
+  }
 }
-.detail-waterfall-css{
-  width: $home-width;
-  height: $home-height;
-  background-color: $gl-theme-root-bg-color;
-}
+

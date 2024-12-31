@@ -49,7 +49,7 @@
 import { ref } from 'vue'
 import { ESKeyEvent } from '@extscreen/es3-core'
 import { QTMediaSeries} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaSeriesType ,IMediaSeriesItem } from '../../adapter/interface'
+import { IMedia, IMediaSeriesType ,IMediaItem } from '../../adapter/interface'
 import MediaIntroduction from './item/media-introduction.vue'
 import PlayerPlaceholder from './item/player-placeholder.vue'
 import ButtonMenu from './item/button-menu.vue'
@@ -78,7 +78,7 @@ import config from './config';
   const onPlayerPlaceholderClick = () => {}
   //选集
   const mediaSeiresRef = ref() 
-  const onMediaSeriesItemLoad = (page: number, data: Array<IMediaSeriesItem>) => {
+  const onMediaSeriesItemLoad = (page: number, data: Array<IMediaItem>) => {
     emits("onMediaSeriesItemLoad", page, data)
   }
   const onMediaSeriesItemFocus = (position: number) => {
@@ -116,9 +116,8 @@ import config from './config';
     menuRef.value?.init(media)
     mediaSeiresRef.value?.init(media)
   }
-
   const showPlayerPlaceholderImg = (value: boolean) => {
-    playerPlaceholderRef.value?.show(value)
+    playerPlaceholderRef.value?.showPlayerPlaceholderImg(value)
   } 
   const scrollMediaSeriesTo = (position: number): void => {
     mediaSeiresRef.value?.scrollTo(position)

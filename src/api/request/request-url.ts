@@ -10,6 +10,7 @@ export const tabContentUrl = BuildConfig.requestBaseUrl + '/home/tabs/${id}?pack
 export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
 export const DetailMediaSeriesUrl = BuildConfig.requestBaseUrl + '/album/episodes/'
 export const RecommendListUrl = BuildConfig.requestBaseUrl + '/recommendations'
+export const playUrl = BuildConfig.requestBaseUrl + '/streams/'
 //用户接口
 
 //搜索页接口

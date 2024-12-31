@@ -63,7 +63,7 @@ import {
 } from "@extscreen/es3-player";
 import { qtRef, QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
-import mediaPlayerPlaceholder from "../../../assets/detail/ic_media_player_placeholder.png"
+import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_placeholder.png"
   const TAG = 'MediaPlayerSmallView'
   let enabled = true
   let player: ESIPlayerManager
