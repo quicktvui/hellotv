@@ -20,21 +20,24 @@ export interface Suggestions {
 
 export interface Contents {
   total: number
-  items: {
-    id: string
-    title: string
-    cover: string
-    description: string
-    tags: string
-    actors: string
-    score: number
-    offLine: boolean
-    vipType: number
-    episodes: number
-    episodesId: string
-    jumpParams: {
-      type: number
-      options: Object
-    }
-  }[]
+  items: Content[]
+  recommends: Content[]
+}
+
+export interface Content {
+  id: string
+  title: string
+  cover: string
+  description: string
+  tags: string
+  actors: string
+  score: number
+  offLine: boolean
+  vipType: number
+  episodes: number
+  episodesId: string
+  jumpParams: {
+    type: number
+    options: Object
+  }
 }

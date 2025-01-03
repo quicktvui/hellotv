@@ -3,11 +3,11 @@
     <scroll-view name="searchScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true">
       <qt-view class="search-three-columns-body" :clipChildren="true">
         <!-- 键盘区域 -->
-        <keyboard ref="keyboardRef" />
+        <search-keyboard ref="keyboardRef" />
         <!-- 搜索关键词 -->
-        <keyword ref="keywordRef" @searchByKeyword="searchByKeyword" />
+        <search-keyword ref="keywordRef" @searchByKeyword="searchByKeyword" />
         <!-- 搜索内容区域 -->
-        <content-waterfall ref="contentRef" :triggerTask="triggerTask" />
+        <search-content ref="contentRef" :keyword="keyword" :triggerTask="triggerTask" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -15,17 +15,16 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { buildKeywords } from './adapter/index'
 import themeConfig from '../../config/theme-config'
-import keyboard from './components/keyboard.vue'
-import keyword from './components/keyword.vue'
-import contentWaterfall from './components/content-waterfall.vue'
-import searchManager from '../../api/search/index'
+import searchKeyboard from './components/search-keyboard.vue'
+import searchKeyword from './components/search-keyword.vue'
+import searchContent from './components/search-content.vue'
 
 // 键盘
 const keyboardRef = ref()
 // 关键词
 const keywordRef = ref()
+const keyword = ref<string>('')
 // 内容
 const contentRef = ref()
 const triggerTask = [
@@ -46,14 +45,12 @@ const triggerTask = [
 function onESCreate() {
   // 初始化键盘
   keyboardRef.value?.init()
-  // 加载关键词
-  searchManager.getSuggestions('hot').then((suggestions) => {
-    keywordRef.value?.init(buildKeywords(suggestions))
-  })
+  // 初始化关键词
+  keywordRef.value?.init('hot')
 }
 
-function searchByKeyword(keyword: string) {
-  contentRef.value?.init(keyword)
+function searchByKeyword(val: string) {
+  keyword.value = val
 }
 
 defineExpose({ onESCreate })
