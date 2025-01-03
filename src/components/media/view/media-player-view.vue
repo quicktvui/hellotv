@@ -237,7 +237,6 @@ export default defineComponent({
     }
 
     const playMediaList = (playList: ESMediaItemList) => {
-      console.log('XRG===播放方法==', playList, 'playMediaList')
       playerManager.value?.playMediaList(playList)
     }
 
