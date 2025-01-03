@@ -72,7 +72,7 @@
 
 </template>
 
-<script lang='ts' setup name='WaterfallTabs'>
+<script lang='ts' setup name='waterfall-tabs'>
 
 import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'

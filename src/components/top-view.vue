@@ -41,7 +41,7 @@
 
 </template>
 
-<script lang='ts' setup name='TopView'>
+<script lang='ts' setup name='top-view'>
 
 import launch from '../tools/launch'
 import BtnPackView from './btn-pack-view.vue'

@@ -16,7 +16,7 @@
 
 </template>
 
-<script lang='ts' setup name='PlaceHolderItem'>
+<script lang='ts' setup name='place-holder-item'>
 
 defineExpose({})
 

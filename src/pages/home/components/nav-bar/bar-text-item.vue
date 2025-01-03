@@ -42,7 +42,7 @@
 
 </template>
 
-<script lang='ts' setup name='BarTextItem'>
+<script lang='ts' setup name='bar-text-item'>
 
 defineProps({
   showCorner: {

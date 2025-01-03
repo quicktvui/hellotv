@@ -16,7 +16,7 @@
 
 </template>
 
-<script lang='ts' setup name='BarImgItem'>
+<script lang='ts' setup name='bar-img-item'>
 
 defineExpose({})
 

@@ -31,7 +31,7 @@
 
 </template>
 
-<script lang='ts' setup name='NoFrameItem'>
+<script lang='ts' setup name='no-title-item'>
 
 defineExpose({})
 
