@@ -1,6 +1,13 @@
 <template>
   <qt-view class="search-keyword">
-    <qt-list-view class="search-keyword-list" ref="listRef" :padding="'0,72,0,0'" @item-focused="onListItemFocused">
+    <qt-list-view
+      class="search-keyword-list"
+      ref="listRef"
+      name="keywordList"
+      :padding="'0,72,0,0'"
+      :singleSelectPosition="1"
+      @item-focused="onListItemFocused"
+    >
       <!-- 标题 -->
       <qt-view :type="1" class="search-keyword-list-item" :focusable="false">
         <qt-text class="search-keyword-list-item-text" style="color: white; font-size: 40px" autoWidth autoHeight text="${text}"></qt-text>

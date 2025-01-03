@@ -7,11 +7,7 @@
         <!-- 搜索关键词 -->
         <keyword ref="keywordRef" />
         <!-- 搜索内容区域 -->
-        <qt-view
-          style="width: 1920px; height: 1080px; background-color: yellowgreen"
-          :triggerTask="triggerTask"
-          :focusable="true"
-        ></qt-view>
+        <content ref="contentRef" :triggerTask="triggerTask" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -22,12 +18,14 @@ import { ref } from 'vue'
 import themeConfig from '../../config/theme-config'
 import keyboard from './components/keyboard.vue'
 import keyword from './components/keyword.vue'
+import content from './components/content.vue'
 
 // 键盘
 const keyboardRef = ref()
 // 关键词
 const keywordRef = ref()
 // 内容
+const contentRef = ref()
 const triggerTask = [
   {
     event: 'onFocusAcquired',
@@ -48,6 +46,8 @@ function onESCreate() {
   keyboardRef.value?.init()
   // 初始化关键词
   keywordRef.value?.init()
+  // 初始化内容
+  contentRef.value?.init()
 }
 
 defineExpose({ onESCreate })

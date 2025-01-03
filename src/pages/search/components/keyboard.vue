@@ -27,7 +27,14 @@
       />
     </qt-view>
     <!-- 键盘区域 -->
-    <qt-grid-view class="search-keyboard-grid" ref="gridRef" :spanCount="6" :autofocusPosition="14" @item-click="onGridItemClick">
+    <qt-grid-view
+      class="search-keyboard-grid"
+      ref="gridRef"
+      :spanCount="6"
+      :autofocusPosition="14"
+      :nextFocusName="{ right: 'keywordList' }"
+      @item-click="onGridItemClick"
+    >
       <qt-view :type="1" class="search-keyboard-grid-item" :focusable="true" eventFocus eventClick>
         <qt-text
           class="search-keyboard-grid-item-text"
