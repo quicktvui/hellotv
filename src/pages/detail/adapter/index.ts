@@ -14,7 +14,7 @@ import {
   QTMediaSeries,
   } from "@quicktvui/quicktvui3";
   // import { IMedia } from "../../../api/media/IMedia";
-  import { IMedia, IMediaSeriesType, IMediaSeriesItem, IRecommendItem } from './interface'
+  import { IMedia, IMediaSeriesType, IMediaItem, IRecommendItem } from './interface'
   import ThemeConfig from "../../../config/theme-config";
   // import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
   // import { IMediaAuthType } from "../../../api/media/IMediaAuthType";
@@ -32,7 +32,7 @@ import {
   }
   
   export function buildSectionList(media: IMedia): Array<QTWaterfallSection> {
-    let sectionList: Array<QTWaterfallSection> = [
+    const sectionList: Array<QTWaterfallSection> = [
       buildHeaderSection(),
       buildAlbumDetailSection(media),
       buildRecommendSection(media),
@@ -279,7 +279,7 @@ import {
     return data;
   }
 
-  export function buildMediaSeriesList(list: Array<IMediaSeriesItem>): Array<QTMediaSeries> {
+  export function buildMediaSeriesList(list: Array<IMediaItem>): Array<QTMediaSeries> {
     const itemList: Array<QTMediaSeries> = [];
     if (list && list.length > 0) {
       for (let i = 0; i < list.length; i++) {
@@ -291,7 +291,7 @@ import {
     return itemList;
   }
   
-  export function buildMediaSeries(item: IMediaSeriesItem): QTMediaSeries {
+  export function buildMediaSeries(item: IMediaItem): QTMediaSeries {
     // const vip = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP;
     const vip = true
     if (vip) {

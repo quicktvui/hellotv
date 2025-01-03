@@ -1,3 +1,6 @@
+import {ESKeyEvent} from "@extscreen/es3-core";
+import {ESPlayerWindowType} from "@extscreen/es3-player";
+import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
 // 详情
 export interface IMedia {
   //id
@@ -29,7 +32,7 @@ export enum IEpisodeAuthType {
   MEDIA_AUTH_TYPE_FREE = 1,
 }
 // 选集item
-export interface IMediaSeriesItem {
+export interface IMediaItem {
   //分集id
   id: string
   //分集展示的标题
@@ -63,12 +66,17 @@ export enum IMediaPlayerViewState {
   MEDIA_PLAYER_VIEW_STATE_MENU = 2,
 }
 export const MEDIA_PLAYER_ERROR_AUTH = -2000;
-
+//播放器url
+export interface IMediaUrl {
+  definition: string
+  playUrl: string
+}
+// 媒体播放器
 export interface IMediaPlayer extends QTIBaseView{
 
   play(media: IMedia)
 
-  addMediaItemList(page: number, mediaList: Array<IMedia>)
+  addMediaItemList(page: number, mediaList: Array<IMediaItem>)
 
   playMediaItemById(id: string)
 
@@ -81,6 +89,8 @@ export interface IMediaPlayer extends QTIBaseView{
   setSmallWindow()
 
   getWindowType(): ESPlayerWindowType
+
+  getLoadLow(): boolean
 
   stop()
 

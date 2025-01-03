@@ -10,14 +10,18 @@ export const tabContentUrl = BuildConfig.requestBaseUrl + '/home/tabs/${id}?pack
 export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
 export const DetailMediaSeriesUrl = BuildConfig.requestBaseUrl + '/album/episodes/'
 export const RecommendListUrl = BuildConfig.requestBaseUrl + '/recommendations'
+export const playUrl = BuildConfig.requestBaseUrl + '/streams/'
 //用户接口
-
-//搜索页接口
 
 //筛选页接口
 export const filterLeftListUrl = BuildConfig.requestBaseUrl + '/filter/${primaryId}/tags?packageName=${packageName}'
 export const filterContentsUrl =
   BuildConfig.requestBaseUrl + '/filter/${primaryId}/contents?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
+
+//搜索页接口
+export const searchSuggestionsUrl = BuildConfig.requestBaseUrl + '/search/suggestions?packageName=${packageName}&type=${type}'
+export const searchContentsUrl =
+  BuildConfig.requestBaseUrl + '/search?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
 
 export function replacePlaceholders(template, replacements): string {
   return template.replace(/\$\{(\w+)\}/g, (match, placeholder) => {

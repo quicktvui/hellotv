@@ -25,6 +25,11 @@ const routes = [
     component: () => import('./pages/filter/expandSidebarContents.vue')
   },
   {
+    path: '/search',
+    name: 'search',
+    component: () => import('./pages/search/threeColumns.vue')
+  },
+  {
     path: '/detail',
     name: 'detail',
     component: detail

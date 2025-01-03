@@ -14,13 +14,25 @@
     @item-click="onListItemClick"
   >
     <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" eventFocus eventClick>
-      <qt-text
-        class="filter-main-conditions-list-row-item-text"
-        autoWidth
-        text="${name}"
-        :focusable="false"
-        :duplicateParentState="true"
-      ></qt-text>
+      <qt-view style="height: 40px; background-color: transparent" autoWidth :focusable="false" :duplicateParentState="true">
+        <qt-text
+          class="filter-main-conditions-list-row-item-text"
+          autoWidth
+          text="${name}"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="filter-main-conditions-list-row-item-text"
+          autoWidth
+          text="${name}"
+          typeface="bold"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+      </qt-view>
     </qt-view>
   </qt-list-view>
 </template>
@@ -45,7 +57,7 @@ function onListItemClick(evt) {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .filter-main-conditions-list-row {
   width: 1920px;
   height: 66px;
@@ -58,14 +70,15 @@ function onListItemClick(evt) {
   padding: 24px;
   border-radius: 30px;
   justify-content: center;
-  focus-background-color: #ffffff;
+  focus-background-color: $gl-theme-btn-bg-focus-color;
 }
 
 .filter-main-conditions-list-row-item-text {
+  position: absolute;
   height: 40px;
-  color: rgba(255, 255, 255, 0.35);
+  color: $text-normal-color;
   font-size: 30px;
-  focus-color: #13161b;
-  select-color: #ffffff;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
 }
 </style>

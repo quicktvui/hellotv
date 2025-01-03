@@ -1,33 +1,40 @@
 import requestManager from '../request/request-manager'
 import BuildConfig from "../../config/build-config"
-import { DetailUrl, DetailMediaSeriesUrl, RecommendListUrl } from '../request/request-url'
+import { DetailUrl, DetailMediaSeriesUrl, RecommendListUrl, playUrl } from '../request/request-url'
 import { DetailApi } from './impl-detail'
-import { IMedia, IMediaSeriesItem, IRecommendItem } from '../../pages/detail/adapter/interface'
+import { IMedia, IMediaItem, IRecommendItem } from '../../pages/detail/adapter/interface'
 
 
 class DetailManager implements DetailApi{
 
   getMediaDetail(id:string):Promise<IMedia>{
-    let url = `${DetailUrl}${id}?packageName=${BuildConfig.packageName}`
+    const url = `${DetailUrl}${id}?packageName=${BuildConfig.packageName}`
     return requestManager.get(url).then((res: any) => {
-      let media: IMedia = res
+      const media: IMedia = res
       return Promise.resolve(media)
     })
   }
 
-  getMediaSeriesList(id:string, page: number, limit: number):Promise<Array<IMediaSeriesItem>>{
-    let url = `${DetailMediaSeriesUrl}${id}?packageName=${BuildConfig.packageName}&page=${page}&limit=${limit}`
+  getMediaSeriesList(id:string, page: number, limit: number):Promise<Array<IMediaItem>>{
+    const url = `${DetailMediaSeriesUrl}${id}?packageName=${BuildConfig.packageName}&page=${page}&limit=${limit}`
     return requestManager.get(url).then((res: any) => {
-      let mediaSeriesList: Array<IMediaSeriesItem> = res.items
+      const mediaSeriesList: Array<IMediaItem> = res.items
       return Promise.resolve(mediaSeriesList)
     })
   }
 
   getRecommendList(id:string):Promise<Array<IRecommendItem>>{
-    let url = `${RecommendListUrl}?packageName=${BuildConfig.packageName}&id=${id}&page=1&limit=12`
+    const url = `${RecommendListUrl}?packageName=${BuildConfig.packageName}&id=${id}&page=1&limit=12`
     return requestManager.get(url).then((res: any) => {
-      let recommendist: Array<IRecommendItem> = res.items
+      const recommendist: Array<IRecommendItem> = res.items
       return Promise.resolve(recommendist)
+    })
+  }
+
+  getPlayUrl(id:string, type: string):Promise<any>{
+    const url = `${playUrl}${id}?packageName=${BuildConfig.packageName}&type=${type}`
+    return requestManager.get(url).then((res: any) => {
+      return Promise.resolve(res)
     })
   }
 

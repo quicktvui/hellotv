@@ -16,7 +16,7 @@ import {
   useESLog, useESNetwork,
   useESRuntime
 } from '@extscreen/es3-core'
-import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from '@extscreen/es3-player'
+import { ESPlayerLogLevel, useESPlayerLog, useESPlayer} from '@extscreen/es3-player'
 import requestManager from './api/request/request-manager'
 import userManager from './api/user/user-manager'
 

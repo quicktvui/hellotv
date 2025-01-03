@@ -27,6 +27,18 @@
       text="${name}"
       autoWidth
       gravity="center"
+      :showOnState="['normal', 'selected']"
+      :focusable="false"
+      :duplicateParentState="true"
+    ></qt-text>
+    <qt-text
+      class="filter-sidebar-list-item-text"
+      style="margin-left: 98px"
+      text="${name}"
+      autoWidth
+      gravity="center"
+      typeface="bold"
+      :showOnState="'focused'"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-text>

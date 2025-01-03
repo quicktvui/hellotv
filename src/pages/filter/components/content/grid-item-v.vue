@@ -11,14 +11,27 @@
       :duplicateParentState="true"
     ></qt-image>
     <!-- 标题 -->
-    <qt-text
-      class="filter-main-contents-grid-item-v-text"
-      text="${title}"
-      :lines="1"
-      :ellipsizeMode="4"
-      :focusable="false"
-      :duplicateParentState="true"
-    ></qt-text>
+    <qt-view style="background-color: transparent" :focusable="false" :duplicateParentState="true">
+      <qt-text
+        class="filter-main-contents-grid-item-v-text"
+        text="${title}"
+        :showOnState="['normal', 'selected']"
+        :lines="1"
+        :ellipsizeMode="4"
+        :focusable="false"
+        :duplicateParentState="true"
+      ></qt-text>
+      <qt-text
+        class="filter-main-contents-grid-item-v-text"
+        text="${title}"
+        typeface="bold"
+        :showOnState="'focused'"
+        :lines="1"
+        :ellipsizeMode="4"
+        :focusable="false"
+        :duplicateParentState="true"
+      ></qt-text>
+    </qt-view>
   </qt-view>
 </template>
 
@@ -28,7 +41,7 @@ import ThemeConfig from '../../../../config/theme-config'
 const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .filter-main-contents-grid-item-v {
   width: 260px;
   height: 414px;
@@ -43,11 +56,12 @@ const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 }
 
 .filter-main-contents-grid-item-v-text {
+  position: absolute;
   width: 260px;
   height: 40px;
   background-color: transparent;
   font-size: 30px;
-  color: rgba(255, 255, 255, 0.55);
+  color: $text-normal-color;
   focus-color: #ffffff;
 }
 </style>

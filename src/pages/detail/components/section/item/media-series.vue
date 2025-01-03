@@ -17,15 +17,15 @@
       markColor="#00D9D9"
       :focusable="false"
       :visible="visible"
-      :text-colors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
+      :textColors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
         selectColor: ThemeConfig.textSelectColor }"
-      :gradient-background="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
-      :gradient-focus-background="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
+      :gradientBackground="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       :commonParam="{itemGap: 32,contentWidth: 1760}"
-      @load-data="onLoadData"
-      @item-click="onItemClick"
-      @item-focused="onItemFocused"
-      @group-item-focused="onGroupItemFocused">
+      @loadData="onLoadData"
+      @itemClick="onItemClick"
+      @itemFocused="onItemFocused"
+      @groupItemFocused="onGroupItemFocused">
       <template v-slot:default>
         <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" :focusScale="1">
           <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
@@ -46,11 +46,11 @@
 </template>
 
 <script setup lang='ts' name='MediaSeries'>
-import { ref } from 'vue'
-import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaSeriesItem } from '../../../adapter/interface'
+import { IMedia, IMediaItem } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
 import {
   buildMediaSeriesType,
@@ -63,14 +63,20 @@ import detailManager from '../../../../../api/detail/detail-manager'
 import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
 import config from '../config';
   const TAG = 'MediaSeriesView'
-  const emits = defineEmits(['onMediaSeriesListItemLoad'])
+  const emits = defineEmits([
+    'onMediaSeriesItemLoad',
+    'onMediaSeriesItemFocus',
+    'onMediaSeriesItemClick',
+    'onMediaSeriesGroupItemFocus'
+  ])
   const log = useESLog()
   const router = useESRouter()
+  const eventbus = useESEventBus()
   const mediaSeriesRef = ref<QTIMediaSeries>()
   let m: IMedia
   let visible = ref(false)
   let selectedIndex = ref(0)
-  const dataMap = new Map<number, Array<IMediaSeriesItem>>()
+  const dataMap = new Map<number, Array<IMediaItem>>()
   const init = (media: IMedia) => {
     m = media
     if(media.episodes > 1) visible.value = true
@@ -81,20 +87,30 @@ import config from '../config';
       buildMediaSeriesData(media)
     )
   }
+  onMounted(() => {
+    eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
+  });
+
+  onUnmounted(() => {
+    eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
+  });
+  const onMediaSeriesLoadData = (page: number) => {
+    getMediaList(m.episodesId, page)
+  }
   const getMediaList = (episodesId: string, pageNo: number) => {
     if (dataMap.has(pageNo)) {
       //TODO 等待左图右文修改获取数据的bug
       return
     }
     detailManager.getMediaSeriesList(episodesId, pageNo, 10)
-      .then((mediaList: Array<IMediaSeriesItem>) => {
+      .then((mediaList: Array<IMediaItem>) => {
         dataMap.set(pageNo, mediaList)
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, "-------getMediaList----success------>>>>>", pageNo, mediaList)
         }
         mediaSeriesRef.value?.setPageData(pageNo, buildMediaSeriesList(mediaList))
         setSelected(0)
-        emits("onMediaSeriesListItemLoad", pageNo, mediaList)
+        emits("onMediaSeriesItemLoad", pageNo, mediaList)
       }, error => {
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, "-------getMediaList----error------>>>>>", error)
@@ -102,12 +118,29 @@ import config from '../config';
       })
   }
   const onLoadData = (event: QTMediaSeriesEvent) => {
+    // toast.showToast(event.page+'eeeeee')
     const page = event.page ?? 1
     getMediaList(m.episodesId, page)
   }
-  const onItemClick = () => {}
-  const onItemFocused = () => {}
-  const onGroupItemFocused = () => {}
+  const onItemClick = (event: QTMediaSeriesEvent) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "--------onItemClick----->>>>>", event)
+    }
+    let index = event.position;
+    let data = event.data
+    emits("onMediaSeriesItemClick", index, data)
+  }
+  const onItemFocused = (event: QTMediaSeriesEvent) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------onItemFocused----->>>>>", event)
+    }
+    let index = event.position;
+    emits("onMediaSeriesItemFocus", index)
+  }
+  const onGroupItemFocused = (event: QTMediaSeriesEvent) => {
+    let index = event.position;
+    emits("onMediaSeriesGroupItemFocus", index)
+  }
   const setSelected = (position: number): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-------选集组件----setSelected------>>>>>" + position)
@@ -115,9 +148,30 @@ import config from '../config';
     selectedIndex.value = position
     mediaSeriesRef.value?.setSelected(selectedIndex.value)
   }
-defineExpose({
+  const scrollTo = (position: number): void => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------选集组件----scrollTo------>>>>>" + position)
+    }
+    mediaSeriesRef.value?.scrollTo(position)
+  }
+  const getSelectedPosition = (): number => {return selectedIndex.value}
+  const requestFocus = (position:number): void => {
+    mediaSeriesRef.value?.requestFocus(position)
+  }
+  const release = (): void => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------选集组件----release------>>>>>")
+    }
+    dataMap.clear()
+    mediaSeriesRef.value?.release()
+  }
+  defineExpose({
     init,
-    setSelected
+    setSelected,
+    scrollTo,
+    getSelectedPosition,
+    requestFocus,
+    release
   })
 </script>
 
