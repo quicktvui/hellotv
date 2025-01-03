@@ -35,5 +35,17 @@
   position: absolute;
   align-items: center;
   background-color: transparent;
-
+}
+.bg-player-background-img{
+  position: absolute;
+  border-radius: 0;
+  background-color: transparent;
+}
+.bg-player-mask{
+  position: absolute;
+  background-color: rgba(0,0,0,0.5);
+}
+.bg-player-shadow{
+  position: absolute;
+  background-color: transparent;
 }

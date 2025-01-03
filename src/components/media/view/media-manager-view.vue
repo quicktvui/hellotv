@@ -208,7 +208,6 @@ const initSeekBar = () => {
  * @param menuData
  */
 const initMenuList = (menuData: Array<IMediaMenu>) => {
-  console.log("XRG===","initMenuList")
   menuList.value = menuData
   // //初始化底部菜单列表
   isShowList.value = true

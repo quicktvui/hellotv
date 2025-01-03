@@ -28,7 +28,7 @@
 
 </template>
 
-<script lang='ts' setup name='CellPlayerItem'>
+<script lang='ts' setup name='cell-player-item'>
 import TabContentConfig from '../../build-data/tab-content/tab-content-config.ts'
 defineExpose({})
 

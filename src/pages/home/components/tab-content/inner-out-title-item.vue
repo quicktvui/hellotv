@@ -47,7 +47,7 @@
 
 </template>
 
-<script lang='ts' setup name='InnerOutTitleItem'>
+<script lang='ts' setup name='inner-out-title-item'>
 
 defineExpose({})
 

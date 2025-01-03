@@ -32,7 +32,7 @@
 
 </template>
 
-<script lang='ts' setup name='BtnPackView'>
+<script lang='ts' setup name='btn-pack-view'>
 import ThemeConfig from '../config/theme-config.ts'
 
 

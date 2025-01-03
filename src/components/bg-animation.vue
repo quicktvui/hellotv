@@ -1,20 +1,24 @@
 <template>
-  <div class='bg-animation-root-css' :style='bgStyle'>
+  <div class='bg-animation-root-css' :style='$props.bgStyle'>
     <!--    图片-->
     <qt-animation ref='animationOldRef'
                   class='animation-css' style='z-index: 888'>
-      <img :style='[bgStyle,{borderRadius:borderRadius}]' :src='srcOld' />
+      <img
+        :style='{width:$props.bgStyle.width,height:$props.bgStyle.height,borderRadius:borderRadius,backgroundColor:"transparent"}'
+        :src='srcOld' />
     </qt-animation>
     <!--    图片-->
     <qt-animation ref='animationNewRef'
                   class='animation-css' style='z-index: 999'>
-      <img :style='[bgStyle,{borderRadius:borderRadius}]' :src='srcNew' />
+      <img
+        :style='{width:$props.bgStyle.width,height:$props.bgStyle.height,borderRadius:borderRadius,backgroundColor:"transparent"}'
+        :src='srcNew' />
     </qt-animation>
   </div>
 
 </template>
 
-<script lang='ts' setup name='BgAnimation'>
+<script lang='ts' setup name='bg-animation'>
 
 import { QTAnimationPropertyName, QTAnimationValueType, QTIAnimation } from '@quicktvui/quicktvui3'
 import { ref } from 'vue'
@@ -66,7 +70,7 @@ const setImg = (src: string) => {
       animationOldHideId,
       QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
       QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
-      1, 0, <number>props.transitionTime, -1, 0, false, false,{ type: 2 }
+      1, 0, <number>props.transitionTime, -1, 0, false, false, { type: 2 }
     )
     animationOldRef.value?.startAnimator(animationOldHideId)
     srcOld.value = srcNew.value

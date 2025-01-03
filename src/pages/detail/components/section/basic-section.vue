@@ -60,7 +60,9 @@ import config from './config';
     'onMediaSeriesItemLoad',
     'onMediaSeriesItemFocus',
     'onMediaSeriesItemClick',
-    'onMediaSeriesGroupItemFocus'
+    'onMediaSeriesGroupItemFocus',
+    'onPlayerPlaceholderFocus',
+    'onPlayerPlaceholderClick',
   ])
   // 简介
   let sectionHeight = ref<number>(896)
@@ -74,8 +76,10 @@ import config from './config';
   const menuRef = ref()
   //播放器占位
   const playerPlaceholderRef = ref() 
-  const onPlayerPlaceholderFocus = () => {}
-  const onPlayerPlaceholderClick = () => {}
+  const onPlayerPlaceholderFocus = (focused: boolean) => {
+    emits("onPlayerPlaceholderFocus", focused)
+  }
+  const onPlayerPlaceholderClick = () => {emits("onPlayerPlaceholderClick")}
   //选集
   const mediaSeiresRef = ref() 
   const onMediaSeriesItemLoad = (page: number, data: Array<IMediaItem>) => {
