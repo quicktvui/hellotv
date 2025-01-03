@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="player-placeholder-root"
+  <div class="player-placeholder-root"
     ref="placeholder"
     @click="onClick"
     @focus="onFocus"
@@ -16,7 +16,7 @@
       :focusable="false"
       :enableFocusBorder="false"
       :src="playerPplaceholderUrl"/>
-  </qt-view>
+  </div>
 </template>
     
 <script setup lang='ts' name='PlayerPlaceholder'>

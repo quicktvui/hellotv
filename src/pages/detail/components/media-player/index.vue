@@ -43,7 +43,7 @@
       
 <script setup lang='ts' name='MediaPlayer'>
 import { ref, markRaw, nextTick } from 'vue'
-import { ESLogLevel, useESEventBus, useESLog, ESKeyEvent } from "@extscreen/es3-core";
+import { ESLogLevel, useESEventBus, useESLog, ESKeyEvent, toast } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../../config/theme-config";
@@ -67,6 +67,7 @@ import {
 } from "@extscreen/es3-player"
 import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import { IMedia, IMediaItem } from '../../adapter/interface'
+import MediaPlayerView from './media-player-view.vue'
 import MediaPlayerSmallView from './media-player-small-view.vue'
 import { 
   buildMediaList, 
@@ -89,9 +90,10 @@ import {
   const floatWindowWidth = ref<number>(BuildConfig.isLowEndDev ? 0 : 502)
   const floatWindowHeight = ref<number>(BuildConfig.isLowEndDev ? 0 : 283)
   const playerViewList =  [
-    // markRaw(ESMediaPlayerView),
+    markRaw(MediaPlayerView), 
     markRaw(MediaPlayerSmallView),
   ]
+  playerViewList[0].name = 'media-player-view'
   const interceptor = createESPlayerMediaSourceListInterceptor(detailManager)
   const playerManager = ref<ESIPlayerManager>()
   const playerList = [markRaw(ESVideoPlayer)]
@@ -108,6 +110,7 @@ import {
   const playerMaskImg = ref<string>('')
   let isLoadLow = ref(false)
   let progressTimer: any = -1
+  let _progress,_duration = 0;//播放进度/总时长
 
   const play = (media: IMedia) => {
     m = media
@@ -120,7 +123,6 @@ import {
     playerManager.value?.initialize()
     playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
     playerManager.value?.playMediaList(playList)
-    console.log(playList,'12312333333333333333333333333333333333')
   }
   const addMediaItemList = (page: number, mediaList: Array<IMediaItem>) => {
     //播放器数据
@@ -135,6 +137,52 @@ import {
   }
   const playMediaItemByIndex = (index: number) => {
     if(!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
+  }
+  const stop = () => {
+    playerManager.value?.stop()
+    let _index = Math.max(playerManager.value?.getPlayingMediaIndex()||0, 0)
+    const media = playerManager.value?.getMedia(_index)
+    if(media && media.analyzeParams && _progress>0){
+      // request.post(urlSaveHistory, {
+      //   data: {
+      //     platformId: media.analyzeParams.platformId,
+      //     metaId: media.analyzeParams.metaId,
+      //     assetLongId: media.analyzeParams.assetLongId,
+      //     episodeId: media.analyzeParams.episodeId,
+      //     currentPlayTime: _progress,
+      //     totalPlayTime: _duration||_progress,
+      //     episode: _index+1,
+      //     assetLongTitle: media.analyzeParams.assetLongTitle,
+      //     episodeTitle: media.analyzeParams.episodeTitle,
+      //     assetLongCoverH: media.analyzeParams.assetLongCoverH,
+      //     assetLongCoverV: media.analyzeParams.assetLongCoverV
+      //   }
+      // })
+    }
+  }
+  const release = () => {
+    setSmallWindow()
+    playerManager.value?.release()
+  }
+  const resume = () => {
+    if (BuildConfig.isLowEndDev && playerManager.value?.getWindowType() !== ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL){
+      return
+    }
+    playerManager.value?.resume()
+  }
+  const reset = () => {
+    playerManager.value?.reset()
+    playerRateManager.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)
+  }
+  const setFullWindow = () => {
+    if (BuildConfig.isLowEndDev) {
+      controlPlayViewShow.value = true
+      playerMask.value = false
+      isLoadLow.value = false
+    }
+    nextTick(() => {
+      playerManager.value?.setFullWindow()
+    })
   }
   const setFloatWindow = () => {
     if (BuildConfig.isLowEndDev) {
@@ -250,8 +298,8 @@ import {
       log.d(TAG, '-----------onPlayerInterceptError------------->>>>', result)
     }
   }
-  const onPlayerProgressChangedFn = () => {}
-  const onPlayerDurationChangedFn = () => {}
+  const onPlayerProgressChangedFn = (progress: number) => {_progress = progress}
+  const onPlayerDurationChangedFn = (d: number) => {_duration = d}
   const onKeyDown = (keyEvent: ESKeyEvent): boolean => {
     if (playerManager.value) {
       return playerManager.value!.onKeyDown(keyEvent)
@@ -274,9 +322,15 @@ import {
     return false
   }
   defineExpose({
+    onPlayerWindowTypeChanged,
     play,
     addMediaItemList,
     playMediaItemByIndex,
+    stop,
+    resume,
+    release,
+    reset,
+    setFullWindow,
     setFloatWindow,
     setSmallWindow,
     getWindowType,
@@ -293,6 +347,7 @@ import {
 .media-player{
   width: 1920px;
   height: 1080px;
+  background-color: transparent;
   .player-manager-css{
     position: absolute;
     background-color: transparent;

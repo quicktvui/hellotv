@@ -10,7 +10,6 @@
       :enableKeepFocus='false'
       :descendantFocusability="descendantFocusability"
       :qtTabSectionEnable="qtTabSectionEnable"
-      :triggerTask="triggerTask"
       @onScroll="onScroll"
       @onScrollStateChanged="onScrollStateChanged"
       @onItemClick="onItemClick"
@@ -67,6 +66,7 @@ import {
 import { useESRouter } from '@extscreen/es3-router'
 import { ESPlayerWindowType } from '@extscreen/es3-player'
 import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { QTMediaSeries } from '@quicktvui/quicktvui3/dist/src/series/QTMediaSeries'
 import BuildConfig from '../../config/build-config'
 import detailManager from '../../api/detail/detail-manager'
 import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/interface'
@@ -151,24 +151,24 @@ import MediaPlayer from './components/media-player/index.vue'
       function: 'updateLayout',
       params: [502,283,0,0,true],
     },
-    {
-      event: 'onScrollYLesser',
-      target: 'es-player-manager',
-      function: 'updateLayout',
-      params: [890,500,80,135],
-    },
-    {
-      event: 'onScrollYLesser',
-      target: 'smallRoot',
-      function: 'updateLayout',
-      params: [890,500,0,0],
-    },
-    {
-      event: 'onScrollYLesser',
-      target: 'es-video-player-component',
-      function: 'setPlayerLayout',
-      params: [0, 0, 890,500],
-    },
+    // {
+    //   event: 'onScrollYLesser',
+    //   target: 'es-player-manager',
+    //   function: 'updateLayout',
+    //   params: [890,500,80,135],
+    // },
+    // {
+    //   event: 'onScrollYLesser',
+    //   target: 'smallRoot',
+    //   function: 'updateLayout',
+    //   params: [890,500,0,0],
+    // },
+    // {
+    //   event: 'onScrollYLesser',
+    //   target: 'es-video-player-component',
+    //   function: 'setPlayerLayout',
+    //   params: [0, 0, 890,500],
+    // },
     {
       event: 'onScrollYGreater',
       target: 'media-player',
@@ -406,10 +406,36 @@ import MediaPlayer from './components/media-player/index.vue'
     }
   }
   const onMediaSeriesItemFocus = () => {}
-  const onMediaSeriesItemClick = () => {}
+  const onMediaSeriesItemClick = (index: number, data: QTMediaSeries) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, "-------onMediaListItemClicked----->>>>>" + index, data)
+    }
+    if (basicSectionRef.value?.getMediaSelectedPosition() == index) {
+      enterByFullButton = 2
+      mediaPlayerRef.value?.setFullWindow()
+      return;
+    }
+    if (data.id != null) {
+      mediaPlayerRef.value?.stop()
+      mediaPlayerRef.value?.playMediaItemById(data.id)
+      if (BuildConfig.isLowEndDev) {
+        mediaPlayerRef.value?.setFullWindow()
+      }
+    }
+  }
   const onMediaSeriesGroupItemFocus = () => {}
-  const onPlayerPlaceholderFocus = () => {}
-  const onPlayerPlaceholderClick = () => {}
+  const onPlayerPlaceholderFocus = (focused: boolean) => {
+    if (focused) {
+      waterfallRef.value?.scrollToTop()
+      waterfallScrollY = 0
+      cancelDetailRequestFocusTimer()
+    }
+    eventbus.emit("onPlayerPlaceholderFocus", focused)
+  }
+  const onPlayerPlaceholderClick = () => {
+    mediaPlayerRef.value?.setFullWindow()
+    enterByFullButton = 0;
+  }
   // 播放器
   const onPlayerPlayMedia = () => {
     const playingIndex = mediaPlayerRef.value?.getPlayingMediaIndex() ?? -1
@@ -454,11 +480,10 @@ import MediaPlayer from './components/media-player/index.vue'
 
           return
         }
-
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, '-----全屏---------ES_PLAYER_WINDOW_TYPE_SMALL------>>>>')
         }
-        if (media && !media.itemList.enable) {
+        if (media && media.episodes < 2) {
           basicSectionRef.value?.setAutofocus(false)
           detailFocusTimer = setTimeout(() => {
             cancelDetailRequestFocusTimer()
@@ -514,6 +539,8 @@ import MediaPlayer from './components/media-player/index.vue'
   }
 
   defineExpose({
+    onScrollYGreaterReference,
+    onScrollYLesserReference,
     onESCreate,
     onESRestart,
     onESPause,

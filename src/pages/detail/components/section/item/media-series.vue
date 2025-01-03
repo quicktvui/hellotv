@@ -90,7 +90,6 @@ import config from '../config';
   onMounted(() => {
     eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
   });
-
   onUnmounted(() => {
     eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
   });
@@ -118,7 +117,6 @@ import config from '../config';
       })
   }
   const onLoadData = (event: QTMediaSeriesEvent) => {
-    // toast.showToast(event.page+'eeeeee')
     const page = event.page ?? 1
     getMediaList(m.episodesId, page)
   }
