@@ -16,7 +16,7 @@ import {
   useESLog, useESNetwork,
   useESRuntime
 } from '@extscreen/es3-core'
-import { ESPlayerLogLevel, useESPlayerLog } from '@extscreen/es3-player'
+import { ESPlayerLogLevel, useESPlayer, useESPlayerLog } from '@extscreen/es3-player'
 import requestManager from './api/request/request-manager'
 import userManager from './api/user/user-manager'
 
@@ -42,9 +42,7 @@ export default defineComponent({
     const develop = useESDevelop()
     const device = useESDevice()
     const runtime = useESRuntime()
-
-
-    // const playerManager = useESPlayer()
+    const playerManager = useESPlayer()
 
 
     // const launch = useLaunch()
@@ -66,16 +64,16 @@ export default defineComponent({
         .then(() => launch.init(router,nativeRouter,develop))
         // .then(() => HistoryApi.init(localStore))
         // .then(() => activity2Api.init())
-        // .then(() => playerManager.init({
-        //   debug: BuildConfig.DEBUG,
-        //   display: {
-        //     screenWidth: device.getScreenWidth(),
-        //     screenHeight: device.getScreenHeight()
-        //   },
-        //   device: {
-        //     deviceType: runtime.getRuntimeDeviceType() ?? ''
-        //   }
-        // }))
+        .then(() => playerManager.init({
+          debug: BuildConfig.DEBUG,
+          display: {
+            screenWidth: device.getScreenWidth(),
+            screenHeight: device.getScreenHeight()
+          },
+          device: {
+            deviceType: runtime.getRuntimeDeviceType() ?? ''
+          }
+        }))
     }
 
     /**

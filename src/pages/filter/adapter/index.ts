@@ -95,7 +95,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
  * @returns
  */
 export const getContentsQuery = (filters: QTListViewItem[]): string => {
-  let query: string[] = []
+  const query: string[] = []
 
   filters.forEach((item) => {
     if (item.defaultSelectedPos > 0) {

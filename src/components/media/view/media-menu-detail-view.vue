@@ -15,7 +15,7 @@
 
 </template>
 
-<script lang='ts' setup name='MediaMenuDetailView'>
+<script lang='ts' setup name='media-menu-detail-view'>
 import { QTIListView, QTListViewItem, qtRef } from '@quicktvui/quicktvui3'
 import { ref } from 'vue'
 import MediaMenuDetailItem from './media-menu-detail-item.vue'

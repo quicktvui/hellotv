@@ -22,7 +22,7 @@
 
 </template>
 
-<script lang='ts' setup name='MediaMenuIconItem'>
+<script lang='ts' setup name='media-menu-icon-item'>
 
 defineExpose({})
 

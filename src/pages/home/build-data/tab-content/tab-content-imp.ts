@@ -73,7 +73,9 @@ export enum SectionItemType {
   //小窗播放格子
   TYPE_SMALL_PLAY = 7,
   //小窗列表播放格子
-  TYPE_SMALL_LIST_PLAY = 8
+  TYPE_SMALL_LIST_PLAY = 8,
+  //轮播图片格子
+  TYPE_LOOP_IMAGE = 9,
 }
 
 /**
@@ -126,11 +128,10 @@ interface Corner{
  * 视频类型
  */
 export enum PlayType {
-  //短视频类型
-  TYPE_LONG = 1,
   //正片长视频类型
+  TYPE_LONG = 1,
+  //短视频类型
   TYPE_SHORT = 2,
-
 }
 
 /**
@@ -148,7 +149,7 @@ interface PlayData {
   //是否请求播放地址
   isRequestUrl: boolean
   //播放地址
-  url: Array<{
+  url?: Array<{
     playUrl: string
     definition: string
   }>

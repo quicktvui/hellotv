@@ -16,7 +16,7 @@
 
 </template>
 
-<script lang='ts' setup name='MediaMenuTextItem'>
+<script lang='ts' setup name='media-menu-text-item'>
 
 defineExpose({})
 

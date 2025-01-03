@@ -10,7 +10,7 @@
 
 </template>
 
-<script lang='ts' setup name='MediaMenuDetailItem'>
+<script lang='ts' setup name='media-menu-detail-item'>
 import selectedIcon from '../../../assets/component-media/ic_media_ok_selected.png'
 import focusedIcon from '../../../assets/component-media/ic_media_ok_focused.png'
 

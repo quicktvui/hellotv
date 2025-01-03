@@ -1,7 +1,14 @@
 import home from './pages/home/index.vue'
 import detail from './pages/detail/index.vue'
 
+import test from './pages/m-test'
+
 const routes = [
+  {
+    path: '/test',
+    name: 'test',
+    component: test
+  },
   {
     path: '/home',
     name: 'home',

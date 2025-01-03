@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="media-player-small-view-root" 
+  <qt-view class="media-player-small-view-root"
     name='smallRoot'
     :focusable="false"
     :style="{width:playerWidth, height:playerHeight}">
@@ -14,9 +14,9 @@
       :duplicateParentState="true">
       <span>按【OK键】全屏观看</span>
     </qt-view>
-    <qt-view 
-      class="media-player-loading" 
-      :focusable="false" 
+    <qt-view
+      class="media-player-loading"
+      :focusable="false"
       ref="mediaPlayerLoadingRef"
       name='loadingRoot'
       :fillParent='true' v-show="showLoading"
@@ -49,7 +49,7 @@
     </qt-column>
   </qt-view>
 </template>
-    
+
 <script setup lang='ts' name='ButtonMenu'>
 import { ref } from 'vue'
 import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
@@ -63,7 +63,7 @@ import {
 } from "@extscreen/es3-player";
 import { qtRef, QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
-import mediaPlayerPlaceholder from "../../../assets/detail/ic_media_player_placeholder.png"
+import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_placeholder.png"
   const TAG = 'MediaPlayerSmallView'
   let enabled = true
   let player: ESIPlayerManager
@@ -94,7 +94,7 @@ import mediaPlayerPlaceholder from "../../../assets/detail/ic_media_player_place
   const onPlayerPlaceholderFocus = (focused: boolean) => {
     playerPlaceholderFocus = focused
     showBottomTip.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) && focused
-  } 
+  }
   eventBus.on("onPlayerPlaceholderFocus", onPlayerPlaceholderFocus)
   const setPlayerViewStateDismiss = () => {
     const lastViewState = viewState.value
@@ -235,7 +235,7 @@ import mediaPlayerPlaceholder from "../../../assets/detail/ic_media_player_place
     onKeyUp
   })
 </script>
-    
+
 <style lang='scss' scoped>
 .media-player-small-view-root{
   background-color: transparent;
@@ -324,4 +324,3 @@ import mediaPlayerPlaceholder from "../../../assets/detail/ic_media_player_place
   }
 }
 </style>
-      

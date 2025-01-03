@@ -1,0 +1,16 @@
+
+.cell-player-item-root-css{
+  background-color: rgba(0,0,0,0.1);
+  border-radius: 9px;
+}
+.cell-player-item-bg{
+  position:absolute;
+  top:-0.1px;
+  left:-0.1px;
+  border-radius: $gl-theme-img-border;
+  background-color: transparent;
+}
+.cell-player-item-replace{
+  position: absolute;
+  background-color: transparent;
+}

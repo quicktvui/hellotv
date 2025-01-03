@@ -81,8 +81,8 @@ export function buildPlayRates(rateList: Array<ESPlayerRate>): Array<QTListViewI
 }
 
 export function buildItemPlayRate(rate: ESPlayerRate):QTListViewItem{
-  let name = (rate == 1 ? "1.0" : rate) + 'x'
-  let decoration: QTListViewItemDecoration = {
+  const name = (rate == 1 ? "1.0" : rate) + 'x'
+  const decoration: QTListViewItemDecoration = {
     bottom: 20
   }
   return {
@@ -103,14 +103,14 @@ export function buildModes(modeList: Array<ESPlayerPlayMode>): Array<QTListViewI
   if (modeList && modeList.length) {
     for (let i = 0; i < modeList.length; i++) {
       const m = modeList[i]
-      const item = buildItemMode(m, i)
+      const item = buildItemMode(m)
       itemList.push(item)
     }
   }
   return itemList
 }
 
-export function buildItemMode(mode: ESPlayerPlayMode, index: number): QTListViewItem {
+export function buildItemMode(mode: ESPlayerPlayMode): QTListViewItem {
   let modeName = ''
   switch (mode) {
     case ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ONCE:
@@ -129,7 +129,7 @@ export function buildItemMode(mode: ESPlayerPlayMode, index: number): QTListView
       modeName = '自动连播'
       break
   }
-  let decoration: QTListViewItemDecoration = {
+  const decoration: QTListViewItemDecoration = {
     bottom: 16
   }
   return {
@@ -181,9 +181,9 @@ export function buildDefinitions(definitionList: Array<ESPlayerDefinition>): Arr
   return itemList
 }
 
-export function buildItemDefinition(definition: ESPlayerDefinition, index: number): QTListViewItem{
-  let definitionName = decodeDefinition(definition)
-  let decoration: QTListViewItemDecoration = {
+export function buildItemDefinition(definition: ESPlayerDefinition ): QTListViewItem{
+  const definitionName = decodeDefinition(definition)
+  const decoration: QTListViewItemDecoration = {
     bottom: 20
   }
   return {
@@ -245,13 +245,13 @@ export function getCurDefinitionIndex(definition: ESPlayerDefinition, definition
   return getCurIndex(definition,definitionList)
 }
 
-export function buildPlayData(playDatas:Array<IMediaList>,interceptors?:Array<ESIPlayerInterceptor>):ESMediaItemList{
-  let playList: ESMediaItemList = {
+export function buildPlayData(playData:Array<IMediaList>,interceptors?:Array<ESIPlayerInterceptor>):ESMediaItemList{
+  const playList: ESMediaItemList = {
     index: 0,
     list: []
   }
-  if (playDatas && playDatas.length > 0){
-    playDatas.map((item,index)=>{
+  if (playData && playData.length > 0){
+    playData.map((item,index)=>{
       const mediaItem_0: ESMediaItem = buildItem(item,index,interceptors)
       playList.list.push(mediaItem_0)
     })
@@ -283,7 +283,6 @@ function buildItem(item:IMediaList,index:number,interceptors?:Array<ESIPlayerInt
     title:item?.title,
     subTitle:item?.subTitle,
     albumName:item?.albumName,
-    url:item.url,
   }
   if (isRequestUrl){
     mediaItem_0 = {
@@ -302,10 +301,11 @@ function buildItem(item:IMediaList,index:number,interceptors?:Array<ESIPlayerInt
 }
 
 function buildUrls(mediaUrlList:IMediaUrl[]):Array<ESMediaSource>{
-  let list:Array<ESMediaSource> = []
+  const list:Array<ESMediaSource> = []
   for (let i = 0; i < mediaUrlList.length; i++) {
     const item = mediaUrlList[i]
-    const mItem:ESMediaSource = {uri:item.playUrl,definition:Number(item.definition)??1}
+    const mDefinition = item.definition ? Number(item.definition) : 1
+    const mItem:ESMediaSource = {uri:item.playUrl,definition:mDefinition}
     list.push(mItem)
   }
   return list

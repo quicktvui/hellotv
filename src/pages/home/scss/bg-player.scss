@@ -1,0 +1,39 @@
+
+.bg-player-root-css{
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+}
+
+.bg-player-replace-child{
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background-color: transparent;
+}
+
+.bg-player-parent-css{
+  position: absolute;
+  width: 1920px;
+  height: 1080px;
+  background-color: transparent;
+  justify-content: center;
+  align-items: center;
+}
+.bg-player-window{
+  position: absolute;
+  left: 0;
+  top: 0;
+  border-radius: 0;
+  flex-direction: row;
+  background-color: transparent;
+}
+.bg-player-view{
+  position: absolute;
+  align-items: center;
+  background-color: transparent;
+
+}

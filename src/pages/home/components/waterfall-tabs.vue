@@ -6,6 +6,8 @@
     <bg-animation ref='waterfallLogo4kRef' class='waterfall-tabs-4k-logo'
                   :bgStyle='{width:"240px",height:"84px"}' :focusable='false'
                   :transitionTime='200' />
+    <!-- 背景播放及小窗播放组件 -->
+    <bg-player class='waterfall-tabs-bg-player' ref='waterfallBgPlayerRef' :clipChildren='false' sid='waterfallBgPlayerSid'/>
     <!--顶部按钮组-->
     <div ref='waterfallTopRef' name='waterfallTopView' sid='waterfallTopSid'
          class='waterfall-top-view' :clipChildren='false'
@@ -59,6 +61,8 @@
         <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
+        <!-- 小窗播放格子-->
+        <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
       </template>
 
     </qt-tabs>
@@ -89,6 +93,8 @@ import BarTextItem from './nav-bar/bar-text-item.vue'
 import NavBarItemType from '../build-data/nav-bar/nav-bar-item-type'
 import NavBarConfig from '../build-data/nav-bar/nav-bar-config'
 import TabContentConfig from '../build-data/tab-content/tab-content-config'
+import BgPlayer from './tab-content/bg-player.vue'
+import CellPlayerItem from './tab-content/cell-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
@@ -228,16 +234,16 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
   homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit, tabPageIndex)
     .then((tabPage: QTTabPageData) => {
       if (tabPage.data.length > 0) {
-        if (pageNo <=1){
+        if (pageNo <= 1) {
           tabRef.value?.setPageData(tabPageIndex, tabPage)
-        }else{
+        } else {
           tabRef.value?.addPageData(tabPageIndex, tabPage, 0)
         }
       }
-      if (tabPage.isLoadPageEnd || tabPage.data.length === 0){
-        tabRef.value?.setPageState(tabPageIndex,QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+      if (tabPage.isLoadPageEnd || tabPage.data.length === 0) {
+        tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
       }
-    },error =>{
+    }, error => {
       toast.showToast('加载数据失败，稍后重试！')
     })
 }

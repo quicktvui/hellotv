@@ -1,8 +1,8 @@
 <template>
-  <qt-view 
-    class="media-series-root" 
-    :clipChildren="false" 
-    :clipPadding="false" 
+  <qt-view
+    class="media-series-root"
+    :clipChildren="false"
+    :clipPadding="false"
     :focusable="false"
     v-show="visible">
     <!-- 选集标题 -->
@@ -10,14 +10,14 @@
       <qt-text class="media-series-title-text" :focusable="false" :fontSize="40" text="选集"/>
     </div>
     <!-- 选集内容 -->
-    <qt-media-series 
-      ref="mediaSeriesRef" 
+    <qt-media-series
+      ref="mediaSeriesRef"
       class="media-series"
-      :clipChildren="false" 
-      mark-color="#00D9D9" 
-      :focusable="false" 
+      :clipChildren="false"
+      markColor="#00D9D9"
+      :focusable="false"
       :visible="visible"
-      :text-colors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor, 
+      :text-colors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
         selectColor: ThemeConfig.textSelectColor }"
       :gradient-background="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
       :gradient-focus-background="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
@@ -30,9 +30,9 @@
         <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" :focusScale="1">
           <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
           <qt-view class="media-series-item-info" duplicateParentState>
-            <qt-text class="media-series-item-text" text="${text}" :lines="2" :ellipsizeMode="2" 
+            <qt-text class="media-series-item-text" text="${text}" :lines="2" :ellipsizeMode="2"
               :focusable="false" duplicateParentState :fontSize="26"></qt-text>
-            <qt-text class="media-series-item-duartion" text="${duartion}" :lines="2" :ellipsizeMode="2" 
+            <qt-text class="media-series-item-duartion" text="${duartion}" :lines="2" :ellipsizeMode="2"
               :focusable="false" duplicateParentState :fontSize="22"></qt-text>
             <qt-view class="play_Mark" :focusable="false" :showOnState="['selected']" duplicateParentState>
               <play-mark :style="{width:'18px',height:'20px'}" markColor="#ffffff"
@@ -41,10 +41,10 @@
           </qt-view>
         </qt-view>
       </template>
-    </qt-media-series>              
+    </qt-media-series>
   </qt-view>
 </template>
-    
+
 <script setup lang='ts' name='MediaSeries'>
 import { ref } from 'vue'
 import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
@@ -52,8 +52,8 @@ import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaSeriesItem } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
-import { 
-  buildMediaSeriesType, 
+import {
+  buildMediaSeriesType,
   buildMediaSeriesGroup,
   buildMediaSeriesStyleType,
   buildMediaSeriesData,
@@ -120,7 +120,7 @@ defineExpose({
     setSelected
   })
 </script>
-    
+
 <style lang='scss' scoped>
 .media-series-root{
   width: 1920px;
@@ -191,4 +191,3 @@ defineExpose({
   }
 }
 </style>
-      

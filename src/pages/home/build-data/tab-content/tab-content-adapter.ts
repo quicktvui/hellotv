@@ -72,7 +72,7 @@ export function buildTabContentAdapter(tabContent: TabContent, pageNo: number = 
       const isFocusScrollTarget: boolean = res.isFocusScrollTarget
       //获取展示的板块高度
       section.style.height = buildSectionHeightBySectionType(section)
-      const firstSectionIndex:boolean = sectionIndex === 0 && isFirstPage
+      const firstSectionIndex: boolean = sectionIndex === 0 && isFirstPage
       //build 板块数据
       const buildSectionData: QTWaterfallSection = buildSection(section, sectionWaterfallItemList, firstSectionIndex, firstSectionMarginTop, isFocusScrollTarget)
       sectionList.push(buildSectionData)
@@ -264,18 +264,18 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_PLACE_HOLDER://占位格子
       buildSectionItem = buildPlaceHolderSectionItem(sectionItem)
       break
-    case SectionItemType.TYPE_TEXT_HISTORY:
-      break
-    case SectionItemType.TYPE_IMG_HISTORY:
-      break
+    // case SectionItemType.TYPE_TEXT_HISTORY:
+    //   break
+    // case SectionItemType.TYPE_IMG_HISTORY:
+    //   break
     case SectionItemType.TYPE_FOCUS_CHANGE_IMG://焦点换图格子
       buildSectionItem = buildFocusChangeImgSectionItem(sectionItem)
       break
-    case SectionItemType.TYPE_SMALL_PLAY:
-
+    case SectionItemType.TYPE_SMALL_PLAY://小窗播放
+      buildSectionItem = buildSmallPlayerSectionItem(sectionItem,tabPageIndex)
       break
-    case SectionItemType.TYPE_SMALL_LIST_PLAY:
-      break
+    // case SectionItemType.TYPE_SMALL_LIST_PLAY:
+    //   break
     default://默认--无标题格子
       buildSectionItem = buildNoTitleSectionItem(sectionItem)
       break
@@ -381,6 +381,30 @@ export function buildFocusChangeImgSectionItem(sectionItem: SectionItem): QTWate
   }
 }
 
+export function buildSmallPlayerSectionItem(sectionItem: SectionItem,tabPageIndex:number): QTWaterfallItem {
+  return {
+    type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER,
+    style: buildStyle(sectionItem),
+    image: {
+      style: {
+        width: sectionItem.width,
+        height: sectionItem.height
+      },
+      normal: sectionItem.image
+    },
+    play: {
+      style: {
+        width: sectionItem.width,
+        height: sectionItem.height
+      },
+      sid:sectionItem.id + 'cellSid'+'tabIndex'+tabPageIndex,
+      playData:sectionItem.playData
+    },
+    jumpParams: sectionItem.jumpParams
+
+  }
+}
+
 /**
  * 封装占位格子
  * @param sectionItem 格子数据
@@ -468,7 +492,7 @@ export function buildSectionStyle(sectionHeight: number): QTWaterfallFlexStyle {
   return {
     width: 1920,
     height: sectionHeight,
-    marginLeft: -1,
+    marginLeft: -1
     // gradientBackground:{ colors: ['#FFFF00', '#00FFFF'],orientation:0 }
   }
 }

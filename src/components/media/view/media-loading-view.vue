@@ -13,120 +13,131 @@
 
 </template>
 
-<script lang='ts' setup name='MediaLoadingView'>
+<script lang='ts'>
 
 import { useESEventBus } from '@extscreen/es3-core'
 import { ESPlayerInfo, ESPlayerWindowType } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
 import { RouteRecordName, useESRoute } from '@extscreen/es3-router'
-import { onBeforeMount, onMounted, ref, watch } from 'vue'
+import { defineComponent, onBeforeMount, onMounted, ref, watch } from 'vue'
 import MediaConfig from '../build-data/media-config'
 import MediaLoadingComponent from './media-loading-component.vue'
 
-const route = useESRoute()
-const esEventBus = useESEventBus()
-let curRouteName: RouteRecordName | null | undefined = ''
 
-const mediaLoadingRef = ref()
+export default defineComponent({
+  name: 'media-loading-view',
+  components: { MediaLoadingComponent },
+  setup(props, context) {
+    const route = useESRoute()
+    const esEventBus = useESEventBus()
+    let curRouteName: RouteRecordName | null | undefined = ''
 
-const playerWidth = ref<number>(0)
-const playerHeight = ref<number>(0)
-const isFullWindow = ref<boolean>(false)
-const isShowTrySee = ref<boolean>(false)
-const controlTrySeeShow = ref(true)
-const trySee = ref(false)
+    const mediaLoadingRef = ref()
 
-//付费类型 0：免费，其他收费
-let payStatus: string | number
+    const playerWidth = ref<number>(0)
+    const playerHeight = ref<number>(0)
+    const isFullWindow = ref<boolean>(false)
+    const isShowTrySee = ref<boolean>(false)
+    const controlTrySeeShow = ref(true)
+    const trySee = ref(false)
 
-let isBuffStart = -1
+    //付费类型 0：免费，其他收费
+    let payStatus: string | number
 
-onMounted(() => {
-  curRouteName = route.name
-  esEventBus.on(MediaConfig.trySeeShowStateEventName, setTrySeeShowState)
-})
-onBeforeMount(() => {
-  esEventBus.off(MediaConfig.trySeeShowStateEventName)
-})
-watch([()=>isFullWindow.value,()=>controlTrySeeShow.value,()=>trySee.value],(newValue)=>{
-  isShowTrySee.value = newValue[0] && newValue[1] && newValue[2]
-},{immediate:true})
-const setTrySeeShowState = (isShow: boolean) => {
-  controlTrySeeShow.value = isShow
-}
-const isTrySee= () =>{
-  //todo 后期加入用户是否有权益的判断，有即为不用试看，无即为试看
-  if (!payStatus || payStatus === 0 || payStatus === "0" || payStatus === "null"){
-    trySee.value = false
-  }else {
-    trySee.value = true
+    let isBuffStart = -1
+
+    onMounted(()=>{
+      curRouteName = route.name
+      esEventBus.on(MediaConfig.trySeeShowStateEventName, setTrySeeShowState)
+    })
+    onBeforeMount(() => {
+      esEventBus.off(MediaConfig.trySeeShowStateEventName)
+    })
+
+    watch([()=>isFullWindow.value,()=>controlTrySeeShow.value,()=>trySee.value],(newValue)=>{
+      isShowTrySee.value = newValue[0] && newValue[1] && newValue[2]
+    },{immediate:true})
+    const setTrySeeShowState = (isShow: boolean) => {
+      controlTrySeeShow.value = isShow
+    }
+    const isTrySee= () =>{
+      //todo 后期加入用户是否有权益的判断，有即为不用试看，无即为试看
+      if (!payStatus || payStatus === 0 || payStatus === "0" || payStatus === "null"){
+        trySee.value = false
+      }else {
+        trySee.value = true
+      }
+    }
+
+    /**
+     * 窗口类型改变 回调
+     * @param windowType
+     */
+    const onPlayerWindowTypeChanged = (windowType: ESPlayerWindowType) => {
+      isFullWindow.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL)
+    }
+    /**
+     * 窗口尺寸改变回调
+     * @param width
+     * @param height
+     */
+    const onPlayerWindowSizeChanged = (width: number, height: number) => {
+      playerWidth.value = width
+      playerHeight.value = height
+      isFullWindow.value = (width === 1920 && height === 1080) || (width === 1280 && height === 720)
+
+    }
+    const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
+      payStatus = mediaItem.payStatus
+      if (curRouteName !== MediaConfig.HOME_ROUTE_NAME){//首页首次加载视频不展示 loading
+        mediaLoadingRef.value?.showLoading()
+      }
+      payStatus = mediaItem.payStatus
+      isTrySee()
+    }
+    const onPlayerPlaying = () => {
+      mediaLoadingRef.value?.dismissLoading()
+    }
+    const onPlayerBufferStart = () => {
+      if (isBuffStart === -1) {
+        mediaLoadingRef.value?.showLoading()
+        isBuffStart = 1
+      } else {
+        isBuffStart = -1
+      }
+
+    }
+    const onPlayerBufferEnd = () => {
+      if (isBuffStart === 1) {
+        isBuffStart = -1
+        mediaLoadingRef.value?.dismissLoading()
+      } else {
+        isBuffStart = 2
+      }
+    }
+    const onPlayerInfo = (info:ESPlayerInfo)=>{
+      if (info.infoCode === 10008 || info.infoCode === 3){
+        mediaLoadingRef.value?.dismissLoading()
+      }
+    }
+    return {
+      mediaLoadingRef,
+      playerWidth,
+      playerHeight,
+      isShowTrySee,
+      onPlayerWindowTypeChanged,
+      onPlayerWindowSizeChanged,
+      onPlayerPlayMedia,
+      onPlayerInfo,
+      onPlayerPlaying,
+      onPlayerBufferStart,
+      onPlayerBufferEnd
+    }
   }
-}
-
-/**
- * 窗口类型改变 回调
- * @param windowType
- */
-const onPlayerWindowTypeChanged = (windowType: ESPlayerWindowType) => {
-  isFullWindow.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL)
-}
-/**
- * 窗口尺寸改变回调
- * @param width
- * @param height
- */
-const onPlayerWindowSizeChanged = (width: number, height: number) => {
-  playerWidth.value = width
-  playerHeight.value = height
-  isFullWindow.value = (width === 1920 && height === 1080) || (width === 1280 && height === 720)
-
-}
-const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
-  payStatus = mediaItem.payStatus
-  if (curRouteName !== MediaConfig.HOME_ROUTE_NAME){//首页首次加载视频不展示 loading
-    mediaLoadingRef.value?.showLoading()
-  }
-  payStatus = mediaItem.payStatus
-  isTrySee()
-}
-const onPlayerPlaying = () => {
-  mediaLoadingRef.value?.dismissLoading()
-}
-const onPlayerBufferStart = () => {
-  if (isBuffStart === -1) {
-    mediaLoadingRef.value?.showLoading()
-    isBuffStart = 1
-  } else {
-    isBuffStart = -1
-  }
-
-}
-const onPlayerBufferEnd = () => {
-  if (isBuffStart === 1) {
-    isBuffStart = -1
-    mediaLoadingRef.value?.dismissLoading()
-  } else {
-    isBuffStart = 2
-  }
-}
-const onPlayerInfo = (info:ESPlayerInfo)=>{
-  if (info.infoCode === 10008 || info.infoCode === 3){
-    mediaLoadingRef.value?.dismissLoading()
-  }
-}
-
-defineExpose({
-  onPlayerWindowTypeChanged,
-  onPlayerWindowSizeChanged,
-  onPlayerPlayMedia,
-  onPlayerInfo,
-  onPlayerPlaying,
-  onPlayerBufferStart,
-  onPlayerBufferEnd
 })
 
 </script>
 
-<style lang='scss' src='scss/media-loading.scss'>
+<style lang='scss' src='./scss/media-loading.scss'>
 
 </style>

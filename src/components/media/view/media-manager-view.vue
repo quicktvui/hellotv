@@ -47,7 +47,7 @@
                          ref='mediaMenuViewRef'
                          name='mediaMenuView'
                          :nextFocusName="{ up: 'seekBar'}"
-                         :menu-list='menuList'
+                         :menuList='menuList'
                          @onItemFocused='onItemFocused'
                          @onItemClicked='onItemClicked' />
         <!-- 进度提示-->
@@ -84,7 +84,7 @@
 
 </template>
 
-<script lang='ts' setup name='MediaManagerView'>
+<script lang='ts' setup  name='media-manager-view'>
 
 import { ESKeyCode, ESKeyEvent, ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 import {
@@ -109,9 +109,9 @@ import {
 import { IMediaMenu, PlayMenuNameFlag } from '../build-data/media-imp'
 import MediaMenuDetailView from './media-menu-detail-view.vue'
 import MediaMenuView from './media-menu-view.vue'
-import BuildConfig from "../../../config/build-config.ts"
+import BuildConfig from '../../../config/build-config.ts'
 
-const TAG = "MEDIA_MANAGER_VIEW"
+const TAG = 'MEDIA_MANAGER_VIEW'
 const log = useESLog()
 const toast = useESToast()
 /*******************组件声明******************/
@@ -163,7 +163,7 @@ let isShowSeekBarTip = ref(false)
 // 当前 view 显示隐藏状态
 let viewState: IMediaViewState | undefined = IMediaViewState.STATE_MANAGER_VIEW_DISMISS
 // manager view 隐藏延时器
-let dismissTimer: NodeJS.Timeout
+let dismissTimer: any
 // 速率原始列表
 let rateList: Array<ESPlayerRate>
 // 当前速率
@@ -180,7 +180,7 @@ let playMode: ESPlayerPlayMode
 let curMenuClickPosition = -1
 let bottomViewFocus = false
 //菜单数据
-let menuList = ref<Array<IMediaMenu>>()
+let menuList = ref<Array<IMediaMenu>>([])
 //初始菜单创建标志
 let isShowList = ref(false)
 onMounted(() => {
@@ -208,8 +208,9 @@ const initSeekBar = () => {
  * @param menuData
  */
 const initMenuList = (menuData: Array<IMediaMenu>) => {
+  console.log("XRG===","initMenuList")
   menuList.value = menuData
-  //初始化底部菜单列表
+  // //初始化底部菜单列表
   isShowList.value = true
 }
 /**
@@ -318,7 +319,7 @@ const onSeekBarSeekStart = (progress) => {
  */
 const onSeekBarSeekStop = (progress) => {
   if (log.isLoggable(ESLogLevel.DEBUG)) {
-    log.e(TAG, "-------onSeekBarSeekStop-------->>>>>", progress)
+    log.e(TAG, '-------onSeekBarSeekStop-------->>>>>', progress)
   }
   isSeeking = false
   viewState = IMediaViewState.STATE_SEEK_BAR_END
@@ -333,16 +334,16 @@ const onSeekBarSeekStop = (progress) => {
  */
 const onSeekbarFocusChanged = (event) => {
   if (log.isLoggable(ESLogLevel.DEBUG)) {
-    log.e(TAG, "-------onSeekbarFocusChanged-------->>>>>", event)
+    log.e(TAG, '-------onSeekbarFocusChanged-------->>>>>', event)
   }
-  let focused = event.isFocused;
-  mediaManagerSeekBarRef.value?.setThumbActivate(focused);
+  let focused = event.isFocused
+  mediaManagerSeekBarRef.value?.setThumbActivate(focused)
 }
 /**
  * 播放速率 回调
  * @param list 速率列表
  */
-const onPlayerPlayRateListChanged = (list: Array<ESPlayerRate>): void=> {
+const onPlayerPlayRateListChanged = (list: Array<ESPlayerRate>): void => {
   rateList = BuildConfig.isLowEndDev ? [ESPlayerRate.ES_PLAYER_RATE_1] : list
   mediaMenuSpeedRateRef.value.setList(buildPlayRates(rateList))
 }
@@ -350,7 +351,7 @@ const onPlayerPlayRateListChanged = (list: Array<ESPlayerRate>): void=> {
  * 当前速率 回调
  * @param r
  */
-const onPlayerPlayRateChanged = (r: ESPlayerRate): void=> {
+const onPlayerPlayRateChanged = (r: ESPlayerRate): void => {
   rate = r
   initRateItemSelected()
 }
@@ -374,16 +375,16 @@ const onPlayerDefinitionChanged = (d: ESPlayerDefinition): void => {
  * 播放模式列表 回调
  * @param modeList
  */
-const onPlayerPlayMediaListModeListChanged = (modeList: Array<ESPlayerPlayMode>): void=> {
+const onPlayerPlayMediaListModeListChanged = (modeList: Array<ESPlayerPlayMode>): void => {
   //获取 2 中播放模式展示
-  if (modeList && modeList.length>0){
-    playModeList = modeList.filter(mode=>{
+  if (modeList && modeList.length > 0) {
+    playModeList = modeList.filter(mode => {
       return mode === ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT
         || mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP
         || mode == ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ORDER
     })
   }
-  if (playModeList && playModeList.length > 0){
+  if (playModeList && playModeList.length > 0) {
     mediaMenuModeRef.value.setList(buildModes(playModeList))
   }
 }
@@ -398,19 +399,23 @@ const onPlayerPlayMediaListModeChanged = (mode: ESPlayerPlayMode): void => {
 /**
  * 初始化速率默认选中项
  */
-const initRateItemSelected = ()=>{
-  if (rateList){
-    const index = getCurRateIndex(rate,rateList)
+const initRateItemSelected = () => {
+  if (rateList) {
+    const index = getCurRateIndex(rate, rateList)
     mediaMenuSpeedRateRef.value.setSelectedIndex(index)
     //更新当前底部列表中速率项的值
-    if (!mediaMenuSpeedRateRef.value.initMenu){
-      const menuRateP = menuList.value?.findIndex(mlItem=>mlItem.nameFlag == PlayMenuNameFlag.RATE)//resultMap.get(PlayMenuNameFlag.RATE)
-      if(menuRateP!=undefined && menuRateP>-1){//解决-底部按钮出现两个倍速的问题
-        const mRate = (rate == 1 ? "1.0" : rate)
-        if(menuList.value && menuList.value?.length){
-          menuList.value?.[menuRateP as number].name = `倍速 ${mRate}x`//解决-切换选集后倍速不正确的问题
+    if (!mediaMenuSpeedRateRef.value.initMenu) {
+      const menuRateP:number | undefined = menuList.value?.findIndex(mlItem => mlItem.nameFlag == PlayMenuNameFlag.RATE)//resultMap.get(PlayMenuNameFlag.RATE)
+      if (menuRateP !== undefined && menuRateP > -1) {//解决-底部按钮出现两个倍速的问题
+        const mRate = (rate === 1 ? '1.0' : rate)
+        if (menuList && menuList.value) {
+          const length = menuList.value.length
+          if (length > 0){
+            const menuItem = menuList.value[menuRateP]
+            menuItem.name = `倍速 ${mRate}x`//解决-切换选集后倍速不正确的问题
+          }
         }
-        mediaMenuViewRef.value.update(menuRateP,`倍速 ${mRate}x`)
+        mediaMenuViewRef.value.update(menuRateP, `倍速 ${mRate}x`)
       }
     }
   }
@@ -433,9 +438,9 @@ const initRateItemSelected = ()=>{
 /**
  * 初始化播放模式默认选中项
  */
-const initModeItemSelected = ()=>{
-  if (playModeList){
-    const index = getCurModeIndex(playMode,playModeList)
+const initModeItemSelected = () => {
+  if (playModeList) {
+    const index = getCurModeIndex(playMode, playModeList)
     mediaMenuModeRef.value.setSelectedIndex(index)
   }
 }
@@ -447,29 +452,29 @@ const initModeItemSelected = ()=>{
  */
 const onItemFocused = (focused, name) => {
   bottomViewFocus = focused
-  switch(name){
+  switch (name) {
     case PlayMenuNameFlag.RATE:
-      if (focused){
+      if (focused) {
         initRightRateMenu()
       }
-      break;
+      break
     // case PlayMenuNameFlag.DEFINITION:
     //   if (focused){
     //     initRightDefinition()
     //   }
     //   break;
     case PlayMenuNameFlag.SETTING:
-      if (focused){
+      if (focused) {
         initRightMode()
       }
-      break;
+      break
   }
 }
 /**
  * 初始化速率列表
  */
-const initRightRateMenu = ()=>{
-  if (mediaMenuSpeedRateRef.value.initMenu)return
+const initRightRateMenu = () => {
+  if (mediaMenuSpeedRateRef.value.initMenu) return
   mediaMenuSpeedRateRef.value.init()
 }
 /**
@@ -482,8 +487,8 @@ const initRightRateMenu = ()=>{
 /**
  * 初始化播放模式
  */
-const initRightMode=()=>{
-  if (mediaMenuModeRef.value.initMenu)return
+const initRightMode = () => {
+  if (mediaMenuModeRef.value.initMenu) return
   mediaMenuModeRef.value.init()
 }
 /**
@@ -492,18 +497,18 @@ const initRightMode=()=>{
  * @param e 焦点 Item 名称
  */
 const onItemClicked = (name, e, isSameLocation?: number) => {
-  switch(name){
+  switch (name) {
     case PlayMenuNameFlag.NEXT:
       if (playerManager) {
         playerManager?.stop()
         curDuration = 0
-        mediaManagerSeekBarRef.value?.setProgress(0);
+        mediaManagerSeekBarRef.value?.setProgress(0)
         // 播放下一集先设置回当前速率
         playerManager?.setPlayRate(rate)
         playerManager.playNextMedia()
         setPlayerViewStateDismiss()
       }
-      break;
+      break
     case PlayMenuNameFlag.EPISODES:
       //todo 跳转待实现
       // router.push({
@@ -511,13 +516,13 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
       //   params: {packageId:cid}
       // })
       setPlayerViewStateDismiss()
-      break;
+      break
     case PlayMenuNameFlag.RATE:
       curControlRef = mediaMenuSpeedRateRef
       curMenuClickPosition = e.position
       viewState = IMediaViewState.STATE_MENU_RATE_VIEW_SHOW
       resetShowViewState()
-      break;
+      break
     // case PlayMenuNameFlag.DEFINITION:
     //   curControlRef = mediaMenuDefinitionRef
     //   curMenuClickPosition = e.position
@@ -529,26 +534,30 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
       curMenuClickPosition = e.position
       viewState = IMediaViewState.STATE_MENU_MODE_VIEW_SHOW
       resetShowViewState()
-      break;
+      break
     case PlayMenuNameFlag.RATE_ITEM:
       viewState = IMediaViewState.STATE_MENU_RATE_VIEW_DISMISS
-      if (!isSameLocation){
-        const _ratePosition = menuList.value?.findIndex(mlItem=>mlItem.nameFlag == PlayMenuNameFlag.RATE)
-        if(_ratePosition!=undefined && _ratePosition>-1){
-          mediaMenuViewRef.value.update(_ratePosition,`倍速${e.text}`)
-          if(menuList.value&&menuList.value?.length){
-            menuList.value?.[_ratePosition as number].name = `倍速${e.text}`//解决-切换选集后倍速不正确的问题
+      if (!isSameLocation) {
+        const _ratePosition:number|undefined = menuList.value?.findIndex(mlItem => mlItem.nameFlag == PlayMenuNameFlag.RATE)
+        if (_ratePosition != undefined && _ratePosition > -1) {
+          mediaMenuViewRef.value.update(_ratePosition, `倍速${e.text}`)
+          if (menuList && menuList.value) {
+            const length = menuList.value.length
+            if (length > 0){
+              const menuItem = menuList.value[_ratePosition]
+              menuItem.name = `倍速${e.text}`//解决-切换选集后倍速不正确的问题
+            }
           }
         }
         playerManager?.setPlayRate(e.rate)
-        toast.showToast("切换成功")//+e.rate
+        toast.showToast('切换成功')//+e.rate
       }
       if (!isPlayerPlaying.value) {
         playerManager.start(0)
         isPlayerPlaying.value = true
       }
       resetShowViewState(IMediaViewState.STATE_MANAGER_VIEW_DISMISS)
-      break;
+      break
     // case PlayMenuNameFlag.DEFINITION_ITEM:
     //   viewState = IMediaViewState.STATE_MENU_DEFINITION_VIEW_DISMISS
     //   if (!isSameLocation){
@@ -564,20 +573,20 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
     //   break;
     case PlayMenuNameFlag.SETTING_ITEM:
       viewState = IMediaViewState.STATE_MENU_MODE_VIEW_DISMISS
-      if (!isSameLocation){
+      if (!isSameLocation) {
         playerManager?.setPlayMediaListMode(e.mode)
-        toast.showToast("切换成功")
+        toast.showToast('切换成功')
       }
       if (!isPlayerPlaying.value) {
         playerManager.start(0)
         isPlayerPlaying.value = true
       }
       resetShowViewState(IMediaViewState.STATE_MANAGER_VIEW_DISMISS)
-      break;
+      break
     default:
       // eventBus.emit(bottomMenuClickEventBusName,e)
       setPlayerViewStateDismiss()
-      break;
+      break
   }
 }
 
@@ -586,76 +595,81 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
  * @param ref
  * @param position
  */
-const resetShowViewState = (waitStatus?:IMediaViewState)=>{
-  switch (viewState){
+const resetShowViewState = (waitStatus?: IMediaViewState) => {
+  switch (viewState) {
     case IMediaViewState.STATE_MANAGER_VIEW_SHOW:
       isShowManagerView.value = true
       isShowBottomView.value = true
-      if (curControlRef && curControlRef.value.getViewShowState()){
+      if (curControlRef && curControlRef.value.getViewShowState()) {
         curControlRef.value.dismissView()
       }
-      break;
+      break
     case IMediaViewState.STATE_MANAGER_VIEW_DISMISS:
       isShowManagerView.value = false
       isShowBottomView.value = true
       isShowSeekBarTip.value = false
-      if (curControlRef && curControlRef.value.getViewShowState()){
+      if (curControlRef && curControlRef.value.getViewShowState()) {
         curControlRef.value.dismissView()
       }
-      break;
+      break
     case IMediaViewState.STATE_MENU_RATE_VIEW_SHOW:
     case IMediaViewState.STATE_MENU_DEFINITION_VIEW_SHOW:
     case IMediaViewState.STATE_MENU_MODE_VIEW_SHOW:
       curControlRef.value.showView()
       isShowBottomView.value = false
-      break;
+      break
     case IMediaViewState.STATE_MENU_RATE_VIEW_DISMISS:
     case IMediaViewState.STATE_MENU_DEFINITION_VIEW_DISMISS:
     case IMediaViewState.STATE_MENU_MODE_VIEW_DISMISS:
-      if (curControlRef.value.getViewShowState()){
+      if (curControlRef.value.getViewShowState()) {
         curControlRef.value.dismissView()
       }
-      if (waitStatus === IMediaViewState.STATE_MANAGER_VIEW_DISMISS){
+      if (waitStatus === IMediaViewState.STATE_MANAGER_VIEW_DISMISS) {
         setPlayerViewStateDismiss()
       }
-      break;
+      break
     case IMediaViewState.STATE_SEEK_BAR_START:
       isShowSeekBarTip.value = true
-      break;
+      break
     case IMediaViewState.STATE_SEEK_BAR_END:
       viewState = waitStatus
-      break;
+      break
   }
 }
+
 /**
  * 当前 manager view 是否隐藏
  */
-function isPlayerViewStateDismiss(){
+function isPlayerViewStateDismiss() {
   return IMediaViewState.STATE_MANAGER_VIEW_DISMISS === viewState
 }
+
 /**
  * 右侧菜单是否展示
  */
-function isMenuViewStateShow(){
+function isMenuViewStateShow() {
   return IMediaViewState.STATE_MENU_RATE_VIEW_SHOW === viewState
     || IMediaViewState.STATE_MENU_DEFINITION_VIEW_SHOW === viewState
     || IMediaViewState.STATE_MENU_MODE_VIEW_SHOW === viewState
 }
+
 /**
  * 当前 manager view 是否显示
  */
-function isPlayerViewStateShow(){
+function isPlayerViewStateShow() {
   return IMediaViewState.STATE_MANAGER_VIEW_SHOW === viewState || IMediaViewState.STATE_SEEK_BAR_START === viewState
 }
+
 /**
  * 设置当前 manager view 显示
  */
-function setPlayerViewStateShow(){
+function setPlayerViewStateShow() {
   viewState = IMediaViewState.STATE_MANAGER_VIEW_SHOW
   resetShowViewState()
   //这里通过autofocus来请求焦点，去掉此处调用
   // requestFocus()
 }
+
 /**
  * 设置当前 manager view 隐藏
  */
@@ -663,42 +677,45 @@ function setPlayerViewStateDismiss() {
   viewState = IMediaViewState.STATE_MANAGER_VIEW_DISMISS
   resetShowViewState()
 }
+
 /**
  * 设置当前 view 隐藏
  * @param delay 延时
  */
-function setPlayerViewStateDismissDelay(delay:number=4000){
+function setPlayerViewStateDismissDelay(delay: number = 4000) {
   clearDismissTimer()
-  dismissTimer = setTimeout(()=>{
+  dismissTimer = setTimeout(() => {
     setPlayerViewStateDismiss()
-  },delay)
+  }, delay)
 }
+
 /**
  * 清除定时器
  */
 function clearDismissTimer() {
   if (dismissTimer) {
-    clearTimeout(dismissTimer);
+    clearTimeout(dismissTimer)
   }
 }
-function onKeyDown(keyEvent: ESKeyEvent):boolean{
+
+function onKeyDown(keyEvent: ESKeyEvent): boolean {
   if (playerManager && playerManager.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
     return false
   }
-  if (isPlayerPlaying.value){
+  if (isPlayerPlaying.value) {
     setPlayerViewStateDismissDelay(4000)
   }
   switch (keyEvent.keyCode) {
     case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
     case ESKeyCode.ES_KEYCODE_ENTER:
-      if (isPlayerViewStateDismiss()){
+      if (isPlayerViewStateDismiss()) {
         setPlayerViewStateShow()
       }
-      if (isMenuViewStateShow()){
+      if (isMenuViewStateShow()) {
         return true
       }
-      if (isPlayerViewStateShow()){
-        if (bottomViewFocus){
+      if (isPlayerViewStateShow()) {
+        if (bottomViewFocus) {
           return true
         }
         if (isPlayerPlaying.value) {
@@ -711,43 +728,43 @@ function onKeyDown(keyEvent: ESKeyEvent):boolean{
         }
         return true
       }
-      break;
+      break
     case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
     case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
-      autofocusType.value = 0;
+      autofocusType.value = 0
       if (isPlayerViewStateDismiss()) {
         setPlayerViewStateShow()
         return true
       }
-      if (isPlayerViewStateShow()){
-        if (mediaManagerSeekBarRef.value?.isFocused()  && curDuration > 0){
+      if (isPlayerViewStateShow()) {
+        if (mediaManagerSeekBarRef.value?.isFocused() && curDuration > 0) {
           mediaManagerSeekBarRef.value?.startSeek(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT)
         }
         return true
       }
-      break;
+      break
     case ESKeyCode.ES_KEYCODE_DPAD_DOWN:
-      autofocusType.value = 1;
-      if (isPlayerViewStateDismiss()){
+      autofocusType.value = 1
+      if (isPlayerViewStateDismiss()) {
         setPlayerViewStateShow()
       }
-      break;
+      break
   }
   return true
 }
 
-function onKeyUp(keyEvent: ESKeyEvent):boolean{
+function onKeyUp(keyEvent: ESKeyEvent): boolean {
   if (playerManager.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
     return false
   }
-  if (isPlayerPlaying.value || isMenuViewStateShow() || viewState === IMediaViewState.STATE_SEEK_BAR_START){
+  if (isPlayerPlaying.value || isMenuViewStateShow() || viewState === IMediaViewState.STATE_SEEK_BAR_START) {
     const delay = viewState === IMediaViewState.STATE_SEEK_BAR_START ? 3000 : 4000
     setPlayerViewStateDismissDelay(delay)
   }
-  switch(keyEvent.keyCode){
+  switch (keyEvent.keyCode) {
     case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
     case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
-      if (isPlayerViewStateShow() && mediaManagerSeekBarRef.value?.isFocused() && curDuration > 0){
+      if (isPlayerViewStateShow() && mediaManagerSeekBarRef.value?.isFocused() && curDuration > 0) {
         mediaManagerSeekBarRef.value?.stopSeek()
       }
       isSeeking = false
@@ -756,11 +773,11 @@ function onKeyUp(keyEvent: ESKeyEvent):boolean{
   return true
 }
 
-function onBackPressed():boolean{
+function onBackPressed(): boolean {
   if (playerManager.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
     return false
   }
-  if (isMenuViewStateShow()){
+  if (isMenuViewStateShow()) {
     setPlayerViewStateDismiss()
     return true
   }
@@ -770,20 +787,21 @@ function onBackPressed():boolean{
     setPlayerViewStateDismissDelay(4000)//暂停播放，再恢复播放时，4秒后隐藏控制条
     return true
   }
-  if (isPlayerViewStateShow()){
+  if (isPlayerViewStateShow()) {
     setPlayerViewStateDismiss()
     return true
   }
   return false
 }
 
-function isViewShow():boolean{
+function isViewShow(): boolean {
   return isFullWindow.value && isShowManagerView.value
 }
-const replyRate = (r?:any)=>{
+
+const replyRate = (r?: any) => {
   playerManager?.setPlayRate(r || rate)//恢复播放倍速为上次设置的值
 }
-const clear = ()=>{
+const clear = () => {
   playerManager?.setPlayRate(ESPlayerRate.ES_PLAYER_RATE_1)//页面退出时，恢复播放倍速为1.0
 }
 defineExpose({
@@ -812,7 +830,8 @@ defineExpose({
   onItemClicked,
   onKeyDown,
   onKeyUp,
-  onBackPressed
+  onBackPressed,
+  isViewShow
 })
 
 </script>
