@@ -1,25 +1,6 @@
 <template>
   <qt-view class="search-content">
-    <qt-tabs
-      ref="tabRef"
-      tabNavBarClass="search-content-tab"
-      tabPageClass="search-content-tab-page"
-      :clipChildren="false"
-      @onTabPageLoadData="onTabPageLoadData"
-    >
-      <!-- Tab -->
-      <template v-slot:tab-item>
-        <qt-view class="search-content-tab-item" :type="1" :focusable="true">
-          <qt-text
-            class="search-content-tab-item-text"
-            autoWidth
-            text="${text}"
-            gravity="center"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-text>
-        </qt-view>
-      </template>
+    <qt-tabs ref="tabRef" tabPageClass="search-content-tab-page" :clipChildren="false" @onTabPageLoadData="onTabPageLoadData">
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
@@ -140,7 +121,7 @@ defineExpose({ init })
 .search-content-item-img-h {
   width: 410px;
   height: 230px;
-  background-color: red;
+  background-color: transparent;
 }
 
 .search-content-item-v {
@@ -153,7 +134,7 @@ defineExpose({ init })
 .search-content-item-img-v {
   width: 260px;
   height: 368px;
-  background-color: red;
+  background-color: transparent;
 }
 
 .search-content-item-text {

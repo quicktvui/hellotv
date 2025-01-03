@@ -48,27 +48,22 @@
 import { ref } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { QTIListView } from '@quicktvui/quicktvui3'
+import { Keyword } from '../adapter/interface'
+
+const emits = defineEmits(['searchByKeyword'])
 
 const toast = useESToast()
 const listRef = ref<QTIListView>()
 
-function init() {
-  listRef.value?.init([
-    { type: 1, text: '猜你想搜', decoration: { bottom: 12 } },
-    { type: 2, text: '我们的新时代' },
-    { type: 2, text: '我们的新时代 第2部' },
-    { type: 2, text: '我们的新时代 第3部' },
-    { type: 2, text: '我们的新时代 第4部' },
-    { type: 2, text: '我们的新时代 第5部' },
-    { type: 2, text: '我们的新时代 第6部' },
-    { type: 2, text: '我们的新时代 第7部' },
-    { type: 2, text: '我们的新时代 第8部' }
-  ])
+function init(keywords: Keyword[]) {
+  listRef.value?.init(keywords)
 }
 
+let lastFocusPos = 0
 function onListItemFocused(evt) {
-  if (evt.isFocused) {
-    toast.showToast(`${evt.item.text}`)
+  if (evt.isFocused && evt.position != lastFocusPos) {
+    lastFocusPos = evt.position
+    emits('searchByKeyword', evt.item.text)
   }
 }
 
@@ -103,5 +98,6 @@ defineExpose({ init })
   color: $text-normal-color;
   font-size: 36px;
   focus-color: $text-focus-color;
+  select-color: $text-select-color;
 }
 </style>

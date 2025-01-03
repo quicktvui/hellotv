@@ -5,9 +5,9 @@
         <!-- 键盘区域 -->
         <keyboard ref="keyboardRef" />
         <!-- 搜索关键词 -->
-        <keyword ref="keywordRef" />
+        <keyword ref="keywordRef" @searchByKeyword="searchByKeyword" />
         <!-- 搜索内容区域 -->
-        <content ref="contentRef" :triggerTask="triggerTask" />
+        <content-waterfall ref="contentRef" :triggerTask="triggerTask" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -15,10 +15,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
+import { buildKeywords } from './adapter/index'
 import themeConfig from '../../config/theme-config'
 import keyboard from './components/keyboard.vue'
 import keyword from './components/keyword.vue'
-import content from './components/content.vue'
+import contentWaterfall from './components/content-waterfall.vue'
+import searchManager from '../../api/search/index'
 
 // 键盘
 const keyboardRef = ref()
@@ -44,10 +46,14 @@ const triggerTask = [
 function onESCreate() {
   // 初始化键盘
   keyboardRef.value?.init()
-  // 初始化关键词
-  keywordRef.value?.init()
-  // 初始化内容
-  contentRef.value?.init()
+  // 加载关键词
+  searchManager.getSuggestions('hot').then((suggestions) => {
+    keywordRef.value?.init(buildKeywords(suggestions))
+  })
+}
+
+function searchByKeyword(keyword: string) {
+  contentRef.value?.init(keyword)
 }
 
 defineExpose({ onESCreate })
