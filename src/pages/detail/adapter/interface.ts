@@ -103,7 +103,7 @@ export interface IMediaCollapseItemListView extends QTICollapseItem {
 }
 
 export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
-  initMedia(media: IMedia): void
+  init(media: IMedia): void
   setListData(page: number, mediaList: Array<IMediaItem>): void
   setItemFocused(position: number): void
   setItemSelected(position: number): void

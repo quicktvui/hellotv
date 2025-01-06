@@ -80,10 +80,21 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
       }
     }
   } 
+  // CollapseItem 展示回调
+  const onCollapseItemExpand = (value: boolean) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
+    }
+    isCollapseExpand.value = value
+    if (value) {
+      setItemFocused(selectedIndex.value)
+    }
+  }
   defineExpose({
     setListData,
     setItemFocused,
-    setItemSelected
+    setItemSelected,
+    onCollapseItemExpand
   })
 </script>
       

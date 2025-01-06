@@ -45,6 +45,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
   }
   const setListData = (dataList: Array<QTListViewItem>) => {
     itemDataList = dataList;
+    console.log(dataList,'dataListdataListdataListdataList')
     orderListViewRef.value?.setListData(dataList)
   }
   const setItemFocused = (position: number): void => {
@@ -79,11 +80,22 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
         orderListViewRef.value?.updateItemRange(i,1,[item])
       }
     }
-  } 
+  }
+  // CollapseItem 展示回调
+  const onCollapseItemExpand = (value: boolean) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
+    }
+    isCollapseExpand.value = value
+    if (value) {
+      setItemFocused(selectedIndex.value)
+    }
+  }
   defineExpose({
     setListData,
     setItemFocused,
-    setItemSelected
+    setItemSelected,
+    onCollapseItemExpand
   })
 </script>
       
@@ -105,6 +117,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     display: flex;
     align-items: center;
     justify-content: center;
+    background-color: transparent;
     .media-collapse-order-list {
       width: 1920px;
       height: 80px;

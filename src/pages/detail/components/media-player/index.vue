@@ -131,9 +131,15 @@ import {
       log.d(TAG, '-----------addMediaItemList------------->>>>', page, mediaList)
     }
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.d(TAG, '-----------buildMediaItemList------XXXXX------->>>>', page, mediaList, JSON.stringify(mediaItemList))
+      log.d(TAG, '-----------buildMediaItemList------XXXXX------->>>>', page, mediaList, mediaItemList)
     }
     playerManager.value?.addMediaToIndex(page * 10, mediaItemList)
+  }
+  const playMediaItemById = (id: string) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.d(TAG, '-----------playMediaItemById------------->>>>', id)
+    }
+    playerManager.value?.playMediaById(id)
   }
   const playMediaItemByIndex = (index: number) => {
     if(!BuildConfig.isLowEndDev) playerManager.value?.playMediaByIndex(index)
@@ -325,6 +331,7 @@ import {
     onPlayerWindowTypeChanged,
     play,
     addMediaItemList,
+    playMediaItemById,
     playMediaItemByIndex,
     stop,
     resume,

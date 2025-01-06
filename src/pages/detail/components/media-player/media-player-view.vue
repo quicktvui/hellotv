@@ -61,43 +61,43 @@
               duplicateParentState :fontSize="30" text="下一个" focusScale="1.1"/>
           </div>
         </qt-column>
-        <!-- 底部菜单 -->
-        <qt-view v-show="isFullWindow && isMenuShowing" class="media-player-view-menu">
-          <qt-view v-if="isFullWindow && isMenuShowing"
-            class="media-player-view-menu-bg" :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
-          <!-- 折叠面板 -->
-          <qt-collapse ref="mediaCollapseRef"
-            v-show="isFullWindow && isMenuShowing"
-            v-if="mediaCollapseMenuInit"
-            class="media-player-collapse">
-            <media-collapse-order
-              ref="mediaCollapseOrderRef"
-              :blockFocusDirections="['left', 'right', 'down', 'up']"
-              name="mediaCollapseOrder"
-              @onCollapseItemFocused="onCollapseItemOrderFocused"
-              @onCollapseItemClicked="onCollapseItemOrderClicked"/>
-            <media-collapse-speed
-              ref="mediaCollapseSpeedRef"
-              :blockFocusDirections="['left', 'right', 'up']"
-              name="mediaCollapseSpeed"
-              @onCollapseItemFocused="onCollapseItemSpeedFocused"
-              @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
-            <media-collapse-definition
-              ref="mediaCollapseDefinitionRef"
-              :blockFocusDirections="['left', 'right']"
-              name="mediaCollapseDefinition"
-              @onCollapseItemFocused="onCollapseItemDefinitionFocused"
-              @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
-            <!-- <media-collapse-media-list
-              v-if="mediaListVisible"
-              ref="mediaCollapseMediaListRef"
-              :blockFocusDirections="['left', 'right', 'down']"
-              name="mediaCollapseMediaList"
-              @onMediaListGroupItemFocused="onCollapseItemMediaListGroupFocused"
-              @onMediaListItemFocused="onCollapseItemMediaListFocused"
-              @onMediaListItemClicked="onCollapseItemMediaListClicked"/> -->
-          </qt-collapse>
-        </qt-view>
+      </qt-view>
+      <!-- 底部菜单 -->
+      <qt-view v-show="isFullWindow && isMenuShowing" class="media-player-view-menu">
+        <qt-view v-if="isFullWindow && isMenuShowing"
+          class="media-player-view-menu-bg" :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
+        <!-- 折叠面板 -->
+        <qt-collapse ref="mediaCollapseRef"
+          v-show="isFullWindow && isMenuShowing"
+          v-if="mediaCollapseMenuInit"
+          class="media-player-collapse">
+          <media-collapse-order
+            ref="mediaCollapseOrderRef"
+            :blockFocusDirections="['left', 'right', 'down', 'up']"
+            name="mediaCollapseOrder"
+            @onCollapseItemFocused="onCollapseItemOrderFocused"
+            @onCollapseItemClicked="onCollapseItemOrderClicked"/>
+          <media-collapse-speed
+            ref="mediaCollapseSpeedRef"
+            :blockFocusDirections="['left', 'right', 'up']"
+            name="mediaCollapseSpeed"
+            @onCollapseItemFocused="onCollapseItemSpeedFocused"
+            @onCollapseItemClicked="onCollapseItemSpeedClicked"/>
+          <media-collapse-definition
+            ref="mediaCollapseDefinitionRef"
+            :blockFocusDirections="['left', 'right']"
+            name="mediaCollapseDefinition"
+            @onCollapseItemFocused="onCollapseItemDefinitionFocused"
+            @onCollapseItemClicked="onCollapseItemDefinitionClicked"/>
+          <media-collapse-media-series
+            v-if="mediaListVisible"
+            ref="mediaCollapseMediaSeriesRef"
+            :blockFocusDirections="['left', 'right', 'down']"
+            name="mediaCollapseMediaSeries"
+            @onMediaSeriesGroupItemFocus="onMediaSeriesGroupItemFocus"
+            @onMediaSeriesItemFocus="onMediaSeriesItemFocus"
+            @onMediaSeriesItemClick="onMediaSeriesItemClick"/>
+        </qt-collapse>
       </qt-view>
     </qt-view>
     <!-- loading -->
@@ -153,6 +153,7 @@ import pauseIcon from '../../../../assets/detail/ic_media_player_pause.png'
 import MediaCollapseOrder from './collapse/media-collapse-order.vue'
 import MediaCollapseSpeed from './collapse/media-collapse-speed.vue'
 import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
+import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue'
 
   const TAG = 'MediaPlayerView'
   let enabled = true
@@ -196,7 +197,7 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
   const mediaCollapseOrderRef = ref<IMediaCollapseItemListView>()
   const mediaCollapseSpeedRef = ref<IMediaCollapseItemListView>()
   const mediaCollapseDefinitionRef = ref<IMediaCollapseItemListView>()
-  const mediaCollapseMediaListRef = ref<IMediaCollapseMediaSeriesView>()
+  const mediaCollapseMediaSeriesRef = ref<IMediaCollapseMediaSeriesView>()
   const mediaCollapseRef = ref<QTICollapse>()
   const isMenuShowing = ref<boolean>(false)
   let collapseItemIndex = 0
@@ -219,8 +220,11 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
   const onSeekBarChanged = () => {}
   const onSeekBarSeekStop = () => {}
   const onSeekbarFocusChanged = () => {}
-  const onNextButtonClicked = () => {}
-  const onNextButtonFocusChanged = () => {}
+  const onNextButtonClicked = () => {if (player) player.playNextMedia()}
+  const onNextButtonFocusChanged = (e) => {
+    nextButtonFocused = e.isFocused
+    log.e(TAG, "onNextButtonFocusChanged nextButtonFocused" + nextButtonFocused)
+  }
   
   onMounted(() => {
     eventBus.on('onMediaListItemLoad', onMediaListItemLoad)
@@ -233,30 +237,31 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
     () => [mediaCollapseRef.value] as const,
     ([instance], [oldInstance]) => {
       if (instance) {
-        toast.showToast((isFullWindow.value && isMenuShowing.value) + '12131231')
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.e(TAG, "----watch---initCollapseMenu----->>>>>")
         }
-        // collapse = buildCollapseMenu(mediaListVisible.value)
-        // collapseItemIndex = collapse.defaultIndex ?? 0
-        // collapseItemList = collapse.itemList
-        // mediaCollapseRef.value?.init(collapse)
-        // initCollapseOrderMenu()
-        // initCollapseSpeedMenu()
-        // initCollapseDefinitionMenu()
-        // initCollapseListMenu()
+        collapse = buildCollapseMenu(mediaListVisible.value)
+        collapseItemIndex = collapse.defaultIndex ?? 0
+        collapseItemList = collapse.itemList
+        mediaCollapseRef.value?.init(collapse)
+        initCollapseOrderMenu()
+        initCollapseSpeedMenu()
+        initCollapseDefinitionMenu()
+        initCollapseMediaSeries()
       }
     },
     { flush: 'post' }
   )
   const initCollapseMenu = () => {mediaCollapseMenuInit.value = true}
   const onMediaListItemLoad = (page: number, mediaList: Array<IMediaItem>) => {
+    console.log(mediaList,'1wqeqeeeeeeeeeeeeeeeeeeee')
     if (mediaCollapseMenuInit.value) {
       nextTick(() => {
-        mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+        mediaCollapseMediaSeriesRef.value?.setListData(page, mediaList)
       })
     } else {
       dataMap.set(page, mediaList)
+      console.log(dataMap,'11wqeqeeeeeeeeeeeeeeeeeeee')
     }
   }
   //播放顺序
@@ -285,12 +290,6 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
         }
       }
     })
-  }
-  const setCollapseOrderMenuFocused = () => {
-    mediaCollapseRef.value?.expandItem(0)
-    setTimeout(() => {
-      mediaCollapseOrderRef.value?.setItemFocused(0)
-    }, 500)
   }
   const onCollapseItemOrderFocused = (focused: boolean) => {
     mediaListGroupItemFocused = false
@@ -358,15 +357,15 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
     player?.setPlayRate(item.rate)
   }
   //  选集相关
-  const initCollapseListMenu = () => {
+  const initCollapseMediaSeries = () => {
     if (mediaCollapseMenuInit.value) {
       nextTick(() => {
         if (media) {
-          mediaCollapseMediaListRef.value?.initMedia(media)
+          mediaCollapseMediaSeriesRef.value?.init(media)
         }
         if (dataMap.size > 0) {
           dataMap.forEach(function (mediaList: Array<IMediaItem>, page: number) {
-            mediaCollapseMediaListRef.value?.setListData(page, mediaList)
+            mediaCollapseMediaSeriesRef.value?.setListData(page, mediaList)
           });
           dataMap.clear()
         }
@@ -378,27 +377,27 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
     if (playingMediaItem) {
       const index = playingMediaItem.index
       if (index > -1) {
-        mediaCollapseMediaListRef.value?.setItemSelected(index)
+        mediaCollapseMediaSeriesRef.value?.setItemSelected(index)
       }
     }
   }
-  const onCollapseItemMediaListGroupFocused = (index: number) => {
+  const onMediaSeriesGroupItemFocus = (index: number) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.e(TAG, "---选集----onCollapseItemMediaListGroupFocused------>>>>>", index)
+      log.e(TAG, "---选集----onMediaSeriesGroupItemFocus------>>>>>", index)
     }
     mediaListGroupItemFocused = true
     mediaListItemFocused = false
   }
-  const onCollapseItemMediaListFocused = (index: number) => {
+  const onMediaSeriesItemFocus = (index: number) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.e(TAG, "----选集---onCollapseItemMediaListFocused------>>>>>", index)
+      log.e(TAG, "----选集---onMediaSeriesItemFocus------>>>>>", index)
     }
     mediaListGroupItemFocused = false
     mediaListItemFocused = true
   }
-  const onCollapseItemMediaListClicked = (index: number, item: QTListViewItem) => {
+  const onMediaSeriesItemClick = (index: number, item: QTListViewItem) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.e(TAG, "-------onCollapseItemMediaListClicked------>>>>>", index, item)
+      log.e(TAG, "-------onMediaSeriesItemClick------>>>>>", index, item)
     }
     player?.stop()
     player?.playMediaById(item.id)
@@ -648,7 +647,7 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-----------onPlayerRelease------------->>>>")
     }
-    mediaCollapseMediaListRef.value?.release()
+    mediaCollapseMediaSeriesRef.value?.release()
     mediaCollapseMenuInit.value = false
   }
   const onPlayerReset = (next: boolean): void => {
@@ -708,7 +707,6 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
 
         break
       case ESKeyCode.ES_KEYCODE_DPAD_DOWN:
-
         if (nextButtonFocused) {
           if (!isPlayerViewStateMenu()) {
             setPlayerViewStateMenu()
@@ -721,7 +719,6 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
           setPlayerViewStateMenu()
           return true
         }
-
         if (isPlayerViewStateMenu()) {
           if (collapseItemIndex + 1 < collapseItemList.length) {
             collapseItemIndex++
@@ -828,6 +825,7 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
     width: 1920px;
     height: 1080px;
     background-color: transparent;
+    //顶部条
     .media-player-view-title {
       background-color: transparent;
       .media-player-view-title-text{
@@ -840,6 +838,7 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
         margin-top: 50px;
       }
     }
+    //底部进度条
     .media-player-view-bottom {
       width: 1920px;
       height: 700px;
@@ -918,34 +917,33 @@ import MediaCollapseDefinition from './collapse/media-collapse-definition.vue'
           }
         }
       }
-      //菜单 折叠面板
-      .media-player-view-menu {
+    }
+    //底部菜单
+    .media-player-view-menu {
+      width: 1920px;
+      height: 700px;
+      background-color: transparent;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      align-items: flex-start;
+      justify-content: flex-end;
+      .media-player-view-menu-bg {
         width: 1920px;
-        height: 700px;
-        background-color: red;
+        height: 640px;
         position: absolute;
-        bottom: 0;
         left: 0;
-        align-items: flex-start;
-        justify-content: flex-end;
-        .media-player-view-menu-bg {
-          width: 1920px;
-          height: 640px;
-          position: absolute;
-          left: 0;
-          background-color: transparent;
-        }
-        .media-player-collapse {
-          width: 1920px;
-          height: 640px;
-          position: absolute;
-          left: 0;
-          background-color: transparent;
-        }
+        background-color: transparent;
+      }
+      .media-player-collapse {
+        width: 1920px;
+        height: 640px;
+        position: absolute;
+        left: 0;
+        background-color: transparent;
       }
     }
   }
-  
   .media-player-loading {
     background-color: transparent;
     position: absolute;

@@ -98,11 +98,10 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
         let mediaUrlList = await detailManager.getPlayUrl(mediaItem.id + "",'2')
         mediaUrlList = [
           {
-            definition: 1080,
+            definition: 2,
             playUrl: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
           }
-         ]
-        console.log(mediaUrlList, 'getPlayUrlgetPlayUrl')
+        ]
         let mediaSourceList: ESMediaSourceList = {
           index: -1,
           list: buildMediaSourceList(mediaUrlList)
