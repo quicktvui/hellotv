@@ -1,7 +1,7 @@
 <template>
   <qt-view class="search-content">
     <!-- 提示 -->
-    <qt-text class="search-content-tips" :text="tips" gravity="center|start"></qt-text>
+    <qt-text v-if="showTips" class="search-content-tips" :text="tips" gravity="center|start"></qt-text>
     <!-- 内容 -->
     <qt-tabs
       ref="tabRef"
@@ -10,6 +10,8 @@
       :autoHandleBackKey="true"
       :contentNextFocus="{ left: 'keywordList' }"
       @onTabPageLoadData="onTabPageLoadData"
+      @onTabMoveToTopStart="onTabMoveToTopStart"
+      @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
     >
       <!-- Tab -->
       <template v-slot:tab-item>
@@ -76,8 +78,9 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
-import { QTITab, QTTabPageState } from '@quicktvui/quicktvui3'
-import { buildTab, buildContents } from '../adapter/index'
+import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
+import { buildTab, buildContents, buildRecommends } from '../adapter/index'
+import config from '../config'
 import searchManager from '../../../api/search/index'
 
 const props = defineProps({
@@ -86,15 +89,21 @@ const props = defineProps({
     default: ''
   }
 })
+const emits = defineEmits(['setLoading'])
 const toast = useESToast()
-const tabRef = ref<QTITab>()
+// 顶部提示
+const showTips = ref<boolean>(true)
 const tips = ref<string>('')
+// 内容组件
+const tabRef = ref<QTITab>()
+// 关键词
 const rawKeyword = ref<string>()
 
 watch(
   () => props.keyword,
   () => {
-    tips.value = `全部“${props.keyword}”结果`
+    emits('setLoading', true)
+    tips.value = props.keyword.length > 0 ? `全部“${props.keyword}”结果` : '热门推荐'
     init(props.keyword)
   }
 )
@@ -102,17 +111,36 @@ watch(
 function init(keyword: string) {
   rawKeyword.value = keyword
   // 初始化组件
-  searchManager.getContents(keyword).then(() => {
-    tabRef.value?.initTab(buildTab())
-    tabRef.value?.initPage({ width: 1920, height: 1080 })
-  })
+  tabRef.value?.initTab(buildTab())
+  tabRef.value?.initPage({ width: 1920, height: 1080 })
 }
 
-function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
-  searchManager.getContents(rawKeyword.value, ++pageNo).then((contents) => {
-    tabRef.value?.setPageData(pageIndex, { data: buildContents(contents) })
-  })
-  tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
+  let tabPage: QTTabPageData = { data: [] }
+  if (rawKeyword.value?.length === 0) {
+    tabPage.data = buildRecommends(await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit))
+  } else {
+    tabPage.data = buildContents(await searchManager.getContents(rawKeyword.value, ++pageNo))
+    // 停止分页
+    tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+  }
+  // 数据更新
+  if (pageNo === 1) {
+    tabRef.value?.setPageData(pageIndex, tabPage)
+  } else {
+    tabRef.value?.addPageData(pageIndex, tabPage, 0)
+  }
+
+  // 关闭上层loading
+  emits('setLoading', false)
+}
+
+function onTabMoveToTopStart() {
+  showTips.value = false
+}
+
+function onTabMoveToBottomEnd() {
+  showTips.value = true
 }
 </script>
 
@@ -142,7 +170,6 @@ function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) 
   width: 1920px;
   height: 1080px;
   background-color: transparent;
-  margin-top: 40px;
 }
 
 .search-content-tab-item {

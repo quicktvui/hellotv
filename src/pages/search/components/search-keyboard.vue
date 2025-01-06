@@ -3,7 +3,8 @@
     <!-- 输入框 -->
     <qt-view class="search-keyboard-input">
       <qt-image class="search-keyboard-input-icon" :src="icSearch" :focusable="false"></qt-image>
-      <qt-text class="search-keyboard-input-text" :textSpan="inputText"></qt-text>
+      <qt-text v-if="inputText.length > 0" class="search-keyboard-input-text" style="color: white" :text="inputText"></qt-text>
+      <qt-text v-else class="search-keyboard-input-text" :textSpan="defaultText"></qt-text>
     </qt-view>
     <!-- 输入框底部横线 -->
     <qt-view class="search-keyboard-input-bottom"></qt-view>
@@ -51,8 +52,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
+import { ref, watch, onMounted } from 'vue'
 import { QTIGridView, QTListViewItem } from '@quicktvui/quicktvui3'
 import icSearch from '../../../assets/search/ic_search.png'
 import icClear from '../../../assets/search/ic_clear.png'
@@ -60,7 +60,11 @@ import icClearFocused from '../../../assets/search/ic_clear_focused.png'
 import icBack from '../../../assets/search/ic_back.png'
 import icBackFocused from '../../../assets/search/ic_back_focused.png'
 
-const inputText = {
+const emits = defineEmits(['updateInput'])
+
+const gridRef = ref<QTIGridView>()
+const inputText = ref<string>('')
+const defaultText = {
   text: '输入片名的首字母或全拼搜索',
   spanAttr: [
     { type: 'color', value: ['#FFFFFF', 5, 8] },
@@ -80,10 +84,7 @@ const textStyle = {
   focusColor: '#13161B'
 }
 
-const toast = useESToast()
-const gridRef = ref<QTIGridView>()
-
-function init() {
+onMounted(() => {
   const keyboardItems: QTListViewItem[] = []
   // 输出 A-Z
   for (let i = 65; i <= 90; i++) {
@@ -93,18 +94,39 @@ function init() {
   for (let i = 48; i <= 57; i++) {
     keyboardItems.push({ type: 1, text: String.fromCharCode(i) })
   }
+  // 初始化键盘
   gridRef.value?.init(keyboardItems)
-}
+})
+
+watch(
+  () => inputText.value,
+  () => {
+    emits('updateInput', inputText.value)
+  }
+)
 
 function onBtnClick(name: 'clear' | 'back') {
-  toast.showToast(`${name}`)
+  switch (name) {
+    case 'clear':
+      inputText.value = ''
+      break
+    case 'back':
+      if (inputText.value.length > 0) {
+        inputText.value = inputText.value.slice(0, inputText.value.length - 1)
+      }
+      break
+  }
 }
 
 function onGridItemClick(evt) {
-  toast.showToast(`${evt.item.text}`)
+  inputText.value += evt.item.text
 }
 
-defineExpose({ init })
+function onBackPressed() {
+  gridRef.value?.setItemFocused(14)
+}
+
+defineExpose({ onBackPressed })
 </script>
 
 <style scoped lang="scss">

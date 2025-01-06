@@ -19,9 +19,11 @@ export const filterContentsUrl =
   BuildConfig.requestBaseUrl + '/filter/${primaryId}/contents?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
 
 //搜索页接口
-export const searchSuggestionsUrl = BuildConfig.requestBaseUrl + '/search/suggestions?packageName=${packageName}&type=${type}'
+export const searchSuggestionsUrl =
+  BuildConfig.requestBaseUrl + '/search/suggestions?packageName=${packageName}&type=${type}&keyword=${keyword}&page=${page}&limit=${limit}'
 export const searchContentsUrl =
   BuildConfig.requestBaseUrl + '/search?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
+export const searchHotRecommendUrl = BuildConfig.requestBaseUrl + '/recommendations?packageName=${packageName}&page=${page}&limit=${limit}'
 
 export function replacePlaceholders(template, replacements): string {
   return template.replace(/\$\{(\w+)\}/g, (match, placeholder) => {
