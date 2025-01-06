@@ -1,6 +1,6 @@
 <template>
   <qt-view class="media-collapse-definition" :focusable="false">
-    <span class="media-collapse-definition-title" :opacity="isCollapseExpand ? 1 : 0.5">倍速</span>
+    <span class="media-collapse-definition-title" :opacity="isCollapseExpand ? 1 : 0.5">清晰度</span>
     <div class="media-collapse-definition-content" :clipChildren="false" :opacity="isCollapseExpand ? 1 : 0">
       <qt-list-view
         ref="definitionListViewRef" horizontal
@@ -80,10 +80,21 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
       }
     }
   } 
+  // CollapseItem 展示回调
+  const onCollapseItemExpand = (value: boolean) => {
+    if (log.isLoggable(ESLogLevel.DEBUG)) {
+      log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
+    }
+    isCollapseExpand.value = value
+    // if (value) {
+    //   setItemFocused(selectedIndex.value)
+    // }
+  }
   defineExpose({
     setListData,
     setItemFocused,
-    setItemSelected
+    setItemSelected,
+    onCollapseItemExpand
   })
 </script>
       
