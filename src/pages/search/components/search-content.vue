@@ -1,10 +1,14 @@
 <template>
   <qt-view class="search-content">
+    <!-- 提示 -->
+    <qt-text class="search-content-tips" :text="tips" gravity="center|start"></qt-text>
+    <!-- 内容 -->
     <qt-tabs
       ref="tabRef"
       tabNavBarClass="search-content-tab"
       tabPageClass="search-content-tab-page"
-      :clipChildren="false"
+      :autoHandleBackKey="true"
+      :contentNextFocus="{ left: 'keywordList' }"
       @onTabPageLoadData="onTabPageLoadData"
     >
       <!-- Tab -->
@@ -14,7 +18,7 @@
             class="search-content-tab-item-text"
             autoWidth
             text="${text}"
-            gravity="center"
+            gravity="center|start"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -24,24 +28,42 @@
       <template v-slot:waterfall-item>
         <!-- 横图 -->
         <qt-view class="search-content-item-h" :type="1" :focusable="true" layout="${layout}">
-          <qt-image class="search-content-item-img-h" src="${cover}" :focusable="false"></qt-image>
+          <qt-image
+            class="search-content-item-img-h"
+            src="${cover}"
+            :postDelay="100"
+            :enableFocusBorder="true"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-image>
           <qt-text
             class="search-content-item-text"
-            autoWidth
+            style="width: 410px"
             text="${title}"
-            gravity="center"
+            gravity="center|start"
+            :lines="1"
+            :ellipsizeMode="4"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
         </qt-view>
         <!-- 竖图 -->
         <qt-view class="search-content-item-v" :type="2" :focusable="true" layout="${layout}">
-          <qt-image class="search-content-item-img-v" src="${cover}" :focusable="false"></qt-image>
+          <qt-image
+            class="search-content-item-img-v"
+            src="${cover}"
+            :postDelay="100"
+            :enableFocusBorder="true"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-image>
           <qt-text
             class="search-content-item-text"
-            autoWidth
+            style="width: 260px"
             text="${title}"
             gravity="center"
+            :lines="1"
+            :ellipsizeMode="4"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -52,18 +74,34 @@
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, watch } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { QTITab, QTTabPageState } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents } from '../adapter/index'
 import searchManager from '../../../api/search/index'
 
+const props = defineProps({
+  keyword: {
+    type: String,
+    default: ''
+  }
+})
 const toast = useESToast()
 const tabRef = ref<QTITab>()
+const tips = ref<string>('')
 const rawKeyword = ref<string>()
+
+watch(
+  () => props.keyword,
+  () => {
+    tips.value = `全部“${props.keyword}”结果`
+    init(props.keyword)
+  }
+)
 
 function init(keyword: string) {
   rawKeyword.value = keyword
+  // 初始化组件
   searchManager.getContents(keyword).then(() => {
     tabRef.value?.initTab(buildTab())
     tabRef.value?.initPage({ width: 1920, height: 1080 })
@@ -71,14 +109,11 @@ function init(keyword: string) {
 }
 
 function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
-  searchManager.getContents(rawKeyword.value).then((contents) => {
+  searchManager.getContents(rawKeyword.value, ++pageNo).then((contents) => {
     tabRef.value?.setPageData(pageIndex, { data: buildContents(contents) })
   })
-
   tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
 }
-
-defineExpose({ init })
 </script>
 
 <style lang="scss">
@@ -92,17 +127,15 @@ defineExpose({ init })
   width: 1920px;
   height: 50px;
   background-color: transparent;
-  margin-top: 75px;
+  margin-top: 85px;
   margin-left: 80px;
   color: white;
   font-size: 40px;
 }
 
 .search-content-tab {
-  width: 1920px;
-  height: 60px;
+  height: 0px;
   background-color: transparent;
-  margin-top: 85px;
 }
 
 .search-content-tab-page {
@@ -140,7 +173,7 @@ defineExpose({ init })
 .search-content-item-img-h {
   width: 410px;
   height: 230px;
-  background-color: red;
+  background-color: transparent;
 }
 
 .search-content-item-v {
@@ -153,7 +186,7 @@ defineExpose({ init })
 .search-content-item-img-v {
   width: 260px;
   height: 368px;
-  background-color: red;
+  background-color: transparent;
 }
 
 .search-content-item-text {

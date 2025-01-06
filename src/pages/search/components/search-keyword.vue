@@ -48,15 +48,18 @@
 import { ref } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { QTIListView } from '@quicktvui/quicktvui3'
-import { Keyword } from '../adapter/interface'
+import { buildKeywords } from '../adapter/index'
+import searchManager from '../../../api/search/index'
 
 const emits = defineEmits(['searchByKeyword'])
 
 const toast = useESToast()
 const listRef = ref<QTIListView>()
 
-function init(keywords: Keyword[]) {
-  listRef.value?.init(keywords)
+function init() {
+  searchManager.getSuggestions('hot').then((suggestions) => {
+    listRef.value?.init(buildKeywords(suggestions))
+  })
 }
 
 let lastFocusPos = 0
