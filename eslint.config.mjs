@@ -39,6 +39,7 @@ export default [
     plugins:{'check-file':checkFile},
     rules: {
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn', // 允许使用 console
+      'no-fallthrough':'warn',
       'check-file/no-index':'off',
       'check-file/filename-naming-convention': [
         'warn',

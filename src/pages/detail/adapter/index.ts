@@ -18,7 +18,7 @@ import {
   import ThemeConfig from "../../../config/theme-config";
   // import { IMediaItemListType } from "../../../api/media/IMediaItemListType";
   // import { IMediaAuthType } from "../../../api/media/IMediaAuthType";
-  
+
   /**
    *
    */
@@ -30,7 +30,7 @@ import {
     };
     return waterfall;
   }
-  
+
   export function buildSectionList(media: IMedia): Array<QTWaterfallSection> {
     const sectionList: Array<QTWaterfallSection> = [
       buildHeaderSection(),
@@ -40,11 +40,11 @@ import {
     ];
     return sectionList;
   }
-  
+
   //------------------------------------------------------------------------------------
-  
+
   function buildEndSection(): QTWaterfallSection {
-    let endSection: QTWaterfallSection = {
+    return {
       _id: "6",
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
       title: "已经到底啦，按【返回键】回到顶部",
@@ -62,11 +62,11 @@ import {
         height: 200,
       },
     };
-    return endSection;
+
   }
-  
+
   export function buildHeaderSection(): QTWaterfallSection {
-    let section: QTWaterfallSection = {
+    return {
       _id: "1",
       type: 1,
       itemList: [],
@@ -75,9 +75,8 @@ import {
         height: 135,
       },
     };
-    return section;
   }
-  
+
   export function buildAlbumDetailSection(media: IMedia): QTWaterfallSection {
     let sectionHeight = 896;
     // if (m.itemList.enable) {
@@ -96,7 +95,7 @@ import {
     //     //   break;
     //   }
     // }
-  
+
     let section: QTWaterfallSection = {
       _id: "2",
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_VUE,
@@ -108,7 +107,7 @@ import {
     };
     return section;
   }
-  
+
   //-----------------------------------相关推荐---------------------------------------
 
   export function buildRecommendSection(media: IMedia): QTWaterfallSection {
@@ -118,7 +117,7 @@ import {
       upOffset = 0;
       downOffset = 1000;
     }
-  
+
     let section: QTWaterfallSection = {
       _id: "5",
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
@@ -146,7 +145,7 @@ import {
     };
     return section;
   }
-  
+
   export function buildRecommendList(recommendList: Array<IRecommendItem>): Array<QTWaterfallItem> {
     const itemList: Array<QTWaterfallItem> = [];
     if (recommendList && recommendList.length > 0) {
@@ -159,7 +158,7 @@ import {
     }
     return itemList;
   }
-  
+
   export function buildRecommendItem(recommendItem: IRecommendItem): QTWaterfallItem {
     const poster: any = {
       type: 10011,
@@ -204,7 +203,7 @@ import {
     };
     return poster;
   }
-  
+
   //------------------------------------选集组件 adapter--------------------------------------
 
   export function buildMediaSeriesType(mediaSeriesType: IMediaSeriesType): QTMediaSeriesType {
@@ -225,7 +224,7 @@ import {
     }
     return type;
   }
-  
+
   export function buildMediaSeriesGroup(): QTMediaSeriesGroup {
     const groupStyle: QTMediaSeriesGroupStyle = {
       groupMarginLeft: -100,
@@ -263,13 +262,13 @@ import {
     };
     return group;
   }
-  
+
   export function buildMediaSeriesStyleType(): QTMediaSeriesStyleType {
     const styleType: QTMediaSeriesStyleType =
       QTMediaSeriesStyleType.QT_MEDIA_SERIES_STYLE_TYPE_DEFAULT;
     return styleType;
   }
-  
+
   export function buildMediaSeriesData(media: IMedia): QTMediaSeriesData {
     const data: QTMediaSeriesData = {
       initPosition: 0,
@@ -290,7 +289,7 @@ import {
     }
     return itemList;
   }
-  
+
   export function buildMediaSeries(item: IMediaItem): QTMediaSeries {
     // const vip = media.authType == IMediaAuthType.MEDIA_AUTH_TYPE_VIP;
     const vip = true
@@ -321,4 +320,3 @@ import {
       };
     }
   }
-  
