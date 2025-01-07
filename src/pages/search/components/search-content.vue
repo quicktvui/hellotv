@@ -79,10 +79,11 @@
 import { ref, watch } from 'vue'
 import { useESToast } from '@extscreen/es3-core'
 import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
-import { buildTab, buildContents, buildRecommends } from '../adapter/index'
+import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
 import config from '../config'
 import searchManager from '../../../api/search/index'
 
+const toast = useESToast()
 const props = defineProps({
   keyword: {
     type: String,
@@ -90,7 +91,6 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['setLoading'])
-const toast = useESToast()
 // 顶部提示
 const showTips = ref<boolean>(true)
 const tips = ref<string>('')
@@ -119,7 +119,13 @@ let timer: any = -1
 async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
   let tabPage: QTTabPageData = { data: [] }
   if (rawKeyword.value?.length === 0) {
-    tabPage.data = buildRecommends(await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit))
+    const recommends = await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit)
+    tabPage.data = buildRecommends(recommends)
+    // 停止分页
+    if (recommends.items.length < config.gridHotRecommendsLimit) {
+      tabPage.data.push(buildEndSection())
+      tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+    }
   } else {
     tabPage.data = buildContents(await searchManager.getContents(rawKeyword.value, ++pageNo))
     // 停止分页
