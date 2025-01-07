@@ -77,7 +77,7 @@ const singleSelectPos = ref<number>(0)
 // 暂无数据
 const isEmpty = ref<boolean>(false)
 // 页码
-let page = 0
+let curPage = 0
 // 分页大小
 let pageSize = config.listKeywordsLimit
 // 最后焦点位置
@@ -93,7 +93,7 @@ watch(
     isEmpty.value = false
     lastFocusPos = singleSelectPos.value
     // 重置页码
-    page = 0
+    curPage = 0
     // 加载词条
     loadSuggestions()
   }
@@ -105,6 +105,7 @@ async function loadSuggestions(page: number = 1) {
   const keywords = buildKeywords(suggestions)
 
   if (page === 1) {
+    curPage = 1
     if (keywords.length > 0) {
       listData = listRef.value?.init(keywords) as QTListViewItem[]
       listRef.value?.scrollToTop()
@@ -115,18 +116,18 @@ async function loadSuggestions(page: number = 1) {
     }
   } else {
     if (keywords.length > 0) {
-      listData.push(...keywords.splice(1))
+      listData.push(...keywords)
     } else {
       listRef.value?.stopPage()
     }
   }
 
-  emits('updateKeyword', listData.length > 0 ? listData[1].text : '')
+  emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
 }
 
 function onListLoadMore() {
-  if (page > 0) {
-    loadSuggestions(++page)
+  if (curPage > 0) {
+    loadSuggestions(++curPage)
   }
 }
 
@@ -190,7 +191,7 @@ defineExpose({ onBackPressed })
 
 .search-keyword-list {
   width: 518px;
-  height: 960px;
+  height: 955px;
   background-color: transparent;
 }
 
