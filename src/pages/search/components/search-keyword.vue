@@ -54,13 +54,11 @@
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
 import searchManager from '../../../api/search/index'
 import config from '../config'
 
-const toast = useESToast()
 const props = defineProps({
   inputText: {
     type: String,

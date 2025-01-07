@@ -77,13 +77,11 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
 import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
 import config from '../config'
 import searchManager from '../../../api/search/index'
 
-const toast = useESToast()
 const props = defineProps({
   keyword: {
     type: String,
@@ -123,7 +121,7 @@ function init(keyword: string) {
 }
 
 let timer: any = -1
-async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
+async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   let tabPage: QTTabPageData = { data: [] }
   if (rawKeyword.value?.length === 0) {
     const recommends = await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit)

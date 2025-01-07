@@ -30,14 +30,12 @@
 
 <script setup lang="ts">
 import { ref } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import themeConfig from '../../config/theme-config'
 import searchKeyboard from './components/search-keyboard.vue'
 import searchKeyword from './components/search-keyword.vue'
 import searchContent from './components/search-content.vue'
 
-const toast = useESToast()
 const router = useESRouter()
 // 键盘
 const keyboardRef = ref()

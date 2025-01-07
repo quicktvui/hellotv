@@ -22,12 +22,12 @@ const routes = [
   {
     path: '/filter',
     name: 'filter',
-    component: () => import('./pages/filter/expandSidebarContents.vue')
+    component: () => import('./pages/filter/expand-sidebar-contents.vue')
   },
   {
     path: '/search',
     name: 'search',
-    component: () => import('./pages/search/threeColumns.vue')
+    component: () => import('./pages/search/three-columns.vue')
   },
   {
     path: '/detail',

@@ -45,6 +45,6 @@ export interface Content {
   episodesId: string
   jumpParams: {
     type: number
-    options: Object
+    options: object
   }
 }

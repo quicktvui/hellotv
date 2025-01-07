@@ -1,5 +1,5 @@
 import { QTListViewItem } from '@quicktvui/quicktvui3'
-import { Filters, Contents } from 'src/api/filter/interface'
+import { Filters, Contents } from '../../../api/filter/interface'
 import {
   GridContent,
   GridContentType,
@@ -95,7 +95,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
  * @returns
  */
 export const getContentsQuery = (filters: QTListViewItem[]): string[] => {
-  let query: string[] = []
+  const query: string[] = []
 
   filters.forEach((item) => {
     if (item.defaultSelectedPos > 0) {
