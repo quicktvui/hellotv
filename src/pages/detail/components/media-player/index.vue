@@ -43,13 +43,10 @@
       
 <script setup lang='ts' name='MediaPlayer'>
 import { ref, markRaw, nextTick } from 'vue'
-import { ESLogLevel, useESEventBus, useESLog, ESKeyEvent, toast, useESRuntime } from "@extscreen/es3-core";
+import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
-import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
-import ThemeConfig from "../../../../config/theme-config";
 import BuildConfig from "../../../../config/build-config";
 import detailManager from '../../../../api/detail/detail-manager'
-import request from '../../../../api/request/request-manager'
 import {
   ESIPlayerManager, 
   ESMediaItem,

@@ -115,8 +115,7 @@
     
 <script setup lang='ts' name='MediaPlayerView'>
 import { ref, watch, onMounted, nextTick, onUnmounted} from 'vue'
-import { ESKeyCode, ESKeyEvent, ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core"
-import { useESRouter } from '@extscreen/es3-router'
+import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {
   ESMediaSource,
@@ -133,12 +132,12 @@ import {
   ESPlayerWindowType
 } from "@extscreen/es3-player";
 import { QTISeekBar, QTICollapse, QTCollapse, QTListViewItem} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH,IMediaItem,
+import { IMedia, IMediaPlayerViewState,IMediaItem,
   IMediaCollapseItemListView,IMediaCollapseMediaSeriesView
  } from '../../adapter/interface'
 import BuildConfig from "../../../../config/build-config";
 import ThemeConfig from "../../../../config/theme-config";
-import { s_to_hs } from "../../../../tools/formatDate";
+import { s_to_hs } from "../../../../tools/format-date";
 import {
   buildPlayModeList,
   buildDefinitionList,
@@ -172,10 +171,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   const mediaTitle = ref<string>('')
   const viewState = ref<number>(1)
   let dismissTimer:any = -1
-  let playerPlaceholderFocus = false
   const isMediaAuthError = ref<boolean>(false)
-  
-
   
   //-------------------------进度条----------------------------
   const isProgressShowing = ref<boolean>(false)
@@ -291,7 +287,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
       }
     })
   }
-  const onCollapseItemOrderFocused = (focused: boolean) => {
+  const onCollapseItemOrderFocused = () => {
     mediaListGroupItemFocused = false
     mediaListItemFocused = false
   }
@@ -321,7 +317,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
       }
     }
   }
-  const onCollapseItemDefinitionFocused = (focused: boolean) => {
+  const onCollapseItemDefinitionFocused = () => {
     mediaListGroupItemFocused = false
     mediaListItemFocused = false
   }
@@ -348,7 +344,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
       }
     }
   }
-  const onCollapseItemSpeedFocused = (focused: boolean) => {
+  const onCollapseItemSpeedFocused = () => {
     mediaListGroupItemFocused = false
     mediaListItemFocused = false
   }
@@ -475,9 +471,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   const isEnabled = (): boolean => {return enabled;}
   const setPlayerManager = (value: ESIPlayerManager): void => {player = value}
   const getPlayerManager = (): ESIPlayerManager => {return player}
-  const onPlayerInitialized = (playerType: number): void => {}
-  const onPlayerPlayMediaSourceList = (mediaSourceList: ESMediaSourceList): void => {}
-  const onPlayerPlayMediaSource = (mediaSource: ESMediaSource): void => {}
+ 
   const onPlayerInterceptSuccess = (value: ESPlayerInterceptResult): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerInterceptSuccess----ccc---->>>>>", value)
@@ -490,7 +484,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     }
     isMediaAuthError.value = true
   }
-  const onPlayerPreparing = (): void => {}
   const onPlayerPrepared = (): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerPrepared-------->>>>>")
@@ -519,15 +512,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     seekBarRef.value?.setMaxProgress(d);
     duration.value = s_to_hs(Math.floor(d / 1000))
   }
-  const onPlayerSeekStart = (): void => {}
-  const onPlayerSeekCompleted = (): void => {}
   const onPlayerPaused = (): void => {isPlayerPlaying.value = false}
-  const onPlayerResumed = (): void => {}
-  const onPlayerStopped = (): void => {}
-  const onPlayerCompleted = (): void => {}
-  const onPlayerError = (error: ESPlayerError): void => {}
-  const onPlayerInfo = (info: ESPlayerInfo): void => {}
-  const onPlayerNoMediaSourceCanPlay = (next: boolean): void => {}
   const onPlayerDefinitionListChanged = (list: Array<ESPlayerDefinition>): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerDefinitionListChanged-----清晰度--->>>>>", list)
@@ -625,7 +610,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     showLoading.value = false
     setCollapseItemMediaListSelected()
   }
-  const onPlayerNoMediaCanPlay = (next: boolean): void => {}
+  const onPlayerNoMediaCanPlay = (): void => {}
   const onPlayerWindowTypeChanged = (windowType: ESPlayerWindowType): void => {
     showPlaceholder.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL)
     isFullWindow.value = (windowType == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL)
@@ -643,14 +628,14 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     playerWidth.value = width
     playerHeight.value = height
   }
-  const onPlayerRelease = (next: boolean): void => {
+  const onPlayerRelease = (): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-----------onPlayerRelease------------->>>>")
     }
     mediaCollapseMediaSeriesRef.value?.release()
     mediaCollapseMenuInit.value = false
   }
-  const onPlayerReset = (next: boolean): void => {
+  const onPlayerReset = (): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------onPlayerReset------------->>>>')
     }
@@ -774,27 +759,15 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     showPlaceholder,isFullWindow,
     getId,setEnabled,isEnabled,setPlayerManager,
     getPlayerManager,
-    onPlayerInitialized,
-    onPlayerPlayMediaSourceList,
-    onPlayerPlayMediaSource,
     onPlayerInterceptSuccess,
     onPlayerInterceptError,
-    onPlayerPreparing,
     onPlayerPrepared,
     onPlayerBufferStart,
     onPlayerBufferEnd,
     onPlayerPlaying,
     onPlayerProgressChanged,
     onPlayerDurationChanged,
-    onPlayerSeekStart,
-    onPlayerSeekCompleted,
     onPlayerPaused,
-    onPlayerResumed,
-    onPlayerStopped,
-    onPlayerCompleted,
-    onPlayerError,
-    onPlayerInfo,
-    onPlayerNoMediaSourceCanPlay,
     onPlayerDefinitionListChanged,
     onPlayerDefinitionChanged,
     onPlayerPlayRateListChanged,

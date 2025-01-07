@@ -171,7 +171,6 @@ class RequestManager{
   }
 
   request<T>(url,requestInit:RequestInit,timeout=30000):Promise<T>{
-    console.log(url,requestInit,'0RequestInitRequestInitRequestInit')
     let rejectInstance:any = null
     const ajaxTimer = setTimeout(() => {
       if(rejectInstance){
@@ -185,10 +184,8 @@ class RequestManager{
         return response.json()
       }).then(res=>{
         if (res.code == 200){
-          console.log(res,'1RequestInitRequestInitRequestInit')
           resolve(res.data)
         }else{
-          console.log(res,'2RequestInitRequestInitRequestInit')
           reject({
             code: res.code,
             message: "服务器忙，请稍后重试！",

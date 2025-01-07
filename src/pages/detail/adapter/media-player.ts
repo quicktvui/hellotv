@@ -28,8 +28,8 @@ export function buildMediaList(page: number, mediaList: Array<IMediaItem>, media
   return itemList
 }
 export function buildMediaItem(page: number, index: number, mediaItem: IMediaItem, mediaItemInterceptors: Array<ESIPlayerInterceptor>, media?: any): ESMediaItem {
-  let mediaIndex = Number(page * 10) + Number(index)
-  let mItem: ESMediaItem = {
+  const mediaIndex = Number(page * 10) + Number(index)
+  return {
     id: mediaItem.id,
     index: mediaIndex,
     title: mediaItem.title,
@@ -51,7 +51,6 @@ export function buildMediaItem(page: number, index: number, mediaItem: IMediaIte
     },
     vipType: mediaItem.vipType
   }
-  return mItem
 }
 //build播放器数据
 export function buildMediaSourceList(mediaList: Array<IMediaUrl>): Array<ESMediaSource> {
@@ -82,36 +81,37 @@ export function buildMediaSource(mediaUrl: IMediaUrl): ESMediaSource {
       break
   }
 
-  let mediaSource: ESMediaSource = {
+  return {
     uri: mediaUrl.playUrl,
     definition: definition
   }
-  return mediaSource
 }
 //media-player Interceptor 鉴权 + 请求播放地址
 export function createESPlayerMediaSourceListInterceptor(detailManager: DetailApi): ESIPlayerInterceptor {
   function intercept(...params: Array<any>): Promise<ESPlayerInterceptResult> {
     const mediaItem = params[0] as ESMediaItem
     console.log(mediaItem,'mediaItemmediaItemmediaItem')
-    return new Promise<ESPlayerInterceptResult>(async (resolve, reject) => {
+    return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
       if(mediaItem.vipType == '0'){
-        let mediaUrlList = await detailManager.getPlayUrl(mediaItem.id + "",'2')
-        mediaUrlList = [
-          {
-            definition: 2,
-            playUrl: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
+        detailManager.getPlayUrl(mediaItem.id + "",'2').then((res) => {
+          let mediaUrlList = res
+          mediaUrlList = [
+            {
+              definition: 2,
+              playUrl: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
+            }
+          ]
+          const mediaSourceList: ESMediaSourceList = {
+            index: -1,
+            list: buildMediaSourceList(mediaUrlList)
           }
-        ]
-        let mediaSourceList: ESMediaSourceList = {
-          index: -1,
-          list: buildMediaSourceList(mediaUrlList)
-        }
-        let result: ESPlayerInterceptResult = {
-          result: {
-            mediaSourceList: mediaSourceList,
+          const result: ESPlayerInterceptResult = {
+            result: {
+              mediaSourceList: mediaSourceList,
+            }
           }
-        }
-        resolve(result)
+          resolve(result)
+        }).catch(() => {reject({errorCode: -1,errorMessage: '播放地址错误'})})
       }else{
         reject({errorCode: -1,errorMessage: '请付费后观看'})
       }
@@ -309,7 +309,7 @@ export function buildPlayRateList(rateList: Array<ESPlayerRate>): Array<QTListVi
   return itemList
 }
 export function buildPlayRate(rate: ESPlayerRate, index: number): QTListViewItem {
-  let name = rate + 'X'
+  const name = rate + 'X'
   let decoration: QTListViewItemDecoration = {
     right: 16
   }

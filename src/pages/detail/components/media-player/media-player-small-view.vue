@@ -55,7 +55,6 @@
 <script setup lang='ts' name='ButtonMenu'>
 import { ref } from 'vue'
 import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog, toast } from "@extscreen/es3-core"
-import { useESRouter } from '@extscreen/es3-router'
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {
   ESPlayerError,
@@ -63,7 +62,6 @@ import {
   ESPlayerInterceptResult,
   ESPlayerWindowType
 } from "@extscreen/es3-player";
-import { qtRef, QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
 import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_placeholder.png"
   const TAG = 'MediaPlayerSmallView'
@@ -74,7 +72,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
   const playerWidth = ref<number>(0)
   const playerHeight = ref<number>(0)
   const showPlaceholder = ref<boolean>(true)
-  const mediaTitle = ref<string>('')
   const isPlayerPlaying = ref<boolean>(false)
   let showLoading = ref(false)
   const showBackground = ref<boolean>(true)
@@ -88,7 +85,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
   const isProgressShowing = ref<boolean>(false)
   let playingMediaItem: ESMediaItem
   let dismissTimer
-  let media: IMedia
 
   let playerPlaceholderFocus = false
   let windowType: ESPlayerWindowType = ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL
@@ -166,9 +162,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     }
     showLoading.value = false
   }
-  const onPlayerProgressChanged = (p: number): void => {}
-  const onPlayerDurationChanged = (d: number): void => {}
-  const onPlayerPaused = (): void => {}
   const onPlayerError = (error: ESPlayerError): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-----------onPlayerError------------->>>>", error)
@@ -178,7 +171,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------onPlayerPlayMediaList------------->>>>', playList)
     }
-    media = playList.media
   }
   const onPlayerPlayMedia = (mediaItem: ESMediaItem): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -208,8 +200,8 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     playerWidth.value = width
     playerHeight.value = height
   }
-  const onKeyDown = (keyEvent: ESKeyEvent): boolean => {return false}
-  const onKeyUp = (keyEvent: ESKeyEvent): boolean => {return false}
+  const onKeyDown = (): boolean => {return false}
+  const onKeyUp = (): boolean => {return false}
 
   defineExpose({
     showPlaceholder,isFullWindow,isFloatWindow,showBottomTip,
@@ -224,9 +216,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     onPlayerBufferStart,
     onPlayerBufferEnd,
     onPlayerPlaying,
-    onPlayerProgressChanged,
-    onPlayerDurationChanged,
-    onPlayerPaused,
     onPlayerError,
     onPlayerPlayMediaList,
     onPlayerPlayMedia,

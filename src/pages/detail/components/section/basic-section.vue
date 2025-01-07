@@ -47,7 +47,7 @@
 
 <script setup lang='ts' name='BasicSection'>
 import { ref } from 'vue'
-import { useESRuntime, toast } from '@extscreen/es3-core'
+import { useESRuntime } from '@extscreen/es3-core'
 import { QTMediaSeries} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaSeriesType ,IMediaItem } from '../../adapter/interface'
 import MediaIntroduction from './item/media-introduction.vue'

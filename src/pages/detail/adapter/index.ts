@@ -63,8 +63,7 @@ export function buildBasicSection(media: IMedia): QTWaterfallSection {
         break;
     }
   }
-
-  let section: QTWaterfallSection = {
+  return {
     _id: "2",
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_VUE,
     itemList: [],
@@ -73,7 +72,6 @@ export function buildBasicSection(media: IMedia): QTWaterfallSection {
       height: sectionHeight,
     },
   };
-  return section;
 }
 function buildEndSection(): QTWaterfallSection {
   return {
@@ -94,7 +92,6 @@ function buildEndSection(): QTWaterfallSection {
       height: 200,
     },
   };
-
 }
 
 //相关推荐
@@ -106,7 +103,7 @@ export function buildRecommendSection(media: IMedia): QTWaterfallSection {
     downOffset = 1000;
   }
 
-  let section: QTWaterfallSection = {
+  return {
     _id: "5",
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
     title: "相关推荐",
@@ -131,7 +128,6 @@ export function buildRecommendSection(media: IMedia): QTWaterfallSection {
       up: upOffset,
     },
   };
-  return section;
 }
 export function buildRecommendList(recommendList: Array<IRecommendItem>): Array<QTWaterfallItem> {
   const itemList: Array<QTWaterfallItem> = [];
@@ -146,7 +142,7 @@ export function buildRecommendList(recommendList: Array<IRecommendItem>): Array<
   return itemList;
 }
 export function buildRecommendItem(recommendItem: IRecommendItem): QTWaterfallItem {
-  const poster: any = {
+  return {
     type: 10011,
     image: {
       src: recommendItem.cover,
@@ -170,24 +166,22 @@ export function buildRecommendItem(recommendItem: IRecommendItem): QTWaterfallIt
     },
     corner: {
       text: recommendItem.corner?.text ?? "",
-      enable:
-      recommendItem.corner?.text != "" && recommendItem.corner?.text != null && recommendItem.corner?.text != "null",
+      enable: !!recommendItem.corner?.text,
       style: {
         width: 260,
         height: 30,
       },
       background: {
         colors: [
-          recommendItem.corner?.startColor ? recommendItem.corner?.startColor! : "#ffB67827",
-          recommendItem.corner?.endColor ? recommendItem.corner?.endColor! : "#ffB67827",
+          recommendItem.corner?.startColor??"#ffB67827",
+          recommendItem.corner?.endColor ??"#ffB67827",
         ],
         cornerRadii4: [0, 8, 0, 8],
         orientation: 2,
       },
     },
-    item: recommendItem, //
+    item: recommendItem,
   };
-  return poster;
 }
 
 //选集

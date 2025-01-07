@@ -18,7 +18,7 @@
       
 <script setup lang='ts' name='media-collapse-speed'>
 import { ref } from 'vue'
-import { ESLogLevel, useESLog, toast } from "@extscreen/es3-core"
+import { ESLogLevel, useESLog } from "@extscreen/es3-core"
 import { QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import MediaCollapseListItem from "./media-collapse-list-item.vue";
   const TAG = 'media-collapse-speed'

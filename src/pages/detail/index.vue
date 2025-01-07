@@ -53,20 +53,17 @@
 </template>
   
 <script setup lang='ts' name='detail'>
-import { ref,nextTick, reactive } from 'vue'
+import { ref,nextTick } from 'vue'
 import {
-  ESKeyCode,
   ESKeyEvent,
   ESLogLevel,
   useESEventBus,
   useESLog,
-  useESAppList,
   useESRuntime,
-  toast
 } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { ESPlayerWindowType } from '@extscreen/es3-player'
-import { QTIViewVisibility, QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { QTIWaterfall, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { QTMediaSeries } from '@quicktvui/quicktvui3/dist/src/series/QTMediaSeries'
 import BuildConfig from '../../config/build-config'
 import detailManager from '../../api/detail/detail-manager'
@@ -195,7 +192,7 @@ import MediaPlayer from './components/media-player/index.vue'
             currentPlayIndex = 0
             media._prevPlayIndex = currentPlayIndex
           }
-        }).catch((err) => {
+        }).catch(() => {
           currentPlayIndex = 0
           media._prevPlayIndex = currentPlayIndex
         })
@@ -330,10 +327,10 @@ import MediaPlayer from './components/media-player/index.vue'
       title: media.title
     }
     if(val){ //收藏
-      detailManager.reportRecordData(body).then((res)=> {}).catch((err)=>{}) 
+      detailManager.reportRecordData(body).then(()=> {}).catch((err)=>{}) 
     }else{ //取消收藏
       detailManager.deleteRecordData(body.id,body.deviceId,body.recordType)
-        .then((res)=> {}).catch((err)=>{}) 
+        .then(()=> {}).catch(()=>{}) 
     } 
   }
   // basic-setion 回调
