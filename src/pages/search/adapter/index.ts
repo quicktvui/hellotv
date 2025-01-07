@@ -7,17 +7,15 @@ export const buildKeywords = function (rawData: Suggestions): Keyword[] {
 
   // 热门搜索
   if (rawData.hotKeywords.length > 0) {
-    keywords.push({ type: 1, text: '热门搜索', decoration: { bottom: 12 } })
     rawData.hotKeywords.forEach((item) => {
-      keywords.push({ type: 2, text: item.keyword })
+      keywords.push({ type: 1, text: item.keyword })
     })
   }
 
   // 猜你想搜
   if (rawData.guessKeywords.length > 0) {
-    keywords.push({ type: 1, text: '猜你想搜', decoration: { bottom: 12 } })
     rawData.guessKeywords.forEach((item) => {
-      keywords.push({ type: 2, text: item.keyword })
+      keywords.push({ type: 1, text: item.keyword })
     })
   }
 
@@ -48,13 +46,12 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       style: { width: 1920 },
       decoration: { left: 80, top: 40 },
-      title: '绘本',
-      titleStyle: { height: 50, fontSize: 40 },
+      title: '',
       itemList: rawData.items.map((item, index) => ({
         _id: `t1-${index}`,
         type: 1,
         style: { width: 410, height: 276 },
-        decoration: { top: 40, right: 40 },
+        decoration: { right: 40 },
         title: item.title,
         cover: item.cover
       }))

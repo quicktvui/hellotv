@@ -1,7 +1,7 @@
 <template>
   <qt-view class="search-content">
     <!-- 提示 -->
-    <qt-text v-if="showTips" class="search-content-tips" :text="tips" gravity="center|start"></qt-text>
+    <qt-text v-if="showTips" class="search-content-tips" :text="tips" gravity="center|start" typeface="bold"></qt-text>
     <!-- 内容 -->
     <qt-tabs
       ref="tabRef"
@@ -115,6 +115,7 @@ function init(keyword: string) {
   tabRef.value?.initPage({ width: 1920, height: 1080 })
 }
 
+let timer: any = -1
 async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
   let tabPage: QTTabPageData = { data: [] }
   if (rawKeyword.value?.length === 0) {
@@ -131,8 +132,9 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boo
     tabRef.value?.addPageData(pageIndex, tabPage, 0)
   }
 
-  // 关闭上层loading
-  emits('setLoading', false)
+  // 延迟关闭上层loading
+  clearTimeout(timer)
+  timer = setTimeout(() => emits('setLoading', false), 100)
 }
 
 function onTabMoveToTopStart() {
@@ -155,7 +157,7 @@ function onTabMoveToBottomEnd() {
   width: 1920px;
   height: 50px;
   background-color: transparent;
-  margin-top: 85px;
+  margin-top: 75px;
   margin-left: 80px;
   color: white;
   font-size: 40px;
@@ -182,8 +184,8 @@ function onTabMoveToBottomEnd() {
 .search-content-tab-item-text {
   height: 60px;
   background-color: transparent;
-  margin-left: 18px;
-  margin-right: 18px;
+  margin-left: 24px;
+  margin-right: 24px;
   color: $text-normal-color;
   font-size: 36px;
   focus-color: $text-focus-color;
