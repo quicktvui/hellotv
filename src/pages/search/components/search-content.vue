@@ -1,7 +1,7 @@
 <template>
   <qt-view class="search-content">
     <!-- 提示 -->
-    <qt-text v-if="showTips" class="search-content-tips" :text="tips" gravity="center|start" typeface="bold"></qt-text>
+    <qt-text v-if="showTips && !lockTips" class="search-content-tips" :text="tips" gravity="center|start" typeface="bold"></qt-text>
     <!-- 内容 -->
     <qt-tabs
       ref="tabRef"
@@ -93,6 +93,7 @@ const props = defineProps({
 const emits = defineEmits(['setLoading'])
 // 顶部提示
 const showTips = ref<boolean>(true)
+const lockTips = ref<boolean>(false)
 const tips = ref<string>('')
 // 内容组件
 const tabRef = ref<QTITab>()
@@ -102,8 +103,14 @@ const rawKeyword = ref<string>()
 watch(
   () => props.keyword,
   () => {
+    // 设置loading状态
     emits('setLoading', true)
+    // 重置状态
+    showTips.value = true
+    lockTips.value = false
+    // 提示词
     tips.value = props.keyword.length > 0 ? `全部“${props.keyword}”结果` : '热门推荐'
+    // 初始化组件
     init(props.keyword)
   }
 )
@@ -128,6 +135,11 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boo
     }
   } else {
     tabPage.data = buildContents(await searchManager.getContents(rawKeyword.value, ++pageNo))
+    // 没有搜索结果时, 不展示顶部提示词
+    if (tabPage.data.length === 2) {
+      showTips.value = false
+      lockTips.value = true
+    }
     // 停止分页
     tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
   }

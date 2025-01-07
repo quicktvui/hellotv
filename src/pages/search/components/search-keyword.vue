@@ -67,7 +67,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['updateFocusName', 'updateKeyword'])
+const emits = defineEmits(['setLoading', 'updateFocusName', 'updateKeyword'])
 // 标题
 const title = ref<string>('热门搜索')
 // 关键词列表
@@ -100,6 +100,7 @@ watch(
 )
 
 let listData: QTListViewItem[] = []
+let timer: any = -1
 async function loadSuggestions(page: number = 1) {
   const suggestions = await searchManager.getSuggestions(props.inputText.length > 0 ? 'guess' : 'hot', props.inputText, page, pageSize)
   const keywords = buildKeywords(suggestions)
@@ -122,7 +123,11 @@ async function loadSuggestions(page: number = 1) {
     }
   }
 
-  emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
+  clearTimeout(timer)
+  timer = setTimeout(() => {
+    emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
+    emits('setLoading', false)
+  }, 300)
 }
 
 function onListLoadMore() {

@@ -5,7 +5,13 @@
         <!-- 键盘区域 -->
         <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
         <!-- 搜索关键词 -->
-        <search-keyword ref="keywordRef" :inputText="inputText" @updateFocusName="updateFocusName" @updateKeyword="updateKeyword" />
+        <search-keyword
+          ref="keywordRef"
+          :inputText="inputText"
+          @setLoading="setLoading"
+          @updateFocusName="updateFocusName"
+          @updateKeyword="updateKeyword"
+        />
         <!-- 搜索内容区域 -->
         <search-content ref="contentRef" :keyword="keyword" :triggerTask="triggerTask" @setLoading="setLoading" />
       </qt-view>
@@ -14,6 +20,7 @@
     <qt-view
       v-if="isLoading"
       class="search-three-columns-body-loading"
+      :style="{ width: `${loadingWidth}px`, left: `${loadingLeft}px` }"
       :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }"
     >
       <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
@@ -36,6 +43,8 @@ const router = useESRouter()
 const keyboardRef = ref()
 const inputText = ref<string>('')
 const isLoading = ref<boolean>(false)
+const loadingLeft = ref<number>(634)
+const loadingWidth = ref<number>(1286)
 // 关键词
 const keywordRef = ref()
 const keyword = ref<string>('')
@@ -60,6 +69,7 @@ const curFocusName = ref<string>('searchKeyboard')
 
 function updateInput(val: string) {
   inputText.value = val
+  isLoading.value = true
 }
 
 function updateKeyword(val: string) {
@@ -71,6 +81,13 @@ function updateFocusName(val: string) {
 }
 
 function setLoading(b: boolean): void {
+  if (b) {
+    loadingLeft.value = 1152
+    loadingWidth.value = 768
+  } else {
+    loadingLeft.value = 634
+    loadingWidth.value = 1286
+  }
   isLoading.value = b
 }
 
@@ -100,12 +117,10 @@ defineExpose({ onBackPressed })
 }
 
 .search-three-columns-body-loading {
-  width: 768px;
   height: 1080px;
   background-color: transparent;
   align-items: center;
   justify-content: center;
   position: absolute;
-  left: 1152px;
 }
 </style>

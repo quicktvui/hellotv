@@ -51,7 +51,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
         _id: `t1-${index}`,
         type: 1,
         style: { width: 410, height: 276 },
-        decoration: { right: 40 },
+        decoration: { right: 40, bottom: 40 },
         title: item.title,
         cover: item.cover
       }))
@@ -63,7 +63,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
     _id: 't2',
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
     style: { width: 1920 },
-    decoration: { left: 80, top: 40, bottom: 40 },
+    decoration: { left: 80, top: contents.length === 1 ? 0 : 75, bottom: 40 },
     title: '大家都在搜',
     titleStyle: { height: 50, fontSize: 40 },
     itemList: rawData.recommends!.map((item, index) => ({
