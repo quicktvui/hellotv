@@ -2,6 +2,13 @@ import {ESKeyEvent} from "@extscreen/es3-core";
 import {ESPlayerWindowType} from "@extscreen/es3-player";
 import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
 import {QTListViewItem, QTICollapseItem} from "@quicktvui/quicktvui3";
+//选集展示类型
+export enum IMediaSeriesType {
+  MEDIA_ITEM_LIST_TYPE_NUMBER = 0,
+  MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT = 1,
+  MEDIA_ITEM_LIST_TYPE_TEXT = 2,
+  MEDIA_ITEM_LIST_TYPE_TOP_DOWN = 3,
+}
 // 详情
 export interface IMedia {
   //id
@@ -19,14 +26,9 @@ export interface IMedia {
   //集数
   episodes: number
   episodesId: string
+  //选集类型
+  mediaSeriesType: IMediaSeriesType | number
   [prop: string]: any
-}
-//选集展示类型
-export enum IMediaSeriesType {
-  MEDIA_ITEM_LIST_TYPE_NUMBER = 0,
-  MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT = 1,
-  MEDIA_ITEM_LIST_TYPE_TEXT = 2,
-  MEDIA_ITEM_LIST_TYPE_TOP_DOWN = 3,
 }
 export enum IEpisodeAuthType {
   MEDIA_AUTH_TYPE_VIP = 0,
@@ -60,7 +62,6 @@ export interface IRecommendItem {
   episodesId: string
   [prop: string]: any
 }
-
 export enum IMediaPlayerViewState {
   MEDIA_PLAYER_VIEW_STATE_DISMISS = 0,
   MEDIA_PLAYER_VIEW_STATE_PROGRESS = 1,
@@ -94,14 +95,12 @@ export interface IMediaPlayer extends QTIBaseView{
 
   changeVisible(value: boolean): void
 }
-
 // 播放器折叠面板相关
 export interface IMediaCollapseItemListView extends QTICollapseItem {
   setListData(dataList: Array<QTListViewItem>)
   setItemFocused(position: number): void
   setItemSelected(position: number): void
 }
-
 export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
   init(media: IMedia): void
   setListData(page: number, mediaList: Array<IMediaItem>): void

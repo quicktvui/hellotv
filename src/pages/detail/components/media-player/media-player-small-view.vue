@@ -21,7 +21,7 @@
       :focusable="false" 
       ref="mediaPlayerLoadingRef"
       name='loadingRoot'
-      :fillParent='true' v-show="showLoading"
+      :fillParent='true' :visible="showLoading"
       :style="{width:playerWidth, height:playerHeight}">
       <qt-loading-view :style="{width:100, height:100}"/>
     </qt-view>

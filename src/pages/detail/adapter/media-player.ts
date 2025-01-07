@@ -39,7 +39,7 @@ export function buildMediaItem(page: number, index: number, mediaItem: IMediaIte
       metaId: media.id,
     //   assetLongId: mediaItem.rawData.assetLongId,
       episodeId: mediaItem.id,
-      episode: media.episodes,
+      episode: mediaItem.episode,
       assetLongTitle: media.title,
       episodeTitle: mediaItem.subTitle,
       assetLongCoverH: media.cover,
@@ -47,7 +47,7 @@ export function buildMediaItem(page: number, index: number, mediaItem: IMediaIte
     },
     position: {
       support: (media._prevPlayIndex>=0 && media._prevPlayIndex==mediaIndex) ? true : false,
-      position: media.history?.currentPlayTime
+      position: media.history?.viewedDuration
     },
     vipType: mediaItem.vipType
   }
@@ -99,7 +99,7 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
         mediaUrlList = [
           {
             definition: 2,
-            playUrl: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
+            playUrl: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
           }
         ]
         let mediaSourceList: ESMediaSourceList = {

@@ -43,7 +43,7 @@
       
 <script setup lang='ts' name='MediaPlayer'>
 import { ref, markRaw, nextTick } from 'vue'
-import { ESLogLevel, useESEventBus, useESLog, ESKeyEvent, toast } from "@extscreen/es3-core";
+import { ESLogLevel, useESEventBus, useESLog, ESKeyEvent, toast, useESRuntime } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../../config/theme-config";
@@ -83,7 +83,8 @@ import {
   ])
   const log = useESLog()
   const router = useESRouter()
-
+  const runtime = useESRuntime()
+  let deviceId = runtime.getRuntimeDeviceId()??''
   let m: IMedia
   let playerParent = ref()
   let controlPlayViewShow = ref(true)
@@ -149,21 +150,19 @@ import {
     let _index = Math.max(playerManager.value?.getPlayingMediaIndex()||0, 0)
     const media = playerManager.value?.getMedia(_index)
     if(media && media.analyzeParams && _progress>0){
-      // request.post(urlSaveHistory, {
-      //   data: {
-      //     platformId: media.analyzeParams.platformId,
-      //     metaId: media.analyzeParams.metaId,
-      //     assetLongId: media.analyzeParams.assetLongId,
-      //     episodeId: media.analyzeParams.episodeId,
-      //     currentPlayTime: _progress,
-      //     totalPlayTime: _duration||_progress,
-      //     episode: _index+1,
-      //     assetLongTitle: media.analyzeParams.assetLongTitle,
-      //     episodeTitle: media.analyzeParams.episodeTitle,
-      //     assetLongCoverH: media.analyzeParams.assetLongCoverH,
-      //     assetLongCoverV: media.analyzeParams.assetLongCoverV
-      //   }
-      // })
+      const body = {
+        id: media.analyzeParams.metaId,
+        deviceId: deviceId,
+        recordType: "history",
+        title: media.title,
+        episode: _index+1,
+        episodeId: media.analyzeParams.episodeId,
+        totalDuration: _duration||_progress,
+        viewedDuration: _progress,
+        coverH: media.analyzeParams.assetLongCoverH,
+        coverV: media.analyzeParams.assetLongCoverV
+      }
+      detailManager.reportRecordData(body) // 上报播放历史
     }
   }
   const release = () => {
@@ -357,7 +356,7 @@ import {
   background-color: transparent;
   .player-manager-css{
     position: absolute;
-    background-color: transparent;
+    background-color: black;
   }
   .media-player-mask-small-css {
     width: 890px;

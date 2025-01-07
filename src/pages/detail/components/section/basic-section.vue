@@ -29,7 +29,7 @@
           <qt-image class="resource-placeholder-img" :src=resourcePlaceholderUrl />
         </qt-view>
         <!-- 按钮菜单 -->
-        <button-menu ref="menuRef"></button-menu>
+        <button-menu ref="menuRef" :isCollected="isCollected"></button-menu>
       </qt-column>
     </qt-row>
     <!-- 选集 -->
@@ -47,13 +47,14 @@
 
 <script setup lang='ts' name='BasicSection'>
 import { ref } from 'vue'
-import { ESKeyEvent } from '@extscreen/es3-core'
+import { useESRuntime, toast } from '@extscreen/es3-core'
 import { QTMediaSeries} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaSeriesType ,IMediaItem } from '../../adapter/interface'
 import MediaIntroduction from './item/media-introduction.vue'
 import PlayerPlaceholder from './item/player-placeholder.vue'
 import ButtonMenu from './item/button-menu.vue'
 import MediaSeries from './item/media-series.vue'
+import detailManager from '../../../../api/detail/detail-manager'
 import config from './config';
   const emits = defineEmits([
     'onIntroductionFocus',
@@ -64,6 +65,7 @@ import config from './config';
     'onPlayerPlaceholderFocus',
     'onPlayerPlaceholderClick',
   ])
+  const runtime = useESRuntime()
   // 简介
   let sectionHeight = ref<number>(896)
   const onIntroductionFocus = (focused: boolean) => emits("onIntroductionFocus", focused)
@@ -74,6 +76,7 @@ import config from './config';
   const onMediaResourceClicked = () => {}
   //按钮菜单
   const menuRef = ref()
+  const isCollected = ref(false)
   //播放器占位
   const playerPlaceholderRef = ref() 
   const onPlayerPlaceholderFocus = (focused: boolean) => {
@@ -95,26 +98,29 @@ import config from './config';
     emits("onMediaSeriesGroupItemFocus", position)
   }
   //**************************初始化入口**************************
-  const init = (media: IMedia) => {
-    // console.log('----------initMedia---------->>>>', media)
-    // if (media.itemList.enable) {
-      // switch (media.itemList.type) {
-      //   case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_NUMBER://数字
-      //     sectionHeight.value = 815
-      //     break
-      //   case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT://左图右文
-      //     sectionHeight.value = 896
-      //     break
-      //   case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_TEXT://文本
-      //     sectionHeight.value = 835
-      //     break
-      //   case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_TOP_DOWN://上图下文
-      //     sectionHeight.value = 945
-      //     break
-      // }
-    // } else {
-    //   sectionHeight.value = 550
-    // }
+  const init = async (media: IMedia) => {
+    if (media.mediaSeriesType && media.mediaSeriesType > -1) {
+      switch (media.mediaSeriesType) {
+        case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_NUMBER: //数字
+          sectionHeight.value = 815
+          break
+        case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_LEFT_RIGHT: //左图右文
+          sectionHeight.value = 896
+          break
+        case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_TEXT: //文本
+          sectionHeight.value = 835
+          break
+        case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_TOP_DOWN: //上图下文
+          sectionHeight.value = 945
+          break
+      }
+    } else {
+      sectionHeight.value = 550
+    }
+    let devicedId = runtime.getRuntimeDeviceId()??''
+    await detailManager.getRecordData(media.id,devicedId,'favorite').then((res) => {
+      isCollected.value = res && res.id ? true : false
+    })
     mediaIntroductionRef.value?.init(media)
     playerPlaceholderRef.value?.init(media)
     menuRef.value?.init(media)
@@ -137,7 +143,6 @@ import config from './config';
   }
   const release = (): void => {
     mediaSeiresRef.value?.release()
-    menuRef.value?.release()
   }
   const setAutofocus = (enable: boolean) => {
     playerPlaceholderRef.value?.setAutofocus(enable)
