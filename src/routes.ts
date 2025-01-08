@@ -1,7 +1,8 @@
 import home from './pages/home/index.vue'
 import detail from './pages/detail/index.vue'
+import { ESRouteType } from "@extscreen/es3-router";
 
-import test from './pages/m-test'
+import test from './pages/m-test.vue'
 
 const routes = [
   {
@@ -22,19 +23,25 @@ const routes = [
   {
     path: '/filter',
     name: 'filter',
-    component: () => import('./pages/filter/expandSidebarContents.vue')
+    component: () => import('./pages/filter/expand-sidebar-contents.vue')
   },
   {
     path: '/search',
     name: 'search',
-    component: () => import('./pages/search/threeColumns.vue')
+    component: () => import('./pages/search/three-columns.vue')
   },
   {
     path: '/detail',
     name: 'detail',
     component: detail
     // component: ()=>import("./pages/detail/index.vue"),
-  }
+  },
+  {
+    path: '/introduction',
+    name: 'introduction',
+    component: () => import('./pages/introduction/index.vue'),
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG,
+  },
 ]
 
 export default routes

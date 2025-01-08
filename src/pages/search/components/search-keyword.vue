@@ -1,69 +1,62 @@
 <template>
   <qt-view class="search-keyword">
+    <!-- 标题 -->
+    <qt-text class="search-keyword-title" :text="title" gravity="center|start" typeface="bold" :focusable="false"></qt-text>
     <!-- 暂无数据 -->
     <qt-view v-if="isEmpty" class="search-keyword-empty" :focusable="false">
       <qt-text class="search-keyword-empty-text" text="抱歉暂无相关内容" gravity="center" :focusable="false"></qt-text>
       <qt-text class="search-keyword-empty-text" text="为您推荐右边热门影片～" gravity="center" :focusable="false"></qt-text>
     </qt-view>
-    <qt-list-view
-      v-else
-      class="search-keyword-list"
-      ref="listRef"
-      name="keywordList"
-      :padding="'0,72,0,0'"
-      :singleSelectPosition="singleSelectPos"
-      :blockFocusDirections="['down']"
-      :openPage="true"
-      :listenBoundEvent="true"
-      :loadMore="onListLoadMore"
-      @item-focused="onListItemFocused"
-    >
-      <!-- 标题 -->
-      <qt-view :type="1" class="search-keyword-list-item" :focusable="false">
-        <qt-text
-          class="search-keyword-list-item-text"
-          style="color: white; font-size: 40px"
-          autoWidth
-          autoHeight
-          text="${text}"
-          :focusable="false"
-        ></qt-text>
-      </qt-view>
-      <!-- 普通文本 -->
-      <qt-view :type="2" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
-        <qt-text
-          class="search-keyword-list-item-text"
-          autoHeight
-          text="${text}"
-          gravity="center|start"
-          :showOnState="['normal', 'selected']"
-          :lines="1"
-          :ellipsizeMode="4"
-          :focusable="false"
-          :duplicateParentState="true"
-        ></qt-text>
-        <qt-text
-          class="search-keyword-list-item-text"
-          autoHeight
-          text="${text}"
-          typeface="bold"
-          gravity="center|start"
-          showOnState="focused"
-          :lines="1"
-          :ellipsizeMode="4"
-          :focusable="false"
-          :duplicateParentState="true"
-        ></qt-text>
-      </qt-view>
-    </qt-list-view>
+    <qt-view v-else>
+      <!-- 词条 -->
+      <qt-list-view
+        class="search-keyword-list"
+        ref="listRef"
+        name="keywordList"
+        :padding="'0,40,0,0'"
+        :singleSelectPosition="singleSelectPos"
+        :blockFocusDirections="['down']"
+        :openPage="true"
+        :listenBoundEvent="true"
+        :loadMore="onListLoadMore"
+        @item-focused="onListItemFocused"
+      >
+        <!-- 普通文本 -->
+        <qt-view :type="KeywordType.TEXT" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
+          <qt-text
+            class="search-keyword-list-item-text"
+            autoHeight
+            text="${text}"
+            gravity="center|start"
+            :showOnState="['normal', 'selected']"
+            :lines="1"
+            :ellipsizeMode="4"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+          <qt-text
+            class="search-keyword-list-item-text"
+            autoHeight
+            text="${text}"
+            typeface="bold"
+            gravity="center|start"
+            showOnState="focused"
+            :lines="1"
+            :ellipsizeMode="4"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+        </qt-view>
+      </qt-list-view>
+    </qt-view>
   </qt-view>
 </template>
 
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
+import { KeywordType } from '../adapter/interface'
 import searchManager from '../../../api/search/index'
 import config from '../config'
 
@@ -73,42 +66,47 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['updateFocusName', 'updateKeyword'])
-const toast = useESToast()
-// 关键词列表
+const emits = defineEmits(['setLoading', 'updateFocusName', 'updateKeyword'])
+// 页面引用
+const title = ref<string>('热门搜索')
 const listRef = ref<QTIListView>()
-// 默认选择位置
-const singleSelectPos = ref<number>(1)
-// 暂无数据
+const singleSelectPos = ref<number>(0)
 const isEmpty = ref<boolean>(false)
-// 页码
-let page = 0
-// 分页大小
+// 局部变量
+let curPage = 0
 let pageSize = config.listKeywordsLimit
 // 最后焦点位置
 let lastFocusPos = singleSelectPos.value
+// 组件绑定数据
+let listData: QTListViewItem[] = []
+let loadTimer: any = -1
+let listFocusTimer: any = -1
 
 onMounted(() => loadSuggestions())
 
 watch(
   () => props.inputText,
   () => {
-    // 重置状态
+    title.value = props.inputText.length > 0 ? '猜你想搜' : '热门搜索'
+    // 状态重置
     isEmpty.value = false
     lastFocusPos = singleSelectPos.value
-    // 重置页码
-    page = 0
+    curPage = 0
     // 加载词条
     loadSuggestions()
   }
 )
 
-let listData: QTListViewItem[] = []
+/**
+ * 获取搜索关键词
+ * @param page 页码
+ */
 async function loadSuggestions(page: number = 1) {
   const suggestions = await searchManager.getSuggestions(props.inputText.length > 0 ? 'guess' : 'hot', props.inputText, page, pageSize)
   const keywords = buildKeywords(suggestions)
 
   if (page === 1) {
+    curPage = 1
     if (keywords.length > 0) {
       listData = listRef.value?.init(keywords) as QTListViewItem[]
       listRef.value?.scrollToTop()
@@ -119,22 +117,26 @@ async function loadSuggestions(page: number = 1) {
     }
   } else {
     if (keywords.length > 0) {
-      listData.push(...keywords.splice(1))
+      listData.push(...keywords)
     } else {
       listRef.value?.stopPage()
     }
   }
 
-  emits('updateKeyword', listData.length > 0 ? listData[1].text : '')
+  clearTimeout(loadTimer)
+  loadTimer = setTimeout(() => {
+    emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
+    emits('setLoading', false)
+  }, 300)
 }
 
 function onListLoadMore() {
-  if (page > 0) {
-    loadSuggestions(++page)
+  // 第一页通过 onMounted 生命周期触发
+  if (curPage > 0) {
+    loadSuggestions(++curPage)
   }
 }
 
-let listFocusTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused) {
     emits('updateFocusName', 'searchKeyword')
@@ -161,11 +163,14 @@ defineExpose({ onBackPressed })
   width: 518px;
   height: 1080px;
   background-color: transparent;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: rgba(255, 255, 255, 0.15);
 }
 
 .search-keyword-empty {
   width: 518px;
-  height: 1080px;
+  height: 255px;
   background-color: transparent;
   align-items: center;
   justify-content: center;
@@ -179,9 +184,19 @@ defineExpose({ onBackPressed })
   font-size: 30px;
 }
 
+.search-keyword-title {
+  width: 518px;
+  height: 50px;
+  background-color: transparent;
+  margin-top: 75px;
+  margin-left: 80px;
+  color: white;
+  font-size: 40px;
+}
+
 .search-keyword-list {
   width: 518px;
-  height: 1080px;
+  height: 955px;
   background-color: transparent;
 }
 

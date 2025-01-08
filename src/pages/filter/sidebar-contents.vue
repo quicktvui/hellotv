@@ -43,7 +43,7 @@ function onESCreate(params: { primaryId: string }) {
 
 function loadFilters(primaryId: string) {
   filterManager.getFilters(primaryId).then((filters) => {
-    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { secondaries, tertiaries } = buildFilters(primaryId, filters)
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表

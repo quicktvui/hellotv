@@ -30,7 +30,7 @@ function onESCreate(params: { primaryId: string }) {
 
 function loadFilters(primaryId: string) {
   filterManager.getFilters(primaryId).then((filters) => {
-    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { tertiaries } = buildFilters(primaryId, filters)
     // 初始化三级列表
     contentRef.value?.init(tertiaries)
   })

@@ -1,7 +1,7 @@
 <template>
   <qt-view class="search-content">
     <!-- 提示 -->
-    <qt-text v-if="showTips" class="search-content-tips" :text="tips" gravity="center|start"></qt-text>
+    <qt-text v-if="showTips && !lockTips" class="search-content-tips" :text="tips" gravity="center|start" typeface="bold"></qt-text>
     <!-- 内容 -->
     <qt-tabs
       ref="tabRef"
@@ -10,12 +10,13 @@
       :autoHandleBackKey="true"
       :contentNextFocus="{ left: 'keywordList' }"
       @onTabPageLoadData="onTabPageLoadData"
+      @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
       @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
     >
       <!-- Tab -->
       <template v-slot:tab-item>
-        <qt-view class="search-content-tab-item" :type="1" :focusable="true">
+        <qt-view class="search-content-tab-item" :type="TabItemType.TEXT" :focusable="true">
           <qt-text
             class="search-content-tab-item-text"
             autoWidth
@@ -29,7 +30,7 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <qt-view class="search-content-item-h" :type="1" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}" eventFocus eventClick>
           <qt-image
             class="search-content-item-img-h"
             src="${cover}"
@@ -50,7 +51,7 @@
           ></qt-text>
         </qt-view>
         <!-- 竖图 -->
-        <qt-view class="search-content-item-v" :type="2" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}" eventFocus eventClick>
           <qt-image
             class="search-content-item-img-v"
             src="${cover}"
@@ -77,9 +78,10 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
-import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
-import { buildTab, buildContents, buildRecommends } from '../adapter/index'
+import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
+import { TabItemType, ContentType } from '../adapter/interface'
+import launch from '../../../tools/launch'
 import config from '../config'
 import searchManager from '../../../api/search/index'
 
@@ -90,9 +92,9 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['setLoading'])
-const toast = useESToast()
 // 顶部提示
 const showTips = ref<boolean>(true)
+const lockTips = ref<boolean>(false)
 const tips = ref<string>('')
 // 内容组件
 const tabRef = ref<QTITab>()
@@ -102,8 +104,14 @@ const rawKeyword = ref<string>()
 watch(
   () => props.keyword,
   () => {
+    // 设置loading状态
     emits('setLoading', true)
+    // 重置状态
+    showTips.value = true
+    lockTips.value = false
+    // 提示词
     tips.value = props.keyword.length > 0 ? `全部“${props.keyword}”结果` : '热门推荐'
+    // 初始化组件
     init(props.keyword)
   }
 )
@@ -115,12 +123,24 @@ function init(keyword: string) {
   tabRef.value?.initPage({ width: 1920, height: 1080 })
 }
 
-async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boolean) {
+let timer: any = -1
+async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   let tabPage: QTTabPageData = { data: [] }
   if (rawKeyword.value?.length === 0) {
-    tabPage.data = buildRecommends(await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit))
+    const recommends = await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit)
+    tabPage.data = buildRecommends(recommends)
+    // 停止分页
+    if (recommends.items.length < config.gridHotRecommendsLimit) {
+      tabPage.data.push(buildEndSection())
+      tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+    }
   } else {
     tabPage.data = buildContents(await searchManager.getContents(rawKeyword.value, ++pageNo))
+    // 没有搜索结果时, 不展示顶部提示词
+    if (tabPage.data.length === 2) {
+      showTips.value = false
+      lockTips.value = true
+    }
     // 停止分页
     tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
   }
@@ -131,8 +151,13 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number, useDiff: boo
     tabRef.value?.addPageData(pageIndex, tabPage, 0)
   }
 
-  // 关闭上层loading
-  emits('setLoading', false)
+  // 延迟关闭上层loading
+  clearTimeout(timer)
+  timer = setTimeout(() => emits('setLoading', false), 100)
+}
+
+function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
+  launch.launchDetail(item.id)
 }
 
 function onTabMoveToTopStart() {
@@ -155,7 +180,7 @@ function onTabMoveToBottomEnd() {
   width: 1920px;
   height: 50px;
   background-color: transparent;
-  margin-top: 85px;
+  margin-top: 75px;
   margin-left: 80px;
   color: white;
   font-size: 40px;
@@ -182,8 +207,8 @@ function onTabMoveToBottomEnd() {
 .search-content-tab-item-text {
   height: 60px;
   background-color: transparent;
-  margin-left: 18px;
-  margin-right: 18px;
+  margin-left: 24px;
+  margin-right: 24px;
   color: $text-normal-color;
   font-size: 36px;
   focus-color: $text-focus-color;

@@ -153,9 +153,21 @@ class RequestManager{
         "Accept": "application/json",
         "Content-Type": "application/json",
       },
-      body:body
+      body: body
     }
     return this.request(url,options,timeout)
+  }
+
+  delete<T>(url:string,timeout= 30000):Promise<T>{
+    const requestUrl = encodeURI(url)
+    const options:RequestInit = {
+      method:"DELETE",
+      headers:{
+        "Accept": "application/json",
+        "Content-Type": "application/x-www-form-urlencoded",
+      }
+    }
+    return this.request(requestUrl,options,timeout)
   }
 
   request<T>(url,requestInit:RequestInit,timeout=30000):Promise<T>{
@@ -179,7 +191,7 @@ class RequestManager{
             message: "服务器忙，请稍后重试！",
           });
         }
-      }).catch(()=>{
+      }).catch((err)=>{
         clearTimeout(ajaxTimer)
         reject({ code: -1, message: '发生错误，请稍后重试！' })
       })

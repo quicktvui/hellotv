@@ -47,9 +47,8 @@
 
 <script setup lang='ts' name='MediaSeries'>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core";
-import { useESRouter } from '@extscreen/es3-router'
-import { qtRef, QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
 import { IMedia, IMediaItem } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
 import {
@@ -60,8 +59,6 @@ import {
   buildMediaSeriesList
 } from "../../../adapter/index";
 import detailManager from '../../../../../api/detail/detail-manager'
-import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
-import config from '../config';
   const TAG = 'MediaSeriesView'
   const emits = defineEmits([
     'onMediaSeriesItemLoad',
@@ -70,7 +67,6 @@ import config from '../config';
     'onMediaSeriesGroupItemFocus'
   ])
   const log = useESLog()
-  const router = useESRouter()
   const eventbus = useESEventBus()
   const mediaSeriesRef = ref<QTIMediaSeries>()
   let m: IMedia
@@ -81,7 +77,7 @@ import config from '../config';
     m = media
     if(media.episodes > 1) visible.value = true
     mediaSeriesRef.value?.setInitData(
-      buildMediaSeriesType(1),
+      buildMediaSeriesType(media.mediaSeriesType),
       buildMediaSeriesGroup(),
       buildMediaSeriesStyleType(),
       buildMediaSeriesData(media)

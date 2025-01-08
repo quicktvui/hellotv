@@ -100,6 +100,7 @@ import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
 import config from '../../config'
 import filterManager from '../../../../api/filter/index'
+import launch from '../../../../tools/launch'
 
 const emits = defineEmits(['setNextFocusNameRight'])
 
@@ -179,8 +180,8 @@ function onListItemClick(evt) {
   loadContents(getContentsQuery(rawParams.listData).join(','))
 }
 
-function onGridItemClick() {
-  toast.showToast('跳详情')
+function onGridItemClick(evt) {
+  launch.launchDetail(evt.item.id)
 }
 
 function onGridItemFocused(evt) {

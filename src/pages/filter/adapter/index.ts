@@ -1,5 +1,5 @@
 import { QTListViewItem } from '@quicktvui/quicktvui3'
-import { Filters, Contents } from 'src/api/filter/interface'
+import { Filters, Contents } from '../../../api/filter/interface'
 import {
   GridContent,
   GridContentType,
@@ -80,6 +80,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
     contents.push({
       type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
       decoration: { right: 40, bottom: 40 },
+      id: item.id,
       title: item.title,
       cover: item.cover,
       jumpParams: item.jumpParams
@@ -95,7 +96,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
  * @returns
  */
 export const getContentsQuery = (filters: QTListViewItem[]): string[] => {
-  let query: string[] = []
+  const query: string[] = []
 
   filters.forEach((item) => {
     if (item.defaultSelectedPos > 0) {

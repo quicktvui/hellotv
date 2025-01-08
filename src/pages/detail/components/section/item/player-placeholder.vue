@@ -26,7 +26,6 @@ import { IMedia } from '../../../adapter/interface'
   const emits = defineEmits(['onPlaceholderClick', 'onPlaceholderFocus'])
   const focus = useESFocus()
   const placeholder = ref<ESFocusable>()
-  let m: IMedia
   let autofocus = ref<boolean>(false)
   let isFree = ref<boolean>(true)
   let isShowPlayerPlaceholderImg = ref<boolean>(true)
@@ -36,14 +35,13 @@ import { IMedia } from '../../../adapter/interface'
     isShowPlayerPlaceholderImg.value = value
   }
   const init = (media: IMedia) => {
-    m = media
     playerPplaceholderUrl.value = media.cover
   }
   const requestFocus = () => {
     if(placeholder.value) focus.requestFocusDirectly(placeholder.value!)
   }
   const setAutofocus = (enable:boolean) => autofocus.value = enable
-  const onClick = (e) => emits('onPlaceholderClick') 
+  const onClick = () => emits('onPlaceholderClick') 
   const onFocus = (e) => emits('onPlaceholderFocus', e.isFocused) 
 
   defineExpose({

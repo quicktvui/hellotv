@@ -99,6 +99,7 @@ export enum GridContentType {
 export interface GridContent {
   type: GridContentType
   decoration: QTListViewItemDecoration
+  id: string
   title: string
   cover: string
   jumpParams: any

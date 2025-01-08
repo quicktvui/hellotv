@@ -38,7 +38,7 @@
       
 <script setup lang='ts' name='media-collapse-media-series'>
 import { ref, nextTick} from 'vue'
-import { ESLogLevel, useESLog, toast, useESEventBus } from "@extscreen/es3-core"
+import { ESLogLevel, useESLog, useESEventBus } from "@extscreen/es3-core"
 import { QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../../../config/theme-config";
 import {
@@ -70,7 +70,7 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     }
     if(media.episodes > 1) visible.value = true
     mediaSeriesRef.value?.setInitData(
-      buildMediaSeriesType(1),
+      buildMediaSeriesType(media.mediaSeriesType),
       buildMediaSeriesGroup(),
       buildMediaSeriesStyleType(),
       buildMediaSeriesData(media)
