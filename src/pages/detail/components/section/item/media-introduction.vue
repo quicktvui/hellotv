@@ -1,5 +1,5 @@
 <template>
-  <qt-column class="introduction-root">
+  <qt-column class="media-introduction-root">
     <!-- 标题 -->
     <qt-text
       class="title"
@@ -100,7 +100,7 @@
   </qt-column>
 </template>
   
-<script setup lang='ts' name='Introduction'>
+<script setup lang='ts' name='media-introduction'>
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { IMedia } from '../../../adapter/interface'
@@ -136,7 +136,7 @@ import { IMedia } from '../../../adapter/interface'
 </script>
   
 <style lang='scss' scoped>
-.introduction-root {
+.media-introduction-root {
   width: 810px;
   height: 320px;
   background-color: transparent;

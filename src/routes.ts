@@ -1,7 +1,8 @@
 import home from './pages/home/index.vue'
 import detail from './pages/detail/index.vue'
+import { ESRouteType } from "@extscreen/es3-router";
 
-import test from './pages/m-test'
+import test from './pages/m-test.vue'
 
 const routes = [
   {
@@ -34,7 +35,13 @@ const routes = [
     name: 'detail',
     component: detail
     // component: ()=>import("./pages/detail/index.vue"),
-  }
+  },
+  {
+    path: '/introduction',
+    name: 'introduction',
+    component: () => import('./pages/introduction/index.vue'),
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG,
+  },
 ]
 
 export default routes
