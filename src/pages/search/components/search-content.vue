@@ -10,6 +10,7 @@
       :autoHandleBackKey="true"
       :contentNextFocus="{ left: 'keywordList' }"
       @onTabPageLoadData="onTabPageLoadData"
+      @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
       @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
     >
@@ -29,7 +30,7 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}" eventFocus eventClick>
           <qt-image
             class="search-content-item-img-h"
             src="${cover}"
@@ -50,7 +51,7 @@
           ></qt-text>
         </qt-view>
         <!-- 竖图 -->
-        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}" eventFocus eventClick>
           <qt-image
             class="search-content-item-img-v"
             src="${cover}"
@@ -77,9 +78,10 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
+import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
+import launch from '../../../tools/launch'
 import config from '../config'
 import searchManager from '../../../api/search/index'
 
@@ -152,6 +154,10 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   // 延迟关闭上层loading
   clearTimeout(timer)
   timer = setTimeout(() => emits('setLoading', false), 100)
+}
+
+function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
+  launch.launchDetail(item.id)
 }
 
 function onTabMoveToTopStart() {

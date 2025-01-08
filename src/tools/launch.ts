@@ -3,28 +3,28 @@ import { ESNativeRouter, RouteLocationRaw, Router } from '@extscreen/es3-router'
 
 export interface LaunchParams {
   //0：快应用之间跳转； 1： 快应用内部跳转； 3：第三方应用跳转
-  type: string | number,
+  type: string | number
   //type = 0 option是字符串；1、3：option是对象
-  options: string | {
-    //外层 type = 3 存在 值：ACTION、ACTIVITY、URL
-    type?: string
-    //type=3存在
-    packageName?: string
-    //type = ACTIVITY 存在
-    activityPath?: string
-    //type = URL 存在
-    url?: string
-    //type = ACTION 存在
-    action?: string,
-    //"[{\"key\":\"activityKey\",\"value\":\"666\",\"type\":\"string\"},{\"key\":\"activityKey1\",\"value\":\"888\",\"type\":\"int\"}]"
-    //外层type=1 params 是对象，外层 type=3 params字符串
-    params?: object | string,
-    //外层type=1 name 存在
-    name?: string,
-  }
-
+  options:
+    | string
+    | {
+        //外层 type = 3 存在 值：ACTION、ACTIVITY、URL
+        type?: string
+        //type=3存在
+        packageName?: string
+        //type = ACTIVITY 存在
+        activityPath?: string
+        //type = URL 存在
+        url?: string
+        //type = ACTION 存在
+        action?: string
+        //"[{\"key\":\"activityKey\",\"value\":\"666\",\"type\":\"string\"},{\"key\":\"activityKey1\",\"value\":\"888\",\"type\":\"int\"}]"
+        //外层type=1 params 是对象，外层 type=3 params字符串
+        params?: object | string
+        //外层type=1 name 存在
+        name?: string
+      }
 }
-
 
 class Launch {
   //内部路由
@@ -60,23 +60,21 @@ class Launch {
     const type = item.type
     switch (type) {
       //快应用间跳转
-      case 0 :
+      case 0:
       case '0':
         this.jumpType0(item)
         break
       //快应用内部跳转
-      case 1 :
+      case 1:
       case '1':
         this.jumpType1(item)
         break
       //三方应用跳转
-      case 3 :
+      case 3:
       case '3':
         this.jumpType3(item)
         break
-
     }
-
   }
 
   /**
@@ -108,8 +106,7 @@ class Launch {
   jumpType1(item: LaunchParams) {
     const options = item.options
     if (options && typeof options !== 'string') {
-      this.router.push(<RouteLocationRaw>options).then(() => {
-      })
+      this.router.push(<RouteLocationRaw>options).then(() => {})
     }
   }
 
@@ -131,7 +128,7 @@ class Launch {
           this.launchByUrl(options.url, false, packageName, params)
           break
         case 'ACTIVITY':
-          this.launchByActivity( packageName + '/' + options.activityPath, packageName, params)
+          this.launchByActivity(packageName + '/' + options.activityPath, packageName, params)
           break
         case 'ACTION':
           this.launchByAction(options.action, packageName, params)
@@ -201,8 +198,7 @@ class Launch {
     if (mParam && mParam.length > 0) {
       args.push(mParam)
     }
-    this.nativeRouter.launch(args).then(() => {
-    })
+    this.nativeRouter.launch(args).then(() => {})
   }
 
   /**
@@ -247,20 +243,30 @@ class Launch {
   /**
    * 跳转个人中心
    */
-  launchMy(){
+  launchMy() {
     this.router.push({
-      name:"my",
-      params:{}
+      name: 'my',
+      params: {}
     })
   }
 
   /**
    * 跳转搜索
    */
-  launchSearch(){
+  launchSearch() {
     this.router.push({
-      name:"search",
-      params:{}
+      name: 'search',
+      params: {}
+    })
+  }
+
+  /**
+   * 跳转详情
+   */
+  launchDetail(jumpId: string) {
+    this.router.push({
+      name: 'detail',
+      params: { id: jumpId }
     })
   }
 }

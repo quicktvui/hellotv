@@ -48,5 +48,6 @@ export interface Content {
   type: ContentType
   style: QTWaterfallFlexStyle
   decoration?: QTListViewItemDecoration
+  id: string
   title: string
 }

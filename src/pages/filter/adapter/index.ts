@@ -80,6 +80,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
     contents.push({
       type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
       decoration: { right: 40, bottom: 40 },
+      id: item.id,
       title: item.title,
       cover: item.cover,
       jumpParams: item.jumpParams

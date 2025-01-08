@@ -56,6 +56,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
         type: ContentType.HORIZONTAL,
         style: { width: 410, height: 276 },
         decoration: { right: 40, bottom: 40 },
+        id: item.id,
         title: item.title,
         cover: item.cover
       }))
@@ -75,6 +76,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
       type: ContentType.VERTICAL,
       style: { width: 260, height: 414 },
       decoration: { top: 40, right: 40 },
+      id: item.id,
       title: item.title,
       cover: item.cover
     }))
@@ -107,6 +109,7 @@ export const buildRecommends = function (rawData: Recommends): QTWaterfallSectio
         type: ContentType.VERTICAL,
         style: { width: 260, height: 414 },
         decoration: { top: 40, right: 40 },
+        id: item.id,
         title: item.title,
         cover: item.cover
       }))
