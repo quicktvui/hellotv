@@ -15,7 +15,7 @@
     >
       <!-- Tab -->
       <template v-slot:tab-item>
-        <qt-view class="search-content-tab-item" :type="1" :focusable="true">
+        <qt-view class="search-content-tab-item" :type="TabItemType.TEXT" :focusable="true">
           <qt-text
             class="search-content-tab-item-text"
             autoWidth
@@ -29,7 +29,7 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <qt-view class="search-content-item-h" :type="1" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}">
           <qt-image
             class="search-content-item-img-h"
             src="${cover}"
@@ -50,7 +50,7 @@
           ></qt-text>
         </qt-view>
         <!-- 竖图 -->
-        <qt-view class="search-content-item-v" :type="2" :focusable="true" layout="${layout}">
+        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}">
           <qt-image
             class="search-content-item-img-v"
             src="${cover}"
@@ -79,6 +79,7 @@
 import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
+import { TabItemType, ContentType } from '../adapter/interface'
 import config from '../config'
 import searchManager from '../../../api/search/index'
 

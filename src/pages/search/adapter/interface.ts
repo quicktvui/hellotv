@@ -1,22 +1,51 @@
 import { QTWaterfallFlexStyle, QTListViewItemDecoration } from '@quicktvui/quicktvui3'
 
+/**
+ * 关键词类型
+ */
+export enum KeywordType {
+  // 文本
+  TEXT = 1
+}
+
+/**
+ * 关键词
+ */
 export interface Keyword {
-  type: 1 | 2
+  type: KeywordType
   text: string
   jumpId?: string
   decoration?: QTListViewItemDecoration
 }
 
+export enum TabItemType {
+  // 文本
+  TEXT = 1
+}
+
+/**
+ * QTTab组件中Tab子项
+ */
 export interface TabItem {
-  type: number
+  type: TabItemType
   text: string
   titleSize: number
   decoration?: QTListViewItemDecoration
 }
 
+export enum ContentType {
+  // 横图
+  HORIZONTAL = 1,
+  // 竖图
+  VERTICAL = 2
+}
+
+/**
+ * 搜索内容
+ */
 export interface Content {
   _id: string
-  type: number
+  type: ContentType
   style: QTWaterfallFlexStyle
   decoration?: QTListViewItemDecoration
   title: string

@@ -22,7 +22,7 @@
         @item-focused="onListItemFocused"
       >
         <!-- 普通文本 -->
-        <qt-view :type="1" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
+        <qt-view :type="KeywordType.TEXT" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
           <qt-text
             class="search-keyword-list-item-text"
             autoHeight
@@ -56,6 +56,7 @@
 import { ref, watch, onMounted } from 'vue'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
+import { KeywordType } from '../adapter/interface'
 import searchManager from '../../../api/search/index'
 import config from '../config'
 
@@ -66,20 +67,20 @@ const props = defineProps({
   }
 })
 const emits = defineEmits(['setLoading', 'updateFocusName', 'updateKeyword'])
-// 标题
+// 页面引用
 const title = ref<string>('热门搜索')
-// 关键词列表
 const listRef = ref<QTIListView>()
-// 默认选择位置
 const singleSelectPos = ref<number>(0)
-// 暂无数据
 const isEmpty = ref<boolean>(false)
-// 页码
+// 局部变量
 let curPage = 0
-// 分页大小
 let pageSize = config.listKeywordsLimit
 // 最后焦点位置
 let lastFocusPos = singleSelectPos.value
+// 组件绑定数据
+let listData: QTListViewItem[] = []
+let loadTimer: any = -1
+let listFocusTimer: any = -1
 
 onMounted(() => loadSuggestions())
 
@@ -87,18 +88,19 @@ watch(
   () => props.inputText,
   () => {
     title.value = props.inputText.length > 0 ? '猜你想搜' : '热门搜索'
-    // 重置状态
+    // 状态重置
     isEmpty.value = false
     lastFocusPos = singleSelectPos.value
-    // 重置页码
     curPage = 0
     // 加载词条
     loadSuggestions()
   }
 )
 
-let listData: QTListViewItem[] = []
-let timer: any = -1
+/**
+ * 获取搜索关键词
+ * @param page 页码
+ */
 async function loadSuggestions(page: number = 1) {
   const suggestions = await searchManager.getSuggestions(props.inputText.length > 0 ? 'guess' : 'hot', props.inputText, page, pageSize)
   const keywords = buildKeywords(suggestions)
@@ -121,20 +123,20 @@ async function loadSuggestions(page: number = 1) {
     }
   }
 
-  clearTimeout(timer)
-  timer = setTimeout(() => {
+  clearTimeout(loadTimer)
+  loadTimer = setTimeout(() => {
     emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
     emits('setLoading', false)
   }, 300)
 }
 
 function onListLoadMore() {
+  // 第一页通过 onMounted 生命周期触发
   if (curPage > 0) {
     loadSuggestions(++curPage)
   }
 }
 
-let listFocusTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused) {
     emits('updateFocusName', 'searchKeyword')

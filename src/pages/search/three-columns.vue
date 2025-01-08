@@ -4,7 +4,7 @@
       <qt-view class="search-three-columns-body" :clipChildren="true">
         <!-- 键盘区域 -->
         <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
-        <!-- 搜索关键词 -->
+        <!-- 搜索关键词区域 -->
         <search-keyword
           ref="keywordRef"
           :inputText="inputText"
@@ -16,7 +16,7 @@
         <search-content ref="contentRef" :keyword="keyword" :triggerTask="triggerTask" @setLoading="setLoading" />
       </qt-view>
     </scroll-view>
-    <!-- 搜索内容区域loading -->
+    <!-- 搜索关键词、内容区域loading -->
     <qt-view
       v-if="isLoading"
       class="search-three-columns-body-loading"
@@ -65,19 +65,31 @@ const triggerTask = [
 // 焦点
 const curFocusName = ref<string>('searchKeyboard')
 
+/**
+ * 输入数据更新
+ */
 function updateInput(val: string) {
   inputText.value = val
   isLoading.value = true
 }
 
+/**
+ * 搜索关键词更新
+ */
 function updateKeyword(val: string) {
   keyword.value = val
 }
 
+/**
+ * 当前焦点位置更新
+ */
 function updateFocusName(val: string) {
   curFocusName.value = val
 }
 
+/**
+ * loading状态、位置控制
+ */
 function setLoading(b: boolean): void {
   if (b) {
     loadingLeft.value = 1152
@@ -89,6 +101,9 @@ function setLoading(b: boolean): void {
   isLoading.value = b
 }
 
+/**
+ * 返回按键处理
+ */
 function onBackPressed() {
   if (curFocusName.value === 'searchKeyboard') {
     router.back()
