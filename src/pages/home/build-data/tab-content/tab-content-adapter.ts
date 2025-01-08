@@ -8,9 +8,17 @@ import {
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
 import ThemeConfig from '../../../../config/theme-config'
+import { HomePlayType } from '../media/home-media-imp'
 import barsDataManager from '../nav-bar/nav-bar-adapter'
 import TabContentConfig from './tab-content-config'
-import { Section, SectionItem, SectionItemType, SectionType, TabContent } from './tab-content-imp'
+import {
+  PlayType,
+  Section,
+  SectionItem,
+  SectionItemType,
+  SectionType,
+  TabContent
+} from './tab-content-imp'
 import TabContentItemType from './tab-content-item-type'
 
 class TabsContent {
@@ -208,15 +216,9 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
     const type = section.type
     //是否展示板块标题
     const showTitle = section.showTitle
+    let isFirstSetPlay: boolean = true
     for (const sectionItem of sectionItemList) {
       const sectionItemIndex: number = sectionItemList.indexOf(sectionItem)
-      if (sectionIndex === 0) {
-        //检测第一个板块中是否有播放器
-        const sectionItemType = sectionItem.type
-        if (sectionItemType === SectionItemType.TYPE_SMALL_PLAY || sectionItemType === SectionItemType.TYPE_SMALL_LIST_PLAY) {
-          isFocusScrollTarget = true
-        }
-      }
       //封装格子数据
       const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type)
       //针对一行滚动格子设置decoration
@@ -225,6 +227,42 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
           left: sectionItemIndex === 0 ? TabContentConfig.decorationLeftGap : TabContentConfig.sectionItemGap,
           right: (sectionItemIndex === (length - 1)) ? TabContentConfig.decorationLeftGap : 0,
           top: section.showTitle ? TabContentConfig.sectionItemGap : 0
+        }
+      }
+      if (sectionIndex === 0) {
+        //检测第一个板块中是否有播放器
+        const sectionItemType = sectionItem.type
+        if ((sectionItemType === SectionItemType.TYPE_SMALL_PLAY || sectionItemType === SectionItemType.TYPE_SMALL_LIST_PLAY) && isFirstSetPlay) {
+          isFirstSetPlay = false
+          isFocusScrollTarget = true
+          //保存小窗播放数据
+          barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+          const playType = sectionItemType === SectionItemType.TYPE_SMALL_PLAY ? HomePlayType.TYPE_CELL : HomePlayType.TYPE_CELL_LIST
+          barsDataManager.barsData.itemList[tabPageIndex].playType = playType
+          barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = sectionItemIndex
+        }
+        else if (sectionItem.playBackgroundId) {//背景播放
+          if (isFirstSetPlay){
+            isFirstSetPlay = false
+            barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+            barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_BG
+            barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = sectionItemIndex
+          }
+          const playBackgroundUrl = sectionItem.playBackgroundUrl
+          const play = {
+            playData: [{
+              id: sectionItem.playBackgroundId,
+              index:sectionItemIndex,
+              type: PlayType.TYPE_LONG,
+              cover: sectionItem.imageFocusBackground,
+              isRequestUrl: !playBackgroundUrl,
+              url: playBackgroundUrl ? [{
+                definition: '1',
+                playUrl: playBackgroundUrl
+              }] : []
+            }]
+          }
+          qtWaterfallItem.play = play
         }
       }
       buildSectionItemList.push(qtWaterfallItem)
@@ -272,7 +310,7 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
       buildSectionItem = buildFocusChangeImgSectionItem(sectionItem)
       break
     case SectionItemType.TYPE_SMALL_PLAY://小窗播放
-      buildSectionItem = buildSmallPlayerSectionItem(sectionItem,tabPageIndex)
+      buildSectionItem = buildSmallPlayerSectionItem(sectionItem, tabPageIndex)
       break
     // case SectionItemType.TYPE_SMALL_LIST_PLAY:
     //   break
@@ -381,7 +419,7 @@ export function buildFocusChangeImgSectionItem(sectionItem: SectionItem): QTWate
   }
 }
 
-export function buildSmallPlayerSectionItem(sectionItem: SectionItem,tabPageIndex:number): QTWaterfallItem {
+export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageIndex: number): QTWaterfallItem {
   return {
     type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER,
     style: buildStyle(sectionItem),
@@ -397,11 +435,10 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem,tabPageInde
         width: sectionItem.width,
         height: sectionItem.height
       },
-      sid:sectionItem.id + 'cellSid'+'tabIndex'+tabPageIndex,
-      playData:sectionItem.playData
+      sid: 'cellSid' + sectionItem.id + 'tabIndex' + tabPageIndex,
+      playData: sectionItem.playData
     },
     jumpParams: sectionItem.jumpParams
-
   }
 }
 

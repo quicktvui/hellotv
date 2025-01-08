@@ -18,13 +18,18 @@
     @onPlayerInitialized='onPlayerInitialized'
     @onPlayerProgressChanged='onPlayerProgressChanged'
     @onPlayerDurationChanged='onPlayerDurationChanged'
+    @onPlayerError='onPlayerError'
   />
 </template>
 
 <script lang='ts'>
 import { ESKeyEvent } from '@extscreen/es3-core'
 import {
-  ESIPlayerInterceptor, ESPlayerDecode, ESPlayerInterceptError, ESPlayerInterceptResult,
+  ESIPlayerInterceptor,
+  ESPlayerDecode,
+  ESPlayerError,
+  ESPlayerInterceptError,
+  ESPlayerInterceptResult,
   ESPlayerPlayMode,
   ESPlayerRate,
   ESPlayerWindowType
@@ -82,7 +87,8 @@ export default defineComponent({
     'onPlayerInterceptError',
     'onPlayerInitialized',
     'onPlayerProgressChanged',
-    'onPlayerDurationChanged'
+    'onPlayerDurationChanged',
+    'onPlayerError'
   ],
   setup(props, context) {
     const playerManager = ref<ESIPlayerManager>()
@@ -96,7 +102,7 @@ export default defineComponent({
     if (props.isShowPlayerController) {
       playerViewList = [markRaw(MediaLoadingView), markRaw(MediaManagerView)]
       //todo 让立朋兼容一个__name的获取
-      playerViewList[1].name = "media-manager-view"
+      playerViewList[1].name = 'media-manager-view'
     } else {
       playerViewList = [markRaw(MediaLoadingView)]
     }
@@ -203,7 +209,9 @@ export default defineComponent({
     const onPlayerDurationChanged = (d: number): void => {
       context.emit('onPlayerDurationChanged', d)
     }
-
+    const onPlayerError = (error: ESPlayerError): void => {
+      context.emit('onPlayerError', error)
+    }
     const seekTo = (progress: number): void => {
       playerManager.value?.seekTo(progress)
     }
@@ -322,6 +330,7 @@ export default defineComponent({
       onPlayerInitialized,
       onPlayerProgressChanged,
       onPlayerDurationChanged,
+      onPlayerError,
       seekTo,
       initPlayData,
       initialize,

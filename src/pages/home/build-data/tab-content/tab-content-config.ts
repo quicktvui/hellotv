@@ -1,6 +1,6 @@
 export default {
   //首页播放器sid
-  homeBgPlaySid: 'bg-play',
+  homeBgPlaySid: 'bg-player',
   //首页内容请求数量
   sectionLoadLimit: 10,
   //板块间距

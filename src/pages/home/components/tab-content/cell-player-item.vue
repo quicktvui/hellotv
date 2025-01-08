@@ -9,6 +9,7 @@
     <img class='cell-player-item-bg'
          flexStyle='${image.style}'
          src='${image.normal}'
+         :postDelay='100'
          :duplicateParentState='true'
          :enableFocusBorder='true'
          :focusable='false' />
@@ -16,12 +17,12 @@
       class='cell-player-item-replace'
       flexStyle='${play.style}'
       sid='${play.sid}'
+      :postDelay='300'
       eventReceiverSID='homeTabsSid'
       :focusable='false'
       :clipChildren='false'
       :replaceOnVisibilityChanged='false'
-      :markChildSID='TabContentConfig.homeBgPlaySid'
-    >
+      :markChildSID='TabContentConfig.homeBgPlaySid'>
     </qt-replace-child>
 
   </tv-item>
