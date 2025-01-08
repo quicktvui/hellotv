@@ -8,6 +8,7 @@
         <!-- 筛选列表扩展项 -->
         <filter-expand
           ref="expandRef"
+          :blockFocusDir="expandBlockFocusDir"
           :singleSelectPos="expandSinglePos"
           :expandAvailable="expandAvailable"
           :triggerTask="triggerTask"
@@ -46,6 +47,7 @@ const router = useESRouter()
 // 扩展列表
 const expandRef = ref()
 const expandSinglePos = ref<number>(0)
+const expandBlockFocusDir = ref()
 const expandAvailable = ref<boolean>(false)
 // 筛选列表
 const sidebarRef = ref()
@@ -75,6 +77,9 @@ function onESCreate(params: { primaryId: string }) {
 
 function loadFilters(primaryId: string, initExpand?: boolean) {
   filterManager.getFilters(primaryId).then((filters) => {
+    // 设置焦点向右方向
+    setExpandNextFocusNameRight('sidebarList')
+
     const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
     // 初始化一级列表
     if (initExpand) {
@@ -91,6 +96,8 @@ let lastExtPosition = expandSinglePos.value
 let extListTimer: any = -1
 function onExtListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastExtPosition) {
+    // 禁止焦点向右
+    setExpandNextFocusNameRight('')
     clearTimeout(extListTimer)
     extListTimer = setTimeout(() => {
       lastExtPosition = evt.position
@@ -106,6 +113,8 @@ function onListItemFocused(evt) {
     expandAvailable.value = evt.item.type === SecondaryType.FILTER_TITLE
 
     if (evt.position != lastPosition) {
+      // 禁止焦点向右
+      setNextFocusNameRight('')
       clearTimeout(listTimer)
       listTimer = setTimeout(() => {
         lastPosition = evt.position
@@ -113,6 +122,11 @@ function onListItemFocused(evt) {
       }, 300)
     }
   }
+}
+
+function setExpandNextFocusNameRight(s: string) {
+  expandBlockFocusDir.value = s === '' ? ['right'] : []
+  expandRef.value?.setNextFocusNameRight(s)
 }
 
 function setNextFocusNameRight(s: string) {

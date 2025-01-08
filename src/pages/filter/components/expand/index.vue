@@ -1,10 +1,14 @@
 <template>
-  <qt-view class="filter-expand" :gradientBackground="{ colors: ['#00000000', '#0DFFFFFF'], orientation: 0 }">
+  <qt-view
+    class="filter-expand"
+    :gradientBackground="{ colors: ['#00000000', '#0DFFFFFF'], orientation: 0 }"
+    :blockFocusDirections="$props.blockFocusDir"
+  >
     <qt-list-view
       class="filter-expand-list"
       ref="listRef"
       :singleSelectPosition="$props.singleSelectPos"
-      :nextFocusName="{ up: 'topView', right: 'sidebarList' }"
+      :nextFocusName="{ up: 'topView', right: nextFocusNameRight }"
       :descendantFocusability="$props.expandAvailable ? 1 : 2"
       @item-focused="onItemFocused"
     >
@@ -37,6 +41,10 @@ import { QTIListView } from '@quicktvui/quicktvui3'
 import { Primary, PrimaryType } from '../../adapter/interface'
 
 defineProps({
+  blockFocusDir: {
+    type: Array,
+    default: () => []
+  },
   singleSelectPos: {
     type: Number,
     default: 0
@@ -49,6 +57,7 @@ defineProps({
 const emits = defineEmits(['onListItemFocused'])
 
 const listRef = ref<QTIListView>()
+const nextFocusNameRight = ref<string>('sidebarList')
 
 function init(listData: Primary[]) {
   listRef.value?.init(listData)
@@ -58,7 +67,11 @@ function onItemFocused(evt) {
   emits('onListItemFocused', evt)
 }
 
-defineExpose({ init })
+function setNextFocusNameRight(s: string) {
+  nextFocusNameRight.value = s
+}
+
+defineExpose({ init, setNextFocusNameRight })
 </script>
 
 <style scoped lang="scss">
