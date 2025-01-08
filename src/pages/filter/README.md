@@ -2,11 +2,11 @@
 
 ## 页面功能
 
-### 基础单页面（singleContents.vue）
+### 基础单页面（single-contents.vue）
 
-### 左侧筛选项列表、右侧基础单页面（sidebarContents.vue）
+### 左侧筛选项列表、右侧基础单页面（sidebar-contents.vue）
 
-### 左侧筛选项列表(支持向左扩展一级筛选项列表)、右侧基础单页面（expandSidebarContents.vue）
+### 左侧筛选项列表(支持向左扩展一级筛选项列表)、右侧基础单页面（expand-sidebar-contents.vue）
 
 ## 目录结构
 
@@ -34,7 +34,7 @@ src/pages/filter
 ├── scss
 │   └── filter-sidebar.scss
 ├── config.ts                            // 页面级配置
-├── expandSidebarContents.vue
-├── sidebarContents.vue
-└── singleContents.vue
+├── expand-sidebar-contents.vue
+├── sidebar-contents.vue
+└── single-contents.vue
 ```

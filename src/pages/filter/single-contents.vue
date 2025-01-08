@@ -32,7 +32,7 @@ function loadFilters(primaryId: string) {
   filterManager.getFilters(primaryId).then((filters) => {
     const { tertiaries } = buildFilters(primaryId, filters)
     // 初始化三级列表
-    contentRef.value?.init(tertiaries)
+    contentRef.value?.init(primaryId, tertiaries)
   })
 }
 
