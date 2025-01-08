@@ -223,6 +223,8 @@ let loadingTimer: any = -1
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
   showRecords.value = false
+  gridScrollY.value = 0
+  scrollRef.value?.scrollToWithOptions(0, 0, 300)
 
   if (resetFilters) {
     isLoading.value = true
