@@ -31,9 +31,13 @@ export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
   const barItemList: Array<QTTabItem> = []
   for (let i = 0; i < length; i++) {
     const bar = bars[i]
+    if (i === defFocusIndex){
+      barsDataManager.barsBgUrls.set("firstShowBg", bar.id)
+    }
     //设置默认选中项
     if (bar.isDefault) {
       defFocusIndex = i
+      barsDataManager.barsBgUrls.set("firstShowBg", bar.id)
     }
     //设置左右距离边界间距
     const decoration: ESListViewItemDecoration = {

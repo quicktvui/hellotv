@@ -23,8 +23,9 @@ export interface HomeApi {
   /**
    * 获取首页背景播放请求地址
    * @param id
+   * @param type 1 长视频、2 短视频
    */
-  getHomeBgVideoAssetsUrl(id: string): Promise<object>
+  getHomePlayUrl(id: string,type:number): Promise<object>
 
 
 }

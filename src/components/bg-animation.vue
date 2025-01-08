@@ -62,6 +62,7 @@ let loadImgNewTimer: any = -1
  * @param src
  */
 const setImg = (src: string) => {
+  if (!src)src = ""
   if (loadImgTimer) clearTimeout(loadImgTimer)
   if (loadImgNewTimer) clearTimeout(loadImgNewTimer)
   loadImgNewTimer = setTimeout(() => {
@@ -98,14 +99,14 @@ const clearImg = () => {
     animationOldHideId,
     QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
     QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
-    1, 0, 0, -1, 0, false, false
+    1, 0, 200, -1, 0, false, false
   )
   //设置new图片隐藏动画
   animationNewRef.value?.objectAnimator2(
     animationNewHideId,
     QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
     QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
-    1, 0, <number>props.transitionTime, -1, 0, false, false
+    1, 0, 200, -1, 0, false, false
   )
   //执行动画
   animationOldRef.value?.startAnimator(animationOldHideId)
@@ -114,7 +115,7 @@ const clearImg = () => {
   loadImgTimer = setTimeout(() => {
     srcOld.value = ''
     srcNew.value = ''
-  }, <number>props.transitionTime + 10)
+  }, 250)
 }
 
 

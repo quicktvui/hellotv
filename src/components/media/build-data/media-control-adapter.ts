@@ -276,6 +276,7 @@ function buildItem(item:IMediaList,index:number,interceptors?:Array<ESIPlayerInt
   let mediaItem_0: ESMediaItem
   const all = {
     id:item.id,
+    type:item.type,
     beforeSid:item?.beforeSid,
     sid:item?.sid,
     nextSid:item?.nextSid,

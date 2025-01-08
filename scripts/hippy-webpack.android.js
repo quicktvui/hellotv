@@ -10,7 +10,11 @@ const platform = 'android';
 const pkg = require('../package.json');
 const manifest = require('../dist/android/vendor-manifest.json');
 let cssLoader = '@hippy/vue-css-loader';
-
+const configs = {
+  "splash": {
+    "msg": ""
+  }
+}
 /**override flavor*/
 // const { execSync } = require('child_process');
 // const { getFlavorDir } = require('./libs/flavor-util');
@@ -121,6 +125,16 @@ module.exports = {
     //   test: /\.(js|jsbundle|css|bundle)($|\?)/i,
     //   filename: '[file].map',
     // }),
+    function (){
+      const dirPath = `./dist/${platform}/`
+      const filePath = path.join(`./dist/${platform}/`, 'package.json')
+      if (fs.existsSync(dirPath)){
+        fs.writeFileSync(filePath, JSON.stringify(configs));
+      }else{
+        fs.mkdirSync(dirPath, { recursive: true });
+        fs.writeFileSync(filePath, JSON.stringify(configs));
+      }
+    }
   ],
   module: {
     rules: [

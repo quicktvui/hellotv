@@ -27,7 +27,7 @@ import MediaLoadingComponent from './media-loading-component.vue'
 export default defineComponent({
   name: 'media-loading-view',
   components: { MediaLoadingComponent },
-  setup(props, context) {
+  setup() {
     const route = useESRoute()
     const esEventBus = useESEventBus()
     let curRouteName: RouteRecordName | null | undefined = ''

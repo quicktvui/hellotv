@@ -1,5 +1,6 @@
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
+import { PlayType } from '../../../pages/home/build-data/tab-content/tab-content-imp'
 
 export interface IMediaUrl {
   definition: string
@@ -8,6 +9,7 @@ export interface IMediaUrl {
 
 export interface IMediaList {
   id:string
+  type?:PlayType
   title?:string,
   subTitle?:string
   cover?:string

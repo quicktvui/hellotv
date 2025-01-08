@@ -5,6 +5,8 @@ import BuildConfig from '../../config/build-config'
 export const tabListUrl = BuildConfig.requestBaseUrl + '/home/tabs?packageName=' //tab
 //导航下内容接口
 export const tabContentUrl = BuildConfig.requestBaseUrl + '/home/tabs/${id}?packageName=${packageName}&page=${page}&limit=${limit}'
+//获取首页视频播放地址接口
+export const homePlayUrl = BuildConfig.requestBaseUrl +'/streams/${id}?packageName=${packageName}&type=${type}'
 
 //详情页接口
 export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
