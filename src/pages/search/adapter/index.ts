@@ -5,20 +5,35 @@ import { Keyword, KeywordType, TabItemType, ContentType } from './interface'
 /**
  * 构造关键词列表数据
  * @param rawData 原始数据
+ * @param mode 数据模式, hot 热门搜索、guess 猜你想搜、all 返回所有
  * @returns
  */
-export const buildKeywords = function (rawData: Suggestions): Keyword[] {
+export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all'): Keyword[] {
   const keywords: Keyword[] = []
 
-  // 热门搜索
-  rawData.hotKeywords.forEach((item) => {
-    keywords.push({ type: KeywordType.TEXT, text: item.keyword })
-  })
+  switch (mode) {
+    case 'hot':
+      rawData.hotKeywords.forEach((item) => {
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+      })
+      break
+    case 'guess':
+      rawData.guessKeywords.forEach((item) => {
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+      })
+      break
+    case 'all':
+      keywords.push({ type: KeywordType.TITLE, text: '猜你想搜', decoration: { bottom: 40 } })
+      rawData.guessKeywords.forEach((item) => {
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id, decoration: { bottom: 30 } })
+      })
 
-  // 猜你想搜
-  rawData.guessKeywords.forEach((item) => {
-    keywords.push({ type: KeywordType.TEXT, text: item.keyword })
-  })
+      keywords.push({ type: KeywordType.TITLE, text: '热门搜索', decoration: { top: 20, bottom: 40 } })
+      rawData.hotKeywords.forEach((item) => {
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id, decoration: { bottom: 30 } })
+      })
+      break
+  }
 
   return keywords
 }

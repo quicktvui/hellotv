@@ -102,8 +102,9 @@ watch(
  * @param page 页码
  */
 async function loadSuggestions(page: number = 1) {
-  const suggestions = await searchManager.getSuggestions(props.inputText.length > 0 ? 'guess' : 'hot', props.inputText, page, pageSize)
-  const keywords = buildKeywords(suggestions)
+  const mode = props.inputText.length > 0 ? 'guess' : 'hot'
+  const suggestions = await searchManager.getSuggestions(mode, props.inputText, page, pageSize)
+  const keywords = buildKeywords(suggestions, mode)
 
   if (page === 1) {
     curPage = 1
