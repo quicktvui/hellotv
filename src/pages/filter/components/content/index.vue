@@ -29,7 +29,7 @@
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
-            :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
+            :nextFocusName="{ left: 'sidebarList' }"
             :blockFocusDirections="['right', 'down']"
             :openPage="true"
             :listenBoundEvent="true"
@@ -62,24 +62,32 @@
         </qt-view>
       </qt-view>
     </scroll-view>
+
     <!-- 筛选条件记录 -->
     <qt-view
       :visible="showRecords"
       class="filter-main-conditions-record"
       :style="{ width: contentWidth, height: listRowHeight }"
-      :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }"
+      :gradientBackground="{ colors: ['#1A2029', '#161B24'], orientation: 0 }"
     >
       <qt-list-view :style="{ height: listRowHeight }" ref="recordListRef" horizontal :padding="'80,0,40,0'">
         <list-item-record :type="1" />
       </qt-list-view>
     </qt-view>
+
     <!-- 暂无数据 -->
     <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth, marginTop: listHeight / 2 }">
       <qt-image class="filter-main-box-img" :src="icEmpty"></qt-image>
       <qt-text class="filter-main-box-text" text="暂无数据" gravity="center"></qt-text>
     </qt-view>
+
     <!-- 全屏loading -->
-    <qt-view v-if="isLoading" class="filter-main-box" :style="{ width: contentWidth }">
+    <qt-view
+      v-if="isLoading"
+      class="filter-main-box"
+      :style="{ width: contentWidth }"
+      :gradientBackground="{ colors: ['#1A2029', '#00040B'], orientation: 0 }"
+    >
       <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
     </qt-view>
   </qt-view>
@@ -96,7 +104,6 @@ import ListItem from './list-item.vue'
 import ListItemRecord from './list-item-record.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
-import themeConfig from '../../../../config/theme-config'
 import config from '../../config'
 import filterManager from '../../../../api/filter/index'
 import launch from '../../../../tools/launch'
