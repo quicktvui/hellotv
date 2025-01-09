@@ -65,6 +65,9 @@ export const buildFilters = function (
     tertiaries.push(tertiary)
   })
 
+  // 优化内容区域焦点首次向上体验, 值需要全局唯一
+  tertiaries[tertiaries.length - 1].list[0].sid = '--sid--'
+
   return { primaries, secondaries, tertiaries }
 }
 

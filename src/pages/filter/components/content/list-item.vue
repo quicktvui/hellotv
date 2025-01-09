@@ -13,7 +13,7 @@
     :blockFocusDirections="['right']"
     @item-click="onListItemClick"
   >
-    <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" eventFocus eventClick>
+    <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" sid="${sid}" :focusable="true" eventFocus eventClick>
       <qt-view style="height: 40px; background-color: transparent" autoWidth :focusable="false" :duplicateParentState="true">
         <qt-text
           class="filter-main-conditions-list-row-item-text"

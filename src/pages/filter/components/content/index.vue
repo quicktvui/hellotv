@@ -9,7 +9,7 @@
             :style="{ height: listHeight }"
             ref="listRef"
             name="contentList"
-            :padding="'80,0,40,0'"
+            :padding="'56,0,40,0'"
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
@@ -30,6 +30,7 @@
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
             :nextFocusName="{ left: 'sidebarList' }"
+            :nextFocusUpSID="'--sid--'"
             :blockFocusDirections="['right', 'down']"
             :openPage="true"
             :listenBoundEvent="true"
