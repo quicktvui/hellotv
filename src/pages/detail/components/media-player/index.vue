@@ -249,7 +249,7 @@ import {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------onPlayerPlaying------------->>>>')
     }
-    // startProgressTimer()
+    startProgressTimer()
     emits('onPlayerPlaying')
     //屏蔽再次播放同一个视频时视频从历史记录起播
     const curPlayingMedia:ESMediaItem | null | undefined = playerManager.value?.getPlayingMedia()
