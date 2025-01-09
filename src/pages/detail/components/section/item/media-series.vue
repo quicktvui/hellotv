@@ -14,7 +14,6 @@
       ref="mediaSeriesRef"
       class="media-series"
       :clipChildren="false"
-      markColor="#00D9D9"
       :focusable="false"
       :visible="visible"
       :textColors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
@@ -27,7 +26,8 @@
       @itemFocused="onItemFocused"
       @groupItemFocused="onGroupItemFocused">
       <template v-slot:default>
-        <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" :focusScale="1">
+        <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" 
+          :focusScale="ThemeConfig.placeHolderFocusScale">
           <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
           <qt-view class="media-series-item-info" duplicateParentState>
             <qt-text class="media-series-item-text" text="${text}" :lines="2" :ellipsizeMode="2"

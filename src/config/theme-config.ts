@@ -29,14 +29,15 @@ export default {
   rootBgGradientColor: ['#00040B', '#1C222B'],
 
   //按钮背景颜色
-  btnGradientColor: ['#0FFFFFFF', '#1FFFFFFF'],
+  btnGradientColor: ["#19FFFFFF", "#19FFFFFF"],
   btnGradientSelectColor: [],
-  btnGradientFocusColor: ['#0057FF', '#00C7FF'],
+  btnGradientFocusColor: ["#FFFFFF", "#FFFFFF"],
   
   //普通按钮文字，文字---颜色
-  textColor: "#BFBFBF",
-  textSelectColor: "#00D9D9",
-  textFocusColor: "#0E0E0E",
+  textColor: "#8cffffff",
+  textSelectColor: "#FFFFFF",
+  textFocusColor: "#000000",
+  
 
   //瀑布流格子选中背景色
   tabContentBgGradientFocusColor: ['#157AFC', '#157AFC'],

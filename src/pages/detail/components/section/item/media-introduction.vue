@@ -23,7 +23,7 @@
       @click="onClick"
       @focus="onFocus"
       :style="{ 'focus-border-color': isFree ? '#FFFFFF' : '#FFD97C' }"
-      :focusScale="1.03">
+      :focusScale="ThemeConfig.placeHolderFocusScale">
 
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true">
@@ -104,6 +104,8 @@
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { IMedia } from '../../../adapter/interface'
+import ThemeConfig from "../../../../../config/theme-config";
+import { toast } from '@extscreen/es3-core';
   const emits = defineEmits(['onIntroductionFocus'])
   const router = useESRouter()
   let title = ref<string>('')
@@ -149,13 +151,14 @@ import { IMedia } from '../../../adapter/interface'
   }
   .introduction-box {
     width: 810px;
-    height: 230px;
+    height: 250px;
     padding-left: 20px;
     padding-top: 15px;
-    margin-top: 10px;
+    margin-top: 15px;
     padding-bottom: 10px;
     border-radius: 8px;
     focus-border-radius: 8px;
+    background-color: transparent;
     focus-background-color: rgba(255, 255, 255, 0.1);
     .item-vip {
       margin-right: 20px;
@@ -185,12 +188,13 @@ import { IMedia } from '../../../adapter/interface'
       width: 60px;
       height: 32px;
       flex-direction: row;
-      justify-content: center
+      justify-content: center;
+      background-color: rgba(255,255,255,0.06);
     }
     .item-score-text {
       top: -1px;
       font-size: 24px;
-      color: #00D9D9;
+      color: #ffffff;
       width: 60px;
       height: 32px;
     }
@@ -207,12 +211,14 @@ import { IMedia } from '../../../adapter/interface'
       width: 814px;
       color: rgba(255, 255, 255, 0.6);
       focus-color: white;
+      margin-top: 5px;
     }
     .item-desc-text {
       color: rgba(255, 255, 255, 0.6);
       focus-color: white;
       width: 790px;
       height: 118px;
+      margin-top: 5px;
     } 
   }
 }

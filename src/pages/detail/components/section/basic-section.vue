@@ -24,7 +24,7 @@
           class="resource-placeholder" 
           :focusable="true"
           v-if="isShowResourcePlaceholder"
-          :focusScale="1.05" 
+          :focusScale="ThemeConfig.placeHolderFocusScale"
           @click="onMediaResourceClicked">
           <qt-image class="resource-placeholder-img" :src=resourcePlaceholderUrl />
         </qt-view>
@@ -55,6 +55,7 @@ import PlayerPlaceholder from './item/player-placeholder.vue'
 import ButtonMenu from './item/button-menu.vue'
 import MediaSeries from './item/media-series.vue'
 import detailManager from '../../../../api/detail/detail-manager'
+import ThemeConfig from "../../../../config/theme-config";
 import config from './config';
   const emits = defineEmits([
     'onIntroductionFocus',

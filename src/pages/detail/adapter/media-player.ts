@@ -1,4 +1,5 @@
 import { IMedia, IMediaItem, IMediaUrl } from "./interface";
+import { isTrySee } from "./index";
 import { ESMediaItem } from "@extscreen/es3-player-manager";
 import {
   ESIPlayerInterceptor,
@@ -92,7 +93,7 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
     const mediaItem = params[0] as ESMediaItem
     console.log(mediaItem,'mediaItemmediaItemmediaItem')
     return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
-      if(mediaItem.vipType == '0'){
+      if(mediaItem.vipType == '0' || (mediaItem.vipType != '0' && isTrySee)){
         detailManager.getPlayUrl(mediaItem.id + "",'2').then((res) => {
           let mediaUrlList = res
           mediaUrlList = [
@@ -113,7 +114,7 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
           resolve(result)
         }).catch(() => {reject({errorCode: -1,errorMessage: '播放地址错误'})})
       }else{
-        reject({errorCode: -1,errorMessage: '请付费后观看'})
+        reject({errorCode: -2000,errorMessage: '请付费后观看'})
       }
     })
   }
