@@ -184,12 +184,13 @@ import introductionBg from "../../assets/detail/ic_introduction_bg.png"
         width: 60px;
         height: 32px;
         flex-direction: row;
-        justify-content: center
+        justify-content: center;
+        background-color: rgba(255,255,255,0.06);
       }
       .item-score-text {
         top: -1px;
         font-size: 24px;
-        color: #00D9D9;
+        color: #ffffff;
         width: 60px;
         height: 32px;
       }

@@ -13,7 +13,7 @@ import {
   } from "@quicktvui/quicktvui3";
 import { IMedia, IMediaSeriesType, IMediaItem, IRecommendItem } from './interface'
 import ThemeConfig from "../../../config/theme-config";
-
+export const isTrySee = false // 根据自有业务判断是否试看
 //build waterfall初始数据
 export function buildWaterfall(): QTWaterfall {
   const waterfall: QTWaterfall = {
@@ -209,7 +209,7 @@ export function buildMediaSeriesGroup(): QTMediaSeriesGroup {
     itemWidth: 213,
     itemHeight: 52,
     itemGap: 16,
-    mark: { color: "#00D9D9" },
+    mark: { color: "#00FFFFFF" },
     textColor: {
       normal: ThemeConfig.textColor,
       focused: ThemeConfig.textFocusColor,
@@ -221,7 +221,7 @@ export function buildMediaSeriesGroup(): QTMediaSeriesGroup {
       padding: [0, 0],
     },
     background: {
-      color: ["#1Affffff", "#1Affffff"],
+      color: ThemeConfig.btnGradientColor,
       cornerRadius: [8, 8, 8, 8],
       padding: [0, 0],
       stroke: {
@@ -265,7 +265,7 @@ export function buildMediaSeriesList(list: Array<IMediaItem>): Array<QTMediaSeri
   return itemList;
 }
 export function buildMediaSeries(item: IMediaItem): QTMediaSeries {
-  const vip = true
+  const vip = item.vipType == 0 ? false : true
   if (vip) {
     return {
       id: item.id,
@@ -278,6 +278,7 @@ export function buildMediaSeries(item: IMediaItem): QTMediaSeries {
         enable: true,
         text: "VIP",
       },
+      vipType: item.vipType
     };
   } else {
     return {
@@ -290,6 +291,7 @@ export function buildMediaSeries(item: IMediaItem): QTMediaSeries {
         enable: false,
         text: "VIP",
       },
+      vipType: item.vipType
     };
   }
 }

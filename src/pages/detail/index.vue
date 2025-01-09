@@ -55,8 +55,10 @@
 <script setup lang='ts' name='detail'>
 import { ref,nextTick } from 'vue'
 import {
+  ESKeyCode,
   ESKeyEvent,
   ESLogLevel,
+  toast,
   useESEventBus,
   useESLog,
   useESRuntime,
@@ -110,12 +112,12 @@ import MediaPlayer from './components/media-player/index.vue'
   }
   let currentPlayIndex = -1 // 当前播放视频的index
   const mediaPlayerRef = ref<IMediaPlayer>()
-  let changePlayerStateTimer: any = -1
   let lastWindowType: ESPlayerWindowType
   let enterByFullButton = 0; // 0 ,placeholder,1 : fullBtn,2 : mediaItem
   let detailFocusTimer: any = null
   let waterfallScrollY = 0
   let changePlayerVisibleTimer: any = -1
+  let mediaSeriesData: Array<any> = []
   //  生命周期
   //  ***************************初始化入口 onESCreate***************************
   const onESCreate = (params) => {
@@ -131,7 +133,10 @@ import MediaPlayer from './components/media-player/index.vue'
     }
     initEventBus()
     if (isStopped) {
-      mediaPlayerRef.value?.resume()
+      let curIndex = currentPlayIndex > -1 ? currentPlayIndex : 0
+      if (mediaSeriesData[curIndex].vipType == 0) {
+        mediaPlayerRef.value?.resume()
+      }
     }
     isPaused = false;
     isStopped = false;
@@ -173,7 +178,7 @@ import MediaPlayer from './components/media-player/index.vue'
     detailManager.getMediaDetail(currenId.value).then((res:IMedia) => {
       console.log(res,'getDetailgetDetailgetDetail') 
       media = res
-      media.mediaSeriesType = 2 //设置选集类型
+      media.mediaSeriesType = 1 //设置选集类型
       basicSectionRef.value?.init(media) //初始化基本介绍板块数据
       nextTick(async () => {
         waterfallRef.value?.scrollToTop()
@@ -223,10 +228,12 @@ import MediaPlayer from './components/media-player/index.vue'
   const initEventBus = () => {
     eventbus.on('onMenuFullButtonClick', onMenuFullButtonClick)
     eventbus.on('onMenuFavouriteButtonClick', onMenuFavouriteButtonClick)
+    eventbus.on('onMenuVIPButtonClick', onMenuVIPButtonClick)
   }
   const releaseEventBus = () => {
     eventbus.off('onMenuFullButtonClick', onMenuFullButtonClick)
     eventbus.off('onMenuFavouriteButtonClick', onMenuFavouriteButtonClick)
+    eventbus.off('onMenuVIPButtonClick', onMenuVIPButtonClick)
   }
   // waterfall 回调
   const onScroll = (offsetX: number, scrollY: number) => {
@@ -253,7 +260,6 @@ import MediaPlayer from './components/media-player/index.vue'
     )
     switch (sectionIndex) {
       case 1:
-        router.push("introduction")
         break
       case 2:
         router.push({
@@ -267,28 +273,15 @@ import MediaPlayer from './components/media-player/index.vue'
     }
   }
   const onScrollYGreaterReference = () => {
-    log.d(TAG, "----onScrollY---onScrollYGreaterReference----->>>>")
-    clearTimeout(changePlayerStateTimer)
-    if (mediaPlayerRef.value?.getWindowType() ==
-      ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
-      nextTick(() => {
-        changePlayerStateTimer = setTimeout(() => {
-          mediaPlayerRef.value?.setFloatWindow()
-        }, 100)
-      })
+    if (mediaPlayerRef.value?.getWindowType() == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_SMALL) {
+      mediaPlayerRef.value?.setFloatWindow()
     }
     basicSectionRef.value?.setAutofocus(false)
   }
   const onScrollYLesserReference = () => {
-    log.d(TAG, "----onScrollY---onScrollYLesserReference----->>>>")
-    clearTimeout(changePlayerStateTimer)
     if (mediaPlayerRef.value?.getWindowType() ==
       ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT || mediaPlayerRef.value?.getLoadLow()) {
-      nextTick(() => {
-        changePlayerStateTimer = setTimeout(() => {
-          mediaPlayerRef.value?.setSmallWindow()
-        }, 200)
-      })
+      mediaPlayerRef.value?.setSmallWindow()
     }
   }
   // header-setion 回调
@@ -297,12 +290,9 @@ import MediaPlayer from './components/media-player/index.vue'
       log.d(TAG, "-------onTopButtonFocus----->>>>>", e)
     }
     waterfallRef.value?.scrollToTop()
-    setTimeout(() => {
-      if (mediaPlayerRef.value?.getWindowType() ==
-        ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
-        mediaPlayerRef.value?.setSmallWindow()
-      }
-    }, 100)
+    if(mediaPlayerRef.value?.getWindowType() == ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FLOAT) {
+      mediaPlayerRef.value?.setSmallWindow()
+    }
     cancelDetailRequestFocusTimer()
   }
   const cancelDetailRequestFocusTimer = () => {
@@ -333,6 +323,9 @@ import MediaPlayer from './components/media-player/index.vue'
         .then(()=> {}).catch(()=>{}) 
     } 
   }
+  const onMenuVIPButtonClick = () => {
+    toast.showToast('去付费')
+  }
   // basic-setion 回调
   const onIntroductionFocus = (focused: boolean) => {
     if(focused) {
@@ -345,6 +338,7 @@ import MediaPlayer from './components/media-player/index.vue'
     }
     //全屏菜单数据
     eventbus.emit('onMediaListItemLoad', page, data)
+    mediaSeriesData = mediaSeriesData.concat(data)
     mediaPlayerRef.value?.addMediaItemList(page, data)
     if (currentPlayIndex >= 0) {
       mediaPlayerRef.value?.playMediaItemByIndex(currentPlayIndex)
@@ -358,8 +352,12 @@ import MediaPlayer from './components/media-player/index.vue'
       log.d(TAG, "-------onMediaListItemClicked----->>>>>" + index, data)
     }
     if (basicSectionRef.value?.getMediaSelectedPosition() == index) {
-      enterByFullButton = 2
-      mediaPlayerRef.value?.setFullWindow()
+      if (data && data.vipType == 0) {
+        enterByFullButton = 2
+        mediaPlayerRef.value?.setFullWindow()
+      } else {
+        toast.showToast('去支付')
+      }
       return;
     }
     if (data.id != null) {
@@ -379,12 +377,19 @@ import MediaPlayer from './components/media-player/index.vue'
     }
     eventbus.emit("onPlayerPlaceholderFocus", focused)
   }
+  //小窗播放器placeholeder的点击事件
   const onPlayerPlaceholderClick = () => {
-    mediaPlayerRef.value?.setFullWindow()
-    enterByFullButton = 0;
+    let curIndex = currentPlayIndex > -1 ? currentPlayIndex : 0
+    //判断当前分集是否免费
+    if(mediaSeriesData[curIndex].vipType == 0){
+      mediaPlayerRef.value?.setFullWindow()
+      enterByFullButton = 0;
+    }else{
+      toast.showToast('去支付')
+    }
   }
   // 播放器
-  const onPlayerPlayMedia = () => {
+  const onPlayerPlayMedia = () => { // 播放器媒体列表开始播放回调
     const playingIndex = mediaPlayerRef.value?.getPlayingMediaIndex() ?? -1
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "----onMediaListItemClicked---onPlayerPlayMedia---->>>>>" + playingIndex)
@@ -394,10 +399,10 @@ import MediaPlayer from './components/media-player/index.vue'
       basicSectionRef.value?.setMediaSeriesSelected(playingIndex)
     }
   }
-  const onPlayerPlaying = () => {
+  const onPlayerPlaying = () => {// 播放器开始播放回调  隐藏占位图
     basicSectionRef.value?.showPlayerPlaceholderImg(false)
   }
-  const onPlayerWindowTypeChanged = (windowType: ESPlayerWindowType) => {
+  const onPlayerWindowTypeChanged = (windowType: ESPlayerWindowType) => { //播放器窗口改变回调
     log.d(TAG, '-------onPlayerWindowTypeChanged-------->>>>' + windowType)
     switch (windowType) {
       case ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL:
@@ -442,6 +447,14 @@ import MediaPlayer from './components/media-player/index.vue'
   }
   //  按键
   const onKeyDown = (keyEvent: ESKeyEvent) => {
+    if ((keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_CENTER || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_ENTER)
+      && mediaPlayerRef.value?.getWindowType() === ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
+      let curIndex = currentPlayIndex > -1 ? currentPlayIndex : 0
+      if (mediaSeriesData[curIndex].vipType != 0) {
+        toast.showToast('去支付')
+        return true
+      }
+    }
     if (mediaPlayerRef.value?.onKeyDown(keyEvent)) {
       return true
     }

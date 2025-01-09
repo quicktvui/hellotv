@@ -14,7 +14,8 @@
       v-if="showBottomTip"
       :gradientBackground="{colors:['#00000000','#E5000000']}"
       :duplicateParentState="true">
-      <span>按【OK键】全屏观看</span>
+      <span :visible="isTrySee" class="tip-text1" >正在试看</span>
+      <span class="tip-text2">按【OK键】全屏观看</span>
     </qt-view>
     <qt-view 
       class="media-player-loading" 
@@ -63,6 +64,7 @@ import {
   ESPlayerWindowType
 } from "@extscreen/es3-player";
 import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
+import { isTrySee } from '../../adapter/index'
 import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_placeholder.png"
   const TAG = 'MediaPlayerSmallView'
   let enabled = true
@@ -236,7 +238,16 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     width: 890px;
     position: absolute;
     bottom: 0;
-    span {
+    .tip-text1{
+      position: absolute;
+      width: 300px;
+      height: 35px;
+      left: 25px;
+      bottom: 25px;
+      font-size: 30px;
+      color: white;
+    }
+    .tip-text2{
       position: absolute;
       width: 500px;
       height: 35px;
