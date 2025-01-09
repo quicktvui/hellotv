@@ -41,6 +41,11 @@ const routes = [
     name: 'introduction',
     component: () => import('./pages/introduction/index.vue'),
     type: ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
+  {
+    path: '/detail-full-screen',
+    name: 'detail-full-screen',
+    component: () => import('./pages/detail-full-screen/index.vue')
   }
 ]
 
