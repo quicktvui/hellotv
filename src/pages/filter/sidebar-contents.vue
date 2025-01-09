@@ -1,7 +1,9 @@
 <template>
   <qt-view class="filter" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+    <!-- 焦点占位, 解决页面跳焦的问题 -->
+    <qt-view class="filter-focus-placeholder" :focusable="true"></qt-view>
     <!-- 顶部按钮 -->
-    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" />
+    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" :blockFocusDirections="['left', 'up']" />
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表 -->
@@ -55,6 +57,8 @@ let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
 function onListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastPosition) {
+    // 禁止焦点向右
+    setNextFocusNameRight('')
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
@@ -82,6 +86,15 @@ defineExpose({ onESCreate, onBackPressed })
   width: 1920px;
   height: 1080px;
   background-color: transparent;
+}
+
+.filter-focus-placeholder {
+  width: 1px;
+  height: 1px;
+  background-color: transparent;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 
 .filter-body {
