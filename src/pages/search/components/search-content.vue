@@ -30,47 +30,9 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}" eventFocus eventClick>
-          <qt-image
-            class="search-content-item-img-h"
-            src="${cover}"
-            :postDelay="100"
-            :enableFocusBorder="true"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-image>
-          <qt-text
-            class="search-content-item-text"
-            style="width: 410px"
-            text="${title}"
-            gravity="center|start"
-            :lines="1"
-            :ellipsizeMode="4"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-text>
-        </qt-view>
+        <search-content-item-h :type="ContentType.HORIZONTAL" />
         <!-- 竖图 -->
-        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}" eventFocus eventClick>
-          <qt-image
-            class="search-content-item-img-v"
-            src="${cover}"
-            :postDelay="100"
-            :enableFocusBorder="true"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-image>
-          <qt-text
-            class="search-content-item-text"
-            style="width: 260px"
-            text="${title}"
-            gravity="center"
-            :lines="1"
-            :ellipsizeMode="4"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-text>
-        </qt-view>
+        <search-content-item-v :type="ContentType.VERTICAL" />
       </template>
     </qt-tabs>
   </qt-view>
@@ -81,6 +43,8 @@ import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
+import searchContentItemH from './search-content-item-h.vue'
+import searchContentItemV from './search-content-item-v.vue'
 import launch from '../../../tools/launch'
 import config from '../config'
 import searchManager from '../../../api/search/index'
@@ -169,84 +133,4 @@ function onTabMoveToBottomEnd() {
 }
 </script>
 
-<style lang="scss">
-.search-content {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-content-tips {
-  width: 1920px;
-  height: 50px;
-  background-color: transparent;
-  margin-top: 75px;
-  margin-left: 80px;
-  color: white;
-  font-size: 40px;
-}
-
-.search-content-tab {
-  height: 0px;
-  background-color: transparent;
-}
-
-.search-content-tab-page {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-content-tab-item {
-  height: 60px;
-  background-color: transparent;
-  border-radius: 30px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
-}
-
-.search-content-tab-item-text {
-  height: 60px;
-  background-color: transparent;
-  margin-left: 24px;
-  margin-right: 24px;
-  color: $text-normal-color;
-  font-size: 36px;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
-}
-
-.search-content-item-h {
-  width: 410px;
-  height: 276px;
-  background-color: transparent;
-  border-radius: 16px;
-}
-
-.search-content-item-img-h {
-  width: 410px;
-  height: 230px;
-  background-color: transparent;
-}
-
-.search-content-item-v {
-  width: 260px;
-  height: 414px;
-  background-color: transparent;
-  border-radius: 16px;
-}
-
-.search-content-item-img-v {
-  width: 260px;
-  height: 368px;
-  background-color: transparent;
-}
-
-.search-content-item-text {
-  height: 40px;
-  background-color: transparent;
-  margin-top: 11px;
-  color: $text-normal-color;
-  font-size: 30px;
-  focus-color: white;
-}
-</style>
+<style lang="scss" src="../scss/search-content.scss"></style>

@@ -14,12 +14,14 @@
 src/pages/search
 ├── README.md                   // 自述文件
 ├── adapter                     // 数据适配器
-│   ├── index.ts                // 相关函数
-│   └── interface.ts            // 相关类型
+│   ├── index.ts
+│   └── interface.ts
 ├── components                  // 页面组件
-│   ├── search-content.vue      // 内容
-│   ├── search-keyboard.vue     // 键盘
-│   └── search-keyword.vue      // 关键词
+│   ├── search-content.vue
+│   ├── search-keyboard.vue
+│   └── search-keyword.vue
+├── scss                        // 样式文件
+│   ├── search-content.scss
 ├── config.ts                   // 页面级配置
 └── three-columns.vue           // 三栏页面入口
 ```
