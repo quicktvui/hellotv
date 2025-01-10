@@ -17,9 +17,9 @@
         :focusScale="ThemeConfig.placeHolderFocusScale"
         eventFocus eventClick>
         <div showOnState="focused" flexStyle="${style}"
-         class="menu-list-item-bg"
-         duplicateParentState
-         gradientBackground="${gradientBackground}"/>
+          class="menu-list-item-bg"
+          duplicateParentState
+          gradientBackground="${gradientBackground}"/>
         <qt-view duplicateParentState class="menu-list-item-img" flexStyle="${iconStyle}">
           <img src="${focusIcon}" duplicateParentState showOnState="focused" flexStyle="${iconStyle}" :focusable="false"/>
           <img src="${icon}" duplicateParentState :showOnState="['normal','selected']" flexStyle="${iconStyle}" :focusable="false"/>
@@ -111,7 +111,7 @@ import config from '../config';
         gradientBackground: {colors: ['#FFE398', '#EEB364'], orientation: 6, cornerRadius: ThemeConfig.focusBorderCorner},
         icon: 'file://'+ic_vip_normal,
         focusIcon: 'file://'+ic_vip_focused,
-        style: config.buttonMenuSize == 'default' ? {width: 200,height: 140,} : {width: 200,height: 70},
+        style: config.buttonMenuSize == 'default' ? {width: 226,height: 140,} : {width: 226,height: 70},
         iconStyle: config.buttonMenuSize == 'default' ? {width: 46,height: 46,} : {width: 30,height: 30}
       },
     ]

@@ -1,12 +1,23 @@
 <template>
-  <div class='detail-full-screen' ref='detailRef'>
+  <qt-view class='detail-full-screen' ref='detailRef'>
     <!-- 播放器 -->
-    <media-player ref="mediaPlayerRef" @emStartPlay="emStartPlayFn" @onOver="onOverFn" />      
-  </div>
+    <!-- <media-player ref="mediaPlayerRef" @emStartPlay="emStartPlayFn" @onOver="onOverFn" />       -->
+    <!-- 页面内容 -->
+    <qt-view class="content">
+      <!-- 顶部按钮 -->
+      <top-view :logoRight='true' @focus="onTopBtnFocus"></top-view>
+      <!-- 详情页基本信息及按钮 -->
+       <media-info ref="mediaInfoRef"></media-info>
+    </qt-view>
+    <!-- 骨架屏 -->
+    <div class="skeleton" v-if="isShowSkeleton">
+      <img src="../../assets/detail-full-screen/skeleton.png" :focusable="false" />
+    </div>
+  </qt-view >
 </template>
     
 <script setup lang='ts' name='detail-full-screen'>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import {
 ESKeyCode,
 ESKeyEvent,
@@ -18,19 +29,61 @@ useESRuntime,
 } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import MediaPlayer from "./components/media-player.vue";
+import TopView from '../../components/top-view.vue'
+import MediaInfo from "./components/media-info.vue";
+import BuildConfig from '../../config/build-config'
+import detailManager from '../../api/detail/detail-manager'
+import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/interface'
 
   const TAG = 'DetailFullScreen'
   const log = useESLog()
   const runtime = useESRuntime()
   const router = useESRouter()
+  let deviceId = runtime.getRuntimeDeviceId()??''
+  let media: IMedia
   const mediaPlayerRef = ref()
+  const mediaInfoRef = ref()
+  let currentPlayIndex = -1 // 当前播放视频的index
   let currenId = ref('')
+  let isShowSkeleton = ref(true)
   
   //  生命周期
   //  ***************************初始化入口 onESCreate***************************
   const onESCreate = (params) => {
     currenId.value = params && params.id ? params.id : '1584863712586579969'
+    getDetail()
   }
+  //获取详情页数据
+  const getDetail = () => {
+    detailManager.getMediaDetail(currenId.value).then((res:IMedia) => {
+      console.log(res,'getDetailgetDetailgetDetail') 
+      media = res
+      media.mediaSeriesType = 1 //设置选集类型
+      mediaInfoRef.value?.init(media) //初始化基本介绍板块数据
+      nextTick(async () => {
+        //加载waterfall 板块数据
+        //获取播放历史
+        // detailManager.getRecordData(media.id, deviceId, 'history').then((result) => {
+        //   if(result){
+        //     media.history = result
+        //     currentPlayIndex = Math.min(Math.max((Number(result.episode)||0)-1, 0), Math.max(media.episodes-1, 0))
+        //     media._prevPlayIndex = currentPlayIndex
+        //   }else{
+        //     currentPlayIndex = 0
+        //     media._prevPlayIndex = currentPlayIndex
+        //   }
+        // }).catch(() => {
+        //   currentPlayIndex = 0
+        //   media._prevPlayIndex = currentPlayIndex
+        // })
+        // mediaPlayerRef.value?.play(media)
+        //延迟加载相关推荐列表数据更新相关推荐板块 不影响主页面展示速度
+        // getRecommendList(media.id)
+        isShowSkeleton.value = false
+      })
+    })
+  }
+  const onTopBtnFocus = () => {}
   const emStartPlayFn = () => {}
   const onOverFn = () => {}
 

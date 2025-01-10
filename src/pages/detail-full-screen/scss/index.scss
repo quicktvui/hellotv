@@ -9,5 +9,25 @@ $home-height:1080px;
   flex-direction: column;
   align-items: center;
   justify-content: center;
+  .content{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    background-color: transparent;
+  }
+  .skeleton{
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    background-color: transparent;
+    img{
+      width: 1920px;
+      height: 1080px;
+    }
+  }
 }
 

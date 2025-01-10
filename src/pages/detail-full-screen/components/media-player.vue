@@ -20,7 +20,7 @@ import { onBeforeUnmount, ref, onMounted, nextTick, toRaw } from 'vue'
 import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
 import BuildConfig from "../../../config/build-config";
 import detailManager from '../../../api/detail/detail-manager'
-import MediaPlayerView from '../../components/media/view/media-player-view.vue'
+import MediaPlayerView from '../../../components/media/view/media-player-view.vue'
   const TAG = 'DetailFullScreenMediaPlayer'
   
   const onPlayerPlayMedia = () => {}
