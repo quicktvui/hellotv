@@ -164,7 +164,7 @@ defineExpose({ onBackPressed })
 .search-keyboard-input-bottom {
   width: 466px;
   height: 1px;
-  background-color: rgba(255, 255, 255, 0.22);
+  background-color: rgba(255, 255, 255, 0.1);
   margin-top: 13px;
 }
 

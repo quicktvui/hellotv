@@ -1,31 +1,19 @@
 <template>
   <qt-view class="filter-main" :style="{ width: contentWidth }" :focusable="false">
-    <scroll-view
-      v-show="!isLoading"
-      class="filter-main-scroll"
-      ref="scrollRef"
-      :focusable="false"
-      :onScrollEnable="true"
-      makeChildVisibleType="none"
-    >
-      <qt-view style="background-color: transparent" :clipChildren="true">
-        <!-- 筛选条件、筛选记录 -->
+    <scroll-view class="filter-main-scroll" ref="scrollRef" :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
+      <qt-view v-show="!isLoading" style="background-color: transparent" :clipChildren="true">
+        <!-- 筛选条件 -->
         <qt-view v-if="showConditions" class="filter-main-conditions">
-          <!-- 筛选条件 -->
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
             ref="listRef"
             name="contentList"
-            :padding="'80,0,40,0'"
+            :padding="'56,0,40,0'"
             :enableSelectOnFocus="false"
             @item-focused="onListItemFocused"
           >
             <list-item :type="TertiaryType.LIST" :width="contentWidth" :height="listRowHeight" @onListItemClick="onListItemClick" />
-          </qt-list-view>
-          <!-- 筛选条件记录 -->
-          <qt-list-view v-show="showRecords" class="filter-main-conditions-list" ref="recordListRef" horizontal :padding="'80,0,40,0'">
-            <list-item-record :type="1" />
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
@@ -41,7 +29,8 @@
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
-            :nextFocusName="{ left: 'sidebarList', up: 'contentList' }"
+            :nextFocusName="{ left: 'sidebarList' }"
+            :nextFocusUpSID="'--sid--'"
             :blockFocusDirections="['right', 'down']"
             :openPage="true"
             :listenBoundEvent="true"
@@ -74,21 +63,39 @@
         </qt-view>
       </qt-view>
     </scroll-view>
-    <!-- 全屏loading -->
-    <qt-view v-if="isLoading" class="filter-main-box" :style="{ width: contentWidth }">
-      <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
+
+    <!-- 筛选条件记录 -->
+    <qt-view
+      :visible="showRecords"
+      class="filter-main-conditions-record"
+      :style="{ width: contentWidth, height: listRowHeight }"
+      :gradientBackground="{ colors: ['#1A2029', '#161B24'], orientation: 0 }"
+    >
+      <qt-list-view :style="{ height: listRowHeight }" ref="recordListRef" horizontal :padding="'80,0,40,0'">
+        <list-item-record :type="1" />
+      </qt-list-view>
     </qt-view>
+
     <!-- 暂无数据 -->
     <qt-view v-if="isEmpty" class="filter-main-box" :style="{ width: contentWidth, marginTop: listHeight / 2 }">
       <qt-image class="filter-main-box-img" :src="icEmpty"></qt-image>
       <qt-text class="filter-main-box-text" text="暂无数据" gravity="center"></qt-text>
+    </qt-view>
+
+    <!-- 全屏loading -->
+    <qt-view
+      v-if="isLoading"
+      class="filter-main-box"
+      :style="{ width: contentWidth }"
+      :gradientBackground="{ colors: ['#1A2029', '#00040B'], orientation: 0 }"
+    >
+      <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
     </qt-view>
   </qt-view>
 </template>
 
 <script setup lang="ts" name="FilterContent">
 import { ref, nextTick } from 'vue'
-import { useESToast } from '@extscreen/es3-core'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
@@ -109,7 +116,6 @@ const cfgGridItemMode = ref<number>(config.gridItemMode)
 const cfgGridSpanCount = ref<number>(config.gridSpanCount)
 const cfgGridContentLimit = ref<number>(config.gridContentLimit)
 
-const toast = useESToast()
 const scrollRef = ref<ESIScrollView>()
 const contentWidth = ref<number>(
   (cfgGridItemMode.value === 1 && cfgGridSpanCount.value === 4) || (cfgGridItemMode.value === 2 && cfgGridSpanCount.value === 5)
@@ -192,12 +198,12 @@ function onGridItemFocused(evt) {
     if (evt.position >= cfgGridSpanCount.value) {
       if (gridScrollY.value === 0) {
         // 筛选记录
-        const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { right: 30 } }))
+        const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { top: 10, right: 30 } }))
         if (records.length > 0) {
-          recordListRef.value?.init(records)
           showRecords.value = true
+          recordListRef.value?.init(records)
         }
-        scrollRef.value?.scrollToWithOptions(0, listHeight.value, 300)
+        scrollRef.value?.scrollToWithOptions(0, listHeight.value - (showRecords.value ? listRowHeight.value : 0), 300)
         gridScrollY.value = 1
       }
     } else {
@@ -225,6 +231,8 @@ let loadingTimer: any = -1
 function loadContents(query: string, resetFilters?: boolean, hideFilters?: boolean) {
   isEmpty.value = false
   showRecords.value = false
+  gridScrollY.value = 0
+  scrollRef.value?.scrollToWithOptions(0, 0, 300)
 
   if (resetFilters) {
     isLoading.value = true
@@ -278,7 +286,7 @@ function onGridLoadMore() {
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
       if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
-        gridData.value.push({ type: 1003, decoration: { bottom: 30 } })
+        gridData.value.push({ type: 1003, decoration: { bottom: showConditions.value && reqQuery.length > 0 ? 100 : 30 } })
       }
       gridRef.value?.stopPage()
     }
@@ -339,6 +347,12 @@ defineExpose({ init, loadContents, onBackPressed })
 
 .filter-main-conditions-list {
   background-color: transparent;
+}
+
+.filter-main-conditions-record {
+  background-color: transparent;
+  position: absolute;
+  top: 0px;
 }
 
 .filter-main-contents {

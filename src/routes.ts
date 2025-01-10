@@ -1,6 +1,6 @@
+import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
 import detail from './pages/detail/index.vue'
-import { ESRouteType } from "@extscreen/es3-router";
 
 import test from './pages/m-test.vue'
 
@@ -47,8 +47,13 @@ const routes = [
     path: '/introduction',
     name: 'introduction',
     component: () => import('./pages/introduction/index.vue'),
-    type: ESRouteType.ES_ROUTE_TYPE_DIALOG,
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
   },
+  {
+    path: '/detail-full-screen',
+    name: 'detail-full-screen',
+    component: () => import('./pages/detail-full-screen/index.vue')
+  }
 ]
 
 export default routes

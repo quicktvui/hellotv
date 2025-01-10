@@ -4,8 +4,10 @@ import { QTWaterfallFlexStyle, QTListViewItemDecoration } from '@quicktvui/quick
  * 关键词类型
  */
 export enum KeywordType {
+  // 标题
+  TITLE = 1003,
   // 文本
-  TEXT = 1
+  TEXT = 2
 }
 
 /**

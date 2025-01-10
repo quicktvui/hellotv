@@ -5,7 +5,7 @@
       v-if='!$slots.topBtnItem'
       ref='topSearchBtnRef'
       name='topSearchBtn'
-      style='width: 145px;height: 60px;margin-left: 10px;margin-right: 10px;'
+      style='width: 145px;height: 60px;margin-right: 10px;'
       :nextFocusDownSID='downSid'
       :focusable='true'
       :iconLeft='true'

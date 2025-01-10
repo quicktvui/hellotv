@@ -1,13 +1,16 @@
 <template>
   <qt-view class="filter" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+    <!-- 焦点占位, 解决页面跳焦的问题 -->
+    <qt-view class="filter-focus-placeholder" :focusable="true"></qt-view>
     <!-- 顶部按钮 -->
-    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" />
+    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" :blockFocusDirections="['left', 'up']" />
     <!-- 内容主体 -->
     <scroll-view name="filterScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true" :initialContentOffset="210">
       <qt-view class="filter-body" :clipChildren="true">
         <!-- 筛选列表扩展项 -->
         <filter-expand
           ref="expandRef"
+          :blockFocusDir="expandBlockFocusDir"
           :singleSelectPos="expandSinglePos"
           :expandAvailable="expandAvailable"
           :triggerTask="triggerTask"
@@ -46,6 +49,7 @@ const router = useESRouter()
 // 扩展列表
 const expandRef = ref()
 const expandSinglePos = ref<number>(0)
+const expandBlockFocusDir = ref()
 const expandAvailable = ref<boolean>(false)
 // 筛选列表
 const sidebarRef = ref()
@@ -75,6 +79,9 @@ function onESCreate(params: { primaryId: string }) {
 
 function loadFilters(primaryId: string, initExpand?: boolean) {
   filterManager.getFilters(primaryId).then((filters) => {
+    // 设置焦点向右方向
+    setExpandNextFocusNameRight('sidebarList')
+
     const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
     // 初始化一级列表
     if (initExpand) {
@@ -91,6 +98,8 @@ let lastExtPosition = expandSinglePos.value
 let extListTimer: any = -1
 function onExtListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastExtPosition) {
+    // 禁止焦点向右
+    setExpandNextFocusNameRight('')
     clearTimeout(extListTimer)
     extListTimer = setTimeout(() => {
       lastExtPosition = evt.position
@@ -106,6 +115,8 @@ function onListItemFocused(evt) {
     expandAvailable.value = evt.item.type === SecondaryType.FILTER_TITLE
 
     if (evt.position != lastPosition) {
+      // 禁止焦点向右
+      setNextFocusNameRight('')
       clearTimeout(listTimer)
       listTimer = setTimeout(() => {
         lastPosition = evt.position
@@ -113,6 +124,11 @@ function onListItemFocused(evt) {
       }, 300)
     }
   }
+}
+
+function setExpandNextFocusNameRight(s: string) {
+  expandBlockFocusDir.value = s === '' ? ['right'] : []
+  expandRef.value?.setNextFocusNameRight(s)
 }
 
 function setNextFocusNameRight(s: string) {
@@ -134,6 +150,15 @@ defineExpose({ onESCreate, onBackPressed })
   width: 1920px;
   height: 1080px;
   background-color: transparent;
+}
+
+.filter-focus-placeholder {
+  width: 1px;
+  height: 1px;
+  background-color: transparent;
+  position: absolute;
+  top: 0px;
+  left: 0px;
 }
 
 .filter-body {

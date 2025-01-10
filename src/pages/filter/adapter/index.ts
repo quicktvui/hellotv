@@ -34,9 +34,9 @@ export const buildFilters = function (
 
   // 二级列表, 左侧筛选项
   const secondaries: Secondary[] = [
-    // { type: 1, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
+    // { type: SecondaryType.TITLE, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
     // {
-    //   type: 2,
+    //   type: SecondaryType.FILTER,
     //   id: '',
     //   name: '筛选',
     //   icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
@@ -64,6 +64,9 @@ export const buildFilters = function (
     tertiary.list.unshift({ type: ListItemType.TEXT, id: `t-${index}`, name: item.groupName })
     tertiaries.push(tertiary)
   })
+
+  // 优化内容区域焦点首次向上体验, 值需要全局唯一
+  tertiaries[tertiaries.length - 1].list[0].sid = '--sid--'
 
   return { primaries, secondaries, tertiaries }
 }

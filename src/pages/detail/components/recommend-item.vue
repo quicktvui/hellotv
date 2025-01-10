@@ -4,7 +4,7 @@
     layout="${layout}" 
     name="detail-recommend-item" 
     :focusable="true" 
-    :focusScale="1" 
+    :focusScale="ThemeConfig.placeHolderFocusScale"
     eventFocus 
     eventClick>
     <!-- 海报图 -->
@@ -71,6 +71,7 @@
 </template>
   
 <script setup lang='ts' name='RecommendItem'>
+import ThemeConfig from "../../../config/theme-config";
 </script>
   
 <style lang='scss' scoped>
