@@ -1,6 +1,9 @@
 export default {
   //首页播放器sid
   homeBgPlaySid: 'bg-player',
+  //4k section item 名称
+  world4kSectionItemName:'home-4k-list-section-item',
+  worldSmall4kSectionItemName:'home-small-4k-list-section-item',
   //首页内容请求数量
   sectionLoadLimit: 10,
   //板块间距

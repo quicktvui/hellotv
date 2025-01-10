@@ -37,6 +37,13 @@ const routes = [
     // component: ()=>import("./pages/detail/index.vue"),
   },
   {
+    path: '/detail',
+    name: 'series_view',
+    component: detail
+    // component: ()=>import("./pages/detail/index.vue"),
+  },
+
+  {
     path: '/introduction',
     name: 'introduction',
     component: () => import('./pages/introduction/index.vue'),

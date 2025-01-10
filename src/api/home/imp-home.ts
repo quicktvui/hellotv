@@ -1,4 +1,4 @@
-import { QTTab, QTTabPageData } from '@quicktvui/quicktvui3'
+import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
 
 export interface HomeApi {
   /**
@@ -27,6 +27,12 @@ export interface HomeApi {
    */
   getHomePlayUrl(id: string,type:number): Promise<object>
 
-
+  /**
+   * 获取 4K 世界数据
+   * @param content4kId
+   * @param size
+   * @param type WATERFALL_SECTION type
+   */
+  get4KSection(content4kId:string,size:number,type:number):Promise<Array<QTWaterfallItem>>
 }
 

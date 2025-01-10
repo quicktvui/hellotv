@@ -1,74 +1,77 @@
 <template>
-  <qt-view class="search-content">
+  <qt-view class='search-content'>
     <!-- 提示 -->
-    <qt-text v-if="showTips && !lockTips" class="search-content-tips" :text="tips" gravity="center|start" typeface="bold"></qt-text>
+    <qt-text v-if='showTips && !lockTips' class='search-content-tips' :text='tips'
+             gravity='center|start' typeface='bold'></qt-text>
     <!-- 内容 -->
     <qt-tabs
-      ref="tabRef"
-      tabNavBarClass="search-content-tab"
-      tabPageClass="search-content-tab-page"
-      :autoHandleBackKey="true"
+      ref='tabRef'
+      tabNavBarClass='search-content-tab'
+      tabPageClass='search-content-tab-page'
+      :autoHandleBackKey='true'
       :contentNextFocus="{ left: 'keywordList' }"
-      @onTabPageLoadData="onTabPageLoadData"
-      @onTabPageItemClick="onTabPageItemClick"
-      @onTabMoveToTopStart="onTabMoveToTopStart"
-      @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+      @onTabPageLoadData='onTabPageLoadData'
+      @onTabPageItemClick='onTabPageItemClick'
+      @onTabMoveToTopStart='onTabMoveToTopStart'
+      @onTabMoveToBottomEnd='onTabMoveToBottomEnd'
     >
       <!-- Tab -->
       <template v-slot:tab-item>
-        <qt-view class="search-content-tab-item" :type="TabItemType.TEXT" :focusable="true">
+        <qt-view class='search-content-tab-item' :type='TabItemType.TEXT' :focusable='true'>
           <qt-text
-            class="search-content-tab-item-text"
+            class='search-content-tab-item-text'
             autoWidth
-            text="${text}"
-            gravity="center|start"
-            :focusable="false"
-            :duplicateParentState="true"
+            text='${text}'
+            gravity='center|start'
+            :focusable='false'
+            :duplicateParentState='true'
           ></qt-text>
         </qt-view>
       </template>
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <qt-view class="search-content-item-h" :type="ContentType.HORIZONTAL" :focusable="true" layout="${layout}" eventFocus eventClick>
+        <qt-view class='search-content-item-h' :type='ContentType.HORIZONTAL' :focusable='true'
+                 layout='${layout}' eventFocus eventClick>
           <qt-image
-            class="search-content-item-img-h"
-            src="${cover}"
-            :postDelay="100"
-            :enableFocusBorder="true"
-            :focusable="false"
-            :duplicateParentState="true"
+            class='search-content-item-img-h'
+            src='${cover}'
+            :postDelay='100'
+            :enableFocusBorder='true'
+            :focusable='false'
+            :duplicateParentState='true'
           ></qt-image>
           <qt-text
-            class="search-content-item-text"
-            style="width: 410px"
-            text="${title}"
-            gravity="center|start"
-            :lines="1"
-            :ellipsizeMode="4"
-            :focusable="false"
-            :duplicateParentState="true"
+            class='search-content-item-text'
+            style='width: 410px'
+            text='${title}'
+            gravity='center|start'
+            :lines='1'
+            :ellipsizeMode='4'
+            :focusable='false'
+            :duplicateParentState='true'
           ></qt-text>
         </qt-view>
         <!-- 竖图 -->
-        <qt-view class="search-content-item-v" :type="ContentType.VERTICAL" :focusable="true" layout="${layout}" eventFocus eventClick>
+        <qt-view class='search-content-item-v' :type='ContentType.VERTICAL' :focusable='true'
+                 layout='${layout}' eventFocus eventClick>
           <qt-image
-            class="search-content-item-img-v"
-            src="${cover}"
-            :postDelay="100"
-            :enableFocusBorder="true"
-            :focusable="false"
-            :duplicateParentState="true"
+            class='search-content-item-img-v'
+            src='${cover}'
+            :postDelay='100'
+            :enableFocusBorder='true'
+            :focusable='false'
+            :duplicateParentState='true'
           ></qt-image>
           <qt-text
-            class="search-content-item-text"
-            style="width: 260px"
-            text="${title}"
-            gravity="center"
-            :lines="1"
-            :ellipsizeMode="4"
-            :focusable="false"
-            :duplicateParentState="true"
+            class='search-content-item-text'
+            style='width: 260px'
+            text='${title}'
+            gravity='center'
+            :lines='1'
+            :ellipsizeMode='4'
+            :focusable='false'
+            :duplicateParentState='true'
           ></qt-text>
         </qt-view>
       </template>
@@ -76,7 +79,7 @@
   </qt-view>
 </template>
 
-<script setup lang="ts">
+<script setup lang='ts'>
 import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
@@ -124,6 +127,7 @@ function init(keyword: string) {
 }
 
 let timer: any = -1
+
 async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   let tabPage: QTTabPageData = { data: [] }
   if (rawKeyword.value?.length === 0) {
@@ -169,7 +173,7 @@ function onTabMoveToBottomEnd() {
 }
 </script>
 
-<style lang="scss">
+<style lang='scss'>
 .search-content {
   width: 1920px;
   height: 1080px;

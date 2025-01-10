@@ -53,9 +53,6 @@ class Launch {
     setTimeout(() => {
       this.allowClick = false
     }, 1000)
-    if (qt.log.isLoggable(ESLogLevel.DEBUG)) {
-      qt.log.i('Launch====', item)
-    }
     if (!item) return
     const type = item.type
     switch (type) {

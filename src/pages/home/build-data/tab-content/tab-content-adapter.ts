@@ -7,13 +7,14 @@ import {
 } from '@quicktvui/quicktvui3'
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
+import homeManager from '../../../../api/home/home-manager'
 import ThemeConfig from '../../../../config/theme-config'
 import { HomePlayType } from '../media/home-media-imp'
 import barsDataManager from '../nav-bar/nav-bar-adapter'
 import TabContentConfig from './tab-content-config'
 import {
   PlayType,
-  Section,
+  Section, Section4KItem,
   SectionItem,
   SectionItemType,
   SectionType,
@@ -26,7 +27,8 @@ class TabsContent {
   sectionTotalHeight: Map<string, number> = new Map<string, number>()
   //存储二屏图
   tab2BackgroundUrls: Map<string, string> = new Map<string, string>()
-
+  // 首页4k列表第一页数据
+  home4KList : Array<any> = []
 }
 
 const tabsContent = new TabsContent()
@@ -39,26 +41,32 @@ export default tabsContent
  * @param tabId 导航 ID
  * @param tabPageIndex 导航 index
  */
-export function buildTabContentAdapter(tabContent: TabContent, pageNo: number = 1, tabId: string, tabPageIndex: number): QTTabPageData {
-  if (!tabContent || !tabContent.sectionList || tabContent.sectionList.length === 0) {
-    return {
-      data: []
-    }
-  }
+export async function buildTabContentAdapter(tabContent: TabContent, pageNo: number = 1, tabId: string, tabPageIndex: number): Promise<QTTabPageData> {
   const isFirstPage = pageNo === 1
   //首次加载清除当前板块高度
   if (isFirstPage) {
     tabsContent.sectionTotalHeight.delete(tabId)
   }
+  //解析自定义参数
+  const {
+    firstSectionMarginTop,
+    content4kId,
+    disableScrollOnFirstScreen
+  } = parseParameter(tabContent.customParams)
+  //4K 视频
+  if (content4kId && pageNo === 1) {
+    return build4kTabPage(content4kId, tabPageIndex)
+  }
+  if (!tabContent || !tabContent.sectionList || tabContent.sectionList.length === 0) {
+    return {
+      data: [],
+      isLoadPageEnd: true
+    }
+  }
   //存储二屏图
   if (tabContent.backgroundImg != null) {
     tabsContent.tab2BackgroundUrls.set(tabId, tabContent.backgroundImg)
   }
-  //解析自定义参数
-  const {
-    firstSectionMarginTop,
-    disableScrollOnFirstScreen
-  } = parseParameter(tabContent.customParams)
   //获取当前导航Tab下Section原始数据
   const sectionSourceData: Array<Section> = tabContent.sectionList
   //创建sectionList板块集合列表
@@ -70,20 +78,33 @@ export function buildTabContentAdapter(tabContent: TabContent, pageNo: number = 
       if (section.title?.image && section.title?.style?.height && section.title?.style?.width) {
         TabContentConfig.sectionTitleHeightDefault = section.title.style.height
       }
+      //检测小 4K 放映厅 板块 是否存在 单独处理
+      const sectionType = section.type
+      if (sectionType === SectionType.TYPE_SWIPER_PLAY) {
+        section.style['height'] = 484
+      }
+
       //获取板块高度
       const sectionHeight: number = getSectionHeight(section)
       //存储板块高度 用于判断是否展示底部提示
       saveSectionTotalHeight(sectionHeight, tabId)
-      // build section列表数据
-      const res = buildSectionItemList(section, sectionIndex, tabPageIndex)
-      const sectionWaterfallItemList: Array<QTWaterfallItem> = res.buildSectionItemList
-      const isFocusScrollTarget: boolean = res.isFocusScrollTarget
-      //获取展示的板块高度
-      section.style.height = buildSectionHeightBySectionType(section)
       const firstSectionIndex: boolean = sectionIndex === 0 && isFirstPage
-      //build 板块数据
-      const buildSectionData: QTWaterfallSection = buildSection(section, sectionWaterfallItemList, firstSectionIndex, firstSectionMarginTop, isFocusScrollTarget)
-      sectionList.push(buildSectionData)
+      if (sectionType === SectionType.TYPE_SWIPER_PLAY) {
+        //获取展示的板块高度
+        section.style.height = buildSectionHeightBySectionType(section)
+        const buildSectionData: QTWaterfallSection = await buildSmall4KSection(section, tabPageIndex, sectionIndex, firstSectionIndex, firstSectionMarginTop)
+        sectionList.push(buildSectionData)
+      } else {
+        // build section列表数据
+        const res = buildSectionItemList(section, sectionIndex, tabPageIndex)
+        const sectionWaterfallItemList: Array<QTWaterfallItem> = res.buildSectionItemList
+        const isFocusScrollTarget: boolean = res.isFocusScrollTarget
+        //获取展示的板块高度
+        section.style.height = buildSectionHeightBySectionType(section)
+        //build 板块数据
+        const buildSectionData: QTWaterfallSection = buildSection(section, sectionWaterfallItemList, firstSectionIndex, firstSectionMarginTop, isFocusScrollTarget)
+        sectionList.push(buildSectionData)
+      }
     }
   }
   /********根据板块高度，分页是否结束数据判断是否加载结束板块***********/
@@ -104,6 +125,7 @@ export function buildTabContentAdapter(tabContent: TabContent, pageNo: number = 
   const tabPage: QTTabPageData = buildTabContent(disableScrollOnFirstScreen, sectionList)
   tabPage.isLoadPageEnd = isLoadPageEnd
   return tabPage
+
 }
 
 /**
@@ -187,6 +209,11 @@ export function parseParameter(parameter) {
             params.disableScrollOnFirstScreen = param[j].value === 'true'
           }
           break
+        case 'content4kId':
+          if (param[j].value) {
+            params.content4kId = param[j].value
+          }
+          break
         default:
           if (param[j].value) {
             params[key] = param[j].value
@@ -242,7 +269,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
           barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = sectionItemIndex
         }
         else if (sectionItem.playBackgroundId) {//背景播放
-          if (isFirstSetPlay){
+          if (isFirstSetPlay) {
             isFirstSetPlay = false
             barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
             barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_BG
@@ -252,7 +279,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
           const play = {
             playData: [{
               id: sectionItem.playBackgroundId,
-              index:sectionItemIndex,
+              index: sectionItemIndex,
               type: PlayType.TYPE_LONG,
               cover: sectionItem.imageFocusBackground,
               isRequestUrl: !playBackgroundUrl,
@@ -419,6 +446,11 @@ export function buildFocusChangeImgSectionItem(sectionItem: SectionItem): QTWate
   }
 }
 
+/**
+ * 封装小窗播放格子数据
+ * @param sectionItem 格子数据
+ * @param tabPageIndex tab 导航 index
+ */
 export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageIndex: number): QTWaterfallItem {
   return {
     type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER,
@@ -493,7 +525,7 @@ export function buildTextSectionTitle(section: Section, sectionWaterfallItemList
     type: buildSectionType(section.type),
     title: section.showTitle ? section.title.text : '',
     titleStyle: buildSectionTitleStyle(section),
-    decoration: buildSectionDecoration(section, isFirstSection, firstSectionMarginTop),
+    decoration: buildSectionDecoration(isFirstSection, firstSectionMarginTop),
     style: buildSectionStyle(section.style.height),
     itemList: sectionWaterfallItemList,
     isFocusScrollTarget: isFocusScrollTarget
@@ -514,12 +546,39 @@ export function buildImgSectionTitle(section: Section, sectionWaterfallItemList:
     type: buildSectionType(section.type),
     imgTitle: section.showTitle ? section.title.image : '',
     imgTitleStyle: buildSectionTitleStyle(section, true),
-    decoration: buildSectionDecoration(section, isFirstSection, firstSectionMarginTop),
+    decoration: buildSectionDecoration(isFirstSection, firstSectionMarginTop),
     style: buildSectionStyle(section.style.height),
     itemList: sectionWaterfallItemList,
     isFocusScrollTarget: isFocusScrollTarget
   }
 }
+
+/**
+ * 小 4K 板块 对应数据
+ * @param section
+ * @param sectionWaterfallItemList
+ * @param isFirstSection
+ * @param firstSectionMarginTop
+ */
+export function buildSmallSection(section: Section, sectionWaterfallItemList: Array<QTWaterfallItem>, isFirstSection: boolean, firstSectionMarginTop: number): QTWaterfallSection {
+  const isShowPlateName = section.showTitle
+  return {
+    _id: section.id,
+    type: buildSectionType(section.type),
+    title: section.showTitle ? section.title.text : '',
+    titleStyle: buildSectionTitleStyle(section),
+    decoration: buildSmall4KSectionDecoration(isFirstSection, firstSectionMarginTop),
+    style: buildSectionStyle(section.style.height),
+    listStyle:{width:1920,height:484},
+    replaceChildStyle:{
+      width:860,
+      height:484,
+    },
+    mLayout: isShowPlateName ? [530,TabContentConfig.sectionTitleHeightDefault,860,484] : [530,0,860,484],
+    itemList: sectionWaterfallItemList,
+  }
+}
+
 
 /**
  * build 板块 style 数据
@@ -536,11 +595,10 @@ export function buildSectionStyle(sectionHeight: number): QTWaterfallFlexStyle {
 
 /**
  * build 板块间距
- * @param section 板块数据
  * @param isFirstSection 是否第一个板块
  * @param firstSectionMarginTop 第一个板块距离顶部距离
  */
-export function buildSectionDecoration(section: Section, isFirstSection: boolean, firstSectionMarginTop: number): QTListViewItemDecoration {
+export function buildSectionDecoration(isFirstSection: boolean, firstSectionMarginTop: number): QTListViewItemDecoration {
   let decoration: QTListViewItemDecoration
   if (isFirstSection) {
     const singleNavBarOffsetY = barsDataManager.barsData.itemList?.length > 1 ? 0 : TabContentConfig.firstSectionOffsetY
@@ -550,6 +608,27 @@ export function buildSectionDecoration(section: Section, isFirstSection: boolean
   } else {
     decoration = {
       top: TabContentConfig.sectionItemGap
+    }
+  }
+  return decoration
+}
+
+/**
+ * build 小 4K 板块间距
+ * @param isFirstSection
+ * @param firstSectionMarginTop
+ */
+export function buildSmall4KSectionDecoration(isFirstSection: boolean, firstSectionMarginTop: number): QTListViewItemDecoration {
+  let decoration: QTListViewItemDecoration
+  if (isFirstSection) {
+    const offset = barsDataManager.barsData.itemList?.length > 1 ? 45 : TabContentConfig.firstSectionOffsetY
+    decoration = {
+      top: TabContentConfig.firstSectionTop + firstSectionMarginTop + offset
+    }
+  } else {
+    const top = TabContentConfig.sectionItemGap + 30
+    decoration = {
+      top: top
     }
   }
   return decoration
@@ -568,6 +647,9 @@ function buildSectionType(sectionType: SectionType): number {
     case SectionType.TYPE_LINE_SCROLL:
       type = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_LIST
       break
+    case SectionType.TYPE_SWIPER_PLAY:
+      type = TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K
+      break;
     default:
       type = QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX
       break
@@ -667,4 +749,137 @@ export function buildTabContent(disableScrollOnFirstScreen: boolean = false, wat
     data: waterfallSectionList,
     bindingPlayer: ''
   }
+}
+
+/**
+ * 封装 4K 世界 板块数据
+ * @param content4kId
+ */
+export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTabPageData {
+  barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+  barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_4K
+  barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  const section: QTWaterfallSection = {
+    _id: content4kId,
+    type: TabContentItemType.TYPE_WATERFALL_SECTION_4K,
+    style: {
+      width: 1920,
+      height: 855
+    },
+    decoration: {
+      top: TabContentConfig.firstSectionTop - 30
+    },
+    list4KSid: 'plate4K' + content4kId,
+    content4kId,
+    itemList: tabsContent.home4KList.length > 0 ? tabsContent.home4KList : []
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    disableScrollOnFirstScreen: true,
+    data: [section]
+  }
+  return tabPage
+}
+
+/**
+ * 封装 4K 板块内容数据
+ * @param section4K 原始内容数据
+ */
+export function build4KSectionData(section4K: Array<Section4KItem>): Array<QTWaterfallItem> {
+  const waterfallItems: Array<QTWaterfallItem> = []
+  if (section4K && section4K.length > 0) {
+    const length = section4K.length
+    const endSid = `helloTv4k${section4K[length - 1].id}img`
+    const startSid = `helloTv4k${section4K[0].id}img`
+    let mCurSid = ''
+    for (let section4KItemIndex = 0; section4KItemIndex < length; section4KItemIndex++) {
+      const section4kItem = section4K[section4KItemIndex]
+      const beforeSid = section4KItemIndex === 0 ? endSid : mCurSid
+      mCurSid = `helloTv4k${section4kItem.id}img`
+      const nextSid = section4KItemIndex === (length - 1) ? startSid : `helloTv4k${section4K[section4KItemIndex + 1].id}img`
+      const item: QTWaterfallItem = {
+        type: TabContentItemType.TYPE_WATERFALL_SECTION_4K_ITEM,
+        sid: mCurSid,
+        name: TabContentConfig.world4kSectionItemName,
+        image: {
+          style: { width: 1413, height: 795 },
+          normal: section4kItem.image
+        },
+        style: {
+          width: 1413,
+          height: 795
+        },
+        decoration: { right: 92 },
+        title: section4kItem.title,
+        subTitle: section4kItem.subTitle,
+        subTitleShow: !!section4kItem.subTitle,
+        jumpParams: section4kItem.jumpParams,
+        play: {
+          style: {
+            width: 1413,
+            height: 795
+          },
+          playData: section4kItem.playData
+        }
+      }
+      if (section4kItem.playData && section4kItem.playData.length > 0) {
+        const buildPlayData = section4kItem.playData[0]
+        const sid = {
+          beforeSid: beforeSid,
+          sid: mCurSid,
+          nextSid: nextSid
+        }
+        item.play.playData = [{ ...buildPlayData, ...sid }]
+      }
+      waterfallItems.push(item)
+    }
+  }
+  return waterfallItems
+}
+
+export async function buildSmall4KSection(section: Section,tabPageIndex: number, sectionIndex: number,isFirstSection:boolean,firstSectionMarginTop:number):Promise<QTWaterfallSection>{
+  let buildSection: QTWaterfallSection = {itemList:[],style:{},type:-1}
+  barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+  barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SMALL_4K
+  barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  barsDataManager.barsData.itemList[tabPageIndex].sectionIndex = sectionIndex
+  // const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  if (res && res.length > 0) {
+    buildSection = buildSmallSection(section,res,isFirstSection,firstSectionMarginTop)
+  }
+  return buildSection
+}
+
+export function buildSmall4KSectionData(sectionSmall4K: Array<Section4KItem>): Array<QTWaterfallItem> {
+  const waterfallItems: Array<QTWaterfallItem> = []
+  if (sectionSmall4K && sectionSmall4K.length > 0) {
+    const length = sectionSmall4K.length
+    let mCurSid = ''
+    for (let index = 0; index < length; index++) {
+      const sectionItem = sectionSmall4K[index]
+      mCurSid = `helloTvSmall4k${sectionItem.id}img`
+      const item: QTWaterfallItem = {
+        type: TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K_ITEM,
+        sid: mCurSid,
+        name: TabContentConfig.worldSmall4kSectionItemName,
+        image: {
+          style: { width: 860, height: 484 },
+          normal: sectionItem.image
+        },
+        style: { width: 860, height: 484 },
+        decoration: { right: 92 },
+        jumpParams: sectionItem.jumpParams,
+        play: {
+          style: {
+            width: 860, height: 484
+          },
+          playData: sectionItem.playData
+        }
+      }
+      waterfallItems.push(item)
+    }
+  }
+  return waterfallItems
 }

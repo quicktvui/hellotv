@@ -54,6 +54,7 @@
 import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
 import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
+import { VirtualView } from '@quicktvui/quicktvui3'
 import { onMounted, ref } from 'vue'
 import bg_shadow from '../../../../assets/home/bg_shadow.png'
 import BgAnimation from '../../../../components/bg-animation.vue'
@@ -93,9 +94,12 @@ let lifeCycle = ''
 let delayInitPlayTimer: any = -1
 let delayPlayTimer: any = -1
 let dismissCoverTimer: any = -1
-
 //当前已经加载的背景图
 let curCover = ''
+/********** 4K ************/
+let beforeSid = ""
+let sid = ""
+let nextSid = ""
 
 onMounted(() => {
   esEventBus.on('bg-player-life-cycle', updateLifeCycle)
@@ -255,7 +259,11 @@ const release = () => {
 const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
   //4K 逻辑
   if (bgPlayerType.value === HomePlayType.TYPE_4K) {
-
+    beforeSid = mediaItem.beforeSid
+    sid = mediaItem.sid
+    nextSid = mediaItem.nextSid
+    change4KVisible(beforeSid,'visible')
+    change4KVisible(nextSid,'visible')
   }
 }
 const onPlayerPlaying = () => {
@@ -277,9 +285,13 @@ const onPlayerError = () => {
   pause()
   stop()
 }
+const change4KVisible=(sid:string,visible:string)=>{
+  VirtualView.call(sid,'changeVisibility',[`${visible}`])
+}
 const requestDismissCover = (delay = 1000) => {
   if (bgPlayerType.value === HomePlayType.TYPE_4K) {
-    //change20Visibility(sid,"invisible")
+    change4KVisible(sid,"invisible")
+    VirtualView.call(TabContentConfig.homeBgPlaySid,'changeAlpha',[1])
   }
   clearTimeout(dismissCoverTimer)
   dismissCoverTimer = setTimeout(() => {
@@ -305,6 +317,7 @@ const changeShadow = (boo: boolean) => {
   isShowShadow.value = boo
 }
 defineExpose({
+  playerWindowInit,
   initPlay,
   play,
   start,

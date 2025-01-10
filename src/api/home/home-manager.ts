@@ -1,9 +1,19 @@
-import { QTTab, QTTabPageData } from '@quicktvui/quicktvui3'
+import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import barsDataManager, { buildNavBarAdapter } from '../../pages/home/build-data/nav-bar/nav-bar-adapter'
-import { buildTabContentAdapter } from '../../pages/home/build-data/tab-content/tab-content-adapter'
-import { TabContent } from '../../pages/home/build-data/tab-content/tab-content-imp'
+import {
+  build4KSectionData, buildSmall4KSectionData,
+  buildTabContentAdapter
+} from '../../pages/home/build-data/tab-content/tab-content-adapter'
+import { Section4KItem, TabContent } from '../../pages/home/build-data/tab-content/tab-content-imp'
+import TabContentItemType from '../../pages/home/build-data/tab-content/tab-content-item-type'
 import requestManager from '../request/request-manager'
-import { homePlayUrl, replacePlaceholders, tabContentUrl, tabListUrl } from '../request/request-url'
+import {
+  home4KUrl,
+  homePlayUrl,
+  replacePlaceholders,
+  tabContentUrl,
+  tabListUrl
+} from '../request/request-url'
 import { HomeApi } from './imp-home'
 import BuildConfig from '../../config/build-config'
 
@@ -53,6 +63,28 @@ class HomeManager implements HomeApi{
 
   getTabBg(tabId): string | undefined {
     return barsDataManager.barsBgUrls.get(tabId)
+  }
+  async get4KSection(content4kId:string,size:number,type:number):Promise<Array<QTWaterfallItem>>{
+    const replacements = {
+      id:content4kId,
+      packageName:BuildConfig.packageName,
+    }
+    const url = replacePlaceholders(home4KUrl,replacements)
+    return requestManager.get(url).then((res:Array<Section4KItem>)=>{
+      let dealRes = res
+      if (res && res.length > size){
+        dealRes = res.slice(0,size)
+      }
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K){
+        return buildSmall4KSectionData(dealRes)
+      }
+      return build4KSectionData(dealRes)
+    },()=>{
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K){
+        return buildSmall4KSectionData([])
+      }
+      return build4KSectionData([])
+    })
   }
 }
 

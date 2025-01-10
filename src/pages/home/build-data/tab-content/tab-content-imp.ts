@@ -22,7 +22,9 @@ export enum SectionType {
   //普通板块
   TYPE_DEFAULT = 1,
   //一行滚动板块
-  TYPE_LINE_SCROLL = 2
+  TYPE_LINE_SCROLL = 2,
+  //放映厅板块
+  TYPE_SWIPER_PLAY = 3
 }
 
 /**
@@ -30,7 +32,7 @@ export enum SectionType {
  */
 export interface Section {
   id: string
-  //板块类型 1：普通类型，2：一行滚动
+  //板块类型 1：普通类型，2：一行滚动, 3:轮播播放（小 4K）
   type: SectionType
   //板块标题
   title: {
@@ -51,6 +53,8 @@ export interface Section {
   items: Array<SectionItem>
   //自定义参数
   customParams?: any
+  contentId?:string
+  contentType?:string
 }
 
 /**
@@ -111,6 +115,20 @@ export interface SectionItem {
   playBackgroundUrl?: string
   //小窗播放、小窗列表播放数据
   playData?: Array<PlayData>
+  //跳转数据
+  jumpParams: LaunchParams
+}
+
+export interface Section4KItem{
+  id:string
+  //标题
+  title:string
+  //副标题
+  subTitle:string
+  //封面图
+  image:string
+  //播放数据
+  playData: Array<PlayData>
   //跳转数据
   jumpParams: LaunchParams
 }
