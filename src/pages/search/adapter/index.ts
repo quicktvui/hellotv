@@ -23,14 +23,14 @@ export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'gues
       })
       break
     case 'all':
-      keywords.push({ type: KeywordType.TITLE, text: '猜你想搜', decoration: { bottom: 40 } })
+      keywords.push({ type: KeywordType.TITLE, text: '猜你想搜' })
       rawData.guessKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id, decoration: { bottom: 30 } })
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id })
       })
 
-      keywords.push({ type: KeywordType.TITLE, text: '热门搜索', decoration: { top: 20, bottom: 40 } })
+      keywords.push({ type: KeywordType.TITLE, text: '热门搜索', decoration: { top: 40 } })
       rawData.hotKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id, decoration: { bottom: 30 } })
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, jumpId: item.id })
       })
       break
   }

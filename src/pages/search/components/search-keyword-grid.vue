@@ -1,6 +1,6 @@
 <template>
   <qt-view class="search-keyword">
-    <qt-grid-view class="search-keyword-grid" :list-data="gridData" :spanCount="3" :padding="'70,80,0,0'" @item-click="onGridItemClick">
+    <qt-grid-view class="search-keyword-grid" :list-data="gridData" :spanCount="3" :padding="'40,80,0,0'" @item-click="onGridItemClick">
       <!-- 标题 -->
       <template v-slot:header>
         <qt-view :type="KeywordType.TITLE" class="search-keyword-grid-item" :focusable="false">
@@ -16,7 +16,25 @@
       </template>
       <!-- 内容 -->
       <qt-view :type="KeywordType.TEXT" class="search-keyword-grid-item" :focusable="true" eventClick>
-        <qt-text class="search-keyword-grid-item-text" text="${text}" :ellipsizeMode="3" :focusable="false" duplicateParentState></qt-text>
+        <qt-text
+          class="search-keyword-grid-item-text"
+          style="position: absolute"
+          text="${text}"
+          :showOnState="['normal', 'selected']"
+          :ellipsizeMode="2"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="search-keyword-grid-item-text"
+          style="position: absolute"
+          text="${text}"
+          typeface="bold"
+          :showOnState="'focused'"
+          :ellipsizeMode="4"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
       </qt-view>
     </qt-grid-view>
   </qt-view>
@@ -57,19 +75,19 @@ function onGridItemClick(evt) {
 }
 
 .search-keyword-grid-item {
-  width: 320px;
-  height: 50px;
+  width: 410px;
+  height: 80px;
   background-color: transparent;
-  padding-left: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   justify-content: center;
   focus-background-color: $gl-theme-btn-bg-focus-color;
 }
 
 .search-keyword-grid-item-text {
-  width: 300px;
+  width: 330px;
   height: 40px;
   background-color: transparent;
+  margin-left: 40px;
   color: $text-normal-color;
   font-size: 30px;
   focus-color: $text-focus-color;

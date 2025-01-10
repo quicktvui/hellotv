@@ -166,7 +166,7 @@ defineExpose({ onBackPressed })
   background-color: transparent;
   border-right-width: 1px;
   border-right-style: solid;
-  border-right-color: rgba(255, 255, 255, 0.15);
+  border-right-color: rgba(255, 255, 255, 0.06);
 }
 
 .search-keyword-empty {
