@@ -177,7 +177,7 @@ let playModeList: Array<ESPlayerPlayMode>
 // 当前播放模式
 let playMode: ESPlayerPlayMode
 // 底部菜单列表 点击位置
-let curMenuClickPosition = -1
+// let curMenuClickPosition = -1
 let bottomViewFocus = false
 //菜单数据
 let menuList = ref<Array<IMediaMenu>>([])
@@ -518,7 +518,7 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
       break
     case PlayMenuNameFlag.RATE:
       curControlRef = mediaMenuSpeedRateRef
-      curMenuClickPosition = e.position
+      // curMenuClickPosition = e.position
       viewState = IMediaViewState.STATE_MENU_RATE_VIEW_SHOW
       resetShowViewState()
       break
@@ -530,7 +530,7 @@ const onItemClicked = (name, e, isSameLocation?: number) => {
     //   break;
     case PlayMenuNameFlag.SETTING:
       curControlRef = mediaMenuModeRef
-      curMenuClickPosition = e.position
+      // curMenuClickPosition = e.position
       viewState = IMediaViewState.STATE_MENU_MODE_VIEW_SHOW
       resetShowViewState()
       break
@@ -830,6 +830,8 @@ defineExpose({
   onKeyDown,
   onKeyUp,
   onBackPressed,
+  replyRate,
+  clear,
   isViewShow
 })
 

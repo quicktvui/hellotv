@@ -1,9 +1,9 @@
 <template>
   <media-player-view
-    ref="playerManagerRef" 
-    class="media-def-player" 
+    ref="playerManagerRef"
+    class="media-def-player"
     :initPlayerWindowType="2"
-    :is-show-player-controller="true" 
+    :isShowPlayerController="true"
     :menuList="[]"
     @onPlayerPlayMedia="onPlayerPlayMedia"
     @onPlayerCompleted="onPlayerCompleted"
@@ -14,7 +14,7 @@
     @onPlayerPlayMediaListModeChanged="onPlayerPlayMediaListModeChanged"
   />
 </template>
-        
+
 <script setup lang='ts' name='media-player'>
 import { onBeforeUnmount, ref, onMounted, nextTick, toRaw } from 'vue'
 import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
@@ -22,7 +22,7 @@ import BuildConfig from "../../../config/build-config";
 import detailManager from '../../../api/detail/detail-manager'
 import MediaPlayerView from '../../../components/media/view/media-player-view.vue'
   const TAG = 'DetailFullScreenMediaPlayer'
-  
+
   const onPlayerPlayMedia = () => {}
   const onPlayerCompleted = () => {}
   const onPlayerInterceptError = () => {}
@@ -31,10 +31,10 @@ import MediaPlayerView from '../../../components/media/view/media-player-view.vu
   const onPlayerNoMediaCanPlay = () => {}
   const onPlayerPlayMediaListModeChanged = () => {}
   defineExpose({
-    
+
   })
 </script>
-        
+
 <style lang='scss' scoped>
 .media-def-player{
   position: absolute;
@@ -42,4 +42,3 @@ import MediaPlayerView from '../../../components/media/view/media-player-view.vu
   background-color: transparent;
 }
 </style>
-          

@@ -193,7 +193,7 @@ class RequestManager{
         }
       }).catch((err)=>{
         clearTimeout(ajaxTimer)
-        reject({ code: -1, message: '发生错误，请稍后重试！' })
+        reject({ code: -1, message: '发生错误，请稍后重试！'+err })
       })
     }))
   }

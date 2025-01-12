@@ -329,8 +329,10 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_PLACE_HOLDER://占位格子
       buildSectionItem = buildPlaceHolderSectionItem(sectionItem)
       break
-    // case SectionItemType.TYPE_TEXT_HISTORY:
-    //   break
+    case SectionItemType.TYPE_TEXT_HISTORY:
+    case SectionItemType.TYPE_IMG_HISTORY:
+      buildSectionItem = buildTextHistorySectionItem(sectionItem)
+      break
     // case SectionItemType.TYPE_IMG_HISTORY:
     //   break
     case SectionItemType.TYPE_FOCUS_CHANGE_IMG://焦点换图格子
@@ -489,6 +491,15 @@ export function buildPlaceHolderSectionItem(sectionItem: SectionItem): QTWaterfa
       },
       normal: sectionItem.image
     }
+  }
+}
+
+export function buildTextHistorySectionItem(sectionItem: SectionItem):QTWaterfallItem{
+  return {
+    type: TabContentItemType.TYPE_ITEM_HISTORY_TEXT,
+    style: buildStyle(sectionItem),
+    gradientBackground: { colors: ['#fAff0000', '#99ffffff'],
+      cornerRadius: ThemeConfig.focusBorderCorner, orientation: 7 },
   }
 }
 

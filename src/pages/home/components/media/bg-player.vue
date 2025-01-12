@@ -331,7 +331,8 @@ defineExpose({
   onKeyDown,
   onKeyUp,
   onBackPressed,
-  changeShadow
+  changeShadow,
+  destroy
 })
 
 </script>

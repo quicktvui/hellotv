@@ -1,6 +1,6 @@
 <template>
   <qt-view class="search-keyword">
-    <qt-grid-view class="search-keyword-grid" :list-data="gridData" :spanCount="3" :padding="'40,80,0,0'" @item-click="onGridItemClick">
+    <qt-grid-view class="search-keyword-grid" :listData="gridData" :spanCount="3" :padding="'40,80,0,0'" @item-click="onGridItemClick">
       <!-- 标题 -->
       <template v-slot:header>
         <qt-view :type="KeywordType.TITLE" class="search-keyword-grid-item" :focusable="false">

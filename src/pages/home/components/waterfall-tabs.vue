@@ -64,6 +64,8 @@
         <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
         <!-- 小窗播放格子-->
         <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
+        <!-- 历史记录格子-->
+        <history-text-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
       </template>
       <template v-slot:waterfall-section>
         <!-- 4K 模板-->
@@ -88,7 +90,6 @@ import { EventBus, Native } from '@extscreen/es3-vue'
 import {
   QTITab,
   QTTab,
-  QTTabEventParams,
   QTTabItem,
   QTTabPageData,
   QTTabPageState,
@@ -113,6 +114,7 @@ import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import CellPlayerItem from './tab-content/cell-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
+import HistoryTextItem from './tab-content/history-text-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
 import PlaceHolderItem from './tab-content/place-holder-item.vue'
@@ -179,7 +181,7 @@ let curPlayerType = HomePlayType.TYPE_UNDEFINED
 //当前 Tab index
 let curTabPageIndex = 0
 //短视频播放 index
-let curShortPlayerIndex = 0
+// let curShortPlayerIndex = 0
 let isMoreFront = false
 let isMoreFrontTimer: any = -1
 let bgTimer: any = -1
@@ -301,7 +303,7 @@ const onTabPageChanged = (pageIndex: number) => {
   isMoreFront = false
   curFirstScreenBg = ''
   cur4KSid = ''
-  curShortPlayerIndex = 0
+  // curShortPlayerIndex = 0
   waterfallBgPlayerRef.value?.pause()
   waterfallBgPlayerRef.value?.stop()
   waterfallBgPlayerRef.value?.setBgImage('')

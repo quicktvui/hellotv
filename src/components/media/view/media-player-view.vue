@@ -96,9 +96,9 @@ export default defineComponent({
     const playerListRef = ref(playerList)
     let playerViewList = []
     //付费类型 0：免费，其他收费
-    let payStatus: string | number
+    // let payStatus: string | number
     //当前播放进度
-    let curProgress: number = 0
+    // let curProgress: number = 0
     if (props.isShowPlayerController) {
       playerViewList = [markRaw(MediaLoadingView), markRaw(MediaManagerView)]
       //todo 让立朋兼容一个__name的获取
@@ -154,7 +154,7 @@ export default defineComponent({
     }
 
     const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
-      payStatus = mediaItem.payStatus
+      // payStatus = mediaItem.payStatus
 
       context.emit('onPlayerPlayMedia', mediaItem)
     }
@@ -202,7 +202,7 @@ export default defineComponent({
     }
 
     const onPlayerProgressChanged = (p: number): void => {
-      curProgress = p
+      // curProgress = p
       context.emit('onPlayerProgressChanged', p)
     }
 
