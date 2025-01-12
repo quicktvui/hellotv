@@ -722,9 +722,6 @@ const onESCreate = () => {
   EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
   getTabList()
 }
-const onESRestart = () => {
-
-}
 
 const onESPause = () => {
   if (curPlayerType !== HomePlayType.TYPE_UNDEFINED) {
@@ -764,6 +761,14 @@ const onESResume = () => {
 }
 
 const onESDestroy = () => {
+  waterfallBgPlayerRef.value?.destroy()
+  clearTimeout(isMoreFrontTimer)
+  clearTimeout(bgTimer)
+  clearTimeout(typeBgFocusTimer)
+  clearTimeout(delay4KFocusTimer)
+  clearTimeout(small4KTimer)
+  clearTimeout(resumePlayTimer)
+  clearTimeout(small4KSetChildSIdTimer)
   EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn);
 }
 const dispatchKeyEventFn = (keyEvent:ESKeyEvent) =>{
@@ -792,7 +797,6 @@ const onBackPressed = () => {
 }
 defineExpose({
   onESCreate,
-  onESRestart,
   onESPause,
   onESStop,
   onESResume,
