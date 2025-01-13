@@ -121,7 +121,7 @@ import MediaPlayer from './components/media-player/index.vue'
   //  生命周期
   //  ***************************初始化入口 onESCreate***************************
   const onESCreate = (params) => {
-    currenId.value = params && params.id ? params.id : '1584863712586579969'
+    currenId.value = params && params.mediaId ? params.mediaId : '1584863712586579969'
     isPaused = false
     isStopped = false;
     initWaterfall()

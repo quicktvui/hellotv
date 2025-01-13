@@ -16,6 +16,14 @@ $home-height:1080px;
     width: 1920px;
     height: 1080px;
     background-color: transparent;
+    .detail-waterfall{
+      width: 1920px;
+      height: 452px;
+      background-color: transparent;
+      position: absolute;
+      left: 0;
+      bottom: 0;
+    }
   }
   .skeleton{
     position: absolute;
