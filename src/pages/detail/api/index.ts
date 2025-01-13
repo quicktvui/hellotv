@@ -1,4 +1,4 @@
-import requestManager from '../../../api/request/request-manager'
+import requestManager from '../../../tools/request/request-manager'
 import BuildConfig from "../../../config/build-config"
 import { DetailUrl, DetailMediaSeriesUrl, RecommendListUrl, 
   PlayUrl, RecordsUrl } from './request-url'

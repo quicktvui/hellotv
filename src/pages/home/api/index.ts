@@ -1,21 +1,23 @@
 import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import barsDataManager, { buildNavBarAdapter } from '../../pages/home/build-data/nav-bar/nav-bar-adapter'
+import barsDataManager, { buildNavBarAdapter } from '../build-data/nav-bar/nav-bar-adapter'
 import {
-  build4KSectionData, buildSmall4KSectionData,
+  build4KSectionData, 
+  buildSmall4KSectionData,
   buildTabContentAdapter
-} from '../../pages/home/build-data/tab-content/tab-content-adapter'
-import { Section4KItem, TabContent } from '../../pages/home/build-data/tab-content/tab-content-imp'
-import TabContentItemType from '../../pages/home/build-data/tab-content/tab-content-item-type'
-import requestManager from '../request/request-manager'
+} from '../build-data/tab-content/tab-content-adapter'
+import requestManager from '../../../tools/request/request-manager'
+import { Section4KItem, TabContent } from '../build-data/tab-content/tab-content-imp'
+import TabContentItemType from '../build-data/tab-content/tab-content-item-type'
 import {
   home4KUrl,
   homePlayUrl,
-  replacePlaceholders,
   tabContentUrl,
   tabListUrl
-} from '../request/request-url'
-import { HomeApi } from './imp-home'
-import BuildConfig from '../../config/build-config'
+} from './request-url'
+import { HomeApi } from '../adapter/interface'
+import BuildConfig from '../../../config/build-config'
+import {replacePlaceholders} from '../../../tools/common'
+
 
 class HomeManager implements HomeApi{
 

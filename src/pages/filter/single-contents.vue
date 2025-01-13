@@ -17,7 +17,7 @@ import { buildFilters } from './adapter/index'
 import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterContent from './components/content/index.vue'
-import filterManager from '../../api/filter/index'
+import filterManager from './api/index'
 
 const router = useESRouter()
 

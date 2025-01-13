@@ -57,7 +57,7 @@ import { ref, watch, onMounted } from 'vue'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
 import { KeywordType } from '../adapter/interface'
-import searchManager from '../../../api/search/index'
+import searchManager from '../api/index'
 import config from '../config'
 
 const props = defineProps({
