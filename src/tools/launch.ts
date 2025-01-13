@@ -1,4 +1,4 @@
-import { ESDevelop, ESLogLevel } from '@extscreen/es3-core'
+import { ESDevelop } from '@extscreen/es3-core'
 import { ESNativeRouter, RouteLocationRaw, Router } from '@extscreen/es3-router'
 
 export interface LaunchParams {

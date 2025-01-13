@@ -118,13 +118,9 @@ import { ref, watch, onMounted, nextTick, onUnmounted} from 'vue'
 import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {
-  ESMediaSource,
-  ESMediaSourceList,
   ESPlayerAspectRatio,
   ESPlayerDecode,
   ESPlayerDefinition,
-  ESPlayerError,
-  ESPlayerInfo,
   ESPlayerInterceptError,
   ESPlayerInterceptResult,
   ESPlayerPlayMode,
@@ -200,7 +196,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   let collapseItemList: any = []
   let collapse: QTCollapse
   let mediaListGroupItemFocused = false
-  let mediaListItemFocused = false
   let playModeList: Array<ESPlayerPlayMode>
   let playMode: ESPlayerPlayMode
   let definitionList: Array<ESPlayerDefinition>
@@ -208,9 +203,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   let rateList: Array<ESPlayerRate>
   let rate: ESPlayerRate
   let decodeList: Array<ESPlayerDecode>
-  let decode: ESPlayerDecode
-  let aspectRatioList: Array<ESPlayerAspectRatio>
-  let aspectRatio: ESPlayerAspectRatio
 
   //------------------进度条 callback-----------------------------------
   const onSeekBarChanged = () => {}
@@ -234,7 +226,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     ([instance], [oldInstance]) => {
       if (instance) {
         if (log.isLoggable(ESLogLevel.DEBUG)) {
-          log.e(TAG, "----watch---initCollapseMenu----->>>>>")
+          log.e(TAG, "----watch---initCollapseMenu----->>>>>",oldInstance)
         }
         collapse = buildCollapseMenu(mediaListVisible.value)
         collapseItemIndex = collapse.defaultIndex ?? 0
@@ -289,7 +281,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   }
   const onCollapseItemOrderFocused = () => {
     mediaListGroupItemFocused = false
-    mediaListItemFocused = false
   }
   const onCollapseItemOrderClicked = (index: number, item: QTListViewItem) => {
     if (playMode == item.mode) return
@@ -319,7 +310,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   }
   const onCollapseItemDefinitionFocused = () => {
     mediaListGroupItemFocused = false
-    mediaListItemFocused = false
   }
   const onCollapseItemDefinitionClicked = (index: number, item: QTListViewItem) => {
     if (definition == item.definition) return
@@ -346,7 +336,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   }
   const onCollapseItemSpeedFocused = () => {
     mediaListGroupItemFocused = false
-    mediaListItemFocused = false
   }
   const onCollapseItemSpeedClicked = (index: number, item: QTListViewItem) => {
     if (rate == item.rate) return
@@ -382,14 +371,12 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
       log.e(TAG, "---选集----onMediaSeriesGroupItemFocus------>>>>>", index)
     }
     mediaListGroupItemFocused = true
-    mediaListItemFocused = false
   }
   const onMediaSeriesItemFocus = (index: number) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "----选集---onMediaSeriesItemFocus------>>>>>", index)
     }
     mediaListGroupItemFocused = false
-    mediaListItemFocused = true
   }
   const onMediaSeriesItemClick = (index: number, item: QTListViewItem) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -431,7 +418,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
         isMenuShowing.value = false
         isProgressShowing.value = false
         mediaListGroupItemFocused = false
-        mediaListItemFocused = false
         if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
           mediaCollapseRef.value?.collapse()
           collapseItemIndex = collapse.defaultIndex ?? 0
@@ -450,7 +436,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
         isTitleBarShowing.value = true
         isProgressShowing.value = true
         mediaListGroupItemFocused = false
-        mediaListItemFocused = false
         if (lastViewState == IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_MENU) {
           mediaCollapseRef.value?.collapse()
           collapseItemIndex = collapse.defaultIndex ?? 0
@@ -551,19 +536,16 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerDecodeChanged-------->>>>>", d)
     }
-    decode = d
   }
   const onPlayerAspectRatioListChanged = (list: Array<ESPlayerAspectRatio>): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerAspectRatioListChanged-------->>>>>", list)
     }
-    aspectRatioList = list
   }
   const onPlayerAspectRatioChanged = (a: ESPlayerAspectRatio): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerAspectRatioChanged-------->>>>>", a)
     }
-    aspectRatio = a
   }
   const onPlayerPlayMediaListModeListChanged = (modeList: Array<ESPlayerPlayMode>): void => {
     const filterModeList: Array<any> = []
@@ -646,6 +628,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     }
     switch (keyEvent.keyCode) {
       case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
+        break
       case ESKeyCode.ES_KEYCODE_ENTER:
         if (isPlayerViewStateDismiss()) {
           setPlayerViewStateProgress()
@@ -660,7 +643,9 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
           }
           return true
         }
+        break
       case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
+        break 
       case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
         if (isPlayerViewStateDismiss()) {
           setPlayerViewStateProgress()
