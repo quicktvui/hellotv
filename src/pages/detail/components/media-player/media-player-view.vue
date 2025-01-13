@@ -115,7 +115,7 @@
     
 <script setup lang='ts' name='MediaPlayerView'>
 import { ref, watch, onMounted, nextTick, onUnmounted} from 'vue'
-import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
+import { ESKeyCode, ESKeyEvent, ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core"
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {
   ESPlayerAspectRatio,
@@ -626,9 +626,9 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     if (player.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
       return false
     }
+    toast.showShortToast(keyEvent.keyCode+'')
     switch (keyEvent.keyCode) {
       case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
-        break
       case ESKeyCode.ES_KEYCODE_ENTER:
         if (isPlayerViewStateDismiss()) {
           setPlayerViewStateProgress()
@@ -643,7 +643,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
           }
           return true
         }
-        break
       case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
         break 
       case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:

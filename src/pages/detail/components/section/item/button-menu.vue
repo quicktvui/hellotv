@@ -55,11 +55,8 @@ import { IMedia } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
 import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
 import ic_full_focused from '../../../../../assets/detail/ic_full_focused.png'
-import ic_full_vip_focused from '../../../../../assets/detail/ic_full_vip_focused.png'
-import ic_fav_normal from '../../../../../assets/detail/ic_fav_normal.png'
-import ic_fav_collected from '../../../../../assets/detail/ic_fav_collected.png'
-import ic_fav_focused from '../../../../../assets/detail/ic_fav_focused.png'
-import ic_fav_vip_focused from '../../../../../assets/detail/ic_fav_vip_focused.png'
+import ic_collect_normal from '../../../../../assets/detail/ic_collect_normal.png'
+import ic_collect_focused from '../../../../../assets/detail/ic_collect_focused.png'
 import ic_vip_normal from '../../../../../assets/detail/ic_vip_normal.png'
 import ic_vip_focused from '../../../../../assets/detail/ic_vip_focused.png'
 import config from '../config';
@@ -87,9 +84,9 @@ import config from '../config';
         menuType: 'full',
         gradientBackground: {colors: ThemeConfig.btnGradientFocusColor, orientation: 6, cornerRadius: ThemeConfig.focusBorderCorner},
         icon: 'file://'+ic_full_normal,
-        focusIcon: media.vipType == '0' ? 'file://'+ic_full_focused : 'file://'+ic_full_vip_focused,
+        focusIcon: 'file://'+ic_full_focused,
         style: config.buttonMenuSize == 'default' ? {width: 140,height: 140,} : {width: 160,height: 70},
-        iconStyle: config.buttonMenuSize == 'default' ? {width: 46,height: 46,} : {width: 30,height: 30}
+        iconStyle: config.buttonMenuSize == 'default' ? {width: 50,height: 50,} : {width: 30,height: 30}
       },
       {
         type: 1,
@@ -97,10 +94,10 @@ import config from '../config';
         decoration: {right: 30},
         gradientBackground: {colors: ThemeConfig.btnGradientFocusColor, orientation: 6, cornerRadius: ThemeConfig.focusBorderCorner},
         text: isCollect.value ? '已收藏' : '收藏',
-        icon: !isCollect.value ? 'file://'+ic_fav_normal : 'file://'+ic_fav_collected,
-        focusIcon: media.vipType == '0' ? isCollect.value ? 'file://'+ic_fav_collected : 'file://'+ic_fav_focused : 'file://'+ic_fav_vip_focused,
+        icon: 'file://'+ic_collect_normal,
+        focusIcon: 'file://'+ic_collect_focused,
         style: config.buttonMenuSize == 'default' ? {width: 140,height: 140,} : {width: 160,height: 70},
-        iconStyle: config.buttonMenuSize == 'default' ? {width: 46,height: 46,} : {width: 30,height: 30}
+        iconStyle: config.buttonMenuSize == 'default' ? {width: 50,height: 50,} : {width: 30,height: 30}
       },
       {
         type: 1,
@@ -110,7 +107,7 @@ import config from '../config';
         icon: 'file://'+ic_vip_normal,
         focusIcon: 'file://'+ic_vip_focused,
         style: config.buttonMenuSize == 'default' ? {width: 226,height: 140,} : {width: 226,height: 70},
-        iconStyle: config.buttonMenuSize == 'default' ? {width: 46,height: 46,} : {width: 30,height: 30}
+        iconStyle: config.buttonMenuSize == 'default' ? {width: 50,height: 50,} : {width: 30,height: 30}
       },
     ]
     if(media.vipType == '0') listData = listData.splice(0, 2)
@@ -128,10 +125,10 @@ import config from '../config';
         text: isCollect.value ? '已收藏' : '收藏',
         decoration: {right: 30},
         gradientBackground: {colors: ThemeConfig.btnGradientFocusColor, orientation: 6, cornerRadius: ThemeConfig.focusBorderCorner},
-        icon: !isCollect.value ? 'file://'+ic_fav_normal : 'file://'+ic_fav_collected,
-        focusIcon: m.vipType == '0' ? isCollect.value ? 'file://'+ic_fav_collected : 'file://'+ic_fav_focused : 'file://'+ic_fav_vip_focused,
+        icon: 'file://'+ic_collect_normal,
+        focusIcon: 'file://'+ic_collect_focused,
         style: config.buttonMenuSize == 'default' ? {width: 140,height: 140,} : {width: 160,height: 70},
-        iconStyle: config.buttonMenuSize == 'default' ? {width: 46,height: 46,} : {width: 30,height: 30}
+        iconStyle: config.buttonMenuSize == 'default' ? {width: 50,height: 50,} : {width: 30,height: 30}
       }
       listRef.value?.updateItemRange(1,1,[item])
       eventbus.emit("onMenuFavouriteButtonClick", isCollect.value) 
