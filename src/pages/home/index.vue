@@ -23,9 +23,6 @@ const homeWaterTabRef = ref()
 const onESCreate = (params) => {
   homeWaterTabRef.value?.onESCreate(params)
 }
-const onESRestart = () => {
-  homeWaterTabRef.value?.onESRestart()
-}
 const onESPause = () => {
   homeWaterTabRef.value?.onESPause()
 }
@@ -49,7 +46,6 @@ const onBackPressed = () => {
 }
 defineExpose({
   onESCreate,
-  onESRestart,
   onESPause,
   onESStop,
   onESResume,
