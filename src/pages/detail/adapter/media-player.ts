@@ -95,13 +95,13 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
     return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
       if(mediaItem.vipType == '0' || (mediaItem.vipType != '0' && isTrySee)){
         detailManager.getPlayUrl(mediaItem.id + "",'2').then((res) => {
-          const mediaUrlList = res
-          // mediaUrlList = [
-          //   {
-          //     definition: 2,
-          //     playUrl: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
-          //   }
-          // ]
+          let mediaUrlList = res
+          mediaUrlList = [
+            {
+              definition: 2,
+              playUrl: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/110e7a35-1ba3-4d87-a8ea-0f462de40866.mp4'
+            }
+          ]
           const mediaSourceList: ESMediaSourceList = {
             index: -1,
             list: buildMediaSourceList(mediaUrlList)
