@@ -73,8 +73,8 @@ const triggerTask = [
   }
 ]
 
-function onESCreate(params: { primaryId: string }) {
-  loadFilters(params.primaryId || '1848555233454727169', true)
+function onESCreate(params: { screenId: string }) {
+  loadFilters(params.screenId || '1848555233454727169', true)
 }
 
 function loadFilters(primaryId: string, initExpand?: boolean) {

@@ -26,6 +26,11 @@ const routes = [
     component: () => import('./pages/filter/expand-sidebar-contents.vue')
   },
   {
+    path: '/filter',
+    name: 'screen_main_view',
+    component: () => import('./pages/filter/expand-sidebar-contents.vue')
+  },
+  {
     path: '/search',
     name: 'search',
     component: () => import('./pages/search/three-columns.vue')

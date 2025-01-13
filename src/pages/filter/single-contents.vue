@@ -24,8 +24,8 @@ const router = useESRouter()
 // 筛选内容
 const contentRef = ref()
 
-function onESCreate(params: { primaryId: string }) {
-  loadFilters(params.primaryId || '1848555233454727169')
+function onESCreate(params: { screenId: string }) {
+  loadFilters(params.screenId || '1848555233454727169')
 }
 
 function loadFilters(primaryId: string) {

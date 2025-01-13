@@ -3,7 +3,13 @@
     <!-- 输入框 -->
     <qt-view class="search-keyboard-input">
       <qt-image class="search-keyboard-input-icon" :src="icSearch" :focusable="false"></qt-image>
-      <qt-text v-if="inputText.length > 0" class="search-keyboard-input-text" style="color: white" :text="inputText"></qt-text>
+      <qt-text
+        v-if="inputText.length > 0"
+        class="search-keyboard-input-text"
+        style="color: white; font-size: 40px"
+        :text="inputText"
+        gravity="center|start"
+      ></qt-text>
       <qt-text v-else class="search-keyboard-input-text" :textSpan="defaultText"></qt-text>
     </qt-view>
     <!-- 输入框底部横线 -->
@@ -154,7 +160,7 @@ defineExpose({ onBackPressed })
 
 .search-keyboard-input-text {
   width: 400px;
-  height: 40px;
+  height: 50px;
   background-color: transparent;
   margin-left: 30px;
   color: rgba(255, 255, 255, 0.35);
