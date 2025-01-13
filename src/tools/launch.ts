@@ -263,7 +263,7 @@ class Launch {
   launchDetail(jumpId: string) {
     this.router.push({
       name: 'detail',
-      params: { id: jumpId }
+      params: { mediaId: jumpId }
     })
   }
 }
