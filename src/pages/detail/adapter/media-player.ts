@@ -1,4 +1,4 @@
-import { IMedia, IMediaItem, IMediaUrl } from "./interface";
+import { IMediaItem, IMediaUrl } from "./interface";
 import { isTrySee } from "./index";
 import { ESMediaItem } from "@extscreen/es3-player-manager";
 import {
@@ -95,7 +95,7 @@ export function createESPlayerMediaSourceListInterceptor(detailManager: DetailAp
     return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
       if(mediaItem.vipType == '0' || (mediaItem.vipType != '0' && isTrySee)){
         detailManager.getPlayUrl(mediaItem.id + "",'2').then((res) => {
-          let mediaUrlList = res
+          const mediaUrlList = res
           // mediaUrlList = [
           //   {
           //     definition: 2,

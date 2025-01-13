@@ -9,7 +9,7 @@
     <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-h-img"
-      :style="{ width: $props.width, height: $props.imgHeight, borderRadius: borderRadius }"
+      :style="{ width: $props.width, height: $props.imgHeight, borderRadius: `${themeConfig.focusBorderCorner}px` }"
       src="${cover}"
       :postDelay="100"
       :enableFocusBorder="true"
@@ -44,7 +44,7 @@
 </template>
 
 <script setup lang="ts" name="GridItemH">
-import ThemeConfig from '../../../../config/theme-config'
+import themeConfig from '../../../../config/theme-config'
 
 defineProps({
   width: {
@@ -60,8 +60,6 @@ defineProps({
     default: 180
   }
 })
-
-const borderRadius = ThemeConfig.focusBorderCorner + 'px'
 </script>
 
 <style scoped lang="scss">

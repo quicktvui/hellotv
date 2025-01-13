@@ -3,7 +3,7 @@
     <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-v-img"
-      :style="{ borderRadius: borderRadius }"
+      :style="{ borderRadius: `${themeConfig.focusBorderCorner}px` }"
       src="${cover}"
       :postDelay="100"
       :enableFocusBorder="true"
@@ -36,9 +36,7 @@
 </template>
 
 <script setup lang="ts" name="GridItemV">
-import ThemeConfig from '../../../../config/theme-config'
-
-const borderRadius = ThemeConfig.focusBorderCorner + 'px'
+import themeConfig from '../../../../config/theme-config'
 </script>
 
 <style scoped lang="scss">

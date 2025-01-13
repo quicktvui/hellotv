@@ -105,7 +105,6 @@ import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
 import { IMedia } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
-import { toast } from '@extscreen/es3-core';
   const emits = defineEmits(['onIntroductionFocus'])
   const router = useESRouter()
   let title = ref<string>('')

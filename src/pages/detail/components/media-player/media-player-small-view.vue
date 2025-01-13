@@ -55,7 +55,7 @@
     
 <script setup lang='ts' name='ButtonMenu'>
 import { ref } from 'vue'
-import { ESKeyEvent, ESLogLevel, useESEventBus, useESLog, toast } from "@extscreen/es3-core"
+import {ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core"
 import {ESIPlayerManager, ESMediaItem, ESMediaItemList} from "@extscreen/es3-player-manager";
 import {
   ESPlayerError,
@@ -63,7 +63,7 @@ import {
   ESPlayerInterceptResult,
   ESPlayerWindowType
 } from "@extscreen/es3-player";
-import { IMedia, IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
+import { IMediaPlayerViewState, MEDIA_PLAYER_ERROR_AUTH } from '../../adapter/interface'
 import { isTrySee } from '../../adapter/index'
 import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_placeholder.png"
   const TAG = 'MediaPlayerSmallView'
@@ -85,7 +85,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
   const isTitleBarShowing = ref<boolean>(true)
   const isMenuShowing = ref<boolean>(false)
   const isProgressShowing = ref<boolean>(false)
-  let playingMediaItem: ESMediaItem
   let dismissTimer
 
   let playerPlaceholderFocus = false
@@ -107,7 +106,7 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
       setPlayerViewStateDismiss();
     }, delay);
   }
-  const initPlayerViewState = (lastViewState: number) => {
+  const initPlayerViewState = () => {
     switch (viewState.value) {
       case IMediaPlayerViewState.MEDIA_PLAYER_VIEW_STATE_DISMISS:
         isTitleBarShowing.value = false
@@ -178,7 +177,6 @@ import mediaPlayerPlaceholder from "../../../../assets/detail/ic_media_player_pl
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------onPlayerPlayMedia------------->>>>', mediaItem)
     }
-    playingMediaItem = mediaItem
     showLoading.value = true
     showAuthError.value = false
   }

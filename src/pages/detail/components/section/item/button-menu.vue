@@ -49,9 +49,8 @@
 
 <script setup lang='ts' name='ButtonMenu'>
 import { ref } from 'vue'
-import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
-import { toast, useESEventBus } from "@extscreen/es3-core"
+import { useESEventBus } from "@extscreen/es3-core"
 import { IMedia } from '../../../adapter/interface'
 import ThemeConfig from "../../../../../config/theme-config";
 import ic_full_normal from '../../../../../assets/detail/ic_full_normal.png'
@@ -67,7 +66,6 @@ import config from '../config';
   const props = defineProps({
     isCollected: Boolean
   })
-  const router = useESRouter()
   const eventbus = useESEventBus()
   let bmStyle = config.buttonMenuSize == 'default' ?
     {height: '140px',marginTop: 50} : {height: '70px',marginTop: 20}
