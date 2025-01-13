@@ -50,7 +50,7 @@ import MediaInfo from "./components/media-info.vue";
 import MediaSeriesSection from './components/media-series-section.vue'
 import RecommendItem from './components/recommend-item.vue'
 // import BuildConfig from '../../config/build-config'
-import detailManager from '../../api/detail/detail-manager'
+import detailManager from './api/index'
 import { IMedia } from './adapter/interface'
 
   // const TAG = 'DetailFullScreen'

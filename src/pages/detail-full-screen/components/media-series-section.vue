@@ -9,7 +9,7 @@
 // import { useESRuntime } from '@extscreen/es3-core'
 // import { QTMediaSeries} from '@quicktvui/quicktvui3'
 import { IMedia} from '../adapter/interface'
-// import detailManager from '../../../api/detail/detail-manager'
+// import detailManager from '../api/inidex'
 // import ThemeConfig from "../../../config/theme-config";
   
   //**************************初始化入口**************************

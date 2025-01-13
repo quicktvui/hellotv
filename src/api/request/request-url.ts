@@ -10,12 +10,6 @@ export const homePlayUrl = BuildConfig.requestBaseUrl +'/streams/${id}?packageNa
 //获取 4K世界 数据
 export const home4KUrl = BuildConfig.requestBaseUrl + '/home/tabs/4k/${id}?packageName=${packageName}'
 
-//详情页接口
-export const DetailUrl = BuildConfig.requestBaseUrl + '/album/details/'
-export const DetailMediaSeriesUrl = BuildConfig.requestBaseUrl + '/album/episodes/'
-export const RecommendListUrl = BuildConfig.requestBaseUrl + '/recommendations'
-export const PlayUrl = BuildConfig.requestBaseUrl + '/streams/'
-export const RecordsUrl = BuildConfig.requestBaseUrl + '/records'
 //用户接口
 
 //筛选页接口

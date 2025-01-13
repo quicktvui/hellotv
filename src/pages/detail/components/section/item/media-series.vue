@@ -58,7 +58,7 @@ import {
   buildMediaSeriesData,
   buildMediaSeriesList
 } from "../../../adapter/index";
-import detailManager from '../../../../../api/detail/detail-manager'
+import detailManager from '../../../api/index'
   const TAG = 'MediaSeriesView'
   const emits = defineEmits([
     'onMediaSeriesItemLoad',
