@@ -7,7 +7,27 @@
       <!-- 顶部按钮 -->
       <top-view :logoRight='true' @focus="onTopBtnFocus"></top-view>
       <!-- 详情页基本信息及按钮 -->
-       <media-info ref="mediaInfoRef"></media-info>
+      <media-info ref="mediaInfoRef"></media-info>
+      <!-- bottom waterfall 选集列表及推荐列表-->
+      <qt-waterfall
+        ref="waterfallRef" 
+        class="detail-waterfall"
+        enablePlaceholder
+        :endHintEnabled="false" 
+        :enableKeepFocus='false'
+        :qtTabSectionEnable="qtTabSectionEnable"
+        :blockFocusDirections="['left', 'right', 'down']"
+        @onItemClick="onWaterfallItemClick"
+        :verticalFadingEdgeEnabled="true" :fadingEdgeLength="100">
+        <template v-slot:vue-section>
+          <!-- 选集自定义vue-section -->
+          <media-series-section ref="mediaSeriesSectionRef"></media-series-section>
+        </template>
+        <template v-slot:list-item>
+          <!-- 推荐列表item -->
+          <recommend-item :type="10011"></recommend-item>
+        </template>
+      </qt-waterfall>
     </qt-view>
     <!-- 骨架屏 -->
     <div class="skeleton" v-if="isShowSkeleton">
@@ -31,6 +51,8 @@ import { useESRouter } from '@extscreen/es3-router'
 import MediaPlayer from "./components/media-player.vue";
 import TopView from '../../components/top-view.vue'
 import MediaInfo from "./components/media-info.vue";
+import MediaSeriesSection from './components/media-series-section.vue'
+import RecommendItem from './components/recommend-item.vue'
 import BuildConfig from '../../config/build-config'
 import detailManager from '../../api/detail/detail-manager'
 import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/interface'
@@ -40,9 +62,30 @@ import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/inte
   const runtime = useESRuntime()
   const router = useESRouter()
   let deviceId = runtime.getRuntimeDeviceId()??''
+  const qtTabSectionEnable = {
+    tabEnable:false,
+    flexSectionEnable:false,
+    flexSection:{
+      qtPosterEnable:false,
+      qtPluginItemEnable:false,
+      cardItemEnable:false,
+    },
+    listSectionEnable:true,
+    listSectionItem:{
+      qtPosterEnable:false
+    },
+    loadingSectionEnable:true,
+    endSectionEnable:true,
+    blankSectionEnable:false,
+    cardSectionEnable:false,
+    pluginSectionEnable:false,
+    vueSectionEnable:true,
+    itemStoreEnable:false,
+  }
   let media: IMedia
   const mediaPlayerRef = ref()
   const mediaInfoRef = ref()
+  const mediaSeriesSectionRef = ref()
   let currentPlayIndex = -1 // 当前播放视频的index
   let currenId = ref('')
   let isShowSkeleton = ref(true)
@@ -83,9 +126,12 @@ import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/inte
       })
     })
   }
+
   const onTopBtnFocus = () => {}
   const emStartPlayFn = () => {}
   const onOverFn = () => {}
+
+  const onWaterfallItemClick = () => {}
 
   const onESResume = () => {}
   const onESRestart = () => {}

@@ -201,6 +201,7 @@ import ic_info_focused from '../../../assets/detail-full-screen/ic_info_focused.
         height: 34px;
         position: relative;
         background-color: transparent;
+        margin-top: 5px;
         .menu-list-item-text{
           height: 34px;
           font-size: 28px;
