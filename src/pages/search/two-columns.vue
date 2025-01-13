@@ -108,24 +108,4 @@ function onBackPressed() {
 defineExpose({ onBackPressed })
 </script>
 
-<style scoped>
-.search-three-columns {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-three-columns-body {
-  width: 3072px;
-  background-color: transparent;
-  flex-direction: row;
-}
-
-.search-three-columns-body-loading {
-  height: 1080px;
-  background-color: transparent;
-  align-items: center;
-  justify-content: center;
-  position: absolute;
-}
-</style>
+<style scoped lang="scss" src="./scss/search.scss"></style>

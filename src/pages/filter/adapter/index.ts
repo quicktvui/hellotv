@@ -33,23 +33,38 @@ export const buildFilters = function (
   const primaries: Primary[] = rawData.primary.map((item) => ({ type: PrimaryType.TEXT, ...item }))
 
   // 二级列表, 左侧筛选项
-  const secondaries: Secondary[] = [
-    // { type: SecondaryType.TITLE, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
-    // {
-    //   type: SecondaryType.FILTER,
-    //   id: '',
-    //   name: '筛选',
-    //   icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
-    // },
-    {
-      type: SecondaryType.FILTER_TITLE,
-      id: '',
-      name: '全部' + primaries.find((item) => item.id === primaryId)?.name || '',
-      icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
-    },
-    { type: SecondaryType.LINE, id: '', name: 'line' },
-    ...rawData.secondary.map((item) => ({ type: 9, ...item }))
-  ]
+  const secondaries: Secondary[] = []
+  switch (config.layoutMode) {
+    case 1: // 单栏布局
+      break
+    case 2: // 两栏布局
+      secondaries.push(
+        ...[
+          { type: SecondaryType.TITLE, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
+          {
+            type: SecondaryType.FILTER,
+            id: '',
+            name: '筛选',
+            icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
+          }
+        ]
+      )
+      break
+    case 3: // 三栏布局
+      secondaries.push(
+        ...[
+          {
+            type: SecondaryType.FILTER_TITLE,
+            id: '',
+            name: '全部' + primaries.find((item) => item.id === primaryId)?.name || '',
+            icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
+          },
+          { type: SecondaryType.LINE, id: '', name: 'line' }
+        ]
+      )
+      break
+  }
+  secondaries.push(...rawData.secondary.map((item) => ({ type: 9, ...item })))
 
   // 三级列表, 右侧筛选条件
   const tertiaries: Tertiary[] = []

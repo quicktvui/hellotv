@@ -45,17 +45,4 @@ function onBackPressed() {
 defineExpose({ onESCreate, onBackPressed })
 </script>
 
-<style scoped>
-.filter {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.filter-body {
-  width: 2130px;
-  height: 960px;
-  background-color: transparent;
-  flex-direction: row;
-}
-</style>
+<style scoped lang="scss" src="./scss/filter.scss"></style>

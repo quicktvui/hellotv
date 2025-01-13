@@ -39,27 +39,4 @@
 import themeConfig from '../../../../config/theme-config'
 </script>
 
-<style scoped lang="scss">
-.filter-main-contents-grid-item-v {
-  width: 260px;
-  height: 414px;
-  background-color: transparent;
-}
-
-.filter-main-contents-grid-item-v-img {
-  width: 260px;
-  height: 368px;
-  background-color: transparent;
-  margin-bottom: 11px;
-}
-
-.filter-main-contents-grid-item-v-text {
-  position: absolute;
-  width: 260px;
-  height: 40px;
-  background-color: transparent;
-  font-size: 30px;
-  color: $text-normal-color;
-  focus-color: #ffffff;
-}
-</style>
+<style scoped lang="scss" src="../../scss/filter-content-grid-item.scss"></style>

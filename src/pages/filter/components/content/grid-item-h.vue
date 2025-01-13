@@ -62,27 +62,4 @@ defineProps({
 })
 </script>
 
-<style scoped lang="scss">
-.filter-main-contents-grid-item-h {
-  width: 320px;
-  height: 226px;
-  background-color: transparent;
-}
-
-.filter-main-contents-grid-item-h-img {
-  width: 320px;
-  height: 180px;
-  background-color: transparent;
-  margin-bottom: 11px;
-}
-
-.filter-main-contents-grid-item-h-text {
-  position: absolute;
-  width: 320px;
-  height: 40px;
-  background-color: transparent;
-  font-size: 30px;
-  color: $text-normal-color;
-  focus-color: #ffffff;
-}
-</style>
+<style scoped lang="scss" src="../../scss/filter-content-grid-item.scss"></style>

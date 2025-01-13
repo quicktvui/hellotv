@@ -81,26 +81,4 @@ function onBackPressed() {
 defineExpose({ onESCreate, onBackPressed })
 </script>
 
-<style scoped>
-.filter {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.filter-focus-placeholder {
-  width: 1px;
-  height: 1px;
-  background-color: transparent;
-  position: absolute;
-  top: 0px;
-  left: 0px;
-}
-
-.filter-body {
-  width: 2130px;
-  height: 960px;
-  background-color: transparent;
-  flex-direction: row;
-}
-</style>
+<style scoped lang="scss" src="./scss/filter.scss"></style>

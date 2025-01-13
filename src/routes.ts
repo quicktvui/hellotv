@@ -1,8 +1,20 @@
 import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
 import detail from './pages/detail/index.vue'
-
 import test from './pages/m-test.vue'
+
+// 筛选布局模式选择
+import filterConfig from './pages/filter/config'
+const filter = () => {
+  switch (filterConfig.layoutMode) {
+    case 1:
+      return import('./pages/filter/single-contents.vue')
+    case 2:
+      return import('./pages/filter/sidebar-contents.vue')
+    case 3:
+      return import('./pages/filter/expand-sidebar-contents.vue')
+  }
+}
 
 const routes = [
   {
@@ -23,12 +35,12 @@ const routes = [
   {
     path: '/filter',
     name: 'filter',
-    component: () => import('./pages/filter/expand-sidebar-contents.vue')
+    component: filter
   },
   {
     path: '/filter',
     name: 'screen_main_view',
-    component: () => import('./pages/filter/expand-sidebar-contents.vue')
+    component: filter
   },
   {
     path: '/search',

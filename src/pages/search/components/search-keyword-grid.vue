@@ -61,35 +61,4 @@ function onGridItemClick(evt) {
 }
 </script>
 
-<style scoped lang="scss">
-.search-keyword {
-  width: 1286px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-keyword-grid {
-  width: 1286px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-keyword-grid-item {
-  width: 410px;
-  height: 80px;
-  background-color: transparent;
-  border-radius: 8px;
-  justify-content: center;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
-}
-
-.search-keyword-grid-item-text {
-  width: 330px;
-  height: 40px;
-  background-color: transparent;
-  margin-left: 40px;
-  color: $text-normal-color;
-  font-size: 30px;
-  focus-color: $text-focus-color;
-}
-</style>
+<style scoped lang="scss" src="../scss/search-keyword-grid.scss"></style>

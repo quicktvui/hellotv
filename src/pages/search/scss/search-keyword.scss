@@ -1,0 +1,59 @@
+.search-keyword {
+  width: 518px;
+  height: 1080px;
+  background-color: transparent;
+  border-right-width: 1px;
+  border-right-style: solid;
+  border-right-color: rgba(255, 255, 255, 0.06);
+}
+
+.search-keyword-empty {
+  width: 518px;
+  height: 255px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+}
+
+.search-keyword-empty-text {
+  width: 518px;
+  height: 40px;
+  background-color: transparent;
+  color: $text-normal-color;
+  font-size: 30px;
+}
+
+.search-keyword-title {
+  width: 518px;
+  height: 50px;
+  background-color: transparent;
+  margin-top: 75px;
+  margin-left: 80px;
+  color: white;
+  font-size: 40px;
+}
+
+.search-keyword-list {
+  width: 518px;
+  height: 955px;
+  background-color: transparent;
+}
+
+.search-keyword-list-item {
+  width: 518px;
+  height: 84px;
+  background-color: transparent;
+  justify-content: center;
+  border-radius: 8px;
+  focus-background-color: $gl-theme-btn-bg-focus-color;
+}
+
+.search-keyword-list-item-text {
+  width: 358px;
+  position: absolute;
+  left: 80px;
+  color: $text-normal-color;
+  font-size: 36px;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
+}

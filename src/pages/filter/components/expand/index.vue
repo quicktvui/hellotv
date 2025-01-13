@@ -74,35 +74,4 @@ function setNextFocusNameRight(s: string) {
 defineExpose({ init, setNextFocusNameRight })
 </script>
 
-<style scoped lang="scss">
-.filter-expand {
-  width: 210px;
-  height: 960px;
-  background-color: transparent;
-}
-
-.filter-expand-list {
-  width: 210px;
-  height: 960px;
-  background-color: transparent;
-}
-
-.filter-expand-list-item {
-  width: 210px;
-  height: 106px;
-  background-color: transparent;
-  border-top-right-radius: 8px;
-  border-bottom-right-radius: 8px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
-}
-
-.filter-expand-list-item-text {
-  position: absolute;
-  width: 179px;
-  height: 106px;
-  background-color: transparent;
-  color: $text-select-color;
-  font-size: 36px;
-  focus-color: $text-focus-color;
-}
-</style>
+<style scoped lang="scss" src="../../scss/filter-expand.scss"></style>
