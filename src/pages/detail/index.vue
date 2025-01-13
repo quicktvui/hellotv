@@ -88,7 +88,6 @@ import MediaPlayer from './components/media-player/index.vue'
   const waterfallRef = ref<QTIWaterfall>()
   let descendantFocusability = ref<number>(1)
   let media: IMedia
-  let isPaused = false
   let isStopped = false
   const qtTabSectionEnable = {
     tabEnable:false,
@@ -122,7 +121,6 @@ import MediaPlayer from './components/media-player/index.vue'
   //  ***************************初始化入口 onESCreate***************************
   const onESCreate = (params) => {
     currenId.value = params && params.mediaId ? params.mediaId : '1584863712586579969'
-    isPaused = false
     isStopped = false;
     initWaterfall()
     getDetail()
@@ -138,7 +136,6 @@ import MediaPlayer from './components/media-player/index.vue'
         mediaPlayerRef.value?.resume()
       }
     }
-    isPaused = false;
     isStopped = false;
   }
   const onESRestart = () => {}
@@ -146,7 +143,6 @@ import MediaPlayer from './components/media-player/index.vue'
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "-------onESPause---------->>>>>")
     }
-    isPaused = true;
   }
   const onESStop = () => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -317,7 +313,7 @@ import MediaPlayer from './components/media-player/index.vue'
       title: media.title
     }
     if(val){ //收藏
-      detailManager.reportRecordData(body).then(()=> {}).catch((err)=>{}) 
+      detailManager.reportRecordData(body).then(()=> {}).catch(()=>{}) 
     }else{ //取消收藏
       detailManager.deleteRecordData(body.id,body.deviceId,body.recordType)
         .then(()=> {}).catch(()=>{}) 

@@ -71,10 +71,10 @@
   
 <script setup lang='ts' name='media-info'>
 import { ref } from 'vue'
-import { useESRouter } from '@extscreen/es3-router'
+// import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../config/theme-config";
-import { toast } from '@extscreen/es3-core';
+// import { toast } from '@extscreen/es3-core';
 import { IMedia } from "../adapter/interface";
 import ic_full_normal from '../../../assets/detail-full-screen/ic_full_normal.png'
 import ic_full_focused from '../../../assets/detail-full-screen/ic_full_focused.png'
@@ -85,18 +85,18 @@ import ic_vip_normal from '../../../assets/detail-full-screen/ic_vip_normal.png'
 import ic_vip_focused from '../../../assets/detail-full-screen/ic_vip_focused.png'
 import ic_info_normal from '../../../assets/detail-full-screen/ic_info_normal.png'
 import ic_info_focused from '../../../assets/detail-full-screen/ic_info_focused.png'
-  const props = defineProps({
-    isCollected: Boolean
-  })
-  const router = useESRouter()
+  // const props = defineProps({
+  //   isCollected: Boolean
+  // })
+  // const router = useESRouter()
   let title = ref<string>('')
   let tag = ref<string>('')
   const listRef = ref<QTIListView>()
   let isCollect = ref(false)
   let listData: QTListViewItem[] = []
-  let m: IMedia
+  // let m: IMedia
   const init = (media: IMedia) => {
-    m = media
+    // m = media
     title.value = media.title
     tag.value = media.tags
     listData = [

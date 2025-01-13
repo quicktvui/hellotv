@@ -1,7 +1,7 @@
 import {ESKeyEvent} from "@extscreen/es3-core";
 import {ESPlayerWindowType} from "@extscreen/es3-player";
 import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
-import {QTListViewItem, QTICollapseItem} from "@quicktvui/quicktvui3";
+// import {QTListViewItem, QTICollapseItem} from "@quicktvui/quicktvui3";
 //选集展示类型
 export enum IMediaSeriesType {
   MEDIA_ITEM_LIST_TYPE_NUMBER = 0,

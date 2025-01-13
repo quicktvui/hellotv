@@ -1,7 +1,7 @@
 <template>
   <qt-view class='detail-full-screen' ref='detailRef'>
     <!-- 播放器 -->
-    <!-- <media-player ref="mediaPlayerRef" @emStartPlay="emStartPlayFn" @onOver="onOverFn" />       -->
+    <media-player ref="mediaPlayerRef" @emStartPlay="emStartPlayFn" @onOver="onOverFn" />      
     <!-- 页面内容 -->
     <qt-view class="content">
       <!-- 顶部按钮 -->
@@ -39,11 +39,7 @@
 <script setup lang='ts' name='detail-full-screen'>
 import { ref, nextTick } from 'vue'
 import {
-ESKeyCode,
 ESKeyEvent,
-ESLogLevel,
-toast,
-useESEventBus,
 useESLog,
 useESRuntime,
 } from '@extscreen/es3-core'
@@ -53,15 +49,15 @@ import TopView from '../../components/top-view.vue'
 import MediaInfo from "./components/media-info.vue";
 import MediaSeriesSection from './components/media-series-section.vue'
 import RecommendItem from './components/recommend-item.vue'
-import BuildConfig from '../../config/build-config'
+// import BuildConfig from '../../config/build-config'
 import detailManager from '../../api/detail/detail-manager'
-import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/interface'
+import { IMedia } from './adapter/interface'
 
-  const TAG = 'DetailFullScreen'
+  // const TAG = 'DetailFullScreen'
   const log = useESLog()
   const runtime = useESRuntime()
   const router = useESRouter()
-  let deviceId = runtime.getRuntimeDeviceId()??''
+  // let deviceId = runtime.getRuntimeDeviceId()??''
   const qtTabSectionEnable = {
     tabEnable:false,
     flexSectionEnable:false,
@@ -86,7 +82,7 @@ import { IMedia, IRecommendItem, IMediaPlayer, IMediaItem } from './adapter/inte
   const mediaPlayerRef = ref()
   const mediaInfoRef = ref()
   const mediaSeriesSectionRef = ref()
-  let currentPlayIndex = -1 // 当前播放视频的index
+  //let currentPlayIndex = -1 // 当前播放视频的index
   let currenId = ref('')
   let isShowSkeleton = ref(true)
   

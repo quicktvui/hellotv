@@ -95,12 +95,8 @@
     
 <script setup lang='ts' name='introduction'>
 import { ref } from 'vue'
-import { useESRouter } from '@extscreen/es3-router'
 import { IMedia } from '../detail/adapter/interface'
 import introductionBg from "../../assets/detail/ic_introduction_bg.png"
-  const TAG = "Introduction"
-  const emits = defineEmits(['onIntroductionFocus'])
-  const router = useESRouter()
   let title = ref<string>('')
   let score = ref<string>('')
   let tag = ref<string>('')

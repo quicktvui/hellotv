@@ -5,15 +5,16 @@
 </template>
 
 <script setup lang='ts' name='media-series-section'>
-import { ref } from 'vue'
-import { useESRuntime } from '@extscreen/es3-core'
-import { QTMediaSeries} from '@quicktvui/quicktvui3'
-import { IMedia, IMediaSeriesType ,IMediaItem } from '../adapter/interface'
-import detailManager from '../../../api/detail/detail-manager'
-import ThemeConfig from "../../../config/theme-config";
+// import { ref } from 'vue'
+// import { useESRuntime } from '@extscreen/es3-core'
+// import { QTMediaSeries} from '@quicktvui/quicktvui3'
+import { IMedia} from '../adapter/interface'
+// import detailManager from '../../../api/detail/detail-manager'
+// import ThemeConfig from "../../../config/theme-config";
   
   //**************************初始化入口**************************
   const init = async (media: IMedia) => {
+    
   }
 
   defineExpose({
