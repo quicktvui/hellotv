@@ -10,6 +10,8 @@
 </script>
 
 
-<style scoped src='src/config/test.scss'>
+<!--<style lang='scss' scoped src='../config/test.scss'>-->
+<!--</style>-->
 
+<style lang='scss' scoped src='../config/test.scss'>
 </style>
