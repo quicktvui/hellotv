@@ -1,19 +1,15 @@
 <template>
-  <div style='width:1920px;height: 1080px; background-color: palevioletred'>
+  <div class='qt-test' style='width:1920px;height: 1080px;'>
 
   </div>
 
 </template>
 
-<script lang='ts' setup >
+<script lang='ts' setup>
 
 </script>
 
 
-<!--<style lang='scss'>-->
+<style scoped src='src/config/test.scss'>
 
-<!--//.test-root-css{-->
-<!--//  background-color: $gl-theme-root-bg-color;-->
-<!--//}-->
-
-<!--</style>-->
+</style>
