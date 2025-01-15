@@ -7,7 +7,7 @@ import {
 } from '@quicktvui/quicktvui3'
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
-import homeManager from '../../../../api/home/home-manager'
+import homeManager from '../../api/index'
 import ThemeConfig from '../../../../config/theme-config'
 import { HomePlayType } from '../media/home-media-imp'
 import barsDataManager from '../nav-bar/nav-bar-adapter'

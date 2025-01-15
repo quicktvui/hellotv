@@ -97,7 +97,7 @@ import {
   VirtualView
 } from '@quicktvui/quicktvui3'
 import { ref } from 'vue'
-import homeManager from '../../../api/home/home-manager'
+import homeManager from '../api/index'
 import ic_4k_logo from '../../../assets/home/ic_4k_logo.png'
 import BgAnimation from '../../../components/bg-animation.vue'
 import { IMediaList } from '../../../components/media/build-data/media-imp'

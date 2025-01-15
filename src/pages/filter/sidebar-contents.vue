@@ -28,7 +28,7 @@ import themeConfig from '../../config/theme-config'
 import TopView from '../../components/top-view.vue'
 import FilterSidebar from './components/sidebar/index.vue'
 import FilterContent from './components/content/index.vue'
-import filterManager from '../../api/filter/index'
+import filterManager from './api/index'
 
 const router = useESRouter()
 

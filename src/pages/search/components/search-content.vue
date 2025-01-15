@@ -47,7 +47,7 @@ import searchContentItemH from './search-content-item-h.vue'
 import searchContentItemV from './search-content-item-v.vue'
 import launch from '../../../tools/launch'
 import config from '../config'
-import searchManager from '../../../api/search/index'
+import searchManager from '../api/index'
 
 const props = defineProps({
   keyword: {

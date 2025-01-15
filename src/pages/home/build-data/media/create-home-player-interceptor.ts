@@ -4,7 +4,7 @@ import {
   ESPlayerInterceptResult
 } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
-import homeManager from '../../../../api/home/home-manager'
+import homeManager from '../../api/index'
 import { encodeDefinition } from '../../../../components/media/build-data/media-control-adapter'
 
 export const createHomePlayerInterceptor = (): ESIPlayerInterceptor => {

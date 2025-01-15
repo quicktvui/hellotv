@@ -54,7 +54,7 @@ import MediaIntroduction from './item/media-introduction.vue'
 import PlayerPlaceholder from './item/player-placeholder.vue'
 import ButtonMenu from './item/button-menu.vue'
 import MediaSeries from './item/media-series.vue'
-import detailManager from '../../../../api/detail/detail-manager'
+import detailManager from '../../api/index'
 import ThemeConfig from "../../../../config/theme-config";
 import config from './config';
   const emits = defineEmits([

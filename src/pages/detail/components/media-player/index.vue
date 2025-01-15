@@ -46,7 +46,7 @@ import { ref, markRaw, nextTick } from 'vue'
 import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
 import { useESRouter } from '@extscreen/es3-router'
 import BuildConfig from "../../../../config/build-config";
-import detailManager from '../../../../api/detail/detail-manager'
+import detailManager from '../../api/index'
 import {
   ESIPlayerManager, 
   ESMediaItem,

@@ -45,7 +45,7 @@ import { onMounted } from 'vue'
 import { qtRef, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
 import { KeywordType } from '../adapter/interface'
-import searchManager from '../../../api/search/index'
+import searchManager from '../api/index'
 import launch from '../../../tools/launch'
 
 const gridData = qtRef<QTListViewItem[]>()

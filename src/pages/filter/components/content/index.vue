@@ -106,7 +106,7 @@ import ListItemRecord from './list-item-record.vue'
 import GridItemH from './grid-item-h.vue'
 import GridItemV from './grid-item-v.vue'
 import config from '../../config'
-import filterManager from '../../../../api/filter/index'
+import filterManager from '../../api/index'
 import launch from '../../../../tools/launch'
 
 const emits = defineEmits(['setNextFocusNameRight'])

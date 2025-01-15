@@ -2,6 +2,7 @@ import {ESKeyEvent} from "@extscreen/es3-core";
 import {ESPlayerWindowType} from "@extscreen/es3-player";
 import { QTIBaseView } from '@quicktvui/quicktvui3/dist/src/base/QTIBaseView'
 import {QTListViewItem, QTICollapseItem} from "@quicktvui/quicktvui3";
+
 //选集展示类型
 export enum IMediaSeriesType {
   MEDIA_ITEM_LIST_TYPE_NUMBER = 0,
@@ -107,5 +108,36 @@ export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
   setItemFocused(position: number): void
   setItemSelected(position: number): void
   release(): void
+}
+//api
+export interface DetailApi {
+  /**
+   * 获取详情页详情数据
+   */
+  getMediaDetail(id:string): Promise<IMedia>
+  /**
+   * 获取详情页选集列表
+   */
+  getMediaSeriesList(id:string, page: number, limit: number): Promise<Array<IMediaItem>>
+  /**
+   * 获取相关推荐数据
+   */
+  getRecommendList(id:string): Promise<Array<IRecommendItem>>
+  /**
+   * 获取详情页播放请求地址
+   */
+  getPlayUrl(id: string, type: string): Promise<any>
+  /**
+   * 获取历史/收藏 数据
+   */
+  getRecordData(id:string, deviceId: string, type: string):Promise<any>
+  /**
+   * 上报历史/收藏
+   */
+  reportRecordData(data: any):Promise<any>
+  /**
+   * 删除历史/收藏
+   */
+  deleteRecordData(id:string, deviceId: string, type: string):Promise<any>
 }
   
