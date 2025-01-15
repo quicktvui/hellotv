@@ -1,6 +1,6 @@
 import { FilterApi, Filters } from '../adapter/interface'
 import { filterContentsUrl, filterLeftListUrl } from './request-url'
-import requestManager from '../../../tools/request/request-manager'
+import requestManager from '../../../tools/request'
 import config from '../../../config/build-config'
 import {replacePlaceholders} from '../../../tools/common'
 

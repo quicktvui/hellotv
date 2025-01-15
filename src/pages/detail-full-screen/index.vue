@@ -31,7 +31,7 @@
     </qt-view>
     <!-- 骨架屏 -->
     <div class="skeleton" v-if="isShowSkeleton">
-      <img src="../../assets/detail-full-screen/skeleton.png" :focusable="false" />
+      <img src="../../assets/detail/skeleton.png" :focusable="false" />
     </div>
   </qt-view >
 </template>

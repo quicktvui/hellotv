@@ -9,7 +9,7 @@ import {
   RequestDeviceParams,
   RequestUserParams,
   RequestRuntimeParams
-} from "./request-data"
+} from "./interface"
 
 class RequestManager{
   requestParams: RequestBodyParams | null = null

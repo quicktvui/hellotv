@@ -1,6 +1,6 @@
 import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
-import detail from './pages/detail/index.vue'
+// import detail from './pages/detail/index.vue'
 import test from './pages/m-test.vue'
 
 // 筛选布局模式选择

@@ -17,7 +17,7 @@ import {
   useESRuntime
 } from '@extscreen/es3-core'
 import { ESPlayerLogLevel, useESPlayerLog, useESPlayer} from '@extscreen/es3-player'
-import requestManager from './tools/request/request-manager'
+import requestManager from './tools/request'
 import userManager from './api/user/user-manager'
 
 import BuildConfig from './config/build-config'

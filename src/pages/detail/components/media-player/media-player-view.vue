@@ -626,7 +626,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     if (player.getWindowType() != ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL) {
       return false
     }
-    toast.showShortToast(keyEvent.keyCode+'')
     switch (keyEvent.keyCode) {
       case ESKeyCode.ES_KEYCODE_DPAD_CENTER:
       case ESKeyCode.ES_KEYCODE_ENTER:

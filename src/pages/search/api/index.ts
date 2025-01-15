@@ -1,4 +1,4 @@
-import requestManager from '../../../tools/request/request-manager'
+import requestManager from '../../../tools/request'
 import { Contents, Recommends, SearchApi, Suggestions } from '../adapter/interface'
 import { searchSuggestionsUrl, searchContentsUrl, searchHotRecommendUrl } from './request-url'
 import config from '../../../config/build-config'
