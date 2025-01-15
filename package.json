@@ -42,7 +42,7 @@
     "@babel/polyfill": "^7.12.0",
     "@babel/preset-env": "^7.12.0",
     "@babel/runtime": "^7.16.0",
-    "@extscreen/es3-debug-server": "0.0.1",
+    "@extscreen/es3-debug-server": "0.0.6",
     "@extscreen/es3-dynamic-import-plugin": "^0.0.5",
     "@hippy/hippy-hmr-plugin": "^0.1.0",
     "@hippy/rejection-tracking-polyfill": "^1.0.0",

@@ -1164,10 +1164,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-1.1.24.tgz#51e32864fad945ca026ed2d4e0d88e7072708c30"
   integrity sha512-kbP9wSdnSLCWx8Vl/L1kuXujDe/J795/FlwpoIkHtNozrnGzIaVonnM0B/amxB/C7Ka/gOy5XoJMBG6q5sgCRg==
 
-"@extscreen/es3-debug-server@0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-debug-server/-/es3-debug-server-0.0.1.tgz#d77330eea4bbe35e9b472dacf9ef4c9f623bb6f1"
-  integrity sha512-hYOiCP/xTgXg/wA/79OvwHxLIkepgIUd9hK4OGC17Dx15uzdMqrtrSZ7Dxv/2IQqvPfwoLHhE6hfPX4d3exOCA==
+"@extscreen/es3-debug-server@0.0.6":
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-debug-server/-/es3-debug-server-0.0.6.tgz#d295372f96e16b14f531ac593fb9eb37c6dd5562"
+  integrity sha512-NKGcbLrBKl0mo+Z4gcRoP3Qnr1w1vwzu9MJfw2hjXK8MDzwWg9NaacNPBXqAZ13AErzcvvW0TiHsDc8BsWDIyg==
   dependencies:
     "@hippy/chrome-devtools" "^0.1.2"
     "@hippy/chrome-devtools-extensions" "0.5.0"
@@ -1176,7 +1176,7 @@
     "@hippy/hippy-react-devtools-plugin" "^0.1.0"
     "@hippy/hippy-vue-devtools-plugin" "^0.1.0"
     "@hippy/react-devtools" "^0.1.0"
-    "@hippy/vanilla-js-devtools" "^0.1.10"
+    "@hippy/vanilla-js-devtools" "0.1.10"
     "@hippy/vue-devtools" "^0.0.1"
     "@koa/cors" "^3.1.0"
     axios "^0.26.1"
@@ -1314,10 +1314,10 @@
   resolved "https://registry.yarnpkg.com/@hippy/rejection-tracking-polyfill/-/rejection-tracking-polyfill-1.0.0.tgz#809759b6dde81a10ae583e2b5e2171703f606ad1"
   integrity sha512-iJ/J+n6kyb1rblB7e563vU1VgXxGTUy8TGzcEACUIOt8VLwnxPZGcHDkYW3SQhUB0YF+9dO6QLCX83iGlQqvSA==
 
-"@hippy/vanilla-js-devtools@^0.1.10":
-  version "0.1.13"
-  resolved "https://registry.yarnpkg.com/@hippy/vanilla-js-devtools/-/vanilla-js-devtools-0.1.13.tgz#fba39f6087f3264fb26e5d3c254af5d0ed94d95e"
-  integrity sha512-LC5aTrGauIJBTfjYUddAP4kwdQqrSvIUk0TZxFK4JR3OQXE/8+3BRnw/t0rfg8Gl7AooWm1PgCBkyPXxWzLeDA==
+"@hippy/vanilla-js-devtools@0.1.10":
+  version "0.1.10"
+  resolved "https://registry.yarnpkg.com/@hippy/vanilla-js-devtools/-/vanilla-js-devtools-0.1.10.tgz#1480c4503e2fa91f81618f99a8abcfc070423e78"
+  integrity sha512-vC2upj3CfO84gESmBL/rckk25b5+O/qCO3R0qVbfS83nk1aZOIpMEqOhDRTdPA5/0vezMjgYsBSHSAl5ApjaWw==
 
 "@hippy/vue-css-loader@^2.0.1":
   version "2.17.3"
