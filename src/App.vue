@@ -44,14 +44,6 @@ export default defineComponent({
     const runtime = useESRuntime()
     const playerManager = useESPlayer()
 
-
-    // const launch = useLaunch()
-
-
-    //
-    // const globalApi = useGlobalApi()
-
-
     function onESCreate() {
       //添加网络监听
       network.addListener(connectivityChangeListener)
@@ -63,17 +55,18 @@ export default defineComponent({
         .then(()=> userManager.init(eventBus,localStore))
         .then(() => launch.init(router,nativeRouter,develop))
         // .then(() => HistoryApi.init(localStore))
-        // .then(() => activity2Api.init())
-        .then(() => playerManager.init({
-          debug: BuildConfig.DEBUG,
-          display: {
-            screenWidth: device.getScreenWidth(),
-            screenHeight: device.getScreenHeight()
-          },
-          device: {
-            deviceType: runtime.getRuntimeDeviceType() ?? ''
-          }
-        }))
+        .then(() => {
+           playerManager.init({
+            debug: BuildConfig.DEBUG,
+            display: {
+              screenWidth: device.getScreenWidth(),
+              screenHeight: device.getScreenHeight()
+            },
+            device: {
+              deviceType: runtime.getRuntimeDeviceType() ?? ''
+            }
+          })
+        })
     }
 
     /**
@@ -158,13 +151,7 @@ export default defineComponent({
 })
 </script>
 
-<style lang='scss'>
-.app-root-css {
-  width: 1920px;
-  height: 1080px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: $gl-theme-root-bg-color;
-}
+<style lang='scss' src='./app.scss'>
+
+
 </style>
