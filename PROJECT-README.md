@@ -8,7 +8,7 @@
 ```bash
 src
 ├─App.vue 视图入口
-├─main-native.ts 程序入口
+├─main.ts 程序入口
 ├─routes.ts 路由
 ├─vue.config.js 配置文件
 ├─typings

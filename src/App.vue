@@ -26,6 +26,7 @@ import launch from './tools/launch'
 
 export default defineComponent({
   name: 'App',
+  emits: [],
   setup() {
     //全局渐进背景色
     const rootBgGradientColor = ThemeConfig.rootBgGradientColor
@@ -151,7 +152,16 @@ export default defineComponent({
 })
 </script>
 
-<style lang='scss' src='./app.scss'>
+<style >
+
+.app-root-css {
+  width: 1920px;
+  height: 1080px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
 
 
 </style>
