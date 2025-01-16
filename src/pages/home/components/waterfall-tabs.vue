@@ -414,7 +414,7 @@ const onTabPageItemFocused = (tabPageIndex: number, sectionIndex: number, sectio
       typeBgFocused(tabPageIndex, sectionIndex, sectionItemIndex, item)
     } else {
       //格子焦点切换背景
-      if (sectionIndex === 0 && item.imageFocusBackground) {
+      if (sectionIndex === 0 && item.imageFocusBackground && !barsDataManager.barsData.itemList[tabPageIndex].isPlay) {
         setFirstScreenImg('', '1', item.imageFocusBackground)
       }
     }
