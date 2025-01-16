@@ -76,15 +76,15 @@ import { QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../config/theme-config";
 // import { toast } from '@extscreen/es3-core';
 import { IMedia } from "../adapter/interface";
-import ic_full_normal from '../../../assets/detail-full-screen/ic_full_normal.png'
-import ic_full_focused from '../../../assets/detail-full-screen/ic_full_focused.png'
-import ic_fav_normal from '../../../assets/detail-full-screen/ic_collect_normal.png'
-import ic_fav_collected from '../../../assets/detail-full-screen/ic_collect_focused.png'
-import ic_fav_focused from '../../../assets/detail-full-screen/ic_collect_focused.png'
-import ic_vip_normal from '../../../assets/detail-full-screen/ic_vip_normal.png'
-import ic_vip_focused from '../../../assets/detail-full-screen/ic_vip_focused.png'
-import ic_info_normal from '../../../assets/detail-full-screen/ic_info_normal.png'
-import ic_info_focused from '../../../assets/detail-full-screen/ic_info_focused.png'
+import ic_full_normal from '../../../assets/detail/ic_full_normal.png'
+import ic_full_focused from '../../../assets/detail/ic_full_focused.png'
+import ic_fav_normal from '../../../assets/detail/ic_collect_normal.png'
+import ic_fav_collected from '../../../assets/detail/ic_collect_focused.png'
+import ic_fav_focused from '../../../assets/detail/ic_collect_focused.png'
+import ic_vip_normal from '../../../assets/detail/ic_vip_normal.png'
+import ic_vip_focused from '../../../assets/detail/ic_vip_focused.png'
+import ic_info_normal from '../../../assets/detail/ic_info_normal.png'
+import ic_info_focused from '../../../assets/detail/ic_info_focused.png'
   // const props = defineProps({
   //   isCollected: Boolean
   // })

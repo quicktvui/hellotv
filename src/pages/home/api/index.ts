@@ -5,7 +5,7 @@ import {
   buildSmall4KSectionData,
   buildTabContentAdapter
 } from '../build-data/tab-content/tab-content-adapter'
-import requestManager from '../../../tools/request/request-manager'
+import requestManager from '../../../tools/request'
 import { Section4KItem, TabContent } from '../build-data/tab-content/tab-content-imp'
 import TabContentItemType from '../build-data/tab-content/tab-content-item-type'
 import {

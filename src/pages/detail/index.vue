@@ -202,7 +202,7 @@ import MediaPlayer from './components/media-player/index.vue'
         //延迟加载相关推荐列表数据更新相关推荐板块 不影响主页面展示速度
         getRecommendList(media.id)
       })
-    })
+    }).catch((err) => {console.log(err,'999999999')})
   }
   //获取相关推荐列表数据
   const getRecommendList = (id: string) => {

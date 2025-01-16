@@ -17,7 +17,7 @@ import {
   useESRuntime
 } from '@extscreen/es3-core'
 import { ESPlayerLogLevel, useESPlayerLog, useESPlayer} from '@extscreen/es3-player'
-import requestManager from './tools/request/request-manager'
+import requestManager from './tools/request'
 import userManager from './api/user/user-manager'
 
 import BuildConfig from './config/build-config'
@@ -26,6 +26,7 @@ import launch from './tools/launch'
 
 export default defineComponent({
   name: 'App',
+  emits: [],
   setup() {
     //全局渐进背景色
     const rootBgGradientColor = ThemeConfig.rootBgGradientColor
@@ -151,7 +152,16 @@ export default defineComponent({
 })
 </script>
 
-<style lang='scss' src='./app.scss'>
+<style >
+
+.app-root-css {
+  width: 1920px;
+  height: 1080px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background-color: transparent;
+}
 
 
 </style>

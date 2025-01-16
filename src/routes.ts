@@ -1,7 +1,7 @@
 import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
 // import detail from './pages/detail/index.vue'
-// import test from './pages/m-test.vue'
+import test from './pages/m-test.vue'
 
 // 筛选布局模式选择
 import filterConfig from './pages/filter/config'
@@ -17,11 +17,11 @@ const filter = () => {
 }
 
 const routes = [
-  // {
-  //   path: '/test',
-  //   name: 'test',
-  //   component: test
-  // },
+  {
+    path: '/test',
+    name: 'test',
+    component: test
+  },
   {
     path: '/home',
     name: 'home',
