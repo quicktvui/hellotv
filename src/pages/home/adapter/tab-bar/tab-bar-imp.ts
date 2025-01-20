@@ -13,7 +13,7 @@ export enum BarType{
 /**
  * 导航
  */
-export interface NavBar{
+export interface TabBarItem {
   //导航ID
   id:string
   //导航类型1：文本，2：图片

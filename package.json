@@ -6,6 +6,7 @@
   "icon": "./src/assets/logo.png",
   "private": true,
   "scripts": {
+    "lint": "eslint -c eslint.config.mjs",
     "dev": "tsx ./scripts/dev.ts",
     "pack": "tsx ./scripts/pack.ts",
     "build": "tsx ./scripts/build.ts"
@@ -30,6 +31,13 @@
     "vue-tsc": "^2.0.11"
   },
   "devDependencies": {
+    "@eslint/js": "9.14.0",
+    "typescript-eslint": "8.14.0",
+    "eslint": "9.14.0",
+    "eslint-plugin-check-file": "^2.8.0",
+    "eslint-plugin-vue": "9.31.0",
+    "eslint-webpack-plugin": "4.2.0",
+    "@vue/cli-plugin-eslint": "~5.0.0",
     "@babel/core": "^7.12.16",
     "@babel/eslint-parser": "^7.12.16",
     "@babel/plugin-proposal-class-properties": "^7.10.4",

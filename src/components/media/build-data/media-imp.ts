@@ -1,6 +1,6 @@
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
-import { PlayType } from '../../../pages/home/build-data/tab-content/tab-content-imp'
+import { PlayType } from '../../../pages/home/adapter/tab-content/tab-content-imp'
 
 export interface IMediaUrl {
   definition: string

@@ -1,13 +1,13 @@
 import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import barsDataManager, { buildNavBarAdapter } from '../build-data/nav-bar/nav-bar-adapter'
+import barsDataManager, { buildTabBarAdapter } from '../adapter/tab-bar/tab-bar-adapter'
 import {
-  build4KSectionData, 
+  build4KSectionData,
   buildSmall4KSectionData,
   buildTabContentAdapter
-} from '../build-data/tab-content/tab-content-adapter'
+} from '../adapter/tab-content/tab-content-adapter'
 import requestManager from '../../../tools/request'
-import { Section4KItem, TabContent } from '../build-data/tab-content/tab-content-imp'
-import TabContentItemType from '../build-data/tab-content/tab-content-item-type'
+import { Section4KItem, TabContent } from '../adapter/tab-content/tab-content-imp'
+import TabContentItemType from '../adapter/tab-content/tab-content-item-type'
 import {
   home4KUrl,
   homePlayUrl,
@@ -27,9 +27,7 @@ class HomeManager implements HomeApi{
    */
   getTabList(): Promise<QTTab> {
     const url = tabListUrl + BuildConfig.packageName
-    return requestManager.get(url).then((tabList: Array<any>) => {
-      return buildNavBarAdapter(tabList)
-    })
+    return requestManager.get(url)
   }
 
   /**
@@ -47,10 +45,7 @@ class HomeManager implements HomeApi{
       limit:limit
     }
     const url = replacePlaceholders(tabContentUrl,replacements)
-    return requestManager.get(url).then((tabContent:TabContent)=>{
-      return buildTabContentAdapter(tabContent,pageNo,tabId,tabPageIndex)
-    })
-
+    return requestManager.get(url)
   }
 
   getHomePlayUrl(id: string,type:number): Promise<object> {
@@ -66,6 +61,7 @@ class HomeManager implements HomeApi{
   getTabBg(tabId): string | undefined {
     return barsDataManager.barsBgUrls.get(tabId)
   }
+
   async get4KSection(content4kId:string,size:number,type:number):Promise<Array<QTWaterfallItem>>{
     const replacements = {
       id:content4kId,

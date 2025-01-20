@@ -9,7 +9,7 @@ import { ESComponent } from "@extscreen/es3-component";
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: "test",
+  main: "home",
   error: "error",
   limit: 5,
   routes: routes,

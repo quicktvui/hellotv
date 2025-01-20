@@ -25,7 +25,7 @@
 <script lang='ts' setup name='world-four-section'>
 
 import WorldFourSectionItem from './world-four-section-item.vue'
-import TabContentItemType from "../../../build-data/tab-content/tab-content-item-type.ts"
+import TabContentItemType from "../../../adapter/tab-content/tab-content-item-type.ts"
 
 const emits = defineEmits(['loadMore'])
 const props = defineProps({

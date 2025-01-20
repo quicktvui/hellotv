@@ -7,10 +7,10 @@ import {
 } from '@quicktvui/quicktvui3'
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration'
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
-import homeManager from '../../api/index'
+import homeManager from '../../api'
 import ThemeConfig from '../../../../config/theme-config'
 import { HomePlayType } from '../media/home-media-imp'
-import barsDataManager from '../nav-bar/nav-bar-adapter'
+import barsDataManager from '../tab-bar/tab-bar-adapter'
 import TabContentConfig from './tab-content-config'
 import {
   PlayType,
@@ -753,11 +753,11 @@ export function buildEndSection(sectionId: string): QTWaterfallSection {
  * @param disableScrollOnFirstScreen 首次移动是否滚动
  * @param waterfallSectionList 加载内容
  */
-export function buildTabContent(disableScrollOnFirstScreen: boolean = false, waterfallSectionList: Array<QTWaterfallSection>): QTTabPageData {
+export function buildTabContent(disableScrollOnFirstScreen: boolean = false, sections: Array<QTWaterfallSection>): QTTabPageData {
   return {
     useDiff: false,
     disableScrollOnFirstScreen,
-    data: waterfallSectionList,
+    data: sections,
     bindingPlayer: ''
   }
 }

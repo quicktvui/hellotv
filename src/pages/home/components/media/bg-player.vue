@@ -61,9 +61,9 @@ import BgAnimation from '../../../../components/bg-animation.vue'
 import { IMediaList } from '../../../../components/media/build-data/media-imp'
 import MediaPlayerView from '../../../../components/media/view/media-player-view.vue'
 import BuildConfig from '../../../../config/build-config.ts'
-import { createHomePlayerInterceptor } from '../../build-data/media/create-home-player-interceptor'
-import { HomePlayData, HomePlayType, PlayerState } from '../../build-data/media/home-media-imp.ts'
-import TabContentConfig from '../../build-data/tab-content/tab-content-config.ts'
+import { createHomePlayerInterceptor } from '../../adapter/media/create-home-player-interceptor'
+import { HomePlayData, HomePlayType, PlayerState } from '../../adapter/media/home-media-imp.ts'
+import TabContentConfig from '../../adapter/tab-content/tab-content-config.ts'
 
 
 const esEventBus = useESEventBus()

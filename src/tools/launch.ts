@@ -101,6 +101,7 @@ class Launch {
    * @param item
    */
   jumpType1(item: LaunchParams) {
+    //{"options":{"name":"screen_main_view","params":{"screenId":"1764924767380697089","defaultSelectTabTag":"科普"}},"type":1}
     const options = item.options
     if (options && typeof options !== 'string') {
       this.router.push(<RouteLocationRaw>options).then(() => {})
