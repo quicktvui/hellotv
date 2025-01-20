@@ -70,7 +70,8 @@ const routes = [
     path: '/detail-full-screen',
     name: 'detail-full-screen',
     component: () => import('./pages/detail-full-screen/index.vue')
-  }
+  },
+  { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') }
 ]
 
 export default routes
