@@ -1,8 +1,8 @@
 import { ESListViewItemDecoration } from '@extscreen/es3-component'
 import { QTTab, QTTabItem } from '@quicktvui/quicktvui3'
-import NavBarConfig from './nav-bar-config'
-import { BarType, NavBar } from './nav-bar-imp'
-import NavBarItemType from './nav-bar-item-type'
+import TabBarConfig from './tab-bar-config'
+import { BarType, TabBarItem } from './tab-bar-imp'
+import TabBarItemType from './tab-bar-item-type'
 
 class BarsData {
   barsData: QTTab
@@ -16,14 +16,14 @@ export default barsDataManager
  * build nav bars数据
  * @param tabs
  */
-export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
+export function buildTabBarAdapter(bars: Array<TabBarItem>):QTTab {
   let length = bars.length
   let defFocusIndex = 0
   //添加我的tab
-  if (NavBarConfig.tab.showMineTab && length > 1) {
+  if (TabBarConfig.tab.showMineTab && length > 1) {
     length = bars.unshift({
-      id: NavBarConfig.tab.id,
-      name: NavBarConfig.tab.mineTabName,
+      id: TabBarConfig.tab.id,
+      name: TabBarConfig.tab.mineTabName,
       type: BarType.TYPE_TEXT
     })
     defFocusIndex++
@@ -41,8 +41,8 @@ export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
     }
     //设置左右距离边界间距
     const decoration: ESListViewItemDecoration = {
-      left: i === 0 ? NavBarConfig.tab.leftGap : NavBarConfig.tab.defaultGap,
-      right: i === (length - 1) ? NavBarConfig.tab.rightGap : NavBarConfig.tab.defaultGap,
+      left: i === 0 ? TabBarConfig.tab.leftGap : TabBarConfig.tab.defaultGap,
+      right: i === (length - 1) ? TabBarConfig.tab.rightGap : TabBarConfig.tab.defaultGap,
       top: 10
     }
     const barItem: QTTabItem = buildBarItem(bar, decoration)
@@ -66,7 +66,7 @@ export function buildNavBarAdapter(bars: Array<NavBar>):QTTab {
  * @param bar
  * @param decoration
  */
-export function buildBarItem(bar: NavBar, decoration?: ESListViewItemDecoration): QTTabItem {
+export function buildBarItem(bar: TabBarItem, decoration?: ESListViewItemDecoration): QTTabItem {
   const type:BarType =bar.type
   let barItem: QTTabItem
   switch (type) {
@@ -88,13 +88,13 @@ export function buildBarItem(bar: NavBar, decoration?: ESListViewItemDecoration)
  * @param bar
  * @param decoration
  */
-export function buildBarTextItem(bar: NavBar, decoration?: ESListViewItemDecoration): QTTabItem {
-  const type = bar?.corner ? NavBarItemType.BAR_CORNER_TYPE : NavBarItemType.BAR_TEXT_TYPE
+export function buildBarTextItem(bar: TabBarItem, decoration?: ESListViewItemDecoration): QTTabItem {
+  const type = bar?.corner ? TabBarItemType.BAR_CORNER_TYPE : TabBarItemType.BAR_TEXT_TYPE
   const barItem: QTTabItem = {
     _id: bar.id,
     type: type,
     text: bar.name,
-    titleSize: NavBarConfig.tab.titleSize,
+    titleSize: TabBarConfig.tab.titleSize,
     corner: bar.corner,
     decoration: decoration
   }
@@ -106,12 +106,12 @@ export function buildBarTextItem(bar: NavBar, decoration?: ESListViewItemDecorat
  * @param bar
  * @param decoration
  */
-export function buildBarImgItem(bar: NavBar, decoration?: ESListViewItemDecoration): QTTabItem {
+export function buildBarImgItem(bar: TabBarItem, decoration?: ESListViewItemDecoration): QTTabItem {
   const barItem: QTTabItem = {
     _id: bar.id,
-    type: NavBarItemType.BAR_IMG_TYPE,
+    type: TabBarItemType.BAR_IMG_TYPE,
     text: bar.name,
-    titleSize: NavBarConfig.tab.titleSize,
+    titleSize: TabBarConfig.tab.titleSize,
     image: bar.image,
     decoration: decoration
   }

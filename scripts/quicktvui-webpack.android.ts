@@ -49,7 +49,7 @@ module.exports = {
       })
     ],
     splitChunks: {
-      chunks: 'all',
+      chunks: 'initial',
       minSize: 20000,
       minRemainingSize: 0,
       minChunks: 1,

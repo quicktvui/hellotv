@@ -21,7 +21,7 @@
       tabNavBarSid='tabNavBarSid'
       nextFocusUpSID='topMyBtnSid'
       class='waterfall-qt-tabs-css'
-      tabNavBarClass='waterfall-nav-bar-css'
+      tabNavBarClass='waterfall-tab-bar-css'
       tabPageClass='waterfall-content-css'
       :tabContentBlockFocusDirections='["left", "right", "down", "top"]'
       :autoHandleBackKey='true'
@@ -47,11 +47,11 @@
 <!--      @onTabPageSectionAttached='onTabPageSectionAttached'-->
       <template v-slot:tab-item>
         <!--文字Tab导航-->
-        <bar-text-item :type='NavBarItemType.BAR_TEXT_TYPE' />
+        <bar-text-item :type='TabBarItemType.BAR_TEXT_TYPE' />
         <!--图片Tab导航-->
-        <bar-img-item :type='NavBarItemType.BAR_IMG_TYPE' />
+        <bar-img-item :type='TabBarItemType.BAR_IMG_TYPE' />
         <!--文字 带角标Tab导航-->
-        <!-- <bar-text-item :type='NavBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
+        <!-- <bar-text-item :type='TabBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
       </template>
       <template v-slot:waterfall-shared-item>
         <!-- 带边框无标题格子-->
@@ -102,13 +102,13 @@ import ic_4k_logo from '../../../assets/home/ic_4k_logo.png'
 import BgAnimation from '../../../components/bg-animation.vue'
 import { IMediaList } from '../../../components/media/build-data/media-imp'
 import launch from '../../../tools/launch'
-import { HomePlayData, HomePlayType, PlayerState } from '../build-data/media/home-media-imp'
-import barsDataManager from '../build-data/nav-bar/nav-bar-adapter'
-import NavBarConfig from '../build-data/nav-bar/nav-bar-config'
-import NavBarItemType from '../build-data/nav-bar/nav-bar-item-type'
-import tabsContent from '../build-data/tab-content/tab-content-adapter'
-import TabContentConfig from '../build-data/tab-content/tab-content-config'
-import TabContentType from '../build-data/tab-content/tab-content-item-type'
+import { HomePlayData, HomePlayType, PlayerState } from '../adapter/media/home-media-imp'
+import barsDataManager, { buildTabBarAdapter } from '../adapter/tab-bar/tab-bar-adapter'
+import TabBarConfig from '../adapter/tab-bar/tab-bar-config'
+import TabBarItemType from '../adapter/tab-bar/tab-bar-item-type'
+import tabsContent, { buildTabContentAdapter } from '../adapter/tab-content/tab-content-adapter'
+import TabContentConfig from '../adapter/tab-content/tab-content-config'
+import TabContentType from '../adapter/tab-content/tab-content-item-type'
 import BgPlayer from './media/bg-player.vue'
 import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
@@ -362,7 +362,9 @@ const onTabMoveToBottomEnd = () => {
  * @param e
  */
 const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem, e) => {
+  log.e("XRG",JSON.stringify(item.jumpParams))
   launch.launch(item.jumpParams)
+
   //4K内容跳转的时候 将图片设置回来
   if (cur4KSid){
     VirtualView.call(cur4KSid,'changeVisibility',[`visible`])
@@ -566,7 +568,8 @@ const setWTabBg = (bg: string, isLoad: boolean = false) => {
  * 获取导航数据
  */
 const getTabList = () => {
-  homeManager.getTabList().then((tab: QTTab) => {
+  homeManager.getTabList().then((tabList: any) => {
+    const tab:QTTab = buildTabBarAdapter(tabList)
     //关闭启动界面
     try {
       Native.callNative('EsNativeModule', 'unSuspendLoadingView')
@@ -592,7 +595,7 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
   if (pageIndex >= 0 && pageIndex < barsDataManager.barsData?.itemList?.length) {
     const curTab = barsDataManager.barsData.itemList[pageIndex]
     //添加我的 导航
-    if (NavBarConfig.tab.id === curTab._id && pageNo === 0) {
+    if (TabBarConfig.tab.id === curTab._id && pageNo === 0) {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
     } else {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
@@ -602,18 +605,19 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
 }
 const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
   homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit, tabPageIndex)
-    .then((tabPage: QTTabPageData) => {
+    .then(async (tabContent: any) => {
+      const tabPage: QTTabPageData = await buildTabContentAdapter(tabContent, pageNo, tabId, tabPageIndex)
       if (tabPage.data.length > 0) {
         if (pageNo <= 1) {
           const playerType = barsDataManager.barsData.itemList[tabPageIndex].playType
           let index = 0
-          if (playerType === HomePlayType.TYPE_SMALL_4K){
+          if (playerType === HomePlayType.TYPE_SMALL_4K) {
             index = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
           }
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
           tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
-          if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K){
+          if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
             const sectionIndex = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
             buildPlayerData(tabPageIndex, tabPage.data[sectionIndex].itemList, tabPage)
           }
@@ -634,6 +638,7 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
  */
 const load4KData = async (tabPageIndex: number, content4kId: string) => {
   const world4kSection = await homeManager.get4KSection(content4kId,6,TabContentType.TYPE_WATERFALL_SECTION_4K)
+
   if (world4kSection && world4kSection.length > 0) {
     if (tabsContent.home4KList.length < 1) tabsContent.home4KList = world4kSection
     tabRef.value!.addPageItemList(tabPageIndex, 0, world4kSection)

@@ -45,8 +45,8 @@
 </template>
 
 <script lang='ts' setup name='small-four-section'>
-import TabContentItemType from '../../../build-data/tab-content/tab-content-item-type.ts'
-import TabContentConfig from '../../../build-data/tab-content/tab-content-config.ts'
+import TabContentItemType from '../../../adapter/tab-content/tab-content-item-type.ts'
+import TabContentConfig from '../../../adapter/tab-content/tab-content-config.ts'
 
 defineExpose({})
 
