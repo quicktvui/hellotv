@@ -40,6 +40,7 @@
       :spanCount="6"
       :autofocusPosition="14"
       :nextFocusName="{ right: 'keywordList' }"
+      :blockFocusDirections="['down']"
       @item-click="onGridItemClick"
     >
       <qt-view :type="1" class="search-keyboard-grid-item" :focusable="true" eventFocus eventClick>
