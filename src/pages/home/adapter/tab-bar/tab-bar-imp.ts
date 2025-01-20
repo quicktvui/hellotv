@@ -19,9 +19,9 @@ export interface TabBarItem {
   //导航类型1：文本，2：图片
   type:BarType
   //导航名称
-  name:string
+  title?:string
   //导航背景图
-  backgroundImg?:string
+  backgroundImage?:string
   //默认选中导航
   isDefault?:boolean
   //图片类型导航数据

@@ -47,10 +47,10 @@ export function buildTabBarAdapter(bars: Array<TabBarItem>):QTTab {
     }
     const barItem: QTTabItem = buildBarItem(bar, decoration)
     //添加背景图
-    barItem['backgroundImg'] = bar.backgroundImg
+    barItem['backgroundImg'] = bar.backgroundImage
     //存储背景图
-    if (bar.backgroundImg != null) {
-      barsDataManager.barsBgUrls.set(bar.id, bar.backgroundImg)
+    if (bar.backgroundImage != null) {
+      barsDataManager.barsBgUrls.set(bar.id, bar.backgroundImage)
     }
     //添加跳转数据
     barItem['jumpParams'] = bar.jumpParams
@@ -93,7 +93,7 @@ export function buildBarTextItem(bar: TabBarItem, decoration?: ESListViewItemDec
   const barItem: QTTabItem = {
     _id: bar.id,
     type: type,
-    text: bar.name,
+    text: bar.title+"",
     titleSize: TabBarConfig.tab.titleSize,
     corner: bar.corner,
     decoration: decoration
@@ -110,7 +110,7 @@ export function buildBarImgItem(bar: TabBarItem, decoration?: ESListViewItemDeco
   const barItem: QTTabItem = {
     _id: bar.id,
     type: TabBarItemType.BAR_IMG_TYPE,
-    text: bar.name,
+    text: bar?.title+"",
     titleSize: TabBarConfig.tab.titleSize,
     image: bar.image,
     decoration: decoration

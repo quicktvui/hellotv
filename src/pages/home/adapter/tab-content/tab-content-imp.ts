@@ -8,9 +8,9 @@ export interface TabContent {
   //板块总数
   total?: number
   //二屏背景图
-  backgroundImg?: string
+  backgroundImage?: string
   //板块列表
-  sectionList: Array<Section>
+  sections: Array<Section>
   //自定义参数
   customParams?: any
 }
@@ -43,6 +43,8 @@ export interface Section {
       height:number
     }
   }
+  floatTitle?:string
+  subTitle?:string
   //是否展示板块标题
   showTitle: boolean
   //板块高度样式

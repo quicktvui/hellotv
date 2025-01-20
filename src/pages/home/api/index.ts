@@ -6,7 +6,7 @@ import {
   buildTabContentAdapter
 } from '../adapter/tab-content/tab-content-adapter'
 import requestManager from '../../../tools/request'
-import { Section4KItem, TabContent } from '../adapter/tab-content/tab-content-imp'
+import { Section4KItem } from '../adapter/tab-content/tab-content-imp'
 import TabContentItemType from '../adapter/tab-content/tab-content-item-type'
 import {
   home4KUrl,

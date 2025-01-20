@@ -57,18 +57,18 @@ export async function buildTabContentAdapter(tabContent: TabContent, pageNo: num
   if (content4kId && pageNo === 1) {
     return build4kTabPage(content4kId, tabPageIndex)
   }
-  if (!tabContent || !tabContent.sectionList || tabContent.sectionList.length === 0) {
+  if (!tabContent || !tabContent.sections || tabContent.sections.length === 0) {
     return {
       data: [],
       isLoadPageEnd: true
     }
   }
   //存储二屏图
-  if (tabContent.backgroundImg != null) {
-    tabsContent.tab2BackgroundUrls.set(tabId, tabContent.backgroundImg)
+  if (tabContent.backgroundImage != null) {
+    tabsContent.tab2BackgroundUrls.set(tabId, tabContent.backgroundImage)
   }
   //获取当前导航Tab下Section原始数据
-  const sectionSourceData: Array<Section> = tabContent.sectionList
+  const sectionSourceData: Array<Section> = tabContent.sections
   //创建sectionList板块集合列表
   const sectionList: Array<QTWaterfallSection> = []
   if (sectionSourceData && sectionSourceData.length > 0) {
