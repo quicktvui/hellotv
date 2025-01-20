@@ -2,10 +2,11 @@
 import { createESRouter, Router } from '@extscreen/es3-router'
 import routes from './routes'
 //--------------------ESApp-----------------------
-import application from './App.vue'
-import { ESApp } from '@extscreen/es3-vue'
-import { createESApp } from '@extscreen/es3-core'
-import { ESComponent } from '@extscreen/es3-component'
+import application from "./App.vue";
+import { ESApp } from "@extscreen/es3-vue";
+import { createESApp } from "@extscreen/es3-core";
+import { ESComponent } from "@extscreen/es3-component";
+import { MYComponent } from "./components/qt-ul-component";
 
 //--------------------components-----------------------
 const routerOptions = {
@@ -17,7 +18,8 @@ const routerOptions = {
 const router: Router = createESRouter(routerOptions)
 const app: ESApp = createESApp(application, router)
 
-app.use(ESComponent)
+app.use(ESComponent);
+app.use(MYComponent);
 
 const player = createESPlayer()
 app.use(player)
