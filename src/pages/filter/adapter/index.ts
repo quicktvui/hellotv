@@ -1,5 +1,5 @@
 import { QTListViewItem } from '@quicktvui/quicktvui3'
-import { Filters, Contents } from '../../../api/filter/interface'
+import { Filters, Contents } from '../api/interface'
 import {
   GridContent,
   GridContentType,
@@ -100,7 +100,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
       decoration: { right: 40, bottom: 40 },
       id: item.id,
       title: item.title,
-      cover: item.cover,
+      cover: item.image,
       jumpParams: item.jumpParams
     })
   })

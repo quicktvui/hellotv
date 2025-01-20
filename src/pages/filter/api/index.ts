@@ -1,9 +1,8 @@
-import { FilterApi, Filters } from '../adapter/interface'
+import { FilterApi, Filters } from './interface'
 import { filterContentsUrl, filterLeftListUrl } from './request-url'
+import { replacePlaceholders } from '../../../tools/common'
 import requestManager from '../../../tools/request'
 import config from '../../../config/build-config'
-import {replacePlaceholders} from '../../../tools/common'
-
 
 class FilterManager implements FilterApi {
   // 获取筛选左侧列表
