@@ -1,5 +1,5 @@
 import { QTTab, QTWaterfallSection, QTWaterfallSectionType } from '@quicktvui/quicktvui3'
-import { Suggestions, Contents, Recommends } from '../../../api/search/interface'
+import { Suggestions, Contents, Recommends } from '../api/interface'
 import { Keyword, KeywordType, TabItemType, ContentType } from './interface'
 
 /**
@@ -73,7 +73,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
         decoration: { right: 40, bottom: 40 },
         id: item.id,
         title: item.title,
-        cover: item.cover
+        cover: item.image
       }))
     })
   }
@@ -93,7 +93,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
       decoration: { top: 40, right: 40 },
       id: item.id,
       title: item.title,
-      cover: item.cover
+      cover: item.image
     }))
   })
 
@@ -126,7 +126,7 @@ export const buildRecommends = function (rawData: Recommends): QTWaterfallSectio
         decoration: { top: 40, right: 40 },
         id: item.id,
         title: item.title,
-        cover: item.cover
+        cover: item.image
       }))
     })
   }

@@ -15,6 +15,17 @@ const filter = () => {
   }
 }
 
+// 搜索布局模式选择
+import searchConfig from './pages/search/config'
+const search = () => {
+  switch (searchConfig.layoutMode) {
+    case 1:
+      return import('./pages/search/two-columns.vue')
+    case 2:
+      return import('./pages/search/three-columns.vue')
+  }
+}
+
 const routes = [
   {
     path: '/home',
@@ -32,26 +43,21 @@ const routes = [
     component: filter
   },
   {
-    path: '/filter',
-    name: 'screen_main_view',
-    component: filter
-  },
-  {
     path: '/search',
     name: 'search',
-    component: () => import('./pages/search/three-columns.vue')
+    component: search
   },
   {
     path: '/detail',
     name: 'detail',
     // component: detail
-    component: ()=>import("./pages/detail/index.vue"),
+    component: () => import('./pages/detail/index.vue')
   },
   {
     path: '/detail-old',
     name: 'series_view',
     // component: detail
-    component: ()=>import("./pages/detail/index.vue"),
+    component: () => import('./pages/detail/index.vue')
   },
 
   {

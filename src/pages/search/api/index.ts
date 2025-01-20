@@ -1,8 +1,8 @@
 import requestManager from '../../../tools/request'
-import { Contents, Recommends, SearchApi, Suggestions } from '../adapter/interface'
+import { Contents, Recommends, SearchApi, Suggestions } from './interface'
 import { searchSuggestionsUrl, searchContentsUrl, searchHotRecommendUrl } from './request-url'
 import config from '../../../config/build-config'
-import {replacePlaceholders} from '../../../tools/common'
+import { replacePlaceholders } from '../../../tools/common'
 
 class SearchManager implements SearchApi {
   // 获取搜索建议
