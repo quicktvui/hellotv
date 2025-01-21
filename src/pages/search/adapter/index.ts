@@ -1,5 +1,5 @@
 import { QTTab, QTWaterfallSection, QTWaterfallSectionType } from '@quicktvui/quicktvui3'
-import { Suggestions, Contents, Recommends } from '../api/interface'
+import { Suggestions, Contents, Tab, Recommends } from '../api/interface'
 import { Keyword, KeywordType, TabItemType, ContentType } from './interface'
 
 /**
@@ -40,13 +40,17 @@ export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'gues
 
 /**
  * 构造QTTab组件Tab默认列表
+ * @param rawData 原始数据
  * @returns
  */
-export const buildTab = function (): QTTab {
+export const buildTab = function (rawData?: Tab[]): QTTab {
   return {
     defaultIndex: 0,
     defaultFocusIndex: -1,
-    itemList: [{ type: TabItemType.TEXT, text: '全部', titleSize: 36, decoration: { left: 62 } }]
+    itemList:
+      rawData && rawData.length > 1
+        ? rawData.map((item) => ({ type: TabItemType.TEXT, text: item.name, titleSize: 36, decoration: { left: 62 } }))
+        : [{ type: TabItemType.TEXT, text: '全部', titleSize: 36, decoration: { left: 62 } }]
   }
 }
 
@@ -101,6 +105,27 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
   contents.push(buildEndSection())
 
   return contents
+}
+
+export const buildTabContents = function (rawData: Contents): QTWaterfallSection[] {
+  return [
+    {
+      _id: 's' + Math.random(),
+      type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
+      style: { width: 1920 },
+      decoration: { left: 80, top: 40 },
+      title: '',
+      itemList: rawData.items.map((item, index) => ({
+        _id: `t1-${index}`,
+        type: ContentType.HORIZONTAL,
+        style: { width: 410, height: 276 },
+        decoration: { right: 40, bottom: 40 },
+        id: item.id,
+        title: item.title,
+        cover: item.image
+      }))
+    }
+  ]
 }
 
 /**

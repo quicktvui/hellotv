@@ -5,3 +5,8 @@ export const searchSuggestionsUrl =
 export const searchContentsUrl =
   BuildConfig.requestBaseUrl + '/search?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'
 export const searchHotRecommendUrl = BuildConfig.requestBaseUrl + '/recommendations?packageName=${packageName}&page=${page}&limit=${limit}'
+
+export const searchTabsUrl = BuildConfig.requestBaseUrl + '/search/tabs?packageName=${packageName}&query=${query}'
+
+export const searchTabContentsUrl =
+  BuildConfig.requestBaseUrl + '/search/tabs/${tabId}?packageName=${packageName}&query=${query}&page=${page}&limit=${limit}'

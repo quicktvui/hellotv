@@ -1,13 +1,15 @@
 <template>
   <qt-view class="search-three-columns" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
-    <qt-view class="search-three-columns-body" :clipChildren="true">
-      <!-- 键盘区域 -->
-      <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
-      <!-- 搜索关键词 -->
-      <search-keyword-grid v-if="inputText.length === 0" />
-      <!-- 搜索内容区域 -->
-      <search-content-tabs ref="contentRef" />
-    </qt-view>
+    <scroll-view name="searchScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true">
+      <qt-view class="search-three-columns-body" :clipChildren="true">
+        <!-- 键盘区域 -->
+        <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
+        <!-- 搜索关键词 -->
+        <search-keyword-grid v-if="inputText.length === 0" />
+        <!-- 搜索内容区域 -->
+        <search-content-tabs ref="contentRef" :triggerTask="triggerTask" :keyword="inputText" @setLoading="setLoading" />
+      </qt-view>
+    </scroll-view>
     <!-- 搜索内容区域loading -->
     <qt-view
       v-if="isLoading"
@@ -37,7 +39,6 @@ const loadingLeft = ref<number>(634)
 const loadingWidth = ref<number>(1286)
 // 关键词
 const keywordRef = ref()
-const keyword = ref<string>('')
 // 内容
 const contentRef = ref()
 const triggerTask = [
@@ -45,13 +46,13 @@ const triggerTask = [
     event: 'onFocusAcquired',
     target: 'searchScroll',
     function: 'scrollToWithOptions',
-    params: [{ x: 1152, y: 0, duration: 300 }]
+    params: [{ x: 634, y: 0, duration: 300 }]
   },
   {
     event: 'onFocusLost',
     target: 'searchScroll',
     function: 'scrollToWithOptions',
-    params: [{ x: -1152, y: 0, duration: 300 }]
+    params: [{ x: -634, y: 0, duration: 300 }]
   }
 ]
 // 焦点
@@ -62,14 +63,7 @@ const curFocusName = ref<string>('searchKeyboard')
  */
 function updateInput(val: string) {
   inputText.value = val
-  //   isLoading.value = true
-}
-
-/**
- * 搜索关键词更新
- */
-function updateKeyword(val: string) {
-  keyword.value = val
+  isLoading.value = true
 }
 
 /**
