@@ -3,3 +3,35 @@
   height: 1080px;
   background-color: transparent;
 }
+
+.history-sidebar {
+  width: 340px;
+  height: 1080px;
+  background-color: transparent;
+}
+
+.history-sidebar-item {
+  width: 340px;
+  height: 106px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  focus-background-color: $gl-theme-btn-bg-focus-color;
+}
+
+.history-sidebar-item-text {
+  width: 340px;
+  height: 106px;
+  background-color: transparent;
+  position: absolute;
+  color: $text-normal-color;
+  font-size: 36px;
+  focus-color: $text-focus-color;
+  select-color: $text-select-color;
+}
+
+.history-content {
+  width: 1580px;
+  height: 1080px;
+  background-color: transparent;
+}
