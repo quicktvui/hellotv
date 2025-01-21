@@ -15,7 +15,7 @@
     <!-- 输入框底部横线 -->
     <qt-view class="search-keyboard-input-bottom"></qt-view>
     <!-- 按钮区域 -->
-    <qt-view class="search-keyboard-btns">
+    <qt-view class="search-keyboard-btns" :blockFocusDirections="['up']">
       <qt-button
         text="清空"
         :style="btnStyle"
