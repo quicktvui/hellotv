@@ -258,42 +258,6 @@ function registerQTULViewComponent(app: ESApp) {
       function scrollToPosition(index: number) {
         Native.callUIFunction(viewRef.value, 'scrollToPosition', [index]);
       }
-      function refreshListData(): void {
-        Native.callUIFunction(viewRef.value, 'refreshListData', []);
-      }
-      function updateItemTraverse(position: number, data?: ESListViewItem, traverse?: boolean): void {
-        Native.callUIFunction(viewRef.value, 'updateItem', [position, data, traverse]);
-      }
-      function requestItemLayout(position: number): void {
-        Native.callUIFunction(viewRef.value, 'requestItemLayout', [position]);
-      }
-      function updateItemRange(position: number, count: number, data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'updateItemRange', [position, count, data]);
-      }
-      function insertItemRange(position: number, data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'insertItemRange', [position, data]);
-      }
-      function updateItemMatched(params: Record<string, any>, data: ESListViewItem): void {
-        Native.callUIFunction(viewRef.value, 'updateItemMatched', [params, data]);
-      }
-      function updateItemMatchedByKey(idKey: string, params: Record<string, any>, data: ESListViewItem): void {
-        Native.callUIFunction(viewRef.value, 'updateItemMatched', [idKey, params, data]);
-      }
-      function deleteItemRange(position: number, count: number) {
-        Native.callUIFunction(viewRef.value, 'deleteItemRange', [position, count]);
-      }
-      function setListData(data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'setListData', data);
-      }
-      function setListDataWithParams(data: Array<ESListViewItem>, autoChangeVisible: boolean) {
-        Native.callUIFunction(viewRef.value, 'setListDataWithParams', [data, autoChangeVisible]);
-      }
-      function addListData(data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'addListData', data);
-      }
-      function addListDataWithParams(data: Array<ESListViewItem>, deleteCount: number) {
-        Native.callUIFunction(viewRef.value, 'addListDataWithParams', [data, deleteCount]);
-      }
       function destroy() {
         Native.callUIFunction(viewRef.value, 'destroy', []);
       }
@@ -317,9 +281,6 @@ function registerQTULViewComponent(app: ESApp) {
       }
       function notifySaveInstance() {
         Native.callUIFunction(viewRef.value, 'notifySaveInstance', []);
-      }
-      function updateItemProps(position: number, name: string, toUpdateMap: Object) {
-        Native.callUIFunction(viewRef.value, 'updateItemProps', [name, position, toUpdateMap, true]);
       }
       function dispatchItemFunction(position: number, name: string, funcName: string, params: ESListViewItemFunctionParams) {
         Native.callUIFunction(viewRef.value, 'dispatchItemFunction', [position, name, funcName, params]);
@@ -371,18 +332,6 @@ function registerQTULViewComponent(app: ESApp) {
       function setInitPosition(position: number) {
         Native.callUIFunction(viewRef.value, 'setInitPosition', [position]);
       }
-      function deleteItem(position: number, count: number) {
-        Native.callUIFunction(viewRef.value, 'deleteItemRange', [position, count]);
-      }
-      function updateItem(pos: number, data: ESListViewItem) {
-        Native.callUIFunction(viewRef.value, 'updateItem', [pos, data]);
-      }
-      function updateItemList(position: number, count: number, data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'updateItemRange', [position, count, data]);
-      }
-      function addItem(position: number, data: Array<ESListViewItem>) {
-        Native.callUIFunction(viewRef.value, 'insertItemRange', [position, data]);
-      }
       function dispatchTVItemFunction(id: number | string, name: string, funcName: string, params: ESListViewItemFunctionParams) {
         Native.callUIFunction(viewRef.value, 'dispatchTVItemFunction', [id, name, funcName, params]);
       }
@@ -425,7 +374,7 @@ function registerQTULViewComponent(app: ESApp) {
       watch(() => props.items, (hs) => {
         console.log('data changed', hs)
         Native.callUIFunction(viewRef.value, 'setListDataWithParams', [toRaw(props.items), false,false,{
-          RealDOMTypes:[1]
+          RealDOMTypes:[1,2]
         }]);
       })
       function extractNum(input: string): number {
@@ -506,7 +455,7 @@ function registerQTULViewComponent(app: ESApp) {
           return;
         };
 
-        console.log("Element:", element.tagName); // 打印元素标签名
+        console.log("Element:", element, element.tagName); // 打印元素标签名
 
         // 遍历元素节点的子元素
         element.children?.forEach((child) => {
@@ -533,6 +482,7 @@ function registerQTULViewComponent(app: ESApp) {
           return h('FastItemView', {
               key:hd.sid,
               sid:hd.sid,
+              type:hd.itemType,
             },
             renderItems(hd)
           )
@@ -552,18 +502,6 @@ function registerQTULViewComponent(app: ESApp) {
         scrollToPositionWithOffset,
         scrollToPositionWithOffsetInfiniteMode,
         scrollToPosition,
-        refreshListData,
-        updateItemTraverse,
-        requestItemLayout,
-        updateItemRange,
-        insertItemRange,
-        updateItemMatched,
-        updateItemMatchedByKey,
-        deleteItemRange,
-        setListData,
-        setListDataWithParams,
-        addListData,
-        addListDataWithParams,
         destroy,
         recycle,
         scrollToTop,
@@ -572,7 +510,6 @@ function registerQTULViewComponent(app: ESApp) {
         setDisplay,
         changeDisplayState,
         notifySaveInstance,
-        updateItemProps,
         dispatchItemFunction,
         clearPostTask,
         clearPostTaskByCate,
@@ -587,10 +524,6 @@ function registerQTULViewComponent(app: ESApp) {
         dispatchItemFunctionWithPromise,
         getScrollOffset,
         setInitPosition,
-        deleteItem,
-        updateItem,
-        updateItemList,
-        addItem,
         dispatchTVItemFunction,
         scrollToPositionOffset,
         notifyRestoreInstance,
@@ -610,7 +543,6 @@ function registerQTULViewComponent(app: ESApp) {
         })
         const items = context.slots.item ? h('RecyclePool',
           {slot: 'item',
-              type:1,
               onCreateHolder:(evt:any)=>{
                 //crateH(evt)
               },
@@ -698,27 +630,3 @@ function registerQTULViewComponent(app: ESApp) {
 export const MYComponent = (Vue) => {
   registerQTULViewComponent(Vue);
 }
-// demo 写法
-// const img = ref<String>('https://img1.baidu.com/it/u=1726075624,1307327070&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667');
-// let data  = ref<any[]>([])
-// for (let i = 0; i < 20; i++) {
-//   data.push({
-//     id: 'id'+i, name: 'name'+Math.random(),
-//     itemSize: 260, type: 1,
-//     img: imgArr[i % imgArr.length],
-//     tag: i % 2 == 0 ? '' : 'VIP',
-//     text: `pos:${i}`,
-//     decoration : {
-//       top:20,
-//       right:20
-//     }
-//   })
-// }
-// <qt-ul class="tv_list" ref="tvListRef" name="tv_list" :items="data" :spanCount="6">
-//   <template #item="{item}">
-//     <div class="tv_item" :type="1" :focusable="true" :enableFocusBorder="true">
-//       <img :src="item ? item.img : ''" class="tv_item_img" />
-//       <p class="tv_item_title">{{item ?item.text :''}}</p>
-//     </div>
-//   </template>
-// </qt-ul>

@@ -1,0 +1,45 @@
+
+.qt-test {
+  background-color: yellow;
+  width: 1920px;
+  height: 1080px;
+}
+.qt-ul{
+  width: 1920px;
+  height: 1080px;
+  background-color: red;
+}
+.qt-ul-item {
+  position: relative;
+  width: 300px;
+  height: 250px;
+  border-radius: 20px;
+  background-color: pink;
+  focus-background-color: blue;
+}
+.tv_item_img {
+  width: 300px;
+  height: 200px;
+  background-color: red;
+}
+.tv_item_title{
+  width: 300px;
+  height: 50px;
+  line-height: 50px;
+  font-size: 30px;
+  color: #000000;
+  background-color: transparent;
+}
+.tv_item_tag{
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 60px;
+  height: 30px;
+  text-align: center;
+  line-height: 30px;
+  background-color: gold;
+  color: #000000;
+  font-size: 22px;
+  background-color: transparent;
+}

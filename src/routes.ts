@@ -1,6 +1,7 @@
 import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
 // import detail from './pages/detail/index.vue'
+import test from './pages/m-test.vue'
 
 // 筛选布局模式选择
 import filterConfig from './pages/filter/config'
@@ -71,7 +72,12 @@ const routes = [
     name: 'detail-full-screen',
     component: () => import('./pages/detail-full-screen/index.vue')
   },
-  { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') }
+  { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
+  {
+    path: '/test',
+    name: 'test',
+    component: test
+  },
 ]
 
 export default routes
