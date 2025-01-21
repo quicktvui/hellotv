@@ -1,11 +1,11 @@
 <template>
-  <qt-view class="search-three-columns" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="search" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
     <scroll-view name="searchScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true">
-      <qt-view class="search-three-columns-body" :clipChildren="true">
+      <qt-view class="search-columns-body" style="width: 2554px" :clipChildren="true">
         <!-- 键盘区域 -->
         <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
         <!-- 搜索关键词 -->
-        <search-keyword-grid v-if="inputText.length === 0" />
+        <search-keyword-grid v-if="inputText.length === 0" @setLoading="setLoading" />
         <!-- 搜索内容区域 -->
         <search-content-tabs ref="contentRef" :triggerTask="triggerTask" :keyword="inputText" @setLoading="setLoading" />
       </qt-view>
@@ -13,7 +13,7 @@
     <!-- 搜索内容区域loading -->
     <qt-view
       v-if="isLoading"
-      class="search-three-columns-body-loading"
+      class="search-columns-body-loading"
       :style="{ width: `${loadingWidth}px`, left: `${loadingLeft}px` }"
       :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }"
     >
@@ -37,8 +37,6 @@ const inputText = ref<string>('')
 const isLoading = ref<boolean>(false)
 const loadingLeft = ref<number>(634)
 const loadingWidth = ref<number>(1286)
-// 关键词
-const keywordRef = ref()
 // 内容
 const contentRef = ref()
 const triggerTask = [
@@ -77,13 +75,6 @@ function updateFocusName(val: string) {
  * loading状态、位置控制
  */
 function setLoading(b: boolean): void {
-  if (b) {
-    loadingLeft.value = 1152
-    loadingWidth.value = 768
-  } else {
-    loadingLeft.value = 634
-    loadingWidth.value = 1286
-  }
   isLoading.value = b
 }
 

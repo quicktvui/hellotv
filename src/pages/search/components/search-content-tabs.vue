@@ -1,17 +1,18 @@
 <template>
-  <qt-view class="search-content-tabs">
+  <qt-view class="search-content">
     <qt-tabs
       ref="tabRef"
-      tabNavBarClass="search-content-tabs-tab"
-      tabPageClass="search-content-tabs-page"
+      tabNavBarClass="search-content-tabs"
+      tabPageClass="search-content-tab-page"
       :autoHandleBackKey="true"
       @onTabPageLoadData="onTabPageLoadData"
       @onTabPageItemClick="onTabPageItemClick"
     >
+      <!-- Tab -->
       <template v-slot:tab-item>
-        <qt-view class="search-content-tabs-tab-item" :type="1" :focusable="true" eventFocus>
+        <qt-view class="search-content-tab-item" :type="1" :focusable="true" eventFocus>
           <qt-text
-            class="search-content-tabs-tab-item-text"
+            class="search-content-tab-item-text"
             text="${text}"
             autoWidth
             gravity="center"
@@ -20,11 +21,12 @@
           ></qt-text>
         </qt-view>
       </template>
+      <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <search-content-item-h :type="1" />
+        <search-content-item-h :type="ContentType.HORIZONTAL" />
         <!-- 竖图 -->
-        <search-content-item-v :type="2" />
+        <search-content-item-v :type="ContentType.VERTICAL" />
       </template>
     </qt-tabs>
   </qt-view>
@@ -34,6 +36,7 @@
 import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildTabContents, buildEndSection } from '../adapter/index'
+import { ContentType } from '../adapter/interface'
 import { Tab } from '../api/interface'
 import searchContentItemH from './search-content-item-h.vue'
 import searchContentItemV from './search-content-item-v.vue'
@@ -77,11 +80,13 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
     const tabItem = tabList[pageIndex]
     const contents = await searchManager.getTabContents(rawKeyword, tabItem.id.toString(), ++pageNo, config.gridContentsLimit)
+    // TODO: 从这里继续
+    console.log('ok->', pageIndex, pageNo, contents)
     // 构建数据
     tabPage.data = buildTabContents(contents)
     // 停止分页
     if (contents.items.length < config.gridContentsLimit) {
-      tabPage.data.push(buildEndSection())
+      tabPage.data.push(buildEndSection(140))
       tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
     }
     // 数据更新
@@ -102,41 +107,4 @@ function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: 
 }
 </script>
 
-<style lang="scss">
-.search-content-tabs {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-content-tabs-tab {
-  width: 1920px;
-  height: 60px;
-  background-color: transparent;
-  margin-top: 70px;
-}
-
-.search-content-tabs-tab-item {
-  height: 60px;
-  background-color: transparent;
-  border-radius: 30px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
-}
-
-.search-content-tabs-page {
-  width: 1920px;
-  height: 1080px;
-  background-color: transparent;
-}
-
-.search-content-tabs-tab-item-text {
-  height: 60px;
-  background-color: transparent;
-  padding-left: 24px;
-  padding-right: 24px;
-  color: $text-normal-color;
-  font-size: 40px;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
-}
-</style>
+<style lang="scss" src="../scss/search-content.scss"></style>

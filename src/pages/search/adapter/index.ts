@@ -49,7 +49,12 @@ export const buildTab = function (rawData?: Tab[]): QTTab {
     defaultFocusIndex: -1,
     itemList:
       rawData && rawData.length > 1
-        ? rawData.map((item) => ({ type: TabItemType.TEXT, text: item.name, titleSize: 36, decoration: { left: 62 } }))
+        ? rawData.map((item, index) => ({
+            type: TabItemType.TEXT,
+            text: item.name,
+            titleSize: 36,
+            decoration: { left: index === 0 ? 56 : 0 }
+          }))
         : [{ type: TabItemType.TEXT, text: '全部', titleSize: 36, decoration: { left: 62 } }]
   }
 }
@@ -163,12 +168,12 @@ export const buildRecommends = function (rawData: Recommends): QTWaterfallSectio
  * 构建到底提示板块
  * @returns
  */
-export const buildEndSection = function (): QTWaterfallSection {
+export const buildEndSection = function (bottom: number = 40): QTWaterfallSection {
   return {
     _id: 'e1',
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
     style: { width: 1920, height: 100 },
-    decoration: { bottom: 40 },
+    decoration: { bottom },
     title: '已经到底啦，按【返回键】回到顶部',
     titleStyle: { fontSize: 28 },
     itemList: []

@@ -19,9 +19,9 @@ const filter = () => {
 import searchConfig from './pages/search/config'
 const search = () => {
   switch (searchConfig.layoutMode) {
-    case 1:
-      return import('./pages/search/two-columns.vue')
     case 2:
+      return import('./pages/search/two-columns.vue')
+    case 3:
       return import('./pages/search/three-columns.vue')
   }
 }
