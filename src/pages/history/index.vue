@@ -51,7 +51,14 @@
       </qt-view>
 
       <!-- 数据渲染 -->
-      <qt-ul class="history-content-ul" :items="contentData" :spanCount="4" :clipChildren="false" :verticalFadingEdgeEnabled="true">
+      <qt-ul
+        class="history-content-ul"
+        :items="contentData"
+        :spanCount="4"
+        :clipChildren="false"
+        :verticalFadingEdgeEnabled="true"
+        @scroll-state-changed="onScrollStateChanged"
+      >
         <template #default="{ index, item }">
           <!-- 常规 -->
           <qt-view class="history-content-ul-item" v-if="item.type === 1" :focusable="true" @click="onContentItemClick(index)">
@@ -158,16 +165,16 @@ function onSidebarItemFocus(evt, index) {
   if (evt.isFocused && lastIndex !== index) {
     lastIndex = index
     isLoading.value = true
-    // switch (index) {
-    //   case 0:
-    //     contentData.value = buildMockData()
-    //     break
-    //   case 1:
-    //     contentData.value = buildMockData(sidebarData.value[index].text, 10)
-    //     break
-    //   default:
-    //     contentData.value = []
-    // }
+    switch (index) {
+      case 0:
+        contentData.value = buildMockData()
+        break
+      case 1:
+        contentData.value = buildMockData(sidebarData.value[index].text, 10)
+        break
+      default:
+        contentData.value = []
+    }
     isEmpty.value = contentData.value.length === 0
 
     // 延迟关闭loading
@@ -182,6 +189,10 @@ function onContentItemClick(index) {
   } else {
     toast.showToast(`跳转->${index}`)
   }
+}
+
+function onScrollStateChanged(evt) {
+  console.log('ok->', evt)
 }
 
 function onBtnClick(name: 'cancel' | 'clear') {
