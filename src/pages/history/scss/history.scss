@@ -48,13 +48,30 @@
   background-color: transparent;
 }
 
-.history-content-item {
+.history-content-tips {
+  width: 1500px;
+  height: 40px;
+  background-color: transparent;
+  margin-top: 31px;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 30px;
+}
+
+.history-content-ul {
+  width: 1460px;
+  height: 1080px;
+  background-color: transparent;
+  margin-top: 15px;
+  margin-left: 60px;
+}
+
+.history-content-ul-item {
   width: 325px;
   height: 266px;
   background-color: transparent;
 }
 
-.history-content-item-title {
+.history-content-ul-item-title {
   width: 325px;
   height: 40px;
   background-color: transparent;
@@ -64,7 +81,7 @@
   focus-color: white;
 }
 
-.history-content-item-progress {
+.history-content-ul-item-progress {
   width: 325px;
   height: 34px;
   background-color: transparent;
@@ -72,13 +89,13 @@
   font-size: 24px;
 }
 
-.history-content-item-end {
+.history-content-ul-item-end {
   width: 1580px;
   height: 100px;
   background-color: transparent;
 }
 
-.history-content-item-end-text {
+.history-content-ul-item-end-text {
   width: 1580px;
   height: 100px;
   background-color: transparent;
