@@ -5,6 +5,8 @@
       tabNavBarClass="search-content-tabs"
       tabPageClass="search-content-tab-page"
       :autoHandleBackKey="true"
+      :tabContentSwitchDelay="300"
+      :tabContentResumeDelay="200"
       @onTabPageLoadData="onTabPageLoadData"
       @onTabPageItemClick="onTabPageItemClick"
     >
@@ -34,8 +36,8 @@
 
 <script setup lang="ts">
 import { ref, watch } from 'vue'
-import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import { buildTab, buildTabContents, buildEndSection } from '../adapter/index'
+import { QTITab, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
+import { buildTab, buildTabContents } from '../adapter/index'
 import { ContentType } from '../adapter/interface'
 import { Tab } from '../api/interface'
 import searchContentItemH from './search-content-item-h.vue'
@@ -76,24 +78,22 @@ async function init(keyword: string) {
 
 let timer: any = -1
 async function onTabPageLoadData(pageIndex: number, pageNo: number) {
-  let tabPage: QTTabPageData = { data: [] }
   if (tabList && pageIndex >= 0 && pageIndex < tabList.length) {
     const tabItem = tabList[pageIndex]
     const contents = await searchManager.getTabContents(rawKeyword, tabItem.id.toString(), ++pageNo, config.gridContentsLimit)
-    // TODO: 从这里继续
-    console.log('ok->', pageIndex, pageNo, contents)
     // 构建数据
-    tabPage.data = buildTabContents(contents)
-    // 停止分页
-    if (contents.items.length < config.gridContentsLimit) {
-      tabPage.data.push(buildEndSection(140))
-      tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-    }
+    const tabData = buildTabContents(contents, pageNo)
+
     // 数据更新
     if (pageNo === 1) {
-      tabRef.value?.setPageData(pageIndex, tabPage)
+      tabRef.value?.setPageData(pageIndex, tabData)
     } else {
-      tabRef.value?.addPageData(pageIndex, tabPage, 0)
+      tabRef.value?.addPageData(pageIndex, tabData, 0)
+    }
+
+    // 停止分页
+    if (tabData.stopping) {
+      tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
     }
   }
 

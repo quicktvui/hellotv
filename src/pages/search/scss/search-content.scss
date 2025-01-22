@@ -23,13 +23,16 @@
   width: 1920px;
   height: 60px;
   background-color: transparent;
-  margin-top: 70px;
+  position: absolute;
+  top: 70px;
+  z-index: 100;
 }
 
 .search-content-tab-page {
   width: 1920px;
   height: 1080px;
   background-color: transparent;
+  position: absolute;
 }
 
 .search-content-tab-item {
@@ -54,26 +57,26 @@
   width: 410px;
   height: 276px;
   background-color: transparent;
-  border-radius: $gl-theme-img-border;
 }
 
 .search-content-item-img-h {
   width: 410px;
   height: 230px;
   background-color: transparent;
+  border-radius: $gl-theme-img-border;
 }
 
 .search-content-item-v {
   width: 260px;
   height: 414px;
   background-color: transparent;
-  border-radius: $gl-theme-img-border;
 }
 
 .search-content-item-img-v {
   width: 260px;
   height: 368px;
   background-color: transparent;
+  border-radius: $gl-theme-img-border;
 }
 
 .search-content-item-text {
@@ -83,4 +86,29 @@
   color: $text-normal-color;
   font-size: 30px;
   focus-color: white;
+}
+
+.search-content-box {
+  width: 1920px;
+  height: 960px;
+  background-color: transparent;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 120px;
+}
+
+.search-content-box-img {
+  width: 186px;
+  height: 174px;
+  background-color: transparent;
+}
+
+.search-content-box-text {
+  width: 140px;
+  height: 40px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 30px;
+  margin-top: 37px;
 }
