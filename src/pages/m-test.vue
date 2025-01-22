@@ -1,9 +1,9 @@
 <template>
   <div class='qt-test'>
     <qt-ul class="qt-ul" ref="qtulRef" name="qt-ul" :items="myData" :spanCount="6">
-      <template #item="{item}">
+      <template #default="{item}">
         <div class="qt-ul-item" v-if="item.type == 1" :focusable="true" :enableFocusBorder="true"
-          eventClick eventFocus>
+          @focus="e => onFocus(e)">
           <img :src="item ? item.img : ''" class="tv_item_img" />
           <p class="tv_item_title">{{item ?item.text :''}}</p>
         </div>
@@ -35,6 +35,9 @@ import { ref,nextTick, onMounted } from 'vue'
   onMounted(() => {
     myData.value = arr
   })
+  const onFocus = (e) => {
+    console.log(e,'2222222222222')
+  }
   
 </script>
 

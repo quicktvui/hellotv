@@ -228,6 +228,7 @@ function registerQTULViewComponent(app: ESApp) {
       'item-bind',
       'item-unbind',
       'load-more',
+      'focus',
       'scroll-state-changed',
       'focus-search-failed',
       'scrollYGreaterReference',
@@ -376,7 +377,6 @@ function registerQTULViewComponent(app: ESApp) {
       watch(
         () => props.items,
         (hs) => {
-          console.log('data changed', hs)
           Native.callUIFunction(viewRef.value, 'setListDataWithParams', [
             toRaw(props.items),
             false,
@@ -479,7 +479,7 @@ function registerQTULViewComponent(app: ESApp) {
       })
       const renderItems = (hd) => {
         return [
-          renderSlot(context.slots, 'item', {
+          renderSlot(context.slots, 'default', {
             index: hd.position,
             item: props.items ? props.items[hd.position] : {}
           })
@@ -554,11 +554,10 @@ function registerQTULViewComponent(app: ESApp) {
         nextTick(() => {
           console.log('tv-list render end ')
         })
-        const items = context.slots.item
+        const items = context.slots.default
           ? h(
               'RecyclePool',
               {
-                slot: 'item',
                 onCreateHolder: (evt: any) => {
                   //crateH(evt)
                 },
@@ -572,13 +571,9 @@ function registerQTULViewComponent(app: ESApp) {
                   handleBatch(evt)
                 }
               },
-              // holders.length == 0 ? h('FastItemView',{key:0},[
-              //     renderSlot(context.slots, 'item',{})
-              //   ]) :
               renderHolders(holders)
             )
-          : [] //这里代表没有slot item的情况
-
+          : []
         return h(
           'FastListView',
           {
@@ -627,7 +622,7 @@ function registerQTULViewComponent(app: ESApp) {
             //   //bindH(evt)
             // },
           },
-          [context.slots.default && context.slots.default(), items]
+          [items]
         )
       }
     },
