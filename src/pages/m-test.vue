@@ -2,7 +2,7 @@
   <div class='qt-test'>
     <qt-ul class="qt-ul" ref="qtulRef" name="qt-ul" :items="myData" :spanCount="6">
       <template #default="{item}">
-        <div class="qt-ul-item" v-if="item.type == 1" :focusable="true" :enableFocusBorder="true"
+        <div class="qt-ul-item" v-if="item.type == 5" :focusable="true" :enableFocusBorder="true"
           @focus="e => onFocus(e)">
           <img :src="item ? item.img : ''" class="tv_item_img" />
           <p class="tv_item_title">{{item ?item.text :''}}</p>
@@ -22,7 +22,7 @@ import { ref,nextTick, onMounted } from 'vue'
   for (let i = 0; i < 20; i++) {
     arr.push({
       id: 'id'+i, name: 'name'+Math.random(),
-      itemSize: 260, type: 1,
+      itemSize: 260, type: 5,
       img: img,
       tag: i % 2 == 0 ? '' : 'VIP',
       text: `pos:${i}`,
@@ -34,9 +34,11 @@ import { ref,nextTick, onMounted } from 'vue'
   }
   onMounted(() => {
     myData.value = arr
+    setTimeout(() => {
+      myData.value = myData.value.concat(arr)
+    },5000)
   })
   const onFocus = (e) => {
-    console.log(e,'2222222222222')
   }
   
 </script>

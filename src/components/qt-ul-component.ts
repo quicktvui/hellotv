@@ -373,20 +373,14 @@ function registerQTULViewComponent(app: ESApp) {
       function setAutoFocus(tag: string, delay: number) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
-      const holders = reactive<any[]>([])
-      watch(
-        () => props.items,
-        (hs) => {
-          Native.callUIFunction(viewRef.value, 'setListDataWithParams', [
-            toRaw(props.items),
-            false,
-            false,
-            {
-              RealDOMTypes: [1, 2]
-            }
-          ])
-        }
-      )
+      const holders  = reactive<any[]>([])
+      watch(() => props.items, (hs) => {
+        let currentArrOLd = JSON.parse(JSON.stringify(hs))
+        let currentArrNew = toRaw(currentArrOLd)
+        Native.callUIFunction(viewRef.value, 'setListDataWithParams', [currentArrNew, false,false,{
+          RealDOMTypes:[1,2]
+        }]);
+      })
       function extractNum(input: string): number {
         // 找到最后一个 '-' 的位置
         const lastDashIndex = input.lastIndexOf('-')
@@ -578,7 +572,7 @@ function registerQTULViewComponent(app: ESApp) {
           'FastListView',
           {
             ref: viewRef,
-
+            disableVirtualDOM: props.disableVirtualDOM,
             onItemClick: (evt) => {
               context.emit('item-click', evt)
             },
@@ -630,7 +624,11 @@ function registerQTULViewComponent(app: ESApp) {
       items: {
         type: Array,
         default: () => []
-      }
+      },
+      disableVirtualDOM: {
+        type: Boolean,
+        default: true
+      },
     }
   })
   app.component('qt-ul', QTULViewImpl)
