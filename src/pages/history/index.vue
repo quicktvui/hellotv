@@ -53,15 +53,23 @@
       <!-- 数据渲染 -->
       <qt-ul
         class="history-content-ul"
+        ref="ulRef"
         :items="contentData"
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
+        :blockFocusDirections="['down']"
         @scroll-state-changed="onScrollStateChanged"
       >
         <template #default="{ index, item }">
           <!-- 常规 -->
-          <qt-view class="history-content-ul-item" v-if="item.type === 1" :focusable="true" @click="onContentItemClick(index)">
+          <qt-view
+            class="history-content-ul-item"
+            v-if="item.type === 1"
+            :focusable="true"
+            @focus="onContentItemFocus"
+            @click="onContentItemClick(index)"
+          >
             <!-- 焦点状态下的删除样式 -->
             <qt-view
               class="history-content-ul-item-delete"
@@ -105,7 +113,7 @@
             ></qt-text>
           </qt-view>
           <!-- 到底提示 -->
-          <qt-view class="history-content-ul-item-end" v-if="item.type === 1000" :focusable="false">
+          <qt-view class="history-content-ul-item-end" v-if="item.type === 1002" :focusable="false">
             <qt-text
               class="history-content-ul-item-end-text"
               text="已经到底啦，按【返回键】回到顶部"
@@ -123,7 +131,7 @@
 import { ref, onMounted } from 'vue'
 import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
-import { QTListViewItem } from '@quicktvui/quicktvui3'
+import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildMockData } from './mock'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
@@ -134,6 +142,7 @@ const router = useESRouter()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
+const ulRef = ref<QTIListView>()
 const sidebarData = ref<QTListViewItem[]>([])
 const contentData = ref<QTListViewItem[]>([])
 const btnStyle = {
@@ -160,26 +169,38 @@ onMounted(() => {
 })
 
 let lastIndex = 0
+let lastFocusName = ''
 let loadingDelayTimer: any = -1
 function onSidebarItemFocus(evt, index) {
-  if (evt.isFocused && lastIndex !== index) {
-    lastIndex = index
-    isLoading.value = true
-    switch (index) {
-      case 0:
-        contentData.value = buildMockData()
-        break
-      case 1:
-        contentData.value = buildMockData(sidebarData.value[index].text, 10)
-        break
-      default:
-        contentData.value = []
-    }
-    isEmpty.value = contentData.value.length === 0
+  if (evt.isFocused) {
+    lastFocusName = 'sidebar'
 
-    // 延迟关闭loading
-    clearTimeout(loadingDelayTimer)
-    loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+    if (lastIndex !== index) {
+      lastIndex = index
+      isLoading.value = true
+      ulRef.value?.scrollToTop()
+      switch (index) {
+        case 0:
+          contentData.value = buildMockData()
+          break
+        case 1:
+          contentData.value = buildMockData(sidebarData.value[index].text, 10)
+          break
+        default:
+          contentData.value = []
+      }
+      isEmpty.value = contentData.value.length === 0
+
+      // 延迟关闭loading
+      clearTimeout(loadingDelayTimer)
+      loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+    }
+  }
+}
+
+function onContentItemFocus(evt) {
+  if (evt.isFocused) {
+    lastFocusName = 'content'
   }
 }
 
@@ -191,8 +212,9 @@ function onContentItemClick(index) {
   }
 }
 
+let offsetY = 0
 function onScrollStateChanged(evt) {
-  console.log('ok->', evt)
+  offsetY = evt.offsetY
 }
 
 function onBtnClick(name: 'cancel' | 'clear') {
@@ -205,18 +227,20 @@ function onBtnClick(name: 'cancel' | 'clear') {
 
 let oKCounter = 0
 function onKeyDown(keyEvent: ESKeyEvent) {
-  switch (keyEvent.keyCode) {
-    case 82: // 菜单键
-      isEditing.value = true
-      break
-    case 23: // 长按OK键
-      if ((oKCounter++, oKCounter > 10)) {
+  if (lastFocusName === 'content') {
+    switch (keyEvent.keyCode) {
+      case 82: // 菜单键
         isEditing.value = true
+        break
+      case 23: // 长按OK键
+        if ((oKCounter++, oKCounter > 10)) {
+          isEditing.value = true
+          oKCounter = 0
+        }
+        break
+      default:
         oKCounter = 0
-      }
-      break
-    default:
-      oKCounter = 0
+    }
   }
 }
 
@@ -224,6 +248,12 @@ function onBackPressed() {
   // 编辑状态检查
   if (isEditing.value) {
     isEditing.value = false
+    return
+  }
+
+  // 右侧内容滚动状态检查
+  if (offsetY > 0) {
+    ulRef.value?.scrollToPosition(0)
     return
   }
 
