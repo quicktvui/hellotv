@@ -12,8 +12,8 @@ export const getMenuList = (menuList: IHistoryMenuEntity[] = []) => {
       type: item.type, //(index % 3) + 1,
       showName: item.name,
       normalImg: item.img, //'https://img1.baidu.com/it/u=2666955302,2339578501&fm=253&fmt=auto&app=138&f=JPEG?w=500&h=750',
-      selectedImg: item.selectedImg, //'http://qcloudimg.a311.ottcn.com/data_center/files/2023/11/02/2ba8e63e-c29f-48f8-9955-02229c78ec85.jpg',
-      focusedImg: item.focusedImg, //'http://qcloudimg.a311.ottcn.com/data_center/files/2024/01/15/bccb38a7-5f1a-4228-9901-91f77a96bbe7.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198'
+      selectedImg: item.selectedImg, //'http://extcdn.hsrc.tv/data_center/files/2023/11/02/2ba8e63e-c29f-48f8-9955-02229c78ec85.jpg',
+      focusedImg: item.focusedImg, //'http://extcdn.hsrc.tv/data_center/files/2024/01/15/bccb38a7-5f1a-4228-9901-91f77a96bbe7.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198'
       iStyle:{ width: configs.menuWidth-10, height: 106 },
       txtStyle:{ width: 280, height: 106 },
       imgStyle:{ width: 280, height: 86 }

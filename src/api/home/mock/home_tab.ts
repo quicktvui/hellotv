@@ -51,7 +51,7 @@ export default [
     "image": null,
     "selectImage": null,
     "focusImage": null,
-    "backgroundImage": "http://qcloudimg.a311.ottcn.com/data_center/files/2022/07/28/6b899bf1-e008-4147-acbf-8305742be0c1.jpg",
+    "backgroundImage": "http://extcdn.hsrc.tv/data_center/files/2022/07/28/6b899bf1-e008-4147-acbf-8305742be0c1.jpg",
     "defaultHome": "0",
     "focusCornerImage": null,
     "cornerImage": null,

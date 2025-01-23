@@ -20,7 +20,7 @@ export const getTestContentList = (size = 20, pageNum:number=1): IHistoryContent
     return new Array(size).fill(1).map((item, index) => {
         return {
             assetId: '',
-            assetLongCoverH: "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/08/09/dd6ce497-ee81-46f2-8399-24b543e09fd4.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/320x180",
+            assetLongCoverH: "http://extcdn.hsrc.tv/channelzero_image/2022/08/09/dd6ce497-ee81-46f2-8399-24b543e09fd4.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/320x180",
             assetLongId: "1553955134392692738",
             assetLongTitle: (index<1?"蜘蛛侠蜘蛛侠蜘蛛侠蜘蛛侠蜘蛛侠蜘蛛侠蜘蛛侠":'蜘蛛侠')+pageNum,
             assetType: "1",

@@ -9,17 +9,17 @@ HelloTV是基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 框架的视频点播�
 以下是一些页面效果：
 
 瀑布流首页
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/9a62dd70-e787-4d5f-8294-d2acd79c23bf.jpeg)
-![iamge](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/915c577d-fde4-4f75-91d4-ef54b63a7ccb.jpg)
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/d2b2be9a-2b87-4db9-b36a-8e317a97a7f0.jpg)
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/7ca82a38-b3d1-4a21-8bbb-52b1f42b1f4c.jpg)
-![](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/d7fe27d2-6112-4350-8881-8cb4f7d5ca30.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/9a62dd70-e787-4d5f-8294-d2acd79c23bf.jpeg)
+![iamge](http://extcdn.hsrc.tv/data_center/files/2024/08/06/915c577d-fde4-4f75-91d4-ef54b63a7ccb.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/d2b2be9a-2b87-4db9-b36a-8e317a97a7f0.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/7ca82a38-b3d1-4a21-8bbb-52b1f42b1f4c.jpg)
+![](http://extcdn.hsrc.tv/data_center/files/2024/08/06/d7fe27d2-6112-4350-8881-8cb4f7d5ca30.jpg)
 搜索
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/9204f370-3230-4f56-b7df-c4da1283fd89.jpeg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/9204f370-3230-4f56-b7df-c4da1283fd89.jpeg)
 筛选
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/3c860f27-cefe-47a9-b3ea-c9bbe761e2e2.jpeg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/3c860f27-cefe-47a9-b3ea-c9bbe761e2e2.jpeg)
 详情页
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/c2c6d9e0-ca8a-4ff1-a5ce-e639395ad33f.jpeg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/c2c6d9e0-ca8a-4ff1-a5ce-e639395ad33f.jpeg)
 ![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/faa9e1c4-c427-421b-a8ae-ac9562e26662.jpg)
 内容编辑页
 ![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/fc811902-d468-4828-b030-0f7561c1816b.jpeg

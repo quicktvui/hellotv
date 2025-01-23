@@ -17,7 +17,7 @@ export function createUserApi():ILoginDataSource{
   }
   function getLoginBackground():Promise<string>{
     //请求接口 更换接口数据
-    return Promise.resolve("http://qcloudimg.a311.ottcn.com/data_center/files/2023/05/30/5ef2b018-9405-4d0e-b185-dbabfc34618c.jpg")
+    return Promise.resolve("http://extcdn.hsrc.tv/data_center/files/2023/05/30/5ef2b018-9405-4d0e-b185-dbabfc34618c.jpg")
   }
 
   function getLoginQrCode(params:any):Promise<LoginQrCode>{

@@ -14,7 +14,7 @@ export default {
           "width": 408,
           "height": 230,
           "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/11/17/01f89ddb-8c28-4059-9173-99790eb81a79.jpg",
+          "poster": "http://extcdn.hsrc.tv/project/zero/img_test/2021/11/17/01f89ddb-8c28-4059-9173-99790eb81a79.jpg",
           "posterTitle": "大鹏带你去黑坑",
           "posterTitleStyle": "0",
           "contentData": "1460909241538551810",
@@ -33,7 +33,7 @@ export default {
           "width": 408,
           "height": 230,
          "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/06/15/e13a2200-6894-4dd7-bfdb-5de14d6e406e.jpg",
+          "poster": "http://extcdn.hsrc.tv/channelzero_image/2022/06/15/e13a2200-6894-4dd7-bfdb-5de14d6e406e.jpg",
           "posterTitle": "动感钓鱼：路亚",
           "posterTitleStyle": "0",
 
@@ -55,7 +55,7 @@ export default {
           "width": 408,
           "height": 230,
           "cellType": "1",
-          "poster": "http://qcloudimg.a311.ottcn.com/data_center/files/2022/12/28/dfc0f223-0b5a-451c-a46d-97887a1196b0.jpg",
+          "poster": "http://extcdn.hsrc.tv/data_center/files/2022/12/28/dfc0f223-0b5a-451c-a46d-97887a1196b0.jpg",
           "posterTitle": "一夜岛主",
           "posterTitleStyle": "0",
 
@@ -66,8 +66,8 @@ export default {
           "action": "esapp://action/start?es_pkg=es.com.test.tv&from=es.com.test.tv&splash=0&args={\"params\":{\"mediaId\":\"1496741434282930178\",\"startPosition\":\"NaN\"},\"url\":\"series_view\"}",
           "innerArgs": "{\"params\":{\"mediaId\":\"1496741434282930178\",\"startPosition\":\"NaN\"},\"url\":\"series_view\"}",
 
-          "focusImage": "http://qcloudimg.a311.ottcn.com/data_center/files/2022/12/28/9c5d2b1c-e563-48f9-aa42-68a14c53ff42.jpg",
-          "nonFocusImage": "http://qcloudimg.a311.ottcn.com/data_center/files/2022/12/28/dfc0f223-0b5a-451c-a46d-97887a1196b0.jpg",
+          "focusImage": "http://extcdn.hsrc.tv/data_center/files/2022/12/28/9c5d2b1c-e563-48f9-aa42-68a14c53ff42.jpg",
+          "nonFocusImage": "http://extcdn.hsrc.tv/data_center/files/2022/12/28/dfc0f223-0b5a-451c-a46d-97887a1196b0.jpg",
           "playLogoSwitch": "0",
         },
         {
@@ -77,7 +77,7 @@ export default {
           "width": 408,
           "height": 230,
          "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/07/20/d86a0c45-cbb7-4b6b-a07b-4c8464196b1b.jpg",
+          "poster": "http://extcdn.hsrc.tv/channelzero_image/2022/07/20/d86a0c45-cbb7-4b6b-a07b-4c8464196b1b.jpg",
           "posterTitle": "路亚大本营",
           "posterTitleStyle": "0",
 
@@ -108,7 +108,7 @@ export default {
           "width": 408,
           "height": 230,
          "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/10/24/e997aa64-f5d6-439e-84cd-ded48040371b.jpg",
+          "poster": "http://extcdn.hsrc.tv/channelzero_image/2022/10/24/e997aa64-f5d6-439e-84cd-ded48040371b.jpg",
           "posterTitle": "钓赛进行时2022",
           "posterTitleStyle": "0",
           "contentData": "1584430429654564865",
@@ -125,7 +125,7 @@ export default {
           "width": 408,
           "height": 230,
          "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/10/24/9f602b4b-96b6-41b5-85fa-78e5d164ecbd.jpg",
+          "poster": "http://extcdn.hsrc.tv/channelzero_image/2022/10/24/9f602b4b-96b6-41b5-85fa-78e5d164ecbd.jpg",
           "posterTitle": "垂钓吧美人鱼",
           "posterTitleStyle": "0",
 
@@ -145,7 +145,7 @@ export default {
           "width": 408,
           "height": 230,
          "cellType": "0",
-          "poster": "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/10/24/73f71cfb-1a4d-4592-b54f-ec4a5d78c352.jpg",
+          "poster": "http://extcdn.hsrc.tv/channelzero_image/2022/10/24/73f71cfb-1a4d-4592-b54f-ec4a5d78c352.jpg",
           "posterTitle": "剑冈英雄名满天下",
           "posterTitleStyle": "0",
 
