@@ -1,7 +1,7 @@
 <template>
   <qt-view class="history" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
     <!-- 左侧列表 -->
-    <qt-view class="history-sidebar">
+    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
       <!-- 顶部提示 -->
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
 
@@ -237,6 +237,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
 
 function clearPageData() {
   isEmpty.value = true
+  isEditing.value = false
   // 清空本地数据
   contentData.value = []
 }
