@@ -67,3 +67,10 @@
   font-size: 40px;
   focus-color: $theme-text-focus-color;
 }
+.search-keyboard-btn {
+  width: 160px;
+  height: 60px;
+  borderRadius: 30px;
+  backgroundColor: transparent;
+  focus-background-color:$theme-btn-focus-color;
+}

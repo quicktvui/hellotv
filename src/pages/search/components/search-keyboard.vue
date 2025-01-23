@@ -18,7 +18,7 @@
     <qt-view class="search-keyboard-btns" :blockFocusDirections="['up']">
       <qt-button
         text="清空"
-        :style="btnStyle"
+        class='search-keyboard-btn'
         :textStyle="textStyle"
         :icon="icClear"
         :focusIcon="icClearFocused"
@@ -26,7 +26,7 @@
       />
       <qt-button
         text="退格"
-        :style="btnStyle"
+        class='search-keyboard-btn'
         :textStyle="textStyle"
         :icon="icBack"
         :focusIcon="icBackFocused"
@@ -61,6 +61,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { QTIGridView, QTListViewItem } from '@quicktvui/quicktvui3'
+import ThemeConfig from "../../../config/theme-config"
 import icSearch from '../../../assets/search/ic_search.png'
 import icClear from '../../../assets/search/ic_clear.png'
 import icClearFocused from '../../../assets/search/ic_clear_focused.png'
@@ -78,17 +79,11 @@ const defaultText = {
     { type: 'color', value: ['#FFFFFF', 9, 11] }
   ]
 }
-const btnStyle = {
-  width: `160px`,
-  height: `60px`,
-  borderRadius: `30px`,
-  backgroundColor: 'transparent',
-  focusBackgroundColor: '#FFFFFF'
-}
+
 const textStyle = {
   color: '#FFFFFF',
   fontSize: `30px`,
-  focusColor: '#13161B'
+  focusColor: ThemeConfig.textFocusColor
 }
 
 onMounted(() => {
@@ -136,4 +131,6 @@ function onBackPressed() {
 defineExpose({ onBackPressed })
 </script>
 
-<style scoped lang="scss" src="../scss/search-keyboard.scss"></style>
+<style scoped lang="scss" src="../scss/search-keyboard.scss">
+
+</style>
