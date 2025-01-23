@@ -99,7 +99,7 @@ export default {
           "playData": [{
             "id": "1747108956574457858",
             "title": "原作不温不火，为何还要翻拍",
-            "cover": "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/52/2841919021-fd68-4dc7-b13c-729118448d17.jpg",
+            "cover": "http://extcdn.hsrc.tv/project/zero/img_test/2021/52/2841919021-fd68-4dc7-b13c-729118448d17.jpg",
             "url": "",
             "isRequestUrl":true
           }]

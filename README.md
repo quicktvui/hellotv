@@ -20,9 +20,9 @@ HelloTV是基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 框架的视频点播�
 ![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/3c860f27-cefe-47a9-b3ea-c9bbe761e2e2.jpeg)
 详情页
 ![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/c2c6d9e0-ca8a-4ff1-a5ce-e639395ad33f.jpeg)
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/08/06/faa9e1c4-c427-421b-a8ae-ac9562e26662.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/faa9e1c4-c427-421b-a8ae-ac9562e26662.jpg)
 内容编辑页
-![image](http://qcloudimg.a311.ottcn.com/data_center/files/2024/07/10/fc811902-d468-4828-b030-0f7561c1816b.jpeg
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/fc811902-d468-4828-b030-0f7561c1816b.jpeg
 )
 <!-- [![Build Status](https://travis-ci.org/your-username/your-project.svg?branch=master)](https://travis-ci.org/your-username/your-project) -->
 <!-- [![npm version](https://badge.fury.io/js/your-package.svg)](https://badge.fury.io/js/your-package) -->

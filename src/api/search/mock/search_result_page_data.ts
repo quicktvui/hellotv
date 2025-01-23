@@ -104,7 +104,7 @@ export default {
     {
       id: "1688814703301484546",
       title: "团团汽车世界之组装工程车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/08/08/2ae7392f-d121-4607-9192-1dc2daeae704.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/08/08/2ae7392f-d121-4607-9192-1dc2daeae704.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 10",
       actionRedirect: {
         redirectType: 1,
@@ -115,7 +115,7 @@ export default {
     {
       id: "1686928622163320833",
       title: "汽车世界工程车学颜色乐园",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/08/03/37a9721a-cbe3-473f-91af-3b56f290e83f.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/08/03/37a9721a-cbe3-473f-91af-3b56f290e83f.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 11",
       actionRedirect: {
         redirectType: 1,
@@ -126,7 +126,7 @@ export default {
     {
       id: "1732577187715616769",
       title: "奇妙的汽车：小汽车 大知识",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/12/07/f60a1f72-bf31-4edb-83bb-0d2032db25a6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/12/07/f60a1f72-bf31-4edb-83bb-0d2032db25a6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 12",
       actionRedirect: {
         redirectType: 1,
@@ -137,7 +137,7 @@ export default {
     {
       id: "1648174738301214721",
       title: "偷车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/04/18/84a7bceb-e4fd-4815-b13d-9ccbd85a288a.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/04/18/84a7bceb-e4fd-4815-b13d-9ccbd85a288a.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 13",
       actionRedirect: {
         redirectType: 1,
@@ -148,7 +148,7 @@ export default {
     {
       id: "1468141435892203521",
       title: "车神",
-      poster: "http://qcloudimg.a311.ottcn.com/project/tvq/qsj_img/2019/09/17/36f9defd4d5742cab423ae5605dd48b6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/tvq/qsj_img/2019/09/17/36f9defd4d5742cab423ae5605dd48b6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 14",
       actionRedirect: {
         redirectType: 1,
@@ -159,7 +159,7 @@ export default {
     {
       id: "1413428423119863810",
       title: "堵车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/02/21/f18f100f-cac4-4cba-959f-2c19150c52b5.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2022/02/21/f18f100f-cac4-4cba-959f-2c19150c52b5.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 15",
       actionRedirect: {
         redirectType: 1,
@@ -170,7 +170,7 @@ export default {
     {
       id: "1413420906130178050",
       title: "风车",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/52/099f6d528b-475b-457d-aefc-8ab128c71064.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/52/099f6d528b-475b-457d-aefc-8ab128c71064.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 16",
       actionRedirect: {
         redirectType: 1,
@@ -181,7 +181,7 @@ export default {
     {
       id: "1413412942342258690",
       title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 17",
       actionRedirect: {
         redirectType: 1,
@@ -192,7 +192,7 @@ export default {
     {
       id: "1413421114436091906",
       title: "小米的星空",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 18",
       actionRedirect: {
         redirectType: 1,
@@ -203,7 +203,7 @@ export default {
     {
       id: "1413412942342258690",
       title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 17",
       actionRedirect: {
         redirectType: 1,
@@ -214,7 +214,7 @@ export default {
     {
       id: "1413421114436091906",
       title: "小米的星空",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 18",
       actionRedirect: {
         redirectType: 1,
@@ -225,7 +225,7 @@ export default {
     {
       id: "1413412942342258690",
       title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 17",
       actionRedirect: {
         redirectType: 1,
@@ -236,7 +236,7 @@ export default {
     {
       id: "1413421114436091906",
       title: "小米的星空",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 18",
       actionRedirect: {
         redirectType: 1,
@@ -247,7 +247,7 @@ export default {
     {
       id: "1413412942342258690",
       title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 17",
       actionRedirect: {
         redirectType: 1,
@@ -258,7 +258,7 @@ export default {
     {
       id: "1413421114436091906",
       title: "小米的星空",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/53/0948019184-004a-4193-94e9-abe923190773.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 18",
       actionRedirect: {
         redirectType: 1,

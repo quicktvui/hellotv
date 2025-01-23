@@ -115,7 +115,7 @@ export default {
     {
       id: "2686928622163320833",
       title: "汽车世界工程车学颜色乐园",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/08/03/37a9721a-cbe3-473f-91af-3b56f290e83f.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/08/03/37a9721a-cbe3-473f-91af-3b56f290e83f.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 29",
       actionRedirect: {
         redirectType: 1,
@@ -126,7 +126,7 @@ export default {
     {
       id: "2732577187715616769",
       title: "奇妙的汽车：小汽车 大知识",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/12/07/f60a1f72-bf31-4edb-83bb-0d2032db25a6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/12/07/f60a1f72-bf31-4edb-83bb-0d2032db25a6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 30",
       actionRedirect: {
         redirectType: 1,
@@ -137,7 +137,7 @@ export default {
     {
       id: "2648174738301214721",
       title: "偷车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2023/04/18/84a7bceb-e4fd-4815-b13d-9ccbd85a288a.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2023/04/18/84a7bceb-e4fd-4815-b13d-9ccbd85a288a.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 31",
       actionRedirect: {
         redirectType: 1,
@@ -148,7 +148,7 @@ export default {
     {
       id: "2468141435892203521",
       title: "车神",
-      poster: "http://qcloudimg.a311.ottcn.com/project/tvq/qsj_img/2019/09/17/36f9defd4d5742cab423ae5605dd48b6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/tvq/qsj_img/2019/09/17/36f9defd4d5742cab423ae5605dd48b6.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 32",
       actionRedirect: {
         redirectType: 1,
@@ -159,7 +159,7 @@ export default {
     {
       id: "2413428423119863810",
       title: "堵车",
-      poster: "http://qcloudimg.a311.ottcn.com/channelzero_image/2022/02/21/f18f100f-cac4-4cba-959f-2c19150c52b5.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/channelzero_image/2022/02/21/f18f100f-cac4-4cba-959f-2c19150c52b5.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 33",
       actionRedirect: {
         redirectType: 1,
@@ -170,7 +170,7 @@ export default {
     {
       id: "2413420906130178050",
       title: "风车",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/52/099f6d528b-475b-457d-aefc-8ab128c71064.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/52/099f6d528b-475b-457d-aefc-8ab128c71064.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 34",
       actionRedirect: {
         redirectType: 1,
@@ -181,7 +181,7 @@ export default {
     {
       id: "2413412942342258690",
       title: "车逝",
-      poster: "http://qcloudimg.a311.ottcn.com/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
+      poster: "http://extcdn.hsrc.tv/project/zero/img_test/2021/21/0963306cc0-230f-4882-b4a5-b906d17b2e0b.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/260x378",
       corner: "角标 35",
       actionRedirect: {
         redirectType: 1,

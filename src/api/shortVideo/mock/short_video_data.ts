@@ -146,7 +146,7 @@ export default [
   {
     id: "1688814703301484546",
     title: "驾照清分日期你真的清楚吗？清分规则是怎么计算的？",
-    poster: "http://qcloudimg.a311.ottcn.com/data_center/files/2023/12/20/730217ee-e3e0-46cc-8fa3-6c6bf193abd0.jpg",
+    poster: "http://extcdn.hsrc.tv/data_center/files/2023/12/20/730217ee-e3e0-46cc-8fa3-6c6bf193abd0.jpg",
     url: "http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2023/12/20/cab098fa-594b-4bba-86bd-de33bafde718.mp4",
     corner: "角标 10",
     redirectType: 1,
