@@ -152,16 +152,5 @@ export default defineComponent({
 })
 </script>
 
-<style >
-
-.app-root-css {
-  width: 1920px;
-  height: 1080px;
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  background-color: transparent;
-}
-
-
+<style src='./app.scss'>
 </style>
