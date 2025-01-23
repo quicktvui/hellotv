@@ -1,16 +1,15 @@
-//按钮高度60圆角为30
-$gl-theme-60-border-radius: 30px;
-//全局图片圆角
-$gl-theme-img-border: 16px;
 //全局背景色
 $gl-theme-root-bg-color: #252930;
-
+//全局图片圆角
+$gl-theme-img-border: 16px;
 // 按钮默认颜色
-$gl-theme-btn-bg-normal-color: rgba(255, 255, 255, 0.6);
+$gl-theme-btn-bg-normal-color: rgba(255, 255, 255, 0.1);
 $gl-theme-btn-bg-select-color: transparent;
-$gl-theme-btn-bg-focus-color: #ffffff;
+$gl-theme-btn-bg-focus-color: #FFFFFF;
+// 选中边框颜色
+$gl-theme-focus-border-color:white;
 
 // 文字默认颜色
-$text-normal-color: rgba(255, 255, 255, 0.55);
-$text-select-color: #ffffff;
-$text-focus-color: #13161b;
+$text-normal-color: rgba(255, 255, 255, 0.5);
+$text-select-color: #FFFFFF;
+$text-focus-color: #13161B;

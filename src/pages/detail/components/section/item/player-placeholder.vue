@@ -7,7 +7,6 @@
     :autofocus='autofocus'
     :focusable="true"
     :blockFocusDirections="['left']"
-    :style="{'focus-border-color': isFree ? '#FFFFFF' : '#FFD97C'}"
     :enableFocusBorder="true">
     <qt-view class="player-placeholder-mask" :focusable="false"></qt-view>
     <qt-image class="player-placeholder-img"
@@ -18,7 +17,7 @@
       :src="playerPplaceholderUrl"/>
   </div>
 </template>
-    
+
 <script setup lang='ts' name='PlayerPlaceholder'>
 import { ref } from 'vue'
 import { ESFocusable, useESFocus } from "@extscreen/es3-core"
@@ -41,15 +40,15 @@ import { IMedia } from '../../../adapter/interface'
     if(placeholder.value) focus.requestFocusDirectly(placeholder.value!)
   }
   const setAutofocus = (enable:boolean) => autofocus.value = enable
-  const onClick = () => emits('onPlaceholderClick') 
-  const onFocus = (e) => emits('onPlaceholderFocus', e.isFocused) 
+  const onClick = () => emits('onPlaceholderClick')
+  const onFocus = (e) => emits('onPlaceholderFocus', e.isFocused)
 
   defineExpose({
     init,requestFocus,setAutofocus,
     showPlayerPlaceholderImg
   })
 </script>
-    
+
 <style lang='scss' scoped>
 .player-placeholder-root{
   width: 894px;
@@ -59,8 +58,9 @@ import { IMedia } from '../../../adapter/interface'
   flex-direction: row;
   align-items: center;
   justify-content: center;
+  focus-border-color:$gl-theme-focus-border-color;
   focus-border-width: 3;
-  focus-border-radius: 9;
+  focus-border-radius: $gl-theme-img-border;
   .player-placeholder-mask {
     width: 890px;
     height: 500px;
@@ -80,4 +80,3 @@ import { IMedia } from '../../../adapter/interface'
   }
 }
 </style>
-      

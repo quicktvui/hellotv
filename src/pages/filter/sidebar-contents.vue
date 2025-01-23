@@ -40,6 +40,7 @@ const sidebarBlockFocusDir = ref()
 const contentRef = ref()
 
 function onESCreate(params: { screenId: string }) {
+  params.screenId = "1848555233454727169"
   loadFilters(params.screenId || '1848555233454727169')
 }
 

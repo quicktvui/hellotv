@@ -1313,10 +1313,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-player/-/es3-player-1.0.17.tgz#fb86c4ff75b2a1d303d8aebf067dfda63c985bd8"
   integrity sha512-FrKqhn6/M63ewPRbzlTyO8APXt5UKYBCvT46eoRKm6XNgCYSWTxIY87hu2J5E5AIMiag5stMihBy4r0UXeaEfA==
 
-"@extscreen/es3-router@1.1.17":
-  version "1.1.17"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.1.17.tgz#24ea723d6f8f387b9e99a06183b9da3bc5c46730"
-  integrity sha512-nSbDKwMQ1bmj+/UHqf1ySHJ7PVBlsAdzR9Qh6eoO2zJHiG+Ka2uuMlKicKQCdHOGERbVb3QTXyIT+wWZLDkN3A==
+"@extscreen/es3-router@1.1.27":
+  version "1.1.27"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.1.27.tgz#8f8cdc8597a3d3ba9951c1b9b67a53a0e49013e4"
+  integrity sha512-3n+j1+06+iaQQaLclNMR82mU5qljAMKWMgtFZ4fQVR7/ySR+NiwtFBriXb1AyyZlu7MqwJXCMzZ+bNDcYPRhcw==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 

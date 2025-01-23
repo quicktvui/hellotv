@@ -10,7 +10,7 @@ import { MYComponent } from './components/qt-ul-component'
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: 'history',
+  main: 'home',
   error: 'error',
   limit: 5,
   routes: routes

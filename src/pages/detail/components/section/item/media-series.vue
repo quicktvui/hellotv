@@ -16,17 +16,18 @@
       :clipChildren="false"
       :focusable="false"
       :visible="visible"
-      :textColors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
+      :textColors="{ color: ThemeConfig.textNormalColor, focusColor: ThemeConfig.textFocusColor,
         selectColor: ThemeConfig.textSelectColor }"
+      :markColor='ThemeConfig.textFocusColor'
       :gradientBackground="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
-      :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
+      :gradientFocusBackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       :commonParam="{itemGap: 32,contentWidth: 1760}"
       @loadData="onLoadData"
       @itemClick="onItemClick"
       @itemFocused="onItemFocused"
       @groupItemFocused="onGroupItemFocused">
       <template v-slot:default>
-        <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" 
+        <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true"
           :focusScale="ThemeConfig.placeHolderFocusScale">
           <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
           <qt-view class="media-series-item-info" duplicateParentState>

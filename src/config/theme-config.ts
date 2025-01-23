@@ -32,15 +32,12 @@ export default {
   btnGradientColor: ["#19FFFFFF", "#19FFFFFF"],
   btnGradientSelectColor: [],
   btnGradientFocusColor: ["#FFFFFF", "#FFFFFF"],
-  
-  //普通按钮文字，文字---颜色
-  textColor: "#8cffffff",
-  textSelectColor: "#FFFFFF",
-  textFocusColor: "#000000",
-  
 
-  //瀑布流格子选中背景色
-  tabContentBgGradientFocusColor: ['#157AFC', '#157AFC'],
+  //普通按钮文字，文字---颜色
+  textNormalColorAndroid: "#80FFFFFF",
+  textNormalColor: "rgba(255, 255, 255, 0.5)",
+  textSelectColor: "#FFFFFF",
+  textFocusColor: "#13161B",
 
   //瀑布流格子浮动标题背景色
   tabContentFloatBgColor: ['#ed222222', '#00000000'],

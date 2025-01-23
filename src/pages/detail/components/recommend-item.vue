@@ -1,23 +1,23 @@
 <template>
-  <qt-view class="recommend-item-root" 
-    flexStyle="${style}" 
-    layout="${layout}" 
-    name="detail-recommend-item" 
-    :focusable="true" 
+  <qt-view class="recommend-item-root"
+    flexStyle="${style}"
+    layout="${layout}"
+    name="detail-recommend-item"
+    :focusable="true"
     :focusScale="ThemeConfig.placeHolderFocusScale"
-    eventFocus 
+    eventFocus
     eventClick>
     <!-- 海报图 -->
-    <qt-view 
-      class="recommend-item-img" 
-      :focusable="false" 
-      :enableFocusBorder="true" 
+    <qt-view
+      class="recommend-item-img"
+      :focusable="false"
+      :enableFocusBorder="true"
       duplicateParentState>
       <qt-image
-        class="recommend-item-img" 
+        class="recommend-item-img"
         flexStyle="${image.style}"
-        src="${image.src}" 
-        :focusable="false" 
+        src="${image.src}"
+        :focusable="false"
         :postDelay="300"/>
     </qt-view>
     <!-- 角标 -->
@@ -32,54 +32,54 @@
         typeface="bold"
         gravity="center"
         :postDelay="100"
-        gradientBackground="${corner.background}" 
+        gradientBackground="${corner.background}"
         autoWidth
         text="${corner.text}"
       />
     </div>
     <!-- 评分 -->
-    <qt-view 
-      class="recommend-item-score" 
+    <qt-view
+      class="recommend-item-score"
       :focusable="false"
       :gradientBackground="{colors:['#00000000', '#E5000000'], cornerRadii4: [0, 0, 9, 9]}">
-      <qt-text 
-        class="recommend-item-score-text" 
-        :fontSize="24" 
-        :paddingRect="[15,0,0,6]" 
-        text="${score}" 
+      <qt-text
+        class="recommend-item-score-text"
+        :fontSize="24"
+        :paddingRect="[15,0,0,6]"
+        text="${score}"
         :focusable="false"
       />
     </qt-view>
     <!-- 标题 -->
-    <qt-view 
+    <qt-view
       class="recommend-item-title"
-      :duplicateParentState="true" 
+      :duplicateParentState="true"
       :focusable="false">
-      <qt-text 
-        class="recommend-item-title-text" 
-        :fontSize="30" 
-        :ellipsizeMode="2" 
-        :lines="1" 
+      <qt-text
+        class="recommend-item-title-text"
+        :fontSize="30"
+        :ellipsizeMode="2"
+        :lines="1"
         :duplicateParentState="true"
-        :paddingRect="[0,14,0,0]" 
+        :paddingRect="[0,14,0,0]"
         text="${title.text}"
-        :focusable="false" 
+        :focusable="false"
         :select="true"
       />
     </qt-view>
   </qt-view>
 </template>
-  
+
 <script setup lang='ts' name='RecommendItem'>
 import ThemeConfig from "../../../config/theme-config";
 </script>
-  
+
 <style lang='scss' scoped>
 .recommend-item-root{
   background-color: transparent;
   .recommend-item-img{
-    border-radius: 9px;
-    focus-border-color: #ffffff;
+    border-radius: $gl-theme-img-border;
+    focus-border-color: $gl-theme-focus-border-color;
     focus-border-style: solid;
     z-index: 1;
     background-color: rgba(255,255,255,0.1);
@@ -100,8 +100,8 @@ import ThemeConfig from "../../../config/theme-config";
     flex-direction: row-reverse;
     z-index: 99999;
     .recommend-item-corner-text{
-      padding: 4px 8px; 
-      margin: 4px; 
+      padding: 4px 8px;
+      margin: 4px;
       z-index: 1000;
       height: 36px;
       color: #ffffff;
@@ -146,4 +146,3 @@ import ThemeConfig from "../../../config/theme-config";
   }
 }
 </style>
-    

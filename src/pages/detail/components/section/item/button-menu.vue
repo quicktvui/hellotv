@@ -24,7 +24,7 @@
           <img src="${focusIcon}" duplicateParentState showOnState="focused" flexStyle="${iconStyle}" :focusable="false"/>
           <img src="${icon}" duplicateParentState :showOnState="['normal','selected']" flexStyle="${iconStyle}" :focusable="false"/>
         </qt-view>
-        <div duplicateParentState  class="menu-list-item-text-box" 
+        <div duplicateParentState  class="menu-list-item-text-box"
           :focusable="false" :style="bmlitStyle" autoWidth>
           <qt-text
             class="menu-list-item-text"
@@ -131,7 +131,7 @@ import config from '../config';
         iconStyle: config.buttonMenuSize == 'default' ? {width: 50,height: 50,} : {width: 30,height: 30}
       }
       listRef.value?.updateItemRange(1,1,[item])
-      eventbus.emit("onMenuFavouriteButtonClick", isCollect.value) 
+      eventbus.emit("onMenuFavouriteButtonClick", isCollect.value)
     }
   }
   defineExpose({
@@ -149,8 +149,7 @@ import config from '../config';
     background-color: transparent;
     .menu-list-item{
       border-radius: 16px;
-      background-color: rgba(255,255,255,0.1);
-      focus-background-color: rgba(255,255,255,1);
+      background-color: $gl-theme-btn-bg-normal-color;
       align-items: center;
       justify-content: center;
       .menu-list-item-bg{
@@ -173,13 +172,13 @@ import config from '../config';
         .menu-list-item-text{
           height: 34px;
           font-size: 28px;
-          color: rgba(255, 255, 255, 0.5);
-          focus-color: black;
+          color: $text-normal-color;
+          focus-color: $text-focus-color;
           font-size: 28px;
           position: absolute;
         }
       }
-      
+
     }
   }
 }

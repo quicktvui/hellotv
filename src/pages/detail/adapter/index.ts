@@ -208,7 +208,7 @@ export function buildMediaSeriesGroup(): QTMediaSeriesGroup {
     itemGap: 16,
     mark: { color: '#00FFFFFF' },
     textColor: {
-      normal: ThemeConfig.textColor,
+      normal: ThemeConfig.textNormalColorAndroid,
       focused: ThemeConfig.textFocusColor,
       selected: ThemeConfig.textSelectColor
     },
