@@ -1,8 +1,8 @@
 import requestManager from '../../../tools/request'
-import { Contents, Recommends, SearchApi, Suggestions } from './interface'
-import { searchSuggestionsUrl, searchContentsUrl, searchHotRecommendUrl } from './request-url'
-import config from '../../../config/build-config'
+import { Contents, Recommends, SearchApi, Suggestions, Tab } from './interface'
+import { searchSuggestionsUrl, searchContentsUrl, searchHotRecommendUrl, searchTabsUrl, searchTabContentsUrl } from './request-url'
 import { replacePlaceholders } from '../../../tools/common'
+import config from '../../../config/build-config'
 
 class SearchManager implements SearchApi {
   // 获取搜索建议
@@ -24,6 +24,29 @@ class SearchManager implements SearchApi {
       replacePlaceholders(searchContentsUrl, {
         packageName: config.packageName,
         query,
+        page,
+        limit
+      })
+    )
+  }
+
+  // 获取搜索Tab列表
+  getTabs(query: string): Promise<Tab[]> {
+    return requestManager.get(
+      replacePlaceholders(searchTabsUrl, {
+        packageName: config.packageName,
+        query
+      })
+    )
+  }
+
+  // 获取搜索Tab内容
+  getTabContents(query: string, tabId: string, page: number = 1, limit: number = 10): Promise<Contents> {
+    return requestManager.get(
+      replacePlaceholders(searchTabContentsUrl, {
+        packageName: config.packageName,
+        query,
+        tabId,
         page,
         limit
       })

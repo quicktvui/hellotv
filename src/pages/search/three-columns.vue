@@ -1,7 +1,7 @@
 <template>
-  <qt-view class="search-three-columns" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="search" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
     <scroll-view name="searchScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true">
-      <qt-view class="search-three-columns-body" :clipChildren="true">
+      <qt-view class="search-columns-body" style="width: 3072px" :clipChildren="true">
         <!-- 键盘区域 -->
         <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
         <!-- 搜索关键词区域 -->
@@ -19,7 +19,7 @@
     <!-- 搜索关键词、内容区域loading -->
     <qt-view
       v-if="isLoading"
-      class="search-three-columns-body-loading"
+      class="search-columns-body-loading"
       :style="{ width: `${loadingWidth}px`, left: `${loadingLeft}px` }"
       :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }"
     >

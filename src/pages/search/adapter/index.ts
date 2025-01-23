@@ -1,6 +1,7 @@
-import { QTTab, QTWaterfallSection, QTWaterfallSectionType } from '@quicktvui/quicktvui3'
-import { Suggestions, Contents, Recommends } from '../api/interface'
+import { QTTab, QTTabPageData, QTWaterfallSection, QTWaterfallSectionType } from '@quicktvui/quicktvui3'
+import { Suggestions, Contents, Tab, Recommends } from '../api/interface'
 import { Keyword, KeywordType, TabItemType, ContentType } from './interface'
+import config from '../config'
 
 /**
  * 构造关键词列表数据
@@ -40,13 +41,22 @@ export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'gues
 
 /**
  * 构造QTTab组件Tab默认列表
+ * @param rawData 原始数据
  * @returns
  */
-export const buildTab = function (): QTTab {
+export const buildTab = function (rawData?: Tab[]): QTTab {
   return {
     defaultIndex: 0,
     defaultFocusIndex: -1,
-    itemList: [{ type: TabItemType.TEXT, text: '全部', titleSize: 36, decoration: { left: 62 } }]
+    itemList:
+      rawData && rawData.length > 1
+        ? rawData.map((item, index) => ({
+            type: TabItemType.TEXT,
+            text: item.name,
+            titleSize: 36,
+            decoration: { left: index === 0 ? 56 : 0 }
+          }))
+        : [{ type: TabItemType.TEXT, text: '全部', titleSize: 36, decoration: { left: 62 } }]
   }
 }
 
@@ -101,6 +111,60 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
   contents.push(buildEndSection())
 
   return contents
+}
+
+/**
+ * 构建两栏布局Tab页面数据
+ * @param rawData 原始数据
+ * @param curPage 当前页码
+ * @returns
+ */
+export const buildTabContents = function (rawData: Contents, curPage: number): QTTabPageData {
+  const tabPage: QTTabPageData = {
+    data: [],
+    stopping: false
+  }
+
+  if (rawData.items.length > 0) {
+    const section = {
+      _id: 's' + Math.random(),
+      type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
+      style: { width: 1920 },
+      decoration: { left: 80, top: curPage === 1 ? 160 : 0 },
+      title: '',
+      itemList: rawData.items.map((item, index) => ({
+        _id: `ss-${index}`,
+        type: ContentType.HORIZONTAL,
+        style: { width: 410, height: 276 },
+        decoration: { right: 40, bottom: 40 },
+        id: item.id,
+        title: item.title,
+        cover: item.image
+      }))
+    }
+
+    const itemLen = section.itemList.length
+    if (itemLen) {
+      tabPage.data = [section]
+      // 条件一: 仅一页
+      // 条件二: 有多页, 但当前是最后一页
+      if (curPage === 1 && itemLen < config.gridContentsLimit) {
+        tabPage.stopping = true
+        // 返回数据大于一屏展示个数
+        if (itemLen > 8) tabPage.data.push(buildEndSection())
+      } else if (curPage > 1 && itemLen < config.gridContentsLimit) {
+        tabPage.stopPaging = true
+        tabPage.data.push(buildEndSection())
+      }
+    } else if (curPage > 0) {
+      // 非首次搜索时, 组件会返回页码加一, 搜索结果刚好跟分页大小一致
+      tabPage.stopPaging = true
+      // 第二页开始才添加结束标志
+      if (curPage > 2) tabPage.data.push(buildEndSection())
+    }
+  }
+
+  return tabPage
 }
 
 /**

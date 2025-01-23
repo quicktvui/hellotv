@@ -48,11 +48,17 @@ import { KeywordType } from '../adapter/interface'
 import searchManager from '../api/index'
 import launch from '../../../tools/launch'
 
+const emits = defineEmits(['setLoading'])
 const gridData = qtRef<QTListViewItem[]>()
+
+let loadTimer: any = -1
 
 onMounted(() => {
   searchManager.getSuggestions('all').then((suggestions) => {
     gridData.value = buildKeywords(suggestions, 'all')
+    // 延迟关闭loading
+    clearTimeout(loadTimer)
+    loadTimer = setTimeout(() => emits('setLoading', false), 300)
   })
 })
 
