@@ -1,4 +1,4 @@
-import { defineComponent, h, nextTick, onMounted, ref, renderSlot, toRaw, watch } from 'vue'
+import { defineComponent, h, nextTick, onMounted, ref, renderSlot, toRaw, watch,  watchEffect } from 'vue'
 import { ESApp, Native, registerElement } from '@extscreen/es3-vue'
 import { reactive } from '@vue/runtime-core'
 interface ESListViewItemDecoration {
@@ -373,14 +373,21 @@ function registerQTULViewComponent(app: ESApp) {
       function setAutoFocus(tag: string, delay: number) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
-      const holders  = reactive<any[]>([])
+      let holders  = reactive<any[]>([])
       watch(() => props.items, (hs) => {
         let currentArrOLd = JSON.parse(JSON.stringify(hs))
         let currentArrNew = toRaw(currentArrOLd)
+        if(currentArrNew.length < 1){ // 数据清空 清空holedes保持数据同步
+          holders.splice(0)
+        }
+        if(currentArrNew.length < holders.length){ // 新增数据少于原始数据做减法处理
+          let end = holders.length - currentArrNew.length
+          holders.splice(-end)
+        }
         Native.callUIFunction(viewRef.value, 'setListDataWithParams', [currentArrNew, false,false,{
           RealDOMTypes:[1,2]
         }]);
-      })
+      }, { deep: true })
       function extractNum(input: string): number {
         // 找到最后一个 '-' 的位置
         const lastDashIndex = input.lastIndexOf('-')
@@ -425,15 +432,18 @@ function registerQTULViewComponent(app: ESApp) {
         }
       }
       function handleBatch(params: any) {
+        console.log('batchbatch1','++handleBatch',params)
         let { createItem, bindItem, recycleItem, hashTag } = params
         // Native.callUIFunction(viewRef.value, 'notifyBatchStart', [hashTag]);
         // if(recycleItem){
         //   recycleH(recycleItem)
         // }
         if (createItem) {
+          console.log('batchbatch2','++createHolder',createItem)
           crateH(createItem, hashTag)
         }
         if (bindItem) {
+          console.log('batchbatch2','++bindHolder',bindItem)
           bindH(bindItem)
         }
         // nextTick(() => {
@@ -480,6 +490,7 @@ function registerQTULViewComponent(app: ESApp) {
         ]
       }
       const renderHolders = (holders) => {
+        console.log(holders,'renderHoldersrenderHolders')
         console.log('holders called ', `holderCount:${holders.length}`)
         let children = holders.map((hd: any, index: number) => {
           // console.log('holders called ', `index:${index} position:${hd.position},holderCount:${holders.length},sid:${hd.sid}`)
