@@ -11,5 +11,5 @@ export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
 
   setItemSelected(position: number): void
 
-  show(value: boolean)
+  release(): void
 }

@@ -3,9 +3,15 @@
              :clipChildren="false"
              :enableFocusBorder="false"
              :focusScale="1.1"
+             eventClick
+             eventFocus
              :focusable=true>
+    <div class="qt-collapse-list-item-focus"
+         :gradientBackground="{ orientation: 6, colors: ['#FF0057FF', '#FF00C7FF'], cornerRadius: 8 }"
+         showOnState="focused"
+         duplicateParentState></div>
     <div class="qt-collapse-list-item-text-root" :duplicateParentState="true">
-      <div class="qt-collapse-list-item-icon-root"
+      <div class="qt-collapse-list-item-icon-root" :duplicateParentState="true"
            flexStyle="${iconStyle}">
         <img class="qt-collapse-list-item-icon"
              duplicateParentState
@@ -13,11 +19,11 @@
              showOnState="normal"/>
         <img class="qt-collapse-list-item-icon"
              duplicateParentState
-             :src="mediaListItemNormal"
+             :src="mediaListItemSelected"
              showOnState="focused"/>
         <img class="qt-collapse-list-item-icon"
              duplicateParentState
-             :src="mediaListItemNormal"
+             :src="mediaListItemSelected"
              showOnState="selected"/>
       </div>
       <qt-text class="qt-collapse-list-item-text"
@@ -33,8 +39,7 @@
 </template>
 
 <script lang="ts">
-
-import {defineComponent} from "@vue/runtime-core";
+import { defineComponent } from "@vue/runtime-core";
 
 import mediaListItemSelected from "../../../../assets/ic_media_list_item_selected.png"
 import mediaListItemNormal from "../../../../assets/ic_media_list_item_normal.png"
@@ -66,6 +71,14 @@ export default defineComponent({
   focus-background-color: rgba(245, 245, 245, 1);
 }
 
+.qt-collapse-list-item-focus {
+  width: 280px;
+  height: 80px;
+  background-color: transparent;
+  border-radius: 8px;
+  position: absolute;
+}
+
 .qt-collapse-list-item-text-root {
   background-color: transparent;
   display: flex;
@@ -78,7 +91,6 @@ export default defineComponent({
   height: 80px;
   color: white;
   font-size: 30px;
-  focus-color: rgba(0, 0, 0, 1);
   select-color: white;
   font-weight: 400;
   background-color: transparent;
@@ -97,5 +109,4 @@ export default defineComponent({
   background-color: transparent;
   position: absolute;
 }
-
 </style>

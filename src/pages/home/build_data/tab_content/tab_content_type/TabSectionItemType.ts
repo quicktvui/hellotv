@@ -3,6 +3,8 @@ export enum TabSectionItemType {
   TAB_CONTENT_ITEM_FOCUS_CHANGE_IMG = '1',//焦点变图格子
   TAB_CONTENT_ITEM_NO_FRAME = '2',//无边框格子
   TAB_CONTENT_ITEM_PLACE_HOLDER = '3',//占位格子
+  TAB_CONTENT_ITEM_HISTORY = '121',//历史格子-文字
+  TAB_CONTENT_ITEM_HISTORY_IMG = '122',//历史格子-图片
   TAB_CONTENT_ITEM_CELL_PLAYER = '10008',//小窗播放格子
   TAB_CONTENT_ITEM_CELL_PLAYER_LIST = '10009',//小窗播放列表
 }

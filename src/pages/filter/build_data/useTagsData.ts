@@ -16,7 +16,6 @@ let defaultTagSelectIndex = 0
 let allFilterList:Array<FilterConditionList> = []
 let fastFilterList:FilterConditionList = {}
 let rootTag:string = ""
-let isEnd = false
 let isOffsetY = false
 let curRecord:Array<QTListViewItem> = []
 
@@ -66,6 +65,7 @@ export function buildScreenTag(filterList:Array<any>){
     }
     defaultOffSetIndex = 1
   }
+  // @ts-ignore
   return itemTag
 }
 
@@ -143,8 +143,8 @@ export function buildFiltersCondition(filterList:Array<any>,defaultFilter?:Array
   }
 }
 
-export function getFilterConditionData():Array<QTListViewItem>{
-  return buildFilterAdapter(allFilterList,fastFilterList)
+export function getFilterConditionData(moreLimit?: number):Array<QTListViewItem>{
+  return buildFilterAdapter(allFilterList, fastFilterList, moreLimit)
 }
 
 export function updateFastFilterCondition(itemPosition){
@@ -169,19 +169,20 @@ export function clearAllFilterCondition(position){
     })
   }
 }
+
 export function clearFastFilterCondition(){
   if (fastFilterList){
     fastFilterList.defaultSelectPosition = -1
   }
 }
 
-export function getFilterLength():number{
-  const length = (allFilterList?.length || 0) + ((isFastFilterListMore() ? 1 : 0))
+export function getFilterLength(moreLimit: number):number{
+  const length = ((allFilterList?.length - moreLimit) || 0) + ((isFastFilterListMore() ? 1 : 0))
   return length > 8 ? 8 : length
 }
 
-export function getFilterHeight(){
-  const filterLength = getFilterLength()
+export function getFilterHeight(moreLimit: number = 0):number{
+  const filterLength = getFilterLength(moreLimit)
   if (filterLength > 0){
     const isFastMore = isFastFilterListMore()
     return filterLength * _filter_text_height + (filterLength - (isFastMore ? 2 : 1)) * _filter_tag_gap + (isFastMore ? _filter_line_height : 0)
@@ -203,29 +204,28 @@ export function getScrollHeight(){
 
 }
 
-
-export function buildScreenContent(tagContents:Array<any>,pageNum?:number):Array<QTGridViewItem>{
+/**
+ * 构建筛选内容
+ *
+ * @param tagContents 标签内容数组
+ * @param pageNum 页码(可选)
+ * @param posterMode 海报模式(可选), 可选值为 1(竖图) 或 2(横图)
+ * @returns QTGridViewItem 数组
+ */
+export function buildScreenContent(tagContents: Array<any>, pageNum?: number, posterMode?: 1 | 2):Array<QTGridViewItem>{
   const tagContentArray:Array<TagContent> = []
-  isEnd = false
   tagContents.forEach((content,index)=>{
     const tagContent:TagContent = {
-      id:content.id,
-      title:content.assetTitle,
-      poster:content.coverV,
-      score:content.doubanScore,
-      cornerImg:content.cornerImage,
-      actionRedirect:content.actionRedirect
+      id: content.id,
+      title: content.assetTitle,
+      poster: posterMode && posterMode === 1 ? content.coverV : content.coverH ?? content.coverV,
+      score: content.doubanScore,
+      cornerImg: content.cornerImage,
+      actionRedirect: content.actionRedirect
     }
     tagContentArray.push(tagContent)
   })
-  if (tagContents.length < 20){
-    isEnd = true
-  }
-  return buildTagContentsAdapter(tagContentArray,pageNum)
-}
-
-export function isTagContentEnd(){
-  return isEnd
+  return buildTagContentsAdapter(tagContentArray, pageNum, posterMode && posterMode === 1 ? 1 : 2)
 }
 
 export function setRootTag(tag:string){
@@ -238,10 +238,12 @@ export function getRootTag(){
 
 export function getCurScreenCondition(){
   let condition = ""
+  let showCondition = ""
   //快速筛选
   const defaultFastSelectPosition = fastFilterList.defaultSelectPosition ?? -1
   if (defaultFastSelectPosition > -1 && fastFilterList && fastFilterList.list && fastFilterList.list.length > defaultFastSelectPosition){
     condition += fastFilterList.list[defaultFastSelectPosition].filterTagName
+    showCondition += fastFilterList.list[defaultFastSelectPosition].filterShowName
   }
   //普通筛选
   else{
@@ -251,9 +253,11 @@ export function getCurScreenCondition(){
       if (selectP > 0){
         if (isFirstSetCondition){
            condition += item.list![selectP].filterTagName
+          showCondition += item.list![selectP].filterShowName
           isFirstSetCondition = false
         }else{
           condition += ("," + item.list![selectP].filterTagName)
+          showCondition += ("," + item.list![selectP].filterShowName)
         }
       }
     })
@@ -263,7 +267,7 @@ export function getCurScreenCondition(){
   }else{
     isOffsetY = false
   }
-  setCurRecordFilter(condition)
+  setCurRecordFilter(showCondition)
   return getRootTag() + "," + condition
 }
 
@@ -298,5 +302,3 @@ export function isFastFilterListHasData(){
 export function isAllFilterListHasData(){
   return allFilterList && allFilterList.length > 0
 }
-
-

@@ -1,50 +1,37 @@
 <template>
-
-  <div class="media-list-view-root-css" v-show="visible"
-       :clipChildren="false"
-       :clipPadding="false">
-
+  <div v-show="visible" class="media-list-view-root-css" :clipChildren="false" :clipPadding="false">
+    <!-- 选集标题 -->
     <div class="media-list-title-root-css">
-      <qt-text class="media-list-title-text-css"
-               :focusable="false"
-               :fontSize="40" text="选集"/>
+      <qt-text class="media-list-title-text-css" :focusable="false" :fontSize="40" text="选集"/>
     </div>
-
-    <qt-media-series
-      ref="mediaSeriesRef"
-      class="media-series-root-css"
-      :clipChildren="false"
+    <!-- 选集内容 -->
+    <qt-media-series ref="mediaSeriesRef" class="media-series-root-css"
+      :clipChildren="false" :mark-color="`#FFFFFF`"
+      :text-colors="{ color: textColor, focusColor: textFocusColor, selectColor: textSelectColor }"
+      :gradient-background="{ colors: btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradient-focus-background="{ colors: btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       @load-data="onLoadData"
       @item-click="onItemClick"
       @item-focused="onItemFocused"
       @group-item-focused="onGroupItemFocused"/>
-
   </div>
 </template>
 
 <script lang="ts">
-
-import {defineComponent, onUnmounted} from "@vue/runtime-core";
-import {onMounted, ref} from "vue";
-import {
-  QTMediaSeriesEvent,
-  QTMediaSeriesType,
-  QTIMediaSeries,
-  QTMediaSeriesStyleType,
-  QTMediaSeriesGroup,
-  QTMediaSeriesData
-} from "@quicktvui/quicktvui3";
-import {IMedia} from "../../../api/media/IMedia";
-import {useMediaDataSource} from "../../../api/UseApi";
-import {ESLogLevel, useESEventBus, useESLog} from "@extscreen/es3-core";
-import {buildMediaSeriesList} from "../adapter/DataAdapter";
-import {IMediaItemListType} from "../../../api/media/IMediaItemListType";
+import { ref, onMounted } from "vue";
+import { defineComponent, onUnmounted } from "@vue/runtime-core";
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { QTMediaSeriesEvent, QTIMediaSeries } from "@quicktvui/quicktvui3";
+import { IMedia } from "../../../api/media/IMedia";
+import { useMediaDataSource } from "../../../api/UseApi";
+import { buildMediaSeriesList } from "../adapter/DataAdapter";
 import {
   buildMediaSeriesData,
   buildMediaSeriesGroup,
   buildMediaSeriesStyleType,
   buildMediaSeriesType
 } from "../adapter/MediaSeriesAdapter";
+import ThemeConfig from "../../../build/ThemeConfig";
 
 const TAG = 'MediaListView'
 
@@ -57,7 +44,13 @@ export default defineComponent({
     'onMediaListItemLoad'
   ],
   setup(props, context) {
-
+    // 主题配置
+    const textColor = ThemeConfig.textColor
+    const textFocusColor = ThemeConfig.textFocusColor
+    const textSelectColor = ThemeConfig.textSelectColor
+    const btnGradientColor = ThemeConfig.btnGradientColor
+    const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
+    
     const eventbus = useESEventBus()
     const initParams = ref()
     const listViewWidth = ref<number>(0)
@@ -66,12 +59,16 @@ export default defineComponent({
     const mediaDataSource = useMediaDataSource()
     const log = useESLog()
     const visible = ref<boolean>(false)
+    let selectedIndex : number = 0
 
     let itemListId: string
+
+    const dataMap = new Map<number, Array<IMedia>>()
 
     onMounted(() => {
       eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });
+    
     onUnmounted(() => {
       eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
     });
@@ -92,20 +89,44 @@ export default defineComponent({
     }
 
     function scrollTo(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----scrollTo------>>>>>" + position)
+      }
       mediaSeriesRef.value?.scrollTo(position)
     }
 
     function setSelected(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----setSelected------>>>>>" + position)
+      }
+      selectedIndex = position
       mediaSeriesRef.value?.setSelected(position)
     }
 
+    function getSelectedPosition() : number{
+      return selectedIndex
+    }
+
+    function requestFocus(position:number): void {
+      mediaSeriesRef.value?.requestFocus(position)
+    }
+
     function release(): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "-------选集组件----release------>>>>>")
+      }
+      dataMap.clear()
       mediaSeriesRef.value?.release()
     }
 
     function getMediaList(mediaItemListId: string, pageNo: number) {
+      if (dataMap.has(pageNo)) {
+        //TODO 等待左图右文修改获取数据的bug
+        return
+      }
       mediaDataSource.getMediaItemList(mediaItemListId, pageNo, 10)
         .then((mediaList: Array<IMedia>) => {
+          dataMap.set(pageNo, mediaList)
           if (log.isLoggable(ESLogLevel.DEBUG)) {
             log.d(TAG, "-------getMediaList----success------>>>>>", pageNo, mediaList)
           }
@@ -145,10 +166,15 @@ export default defineComponent({
 
     function onGroupItemFocused(event: QTMediaSeriesEvent) {
       let index = event.position;
-      context.emit("onMediaListGroupItemClicked", index)
+      context.emit("onMediaListGroupItemFocused", index)
     }
 
     return {
+      textColor,
+      textFocusColor,
+      textSelectColor,
+      btnGradientColor,
+      btnGradientFocusColor,
       visible,
       mediaSeriesRef,
       initMedia,
@@ -161,7 +187,9 @@ export default defineComponent({
       onGroupItemFocused,
       scrollTo,
       setSelected,
-      release
+      release,
+      getSelectedPosition,
+      requestFocus
     }
   },
 });
@@ -186,7 +214,7 @@ export default defineComponent({
 
 .media-list-title-text-css {
   width: 180px;
-  height: 45px;
+  height: 50px;
   font-size: 40px;
   font-weight: 400;
   color: white;
@@ -197,5 +225,4 @@ export default defineComponent({
   height: 150px;
   margin-top: 25px;
 }
-
 </style>

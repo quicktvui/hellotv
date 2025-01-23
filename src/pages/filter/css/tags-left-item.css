@@ -2,8 +2,6 @@
 左侧列表 Item样式
  */
 .screen-left-item-tags-root-css{
-    width: 340px;
-    height: 106px;
     background-color: transparent;
     justify-content: center;
     align-items: center;
@@ -14,8 +12,6 @@
  */
 .screen-left-item-tags-root-css .screen-left-item-tags-bg{
     position: absolute;
-    width: 340px;
-    height: 106px;
     background-color: transparent;
 }
 /**
@@ -23,10 +19,8 @@
  */
 .screen-left-item-tags-root-css .screen-left-item-tags-text{
     color: rgba(255, 255, 255, 0.5);
-    width: 340px;
-    height: 106px;
-    focus-color: black;
-    select-color: white;
+    focus-color: white;
+    select-color: #157AFC;
     background-color: transparent;
 }
 
@@ -50,8 +44,6 @@
 
 
 .screen-left-item-img-root-css{
-    width: 340px;
-    height: 106px;
     background-color: transparent;
     justify-content: center;
     align-items: center;
@@ -59,7 +51,5 @@
 
 .screen-left-item-img-root-css .screen-left-item-img{
     position: absolute;
-    width: 300px;
-    height: 86px;
     align-self: center;
 }

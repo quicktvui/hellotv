@@ -2,7 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const HippyDynamicImportPlugin = require('@hippy/hippy-dynamic-import-plugin');
 const CaseSensitivePathsPlugin = require('case-sensitive-paths-webpack-plugin');
-const {VueLoaderPlugin} = require('vue-loader');
+const { VueLoaderPlugin } = require('vue-loader');
 const webpack = require('webpack');
 const TerserPlugin = require("terser-webpack-plugin");
 
@@ -12,31 +12,31 @@ const manifest = require('../dist/android/vendor-manifest.json');
 let cssLoader = '@hippy/vue-css-loader';
 
 /**override flavor*/
-const { execSync } = require('child_process');
-const { getFlavorDir } = require('./libs/flavorUtil');
-const { getFlavor } = require('../scripts/libs/flavorUtil');
+// const { execSync } = require('child_process');
+// const { getFlavorDir } = require('./libs/flavorUtil');
+// const { getFlavor } = require('../scripts/libs/flavorUtil');
 //默认 quicktvui-template-config
-let flavorName = process.env.flavor ? process.env.flavor : "quicktvui-template-config"
-console.log(`>>>>>>>buildFlavor flavorName : ${flavorName}\n`)
-let flavorDir = getFlavorDir('./build/flavor',flavorName)
-const flavor = getFlavor('./build/flavor',flavorName)
-console.log(`>>>>>>>buildFlavor flavor : ${JSON.stringify(flavor)}\n`)
-let flavorPath = path.resolve(flavorDir,'./config.json')
-console.log(`start dev flavorName : ${flavorName},\n path:${flavorPath},\n flavorDir:${flavorDir}\n`)
-let os = process.platform
-console.log(`os ：`+os)
-if(os && os .startsWith('win')){
-  //不支持windows
-  console.log(`注意！当前操作系统不支持替换src os ：`+os)
-}else{
-  try{
-    let sourceSrc = path.resolve(flavorDir,'./src')
-    let destSrc = path.resolve(flavorDir,'../../../')
-    console.log(`sourceSrc:${sourceSrc} ,destSrc path is:${destSrc}`)
-    fs.statSync(sourceSrc)
-    execSync(`cp -r ${path.resolve(flavorDir,'./src')} ${destSrc}`)
-  }catch (e){console.log('replace src error:'+e)}
-}
+// let flavorName = process.env.flavor ? process.env.flavor : "quicktvui-template-config"
+// console.log(`>>>>>>>buildFlavor flavorName : ${flavorName}\n`)
+// let flavorDir = getFlavorDir('./build/flavor', flavorName)
+// const flavor = getFlavor('./build/flavor', flavorName)
+// console.log(`>>>>>>>buildFlavor flavor : ${JSON.stringify(flavor)}\n`)
+// let flavorPath = path.resolve(flavorDir, './config.json')
+// console.log(`start dev flavorName : ${flavorName},\n path:${flavorPath},\n flavorDir:${flavorDir}\n`)
+// let os = process.platform
+// console.log(`os ：` + os)
+// if (os && os.startsWith('win')) {
+//   //不支持windows
+//   console.log(`注意！当前操作系统不支持替换src os ：` + os)
+// } else {
+//   try {
+//     let sourceSrc = path.resolve(flavorDir, './src')
+//     let destSrc = path.resolve(flavorDir, '../../../')
+//     console.log(`sourceSrc:${sourceSrc} ,destSrc path is:${destSrc}`)
+//     fs.statSync(sourceSrc)
+//     execSync(`cp -r ${path.resolve(flavorDir, './src')} ${destSrc}`)
+//   } catch (e) { console.log('replace src error:' + e) }
+// }
 
 const hippyVueCssLoaderPath = path.resolve(__dirname, '../../../packages/hippy-vue-css-loader/dist/css-loader.js');
 if (fs.existsSync(hippyVueCssLoaderPath)) {
@@ -69,14 +69,16 @@ module.exports = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      'process.env.NODE_ENV': JSON.stringify('production'),
+      'process.env': {
+        ...require('./env-config.js'),
+        NODE_ENV: JSON.stringify('production'),
+      },
       __PLATFORM__: JSON.stringify(platform),
       __DEV__: false,
       __TEST__: false,
       __FEATURE_PROD_DEVTOOLS__: false,
       __BROWSER__: false,
-      'process.env': '{}',
-      __THEME__:JSON.stringify(flavor.theme),
+      // __THEME__: JSON.stringify(flavor.theme),
     }),
     new CaseSensitivePathsPlugin(),
     new VueLoaderPlugin(),
@@ -137,8 +139,8 @@ module.exports = {
               ],
               plugins: [
                 ['@babel/plugin-proposal-class-properties'],
-                ['@babel/plugin-proposal-decorators', {legacy: true}],
-                ['@babel/plugin-transform-runtime', {regenerator: true}],
+                ['@babel/plugin-proposal-decorators', { legacy: true }],
+                ['@babel/plugin-transform-runtime', { regenerator: true }],
               ],
             },
           },

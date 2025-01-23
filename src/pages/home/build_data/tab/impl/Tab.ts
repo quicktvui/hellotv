@@ -17,9 +17,9 @@ export interface Tab {
   //tab 选中图片
   selectImage?: string
   //tab图片宽
-  imageWidth?: string
+  imageWidth?: number
   //tab图片高
-  imageHeight?: string
+  imageHeight?: number
   //角标图片
   cornerImage?: string
   //焦点角标图片
@@ -27,5 +27,11 @@ export interface Tab {
   //背景图
   backgroundImage?: string
   //文字标题图标
-  textIcon?:string
+  textIcon?: string
+  // 跳转类型
+  redirectType?: string
+  // 外部跳转参数
+  action?: string
+  // 内部跳转参数
+  innerArgs?: string
 }

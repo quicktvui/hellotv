@@ -2,12 +2,16 @@
   <qt-column class="qt-collapse-item-definition"
              :focusable="false">
     <span class="qt-collapse-item-definition-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">清晰度</span>
+          :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">清晰度</span>
     <div class="qt-collapse-item-definition-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
       <qt-list-view
         ref="definitionListViewRef" horizontal
+        v-show="isCollapseExpand"
+        sid='collapse-item-definition'
+        :autofocusPosition="selectedIndex"
+        :blockFocusDirections="['up', 'down']"
         class="qt-collapse-item-content-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
@@ -19,10 +23,10 @@
 
 <script lang="ts">
 
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESLog} from "@extscreen/es3-core";
-import {ref} from "vue";
-import {QTIListView, QTListViewItem} from "@quicktvui/quicktvui3";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESLog } from "@extscreen/es3-core";
+import { ref } from "vue";
+import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
 
 const TAG = 'QTCollapseItem'
@@ -38,16 +42,23 @@ export default defineComponent({
     const definitionListViewRef = ref<QTIListView>()
     let itemDataList: Array<QTListViewItem>
 
-    let selectedIndex = 0
+    const selectedIndex = ref<number>(0)
+    let focusTimer
 
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------onCollapseItemExpand---紫色---->>>>', value)
+        log.d(TAG, '-------onCollapseItemExpand---清晰度---->>>>', value)
       }
       isCollapseExpand.value = value
 
       if (value) {
-        setItemFocused(selectedIndex)
+        focusTimer = setTimeout(() => {
+          // setItemFocused(selectedIndex.value)
+        }, 1000)
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
       }
     }
 
@@ -72,15 +83,15 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
-      selectedIndex = position
+      selectedIndex.value = position
       if (!isCollapseExpand.value) {
         return
       }
-      definitionListViewRef.value?.setItemFocused(position)
+      // definitionListViewRef.value?.setItemFocused(position)
     }
 
     function setItemSelected(position: number): void {
-      selectedIndex = position
+      selectedIndex.value = position
       if (itemDataList) {
         for (let i = 0; i < itemDataList.length; i++) {
           const item = itemDataList[i]
@@ -111,6 +122,7 @@ export default defineComponent({
       setListData,
       setItemFocused,
       setItemSelected,
+      selectedIndex,
     }
   },
 });
@@ -126,7 +138,7 @@ export default defineComponent({
 
 .qt-collapse-item-definition-title {
   width: 1740px;
-  height: 30px;
+  height: 32px;
   font-size: 27px;
   color: white;
   margin-left: 90px;

@@ -1,58 +1,73 @@
 <template>
-  <qt-view class="search_center" ref="search_center" @focus="onFocus" @childFocus="childFocus">
-    <qt-view class="search_center_view_bg" :gradientBackground="{ colors: ['#00FFFFFF', '#0DFFFFFF'] }" />
-    <qt-view class="search_center_view_line" />
-
-    <qt-view class="search_center_view_top">
-      <qt-text class="search_center_view_title" :text="title" gravity="center" :fontSize="40" />
-      <qt-view v-if="title == '搜索历史'" :focusable="true" :focusScale="1.1" @click="clearHistoryBtnClick"
-        :nextFocusName="{ down: 'search_center_view_list' }"   class="search_center_clear_history_btn">
-        <qt-view style="width: 22px;height: 27px;" :duplicateParentState="true">
-          <qt-image class="clear_icon_image" :src="ic_search_input_clear" :showOnState="['normal', 'selected']" :duplicateParentState="true"/>
-          <qt-image class="clear_icon_image" :src="ic_search_input_clear_focus" showOnState="focused" :duplicateParentState="true"/>
-        </qt-view>
-        <qt-text :duplicateParentState="true" class="btn_text" text="清空" gravity="center" />
-      </qt-view>
+  <qt-view class="search_center" :style="{ width: centerWidth + 'px' }" ref="search_center"
+           @childFocus="childFocus" :focusable="false" :clipChildren="true"
+           :gradientBackground="{ colors: ['#ff252930', '#FF2F3541'] }">
+    <!-- 垂直竖线-->
+    <qt-view class="search_center_view_line" :focusable="false"/>
+    <!--顶部提示-->
+    <qt-view class="search_center_view_top" :focusable="false">
+      <qt-text class="search_center_view_title" :text="title" gravity="left" :fontSize="40" :focusable="false"/>
+      <search-btn v-if="title === '搜索历史'" @click="clearHistoryBtnClick"
+                  :nextFocusNames="{ down: 'search_center_view_list' }"
+                  searchBtnClass="search_center_clear_history_btn"
+                  :icon-width="22" :icon-height="27"
+                  :icon-normal="ic_search_input_clear"
+                  :icon-focus="ic_search_input_clear_focus"
+                  search-txt-class="btn_clear_text"
+                  :font-size="26"
+                  text="清空" />
     </qt-view>
 
-    <qt-view class="search_center_view_list" ref="search_center_view_list" name="search_center_view_list"
-      :nextFocusName="{ right: 'content' }" :blockFocusDirections="['down']">
-      <qt-view v-if="title == ''" class="empty_text_box">
-        <qt-text text="抱歉暂无相关内容" gravity="center" class="empty_text" />
-        <qt-text text="为您推荐右边热门影片～" gravity="center" class="empty_text" />
+    <!-- 搜索词条列表-->
+    <qt-view class="search_center_view_list" name="search_center_view_list"
+             :style="{ width: centerWidth + 'px' }" ref="search_center_view_list"
+             :blockFocusDirections="['down']" :focusable="false">
+      <!-- 无词条提示-->
+      <qt-view v-if="title === ''" class="empty_text_box" :focusable="false">
+        <qt-text text="抱歉暂无相关内容" gravity="center" class="empty_text" :focusable="false" />
+        <qt-text text="为您推荐右边热门影片～" gravity="center" class="empty_text" :focusable="false" />
       </qt-view>
 
-      <qt-list-view class="list_view" ref="listViewRef" :clipChildren="false" :clipPadding="false"
-        @item-focused="onItemFocus" v-else name="search_center_view_list">
-        <qt-view :type="1" :focusable="true" :focusScale="1" class="search_center_item" eventClick eventFocus :clipChildren="false">
-          <qt-view :duplicateParentState="true" class="search_center_item_spot" />
-          <qt-view class="search_center_item_text" :duplicateParentState="true" :focusable="false">
-            <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="left|center" :fontSize="36"
-              :focusable="false" :lines="1" :select="true" class="search_center_item_text_normal"
-              text="${text}" showOnState="normal" />
-            <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="left|center" :fontSize="36"
-              :focusable="false" :lines="1" :select="true" class="search_center_item_text_select"
-              text="${text}" showOnState="selected" />
-            <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="left|center" :fontSize="36"
-              :focusable="false" :lines="1" :select="true" class="search_center_item_text_focus"
-              text="${text}" showOnState="focused" />
-          </qt-view>
+      <!-- 词条列表-->
+      <qt-list-view v-else class="list_view" :style="{ width: centerWidth + 'px' }" ref="listViewRef"
+                    makeChildVisibleType="normal" :makeChildVisibleClampBackward="336" :focusable="false"
+                    :makeChildVisibleClampForward="336" :clipChildren="true" :clipPadding="true"
+                    @item-focused="onItemFocus" @load-more="loadMore"
+                    :nextFocusName="{ right: 'searchTabs' }">
+          <qt-view :type="1" :focusable="true" :focusScale="1" class="search_center_item"
+                 :style="{ width: centerWidth + 'px' }"
+                 eventClick eventFocus>
+          <div class="search_center_item_focus"
+               :style="{ width: centerWidth + 'px' }"
+               :gradientBackground="{ orientation: 6, colors: ['#FF0057FF', '#FF00C7FF'], cornerRadius: 8 }"
+               showOnState="focused"
+               duplicateParentState
+               ></div>       
+          <qt-view :duplicateParentState="true" class="search_center_item_spot"
+                   :focusable="false" />
+          <qt-text :duplicateParentState="true" :ellipsizeMode="2" gravity="left|center"
+                   :fontSize="36"
+                   :focusable="false" :lines="1" :select="true" class="search_center_item_text"
+                   text="${text}" />
         </qt-view>
       </qt-list-view>
     </qt-view>
- </qt-view>
+  </qt-view>
 </template>
+
 <script lang="ts">
-import { defineComponent } from "@vue/runtime-core";
-import { ref, watch } from "vue";
-import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3";
-import { useESToast } from "@extscreen/es3-core";
-import {useGlobalApi} from "../../../api/UseApi";
+import { computed, defineComponent } from "@vue/runtime-core"
+import { nextTick, onMounted, ref, watch } from "vue"
+import { QTIListView, QTListViewItem } from "@quicktvui/quicktvui3"
+import { useGlobalApi } from "../../../api/UseApi"
+import { SearchCenter } from "../build_data/impl/SearchCenter"
+import SearchBtn from "./search-btn.vue"
+import SearchConfig from "../build_data/SearchConfig"
 
 export default defineComponent({
   name: "search_center",
-  components: {},
-  emits: ['keyword-select', 'scroll-to-index'],
+  components: { SearchBtn },
+  emits: ["keyword-select", "scroll-to-index", "close-loading", 'start-loading'],
   props: {
     searchLetter: {
       type: String,
@@ -60,67 +75,127 @@ export default defineComponent({
     }
   },
   setup(props, context) {
-    let title = ref('热门搜索')
-    const search_center = ref()
-    const ic_search_input_clear = require('../../../assets/search/ic_search_input_clear.png').default
-    const ic_search_input_clear_focus = require('../../../assets/search/ic_search_input_clear_focus.png').default
-    let delayHandleFocusChange: any = -1
-    let currentItemIndex = ref(-1)
-    const listViewRef = ref<QTIListView>()
-    let listDataRec: Array<QTListViewItem> = [];
-    const toast = useESToast()
     const appApi = useGlobalApi()
+    const centerWidth = computed(() => SearchConfig.centerWidth)
+    const ic_search_input_clear = require("../../../assets/search/ic_search_input_clear.png").default
+    const ic_search_input_clear_focus = require("../../../assets/search/ic_search_input_clear_focus.png").default
 
-    watch(() => props.searchLetter, async(newVal, oldVal) => {
-      if (newVal) {
-        let list = await appApi.getHotSearch(newVal)
-        if(list.length > 0) title.value = '猜你想搜'
-        else title.value = ''
-        listDataRec.splice(0)
-        setTimeout(() => {
-          listViewRef.value!.init(list)
-          context.emit('keyword-select', list[0].text)
-        },200)
-      }
+    const listViewRef = ref<QTIListView>()
+    let title = ref("热门搜索")
+
+    let curTitleType = 1
+    let currentItemIndex: number = 0
+    let listDataRec: QTListViewItem[] = []
+    let pageNum = 1
+    let isStopPage = false
+    let curValue = ""
+    let curKeyWorkValue = ""
+    let focusItemTimer: any = -1
+
+    watch(() => props.searchLetter, async (newVal, oldVal) => {
+      initParams()
+      await setListData(newVal ?? "", newVal ? 3 : 1)
+      setListSelect(false)
+      context.emit("close-loading")
     })
-    const initComponent = async () => {
-      title.value = '热门搜索'
-      let list = await appApi.getHotSearch('')
-      listDataRec = listViewRef.value!.init(list)
-      context.emit('keyword-select', list[0].text)
-    }
-    const setTitle = (type: number) => {
-      title.value = type == 1 ? '热门搜索' : type == 2 ? '搜索历史' : type == 3 ? '猜你想搜' : ''
 
+    onMounted(() => {
+      nextTick(async () => {
+        await setListData("", 1)
+        setListSelect(true)
+      })
+    })
+
+    const initParams = () => {
+      pageNum = 1
+      isStopPage = false
     }
-    const clearHistoryBtnClick = () => {
-      setTitle(1)
-      //if (title.value) listDataRec = listViewRef.value!.init(list)
+
+    const setListSelect = (isShowResultLoading) => {
+      context.emit("start-loading", isShowResultLoading)
+      setTimeout(() => {
+        listViewRef.value?.setItemSelected(0, true)
+        context.emit("keyword-select", curValue)
+      }, 300)
+    }
+
+    const loadMore = async (e) => {
+      if (!isStopPage) {
+        pageNum++
+        await setListData(curKeyWorkValue, curTitleType)
+      }
+    }
+
+    const setListData = async (value: string = "", titleType) => {
+      curKeyWorkValue = value
+      let searchCenter: SearchCenter = await appApi.getHotSearch(pageNum, value)
+      let list = searchCenter.list ?? []
+      let isHistoryList = searchCenter.isHistoryList ?? false
+      if (pageNum === 1) {
+        if (list.length > 0) {
+          if (isHistoryList) {
+            setTitle(2)
+          } else {
+            setTitle(titleType)
+          }
+          curValue = list[0].text
+        } else {
+          title.value = ""
+          curValue = ""
+        }
+      }
+      if (list.length > 0) {
+        await nextTick(() => {
+          if (listDataRec && listDataRec.length > 0) {
+            if (pageNum === 1) {
+              listDataRec.splice(0)
+            }
+            listDataRec.push(...list)
+          } else {
+            listDataRec = listViewRef.value!.init(list)
+          }
+          if (list.length < SearchConfig.searchCenterPageSize) {
+            isStopPage = true
+            listViewRef.value!.stopPage()
+          }
+        })
+      }
+    }
+
+    const setTitle = (type: number) => {
+      curTitleType = type
+      title.value = type == 1 ? "热门搜索" : type == 2 ? "搜索历史" : type == 3 ? "猜你想搜" : ""
+    }
+    const clearHistoryBtnClick = async () => {
+      initParams()
+      await appApi.clearHistory()
+      await setListData("", 1)
+      //设置焦点
+      context.emit("start-loading", true)
+      setTimeout(() => {
+        listViewRef.value?.setItemFocused(0)
+        context.emit("keyword-select", curValue)
+      }, 300)
     }
     const onItemFocus = (e) => {
+      if (currentItemIndex == e.position) return
+      context.emit("start-loading", true)
       if (e.isFocused) {
-        if (currentItemIndex.value == e.position) return
-        currentItemIndex.value = e.position
-        context.emit('keyword-select', e.item.text)
+        focusItemTimer && clearTimeout(focusItemTimer)
+        focusItemTimer = setTimeout(() => {
+          currentItemIndex = e.position
+          context.emit("keyword-select", e.item.text)
+        }, 400)
       }
     }
-    const onFocus = (e) => {
-      if (delayHandleFocusChange) clearTimeout(delayHandleFocusChange)
-      delayHandleFocusChange = setTimeout(() => {
-        if (e.isFocused) context.emit('scroll-to-index', 1)
-      }, 100)
-    }
     const childFocus = (e) => {
-        if (delayHandleFocusChange) clearTimeout(delayHandleFocusChange)
-        delayHandleFocusChange = setTimeout(() => {
-            if (e.child) {
-                context.emit('scroll-to-index', 1)
-            }
-        }, 100)
+      if (e.child) {
+        context.emit("scroll-to-index", 1, 100)
+      }
     }
     return {
-      search_center, listViewRef, title, initComponent, onItemFocus, onFocus, childFocus,
-      clearHistoryBtnClick, ic_search_input_clear, ic_search_input_clear_focus
+      listViewRef, title, onItemFocus, childFocus, loadMore,
+      clearHistoryBtnClick, ic_search_input_clear, ic_search_input_clear_focus, centerWidth,
     }
   }
 })

@@ -1,15 +1,15 @@
 <template>
-  <qt-column class="qt-collapse-item-media-list"
-             :focusable="false">
-    <span class="qt-collapse-item-media-list-title"
-          :style="{opacity: isCollapseExpand ? 1 : 0.5}">播放列表</span>
+  <qt-column class="qt-collapse-item-media-list" :focusable="false">
+    <span class="qt-collapse-item-media-list-title" :style="{ opacity: isCollapseExpand ? 1 : 0.5 }">播放列表</span>
     <div class="qt-collapse-item-media-list-content"
          :clipChildren="false"
-         :style="{opacity: isCollapseExpand ? 1 : 0}">
-      <qt-media-series
-        ref="mediaSeriesListRef"
-        class="qt-collapse-media-series-root-css"
-        :clipChildren="false"
+         :style="{ opacity: isCollapseExpand ? 1 : 0 }">
+      <qt-media-series ref="mediaSeriesListRef" class="qt-collapse-media-series-root-css"
+        :clipChildren="false" :mark-color="`#FFFFFF`"
+        :text-colors="{ color: textColor, focusColor: textFocusColor, selectColor: textSelectColor }"
+        :gradient-background="{ colors: btnGradientColor, cornerRadius: 8, orientation: 6 }"
+        :gradient-focus-background="{ colors: btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
+        :display="isCollapseExpand"
         @load-data="onLoadData"
         @item-click="onItemClicked"
         @item-focused="onItemFocused"
@@ -19,24 +19,20 @@
 </template>
 
 <script lang="ts">
-
-import {defineComponent} from "@vue/runtime-core";
-import {ESLogLevel, useESEventBus, useESLog, useESToast} from "@extscreen/es3-core";
-import {ref, nextTick} from "vue";
-import {
-  QTIListView, QTIMediaSeries,
-  QTListViewItem,
-  QTMediaSeriesEvent,
-} from "@quicktvui/quicktvui3";
+import { ref, nextTick } from "vue";
+import { defineComponent } from "@vue/runtime-core";
+import { ESLogLevel, useESEventBus, useESLog } from "@extscreen/es3-core";
+import { QTIMediaSeries, QTMediaSeriesEvent } from "@quicktvui/quicktvui3";
 import media_collapse_list_item from "./media-collapse-list-item.vue";
-import {IMedia} from "../../../../api/media/IMedia";
+import { IMedia } from "../../../../api/media/IMedia";
 import {
   buildMediaSeriesType,
   buildMediaSeriesGroup,
   buildMediaSeriesStyleType,
   buildMediaSeriesData
 } from "../../adapter/MediaSeriesAdapter";
-import {buildMediaSeriesList} from "../../adapter/DataAdapter";
+import { buildMediaSeriesList } from "../../adapter/DataAdapter";
+import ThemeConfig from "../../../../build/ThemeConfig";
 
 const TAG = 'QTCollapseItem'
 
@@ -50,14 +46,24 @@ export default defineComponent({
     'media-collapse-list-item': media_collapse_list_item
   },
   setup(props, context) {
+    // 主题配置
+    const textColor = ThemeConfig.textColor
+    const textFocusColor = ThemeConfig.textFocusColor
+    const textSelectColor = ThemeConfig.textSelectColor
+    const btnGradientColor = ThemeConfig.btnGradientColor
+    const btnGradientFocusColor = ThemeConfig.btnGradientFocusColor
+
     const log = useESLog()
     let itemListId: string
     const isCollapseExpand = ref<boolean>(false)
     const mediaSeriesListRef = ref<QTIMediaSeries>()
     const visible = ref<boolean>(false)
     const eventbus = useESEventBus()
-    let mediaListShowing: boolean = false
-    let selectedIndex = 0
+
+    const selectedIndex = ref<number>(0)
+
+    let focusTimer
+    let initialized = false
 
     //---------------------------------------------------------------------------
     function initMedia(media: IMedia) {
@@ -93,13 +99,31 @@ export default defineComponent({
     //---------------------------------------------------------------------------
     function onCollapseItemExpand(value: boolean) {
       if (log.isLoggable(ESLogLevel.DEBUG)) {
-        log.d(TAG, '-------onCollapseItemExpand---绿色---->>>>', value)
+        log.d(TAG, '-------onCollapseItemExpand---选集---->>>>', value, 'selectedIndex:' + selectedIndex)
       }
       isCollapseExpand.value = value
 
+      // setTimeout(() => {
+      //   setItemSelected(selectedIndex.value)
+      // }, 300)
+
       if (value) {
-        setItemSelected(selectedIndex)
-        setItemFocused(selectedIndex)
+        if (!initialized) {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 500)
+        } else {
+          focusTimer = setTimeout(() => {
+            setItemSelected(selectedIndex.value)
+            setItemFocused(selectedIndex.value)
+          }, 200)
+        }
+        initialized = true
+      } else {
+        if (focusTimer) {
+          clearTimeout(focusTimer)
+        }
       }
     }
 
@@ -108,6 +132,9 @@ export default defineComponent({
     }
 
     function setItemFocused(position: number): void {
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, '---选集---setItemSelected------>>>>', position)
+      }
       mediaSeriesListRef.value?.requestFocus(position)
     }
 
@@ -115,7 +142,7 @@ export default defineComponent({
       if (log.isLoggable(ESLogLevel.DEBUG)) {
         log.d(TAG, '---选集---setItemSelected------>>>>', position)
       }
-      selectedIndex = position
+      selectedIndex.value = position
       mediaSeriesListRef.value?.setSelected(position)
     }
 
@@ -126,14 +153,10 @@ export default defineComponent({
       mediaSeriesListRef.value?.scrollTo(position)
     }
 
-    function show(value: boolean) {
-      mediaListShowing = value
-    }
-
     //-----------------------------------------------------------
     function onLoadData(event: QTMediaSeriesEvent) {
-      if (!mediaListShowing) {
-        return
+      if (log.isLoggable(ESLogLevel.DEBUG)) {
+        log.d(TAG, "---选集---onLoadData------>>>>")
       }
       const page = event.page ?? 10
       eventbus.emit('onMediaSeriesLoadData', page)
@@ -155,7 +178,19 @@ export default defineComponent({
       context.emit("onMediaListGroupItemFocused", index)
     }
 
+    function release(): void {
+      selectedIndex.value = 0
+      initialized = false
+      isCollapseExpand.value = false
+      mediaSeriesListRef.value?.release()
+    }
+
     return {
+      textColor,
+      textFocusColor,
+      textSelectColor,
+      btnGradientColor,
+      btnGradientFocusColor,
       mediaSeriesListRef,
       isCollapseExpand,
       onFocus,
@@ -168,12 +203,12 @@ export default defineComponent({
       onGroupItemFocused,
       visible,
       initMedia,
-      show,
-      setItemSelected
+      setItemSelected,
+      selectedIndex,
+      release
     }
   },
 });
-
 </script>
 
 <style scoped>

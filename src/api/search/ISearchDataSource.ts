@@ -1,10 +1,16 @@
-import {QTTabPageData, QTTabItem,QTListViewItem} from "@quicktvui/quicktvui3";
+import {QTTabPageData, QTTabItem} from "@quicktvui/quicktvui3";
+import { SearchCenter } from "../../pages/search/build_data/impl/SearchCenter"
 
 export interface ISearchDataSource {
-    getHotSearch(keyword?: string): Promise<Array<QTListViewItem>>
+    getHotSearch(pageNum: number,keyword?: string): Promise<SearchCenter>
 
-    getSearchResultTabList(): Promise<Array<QTTabItem>>
+    clearHistory():void
 
-    getSearchResultPageData(pageNo: number, pageSize: number, keyword: string, title?: string): Promise<QTTabPageData>
+    getSearchResultTabList(isHotRecommend:boolean): Promise<Array<QTTabItem>>
+
+    getSearchResultPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData>
+
+
+    getRecommendPageData(tabId:string,pageNo: number, pageSize: number,singleTab:boolean): Promise<QTTabPageData>
 }
 

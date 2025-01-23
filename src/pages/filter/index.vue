@@ -1,57 +1,73 @@
 <template>
   <div class="screen-root-css" ref='screen_root'>
-<!--    顶部按钮-->
-    <top-btns-view :logo-right="true">
+    <!-- 顶部按钮 -->
+    <top-btns-view v-if="isShowTopView" :logo-right="true">
       <template #btnItem>
-        <img-text-btn-view
-          :icon-left="true"
-          text="搜索"
-          :focusable="true"
+        <img-text-btn-view ref="top_search_btn" name="top_search_btn"
           style="width: 145px;height: 60px;margin-left: 10px;margin-right: 10px"
-          name="top_search_btn"
-          ref="top_search_btn"
-          icon="ic_top_search.png"
-          focus-icon="ic_top_search_focus.png"
-          :nextFocusName="{ down: 'screen_left_tags' }"
-          @click="onClick"/>
+          text="搜索" icon="ic_top_search.png" focus-icon="ic_top_search.png"
+          :focusable="true" :icon-left="true"
+          :nextFocusName="{ down: 'screen_left_tags' }" @click="onClick"/>
       </template>
     </top-btns-view>
 
-    <!-- 右侧结果-->
-    <tags-content  class="screen-right-root-css" ref="tags_content" :clipChildren="false" :clipPadding="false" @unBlockFocus='unBlockRootFocus'/>
+    <scroll-view name="screenScroll" ref="contentScrollRef" class="screen-scroll"
+      :focusable="false" :horizontal="true" :onScrollEnable="true" makeChildVisibleType="none" :initialContentOffset="leftRootWidth">
+      <qt-view class="screen-content" :focusable="false" :clipChildren="true">
+        <!-- 左侧扩展 -->
+        <qt-list-view ref="leftExpandRef" class="screen-content-left-expand" :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :focusable="false" :enableFocusBorder="true" :listenHasFocusChange="true" :triggerTask="leftExpandTriggerTask"
+          :blockFocusDirections="['down']" nextFocusRightSID="screen_left_tags" @item-focused="leftExpandFocus"
+        >
+          <tags-text-item :type="1" />
+        </qt-list-view>
 
-    <!-- 左侧列表-->
-    <div class="screen-left-root-css">
-      <!-- 背景-->
-      <div class="screen-left-bg" :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
-      <!-- 标题-->
-      <qt-text class="screen-left-title" v-if="title" :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
-      <img class="screen-left-title-img" v-else :src="title_img"/>
-      <!-- 筛选列表-->
-      <qt-list-view class="screen-left-tags-root-css" :padding="'0,0,0,20'" sid="screen_left_tags"
-                    name='screen_left_tags'
-                    ref="leftTags" :clipChildren="false" :clipPadding="false"
-                    @item-focused="leftTagsItemFocus" :blockFocusDirections="['left','down']">
-        <!-- 纯文字标题-->
-        <tags-text-item :type="1"/>
-        <!-- 图片标题-->
-        <tags-img-item :type="2"/>
-        <!-- 带 Icon 文字标题-->
-        <tags-text-icon-item :type="3"/>
+        <!-- 左侧列表 -->
+        <div v-if="isShowLeftList" class="screen-left-root-css"
+          :style="{ width: leftRootWidth + 'px', height: leftRootHeight + 'px', top: ( 1080 - leftRootHeight ) + 'px' }"
+          :descendantFocusability="leftLoadOver ? 1 : 2"
+        >
+          <!-- 背景 -->
+          <div class="screen-left-bg" :style="{width:(leftRootWidth-20)+'px',height:leftRootHeight+'px'}"
+            :gradientBackground="{colors:['#0CFFFFFF','#00FFFFFF'], orientation: 4}"/>
+          <!-- 标题 -->
+          <qt-text v-if="title" class="screen-left-title" :style="{width:(leftRootWidth-20)+'px'}"
+            :fontSize="50" gravity="center" :lines="1" :focusable="false" :select="true" :ellipsizeMode="3" :paddingRect="[12,0,12,0]" :text="title" />
+          <img class="screen-left-title-img" :style="{width:(leftRootWidth-40)+'px'}" v-else :src="title_img"/>
+          <!-- 筛选列表 -->
+          <qt-list-view ref="leftTags" name='screen_left_tags' sid="screen_left_tags"
+            class="screen-left-tags-root-css" :style="{width:leftRootWidth+'px',height:(leftRootHeight - 60)+'px'}"
+            :padding="'0,0,0,20'" :autofocusPosition="defaultTagPosition" :singleSelectPosition="defaultTagSelectPos"
+            :clipChildren="false" :clipPadding="false" :nextFocusRightSID="leftNextFocusRightSid" @item-focused="leftTagsItemFocus"
+          >
+            <!-- 文字标题 -->
+            <tags-text-item :type="1"/>
+            <!-- 图片标题 -->
+            <tags-img-item :type="2"/>
+            <!-- Icon&文字标题 -->
+            <tags-text-icon-item :type="3"/>
+          </qt-list-view>
+        </div>
 
-      </qt-list-view>
-    </div>
+        <!-- 右侧结果 -->
+        <tags-content ref="tags_content" class="screen-right-root-css"
+          :style="{ width: rightContentWidth + 'px', height: rightContentHeight + 'px', top: ( 1080 - rightContentHeight ) + 'px' }"
+          :clipChildren="false" :clipPadding="false"
+          :blockFocusDirections="isShowLeftList ? [] : ['left', 'right']" :descendantFocusability="contentLoadOver ? 1 : 2"
+          @unBlockFocus='unBlockRootFocus' @setLeftNextFocus='setLeftNextFocus' @setContentLoadOver='setContentLoadOver'/>
+      </qt-view>
+    </scroll-view>
   </div>
-
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import { computed, defineComponent } from "@vue/runtime-core"
 import {ESLogLevel, useESLog} from "@extscreen/es3-core";
 import ImgTextBtnView from "../../components/img-text-btn-view.vue";
 import {useESRouter} from "@extscreen/es3-router";
 import TopBtnsView from "../../components/top-btns-view.vue";
 import {nextTick, ref} from "vue";
+import FilterConfig from "./build_data/FilterConfig"
 import TagsTextItem from "./components/tags-text-item.vue";
 import {useGlobalApi} from "../../api/UseApi";
 import {
@@ -71,32 +87,78 @@ export default defineComponent({
   name: "index",
   components: {TagsImgItem, TagsContent, TagsTextIconItem, TagsTextItem, TopBtnsView, ImgTextBtnView},
   setup(props, context) {
+    const contentScrollRef = ref()
+    const leftExpandRef = ref()
+    const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
+    const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
+    const leftRootWidth = computed(()=>{return FilterConfig.leftListWidth})
+    const leftRootHeight = computed(()=>{return FilterConfig.isShowTopView ? FilterConfig.leftListHeight:1060})
+    const rightContentHeight = computed(()=>{return FilterConfig.isShowTopView ? FilterConfig.rightContentHeight:1060})
+    const rightContentWidth = computed(()=>{return FilterConfig.isShowLeftList ? FilterConfig.rightContentWidth:1856})
     const log = useESLog()
+    //跳转
     const router = useESRouter()
+    //接口
     const globalApi = useGlobalApi()
+    //组件
     const leftTags = ref<QTIListView>()
     const screen_root = ref()
     const tags_content = ref()
+    const leftNextFocusRightSid = ref()
+    const leftLoadOver = ref(true) // 左侧列表是否加载完成
+    const contentLoadOver = ref(true) // 右侧内容是否加载完成
+    //全局变量
     let title = ref("")
     let title_img = ref("")
-    let leftTagSwitchTimer:any = -1
-    let curTagPosition:number = -1
-
-
-    let screenId:string = ""
-    let defaultSelectTag:string = ""
-    let defaultFiltersStr:string = ""
+    let defaultTagPosition = ref(0)
+    let defaultTagSelectPos = ref(0)
+    //局部变量
+    let isInit = true
+    let showLeftExpand = false
+    let leftExpandSwitchTimer: any = -1
+    let leftTagSwitchTimer: any = -1
+    let curTagPosition:number = -1 //左侧列表当前 tag位置
+    let curLeftExpandPos: number = 0
+    //筛选接口参数
+    let screenId:string = ""  //筛选分类 ID
+    let defaultSelectTag:string = "" //默认选中左侧筛选 tag
+    let defaultFiltersStr:string = "" //默认选中筛选标签 tags
     let defaultFilters:Array<string> = []
-    let defaultFastTag:string = ""
-    let curType:number = -1
+    let defaultFastTag:string = "" //默认选中的快速标签
+    let curType:number = -1 // 3： 快速标签类型；非 3：普通类型
 
+    let leftExpandTriggerTask = [
+      {
+        event: "onFocusAcquired",
+        target: "screenScroll",
+        function: "scrollToWithOptions",
+        params: [
+          { x: -leftRootWidth.value, y: 0, duration: 300 }
+        ]
+      },
+      {
+        event: "onFocusLost",
+        target: "screenScroll",
+        function: "scrollToWithOptions",
+        params: [
+          { x: leftRootWidth.value, y: 0, duration: 300 }
+        ]
+      }
+    ]
+
+    /**
+     * 入口
+     * @param params 参数
+     */
     function onESCreate(params) {
       screenId = params.screenId
-      defaultSelectTag = params.defaultSelectTag
+      if (isShowLeftList.value){
+        defaultSelectTag = params.defaultSelectTag
+      }
       //Test
       screenId = "1764924767380697089"
       //Test
-      // defaultSelectTag = "科普"
+      // defaultSelectTag = "早教"
       if (!defaultSelectTag){
         defaultFiltersStr = params.defaultFilters
         //Test
@@ -112,39 +174,28 @@ export default defineComponent({
           // defaultFastTag = "早教"
         }
       }
-
-      getTagsData()
+      
+      // 设置默认坐标
+      nextTick(async() => {
+        const leftExpandData = await getLeftExpandData()
+        showLeftExpand = leftExpandData.length ? true : false
+        leftExpandRef.value?.init(leftExpandData)
+        getTagsData(screenId)
+      })
     }
 
+    /**
+     * 锁定焦点
+     */
     function blockRootFocus(){
       Native.callUIFunction(screen_root.value,"blockRootFocus",[])
     }
+
+    /**
+     * 解锁焦点
+     */
     function unBlockRootFocus(){
       Native.callUIFunction(screen_root.value,"unBlockRootFocus",[])
-    }
-
-    function onESStart() {
-
-    }
-
-    function onESRestart() {
-
-    }
-
-    function onESResume() {
-
-    }
-
-    function onESPause() {
-
-    }
-
-    function onESStop() {
-
-    }
-
-    function onESDestroy() {
-
     }
 
     function onClick(e){
@@ -154,61 +205,114 @@ export default defineComponent({
       });
     }
 
-    function getTagsData(){
-      globalApi.getScreenLeftTags(screenId).then(res=>{
+    async function getLeftExpandData() {
+      const data = await globalApi.getScreenLeftExpand()
+      return data.map(item => ({ type: 1, id: item.id, showName: item.showName }))
+    }
+
+    function leftExpandFocus(e) {
+      if (e.isFocused && e.position !== curLeftExpandPos) {
+        curLeftExpandPos = e.position
+        defaultTagPosition.value = -1
+        leftLoadOver.value = false
+        leftNextFocusRightSid.value = 'screen_right_content'
+        leftExpandSwitchTimer && clearTimeout(leftExpandSwitchTimer)
+        leftExpandSwitchTimer = setTimeout(() => getTagsData(e.item.id, true), 300)
+      }
+    }
+
+    /**
+     * 获取左侧列表数据
+     */
+    function getTagsData(id: string, needRequestContent: boolean = false){
+      globalApi.getScreenLeftTags(id).then(res=>{
         if (res){
-          const showType = res?.entryTag?.showType
-          if (showType === '2' || showType === 2){
-            title_img.value = res?.entryTag?.normalImage
-          }else{
-            title.value = res?.entryTag?.showName
+          if (isShowLeftList.value){
+            const showType = res?.entryTag?.showType
+            if (showType === '2' || showType === 2){//图片标题
+              title_img.value = res?.entryTag?.normalImage
+            }else{//文字标题
+              title.value = res?.entryTag?.showName
+            }
           }
+          //设置根筛选条件---接口要求，根据具体接口处理
           setRootTag(res?.entryTag?.tagName)
           const tags:Array<QTListViewItem> = buildTagsData(res,defaultSelectTag,defaultFilters,defaultFastTag)
           nextTick(()=>{
-            leftTags.value!.init(tags)
-            tags_content.value.init()
-            setTimeout(()=>{
-              const defaultTagPosition = getDefaultTagSelectIndex()
-              leftTags.value!.setItemFocused(defaultTagPosition)
-            },300)
+            if (isShowLeftList.value){
+              //设置左侧列表数据
+              leftTags.value!.init(tags)
+              leftTags.value?.setItemSelected(0, true)
+              leftLoadOver.value = true
+
+              //初始化筛选条件
+              tags_content.value.init()
+              //设置默认选中tag
+              if (!showLeftExpand) {
+                defaultTagPosition.value = getDefaultTagSelectIndex()
+              } else {
+                tags_content!.value.loading = true
+                tags_content!.value.rightScrollTo(0, 0)
+                if (needRequestContent) {
+                  curTagPosition = 0
+                  tags_content!.value.filterVisible = false
+                  tags_content!.value.getScreenByTags(1, 3, "", 0, false, false)
+                }
+              }
+            } else {
+              //初始化筛选条件
+              tags_content.value.init()
+              curType = 3
+              curTagPosition = 0
+              tags_content!.value.getScreenByTags(1,curType,"",0,false,false)
+            }
           })
         }
       })
     }
 
     function leftTagsItemFocus(e){
-      if (e.isFocused){
-        if (log.isLoggable(ESLogLevel.DEBUG)) {
-          log.d("leftTagsItemFocus--", e)
-        }
-        if (curTagPosition !== e.position) {
-          tags_content.value.loading = true
-          tags_content.value.empty = false
-        }
-        leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
-        leftTagSwitchTimer = setTimeout(()=>{
-          const name = e.name
-          switch(name){
-            case "screen-left-item-tag":
-              const position = e.position
-              if (curTagPosition === position) {
-                tags_content.value.loading = false
-                return
-              }
-              curTagPosition = position
-              const item = e.item
-              const type = item.type
-              curType = type
-              let tagName = getRootTag()+","+item.tagName
-              if(type === 3){
-                tagName= ""
-              }
-              tags_content!.value.getScreenByTags(1,type,tagName,position,false,false)
-              break;
-          }
-        },300)
+      if (!e.isFocused) return
+      
+      if (curTagPosition !== e.position) {
+        tags_content.value.loading = true
+        tags_content.value.empty = false
+
+        // 首次打开页面不屏蔽右侧内容焦点
+        isInit ? isInit = false : contentLoadOver.value = false
       }
+
+      leftTagSwitchTimer && clearTimeout(leftTagSwitchTimer)
+      leftTagSwitchTimer = setTimeout(() => {
+        switch (e.name) {
+          case "screen-left-item-tag":
+            const position = e.position
+            if (curTagPosition === position) {
+              tags_content.value.loading = false
+              return
+            }
+            curTagPosition = position
+            const item = e.item
+            const type = item.type
+            curType = type
+            let tagName = getRootTag()+","+item.tagName
+            if(type === 3){
+              tagName= ""
+            }
+            tags_content!.value.getScreenByTags(1, type, tagName, position, false, false)
+            break;
+        }
+      }, 300)
+    }
+
+    // 设置左侧列表焦点向右位置
+    function setLeftNextFocus(sid: string) {
+      leftNextFocusRightSid.value = sid
+    }
+
+    // 修改右侧内容加载状态
+    function setContentLoadOver(b: boolean) {
+      contentLoadOver.value = b
     }
 
     function onBackPressed(){
@@ -223,31 +327,39 @@ export default defineComponent({
       router.back()
     }
 
-
     return {
       onESCreate,
-      onESStart,
-      onESResume,
-      onESPause,
-      onESStop,
-      onESRestart,
-      onESDestroy,
       onBackPressed,
       onClick,
       leftTagsItemFocus,
       unBlockRootFocus,
+      leftExpandFocus,
+      setLeftNextFocus,
+      setContentLoadOver,
 
       title,
       title_img,
       leftTags,
+      defaultTagPosition,
 
       tags_content,
-      screen_root
+      screen_root,
+      isShowLeftList,
+      isShowTopView,
+      leftRootWidth,
+      leftRootHeight,
+      rightContentHeight,
+      rightContentWidth,
+      contentScrollRef,
+      leftExpandTriggerTask,
+      leftExpandRef,
+      defaultTagSelectPos,
+      leftNextFocusRightSid,
+      contentLoadOver,
+      leftLoadOver
     }
   }
 })
 </script>
 
-<style src="./css/screen.css">
-
-</style>
+<style src="./css/screen.css"></style>

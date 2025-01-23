@@ -1,113 +1,130 @@
 <template>
-  <qt-view class="screen-right-qt-view-root-css">
-    <scroll-view class="screen-right-scroll-root-css" ref="screen_right_scroll_content"
-                 name="screen_right_scroll_content" :focusable="false" :onScrollEnable="true"
-                 :clipChildren="false" makeChildVisibleType="none" :clipPadding="false">
-      <qt-view class="screen-right-qt-view-css" v-show="!loading"
-               :useAdvancedFocusSearch="true" :focusable="false"
-               :clipChildren="false" :clipPadding="false">
+  <qt-view class="screen-right-qt-view-root-css" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}">
+    <scroll-view ref="screen_right_scroll_content" name="screen_right_scroll_content"
+      class="screen-right-scroll-root-css" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
+      :clipChildren="false" :clipPadding="false"      
+      :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
 
-        <!-- 筛选条件-->
-        <qt-view style='min-height: 1px;width: 1580px;background-color: transparent'>
-          <qt-list-view ref="screen_right_filters"
-                        name="screen_right_filters"
-                        class="screen-right-filter-root" :style="{height:filterHeight}"
-                        v-if="filterVisible"
-                        :triggerTask="switchData(hideSelectTask)"
-                        :enableSelectOnFocus="false">
-            <qt-list-view ref="screen_right_filter_line"
-                          name="screen_right_filter_line"
-                          class="screen-right-filter-line"
-                          nextFocusLeftSID="screen_left_tags"
-                          flexStyle="${filterLineStyle}" :type="1" list="${list}"
-                          :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
-                          :enableSelectOnFocus="false"
-                          singleSelectPosition="${defaultSelectPosition}"
-                          :focusMemory="false" @item-click="onFilterClick"
-                          @item-focused="onFilterFocused"
-                          :blockFocusDirections="['right']">
-              <!-- 普通筛选条件-->
+      <qt-view :v-show="!loading"
+        class="screen-right-qt-view-css" :style="{width:rightContentWidth+'px',height:(rightContentHeight+640)+'px'}"
+        :clipChildren="false" :clipPadding="false"      
+        :useAdvancedFocusSearch="true" :focusable="false">
+
+        <!-- 筛选条件 -->
+        <qt-view :style="{ width: rightContentWidth+'px', minHeight: '1px', backgroundColor: 'transparent' }">
+          <qt-list-view v-if="filterVisible" ref="screen_right_filters" name="screen_right_filters" sid="screen_right_filters"
+            class="screen-right-filter-root" :style="{ width: rightContentWidth + 'px', height: filterHeight }"
+            :triggerTask="switchData(hideSelectTask)"
+            :enableSelectOnFocus="false"
+            @item-click="onFilterClick"
+          >
+            <qt-list-view ref="screen_right_filter_line" name="screen_right_filter_line"
+              class="screen-right-filter-line" :style="{ width: rightContentWidth + 'px' }"
+              cachePoolName="filter_line" nextFocusLeftSID="screen_left_tags" flexStyle="${filterLineStyle}"
+              :type="1" list="${list}"
+              :endHintEnabled="false" horizontal :clipChildren="false" :useDiff="true"
+              :enableSelectOnFocus="false" singleSelectPosition="${defaultSelectPosition}"
+              :focusMemory="false" :blockFocusDirections="['right']"
+              @item-focused="onFilterFocused" @item-click="onFilterClick"
+            >
+              <!-- 普通筛选条件 -->
               <tags-filter-item :type="11"/>
-              <!-- 快速筛选头部提示-->
+              <!-- 快速筛选头部提示 -->
               <tags-filter-fast-item-left-tip :type="12"/>
-              <!-- 快速筛选-->
-              <tags-filter-fast-item :type="13" />
-
+              <!-- 快速筛选 -->
+              <tags-filter-fast-item :type="13"/>
             </qt-list-view>
-            <!-- 横线-->
+            <!-- 横线 -->
             <tags-filter-fast-line :type="2" :focusable="false"/>
-
+            <!-- 更多筛选项 -->
+            <tags-filter-more-btn :type="3"/>
           </qt-list-view>
         </qt-view>
 
-        <!-- 筛选结果-->
-        <qt-grid-view class="screen-right-content" v-show='!filterClickLoading'
-                      :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
-                      :triggerTask="switchData(filterTriggerTask)"
-                      ref="screen_right_content"
-                      name="screen_right_content"
-                      :blockFocusDirections="['right','down']"
-                      :spanCount="5" :openPage="true" :preloadNo="10"
-                      :focusable="false"
-                      :nextFocusName='{down:"screen_right_content"}'
-                      nextFocusLeftSID="screen_left_tags"
-                      :listenBoundEvent="true" :useDiff="true"
-                      :listenHasFocusChange="true"
-                      :clipChildren="false" :clipPadding="false"
-                      :loadMore="loadMoreScreenContent"
-                      @scroll-state-changed="onScrollStateChanged"
-                      @item-focused="onItemFocused"
-                      @item-click="onItemClick"
-                      :padding="'50,10,50,20'">
-          <tags-content-item :type="1"/>
-          <!-- 底部提示-->
-          <p class="screen-right-content-no-more" :focusable="false" :type="999">已经到底啦，按【返回键】回到顶部</p>
-          <template #loading  :focusable="false">
-            <!--分页加载 Loading-->
-            <qt-view class="screen-right-content-more-loading" :type="1002" :focusable="false">
-              <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
+        <!-- 筛选结果 -->
+        <qt-grid-view :v-show='!filterClickLoading' ref="screen_right_content" name="screen_right_content" sid="screen_right_content"
+          class="screen-right-content" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
+          :descendantFocusability="(loading || filterClickLoading) ? 2 : 1"
+          :autofocusPosition="isFirstLoad ? 0 : -1"
+          :triggerTask="switchData(filterTriggerTask)"
+          :cachePool="{name:'filter_content',size:{1:40,}}"
+          :blockFocusDirections="['right','down']"
+          :enablePlaceholder="false"
+          :spanCount="spanCount" :openPage="true" :preloadNo="4"
+          :focusable="false" :pageSize="screenPageSize"
+          nextFocusLeftSID="screen_left_tags"
+          :listenBoundEvent="true" :useDiff="true"
+          :listenHasFocusChange="true"
+          :clipChildren="false" :clipPadding="false"
+          :loadMore="loadMoreScreenContent"
+          :loadingDecoration="{top:15,left:30,bottom:70}"
+          :padding="'50,24,50,0'"
+          @scroll-state-changed="onScrollStateChanged"
+          @item-focused="onItemFocused"
+          @item-click="onItemClick"
+        >
+          <!-- 筛选内容竖图 -->
+          <tags-content-item-v :type="1"/>
+          <!-- 筛选内容横图 -->
+          <tags-content-item-h :type="2"/> <!-- :placeholderLayout="[-5, -5, 321, 180]" -->
+          <!-- 底部提示 -->
+          <template #footer>
+            <qt-text class="screen-right-content-no-more" :style="{width:(rightContentWidth-160)+'px'}"
+              :focusable="false" :type="1003" text="${text}" :fontSize="30" :lines="1" gravity="top|center"/>
+          </template>
+          <!--分页加载 Loading -->
+          <template #loading>
+            <qt-view class="screen-right-content-more-loading" :style="{width:(rightContentWidth-160)+'px'}" :type="1002" :focusable="false">
+              <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 40px;width:40px;"  :focusable="false"/>
             </qt-view>
           </template>
-
-
         </qt-grid-view>
 
       </qt-view>
     </scroll-view>
-    <!-- tag切换loading-->
-    <qt-view v-if="loading" class="screen-right-content-loading" :clipChildren="false" :focusable='false'>
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
+
+    <!-- tag切换loading -->
+    <qt-view v-if="loading" class="screen-right-content-loading" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}"
+      :clipChildren="false" :focusable='false'
+    >
+      <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
+    
+    <!-- tag筛选点击loading -->
     <qt-view v-if="!loading && filterClickLoading" class="screen-right-filter-click-loading"
-             :style="{top:filterHeight,height: 960-filterHeight,backgroundColor:'transparent'}"
-             :clipChildren="false" :focusable='false'>
-      <qt-loading-view color="rgba(255,255,255,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
+      :style="{top:filterHeight,width:rightContentWidth+'px',height: (rightContentHeight-filterHeight)+'px'}"
+      :clipChildren="false" :focusable='false'
+    >
+      <qt-loading-view color="rgba(21,122,252,0.3)" style="height: 100px; width: 100px" :focusable='false'/>
     </qt-view>
-    <!-- 空结果-->
-    <qt-view v-if="empty" class="screen-right-content-empty">
+    
+    <!-- 空结果 -->
+    <qt-view v-if="empty" class="screen-right-content-empty" :style="{width:rightContentWidth+'px',height:rightContentHeight+'px'}">
       <img style="width: 560px;height: 350px;" :src="emptyImg"/>
       <span :style="{fontSize: 30,color: 'rgba(255, 255, 255, 0.5)',marginTop: '26px'}">暂无数据</span>
     </qt-view>
-    <!-- tag筛选记录-->
-    <qt-view class="screen-right-selected-tags" ref="screen_right_selected_tags"
-             name="screen_right_selected_tags" :visible="false">
-      <!-- 当前选中tags-->
-      <qt-list-view class="screen-right-record-list"
-                    ref="screen_record_list"
-                    horizontal :focusable="false">
+
+    <!-- tag筛选记录 -->
+    <qt-view :visible="false" ref="screen_right_selected_tags" name="screen_right_selected_tags"
+      class="screen-right-selected-tags" :style="{width:rightContentWidth+'px',height:filterRecordHeight+'px'}"
+    >
+      <!-- 当前选中tags -->
+      <qt-list-view ref="screen_record_list"
+        class="screen-right-record-list" :style="{width:(rightContentWidth-66)+'px',height:filterRecordHeight+'px'}"
+        horizontal :focusable="false"
+      >
         <tags-filter-record :type="14" :focusable="false"/>
       </qt-list-view>
-
     </qt-view>
   </qt-view>
-
-
 </template>
 
 <script lang="ts">
-import {defineComponent} from "@vue/runtime-core";
+import {nextTick, ref, toRaw } from "vue";
+import { computed, defineComponent } from "@vue/runtime-core"
 import { ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 import {useGlobalApi} from "../../../api/UseApi";
+import FilterConfig from "../build_data/FilterConfig"
 import {
   buildScreenContent, clearAllFilterCondition, clearFastFilterCondition,
   getCurRecordFilter,
@@ -117,22 +134,23 @@ import {
   getFilterLength,
   getOffsetY,
   getScrollHeight, isAllFilterListHasData, isFastFilterListHasData,
-  isTagContentEnd,
   updateAllFilterCondition,
   updateFastFilterCondition
 } from "../build_data/useTagsData";
+import { getFilterMoreItem } from '../build_data/tags/TagsAdapter';
 import {
-  QTGridView,
+  QTIGridView,
   QTGridViewItem,
   QTIListView,
   QTIView,
   QTIViewVisibility
 } from "@quicktvui/quicktvui3";
-import TagsContentItem from "./tags-content-item.vue";
-import {nextTick, ref, toRaw} from "vue";
+import TagsContentItemV from "./tags-content-item-v.vue";
+import TagsContentItemH from "./tags-content-item-h.vue";
 import {QTListViewItem} from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItem";
 import TagsFilterItem from "./tags-filter-item.vue";
 import TagsFilterFastLine from "./tags-filter-fast-line.vue";
+import TagsFilterMoreBtn from "./tags-filter-more-btn.vue";
 import TagsFilterFastItemLeftTip from "./tags-filter-fast-item-left-tip.vue";
 import TagsFilterFastItem from "./tags-filter-fast-item.vue";
 import TagsFilterRecord from "./tags-filter-record.vue";
@@ -146,18 +164,29 @@ export default defineComponent({
     TagsFilterFastItem,
     TagsFilterFastItemLeftTip,
     TagsFilterFastLine,
+    TagsFilterMoreBtn,
     TagsFilterItem,
-    TagsContentItem
+    TagsContentItemV,
+    TagsContentItemH
   },
-  emits:['unBlockFocus'],
+  emits:['unBlockFocus', 'setLeftNextFocus', 'setContentLoadOver'],
   setup(props, context) {
+    const screenPageSize = computed(()=>{return FilterConfig.screenPageSize})
+    const isShowLeftList = computed(()=>{return FilterConfig.isShowLeftList})
+    const isShowTopView = computed(()=>{return FilterConfig.isShowTopView})
+    const rightContentWidth = computed(()=>{return FilterConfig.isShowLeftList ? FilterConfig.rightContentWidth:1856})
+    const rightContentHeight = computed(()=>{return FilterConfig.isShowTopView ? FilterConfig.rightContentHeight:1060})
+    const filterRecordHeight = computed(()=>{return FilterConfig.filterRecordHeight})
+    const posterMode = ref<1|2>(2) // 1: 竖图、2: 横图
+    const spanCount = ref(posterMode.value === 1 ? FilterConfig.spanVCount : FilterConfig.spanHCount)
+
     //工具变量
     const log = useESLog()
     const globalApi = useGlobalApi()
     const launch = useLaunch()
     const toast = useESToast()
     //组件变量
-    const screen_right_content = ref<QTGridView>()
+    const screen_right_content = ref<QTIGridView>()
     const screen_right_filters = ref<QTIListView>()
     const screen_record_list = ref<QTIListView>()
     const screen_right_selected_tags = ref<QTIView>()
@@ -185,8 +214,10 @@ export default defineComponent({
     let empty = ref(false)
     let screenItemContentFocus = ref(false)
     let scrollY = ref(0)
-    let filterTriggerTask = ref([])
-    let hideSelectTask = ref([])
+    let filterTriggerTask = ref<Array<any>>([])
+    let hideSelectTask = ref<Array<any>>([])
+    let isFirstLoad = ref(true)
+    let showFilter = ref(true) // 筛选组件显示状态
 
     function init(){
       hideSelectTask.value = [
@@ -205,9 +236,9 @@ export default defineComponent({
       ]
     }
 
-    function setFilterHeight() {
+    function setFilterHeight(moreLimit: number = 0) {
       //单个列表的高度+间距
-      filterHeight.value = getFilterHeight()
+      filterHeight.value = getFilterHeight(moreLimit)
     }
 
     function onScrollStateChanged(e) {
@@ -217,6 +248,17 @@ export default defineComponent({
     function onItemFocused(e) {
       screenItemContentFocus.value = e.isFocused
       if (e.isFocused){
+        context.emit('setLeftNextFocus', 'screen_right_content')
+
+        // 手动滚动页面
+        if (showFilter.value && e.position >= spanCount.value) {
+          showFilter.value = false
+          screen_right_scroll_content.value?.scrollToWithOptions(0, getFilterHeight(), 300)
+        } else if (showFilter.value && getCurRecordFilter().length > 0) {
+          showFilter.value = false
+          screen_right_scroll_content.value?.scrollToWithOptions(0, getScrollHeight(), 300)
+        }
+
         const focusValue = focusList[0]
         if (focusValue !== 3){
           focusList[0] = 3
@@ -234,12 +276,28 @@ export default defineComponent({
 
     function onFilterClick(e) {
       if (e) {
-        filterClickLoading.value = true
+        // 扩展筛选项
+        if (e.item.type === 3) {
+          setFilterHeight()
+          setFilterTriggerTask()
+          screen_right_filters.value?.setDisplay(false)
+          screen_right_filters.value?.blockRootFocus()
+          screenRightFiltersData.splice(FilterConfig.filterMoreLimit, 1, ...getFilterMoreItem())
+          setTimeout(() => {
+            screen_right_filters.value?.unBlockRootFocus()
+            screen_right_filters.value?.setItemFocused(FilterConfig.filterMoreLimit)
+            screen_right_filters.value?.setDisplay(true)
+          }, 400)
+          return
+        }
+
         const parentPosition = e.parentPosition
         const itemPosition = e.position
         if (parentPosition === curFilterParentPosition && itemPosition === curFilterItemPosition){
           return
         }
+
+        filterClickLoading.value = true
         curFilterParentPosition = parentPosition
         curFilterItemPosition = itemPosition
         //更新当前值
@@ -271,11 +329,12 @@ export default defineComponent({
         }
        getScreenByTags(1,curType,"",curTagPosition,false,true)
       }
-
     }
 
     function onFilterFocused(e){
       if (e.isFocused){
+        context.emit('setLeftNextFocus', 'screen_right_filters')
+        showFilter.value = true
         focusList = []
       }
     }
@@ -287,7 +346,7 @@ export default defineComponent({
     function onScrollToTop() {
       const delay = curType === 3 ? 400 : 200
       if (curType === 3){
-        screen_right_content.value?.scrollToSelected(0,false)
+        screen_right_content.value?.scrollToSelected(0,true)
         const y = getScrollHeight() * -1
         screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
       }else{
@@ -301,7 +360,6 @@ export default defineComponent({
         }else{
           screen_right_content.value?.setItemFocused(0)
         }
-
       },delay)
       scrollY.value = 0
     }
@@ -322,6 +380,9 @@ export default defineComponent({
       }
       isFirstRequest = true
       if (type === 3) {//筛选
+        showFilter.value = true
+        // TODO: 有筛选条件展开按钮时需要取消注释, 待兼容
+        // filterVisible.value = false
         curTags = getCurScreenCondition() //获取筛选条件
         if (isClick){
           setFilterTriggerTask()
@@ -329,25 +390,28 @@ export default defineComponent({
         }
         if (!isLoadMore && !isClick) {
           setRecordTip()
-          setFilterHeight()
+          setFilterHeight(FilterConfig.filterMoreLimit)
           setFilterTriggerTask()
-          filterVisible.value = true
         }
         let filterList: Array<QTListViewItem> = []
         if (!isLoadMore && !isClick) {
-          filterList = getFilterConditionData()
+          filterList = getFilterConditionData(FilterConfig.filterMoreLimit)
         }
         nextTick(() => {
           if (!isLoadMore && !isClick) {
-            screenRightFiltersData = screen_right_filters.value!.init(filterList)
+            filterVisible.value = true
+            nextTick(() => {
+              curFilterParentPosition = -1
+              screen_right_selected_tags.value?.setVisibility(QTIViewVisibility.INVISIBLE)
+              screenRightFiltersData = screen_right_filters.value!.init(filterList)
+            })
           }
           setTimeout(() => {
             setScreenResultData(curPageNum, curType, curTags,isClick)
             loading.value = false
           }, 300)
         })
-      }
-      else {
+      } else {
         if (!isLoadMore && !isClick){
           if (focusList.length > 0 && focusList[0] === 3){
             focusList = []
@@ -356,30 +420,27 @@ export default defineComponent({
             screen_right_scroll_content.value?.scrollToWithOptions(0,y,300)
           }
         }
-        filterTriggerTask.value = []
-        curTags = tagNames
-        filterVisible.value = false
 
-        setScreenResultData(curPageNum, curType, curTags,isClick)
+        curTags = tagNames
+        showFilter.value = false
+        filterVisible.value = false
+        filterTriggerTask.value = []
+
+        setScreenResultData(curPageNum, curType, curTags, isClick)
       }
     }
 
     function setFilterTriggerTask() {
-      const length = getFilterLength()
-      const y = getScrollHeight()
+      const length = getFilterLength(FilterConfig.filterMoreLimit)
+
       filterTriggerTask.value = (length > 1) ? [
         getOffsetY() ? {
           event: 'onFocusAcquired',
           target: 'screen_right_selected_tags',
           function: 'changeVisibility',
           params: ['visible'],
-        } : {},
-        {
-          event: 'onFocusAcquired',
-          target: 'screen_right_scroll_content',
-          function: 'scrollToWithOptions',
-          params: [{x: 0, y: y, duration: 300}],
-        }] : []
+        } : {}
+      ] : []
     }
 
     function setRecordTip(){
@@ -390,29 +451,28 @@ export default defineComponent({
 
     function setScreenResultData(pageNum: number, type: number, tagNames: string,isClick: boolean) {
       globalApi.getScreenContentByTags(tagNames, curPageNum).then((res: Array<any>) => {
-        const screenContentList: Array<QTGridViewItem> = buildScreenContent(res, curPageNum)
+        const screenContentList: Array<QTGridViewItem> = buildScreenContent(res, curPageNum, posterMode.value)
         if (screenContentList && screenContentList.length > 0) {
           if (curPageNum === 1) {
             screenRightContentData = screen_right_content.value!.init(screenContentList)
-            //设置 gridview滚动到顶部并设置 selected
+            // 通知上层组件内容加载完成
+            context.emit('setContentLoadOver', true)
+            // gridview 滚动到顶部并设置 selected
             if (screenRightContentData && screenRightContentData.length > 0) {
               screen_right_content.value?.scrollToSelected(0, true)
             }
             if (type !== 3) {
               loading.value = false
-            }else{
-              const delay = isClick ? 300 : 0
-              setTimeout(()=>{
-                filterClickLoading.value = false
-              },delay)
+            } else {
+              setTimeout(() => filterClickLoading.value = false, isClick ? 300 : 0)
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {
               screenRightContentData.push(...screenContentList)
             }
           }
-          if (isTagContentEnd()) {
-            screen_right_content.value!.stopPage()
+          if(isFirstLoad.value){
+            setTimeout(()=>{isFirstLoad.value = false},500)
           }
         } else {
           if (curPageNum === 1) {//首次无数据,且已经添加过数据
@@ -428,7 +488,7 @@ export default defineComponent({
             }
           } else {
             if (screenRightContentData && screenRightContentData.length > 0) {
-              screen_right_content.value!.stopPage()
+              setTimeout(()=>{screen_right_content.value!.stopPage()},400)
             }
           }
         }
@@ -446,6 +506,11 @@ export default defineComponent({
 
     }
 
+    // 右侧页面滚动
+    function rightScrollTo(x: number, y: number) {
+      screen_right_scroll_content.value?.scrollTo(x, y)
+    }
+
     return {
       init,
       getScreenByTags,
@@ -458,6 +523,7 @@ export default defineComponent({
       onScrollToTop,
       switchData,
       clearContentFocus,
+      rightScrollTo,
 
       screen_right_content,
       screen_right_filters,
@@ -476,11 +542,17 @@ export default defineComponent({
       scrollY,
       screenItemContentFocus,
       filterTriggerTask,
+      screenPageSize,
+      isFirstLoad,
+      isShowLeftList,
+      isShowTopView,
+      rightContentWidth,
+      rightContentHeight,
+      filterRecordHeight,
+      spanCount
     }
   }
 })
 </script>
 
-<style src="../css/tags-right-content.css">
-
-</style>
+<style src="../css/tags-right-content.css"></style>
