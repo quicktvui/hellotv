@@ -128,8 +128,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
-import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
+import { ref, onMounted, onUnmounted } from 'vue'
+import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildMockData } from './mock'
@@ -139,6 +139,7 @@ import themeConfig from '../../config/theme-config'
 
 const toast = useESToast()
 const router = useESRouter()
+const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
@@ -160,12 +161,18 @@ const textStyle = {
 }
 
 onMounted(() => {
+  eventBus.on('clearPageData', clearPageData)
+
   sidebarData.value = [
     { type: 1, itemSize: 106, id: 1, text: '观看历史' },
     { type: 1, itemSize: 106, id: 2, text: '我的收藏' },
     { type: 1, itemSize: 106, id: 3, text: '已购内容' }
   ]
   contentData.value = buildMockData()
+})
+
+onUnmounted(() => {
+  eventBus.off('clearPageData')
 })
 
 let lastIndex = 0
@@ -221,8 +228,17 @@ function onBtnClick(name: 'cancel' | 'clear') {
   if (name === 'cancel') {
     isEditing.value = false
   } else {
-    toast.showToast('弹窗二次确认')
+    router.push({
+      name: 'confirm',
+      params: { text: '清空之后什么都没有了哦～', btnL: '确定清空', btnR: '取消', menuIndex: lastIndex, clearHistory: true }
+    })
   }
+}
+
+function clearPageData() {
+  isEmpty.value = true
+  // 清空本地数据
+  contentData.value = []
 }
 
 let oKCounter = 0
@@ -253,7 +269,7 @@ function onBackPressed() {
 
   // 右侧内容滚动状态检查
   if (offsetY > 0) {
-    ulRef.value?.scrollToPosition(0)
+    ulRef.value?.scrollToTop()
     return
   }
 

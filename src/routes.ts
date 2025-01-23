@@ -73,11 +73,12 @@ const routes = [
     component: () => import('./pages/detail-full-screen/index.vue')
   },
   { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
+  { name: 'confirm', path: '/confirm', component: () => import('./pages/history/components/confirm.vue') },
   {
     path: '/test',
     name: 'test',
     component: test
-  },
+  }
 ]
 
 export default routes
