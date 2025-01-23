@@ -35,7 +35,7 @@
   right: 0.1px;
   display: flex;
   border-radius: 35px;
-  background-color: $gl-theme-btn-bg-focus-color;
+  background-color: $theme-btn-focus-color;
   justify-content: center;
 }
 
@@ -61,20 +61,20 @@
 
 .bar-text-title-normal {
   @extend %bar-title;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
 }
 
 .bar-text-title-select-focus {
   @extend %bar-title;
   typeface:bold;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
+  focus-color: $theme-text-focus-color;
+  select-color: $theme-text-select-color;
 }
 
 .bar-text-select-line{
   width: 51px;
   height: 6px;
-  background-color: $text-select-color;
+  background-color: $theme-text-select-color;
   border-radius: 4px;
   margin-top: 60px;
 }

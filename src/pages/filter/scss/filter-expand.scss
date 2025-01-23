@@ -16,7 +16,7 @@
   background-color: transparent;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
 }
 
 .filter-expand-list-item-text {
@@ -24,7 +24,7 @@
   width: 179px;
   height: 106px;
   background-color: transparent;
-  color: $text-select-color;
+  color: $theme-text-select-color;
   font-size: 36px;
-  focus-color: $text-focus-color;
+  focus-color: $theme-text-focus-color;
 }

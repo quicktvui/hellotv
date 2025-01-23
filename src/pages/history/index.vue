@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="history" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="history" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <!-- 左侧列表 -->
     <qt-view class="history-sidebar">
       <!-- 顶部提示 -->

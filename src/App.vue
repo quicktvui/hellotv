@@ -1,5 +1,5 @@
 <template>
-  <div class='app-root-css' :gradientBackground="{colors:rootBgGradientColor}">
+  <div class='app-root-css' :gradientBackground="{colors:bgGradientColor,orientation: 4}">
     <es-router-view></es-router-view>
   </div>
 </template>
@@ -29,7 +29,7 @@ export default defineComponent({
   emits: [],
   setup() {
     //全局渐进背景色
-    const rootBgGradientColor = ThemeConfig.rootBgGradientColor
+    const bgGradientColor = ThemeConfig.bgGradientColor
 
     const router = useESRouter()
     const nativeRouter = useESNativeRouter()
@@ -144,7 +144,7 @@ export default defineComponent({
     }
 
     return {
-      rootBgGradientColor,
+      bgGradientColor,
       onESCreate,
       onESDestroy
     }

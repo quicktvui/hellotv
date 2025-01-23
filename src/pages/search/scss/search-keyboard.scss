@@ -59,11 +59,11 @@
   border-radius: 8px;
   align-items: center;
   justify-content: center;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
 }
 
 .search-keyboard-grid-item-text {
   color: white;
   font-size: 40px;
-  focus-color: $text-focus-color;
+  focus-color: $theme-text-focus-color;
 }

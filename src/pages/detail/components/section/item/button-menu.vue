@@ -149,7 +149,7 @@ import config from '../config';
     background-color: transparent;
     .menu-list-item{
       border-radius: 16px;
-      background-color: $gl-theme-btn-bg-normal-color;
+      background-color: $theme-btn-normal-color;
       align-items: center;
       justify-content: center;
       .menu-list-item-bg{
@@ -172,8 +172,8 @@ import config from '../config';
         .menu-list-item-text{
           height: 34px;
           font-size: 28px;
-          color: $text-normal-color;
-          focus-color: $text-focus-color;
+          color: $theme-text-normal-color;
+          focus-color: $theme-text-focus-color;
           font-size: 28px;
           position: absolute;
         }

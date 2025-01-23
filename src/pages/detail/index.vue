@@ -175,7 +175,7 @@ import MediaPlayer from './components/media-player/index.vue'
     detailManager.getMediaDetail(currenId.value).then((res:IMedia) => {
       console.log(res,'getDetailgetDetailgetDetail')
       media = res
-      media.mediaSeriesType = 2 //设置选集类型
+      media.mediaSeriesType = 1 //设置选集类型
       basicSectionRef.value?.init(media) //初始化基本介绍板块数据
       nextTick(async () => {
         waterfallRef.value?.scrollToTop()

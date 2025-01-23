@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="search" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="search" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <scroll-view name="searchScroll" makeChildVisibleType="none" :horizontal="true" :onScrollEnable="true">
       <qt-view class="search-columns-body" style="width: 2554px" :clipChildren="true">
         <!-- 键盘区域 -->
@@ -15,7 +15,7 @@
       v-if="isLoading"
       class="search-columns-body-loading"
       :style="{ width: `${loadingWidth}px`, left: `${loadingLeft}px` }"
-      :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }"
+      :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }"
     >
       <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
     </qt-view>

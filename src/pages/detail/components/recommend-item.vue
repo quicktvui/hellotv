@@ -78,8 +78,8 @@ import ThemeConfig from "../../../config/theme-config";
 .recommend-item-root{
   background-color: transparent;
   .recommend-item-img{
-    border-radius: $gl-theme-img-border;
-    focus-border-color: $gl-theme-focus-border-color;
+    border-radius: $theme-img-border;
+    focus-border-color: $theme-focus-border-color;
     focus-border-style: solid;
     z-index: 1;
     background-color: rgba(255,255,255,0.1);
