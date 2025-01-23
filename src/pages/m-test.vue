@@ -19,7 +19,8 @@ import { ref,nextTick, onMounted } from 'vue'
   const img = ref<String>('https://img1.baidu.com/it/u=1726075624,1307327070&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667');
   let myData  = ref<any[]>([])
   let arr:Array<any> = []
-  for (let i = 0; i < 20; i++) {
+  let arrNew:Array<any> = []
+  for (let i = 0; i < 10; i++) {
     arr.push({
       id: 'id'+i, name: 'name'+Math.random(),
       itemSize: 260, type: 5,
@@ -35,7 +36,20 @@ import { ref,nextTick, onMounted } from 'vue'
   onMounted(() => {
     myData.value = arr
     setTimeout(() => {
-      myData.value = myData.value.concat(arr)
+      for (let i = 10; i < 15; i++) {
+        arrNew.push({
+          id: 'id'+i, name: 'name'+Math.random(),
+          itemSize: 260, type: 5,
+          img: img,
+          tag: i % 2 == 0 ? '' : 'VIP',
+          text: `pos:${i}`,
+          // decoration : {
+          //   top:20,
+          //   right:20
+          // }
+        })
+      }
+      myData.value = myData.value.concat(arrNew)
     },5000)
   })
   const onFocus = (e) => {
