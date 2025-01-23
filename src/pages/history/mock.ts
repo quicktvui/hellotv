@@ -22,7 +22,7 @@ export const buildMockData = (tag: string = '观看历史', limit: number = 100)
     })
   }
   // 到底提示
-  arr.push({ type: 1000, itemSize: 100, decoration: { bottom: 140 } })
+  arr.push({ type: 1002, itemSize: 100, decoration: { bottom: 140 } })
 
   return arr
 }
