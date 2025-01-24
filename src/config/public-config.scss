@@ -1,15 +1,16 @@
 //全局背景色
-$gl-theme-root-bg-color: #252930;
+$theme-bg-color: #252930;
 //全局图片圆角
-$gl-theme-img-border: 16px;
-// 按钮默认颜色
-$gl-theme-btn-bg-normal-color: rgba(255, 255, 255, 0.1);
-$gl-theme-btn-bg-select-color: transparent;
-$gl-theme-btn-bg-focus-color: #FFFFFF;
-// 选中边框颜色
-$gl-theme-focus-border-color:white;
+$theme-img-border: 16px;
+// 按钮颜色
+$theme-btn-normal-color: rgba(255, 255, 255, 0.1);
+$theme-btn-select-color: transparent;
+$theme-btn-focus-color: #FFFFFF;
 
 // 文字默认颜色
-$text-normal-color: rgba(255, 255, 255, 0.5);
-$text-select-color: #FFFFFF;
-$text-focus-color: #13161B;
+$theme-text-normal-color: rgba(255, 255, 255, 0.5);
+$theme-text-select-color: #FFFFFF;
+$theme-text-focus-color: #13161B;
+
+// 选中边框颜色
+$theme-focus-border-color:#FFFFFF;

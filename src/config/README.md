@@ -1,6 +1,6 @@
 
 * rootBgColor:全局兜底背景色
-* rootBgGradientColor:全局兜底渐进背景色（数组）
+* bgGradientColor:全局兜底渐进背景色（数组）
 
 
 * textColor:全局文字默认色

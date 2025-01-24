@@ -19,7 +19,7 @@
   width: 518px;
   height: 40px;
   background-color: transparent;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 30px;
 }
 
@@ -45,15 +45,15 @@
   background-color: transparent;
   justify-content: center;
   border-radius: 8px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
 }
 
 .search-keyword-list-item-text {
   width: 358px;
   position: absolute;
   left: 80px;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 36px;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
+  focus-color: $theme-text-focus-color;
+  select-color: $theme-text-select-color;
 }

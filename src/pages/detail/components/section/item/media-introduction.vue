@@ -154,9 +154,9 @@ import ThemeConfig from "../../../../../config/theme-config";
     padding-top: 15px;
     margin-top: 15px;
     padding-bottom: 10px;
-    focus-border-color:$gl-theme-focus-border-color;
-    border-radius: $gl-theme-img-border;
-    focus-border-radius: $gl-theme-img-border;
+    focus-border-color:$theme-focus-border-color;
+    border-radius: $theme-img-border;
+    focus-border-radius: $theme-img-border;
     background-color: transparent;
     focus-background-color: rgba(255, 255, 255, 0.1);
     .item-vip {

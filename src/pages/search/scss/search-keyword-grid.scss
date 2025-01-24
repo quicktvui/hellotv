@@ -16,7 +16,7 @@
   background-color: transparent;
   border-radius: 8px;
   justify-content: center;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
 }
 
 .search-keyword-grid-item-text {
@@ -24,7 +24,7 @@
   height: 40px;
   background-color: transparent;
   margin-left: 40px;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 30px;
-  focus-color: $text-focus-color;
+  focus-color: $theme-text-focus-color;
 }

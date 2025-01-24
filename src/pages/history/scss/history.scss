@@ -27,7 +27,7 @@
   background-color: transparent;
   align-items: center;
   justify-content: center;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
   focus-border-radius: 8px;
 }
 
@@ -36,10 +36,10 @@
   height: 106px;
   background-color: transparent;
   position: absolute;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 36px;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
+  focus-color: $theme-text-focus-color;
+  select-color: $theme-text-select-color;
 }
 
 .history-content {
@@ -120,7 +120,7 @@
   height: 40px;
   background-color: transparent;
   position: absolute;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 30px;
   focus-color: white;
 }
@@ -129,7 +129,7 @@
   width: 325px;
   height: 34px;
   background-color: transparent;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 24px;
 }
 

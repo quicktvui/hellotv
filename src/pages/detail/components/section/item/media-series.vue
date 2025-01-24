@@ -19,7 +19,7 @@
       :textColors="{ color: ThemeConfig.textNormalColor, focusColor: ThemeConfig.textFocusColor,
         selectColor: ThemeConfig.textSelectColor }"
       :markColor='ThemeConfig.textFocusColor'
-      :gradientBackground="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradientBackground="{ colors: ThemeConfig.btnGradientNormalColor, cornerRadius: 8, orientation: 6 }"
       :gradientFocusBackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       :commonParam="{itemGap: 32,contentWidth: 1760}"
       @loadData="onLoadData"

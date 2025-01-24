@@ -218,7 +218,7 @@ export function buildMediaSeriesGroup(): QTMediaSeriesGroup {
       padding: [0, 0]
     },
     background: {
-      color: ThemeConfig.btnGradientColor,
+      color: ThemeConfig.btnGradientNormalColor,
       cornerRadius: [8, 8, 8, 8],
       padding: [0, 0],
       stroke: {

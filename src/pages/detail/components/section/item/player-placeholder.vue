@@ -58,9 +58,9 @@ import { IMedia } from '../../../adapter/interface'
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  focus-border-color:$gl-theme-focus-border-color;
+  focus-border-color:$theme-focus-border-color;
   focus-border-width: 3;
-  focus-border-radius: $gl-theme-img-border;
+  focus-border-radius: $theme-img-border;
   .player-placeholder-mask {
     width: 890px;
     height: 500px;
