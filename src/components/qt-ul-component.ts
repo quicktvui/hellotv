@@ -373,7 +373,9 @@ function registerQTULViewComponent(app: ESApp) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
       const holders  = reactive<any[]>([])
+      let isReduce = ref(false)
       watch(() => props.data, (hs) => {
+        isReduce.value = false
         const currentArrOLd = JSON.parse(JSON.stringify(hs))
         const currentArrNew = toRaw(currentArrOLd)
         console.log(currentArrNew.length, holders.length,'333333333333')
@@ -381,10 +383,9 @@ function registerQTULViewComponent(app: ESApp) {
           holders.splice(0)
         }
         if(currentArrNew.length < holders.length){ // 新增数据少于原始数据做减法处理
-          const end = holders.length - currentArrNew.length
+          isReduce.value = true
           console.log(holders,'333333333333')
           holders.splice(currentArrNew.length)
-          console.log(holders,'333333333333')
           holders.map((item, index) => {
             item.position = index
             return item
@@ -413,15 +414,21 @@ function registerQTULViewComponent(app: ESApp) {
         console.log('++createHolder', batch.length, 'hashTag', hashTag)
         // let {batch ,hashTag} = evt
         const list = [...(Array.isArray(batch) ? batch : [batch])]
+        console.log(holders.length,list,'1333333333333')
         for (let i = 0; i < list.length; i++) {
           console.log('++createHolder list[i]:', list[i])
           const { itemType, position } = list[i]
-          holders.push({
-            itemType: itemType,
-            sid: -1,
-            position: position
-          })
-          holders[holders.length - 1].sid = `hd-${hashTag}-${holders.length - 1}`
+          if(isReduce.value){
+            holders[position].itemType = itemType
+            holders[position].sid = `hd-${hashTag}-${position}}`
+          }else{
+            holders.push({
+              itemType: itemType,
+              sid: -1,
+              position: position
+            })
+            holders[holders.length - 1].sid = `hd-${hashTag}-${holders.length - 1}`
+          }
         }
         //children.push(h(type, params))
       }
@@ -429,6 +436,7 @@ function registerQTULViewComponent(app: ESApp) {
         console.log('++bindHolder', batch)
         // let {batch } = params
         const list = [...(Array.isArray(batch) ? batch : [batch])]
+        console.log(holders.length,list,'2333333333333')
         for (let i = 0; i < list.length; i++) {
           const { position, sid } = list[i]
           const hIndex = extractNum(sid)
