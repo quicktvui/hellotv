@@ -131,16 +131,19 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
+import { ESKeyEvent, useESToast, useESEventBus, useESDevice } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildMockData } from './mock'
+import { buildContents } from './adapter/index'
+import historyManager from './api/index'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
 
 const toast = useESToast()
 const router = useESRouter()
+const device = useESDevice()
 const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
@@ -165,18 +168,26 @@ const textStyle = {
 
 onMounted(() => {
   eventBus.on('clearPageData', clearPageData)
-
+  // 初始化左侧列表
   sidebarData.value = [
     { type: 1, itemSize: 106, id: 1, text: '观看历史' },
     { type: 1, itemSize: 106, id: 2, text: '我的收藏' },
     { type: 1, itemSize: 106, id: 3, text: '已购内容' }
   ]
-  contentData.value = buildMockData()
 })
 
 onUnmounted(() => {
   eventBus.off('clearPageData')
 })
+
+async function loadRecords(page: number = 1, limit: number = 10) {
+  const records = await historyManager.getRecords('xxx', 'history', page, limit)
+  if (page === 1) {
+    contentData.value = buildContents(records)
+  } else {
+    contentData.value.push(...buildContents(records))
+  }
+}
 
 let lastIndex = 0
 let lastFocusName = ''
