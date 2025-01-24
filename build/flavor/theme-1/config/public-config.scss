@@ -1,3 +1,4 @@
+/****供全局 css scss样式文件使用***/
 //全局背景色
 $theme-bg-color: #252930;
 //全局图片圆角
@@ -6,11 +7,10 @@ $theme-img-border: 16px;
 $theme-btn-normal-color: rgba(255, 255, 255, 0.1);
 $theme-btn-select-color: transparent;
 $theme-btn-focus-color: #FFFFFF;
-
 // 文字默认颜色
 $theme-text-normal-color: rgba(255, 255, 255, 0.5);
 $theme-text-select-color: #FFFFFF;
 $theme-text-focus-color: #13161B;
-
 // 选中边框颜色
 $theme-focus-border-color:#FFFFFF;
+

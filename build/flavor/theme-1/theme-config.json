@@ -1,14 +1,12 @@
 {
 
-    "theme-bg-color": "#252930",
+
     "theme-bg-gradient-color": "['#00040B', '#1C222B']",
 
-    "theme-img-border": "16px",
+
     "theme-focus-border-corner": "16",
 
-    "theme-btn-normal-color": "rgba(255, 255, 255, 0.1)",
-    "theme-btn-select-color": "transparent",
-    "theme-btn-focus-color": "#FFFFFF",
+
 
     "theme-btn-gradient-normal-color": "['#19FFFFFF', '#19FFFFFF']",
     "theme-btn-gradient-select-color": "[]",

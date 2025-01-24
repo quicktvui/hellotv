@@ -35,9 +35,6 @@
 <script lang='ts' setup name='btn-pack-view'>
 import ThemeConfig from '../config/theme-config.ts'
 
-//默认60高度按钮的圆角
-const default60BorderRadius = 30
-
 const emits = defineEmits([
   'focus', 'click'
 ])
@@ -64,7 +61,7 @@ defineProps({
       return {
         colors: ThemeConfig.btnGradientNormalColor,
         orientation: 6,
-        cornerRadii4: [default60BorderRadius, default60BorderRadius, default60BorderRadius, default60BorderRadius]
+        cornerRadii4: [30, 30, 30, 30]
       } //cornerRadii4[左上, 右上, 右下, 左下]
     }
   },
@@ -75,7 +72,7 @@ defineProps({
       return {
         colors: ThemeConfig.btnGradientFocusColor,
         orientation: 6,
-        cornerRadius: default60BorderRadius
+        cornerRadius: 30
       }
     }
   },

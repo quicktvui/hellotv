@@ -1,4 +1,6 @@
 export default {
+  /****供全局 动态传递样式使用***/
+
   //全局背景渐进色
   themeBgGradientColor: ['#00040B', '#1C222B'],
   //全局焦点边框圆角
