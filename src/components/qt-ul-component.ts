@@ -374,15 +374,23 @@ function registerQTULViewComponent(app: ESApp) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
       let holders  = reactive<any[]>([])
-      watch(() => props.items, (hs) => {
+      watch(() => props.data, (hs) => {
         let currentArrOLd = JSON.parse(JSON.stringify(hs))
         let currentArrNew = toRaw(currentArrOLd)
+        console.log(currentArrNew.length, holders.length,'333333333333')
         if(currentArrNew.length < 1){ // 数据清空 清空holedes保持数据同步
           holders.splice(0)
         }
         if(currentArrNew.length < holders.length){ // 新增数据少于原始数据做减法处理
           let end = holders.length - currentArrNew.length
-          holders.splice(-end)
+          console.log(holders,'333333333333')
+          holders.splice(currentArrNew.length)
+          console.log(holders,'333333333333')
+          holders.map((item, index) => {
+            item.position = index
+            return item
+          })
+          console.log(holders,'333333333333')
         }
         Native.callUIFunction(viewRef.value, 'setListDataWithParams', [currentArrNew, false,false,{
           RealDOMTypes:[1,2]
@@ -463,34 +471,17 @@ function registerQTULViewComponent(app: ESApp) {
           }
         }
       }
-      const traverseDomTree = (element) => {
-        if (!element) {
-          console.warn('Element is null or undefined')
-          return
-        }
-
-        console.log('Element:', element, element.tagName) // 打印元素标签名
-
-        // 遍历元素节点的子元素
-        element.children?.forEach((child) => {
-          traverseDomTree(child)
-        })
-      }
       onMounted(() => {
-        console.log(`mounted called viewRef.value.element ${viewRef.value.element} , value :${viewRef.value}`)
-        const root = viewRef.value
-        traverseDomTree(root)
       })
       const renderItems = (hd) => {
         return [
           renderSlot(context.slots, 'default', {
             index: hd.position,
-            item: props.items ? props.items[hd.position] : {}
+            item: props.data ? props.data[hd.position] : {}
           })
         ]
       }
       const renderHolders = (holders) => {
-        console.log(holders,'renderHoldersrenderHolders')
         console.log('holders called ', `holderCount:${holders.length}`)
         let children = holders.map((hd: any, index: number) => {
           // console.log('holders called ', `index:${index} position:${hd.position},holderCount:${holders.length},sid:${hd.sid}`)
@@ -559,7 +550,7 @@ function registerQTULViewComponent(app: ESApp) {
         nextTick(() => {
           console.log('tv-list render end ')
         })
-        const items = context.slots.default
+        const defaultSlot = context.slots.default
           ? h(
               'RecyclePool',
               {
@@ -627,12 +618,12 @@ function registerQTULViewComponent(app: ESApp) {
             //   //bindH(evt)
             // },
           },
-          [items]
+          [defaultSlot]
         )
       }
     },
     props: {
-      items: {
+      data: {
         type: Array,
         default: () => []
       },

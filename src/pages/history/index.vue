@@ -1,12 +1,12 @@
 <template>
   <qt-view class="history" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <!-- 左侧列表 -->
-    <qt-view class="history-sidebar">
+    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
       <!-- 顶部提示 -->
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
 
       <!-- 数据渲染 -->
-      <qt-ul class="history-sidebar" :items="sidebarData">
+      <qt-ul class="history-sidebar" :data="sidebarData">
         <template #default="{ index, item }">
           <qt-view class="history-sidebar-item" :type="1" :focusable="true" @focus="(e) => onSidebarItemFocus(e, index)">
             <qt-text
@@ -54,7 +54,7 @@
       <qt-ul
         class="history-content-ul"
         ref="ulRef"
-        :items="contentData"
+        :data="contentData"
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
@@ -237,6 +237,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
 
 function clearPageData() {
   isEmpty.value = true
+  isEditing.value = false
   // 清空本地数据
   contentData.value = []
 }
