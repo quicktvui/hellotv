@@ -73,7 +73,7 @@ const routes = [
     component: () => import('./pages/detail-full-screen/index.vue')
   },
   { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
-  { name: 'confirm', path: '/confirm', component: () => import('./pages/history/components/confirm.vue') },
+  { name: 'confirm', path: '/confirm', component: () => import('./pages/history/components/confirm-dialog.vue') },
   {
     path: '/test',
     name: 'test',
