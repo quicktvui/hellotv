@@ -9,7 +9,8 @@
     "lint": "eslint -c eslint.config.mjs",
     "dev": "tsx ./scripts/dev.ts",
     "pack": "tsx ./scripts/pack.ts",
-    "build": "tsx ./scripts/build.ts"
+    "build": "tsx ./scripts/build.ts",
+    "cpsrc": "tsx ./build/build-flavor.ts"
   },
   "dependencies": {
     "@extscreen/es3-ad-player": "1.0.9",
