@@ -60,6 +60,10 @@
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
         :blockFocusDirections="['down']"
+        :openPage="true"
+        :listenBoundEvent="true"
+        :listenHasFocusChange="true"
+        @loadMore="onContentloadMore"
         @scroll-state-changed="onScrollStateChanged"
       >
         <template #default="{ index, item }">
@@ -131,19 +135,19 @@
 
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted } from 'vue'
-import { ESKeyEvent, useESToast, useESEventBus, useESDevice } from '@extscreen/es3-core'
+import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildMockData } from './mock'
-import { buildContents } from './adapter/index'
+import { buildContents, buildEndContent } from './adapter/index'
 import historyManager from './api/index'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
+import config from './config'
 
 const toast = useESToast()
 const router = useESRouter()
-const device = useESDevice()
 const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
@@ -166,6 +170,9 @@ const textStyle = {
   focusColor: '#13161B'
 }
 
+let page = 1
+let stopPage = false
+
 onMounted(() => {
   eventBus.on('clearPageData', clearPageData)
   // 初始化左侧列表
@@ -180,41 +187,21 @@ onUnmounted(() => {
   eventBus.off('clearPageData')
 })
 
-async function loadRecords(page: number = 1, limit: number = 10) {
-  const records = await historyManager.getRecords('xxx', 'history', page, limit)
-  if (page === 1) {
-    contentData.value = buildContents(records)
-  } else {
-    contentData.value.push(...buildContents(records))
-  }
-}
-
 let lastIndex = 0
 let lastFocusName = ''
-let loadingDelayTimer: any = -1
 function onSidebarItemFocus(evt, index) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
 
     if (lastIndex !== index) {
+      page = 1
+      stopPage = false
       lastIndex = index
       isLoading.value = true
+      // 右侧内容复原
       ulRef.value?.scrollToTop()
-      switch (index) {
-        case 0:
-          contentData.value = buildMockData()
-          break
-        case 1:
-          contentData.value = buildMockData(sidebarData.value[index].text, 10)
-          break
-        default:
-          contentData.value = []
-      }
-      isEmpty.value = contentData.value.length === 0
-
-      // 延迟关闭loading
-      clearTimeout(loadingDelayTimer)
-      loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+      // 加载新数据
+      loadRecords(index)
     }
   }
 }
@@ -230,6 +217,38 @@ function onContentItemClick(index) {
     contentData.value.splice(index, 1)
   } else {
     toast.showToast(`跳转->${index}`)
+  }
+}
+
+let loadingDelayTimer: any = -1
+async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.ContentsLimit) {
+  console.log('ok->', menuIndex, page)
+  if (menuIndex === 2) {
+    contentData.value = []
+  } else {
+    const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
+    if (page === 1) {
+      contentData.value = buildContents(records)
+    } else {
+      contentData.value.push(...buildContents(records))
+    }
+    // 到底提示
+    if (contentData.value.length > 12) {
+      contentData.value.push(buildEndContent())
+    }
+    // 结束分页
+    stopPage = records.items.length < config.ContentsLimit
+  }
+  isEmpty.value = contentData.value.length === 0
+
+  // 延迟关闭loading
+  clearTimeout(loadingDelayTimer)
+  loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+}
+
+function onContentloadMore() {
+  if (!stopPage) {
+    loadRecords(lastIndex, ++page)
   }
 }
 
@@ -285,6 +304,12 @@ function onBackPressed() {
   // 右侧内容滚动状态检查
   if (offsetY > 0) {
     ulRef.value?.scrollToTop()
+    return
+  }
+
+  // 左侧列表焦点
+  if (lastFocusName !== 'sidebar') {
+    sidebarRef.value?.setItemFocused(0)
     return
   }
 

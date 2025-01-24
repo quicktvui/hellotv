@@ -10,7 +10,7 @@ export const buildContents = (records: Records): Content[] => {
         type: ContentType.Normal,
         itemSize: 266,
         title: item.title,
-        progress: `${Math.floor((item.viewedDuration / item.totalDuration) * 100)}`,
+        progress: `${Math.floor((item.viewedDuration / item.totalDuration) * 100)}%`,
         image: item.coverH,
         decoration: { left: 20, top: 20, right: 20, bottom: 20 }
       })

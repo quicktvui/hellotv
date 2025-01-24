@@ -76,7 +76,7 @@ const routes = [
   {
     name: 'confirm',
     path: '/confirm',
-    component: () => import('./pages/history/components/confirm.vue'),
+    component: () => import('./pages/history/components/confirm-dialog.vue'),
     type: ESRouteType.ES_ROUTE_TYPE_DIALOG
   },
   {
