@@ -5,6 +5,7 @@ const path = require('path')
 const run = require('./process')
 
 async function pack() {
+  await run(`tsx ./build/build-flavor.ts`, '')
   await run(`webpack --config ./scripts/quicktvui-webpack.android.ts`, '')
   const cwd = process.cwd()
   const dist = path.join(cwd, './dist')

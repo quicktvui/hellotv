@@ -1,9 +1,8 @@
 import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import barsDataManager, { buildTabBarAdapter } from '../adapter/tab-bar/tab-bar-adapter'
+import barsDataManager  from '../adapter/tab-bar/tab-bar-adapter'
 import {
   build4KSectionData,
-  buildSmall4KSectionData,
-  buildTabContentAdapter
+  buildSmall4KSectionData
 } from '../adapter/tab-content/tab-content-adapter'
 import requestManager from '../../../tools/request'
 import { Section4KItem } from '../adapter/tab-content/tab-content-imp'
@@ -35,9 +34,8 @@ class HomeManager implements HomeApi{
    * @param tabId
    * @param pageNo
    * @param limit
-   * @param tabPageIndex
    */
-  getTabContent(tabId: string, pageNo: number, limit: number, tabPageIndex: number): Promise<QTTabPageData> {
+  getTabContent(tabId: string, pageNo: number, limit: number): Promise<QTTabPageData> {
     const replacements = {
       id:tabId,
       packageName:BuildConfig.packageName,

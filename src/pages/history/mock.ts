@@ -10,7 +10,7 @@ export interface Item {
 }
 
 export const buildMockData = (tag: string = '观看历史', limit: number = 100): Item[] => {
-  let arr: Item[] = []
+  const arr: Item[] = []
   for (let i = 1; i <= limit; i++) {
     arr.push({
       type: 1,

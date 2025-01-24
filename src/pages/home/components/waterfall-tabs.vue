@@ -362,7 +362,7 @@ const onTabMoveToBottomEnd = () => {
  * @param e
  */
 const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem, e) => {
-  log.e("XRG",JSON.stringify(item.jumpParams))
+
   launch.launch(item.jumpParams)
 
   //4K内容跳转的时候 将图片设置回来
@@ -604,7 +604,7 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
 
 }
 const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
-  homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit, tabPageIndex)
+  homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit)
     .then(async (tabContent: any) => {
       const tabPage: QTTabPageData = await buildTabContentAdapter(tabContent, pageNo, tabId, tabPageIndex)
       if (tabPage.data.length > 0) {
