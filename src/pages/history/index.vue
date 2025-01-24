@@ -6,7 +6,7 @@
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
 
       <!-- 数据渲染 -->
-      <qt-ul class="history-sidebar" :items="sidebarData">
+      <qt-ul class="history-sidebar" :data="sidebarData">
         <template #default="{ index, item }">
           <qt-view class="history-sidebar-item" :type="1" :focusable="true" @focus="(e) => onSidebarItemFocus(e, index)">
             <qt-text
@@ -54,7 +54,7 @@
       <qt-ul
         class="history-content-ul"
         ref="ulRef"
-        :items="contentData"
+        :data="contentData"
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"

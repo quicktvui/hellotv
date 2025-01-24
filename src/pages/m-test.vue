@@ -1,6 +1,12 @@
 <template>
   <div class='qt-test'>
-    <qt-ul class="qt-ul" ref="qtulRef" name="qt-ul" :items="myData" :spanCount="6">
+    <qt-ul 
+      class="qt-ul" 
+      ref="qtulRef" 
+      name="qt-ul" 
+      :data="myData" 
+      :spanCount="6" 
+      @load-more="loadMore">
       <template #default="{item}">
         <div class="qt-ul-item" v-if="item.type == 5" :focusable="true" :enableFocusBorder="true"
           @focus="e => onFocus(e)">
@@ -54,6 +60,7 @@ import { ref,nextTick, onMounted } from 'vue'
   })
   const onFocus = (e) => {
   }
+  const loadMore = () => {}
   
 </script>
 
