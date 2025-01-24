@@ -68,6 +68,7 @@
             class="history-content-ul-item"
             v-if="item.type === 1"
             :focusable="true"
+            :focusScale="1.03"
             @focus="onContentItemFocus"
             @click="onContentItemClick(index)"
           >
