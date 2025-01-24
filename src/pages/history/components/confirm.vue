@@ -1,14 +1,12 @@
 <template>
   <qt-view class="history-confirm" :focusable="false">
     <qt-view class="history-confirm-box" :focusable="false">
-      <qt-view class="history-confirm-box-top" :focusable="false">
-        <qt-text class="history-confirm-box-top-text" :text="content.text" gravity="center" :focusable="false"></qt-text>
-      </qt-view>
+      <qt-text class="history-confirm-box-top-text" :text="content.text" gravity="center" :focusable="false"></qt-text>
       <qt-view class="history-confirm-box-btn" :focusable="false">
         <qt-button
           :buttonStyle="btnStyle"
           :textStyle="btnTextStyle"
-          style="margin-right: 44px"
+          style="margin-right: 40px"
           :autofocus="true"
           :text="content.btnL"
           @click="onClick('delete')"
@@ -27,19 +25,17 @@ import { useESRouter } from '@extscreen/es3-router'
 const toast = useESToast()
 const router = useESRouter()
 const eventBus = useESEventBus()
-
 const btnStyle = {
-  width: '310px',
-  height: '96px',
-  backgroundColor: 'rgba(255, 255, 255, 0.2)',
+  width: '260px',
+  height: '80px',
+  backgroundColor: 'rgba(255, 255, 255, 0.1)',
   focusBackgroundColor: '#FFFFFF',
-  borderRadius: '50px'
+  borderRadius: '40px'
 }
-
 const btnTextStyle = {
-  color: '#FFFFFF',
-  focusColor: '#000000',
-  fontSize: '34px'
+  color: 'rgba(202, 203, 204, 1)',
+  focusColor: 'rgba(0, 0, 0, 1)',
+  fontSize: '36px'
 }
 
 type Options = {
@@ -116,39 +112,32 @@ defineExpose({ onESCreate, onBackPressed })
 .history-confirm {
   width: 1920px;
   height: 1080px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.8);
   align-items: center;
   justify-content: center;
 }
 
 .history-confirm-box {
-  width: 814px;
-  height: 438px;
-  background-color: #303030;
-  border-radius: 12px;
-}
-
-.history-confirm-box-top {
-  width: 814px;
-  height: 258px;
-  background-color: transparent;
-  align-items: center;
-  justify-content: center;
+  width: 1000px;
+  height: 575px;
+  background-color: rgba(28, 34, 43, 1);
+  border-radius: 8px;
 }
 
 .history-confirm-box-top-text {
-  width: 774px;
-  height: 58px;
+  width: 1000px;
+  height: 50px;
   background-color: transparent;
-  color: #ffffff;
-  font-size: 38px;
-  font-weight: 500;
+  margin-top: 175px;
+  color: white;
+  font-size: 40px;
 }
 
 .history-confirm-box-btn {
-  width: 814px;
-  height: 96px;
+  width: 1000px;
+  height: 80px;
   background-color: transparent;
+  margin-top: 190px;
   flex-direction: row;
   justify-content: center;
 }

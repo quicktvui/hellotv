@@ -6,7 +6,7 @@
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
 
       <!-- 数据渲染 -->
-      <qt-ul class="history-sidebar" :data="sidebarData">
+      <qt-ul class="history-sidebar" ref="sidebarRef" :data="sidebarData" :autofocusPosition="0">
         <template #default="{ index, item }">
           <qt-view class="history-sidebar-item" :type="1" :focusable="true" @focus="(e) => onSidebarItemFocus(e, index)">
             <qt-text
@@ -55,6 +55,7 @@
         class="history-content-ul"
         ref="ulRef"
         :data="contentData"
+        :useDiff="true"
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
@@ -143,6 +144,7 @@ const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
+const sidebarRef = ref<QTIListView>()
 const ulRef = ref<QTIListView>()
 const sidebarData = ref<QTListViewItem[]>([])
 const contentData = ref<QTListViewItem[]>([])
@@ -230,7 +232,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
   } else {
     router.push({
       name: 'confirm',
-      params: { text: '清空之后什么都没有了哦～', btnL: '确定清空', btnR: '取消', menuIndex: lastIndex, clearHistory: true }
+      params: { text: '清空之后什么都没有了哦～', btnL: '确定', btnR: '取消', menuIndex: lastIndex, clearHistory: true }
     })
   }
 }
