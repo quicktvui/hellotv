@@ -17,16 +17,16 @@
     <!-- 按钮区域 -->
     <qt-view class="search-keyboard-btns" :blockFocusDirections="['up']">
       <qt-button
+        class="search-keyboard-btn"
         text="清空"
-        class='search-keyboard-btn'
         :textStyle="textStyle"
         :icon="icClear"
         :focusIcon="icClearFocused"
         @click="onBtnClick('clear')"
       />
       <qt-button
+        class="search-keyboard-btn"
         text="退格"
-        class='search-keyboard-btn'
         :textStyle="textStyle"
         :icon="icBack"
         :focusIcon="icBackFocused"
@@ -37,6 +37,7 @@
     <qt-grid-view
       class="search-keyboard-grid"
       ref="gridRef"
+      name="keyboardGrid"
       :spanCount="6"
       :autofocusPosition="14"
       :nextFocusName="{ right: 'keywordList' }"
@@ -61,7 +62,7 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { QTIGridView, QTListViewItem } from '@quicktvui/quicktvui3'
-import ThemeConfig from "../../../config/theme-config"
+import ThemeConfig from '../../../config/theme-config'
 import icSearch from '../../../assets/search/ic_search.png'
 import icClear from '../../../assets/search/ic_clear.png'
 import icClearFocused from '../../../assets/search/ic_clear_focused.png'
@@ -131,6 +132,4 @@ function onBackPressed() {
 defineExpose({ onBackPressed })
 </script>
 
-<style scoped lang="scss" src="../scss/search-keyboard.scss">
-
-</style>
+<style scoped lang="scss" src="../scss/search-keyboard.scss"></style>
