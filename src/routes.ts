@@ -1,10 +1,13 @@
 import { ESRouteType } from '@extscreen/es3-router'
-import home from './pages/home/index.vue'
-// import detail from './pages/detail/index.vue'
-import test from './pages/m-test.vue'
 
 // 筛选布局模式选择
 import filterConfig from './pages/filter/config'
+import home from './pages/home/index.vue'
+// import detail from './pages/detail/index.vue'
+import test from './pages/m-test.vue'
+// 搜索布局模式选择
+import searchConfig from './pages/search/config'
+
 const filter = () => {
   switch (filterConfig.layoutMode) {
     case 1:
@@ -16,8 +19,6 @@ const filter = () => {
   }
 }
 
-// 搜索布局模式选择
-import searchConfig from './pages/search/config'
 const search = () => {
   switch (searchConfig.layoutMode) {
     case 2:
@@ -73,7 +74,19 @@ const routes = [
     component: () => import('./pages/detail-full-screen/index.vue')
   },
   { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
-  { name: 'confirm', path: '/confirm', component: () => import('./pages/history/components/confirm-dialog.vue') },
+  {
+    name: 'confirm',
+    path: '/confirm',
+    component: () => import('./pages/history/components/confirm-dialog.vue')
+  },
+
+  {
+    path: '/exit-dialog',
+    name:'exit_dialog',
+    component: ()=> import('./pages/home/components/exit-dialog.vue'),
+    type:ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
+
   {
     path: '/test',
     name: 'test',

@@ -2,7 +2,16 @@
   <div class='home-root-css' ref='homeRef'>
     <waterfall-tabs ref='homeWaterTabRef'>
       <template #topView>
-        <top-view :logoRight='true' downSid='tabNavBarSid'>
+        <top-view downSid='tabNavBarSid'>
+          <template #topOtherBtn>
+            <div class='home-resource-root'
+                 :focusScale='ThemeConfig.placeHolderFocusScale'
+                 :focusable='true'
+                 @click='resourceClick'>
+              <img class='home-resource-img' :src='resourceImg' />
+            </div>
+
+          </template>
         </top-view>
       </template>
     </waterfall-tabs>
@@ -16,12 +25,24 @@
 import { ESKeyEvent } from '@extscreen/es3-core'
 import { ref } from 'vue'
 import TopView from '../../components/top-view.vue'
+import launch from '../../tools/launch'
+import { TopResource } from './adapter/exit/home-exit-imp'
+import homeManager from './api'
 import WaterfallTabs from './components/waterfall-tabs.vue'
+import ThemeConfig from '../../config/theme-config'
 
 const homeWaterTabRef = ref()
+let resourceImg = ref("")
+let topResource:TopResource
 
 const onESCreate = (params) => {
   homeWaterTabRef.value?.onESCreate(params)
+  homeManager.getHomeResource().then((res:TopResource)=>{
+    if (res && res.url){
+      topResource = res
+      resourceImg.value = res.url
+    }
+  })
 }
 const onESPause = () => {
   homeWaterTabRef.value?.onESPause()
@@ -42,7 +63,15 @@ const onKeyUp = (keyEvent: ESKeyEvent) => {
   homeWaterTabRef.value?.onKeyUp(keyEvent)
 }
 const onBackPressed = () => {
-  homeWaterTabRef.value?.onBackPressed()
+  if (homeWaterTabRef.value?.onBackPressed()){
+    return true
+  }
+  launch.launchExitDialog()
+}
+const resourceClick = ()=>{
+  if (topResource.jumpParams){
+    launch.launch(topResource.jumpParams)
+  }
 }
 defineExpose({
   onESCreate,

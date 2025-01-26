@@ -9,14 +9,13 @@ import { Section4KItem } from '../adapter/tab-content/tab-content-imp'
 import TabContentItemType from '../adapter/tab-content/tab-content-item-type'
 import {
   home4KUrl,
-  homePlayUrl,
+  homePlayUrl, homeResources, homeRetention,
   tabContentUrl,
   tabListUrl
 } from './request-url'
-import { HomeApi } from '../adapter/interface'
+import { HomeApi } from './interface'
 import BuildConfig from '../../../config/build-config'
 import {replacePlaceholders} from '../../../tools/common'
-
 
 class HomeManager implements HomeApi{
 
@@ -81,6 +80,16 @@ class HomeManager implements HomeApi{
       }
       return build4KSectionData([])
     })
+  }
+
+  getHomeResource():Promise<object>{
+    const url = homeResources + BuildConfig.packageName
+    return requestManager.get(url)
+  }
+
+  getHomeRetention(): Promise<any> {
+    const url = homeRetention + BuildConfig.packageName
+    return requestManager.get(url)
   }
 }
 

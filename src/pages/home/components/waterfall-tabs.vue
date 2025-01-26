@@ -85,7 +85,7 @@
 <script lang='ts' setup name='waterfall-tabs'>
 
 import { ESKeyCode, ESKeyEvent, ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
-import { useESRouter } from '@extscreen/es3-router'
+
 import { EventBus, Native } from '@extscreen/es3-vue'
 import {
   QTITab,
@@ -167,7 +167,7 @@ const qtTabSectionEnable = {
   //共享功能waterfall-shared-item使用需设置 itemStoreEnable 为true
   itemStoreEnable: true
 }
-const router = useESRouter()
+
 const toast = useESToast()
 const waterfallBgRef = ref()
 const waterfallLogo4kRef = ref()
@@ -797,8 +797,8 @@ const onKeyDown = (keyEvent: ESKeyEvent) => {
 const onKeyUp = (keyEvent: ESKeyEvent) => {
 
 }
-const onBackPressed = () => {
-  router.back()
+const onBackPressed = ():boolean => {
+  return false
 }
 defineExpose({
   onESCreate,

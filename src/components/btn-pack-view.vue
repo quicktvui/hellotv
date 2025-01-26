@@ -12,7 +12,7 @@
          :gradientBackground='focusedGradientBg'
          class='bg-css' />
     <!--    图标-->
-    <div :style='iconRootStyle' duplicateParentState>
+    <div :style='iconRootStyle' duplicateParentState v-if='normalIcon'>
       <img v-if='normalIcon' :style='iconStyle' duplicateParentState showOnState='normal'
            :src='normalIcon' />
       <img v-if='focusIcon' :style='iconStyle' duplicateParentState showOnState='focused'

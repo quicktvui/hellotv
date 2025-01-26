@@ -1,0 +1,89 @@
+
+.exit-dialog-root-css {
+  width: 1920px;
+  height: 1080px;
+  align-items: center;
+  background-color: rgba(0,0,0,0.8);
+}
+.exit-dialog-content-top{
+  width: 1152px;
+  height: 185px;
+  margin-top: 201px;
+  flex-direction: row;
+  background-color: transparent;
+}
+.exit-dialog-content-top-icon{
+  width: 214px;
+  height: 362px;
+  margin-left: 72px;
+  margin-top: -65px;
+  background-color: transparent;
+}
+.exit-dialog-content-top-tip{
+  width: 660px;
+  height: 46px;
+  color: white;
+  font-size: 40px;
+  line-height: 46px;
+  margin-left: 35px;
+  margin-top: 89px;
+  background-color: transparent;
+}
+.exit-dialog-content-top-corner{
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 299px;
+  height: 60px;
+  border-top-right-radius: 42px;
+  border-bottom-left-radius: 30px;
+  background-color: rgba(255,255,255,0.15);
+  align-items: center;
+  .img-corner{
+    width: 230px;
+    height: 43px;
+    margin-top: 6px;
+  }
+}
+.exit-dialog-content-bottom{
+  width: 1152px;
+  height: 408px;
+  background-color: #1C222B;
+  border-bottom-left-radius: 42px;
+  border-bottom-right-radius: 42px;
+}
+
+.exit-dialog-list-view{
+  width: 1152px;
+  height: 408px;
+  background-color: transparent;
+}
+
+.exit-dialog-list-item{
+  width: 320px;
+  height: 276px;
+  background-color: transparent;
+}
+
+.exit-dialog-list-item-img{
+  width: 320px;
+  height: 180px;
+  background-color: rgba(255, 255, 255, 0.1);
+  border-radius: $theme-img-border;
+  margin-bottom: 16px;
+}
+.exit-dialog-list-item-text{
+  width: 320px;
+  height: 80px;
+  background: transparent;
+  color:rgba(255,255,255,0.55);
+  focus-color:white;
+}
+.exit-dialog-btn-root-css{
+  width: 1152px;
+  height: 90px;
+  margin-top: 60px;
+  flex-direction: row;
+  justify-content: center;
+  background-color: transparent;
+}

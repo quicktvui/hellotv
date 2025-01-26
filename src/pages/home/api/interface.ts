@@ -34,5 +34,9 @@ export interface HomeApi {
    * @param type WATERFALL_SECTION type
    */
   get4KSection(content4kId:string,size:number,type:number):Promise<Array<QTWaterfallItem>>
+
+  getHomeResource():Promise<object>
+
+  getHomeRetention():Promise<any>
 }
 
