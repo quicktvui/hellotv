@@ -138,9 +138,9 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
-import { buildMockData } from './mock'
 import { buildContents, buildEndContent } from './adapter/index'
 import historyManager from './api/index'
+import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
@@ -223,7 +223,7 @@ function onContentItemClick(index) {
         toast.showToast('删除失败')
       })
   } else {
-    toast.showToast(`跳转->${index}`)
+    launch.launchDetail(contentData.value[index].id)
   }
 }
 
