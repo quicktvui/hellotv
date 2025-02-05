@@ -233,6 +233,22 @@ function registerQTULViewComponent(app: ESApp) {
       'scrollYGreaterReference',
       'scrollYLesserReference'
     ],
+    props: {
+      data: {
+        type: Array,
+        default: () => []
+      },
+      loadMore: {
+        type: Function,
+        default: function () {
+          return null
+        }
+      },
+      disableVirtualDOM: {
+        type: Boolean,
+        default: true
+      }
+    },
     setup(props, context) {
       const viewRef = ref()
       function scrollToIndex(x: number, y: number, animated?: boolean, duration?: number, offset?: number) {
@@ -388,6 +404,7 @@ function registerQTULViewComponent(app: ESApp) {
           holders.splice(currentArrNew.length)
           holders.map((item, index) => {
             item.position = index
+            item.itemType = currentArrNew[index].type
             return item
           })
           console.log(holders,'333333333333')
@@ -436,9 +453,8 @@ function registerQTULViewComponent(app: ESApp) {
         console.log('++bindHolder', batch)
         // let {batch } = params
         const list = [...(Array.isArray(batch) ? batch : [batch])]
-        console.log(holders.length, list, '2333333333333')
         for (let i = 0; i < list.length; i++) {
-          const { position, sid } = list[i]
+          const { position, sid, itemType } = list[i]
           const hIndex = extractNum(sid)
           if (hIndex != -1 && holders[hIndex]) {
             console.log('--bindHolder', `position:${position}, childIndex:${hIndex} holder:${holders[hIndex]}-sid:${sid}`)
@@ -460,6 +476,9 @@ function registerQTULViewComponent(app: ESApp) {
         if (bindItem) {
           console.log('batchbatch2', '++bindHolder', bindItem)
           bindH(bindItem)
+          if (bindItem[bindItem.length - 1].position == props.data.length - 1) {
+            props.loadMore()
+          }
         }
         // nextTick(() => {
         //   Native.callUIFunction(viewRef.value, 'notifyBatchEnd', []);
@@ -488,7 +507,7 @@ function registerQTULViewComponent(app: ESApp) {
         ]
       }
       const renderHolders = (holders) => {
-        console.log('holders called ', `holderCount:${holders.length}`)
+        console.log('holders called ',holders, `holderCount:${holders.length}`)
         const children = holders.map((hd: any, index: number) => {
           // console.log('holders called ', `index:${index} position:${hd.position},holderCount:${holders.length},sid:${hd.sid}`)
           // console.log('holders called ', `index:${index} item:${JSON.stringify(listData[hd.position])}`)
@@ -597,6 +616,9 @@ function registerQTULViewComponent(app: ESApp) {
               context.emit('item-detached', evt)
             },
             onBindItem: (evt) => {
+              // if (evt.position == props.data.length - 1) {
+              //   props.loadMore()
+              // }
               context.emit('item-bind', evt)
             },
             onUnbindItem: (evt) => {
@@ -628,16 +650,6 @@ function registerQTULViewComponent(app: ESApp) {
         )
       }
     },
-    props: {
-      data: {
-        type: Array,
-        default: () => []
-      },
-      disableVirtualDOM: {
-        type: Boolean,
-        default: true
-      }
-    }
   })
   app.component('qt-ul', QTULViewImpl)
 }

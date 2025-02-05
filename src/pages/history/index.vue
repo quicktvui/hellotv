@@ -62,8 +62,9 @@
         :blockFocusDirections="['down']"
         :openPage="true"
         :listenBoundEvent="true"
+        @item-bind="onItemBind"
         :listenHasFocusChange="true"
-        @loadMore="onContentloadMore"
+        :loadMore="onContentloadMore"
         @scroll-state-changed="onScrollStateChanged"
       >
         <template #default="{ index, item }">
@@ -145,6 +146,7 @@ import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
 import config from './config'
+import { Content, ContentType } from './adapter/interface'
 
 const toast = useESToast()
 const router = useESRouter()
@@ -187,7 +189,7 @@ onUnmounted(() => {
   eventBus.off('clearPageData')
 })
 
-let lastIndex = 0
+let lastIndex = -1
 let lastFocusName = ''
 function onSidebarItemFocus(evt, index) {
   if (evt.isFocused) {
@@ -237,10 +239,11 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
     if (page === 1) {
       contentData.value = buildContents(records)
     } else {
-      contentData.value.push(...buildContents(records))
+      contentData.value = contentData.value.concat(buildContents(records))
+      // contentData.value.push(...buildContents(records))
     }
     // 到底提示
-    if (contentData.value.length > 12) {
+    if (contentData.value.length > config.ContentsLimit) {
       contentData.value.push(buildEndContent())
     }
     // 结束分页
@@ -274,6 +277,8 @@ function onBtnClick(name: 'cancel' | 'clear') {
     })
   }
 }
+
+function onItemBind () {}
 
 function clearPageData() {
   isEmpty.value = true
