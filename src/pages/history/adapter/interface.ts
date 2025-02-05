@@ -10,6 +10,7 @@ export enum ContentType {
 export interface Content {
   type: ContentType
   itemSize: number
+  id: string
   title?: string
   progress?: string
   image?: string

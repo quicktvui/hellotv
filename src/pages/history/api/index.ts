@@ -1,6 +1,6 @@
 import { replacePlaceholders } from '../../../tools/common'
 import { HistoryApi, Records } from './interface'
-import { historyRecordsUrl } from './request-url'
+import { DelHistoryRecordsUrl, historyRecordsUrl } from './request-url'
 import requestManager from '../../../tools/request'
 
 class HistoryManager implements HistoryApi {
@@ -12,6 +12,16 @@ class HistoryManager implements HistoryApi {
         type,
         page,
         limit
+      })
+    )
+  }
+  // 删除/清空历史、收藏记录
+  delRecords(deviceId: string, type: 'history' | 'favorite', recordId?: string): Promise<any> {
+    return requestManager.delete(
+      replacePlaceholders(DelHistoryRecordsUrl, {
+        deviceId,
+        type,
+        recordId
       })
     )
   }

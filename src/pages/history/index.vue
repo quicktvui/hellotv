@@ -214,7 +214,14 @@ function onContentItemFocus(evt) {
 
 function onContentItemClick(index) {
   if (isEditing.value) {
-    contentData.value.splice(index, 1)
+    historyManager
+      .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[index].id)
+      .then(() => {
+        contentData.value.splice(index, 1)
+      })
+      .catch(() => {
+        toast.showToast('删除失败')
+      })
   } else {
     toast.showToast(`跳转->${index}`)
   }

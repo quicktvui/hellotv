@@ -9,6 +9,7 @@ export const buildContents = (records: Records): Content[] => {
       contents.push({
         type: ContentType.Normal,
         itemSize: 266,
+        id: item.id,
         title: item.title,
         progress: `${Math.floor((item.viewedDuration / item.totalDuration) * 100)}%`,
         image: item.coverH,
@@ -24,6 +25,7 @@ export const buildEndContent = (): Content => {
   return {
     type: ContentType.End,
     itemSize: 100,
+    id: '',
     decoration: { bottom: 140 }
   }
 }
