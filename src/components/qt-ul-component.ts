@@ -372,41 +372,30 @@ function registerQTULViewComponent(app: ESApp) {
       function setAutoFocus(tag: string, delay: number) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
-      const holders = reactive<any[]>([])
-      const isReduce = ref(false)
-      watch(
-        () => props.data,
-        (hs) => {
-          isReduce.value = false
-          const currentArrOLd = JSON.parse(JSON.stringify(hs))
-          const currentArrNew = toRaw(currentArrOLd)
-          console.log(currentArrNew.length, holders.length, '333333333333')
-          if (currentArrNew.length < 1) {
-            // 数据清空 清空holedes保持数据同步
-            holders.splice(0)
-          }
-          if (currentArrNew.length < holders.length) {
-            // 新增数据少于原始数据做减法处理
-            isReduce.value = true
-            console.log(holders, '333333333333')
-            holders.splice(currentArrNew.length)
-            holders.map((item, index) => {
-              item.position = index
-              return item
-            })
-            console.log(holders, '333333333333')
-          }
-          Native.callUIFunction(viewRef.value, 'setListDataWithParams', [
-            currentArrNew,
-            false,
-            false,
-            {
-              RealDOMTypes: [1, 2]
-            }
-          ])
-        },
-        { deep: true }
-      )
+      const holders  = reactive<any[]>([])
+      let isReduce = ref(false)
+      watch(() => props.data, (hs) => {
+        isReduce.value = false
+        const currentArrOLd = JSON.parse(JSON.stringify(hs))
+        const currentArrNew = toRaw(currentArrOLd)
+        console.log(currentArrNew.length, holders.length,'333333333333')
+        if(currentArrNew.length < 1){ // 数据清空 清空holedes保持数据同步
+          holders.splice(0)
+        }
+        if(currentArrNew.length < holders.length){ // 新增数据少于原始数据做减法处理
+          isReduce.value = true
+          console.log(holders,'333333333333')
+          holders.splice(currentArrNew.length)
+          holders.map((item, index) => {
+            item.position = index
+            return item
+          })
+          console.log(holders,'333333333333')
+        }
+        Native.callUIFunction(viewRef.value, 'setListDataWithParams', [currentArrNew, false,false,{
+          RealDOMTypes:[1,2]
+        }]);
+      }, { deep: true })
       function extractNum(input: string): number {
         // 找到最后一个 '-' 的位置
         const lastDashIndex = input.lastIndexOf('-')
@@ -458,14 +447,14 @@ function registerQTULViewComponent(app: ESApp) {
         }
       }
       function handleBatch(params: any) {
-        console.log('batchbatch1', '++handleBatch', params)
+        console.log('batchbatch1','++handleBatch',params)
         const { createItem, bindItem, recycleItem, hashTag } = params
         // Native.callUIFunction(viewRef.value, 'notifyBatchStart', [hashTag]);
         // if(recycleItem){
         //   recycleH(recycleItem)
         // }
         if (createItem) {
-          console.log('batchbatch2', '++createHolder', createItem)
+          console.log('batchbatch2','++createHolder',createItem)
           crateH(createItem, hashTag)
         }
         if (bindItem) {
