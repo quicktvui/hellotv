@@ -10,7 +10,7 @@
 
 ## 页面布局
 
-![image](../../../doc/filter/design.jpg)
+![image](../../../doc/filter/design.png)
 
 ### 基础单页面（single-contents.vue）
 

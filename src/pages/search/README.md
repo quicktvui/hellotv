@@ -9,7 +9,7 @@
 
 ## 页面布局
 
-![image](../../../doc/search/design.jpg)
+![image](../../../doc/search/design.png)
 
 ### 两栏页面（two-columns.vue）
 
