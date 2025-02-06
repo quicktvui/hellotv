@@ -29,20 +29,6 @@
 
 ```bash
 src/pages/search
-├── README.md                   // 自述文件
-├── adapter                     // 数据适配器
-│   ├── index.ts
-│   └── interface.ts
-├── components                  // 页面组件
-│   ├── search-content.vue
-│   ├── search-keyboard.vue
-│   └── search-keyword.vue
-├── scss                        // 样式文件
-│   ├── search-content.scss
-├── config.ts                   // 页面级配置
-└── three-columns.vue           // 三栏页面入口
-
-src/pages/search
 ├── README.md                               // 自述文件
 ├── adapter                                 // 数据转换及类型定义
 │   ├── index.ts
