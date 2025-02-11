@@ -259,6 +259,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 function onContentloadMore() {
   if (!stopPage) {
     loadRecords(lastIndex, ++page)
+    console.log(page,'32323444444444444444')
   }
 }
 

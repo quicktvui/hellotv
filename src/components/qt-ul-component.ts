@@ -1,5 +1,6 @@
 import { defineComponent, h, nextTick, onMounted, ref, renderSlot, toRaw, watch, reactive } from 'vue'
 import { ESApp, Native, registerElement } from '@extscreen/es3-vue'
+import { display } from '@extscreen/es3-core'
 interface ESListViewItemDecoration {
   left?: number
   top?: number
@@ -459,8 +460,10 @@ function registerQTULViewComponent(app: ESApp) {
           if (hIndex != -1 && holders[hIndex]) {
             console.log('--bindHolder', `position:${position}, childIndex:${hIndex} holder:${holders[hIndex]}-sid:${sid}`)
             holders[hIndex].position = position
+            holders[hIndex].itemType = itemType
           }
         }
+        console.log(holders,'2333333333333333333333')
       }
       function handleBatch(params: any) {
         console.log('batchbatch1','++handleBatch',params)
@@ -502,13 +505,14 @@ function registerQTULViewComponent(app: ESApp) {
         return [
           renderSlot(context.slots, 'default', {
             index: hd.position,
-            item: props.data ? props.data[hd.position] : {}
+            item: props.data && props.data[hd.position] ? props.data[hd.position] : {}
           })
         ]
       }
       const renderHolders = (holders) => {
         console.log('holders called ',holders, `holderCount:${holders.length}`)
         const children = holders.map((hd: any, index: number) => {
+          console.log(hd,'234879jghjgjgjgjgjg')
           // console.log('holders called ', `index:${index} position:${hd.position},holderCount:${holders.length},sid:${hd.sid}`)
           // console.log('holders called ', `index:${index} item:${JSON.stringify(listData[hd.position])}`)
           return h(
