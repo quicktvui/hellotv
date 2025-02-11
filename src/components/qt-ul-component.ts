@@ -1,4 +1,4 @@
-import { defineComponent, h, nextTick, onMounted, ref, renderSlot, toRaw, watch ,reactive} from 'vue'
+import { defineComponent, h, nextTick, onMounted, ref, renderSlot, toRaw, watch, reactive } from 'vue'
 import { ESApp, Native, registerElement } from '@extscreen/es3-vue'
 interface ESListViewItemDecoration {
   left?: number
@@ -233,6 +233,22 @@ function registerQTULViewComponent(app: ESApp) {
       'scrollYGreaterReference',
       'scrollYLesserReference'
     ],
+    props: {
+      data: {
+        type: Array,
+        default: () => []
+      },
+      loadMore: {
+        type: Function,
+        default: function () {
+          return null
+        }
+      },
+      disableVirtualDOM: {
+        type: Boolean,
+        default: true
+      }
+    },
     setup(props, context) {
       const viewRef = ref()
       function scrollToIndex(x: number, y: number, animated?: boolean, duration?: number, offset?: number) {
@@ -373,7 +389,9 @@ function registerQTULViewComponent(app: ESApp) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
       const holders  = reactive<any[]>([])
+      let isReduce = ref(false)
       watch(() => props.data, (hs) => {
+        isReduce.value = false
         const currentArrOLd = JSON.parse(JSON.stringify(hs))
         const currentArrNew = toRaw(currentArrOLd)
         console.log(currentArrNew.length, holders.length,'333333333333')
@@ -381,12 +399,12 @@ function registerQTULViewComponent(app: ESApp) {
           holders.splice(0)
         }
         if(currentArrNew.length < holders.length){ // 新增数据少于原始数据做减法处理
-          const end = holders.length - currentArrNew.length
+          isReduce.value = true
           console.log(holders,'333333333333')
           holders.splice(currentArrNew.length)
-          console.log(holders,'333333333333')
           holders.map((item, index) => {
             item.position = index
+            item.itemType = currentArrNew[index].type
             return item
           })
           console.log(holders,'333333333333')
@@ -413,15 +431,21 @@ function registerQTULViewComponent(app: ESApp) {
         console.log('++createHolder', batch.length, 'hashTag', hashTag)
         // let {batch ,hashTag} = evt
         const list = [...(Array.isArray(batch) ? batch : [batch])]
+        console.log(holders.length, list, '1333333333333')
         for (let i = 0; i < list.length; i++) {
           console.log('++createHolder list[i]:', list[i])
           const { itemType, position } = list[i]
-          holders.push({
-            itemType: itemType,
-            sid: -1,
-            position: position
-          })
-          holders[holders.length - 1].sid = `hd-${hashTag}-${holders.length - 1}`
+          if (isReduce.value) {
+            holders[position].itemType = itemType
+            holders[position].sid = `hd-${hashTag}-${position}}`
+          } else {
+            holders.push({
+              itemType: itemType,
+              sid: -1,
+              position: position
+            })
+            holders[holders.length - 1].sid = `hd-${hashTag}-${holders.length - 1}`
+          }
         }
         //children.push(h(type, params))
       }
@@ -430,7 +454,7 @@ function registerQTULViewComponent(app: ESApp) {
         // let {batch } = params
         const list = [...(Array.isArray(batch) ? batch : [batch])]
         for (let i = 0; i < list.length; i++) {
-          const { position, sid } = list[i]
+          const { position, sid, itemType } = list[i]
           const hIndex = extractNum(sid)
           if (hIndex != -1 && holders[hIndex]) {
             console.log('--bindHolder', `position:${position}, childIndex:${hIndex} holder:${holders[hIndex]}-sid:${sid}`)
@@ -450,8 +474,11 @@ function registerQTULViewComponent(app: ESApp) {
           crateH(createItem, hashTag)
         }
         if (bindItem) {
-          console.log('batchbatch2','++bindHolder',bindItem)
+          console.log('batchbatch2', '++bindHolder', bindItem)
           bindH(bindItem)
+          if (bindItem[bindItem.length - 1].position == props.data.length - 1) {
+            props.loadMore()
+          }
         }
         // nextTick(() => {
         //   Native.callUIFunction(viewRef.value, 'notifyBatchEnd', []);
@@ -470,8 +497,7 @@ function registerQTULViewComponent(app: ESApp) {
           }
         }
       }
-      onMounted(() => {
-      })
+      onMounted(() => {})
       const renderItems = (hd) => {
         return [
           renderSlot(context.slots, 'default', {
@@ -481,7 +507,7 @@ function registerQTULViewComponent(app: ESApp) {
         ]
       }
       const renderHolders = (holders) => {
-        console.log('holders called ', `holderCount:${holders.length}`)
+        console.log('holders called ',holders, `holderCount:${holders.length}`)
         const children = holders.map((hd: any, index: number) => {
           // console.log('holders called ', `index:${index} position:${hd.position},holderCount:${holders.length},sid:${hd.sid}`)
           // console.log('holders called ', `index:${index} item:${JSON.stringify(listData[hd.position])}`)
@@ -590,6 +616,9 @@ function registerQTULViewComponent(app: ESApp) {
               context.emit('item-detached', evt)
             },
             onBindItem: (evt) => {
+              // if (evt.position == props.data.length - 1) {
+              //   props.loadMore()
+              // }
               context.emit('item-bind', evt)
             },
             onUnbindItem: (evt) => {
@@ -621,16 +650,6 @@ function registerQTULViewComponent(app: ESApp) {
         )
       }
     },
-    props: {
-      data: {
-        type: Array,
-        default: () => []
-      },
-      disableVirtualDOM: {
-        type: Boolean,
-        default: true
-      },
-    }
   })
   app.component('qt-ul', QTULViewImpl)
 }

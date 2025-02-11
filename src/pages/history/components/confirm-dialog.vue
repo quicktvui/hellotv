@@ -21,6 +21,7 @@
 import { ref } from 'vue'
 import { useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
+import historyManager from '../api/index'
 
 const toast = useESToast()
 const router = useESRouter()
@@ -61,18 +62,15 @@ function onClick(btn: string) {
   switch (btn) {
     case 'delete':
       if (content.value.clearHistory) {
-        eventBus.emit('clearPageData')
-        router.back()
-
-        // historyApi.deleteContent({ menuIndex: content.value.menuIndex, cid: '', userId: content.value.userId }).then((ok) => {
-        //   if (ok) {
-        //     eventBus.emit('deletePageData', '', content.value.menuIndex == 0, true)
-        //     router.back()
-        //   } else {
-        //     toast.showToast('清空失败！！！')
-        //   }
-        //   btnClickCounter = 0
-        // })
+        historyManager
+          .delRecords('xxx', content.value.menuIndex == 0 ? 'history' : 'favorite')
+          .then(() => {
+            eventBus.emit('clearPageData')
+            router.back()
+          })
+          .catch(() => {
+            toast.showToast('清空失败')
+          })
       } else {
         // historyApi
         //   .deleteContent({ menuIndex: content.value.menuIndex, cid: content.value.cid, userId: content.value.userId })

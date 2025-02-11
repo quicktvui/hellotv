@@ -60,6 +60,11 @@
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
         :blockFocusDirections="['down']"
+        :openPage="true"
+        :listenBoundEvent="true"
+        @item-bind="onItemBind"
+        :listenHasFocusChange="true"
+        :loadMore="onContentloadMore"
         @scroll-state-changed="onScrollStateChanged"
       >
         <template #default="{ index, item }">
@@ -68,6 +73,7 @@
             class="history-content-ul-item"
             v-if="item.type === 1"
             :focusable="true"
+            :focusScale="1.03"
             @focus="onContentItemFocus"
             @click="onContentItemClick(index)"
           >
@@ -133,10 +139,14 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
-import { buildMockData } from './mock'
+import { buildContents, buildEndContent } from './adapter/index'
+import historyManager from './api/index'
+import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
+import config from './config'
+import { Content, ContentType } from './adapter/interface'
 
 const toast = useESToast()
 const router = useESRouter()
@@ -162,47 +172,38 @@ const textStyle = {
   focusColor: '#13161B'
 }
 
+let page = 1
+let stopPage = false
+
 onMounted(() => {
   eventBus.on('clearPageData', clearPageData)
-
+  // 初始化左侧列表
   sidebarData.value = [
     { type: 1, itemSize: 106, id: 1, text: '观看历史' },
     { type: 1, itemSize: 106, id: 2, text: '我的收藏' },
     { type: 1, itemSize: 106, id: 3, text: '已购内容' }
   ]
-  contentData.value = buildMockData()
 })
 
 onUnmounted(() => {
   eventBus.off('clearPageData')
 })
 
-let lastIndex = 0
+let lastIndex = -1
 let lastFocusName = ''
-let loadingDelayTimer: any = -1
 function onSidebarItemFocus(evt, index) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
 
     if (lastIndex !== index) {
+      page = 1
+      stopPage = false
       lastIndex = index
       isLoading.value = true
+      // 右侧内容复原
       ulRef.value?.scrollToTop()
-      switch (index) {
-        case 0:
-          contentData.value = buildMockData()
-          break
-        case 1:
-          contentData.value = buildMockData(sidebarData.value[index].text, 10)
-          break
-        default:
-          contentData.value = []
-      }
-      isEmpty.value = contentData.value.length === 0
-
-      // 延迟关闭loading
-      clearTimeout(loadingDelayTimer)
-      loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+      // 加载新数据
+      loadRecords(index)
     }
   }
 }
@@ -215,9 +216,49 @@ function onContentItemFocus(evt) {
 
 function onContentItemClick(index) {
   if (isEditing.value) {
-    contentData.value.splice(index, 1)
+    historyManager
+      .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[index].id)
+      .then(() => {
+        contentData.value.splice(index, 1)
+      })
+      .catch(() => {
+        toast.showToast('删除失败')
+      })
   } else {
-    toast.showToast(`跳转->${index}`)
+    launch.launchDetail(contentData.value[index].id)
+  }
+}
+
+let loadingDelayTimer: any = -1
+async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.ContentsLimit) {
+  console.log('ok->', menuIndex, page)
+  if (menuIndex === 2) {
+    contentData.value = []
+  } else {
+    const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
+    if (page === 1) {
+      contentData.value = buildContents(records)
+    } else {
+      contentData.value = contentData.value.concat(buildContents(records))
+      // contentData.value.push(...buildContents(records))
+    }
+    // 到底提示
+    if (contentData.value.length > config.ContentsLimit) {
+      contentData.value.push(buildEndContent())
+    }
+    // 结束分页
+    stopPage = records.items.length < config.ContentsLimit
+  }
+  isEmpty.value = contentData.value.length === 0
+
+  // 延迟关闭loading
+  clearTimeout(loadingDelayTimer)
+  loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+}
+
+function onContentloadMore() {
+  if (!stopPage) {
+    loadRecords(lastIndex, ++page)
   }
 }
 
@@ -236,6 +277,8 @@ function onBtnClick(name: 'cancel' | 'clear') {
     })
   }
 }
+
+function onItemBind () {}
 
 function clearPageData() {
   isEmpty.value = true
@@ -273,6 +316,12 @@ function onBackPressed() {
   // 右侧内容滚动状态检查
   if (offsetY > 0) {
     ulRef.value?.scrollToTop()
+    return
+  }
+
+  // 左侧列表焦点
+  if (lastFocusName !== 'sidebar') {
+    sidebarRef.value?.setItemFocused(0)
     return
   }
 

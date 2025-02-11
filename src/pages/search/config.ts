@@ -1,6 +1,6 @@
 export default {
   // 布局模式, 2 两栏、3 三栏
-  layoutMode: 3,
+  layoutMode: 2,
   // 关键词列表分页大小
   listKeywordsLimit: 60,
   // 搜索结果分页大小
