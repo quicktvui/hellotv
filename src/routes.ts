@@ -5,6 +5,7 @@ import filterConfig from './pages/filter/config'
 import home from './pages/home/index.vue'
 // import detail from './pages/detail/index.vue'
 import test from './pages/m-test.vue'
+import playTest from  './pages/play-test.vue'
 // 搜索布局模式选择
 import searchConfig from './pages/search/config'
 
@@ -91,6 +92,11 @@ const routes = [
     path: '/test',
     name: 'test',
     component: test
+  },
+  {
+    path:'/playTest',
+    name:'playTest',
+    component: playTest
   }
 ]
 

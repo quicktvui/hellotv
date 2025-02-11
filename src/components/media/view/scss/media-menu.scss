@@ -29,6 +29,7 @@
 .media-menu-icon-root-css .icon-item{
   position: absolute;
   @extend %icon-size;
+  background-color: transparent;
 }
 .media-menu-icon-root-css .icon-item-text{
   position: absolute;
