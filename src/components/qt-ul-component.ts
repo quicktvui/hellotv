@@ -389,7 +389,7 @@ function registerQTULViewComponent(app: ESApp) {
         Native.callUIFunction(viewRef.value, 'setAutoFocus', [tag, delay])
       }
       const holders  = reactive<any[]>([])
-      let isReduce = ref(false)
+      const isReduce = ref(false)
       watch(() => props.data, (hs) => {
         isReduce.value = false
         const currentArrOLd = JSON.parse(JSON.stringify(hs))
@@ -412,7 +412,7 @@ function registerQTULViewComponent(app: ESApp) {
         Native.callUIFunction(viewRef.value, 'setListDataWithParams', [currentArrNew, false,false,{
           RealDOMTypes:[1,2]
         }]);
-      }, { deep: true })
+      }, { deep: true ,immediate:true})
       function extractNum(input: string): number {
         // 找到最后一个 '-' 的位置
         const lastDashIndex = input.lastIndexOf('-')

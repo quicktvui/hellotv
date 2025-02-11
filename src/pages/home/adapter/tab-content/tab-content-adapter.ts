@@ -89,7 +89,7 @@ export async function buildTabContentAdapter(tabContent: TabContent, pageNo: num
       //存储板块高度 用于判断是否展示底部提示
       saveSectionTotalHeight(sectionHeight, tabId)
       const firstSectionIndex: boolean = sectionIndex === 0 && isFirstPage
-      if (sectionType === SectionType.TYPE_SWIPER_PLAY) {
+      if (sectionType === SectionType.TYPE_SWIPER_PLAY && section.contentId) {
         //获取展示的板块高度
         section.style.height = buildSectionHeightBySectionType(section)
         const buildSectionData: QTWaterfallSection = await buildSmall4KSection(section, tabPageIndex, sectionIndex, firstSectionIndex, firstSectionMarginTop)
@@ -150,7 +150,11 @@ export function getSectionHeight(section: Section): number {
   //获取是否展示板块标题 flag
   const showTitle = section.showTitle
   if (showTitle) {
-    sectionHeight += TabContentConfig.sectionGap + TabContentConfig.sectionTitleHeightDefault
+    if (section.type === SectionType.TYPE_SWIPER_PLAY){//放映厅板块 需要展示标题的时候，不加间距高度
+      sectionHeight += TabContentConfig.sectionTitleHeightDefault
+    }else{
+      sectionHeight += TabContentConfig.sectionGap + TabContentConfig.sectionTitleHeightDefault
+    }
   }
   return sectionHeight
 }
@@ -578,7 +582,7 @@ export function buildSmallSection(section: Section, sectionWaterfallItemList: Ar
     type: buildSectionType(section.type),
     title: section.showTitle ? section.title.text : '',
     titleStyle: buildSectionTitleStyle(section),
-    decoration: buildSmall4KSectionDecoration(isFirstSection, firstSectionMarginTop),
+    decoration: buildSectionDecoration(isFirstSection, firstSectionMarginTop),
     style: buildSectionStyle(section.style.height),
     listStyle:{width:1920,height:484},
     replaceChildStyle:{
@@ -619,27 +623,6 @@ export function buildSectionDecoration(isFirstSection: boolean, firstSectionMarg
   } else {
     decoration = {
       top: TabContentConfig.sectionItemGap
-    }
-  }
-  return decoration
-}
-
-/**
- * build 小 4K 板块间距
- * @param isFirstSection
- * @param firstSectionMarginTop
- */
-export function buildSmall4KSectionDecoration(isFirstSection: boolean, firstSectionMarginTop: number): QTListViewItemDecoration {
-  let decoration: QTListViewItemDecoration
-  if (isFirstSection) {
-    const offset = barsDataManager.barsData.itemList?.length > 1 ? 45 : TabContentConfig.firstSectionOffsetY
-    decoration = {
-      top: TabContentConfig.firstSectionTop + firstSectionMarginTop + offset
-    }
-  } else {
-    const top = TabContentConfig.sectionItemGap + 30
-    decoration = {
-      top: top
     }
   }
   return decoration
@@ -855,6 +838,7 @@ export async function buildSmall4KSection(section: Section,tabPageIndex: number,
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SMALL_4K
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
   barsDataManager.barsData.itemList[tabPageIndex].sectionIndex = sectionIndex
+  //todo 记得放开 contentId
   // const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
   const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
   if (res && res.length > 0) {
