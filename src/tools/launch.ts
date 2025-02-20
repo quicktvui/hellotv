@@ -198,11 +198,12 @@ class Launch {
    * @param params
    */
   jumpNative(args: Array<any> = [], params = []) {
+    let mArgs = args
     const mParam = this.buildParams(params)
     if (mParam && mParam.length > 0) {
-      args.push(mParam)
+      mArgs = args.concat(mParam)
     }
-    this.nativeRouter.launch(args).then(() => {})
+    this.nativeRouter.launch(mArgs).then(() => {})
   }
 
   /**
@@ -216,7 +217,7 @@ class Launch {
         const key = item['key']
         const value = item['value']
         const type = item['type']
-        mParam = this.decodeParams(key, value, type)
+        mParam.push(this.decodeParams(key, value, type))
       }
     }
     return mParam

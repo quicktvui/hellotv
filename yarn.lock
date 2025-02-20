@@ -1229,10 +1229,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-ad-player/-/es3-ad-player-1.0.9.tgz#32e6329c06abacb717b4c6e36f4050f575f6bb9b"
   integrity sha512-8+n6MwzeDGi9x6/bdK5A2YWpbU4mkQoUnjxTaJr12B5An/pskD7qFsaompYhnHiai9zXGmiExZkiw8FxUGm5zw==
 
-"@extscreen/es3-component@1.0.27":
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.27.tgz#90cf32a136904665d85b2e2bfbe8aaa367598292"
-  integrity sha512-ohvY9JYW4pOeTz9iPCgm52lHWR1/qTUKvpz2+Ci2PmwnrQ33M2ADeJCnZkN+jJ9yFKG9n59M7pav9cV2AxJ5PQ==
+"@extscreen/es3-component@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.32.tgz#433c0389f3a6e5f4a3ea7f806d8fe1fb14b1a2dc"
+  integrity sha512-+5uxU0GYW5RkdIwua+AHkuuOxMDmL067QyRqxt8hUvlG5zDhh5OiCVA0kcrdiJvaVlOXQgedmEKWru6bq1lBCw==
 
 "@extscreen/es3-core@1.1.24":
   version "1.1.24"
