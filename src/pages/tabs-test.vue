@@ -6,7 +6,7 @@
       </tab-pane>
     </el-tabs> -->
     <ul class="tabs-header tabs-header-top" horizontal :focusable="false">
-      <li v-for="(item, index) in tabHeaderData" class="tabs-header-item" :focusable="true"
+      <li v-for="(item, index) in tabHeaderData" class="tabs-header-item" :focusable="true" :key='index'
         @focus="(e) => onLiFocus(e, item, index)">
         <span style="height: 60px;" :focusable="false" class="tabs-header-item-text">{{`tab${item}`}}</span>
       </li>
@@ -22,7 +22,7 @@
       <template #default="{item}">
         <div class="qt-ul-item" v-if="item.type == 1" :focusable="true" :enableFocusBorder="true"
           @focus="e => onFocus(e)" :style="item.style">
-          <img :src="item ? item.img : ''" class="tv_item_img" 
+          <img :src="item ? item.img : ''" class="tv_item_img"
             :style="{ width: `${item.style.width}px` }"/>
           <p class="tv_item_title">
             {{item ? `tab${currentTabIndex}-${item.text}` :''}}
@@ -35,7 +35,7 @@
           <template #default="{sItem}">
             <div class="qt-ul-item" :type="22" :focusable="true" :enableFocusBorder="true"
               @focus="e => onFocus(e)" :style="sItem.style">
-              <img :src="sItem ? sItem.img : ''" class="tv_item_img" 
+              <img :src="sItem ? sItem.img : ''" class="tv_item_img"
                 :style="{ width: `${sItem.style.width}px` }"/>
               <p class="tv_item_title">
                 {{sItem ? `tab${currentTabIndex}-${sItem.text}` :''}}
@@ -60,10 +60,10 @@ import { ref,nextTick, onMounted, reactive } from 'vue'
   let tabHeaderData = ref([
     0,1,2,3,4,5,6,7,8,9
   ])
-  
+
   let cData  = ref<any[]>([])
   let arr:Array<any> = []
-  
+
   const buildData0 = () => {
     arr = []
     for (let i = 0; i < 24; i++) {
@@ -193,7 +193,7 @@ import { ref,nextTick, onMounted, reactive } from 'vue'
   width: 1920px;
   height: 80px;
   background-color: red;
-  
+
 }
 .tab-test{
   .tabs-header-top{
@@ -291,7 +291,7 @@ import { ref,nextTick, onMounted, reactive } from 'vue'
     width: 1920px;
     height: 1080px;
     p{
-    font-size: 30px; 
+    font-size: 30px;
     text-align: center;
     }
   }

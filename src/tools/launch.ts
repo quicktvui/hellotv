@@ -211,7 +211,7 @@ class Launch {
    * @param params
    */
   buildParams(params: []) {
-    let mParam = []
+    const mParam = []
     if (params && params.length > 0) {
       for (const item of params) {
         const key = item['key']

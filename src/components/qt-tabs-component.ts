@@ -5,7 +5,7 @@ import _ from 'lodash';
 function registerTabPaneViewComponent(app: ESApp) {
   const QTTabPaneViewImpl = defineComponent({
     emits: [
-      
+
     ],
     props: {
       label: {
@@ -74,12 +74,12 @@ function registerTABSViewComponent(app: ESApp) {
     setup(props, context) {
       const viewRef = ref()
       const swiperRef = ref()
-      let currentIndex = ref(0)
-      let updateIndex = ref(0)
+      const currentIndex = ref(0)
+      const updateIndex = ref(0)
       let recordContentNode: Array<any> = []
       let currentArr: Array<any> = []
       watch(() => props.data, (hs) => {
-        
+
       }, { deep: true })
       onMounted(() => {})
       context.expose({
@@ -87,19 +87,19 @@ function registerTABSViewComponent(app: ESApp) {
       })
       // 渲染导航节点
       const renderNav = (childNode) => {
-        let children: any = [];
+        const children: any = [];
         let i: number =  -1
         childNode.map((item: any, index: number) => {
           if(item.type.props && item.type.props.tagName.default === 'tab-pane'){
             i++
-            let itemNode = buildNavItemNode(item,i)
+            const itemNode = buildNavItemNode(item,i)
             children.push(itemNode)
           }else{
             if(String(item.type) == 'Symbol(v-fgt)' && item.children.length > 0){
               item.children.map((sItem: any) => {
                 if(sItem.type.props && sItem.type.props.tagName.default === 'tab-pane'){
                   i++
-                  let itemNode = buildNavItemNode(sItem,i)
+                  const itemNode = buildNavItemNode(sItem,i)
                   children.push(itemNode)
                 }
               })
@@ -123,7 +123,7 @@ function registerTABSViewComponent(app: ESApp) {
             focusable: true,
             enableFocusBorder: true,
             onFocus: (evt: any) => {
-              let obj = {
+              const obj = {
                 index: index,
                 label: item.props.label,
                 isFocused: evt.isFocused
@@ -148,15 +148,15 @@ function registerTABSViewComponent(app: ESApp) {
       }
       // 渲染swiper节点
       const renderContent = (childNode) => {
-        let children: any = [];
-        let newChildren: any = [];
+        const children: any = [];
+        const newChildren: any = [];
         let i: number =  -1
         recordContentNode = []
         currentArr = []
         childNode.map((item: any, index: number) => {
           if(item.type.props && item.type.props.tagName.default === 'tab-pane'){
             i++
-            let itemNode = buildContentNode(item,i)
+            const itemNode = buildContentNode(item,i)
             children.push(itemNode)
             recordContentNode.push(itemNode)
             currentArr.push(itemNode)
@@ -165,7 +165,7 @@ function registerTABSViewComponent(app: ESApp) {
               item.children.map((sItem: any) => {
                 if(sItem.type.props && sItem.type.props.tagName.default === 'tab-pane'){
                   i++
-                  let itemNode = buildContentNode(sItem,i)
+                  const itemNode = buildContentNode(sItem,i)
                   children.push(itemNode)
                   recordContentNode.push(itemNode)
                   currentArr.push(itemNode)
@@ -213,7 +213,7 @@ function registerTABSViewComponent(app: ESApp) {
         nextTick(() => {
           console.log('tabs render end ')
         })
-        let children = context.slots.default && context.slots.default()
+        const children = context.slots.default && context.slots.default()
         let navNode: any
         let contentNode: any
         if(children!.length > 0){
