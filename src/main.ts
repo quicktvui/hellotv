@@ -11,7 +11,7 @@ import { MYTABSComponent } from './components/qt-tabs-component'
 
 //--------------------components-----------------------
 const routerOptions = {
-  main: 'tabsTest',
+  main: 'activity',
   error: 'error',
   limit: 5,
   routes: routes
