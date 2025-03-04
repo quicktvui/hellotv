@@ -31,7 +31,7 @@
         <!-- 带标题格子(图片上/图片下)-->
         <inner-out-title-item :type='TabContentItemType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
-        <place-holder-item :type='TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER' />
+        <placeholder-item :type='TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentItemType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
       </template>
@@ -51,8 +51,8 @@ import launch from '../../tools/launch'
 import BgAnimation from '../../components/bg-animation.vue'
 import NoTitleItem from './components/item/no-title-item.vue'
 import InnerOutTitleItem from './components/item/inner-out-title-item.vue'
-import FocusChangeImgItem from './components/item/place-holder-item.vue'
-import PlaceHolderItem from './components/item/focus-change-img-item.vue'
+import PlaceholderItem  from './components/item/placeholder-item.vue'
+import FocusChangeImgItem  from './components/item/focus-change-img-item.vue'
 
   const router = useESRouter()
   const activityRef = ref()
