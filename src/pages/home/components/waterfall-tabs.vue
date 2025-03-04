@@ -310,7 +310,7 @@ const onTabPageChanged = (pageIndex: number) => {
   curPlayerType = HomePlayType.TYPE_UNDEFINED
   clearTimeout(isMoreFrontTimer)
   //设置首屏图
-  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id, '0', '', true)
+  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id??'', '0', '', true)
 }
 /**
  * 吸顶开始
@@ -327,7 +327,7 @@ const onTabMoveToTopStart = () => {
     waterfallBgPlayerRef.value?.stop()
   }
   //设置二屏图
-  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
 }
 /**
  * 恢复吸顶结束
@@ -349,7 +349,7 @@ const onTabMoveToBottomEnd = () => {
   if (curFirstScreenBg) {
     setFirstScreenImg('', '1', curFirstScreenBg, true)
   } else {
-    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
   }
 
 }
@@ -598,7 +598,7 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
     if (TabBarConfig.tab.id === curTab._id && pageNo === 0) {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
     } else {
-      getTabContent(curTab._id, pageIndex, pageNo + 1)
+      getTabContent(curTab._id??'', pageIndex, pageNo + 1)
     }
   }
 
@@ -763,7 +763,7 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
         } else if (playType === HomePlayType.TYPE_CELL || playType === HomePlayType.TYPE_CELL_LIST) {
           buildRecordPlayerMap(
             tabPageIndex, sectionItemIndex, playType,
-            sectionItem.style.width, sectionItem.style.height,
+            sectionItem.style.width!, sectionItem.style.height!,
             sectionItem?.play?.style?.width, sectionItem?.play?.style?.height,
             0, 0, sectionItem.play.playData)
         }
