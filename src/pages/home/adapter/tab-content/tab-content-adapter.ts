@@ -502,8 +502,7 @@ export function buildTextHistorySectionItem(sectionItem: SectionItem):QTWaterfal
   return {
     type: TabContentItemType.TYPE_ITEM_HISTORY_TEXT,
     style: buildStyle(sectionItem),
-    gradientBackground: { colors: ['#fAff0000', '#99ffffff'],
-      cornerRadius: ThemeConfig.focusBorderCorner, orientation: 7 },
+
   }
 }
 
