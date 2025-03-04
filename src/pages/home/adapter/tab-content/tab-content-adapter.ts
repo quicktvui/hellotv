@@ -29,6 +29,8 @@ class TabsContent {
   tab2BackgroundUrls: Map<string, string> = new Map<string, string>()
   // 首页4k列表第一页数据
   home4KList : Array<any> = []
+  // 记录历史格子位置 {tanIndex: 1, itemIndex: 1}
+  historyItemPos: Array<any> = []
 }
 
 const tabsContent = new TabsContent()
@@ -251,7 +253,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
     for (const sectionItem of sectionItemList) {
       const sectionItemIndex: number = sectionItemList.indexOf(sectionItem)
       //封装格子数据
-      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type)
+      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type, sectionItemIndex)
       //针对一行滚动格子设置decoration
       if (type === SectionType.TYPE_LINE_SCROLL) {
         qtWaterfallItem.decoration = {
@@ -312,7 +314,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
  * @param tabPageIndex
  * @param sectionType
  */
-export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string): QTWaterfallItem {
+export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string, sectionItemIndex?: number): QTWaterfallItem {
   //根据是否展示板块标题和是否是一行滚动
   const posY = sectionItem.posY + (showTitle ? TabContentConfig.sectionItemGap : 0)
   if (sectionType === SectionType.TYPE_LINE_SCROLL) {
@@ -336,6 +338,12 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_TEXT_HISTORY:
     case SectionItemType.TYPE_IMG_HISTORY:
       buildSectionItem = buildTextHistorySectionItem(sectionItem)
+      // 记录历史格子的位置
+      let flag = false
+      tabsContent.historyItemPos.map((item) => {
+        if(item.tabIndex == tabPageIndex) flag = true
+      })
+      if(!flag) tabsContent.historyItemPos.push({tabIndex: tabPageIndex,itemIndex: sectionItemIndex})
       break
     // case SectionItemType.TYPE_IMG_HISTORY:
     //   break

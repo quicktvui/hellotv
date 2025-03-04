@@ -1,6 +1,7 @@
 
 .history-item-root-css{
-  background-color: transparent;
+  background-color: rgba(255,255,255,0.06);
+  border-radius: $theme-img-border;
 }
 .history-item-null-root{
   border-radius: $theme-img-border;
@@ -21,4 +22,71 @@
   margin-top: 14px;
   margin-left: 36px;
   background-color: transparent;
+}
+.h-list{
+  background-color: transparent;
+}
+.no-history-item{
+  background-color: rgba(255,255,255,0.06);
+  border-radius: $theme-img-border;
+}
+.bg-history-item{
+  position: absolute;
+  left: 269px;
+  top: 116px;
+  width: 139px;
+  height: 115px;
+  border-bottom-right-radius: $theme-img-border;
+}
+.history-item{
+  flex-direction: row;
+  background-color: transparent;
+  padding-left: 20px;
+  padding-right: 20px;  
+  focus-background-color: #fff;
+}
+.history-item-text-box{
+  width: 280px;
+  height: 76px;
+  background-color: transparent;
+}
+.history-item-text{
+  position: absolute;
+  width: 280px;
+  height: 76px;
+  color: #fff;
+}
+.history-item-progress{
+  width: 70px;
+  margin-left: 23px;
+  background-color: transparent;
+  color: rgba(255,255,255,0.55);
+  focus-color:#13161B;
+}
+.history-login-item{
+  flex-direction: row;
+  background-color: transparent;
+  padding-left: 20px;
+  padding-right: 20px;  
+  focus-background-color: #fff;
+  align-items: center;
+}
+.history-login-item-text-box{
+  width: 280px;
+  height: 76px;
+  background-color: transparent;
+}
+.history-login-item-text{
+  position: absolute;
+  width: 280px;
+  height: 76px;
+  color: #fff;
+}
+.history-login-item-icon{
+  width: 13px;
+  height: 22px;
+  margin-left: 75px;
+}
+.history-item-line{
+  background-color: rgba(255,255,255,0.1);
 }

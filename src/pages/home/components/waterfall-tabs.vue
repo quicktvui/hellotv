@@ -615,7 +615,10 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
             index = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
           }
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
-          tabRef.value?.setPageData(tabPageIndex, tabPage)
+          //判断当前tab是否有历史格子
+          let historyItemPos: any = tabsContent.historyItemPos.filter((item) => item.tabIndex == tabPageIndex)
+          if(historyItemPos.length > 0) updateHistoryItem(tabPageIndex, tabPage, 1,historyItemPos[0])
+          else tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
           if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
             const sectionIndex = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
@@ -630,6 +633,52 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
     }, () => {
       toast.showToast('加载数据失败，稍后重试！')
     })
+}
+/**
+ * 更新历史格子的数据
+ * @param tabPageIndex
+ * @param tabPage
+ * @param type 1 build数据 2 更新
+ * @param historyItemPos 格子位置
+ */
+const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) => {
+  //历史格子默认配在第一个板块
+  if(type == 1){
+    let item = tabPage.data[0].itemList[historyItemPos.itemIndex]
+    console.log(item,'222222222222222')
+    //无历史
+    // item.historyList = [
+    //   {
+    //     type: 4001,
+    //     style: {width: item.style.width,height: item.style.height},
+    //     text: '暂无历史记录',
+    //   }
+    // ]
+    //有历史
+    item.historyList = [
+      {
+        type: 4002,
+        style: {width: item.style.width,height: 76},
+        text: '步步惊心步步惊心步步惊心',
+        progress: '70%',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+      {
+        type: 4003,
+        style: {width: item.style.width,height: 76},
+        text: '登录同步云端历史',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+    ]
+    console.log(tabPage,'222222222222222')
+    tabRef.value?.setPageData(tabPageIndex, tabPage)
+  }
 }
 /**
  * 加载 4K 数据
