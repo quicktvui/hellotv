@@ -645,7 +645,6 @@ const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) =>
   //历史格子默认配在第一个板块
   if(type == 1){
     let item = tabPage.data[0].itemList[historyItemPos.itemIndex]
-    console.log(item,'222222222222222')
     //无历史
     // item.historyList = [
     //   {
@@ -676,7 +675,6 @@ const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) =>
         style: {width: item.style.width,height: 1},
       },
     ]
-    console.log(tabPage,'222222222222222')
     tabRef.value?.setPageData(tabPageIndex, tabPage)
   }
 }
