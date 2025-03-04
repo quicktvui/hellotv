@@ -323,6 +323,7 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     sectionItem.posY = posY
   }
   let buildSectionItem: QTWaterfallItem
+  let historyItemFlag = false
   const sectionItemType: SectionItemType = sectionItem.type
   switch (sectionItemType) {
     case SectionItemType.TYPE_DEFAULT://无标题
@@ -339,11 +340,10 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_IMG_HISTORY:
       buildSectionItem = buildTextHistorySectionItem(sectionItem)
       // 记录历史格子的位置
-      let flag = false
       tabsContent.historyItemPos.map((item) => {
-        if(item.tabIndex == tabPageIndex) flag = true
+        if(item.tabIndex == tabPageIndex) historyItemFlag = true
       })
-      if(!flag) tabsContent.historyItemPos.push({tabIndex: tabPageIndex,itemIndex: sectionItemIndex})
+      if(!historyItemFlag) tabsContent.historyItemPos.push({tabIndex: tabPageIndex,itemIndex: sectionItemIndex})
       break
     // case SectionItemType.TYPE_IMG_HISTORY:
     //   break

@@ -117,8 +117,6 @@ import PlaceHolderItem from './components/item/focus-change-img-item.vue'
         const firstBgUrl = sectionData.itemList[0]?.imageFocusBackground
         setWTabBg(firstBgUrl)
       }
-    }else if (eventName === "onTabFocusChange"){
-      
     }
   }
   //吸顶开始
