@@ -31,7 +31,7 @@
         <!-- 带标题格子(图片上/图片下)-->
         <inner-out-title-item :type='TabContentItemType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
-        <place-holder-item :type='TabContentItemType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
+        <place-holder-item :type='TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentItemType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
       </template>

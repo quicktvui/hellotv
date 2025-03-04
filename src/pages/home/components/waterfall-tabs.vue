@@ -59,13 +59,13 @@
         <!-- 带标题格子(图片上/图片下)-->
         <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
-        <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
+        <placeholder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACEHOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
         <!-- 小窗播放格子-->
         <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
         <!-- 历史记录格子-->
-        <history-text-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
+        <history-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
       </template>
       <template v-slot:waterfall-section>
         <!-- 4K 模板-->
@@ -114,10 +114,10 @@ import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import CellPlayerItem from './tab-content/cell-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
-import HistoryTextItem from './tab-content/history-text-item.vue'
+import HistoryItem from './tab-content/history-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
-import PlaceHolderItem from './tab-content/place-holder-item.vue'
+import PlaceholderItem from './tab-content/placeholder-item.vue'
 import SmallFourSection from './tab-content/small-4k/small-four-section.vue'
 import WorldFourSection from './tab-content/world-4k/world-four-section.vue'
 
