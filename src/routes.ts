@@ -101,6 +101,11 @@ const routes = [
     path:'/tabsTest',
     name:'tabsTest',
     component: tabsTest
+  },
+  {
+    path:'/activity',
+    name:'activity',
+    component: () => import('./pages/activity/index.vue')
   }
 ]
 

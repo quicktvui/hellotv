@@ -1,0 +1,46 @@
+$home-width:1920px;
+$home-height:1080px;
+
+.activity-root-css{
+  width: $home-width;
+  height: $home-height;
+  background-color: $theme-bg-color;
+}
+
+$nav-bar-margin-top: 114px;
+%full-screen {
+  width: 1920px;
+  height: 1080px;
+}
+
+.waterfall-tabs-root-css {
+  @extend %full-screen;
+  background-color: red;
+}
+
+.waterfall-tabs-bg-player{
+  position: absolute;
+  background-color: transparent;
+}
+
+.waterfall-qt-tabs-css {
+  @extend %full-screen;
+  position: absolute;
+  background-color: transparent;
+}
+
+.waterfall-tab-bar-css {
+  width: 1920px;
+  height: 80px;
+  background-color: transparent;
+  margin-top: $nav-bar-margin-top;
+  z-index: 100;
+  clip-children: false;
+}
+
+.waterfall-content-css {
+  @extend %full-screen;
+  position: absolute;
+  background-color: transparent;
+  clip-children: false;
+}
