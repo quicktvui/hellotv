@@ -99,7 +99,6 @@ class HomeManager implements HomeApi{
     }
     const url = replacePlaceholders(home4KUrl,replacements)
     return requestManager.get(url).then((res:Array<Section4KItem>)=>{
-      console.log("XRG===res===",res)
       if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN){
         return buildShortVideoSectionData(res)
       }

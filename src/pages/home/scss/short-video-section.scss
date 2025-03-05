@@ -4,7 +4,7 @@
   background-color: transparent;
 }
 .short-video-section-list-css {
-  background-color: #669966;
+  background-color: transparent;
 }
 
 .short-video-section-list-item-root-css{
@@ -18,6 +18,7 @@
   height: 144px;
   border-top-left-radius: $theme-img-border;
   border-bottom-left-radius: $theme-img-border;
+  background-color: transparent;
 }
 .short-video-section-list-item-content-div{
   width: 284px;
@@ -40,7 +41,7 @@
   width: 42px;
   height: 30px;
   background-color: transparent;
-  top:12px;
+  top:20px;
   left: 0;
 }
 .short-video-section-list-item-sub-title{
@@ -48,11 +49,10 @@
   width: 284px;
   height: 30px;
   top: 104px;
-  left: 16px;
   color: rgba(255,255,255,0.3);
   select-color: white;
   focus-color:white;
-
+  background-color: transparent;
 }
 
 

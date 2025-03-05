@@ -802,13 +802,14 @@ export function buildShortTabPage(shortVideoId:string,tabPageIndex:number): QTTa
   barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SHORT_SCREEN
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
-  shortVideoId = "1849006805280256002"
+  // TODO test data
+  // shortVideoId = "1849006805280256002"
   const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
   const section: QTWaterfallSection = {
     _id: shortVideoId,
     type: TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,
     style: {
-      width: 600,
+      width: 556,
       height: 800
     },
     shortList:{
@@ -820,7 +821,7 @@ export function buildShortTabPage(shortVideoId:string,tabPageIndex:number): QTTa
     },
     itemList:cacheList && cacheList?.length > 0 ? cacheList : [],
     decoration: {
-      top: TabContentConfig.firstSectionTop - 30,
+      top: TabContentConfig.firstSectionTop,
       left: TabContentConfig.decorationLeftGap
     },
     shortVideoId,
@@ -831,7 +832,6 @@ export function buildShortTabPage(shortVideoId:string,tabPageIndex:number): QTTa
     disableScrollOnFirstScreen: true,
     data: [section]
   }
-  console.log("XRG===333",tabPage)
   return tabPage
 }
 
@@ -908,14 +908,16 @@ export function buildShortVideoSectionData(shortVideoData: Array<Section4KItem>)
           height:144,
         },
         decoration: {
-          top: shortItemIndex == 0 ? 8 : 0,
-          bottom: 30
+          top: shortItemIndex == 0 ? 8 : 10,
+          left:8,
+          bottom: 16
         },
         image: {
           normal: shortItem.image
         },
         title:{
           text: shortItem.title,
+          textFocus:"　 "+shortItem.title,
           sub: shortItem.subTitle,
         },
         jumpParams: shortItem.jumpParams,

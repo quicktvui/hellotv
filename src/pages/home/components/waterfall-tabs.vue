@@ -199,6 +199,9 @@ let delay4KFocusTimer: any = -1
 //小4K
 let small4KTimer: any = -1
 let small4KSetChildSIdTimer: any = -1
+//short
+let shortVideoTimer:any = -1
+
 //当前背景图地址
 let curBg = ''
 //当前首屏图地址
@@ -256,10 +259,9 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
       if (playType === HomePlayType.TYPE_SHORT_SCREEN) {
         //列表恢复原位置
         //todo  记得来修改成动态的sid getPageSection bug修复后
-        // let listSID = sectionData!.listSID
-        // let listSID = "shortVideoListSID"
-        // VirtualView.call(listSID,'scrollToPosition',[0])
-        // VirtualView.call(listSID,'setSelectChildPosition',[0,true])
+        let listSID = sectionData!.shortList.sid
+        VirtualView.call(listSID,'scrollToPosition',[0])
+        VirtualView.call(listSID,'setSelectChildPosition',[0,true])
       } else if (playType === HomePlayType.TYPE_4K) {
         const _4KListSid = sectionData!.list4KSid
         //初始化位置
@@ -417,6 +419,11 @@ const onTabPageItemFocused = (tabPageIndex: number, sectionIndex: number, sectio
     }else{
       is4kSectionItemFocused = false
     }
+    if (item.name === TabContentConfig.shortVideoSectionItemName){
+      if (recordPlayerData.tabPageIndex !== tabPageIndex || recordPlayerData.sectionItemIndex !== sectionItemIndex) {
+        dealShortFocused(tabPageIndex,sectionItemIndex,item)
+      }
+    }
     //背景播放
     if (curPlayerType === HomePlayType.TYPE_BG && sectionIndex === 0) {
       typeBgFocused(tabPageIndex, sectionIndex, sectionItemIndex, item)
@@ -472,6 +479,27 @@ const deal4KFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWat
     recordPlayerData.sectionItemIndex = sectionItemIndex
     waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
     delay4KFocusTimer = setTimeout(()=>{
+      waterfallBgPlayerRef?.value?.play(curBgPlayData)
+    },300)
+  }
+}
+/**
+ * short item 焦点
+ * @param tabPageIndex
+ * @param sectionItemIndex
+ * @param item
+ */
+const dealShortFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWaterfallItem)=>{
+  clearTimeout(shortVideoTimer)
+  waterfallBgPlayerRef?.value.pause()
+  curBgPlayData = item.play.playData
+  if (curBgPlayData && curBgPlayData.length > 0) {
+    const bgUrl = curBgPlayData[0].cover
+    waterfallBgPlayerRef?.value?.setBgImage(bgUrl)
+    recordPlayerData.tabPageIndex = tabPageIndex
+    recordPlayerData.sectionItemIndex = sectionItemIndex
+    waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
+    shortVideoTimer = setTimeout(()=>{
       waterfallBgPlayerRef?.value?.play(curBgPlayData)
     },300)
   }
@@ -703,10 +731,14 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
   }
 }
 
+/**
+ * 加载 short 数据
+ * @param tabPageIndex
+ * @param shortVideoId
+ * @param pageNo
+ */
 const loadShortData = async (tabPageIndex: number, shortVideoId: string,pageNo:number) =>{
-  console.log("XRG==loadShortData=","loadShortData")
   const shortVideoSection = await homeManager.getShortVideoSection(shortVideoId,TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,pageNo,30)
-  console.log("XRG==shortVideoSection=",shortVideoSection)
   if (shortVideoSection && shortVideoSection.length > 0){
     if (pageNo === 1){
       const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
@@ -717,9 +749,12 @@ const loadShortData = async (tabPageIndex: number, shortVideoId: string,pageNo:n
       buildRecordPlayerMap(tabPageIndex, 0, playType, 1920, 1080,
         1920, 1080, 0, 0, shortVideoItem.play.playData)
     }
-    // else{
-    //
-    // }
+    else{
+      // todo 分页加载 看接口，当前接口无分页 有分页，放开下面三行加载代码
+      // const shortSection = tabRef.value?.getPageSection(tabPageIndex,0)
+      // const shortListSid = shortSection?.shortList?.sid
+      // VirtualView.call(shortListSid,'addListData',shortVideoSection)
+    }
 
 
   }
@@ -848,6 +883,7 @@ const onESDestroy = () => {
   clearTimeout(bgTimer)
   clearTimeout(typeBgFocusTimer)
   clearTimeout(delay4KFocusTimer)
+  clearTimeout(shortVideoTimer)
   clearTimeout(small4KTimer)
   clearTimeout(resumePlayTimer)
   clearTimeout(small4KSetChildSIdTimer)

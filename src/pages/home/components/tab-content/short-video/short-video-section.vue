@@ -2,7 +2,7 @@
   <tv-item
     class='short-video-section-root-css'
     flexStyle='${style}' layout='${layout}'
-    :clipChildren='false' :clipPadding='false'
+    :clipChildren='true' :clipPadding='false'
     @item-bind='onItemBind'
   >
     <qt-list-view
@@ -16,6 +16,7 @@
       :pauseTaskOnHide='true'
       :blockFocusDirections="['left','right','down']"
       :autoSelectPosition="0"
+      @loadMore="loadMore"
     >
       <short-video-section-item :type='TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN_ITEM'/>
 
@@ -38,21 +39,28 @@ const props = defineProps({
     type: Function
   }
 })
+let tabPageIndex = -1
+let shortVideoId = ""
+let pageNo = 1
+let loadMoreTimer:any = -1
 const onItemBind = (e) =>{
-  console.log("XRG==onItemBind=",e)
   if (e.item){
     const tabRef = props.getTabRef!()
     const tabDataManager = tabRef.getDataManager()
-    const tabPageIndex = e.pageIndex
-    console.log("XRG==tabPageIndex=",tabPageIndex)
+    tabPageIndex = e.pageIndex
     const curSection = tabDataManager.getSection(tabPageIndex,e.position)
-    console.log("XRG==curSection=",curSection)
     if (curSection.itemList.length < 1){
-      const shortVideoId = e.item.shortVideoId
-      console.log("XRG==shortVideoId=",shortVideoId)
-      emits("loadMore",tabPageIndex,shortVideoId,1)
+      shortVideoId = e.item.shortVideoId
+      emits("loadMore",tabPageIndex,shortVideoId,pageNo)
     }
   }
+}
+const loadMore = (e)=>{
+  clearTimeout(loadMoreTimer)
+  loadMoreTimer = setTimeout(()=>{
+    pageNo ++
+    emits('loadMore',tabPageIndex,shortVideoId,pageNo)
+  },500)
 }
 
 defineExpose({})
