@@ -35,6 +35,8 @@ export interface HomeApi {
    */
   get4KSection(content4kId:string,size:number,type:number):Promise<Array<QTWaterfallItem>>
 
+  getShortVideoSection(shortVideoId:string,type:number,pageNo:number,pageSize:number):Promise<Array<QTWaterfallItem>>
+
   getHomeResource():Promise<object>
 
   getHomeRetention():Promise<any>

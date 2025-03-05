@@ -27,8 +27,9 @@ class TabsContent {
   sectionTotalHeight: Map<string, number> = new Map<string, number>()
   //存储二屏图
   tab2BackgroundUrls: Map<string, string> = new Map<string, string>()
-  // 首页4k列表第一页数据
-  home4KList : Array<any> = []
+  // 首页4k列表,短视频第一页数据
+  homeSectionCacheList : Map<string,Array<any>> = new Map<string, Array<any>>()
+
 }
 
 const tabsContent = new TabsContent()
@@ -51,11 +52,15 @@ export async function buildTabContentAdapter(tabContent: TabContent, pageNo: num
   const {
     firstSectionMarginTop,
     content4kId,
+    shortVideoId,
     disableScrollOnFirstScreen
   } = parseParameter(tabContent.customParams)
   //4K 视频
   if (content4kId && pageNo === 1) {
     return build4kTabPage(content4kId, tabPageIndex)
+  }
+  else if(shortVideoId && pageNo === 1){
+    return buildShortTabPage(shortVideoId,tabPageIndex)
   }
   if (!tabContent || !tabContent.sections || tabContent.sections.length === 0) {
     return {
@@ -218,6 +223,11 @@ export function parseParameter(parameter) {
             params.content4kId = param[j].value
           }
           break
+        case 'shortVideoId':
+          if (param[j].value) {
+            params.shortVideoId = param[j].value
+          }
+          break;
         default:
           if (param[j].value) {
             params[key] = param[j].value
@@ -752,6 +762,7 @@ export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTab
   barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_4K
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  const cacheList = tabsContent.homeSectionCacheList.get(content4kId)
   const section: QTWaterfallSection = {
     _id: content4kId,
     type: TabContentItemType.TYPE_WATERFALL_SECTION_4K,
@@ -764,7 +775,7 @@ export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTab
     },
     list4KSid: 'plate4K' + content4kId,
     content4kId,
-    itemList: tabsContent.home4KList.length > 0 ? tabsContent.home4KList : []
+    itemList: cacheList && cacheList?.length > 0 ? cacheList : []
   }
   const tabPage: QTTabPageData = {
     useDiff: false,
@@ -772,6 +783,48 @@ export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTab
     disableScrollOnFirstScreen: true,
     data: [section]
   }
+  return tabPage
+}
+
+/**
+ * 封装 短视频 板块数据
+ * @param shortVideoId
+ * @param tabPageIndex
+ */
+export function buildShortTabPage(shortVideoId:string,tabPageIndex:number): QTTabPageData{
+  barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+  barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SHORT_SCREEN
+  barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  shortVideoId = "1849006805280256002"
+  const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
+  const section: QTWaterfallSection = {
+    _id: shortVideoId,
+    type: TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,
+    style: {
+      width: 600,
+      height: 800
+    },
+    shortList:{
+      style:{
+        width:556,
+        height:855
+      },
+      sid:'shortVideo'+shortVideoId,
+    },
+    itemList:cacheList && cacheList?.length > 0 ? cacheList : [],
+    decoration: {
+      top: TabContentConfig.firstSectionTop - 30,
+      left: TabContentConfig.decorationLeftGap
+    },
+    shortVideoId,
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    disableScrollOnFirstScreen: true,
+    data: [section]
+  }
+  console.log("XRG===333",tabPage)
   return tabPage
 }
 
@@ -831,15 +884,53 @@ export function build4KSectionData(section4K: Array<Section4KItem>): Array<QTWat
   return waterfallItems
 }
 
+/**
+ * 封装 短视频 板块内容数据
+ * @param shortVideoData 原始内容数据
+ */
+export function buildShortVideoSectionData(shortVideoData: Array<Section4KItem>): Array<QTWaterfallItem>{
+  const waterfallItems: Array<QTWaterfallItem> = []
+  if (shortVideoData && shortVideoData.length > 0){
+    for (const shortItem of shortVideoData) {
+      const shortItemIndex: number = shortVideoData.indexOf(shortItem)
+      const item: QTWaterfallItem = {
+        type: TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN_ITEM,
+        name: TabContentConfig.shortVideoSectionItemName,
+        style:{
+          width: 540,
+          height:144,
+        },
+        decoration: {
+          top: shortItemIndex == 0 ? 8 : 0,
+          bottom: 30
+        },
+        image: {
+          normal: shortItem.image
+        },
+        title:{
+          text: shortItem.title,
+          sub: shortItem.subTitle,
+        },
+        jumpParams: shortItem.jumpParams,
+        play: {
+          playData: shortItem.playData
+        }
+      }
+      waterfallItems.push(item)
+    }
+  }
+  return waterfallItems
+}
+
 export async function buildSmall4KSection(section: Section,tabPageIndex: number, sectionIndex: number,isFirstSection:boolean,firstSectionMarginTop:number):Promise<QTWaterfallSection>{
   let buildSection: QTWaterfallSection = {itemList:[],style:{},type:-1}
   barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SMALL_4K
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
   barsDataManager.barsData.itemList[tabPageIndex].sectionIndex = sectionIndex
-  //todo 记得放开 contentId
-  // const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
-  const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  // todo 记得放开 contentId
+  const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  // const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
   if (res && res.length > 0) {
     buildSection = buildSmallSection(section,res,isFirstSection,firstSectionMarginTop)
   }

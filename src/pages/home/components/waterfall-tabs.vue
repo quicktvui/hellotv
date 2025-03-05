@@ -71,7 +71,12 @@
         <!-- 4K 模板-->
         <world-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_4K' @loadMore='load4KData'
                           :getTabRef='getTabRef' />
+        <!-- 小 4K-->
         <small-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_SMALL_4K'/>
+        <!-- 短视频全屏背景播放-->
+        <short-video-section :type='TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN' @loadMore='loadShortData'
+                             :getTabRef='getTabRef'
+        />
 
       </template>
 
@@ -118,6 +123,7 @@ import HistoryTextItem from './tab-content/history-text-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
 import PlaceHolderItem from './tab-content/place-holder-item.vue'
+import ShortVideoSection from './tab-content/short-video/short-video-section.vue'
 import SmallFourSection from './tab-content/small-4k/small-four-section.vue'
 import WorldFourSection from './tab-content/world-4k/world-four-section.vue'
 
@@ -247,7 +253,7 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
         isMoreFront = false
       }, 2000)
       isMoreFront = true
-      if (playType === HomePlayType.TYPE_SHORT) {
+      if (playType === HomePlayType.TYPE_SHORT_SCREEN) {
         //列表恢复原位置
         //todo  记得来修改成动态的sid getPageSection bug修复后
         // let listSID = sectionData!.listSID
@@ -615,6 +621,7 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
             index = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
           }
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
+
           tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
           if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
@@ -640,7 +647,8 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
   const world4kSection = await homeManager.get4KSection(content4kId,6,TabContentType.TYPE_WATERFALL_SECTION_4K)
 
   if (world4kSection && world4kSection.length > 0) {
-    if (tabsContent.home4KList.length < 1) tabsContent.home4KList = world4kSection
+    const cacheList = tabsContent.homeSectionCacheList.get(content4kId)
+    if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(content4kId,world4kSection)
     tabRef.value!.addPageItemList(tabPageIndex, 0, world4kSection)
     const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
     const section4kItem = world4kSection[0]
@@ -648,6 +656,29 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
       section4kItem?.play?.style?.width, section4kItem?.play?.style?.height, 253.5, TabContentConfig.firstSectionTop, section4kItem.play.playData)
   }
 }
+
+const loadShortData = async (tabPageIndex: number, shortVideoId: string,pageNo:number) =>{
+  console.log("XRG==loadShortData=","loadShortData")
+  const shortVideoSection = await homeManager.getShortVideoSection(shortVideoId,TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,pageNo,30)
+  console.log("XRG==shortVideoSection=",shortVideoSection)
+  if (shortVideoSection && shortVideoSection.length > 0){
+    if (pageNo === 1){
+      const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
+      if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(shortVideoId,shortVideoSection)
+      tabRef.value!.addPageItemList(tabPageIndex, 0, shortVideoSection)
+      const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
+      const shortVideoItem = shortVideoSection[0]
+      buildRecordPlayerMap(tabPageIndex, 0, playType, 1920, 1080,
+        1920, 1080, 0, 0, shortVideoItem.play.playData)
+    }
+    // else{
+    //
+    // }
+
+
+  }
+}
+
 const buildRecordPlayerMap = (tabPageIndex: number, sectionItemIndex: number, playType: HomePlayType, windowWidth: number, windowHeight: number, playerWidth: number, playerHeight: number, left: number, top: number, playerData: Array<IMediaList>): HomePlayData => {
   const obj: HomePlayData = {
     type: HomePlayType.TYPE_UNDEFINED,
@@ -689,7 +720,7 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
   if (isPlay) {
     const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
     if (playType !== HomePlayType.TYPE_UNDEFINED) {
-      if (playType === HomePlayType.TYPE_4K || playType === HomePlayType.TYPE_SHORT) {
+      if (playType === HomePlayType.TYPE_4K || playType === HomePlayType.TYPE_SHORT_SCREEN) {
         tabPage.bindingPlayer = 'bgPlayerReplaceChildSid'
         return
       } else if (playType === HomePlayType.TYPE_SMALL_4K) {

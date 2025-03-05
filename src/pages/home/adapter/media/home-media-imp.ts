@@ -13,8 +13,8 @@ export enum HomePlayType{
   TYPE_BG = 2,
   //4K 播放
   TYPE_4K = 3,
-  //短视频播放
-  TYPE_SHORT = 4,
+  //短视频 全屏背景播放
+  TYPE_SHORT_SCREEN = 4,
   //小 4K 播放
   TYPE_SMALL_4K = 5
 }
