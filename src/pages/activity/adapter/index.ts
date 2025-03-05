@@ -441,7 +441,7 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageInd
  */
 export function buildPlaceHolderSectionItem(sectionItem: SectionItem): QTWaterfallItem {
   return {
-    type: TabContentItemType.TYPE_ITEM_SECTION_PLACE_HOLDER,
+    type: TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER,
     style: buildStyle(sectionItem),
     image: {
       style: {

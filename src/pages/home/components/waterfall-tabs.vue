@@ -59,13 +59,13 @@
         <!-- 带标题格子(图片上/图片下)-->
         <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
-        <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
+        <placeholder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACEHOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
         <!-- 小窗播放格子-->
         <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
         <!-- 历史记录格子-->
-        <history-text-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
+        <history-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
       </template>
       <template v-slot:waterfall-section>
         <!-- 4K 模板-->
@@ -119,11 +119,11 @@ import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import CellPlayerItem from './tab-content/cell-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
-import HistoryTextItem from './tab-content/history-text-item.vue'
+import HistoryItem from './tab-content/history-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
-import PlaceHolderItem from './tab-content/place-holder-item.vue'
 import ShortVideoSection from './tab-content/short-video/short-video-section.vue'
+import PlaceholderItem from './tab-content/placeholder-item.vue'
 import SmallFourSection from './tab-content/small-4k/small-four-section.vue'
 import WorldFourSection from './tab-content/world-4k/world-four-section.vue'
 
@@ -316,7 +316,7 @@ const onTabPageChanged = (pageIndex: number) => {
   curPlayerType = HomePlayType.TYPE_UNDEFINED
   clearTimeout(isMoreFrontTimer)
   //设置首屏图
-  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id, '0', '', true)
+  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id??'', '0', '', true)
 }
 /**
  * 吸顶开始
@@ -333,7 +333,7 @@ const onTabMoveToTopStart = () => {
     waterfallBgPlayerRef.value?.stop()
   }
   //设置二屏图
-  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
 }
 /**
  * 恢复吸顶结束
@@ -355,7 +355,7 @@ const onTabMoveToBottomEnd = () => {
   if (curFirstScreenBg) {
     setFirstScreenImg('', '1', curFirstScreenBg, true)
   } else {
-    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
   }
 
 }
@@ -521,7 +521,7 @@ const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTW
  * @param switchBg
  * @param isLoad
  */
-const setFirstScreenImg = (tabId: string, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
+const setFirstScreenImg = (tabId: string|null, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
   if (isSwitchBg === '1') {
     curFirstScreenBg = firstScreenBg
     setWTabBg(firstScreenBg, isLoad)
@@ -604,7 +604,7 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
     if (TabBarConfig.tab.id === curTab._id && pageNo === 0) {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
     } else {
-      getTabContent(curTab._id, pageIndex, pageNo + 1)
+      getTabContent(curTab._id??'', pageIndex, pageNo + 1)
     }
   }
 
@@ -621,8 +621,10 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
             index = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
           }
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
-
-          tabRef.value?.setPageData(tabPageIndex, tabPage)
+          //判断当前tab是否有历史格子
+          let historyItemPos: any = tabsContent.historyItemPos.filter((item) => item.tabIndex == tabPageIndex)
+          if(historyItemPos.length > 0) updateHistoryItem(tabPageIndex, tabPage, 1,historyItemPos[0])
+          else tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
           if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
             const sectionIndex = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
@@ -637,6 +639,50 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
     }, () => {
       toast.showToast('加载数据失败，稍后重试！')
     })
+}
+/**
+ * 更新历史格子的数据
+ * @param tabPageIndex
+ * @param tabPage
+ * @param type 1 build数据 2 更新
+ * @param historyItemPos 格子位置
+ */
+const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) => {
+  //历史格子默认配在第一个板块
+  if(type == 1){
+    let item = tabPage.data[0].itemList[historyItemPos.itemIndex]
+    //无历史
+    // item.historyList = [
+    //   {
+    //     type: 4001,
+    //     style: {width: item.style.width,height: item.style.height},
+    //     text: '暂无历史记录',
+    //   }
+    // ]
+    //有历史
+    item.historyList = [
+      {
+        type: 4002,
+        style: {width: item.style.width,height: 76},
+        text: '步步惊心步步惊心步步惊心',
+        progress: '70%',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+      {
+        type: 4003,
+        style: {width: item.style.width,height: 76},
+        text: '登录同步云端历史',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+    ]
+    tabRef.value?.setPageData(tabPageIndex, tabPage)
+  }
 }
 /**
  * 加载 4K 数据
@@ -745,7 +791,7 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
         } else if (playType === HomePlayType.TYPE_CELL || playType === HomePlayType.TYPE_CELL_LIST) {
           buildRecordPlayerMap(
             tabPageIndex, sectionItemIndex, playType,
-            sectionItem.style.width, sectionItem.style.height,
+            sectionItem.style.width!, sectionItem.style.height!,
             sectionItem?.play?.style?.width, sectionItem?.play?.style?.height,
             0, 0, sectionItem.play.playData)
         }

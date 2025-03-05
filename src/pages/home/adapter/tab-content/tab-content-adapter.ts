@@ -29,7 +29,8 @@ class TabsContent {
   tab2BackgroundUrls: Map<string, string> = new Map<string, string>()
   // 首页4k列表,短视频第一页数据
   homeSectionCacheList : Map<string,Array<any>> = new Map<string, Array<any>>()
-
+  // 记录历史格子位置 {tanIndex: 1, itemIndex: 1}
+  historyItemPos: Array<any> = []
 }
 
 const tabsContent = new TabsContent()
@@ -261,7 +262,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
     for (const sectionItem of sectionItemList) {
       const sectionItemIndex: number = sectionItemList.indexOf(sectionItem)
       //封装格子数据
-      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type)
+      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type, sectionItemIndex)
       //针对一行滚动格子设置decoration
       if (type === SectionType.TYPE_LINE_SCROLL) {
         qtWaterfallItem.decoration = {
@@ -322,7 +323,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
  * @param tabPageIndex
  * @param sectionType
  */
-export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string): QTWaterfallItem {
+export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string, sectionItemIndex?: number): QTWaterfallItem {
   //根据是否展示板块标题和是否是一行滚动
   const posY = sectionItem.posY + (showTitle ? TabContentConfig.sectionItemGap : 0)
   if (sectionType === SectionType.TYPE_LINE_SCROLL) {
@@ -331,6 +332,7 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     sectionItem.posY = posY
   }
   let buildSectionItem: QTWaterfallItem
+  let historyItemFlag = false
   const sectionItemType: SectionItemType = sectionItem.type
   switch (sectionItemType) {
     case SectionItemType.TYPE_DEFAULT://无标题
@@ -346,6 +348,11 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_TEXT_HISTORY:
     case SectionItemType.TYPE_IMG_HISTORY:
       buildSectionItem = buildTextHistorySectionItem(sectionItem)
+      // 记录历史格子的位置
+      tabsContent.historyItemPos.map((item) => {
+        if(item.tabIndex == tabPageIndex) historyItemFlag = true
+      })
+      if(!historyItemFlag) tabsContent.historyItemPos.push({tabIndex: tabPageIndex,itemIndex: sectionItemIndex})
       break
     // case SectionItemType.TYPE_IMG_HISTORY:
     //   break
@@ -496,7 +503,7 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageInd
  */
 export function buildPlaceHolderSectionItem(sectionItem: SectionItem): QTWaterfallItem {
   return {
-    type: TabContentItemType.TYPE_ITEM_SECTION_PLACE_HOLDER,
+    type: TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER,
     style: buildStyle(sectionItem),
     image: {
       style: {

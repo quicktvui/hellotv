@@ -23,7 +23,7 @@ export const TabContentConfig = {
 export const TabContentItemType = {
   TYPE_ITEM_SECTION_NO_TITLE : 0,//带边框无标题格子
   TYPE_ITEM_SECTION_HAS_TITLE : 1,//带标题格子(上方/下方)
-  TYPE_ITEM_SECTION_PLACE_HOLDER : 3,//占位格子
+  TYPE_ITEM_SECTION_PLACEHOLDER : 3,//占位格子
   TYPE_ITEM_HISTORY_TEXT: 4,//历史格子-文字
   TYPE_ITEM_HISTORY_IMG: 5,//历史格子-图片
   TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG : 6,//焦点变图格子

@@ -9,10 +9,18 @@ import checkFile from 'eslint-plugin-check-file'
  *  @Html typescript-eslint 规则url: https://typescript-eslint.io/rules/
  *  @Html vue               规则url: https://eslint.vuejs.org/rules/
  */
+
 export default [
 
   { files: ['**/*.{js,ts,vue}'] },
-  { languageOptions: { globals: globals.node } },
+  { 
+    languageOptions: {
+      globals:  {
+        ...globals.node,
+        qt: "readonly"
+      }
+    } 
+  },
   pluginJs.configs.recommended,
   ...tsEslint.configs.recommended,
   ...pluginVue.configs['flat/essential'],
