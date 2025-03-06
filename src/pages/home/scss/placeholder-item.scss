@@ -1,14 +1,14 @@
 
-.place-holder-root-css{
+.placeholder-root-css{
   position: absolute;
   background-color: transparent;
   display: flex;
   z-index: 1;
 }
 
-.place-holder-img{
+.placeholder-img{
   position: absolute;
   background-color: transparent;
-  border-radius: $gl-theme-img-border;
+  border-radius: $theme-img-border;
   z-index: 899;
 }

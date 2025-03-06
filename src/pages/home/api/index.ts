@@ -1,23 +1,21 @@
 import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import barsDataManager, { buildTabBarAdapter } from '../adapter/tab-bar/tab-bar-adapter'
+import barsDataManager  from '../adapter/tab-bar/tab-bar-adapter'
 import {
-  build4KSectionData,
-  buildSmall4KSectionData,
-  buildTabContentAdapter
+  build4KSectionData, buildShortVideoSectionData,
+  buildSmall4KSectionData
 } from '../adapter/tab-content/tab-content-adapter'
 import requestManager from '../../../tools/request'
 import { Section4KItem } from '../adapter/tab-content/tab-content-imp'
 import TabContentItemType from '../adapter/tab-content/tab-content-item-type'
 import {
   home4KUrl,
-  homePlayUrl,
+  homePlayUrl, homeResources, homeRetention,
   tabContentUrl,
   tabListUrl
 } from './request-url'
-import { HomeApi } from '../adapter/interface'
+import { HomeApi } from './interface'
 import BuildConfig from '../../../config/build-config'
 import {replacePlaceholders} from '../../../tools/common'
-
 
 class HomeManager implements HomeApi{
 
@@ -35,9 +33,8 @@ class HomeManager implements HomeApi{
    * @param tabId
    * @param pageNo
    * @param limit
-   * @param tabPageIndex
    */
-  getTabContent(tabId: string, pageNo: number, limit: number, tabPageIndex: number): Promise<QTTabPageData> {
+  getTabContent(tabId: string, pageNo: number, limit: number): Promise<QTTabPageData> {
     const replacements = {
       id:tabId,
       packageName:BuildConfig.packageName,
@@ -82,6 +79,35 @@ class HomeManager implements HomeApi{
         return buildSmall4KSectionData([])
       }
       return build4KSectionData([])
+    })
+  }
+
+  getHomeResource():Promise<object>{
+    const url = homeResources + BuildConfig.packageName
+    return requestManager.get(url)
+  }
+
+  getHomeRetention(): Promise<any> {
+    const url = homeRetention + BuildConfig.packageName
+    return requestManager.get(url)
+  }
+
+  getShortVideoSection(shortVideoId: string, type: number,pageNo:number,pageSize:number): Promise<Array<QTWaterfallItem>> {
+    const replacements = {
+      id:shortVideoId,
+      packageName:BuildConfig.packageName,
+    }
+    const url = replacePlaceholders(home4KUrl,replacements)
+    return requestManager.get(url).then((res:Array<Section4KItem>)=>{
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN){
+        return buildShortVideoSectionData(res)
+      }
+      return buildShortVideoSectionData([])
+    },()=>{
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN){
+        return buildShortVideoSectionData([])
+      }
+      return buildShortVideoSectionData([])
     })
   }
 }

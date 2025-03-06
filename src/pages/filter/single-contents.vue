@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="filter" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="filter" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <!-- 顶部按钮 -->
     <top-view name="topView" :logoRight="true" />
     <!-- 内容主体 -->

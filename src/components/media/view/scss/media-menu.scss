@@ -6,8 +6,8 @@
 }
 %menu-item{
   border-radius: 45px;
-  background-color: $gl-theme-btn-bg-normal-color;
-  focus-background-color:$gl-theme-btn-bg-focus-color;
+  background-color: $theme-btn-normal-color;
+  focus-background-color:$theme-btn-focus-color;
   justify-content: center;
   align-items: center;
   flex-direction: row;
@@ -29,13 +29,14 @@
 .media-menu-icon-root-css .icon-item{
   position: absolute;
   @extend %icon-size;
+  background-color: transparent;
 }
 .media-menu-icon-root-css .icon-item-text{
   position: absolute;
   height: 72px;
   left: 75px;
-  color:$text-normal-color;
-  focus-color:$text-focus-color;
+  color:$theme-text-normal-color;
+  focus-color:$theme-text-focus-color;
 }
 /************* menu text css ****************/
 %menu-text-item-parent-size{
@@ -50,8 +51,8 @@
 }
 .media-menu-text-root-css .text-item{
   @extend %menu-text-item-parent-size;
-  color:$text-normal-color;
-  focus-color:$text-focus-color;
+  color:$theme-text-normal-color;
+  focus-color:$theme-text-focus-color;
 }
 
 /************* menu detail css ****************/
@@ -90,17 +91,17 @@ $item-height:102px;
 .media-menu-detail-item-root-css{
   @extend %menu-detail-parent-size;
   border-radius: 9px;
-  background-color: $gl-theme-btn-bg-normal-color;
-  focus-background-color:$gl-theme-btn-bg-focus-color;
+  background-color: $theme-btn-normal-color;
+  focus-background-color:$theme-btn-focus-color;
 }
 .media-menu-detail-item-root-css .item-text{
   position: absolute;
   @extend %menu-detail-parent-size;
   left: 0.1px;
   top: 0.1px;
-  color:$text-normal-color;
-  focus-color:$text-focus-color;
-  select-color:$text-select-color;
+  color:$theme-text-normal-color;
+  focus-color:$theme-text-focus-color;
+  select-color:$theme-text-select-color;
   background-color: transparent;
 }
 .media-menu-detail-item-root-css .item-icon{

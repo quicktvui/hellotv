@@ -13,8 +13,8 @@ export default {
   packageName: 'es.tv.huan.hellotv',
   //域名
   // requestBaseUrl: process.env.requestBaseUrl || 'http://cms.hmon.tv/es_single/api',
-  requestBaseUrl: 'http://mockapi.quicktv.net/api',
-  // requestBaseUrl: 'http://192.168.35.254:8080/api',
+  // requestBaseUrl: 'http://mockapi.quicktv.net/api',
+  requestBaseUrl: 'http://192.168.35.254:8080/api',
   //首页内容请求数量
   tabContentPageSize: 10,
   // 默认源

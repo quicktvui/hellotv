@@ -30,7 +30,7 @@
 </template>
 
 <script lang='ts' setup name='cell-player-item'>
-import TabContentConfig from '../../adapter/tab-content/tab-content-config.ts'
+import TabContentConfig from '../../adapter/tab-content/tab-content-config'
 defineExpose({})
 
 </script>

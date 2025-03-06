@@ -12,7 +12,7 @@
          :gradientBackground='focusedGradientBg'
          class='bg-css' />
     <!--    图标-->
-    <div :style='iconRootStyle' duplicateParentState>
+    <div :style='iconRootStyle' duplicateParentState v-if='normalIcon'>
       <img v-if='normalIcon' :style='iconStyle' duplicateParentState showOnState='normal'
            :src='normalIcon' />
       <img v-if='focusIcon' :style='iconStyle' duplicateParentState showOnState='focused'
@@ -34,7 +34,6 @@
 
 <script lang='ts' setup name='btn-pack-view'>
 import ThemeConfig from '../config/theme-config.ts'
-
 
 const emits = defineEmits([
   'focus', 'click'
@@ -60,10 +59,9 @@ defineProps({
     type: Object,
     default: () => {
       return {
-        colors: ThemeConfig.btnGradientColor,
+        colors: ThemeConfig.btnGradientNormalColor,
         orientation: 6,
-        cornerRadii4: [ThemeConfig.default60BorderRadius,
-          ThemeConfig.default60BorderRadius, ThemeConfig.default60BorderRadius, ThemeConfig.default60BorderRadius]
+        cornerRadii4: [30, 30, 30, 30]
       } //cornerRadii4[左上, 右上, 右下, 左下]
     }
   },
@@ -74,7 +72,7 @@ defineProps({
       return {
         colors: ThemeConfig.btnGradientFocusColor,
         orientation: 6,
-        cornerRadius: ThemeConfig.default60BorderRadius
+        cornerRadius: 30
       }
     }
   },

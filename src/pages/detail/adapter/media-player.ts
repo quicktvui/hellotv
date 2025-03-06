@@ -10,7 +10,7 @@ import {
   ESPlayerInterceptorType,
   ESPlayerInterceptResult
 } from "@extscreen/es3-player";
-import { DetailApi } from "../../../api/detail/impl-detail";
+import { DetailApi } from "./interface";
 import { QTCollapse, QTListViewItem } from "@quicktvui/quicktvui3";
 import { QTListViewItemDecoration } from "@quicktvui/quicktvui3/dist/src/list-view/core/QTListViewItemDecoration";
 

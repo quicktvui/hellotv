@@ -59,27 +59,28 @@
                 :focusable='false'>{{ progress }}</span>
         </div>
       </div>
-      <!-- 倍速-->
-      <media-menu-detail-view
-        ref='mediaMenuSpeedRateRef'
-        :itemName='PlayMenuNameFlag.RATE_ITEM'
-        title='倍速'
-        @onItemClicked='onItemClicked'
-      />
-      <!-- 清晰度-->
-      <!--      <media-menu-detail-view-->
-      <!--        ref='mediaMenuDefinitionRef'-->
-      <!--        :item-name='PlayMenuNameFlag.DEFINITION_ITEM'-->
-      <!--        title='清晰度'-->
-      <!--        @onItemClicked="onItemClicked"-->
-      <!--      />-->
-      <media-menu-detail-view
-        ref='mediaMenuModeRef'
-        :itemName='PlayMenuNameFlag.SETTING_ITEM'
-        title='设置'
-        @onItemClicked='onItemClicked'
-      />
+
     </div>
+    <!-- 倍速-->
+    <media-menu-detail-view
+      ref='mediaMenuSpeedRateRef'
+      :itemName='PlayMenuNameFlag.RATE_ITEM'
+      title='倍速'
+      @onItemClicked='onItemClicked'
+    />
+    <!-- 清晰度-->
+    <!--      <media-menu-detail-view-->
+    <!--        ref='mediaMenuDefinitionRef'-->
+    <!--        :item-name='PlayMenuNameFlag.DEFINITION_ITEM'-->
+    <!--        title='清晰度'-->
+    <!--        @onItemClicked="onItemClicked"-->
+    <!--      />-->
+    <media-menu-detail-view
+      ref='mediaMenuModeRef'
+      :itemName='PlayMenuNameFlag.SETTING_ITEM'
+      title='设置'
+      @onItemClicked='onItemClicked'
+    />
   </div>
 
 </template>
@@ -604,6 +605,7 @@ const resetShowViewState = (waitStatus?: IMediaViewState) => {
       }
       break
     case IMediaViewState.STATE_MANAGER_VIEW_DISMISS:
+      autofocusType.value = 0
       isShowManagerView.value = false
       isShowBottomView.value = true
       isShowSeekBarTip.value = false

@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="filter" :gradientBackground="{ colors: themeConfig.rootBgGradientColor, orientation: 4 }">
+  <qt-view class="filter" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <!-- 焦点占位, 解决页面跳焦的问题 -->
     <qt-view class="filter-focus-placeholder" :focusable="true"></qt-view>
     <!-- 顶部按钮 -->

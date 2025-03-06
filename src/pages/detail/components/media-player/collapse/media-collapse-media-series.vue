@@ -8,9 +8,9 @@
       markColor="#00D9D9"
       :focusable="false"
       :visible="visible"
-      :textColors="{ color: ThemeConfig.textColor, focusColor: ThemeConfig.textFocusColor,
+      :textColors="{ color: ThemeConfig.textNormalColor, focusColor: ThemeConfig.textFocusColor,
         selectColor: ThemeConfig.textSelectColor }"
-      :gradientBackground="{ colors: ThemeConfig.btnGradientColor, cornerRadius: 8, orientation: 6 }"
+      :gradientBackground="{ colors: ThemeConfig.btnGradientNormalColor, cornerRadius: 8, orientation: 6 }"
       :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
       :commonParam="{itemGap: 32,contentWidth: 1760}"
       @loadData="onLoadData"
@@ -35,7 +35,7 @@
     </qt-media-series>
   </qt-view>
 </template>
-      
+
 <script setup lang='ts' name='media-collapse-media-series'>
 import { ref, nextTick} from 'vue'
 import { ESLogLevel, useESLog, useESEventBus } from "@extscreen/es3-core"
@@ -165,7 +165,7 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     release
   })
 </script>
-      
+
 <style lang='scss' scoped>
 .media-collapse-media-series{
   width: 1920px;
@@ -230,4 +230,3 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
   }
 }
 </style>
-        

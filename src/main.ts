@@ -7,6 +7,7 @@ import { ESApp } from '@extscreen/es3-vue'
 import { createESApp } from '@extscreen/es3-core'
 import { ESComponent } from '@extscreen/es3-component'
 import { MYComponent } from './components/qt-ul-component'
+import { MYTABSComponent } from './components/qt-tabs-component'
 
 //--------------------components-----------------------
 const routerOptions = {
@@ -20,6 +21,7 @@ const app: ESApp = createESApp(application, router)
 
 app.use(ESComponent)
 app.use(MYComponent)
+app.use(MYTABSComponent)
 
 const player = createESPlayer()
 app.use(player)

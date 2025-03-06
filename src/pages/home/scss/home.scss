@@ -4,7 +4,7 @@ $home-height:1080px;
 .home-root-css{
   width: $home-width;
   height: $home-height;
-  background-color: $gl-theme-root-bg-color;
+  background-color: $theme-bg-color;
 }
 
 .logo-root-css{
@@ -16,4 +16,17 @@ $home-height:1080px;
   background-color: transparent;
 }
 
+%home-resource{
+  width: 488px;
+  height: 84px;
+  background-color: transparent;
+}
 
+.home-resource-root{
+  @extend %home-resource;
+  margin-left: 10px;
+  margin-top: -22px;
+}
+.home-resource-img{
+  @extend %home-resource;
+}

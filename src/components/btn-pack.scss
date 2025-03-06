@@ -1,6 +1,6 @@
-$btn-border-radius:$gl-theme-60-border-radius;
-$btn-background-color:rgba(255,255,255,0.13);
-$btn-focus-background-color:white;
+$btn-border-radius:30px;
+$btn-background-color:$theme-btn-normal-color;
+$btn-focus-background-color:$theme-btn-focus-color;
 
 .btn-pack-root-css{
   display: flex;
@@ -48,6 +48,6 @@ $btn-focus-background-color:white;
 //}
 .btn-pack-root-css .text-css{
   background-color: transparent;
-  color:$text-normal-color;
-  focus-color:$text-focus-color;
+  color:$theme-text-normal-color;
+  focus-color:$theme-text-focus-color;
 }

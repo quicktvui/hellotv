@@ -19,7 +19,7 @@ export function numberToChinese(num) {
     if (part !== 0) {
       let partResult = ''
       for (let i = 0; part > 0; i++) {
-        let digit = part % 10
+        const digit = part % 10
         if (digit !== 0) {
           if (zero) partResult = digits[0] + partResult // 处理中间的零
           partResult = digits[digit] + units[i] + partResult

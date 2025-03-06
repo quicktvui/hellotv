@@ -36,12 +36,11 @@ const props = defineProps({
 
 const onItemBind = (e) => {
   if (e.item){
-    let tabRef = props.getTabRef!()
-    let tabDataManager = tabRef.getDataManager()
-    let curSection = tabDataManager.getSection(e.pageIndex,e.position)
+    const tabRef = props.getTabRef!()
+    const tabDataManager = tabRef.getDataManager()
+    const curSection = tabDataManager.getSection(e.pageIndex,e.position)
     if(curSection.itemList.length < 1){
       const content4kId = e.item.content4kId
-      // const list4KSid = e.item.list4KSid
       emits("loadMore",e.pageIndex,content4kId)
     }
   }

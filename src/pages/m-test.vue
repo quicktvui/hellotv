@@ -1,6 +1,12 @@
 <template>
   <div class='qt-test'>
-    <qt-ul class="qt-ul" ref="qtulRef" name="qt-ul" :items="myData" :spanCount="6">
+    <qt-ul
+      class="qt-ul"
+      ref="qtulRef"
+      name="qt-ul"
+      :data="myData"
+      :spanCount="6"
+      @load-more="loadMore">
       <template #default="{item}">
         <div class="qt-ul-item" v-if="item.type == 5" :focusable="true" :enableFocusBorder="true"
           @focus="e => onFocus(e)">
@@ -16,7 +22,7 @@
 
 <script lang='ts' setup>
 import { ref,nextTick, onMounted } from 'vue'
-  const img = ref<String>('https://img1.baidu.com/it/u=1726075624,1307327070&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667');
+  const img = ref<string>('https://img1.baidu.com/it/u=1726075624,1307327070&fm=253&fmt=auto&app=120&f=JPEG?w=500&h=667');
   let myData  = ref<any[]>([])
   let arr:Array<any> = []
   let arrNew:Array<any> = []
@@ -54,7 +60,8 @@ import { ref,nextTick, onMounted } from 'vue'
   })
   const onFocus = (e) => {
   }
-  
+  const loadMore = () => {}
+
 </script>
 
 

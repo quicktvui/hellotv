@@ -1,18 +1,39 @@
+import PrivateThemeConfig from "./private-theme-config"
 export default {
+  //渐进色设置
+  //全局背景色
+  bgGradientColor: PrivateThemeConfig.themeBgGradientColor,
+
+  //按钮背景颜色
+  btnGradientNormalColor: PrivateThemeConfig.themeBtnGradientNormalColor,
+  btnGradientSelectColor: PrivateThemeConfig.themeBtnGradientSelectColor,
+  btnGradientFocusColor: PrivateThemeConfig.themeBtnGradientFocusColor,
+
+  //普通按钮文字，文字---颜色
+  textNormalColorAndroid: PrivateThemeConfig.themeTextNormalColorAndroid,
+  textNormalColor: PrivateThemeConfig.themeTextNormalColor,
+  textSelectColor: PrivateThemeConfig.themeTextSelectColor,
+  textFocusColor: PrivateThemeConfig.themeTextFocusColor,
+
+  //瀑布流格子浮动标题背景色
+  tabContentFloatBgColor: ['#ed222222', '#00000000'],
+  //角标默认颜色
+  tabCornerColors: ['#ffB67827', '#ffB67827'],
+
   //是否设置全局焦点边框圆角 默认 8
   focusBorderCornerEnable: true,
   //全局焦点边框圆角
-  focusBorderCorner: 16,
+  focusBorderCorner: PrivateThemeConfig.themeFocusBorderCorner,
 
   //是否设置全局焦点边框颜色 默认白色
   focusBorderColorEnable: false,
   //全局焦点边框颜色
-  focusBorderColor: '#157AFC',
+  focusBorderColor: PrivateThemeConfig.themeFocusBorderColor,
 
   //是否设置全局焦点边框宽度 默认 2
   focusBorderWidthEnable: true,
   //全局焦点边框宽度
-  focusBorderWidth: 2.5,
+  focusBorderWidth: 3,
 
   //是否设置焦点边框向内移动距离 默认 2
   focusBorderInsetEnable: true,
@@ -24,29 +45,4 @@ export default {
   //设置放大倍数
   placeHolderFocusScale: 1.05,
 
-  //渐进色设置
-  //全局背景色
-  rootBgGradientColor: ['#00040B', '#1C222B'],
-
-  //按钮背景颜色
-  btnGradientColor: ["#19FFFFFF", "#19FFFFFF"],
-  btnGradientSelectColor: [],
-  btnGradientFocusColor: ["#FFFFFF", "#FFFFFF"],
-  
-  //普通按钮文字，文字---颜色
-  textColor: "#8cffffff",
-  textSelectColor: "#FFFFFF",
-  textFocusColor: "#000000",
-  
-
-  //瀑布流格子选中背景色
-  tabContentBgGradientFocusColor: ['#157AFC', '#157AFC'],
-
-  //瀑布流格子浮动标题背景色
-  tabContentFloatBgColor: ['#ed222222', '#00000000'],
-  //角标默认颜色
-  tabCornerColors: ['#ffB67827', '#ffB67827'],
-
-  //默认60高度按钮的圆角
-  default60BorderRadius: 30
 }

@@ -7,6 +7,7 @@
       :autoHandleBackKey="true"
       :tabContentSwitchDelay="300"
       :tabContentResumeDelay="200"
+      :contentNextFocus="{ left: 'keyboardGrid' }"
       @onTabPageLoadData="onTabPageLoadData"
       @onTabPageItemClick="onTabPageItemClick"
     >

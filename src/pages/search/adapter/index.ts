@@ -130,7 +130,7 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
       _id: 's' + Math.random(),
       type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
       style: { width: 1920 },
-      decoration: { left: 80, top: curPage === 1 ? 160 : 0 },
+      decoration: { left: 80, top: curPage === 1 ? 200 : 0 },
       title: '',
       itemList: rawData.items.map((item, index) => ({
         _id: `ss-${index}`,

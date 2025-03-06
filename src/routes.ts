@@ -2,6 +2,8 @@ import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
 // import detail from './pages/detail/index.vue'
 import test from './pages/m-test.vue'
+import playTest from './pages/play-test.vue'
+import tabsTest from './pages/tabs-test.vue'
 
 // 筛选布局模式选择
 import filterConfig from './pages/filter/config'
@@ -74,10 +76,37 @@ const routes = [
   },
   { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
   {
+    name: 'confirm',
+    path: '/confirm',
+    component: () => import('./pages/history/components/confirm-dialog.vue'),
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
+  {
+    path: '/exit-dialog',
+    name:'exit_dialog',
+    component: ()=> import('./pages/home/components/exit-dialog.vue'),
+    type:ESRouteType.ES_ROUTE_TYPE_DIALOG
+  },
+  {
     path: '/test',
     name: 'test',
     component: test
   },
+  {
+    path:'/playTest',
+    name:'playTest',
+    component: playTest
+  },
+  {
+    path:'/tabsTest',
+    name:'tabsTest',
+    component: tabsTest
+  },
+  {
+    path:'/activity',
+    name:'activity',
+    component: () => import('./pages/activity/index.vue')
+  }
 ]
 
 export default routes

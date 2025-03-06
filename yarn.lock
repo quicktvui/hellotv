@@ -1229,10 +1229,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-ad-player/-/es3-ad-player-1.0.9.tgz#32e6329c06abacb717b4c6e36f4050f575f6bb9b"
   integrity sha512-8+n6MwzeDGi9x6/bdK5A2YWpbU4mkQoUnjxTaJr12B5An/pskD7qFsaompYhnHiai9zXGmiExZkiw8FxUGm5zw==
 
-"@extscreen/es3-component@1.0.27":
-  version "1.0.27"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.27.tgz#90cf32a136904665d85b2e2bfbe8aaa367598292"
-  integrity sha512-ohvY9JYW4pOeTz9iPCgm52lHWR1/qTUKvpz2+Ci2PmwnrQ33M2ADeJCnZkN+jJ9yFKG9n59M7pav9cV2AxJ5PQ==
+"@extscreen/es3-component@1.0.32":
+  version "1.0.32"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.32.tgz#433c0389f3a6e5f4a3ea7f806d8fe1fb14b1a2dc"
+  integrity sha512-+5uxU0GYW5RkdIwua+AHkuuOxMDmL067QyRqxt8hUvlG5zDhh5OiCVA0kcrdiJvaVlOXQgedmEKWru6bq1lBCw==
 
 "@extscreen/es3-core@1.1.24":
   version "1.1.24"
@@ -1313,10 +1313,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-player/-/es3-player-1.0.17.tgz#fb86c4ff75b2a1d303d8aebf067dfda63c985bd8"
   integrity sha512-FrKqhn6/M63ewPRbzlTyO8APXt5UKYBCvT46eoRKm6XNgCYSWTxIY87hu2J5E5AIMiag5stMihBy4r0UXeaEfA==
 
-"@extscreen/es3-router@1.1.17":
-  version "1.1.17"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.1.17.tgz#24ea723d6f8f387b9e99a06183b9da3bc5c46730"
-  integrity sha512-nSbDKwMQ1bmj+/UHqf1ySHJ7PVBlsAdzR9Qh6eoO2zJHiG+Ka2uuMlKicKQCdHOGERbVb3QTXyIT+wWZLDkN3A==
+"@extscreen/es3-router@1.1.27":
+  version "1.1.27"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.1.27.tgz#8f8cdc8597a3d3ba9951c1b9b67a53a0e49013e4"
+  integrity sha512-3n+j1+06+iaQQaLclNMR82mU5qljAMKWMgtFZ4fQVR7/ySR+NiwtFBriXb1AyyZlu7MqwJXCMzZ+bNDcYPRhcw==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
@@ -7292,10 +7292,10 @@ typescript-eslint@8.14.0:
     "@typescript-eslint/parser" "8.14.0"
     "@typescript-eslint/utils" "8.14.0"
 
-typescript@^5.6.3:
-  version "5.7.3"
-  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.7.3.tgz#919b44a7dbb8583a9b856d162be24a54bf80073e"
-  integrity sha512-84MVSjMEHP+FQRPy3pX9sTVV/INIex71s9TL2Gm5FG/WG1SqXeKyZ0k7/blY/4FdOzI12CBy1vGc4og/eus0fw==
+typescript@5.6.3:
+  version "5.6.3"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.6.3.tgz#5f3449e31c9d94febb17de03cc081dd56d81db5b"
+  integrity sha512-hjcS1mhfuyi4WW8IWtjP7brDrG2cuDZukyrYrSauoXGNgx0S7zceP07adYkJycEr56BOUTNPzbInooiN3fn1qw==
 
 undici-types@~6.20.0:
   version "6.20.0"

@@ -1,5 +1,5 @@
 <template>
-  <div :class='["top-view-root-css",{ "logo-right": logoRight, "logo-left": logoLeft }]'>
+  <div :class='["top-view-root-css",{ "logo-right": logoRight, "logo-left": !logoRight }]'>
     <!-- 搜索-->
     <btn-pack-view
       v-if='!$slots.topBtnItem'
@@ -7,6 +7,7 @@
       name='topSearchBtn'
       style='width: 145px;height: 60px;margin-right: 10px;'
       :nextFocusDownSID='downSid'
+      :focusScale='ThemeConfig.placeHolderFocusScale'
       :focusable='true'
       :iconLeft='true'
       :normalIcon='ic_top_search_normal'
@@ -23,6 +24,7 @@
       sid="topMyBtnSid"
       style='width: 200px;height: 60px;margin-left: 10px;margin-right: 10px;'
       :textStyle='{width: "120px", height: "60px"}'
+      :focusScale='ThemeConfig.placeHolderFocusScale'
       :focusable='true'
       :iconLeft='true'
       :normalIcon='ic_top_user_normal'
@@ -32,9 +34,10 @@
       @focus='onFocus'
     />
     <slot name='topBtnItem'></slot>
+    <slot name='topOtherBtn'></slot>
     <!-- logo-->
     <img v-if='!$slots.topLogoItem' :src='ic_logo'
-         :class='["logo-default",{ "img-left": logoLeft, "img-right": logoRight }]'
+         :class='["logo-default",{ "img-left": !logoRight, "img-right": logoRight }]'
     />
     <slot name='topLogoItem'></slot>
   </div>
@@ -50,6 +53,7 @@ import ic_top_search_focused from '../assets/top-view/ic_top_search_focused.png'
 import ic_top_user_normal from '../assets/top-view/ic_top_user_normal.png'
 import ic_top_user_focused from '../assets/top-view/ic_top_user_focused.png'
 import ic_logo from '../assets/top-view/ic_logo.png'
+import ThemeConfig from "../config/theme-config"
 
 const emits = defineEmits([
   'focus', 'click'
@@ -58,12 +62,7 @@ defineProps({
   //logo右侧展示
   logoRight: {
     type: Boolean,
-    default: false
-  },
-  //logo 左侧展示
-  logoLeft: {
-    type: Boolean,
-    default: false
+    default: true
   },
   //向下组件ID
   downSid: {

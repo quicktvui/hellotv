@@ -22,9 +22,8 @@
       :focusable="true"
       @click="onClick"
       @focus="onFocus"
-      :style="{ 'focus-border-color': isFree ? '#FFFFFF' : '#FFD97C' }"
       :focusScale="ThemeConfig.placeHolderFocusScale">
-
+      <!-- :style="{ 'focus-border-color': isFree ? '#FFFFFF' : '#FFD97C' }"-->
       <!-- 第一行 -->
       <qt-row :duplicateParentState="true">
         <div class="item-vip"
@@ -99,7 +98,7 @@
     </qt-column>
   </qt-column>
 </template>
-  
+
 <script setup lang='ts' name='media-introduction'>
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
@@ -130,12 +129,12 @@ import ThemeConfig from "../../../../../config/theme-config";
       params: m
     })
   }
-  const onFocus = (e) => emits('onIntroductionFocus', e.isFocused) 
+  const onFocus = (e) => emits('onIntroductionFocus', e.isFocused)
   defineExpose({
     init
   })
 </script>
-  
+
 <style lang='scss' scoped>
 .media-introduction-root {
   width: 810px;
@@ -155,8 +154,9 @@ import ThemeConfig from "../../../../../config/theme-config";
     padding-top: 15px;
     margin-top: 15px;
     padding-bottom: 10px;
-    border-radius: 8px;
-    focus-border-radius: 8px;
+    focus-border-color:$theme-focus-border-color;
+    border-radius: $theme-img-border;
+    focus-border-radius: $theme-img-border;
     background-color: transparent;
     focus-background-color: rgba(255, 255, 255, 0.1);
     .item-vip {
@@ -218,7 +218,7 @@ import ThemeConfig from "../../../../../config/theme-config";
       width: 790px;
       height: 118px;
       margin-top: 5px;
-    } 
+    }
   }
 }
 
@@ -226,4 +226,3 @@ import ThemeConfig from "../../../../../config/theme-config";
 
 
 </style>
-    

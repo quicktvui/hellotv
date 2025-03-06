@@ -45,8 +45,9 @@ class Launch {
   /**
    * 跳转方法
    * @param item
+   * @param isReplace
    */
-  launch(item: LaunchParams): void {
+  launch(item: LaunchParams,isReplace:boolean=false): void {
     //防止同时触发多次跳转
     if (this.allowClick) return
     this.allowClick = true
@@ -64,7 +65,7 @@ class Launch {
       //快应用内部跳转
       case 1:
       case '1':
-        this.jumpType1(item)
+        this.jumpType1(item,isReplace)
         break
       //三方应用跳转
       case 3:
@@ -99,12 +100,17 @@ class Launch {
         }
      }
    * @param item
+   * @param isReplace
    */
-  jumpType1(item: LaunchParams) {
+  jumpType1(item: LaunchParams,isReplace:boolean=false) {
     //{"options":{"name":"screen_main_view","params":{"screenId":"1764924767380697089","defaultSelectTabTag":"科普"}},"type":1}
     const options = item.options
     if (options && typeof options !== 'string') {
-      this.router.push(<RouteLocationRaw>options).then(() => {})
+      if (isReplace){
+        this.router.replace(<RouteLocationRaw>options).then(() => {})
+      }else{
+        this.router.push(<RouteLocationRaw>options).then(() => {})
+      }
     }
   }
 
@@ -192,11 +198,12 @@ class Launch {
    * @param params
    */
   jumpNative(args: Array<any> = [], params = []) {
+    let mArgs = args
     const mParam = this.buildParams(params)
     if (mParam && mParam.length > 0) {
-      args.push(mParam)
+      mArgs = args.concat(mParam)
     }
-    this.nativeRouter.launch(args).then(() => {})
+    this.nativeRouter.launch(mArgs).then(() => {})
   }
 
   /**
@@ -204,13 +211,13 @@ class Launch {
    * @param params
    */
   buildParams(params: []) {
-    let mParam = []
+    const mParam = []
     if (params && params.length > 0) {
       for (const item of params) {
         const key = item['key']
         const value = item['value']
         const type = item['type']
-        mParam = this.decodeParams(key, value, type)
+        mParam.push(this.decodeParams(key, value, type))
       }
     }
     return mParam
@@ -266,6 +273,18 @@ class Launch {
       name: 'detail',
       params: { mediaId: jumpId }
     })
+  }
+
+  launchExitDialog(){
+    this.router.push({
+      name:'exit_dialog',
+    })
+  }
+  launchBack(){
+    this.router.back()
+  }
+  launchGo(){
+    this.router.go(-2)
   }
 }
 

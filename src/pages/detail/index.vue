@@ -16,10 +16,10 @@
       @onScrollYGreaterReference="onScrollYGreaterReference"
       @onScrollYLesserReference="onScrollYLesserReference">
       <template v-slot:section>
-        <header-section 
-          ref="headerSectionRef" 
-          :type="1"     
-          :blockFocusDirections="['left','right','up']" 
+        <header-section
+          ref="headerSectionRef"
+          :type="1"
+          :blockFocusDirections="['left','right','up']"
           :focusable='false'
           @onTopButtonFocus="onTopButtonFocus">
         </header-section>
@@ -41,9 +41,9 @@
       </template>
     </qt-waterfall>
     <!-- 播放器 -->
-    <media-player 
-      ref="mediaPlayerRef" 
-      name="media-player" 
+    <media-player
+      ref="mediaPlayerRef"
+      name="media-player"
       class="detail-media-player"
       @onPlayerPlayMedia="onPlayerPlayMedia"
       @onPlayerPlaying="onPlayerPlaying"
@@ -51,7 +51,7 @@
     </media-player>
   </div>
 </template>
-  
+
 <script setup lang='ts' name='detail'>
 import { ref,nextTick } from 'vue'
 import {
@@ -173,7 +173,7 @@ import MediaPlayer from './components/media-player/index.vue'
   //获取详情页数据
   const getDetail = () => {
     detailManager.getMediaDetail(currenId.value).then((res:IMedia) => {
-      console.log(res,'getDetailgetDetailgetDetail') 
+      console.log(res,'getDetailgetDetailgetDetail')
       media = res
       media.mediaSeriesType = 1 //设置选集类型
       basicSectionRef.value?.init(media) //初始化基本介绍板块数据
@@ -314,11 +314,11 @@ import MediaPlayer from './components/media-player/index.vue'
       title: media.title
     }
     if(val){ //收藏
-      detailManager.reportRecordData(body).then(()=> {}).catch(()=>{}) 
+      detailManager.reportRecordData(body).then(()=> {}).catch(()=>{})
     }else{ //取消收藏
       detailManager.deleteRecordData(body.id,body.deviceId,body.recordType)
-        .then(()=> {}).catch(()=>{}) 
-    } 
+        .then(()=> {}).catch(()=>{})
+    }
   }
   const onMenuVIPButtonClick = () => {
     toast.showToast('去付费')
@@ -496,8 +496,7 @@ import MediaPlayer from './components/media-player/index.vue'
     onBackPressed
   })
 </script>
-  
+
 <style lang='scss' src='./scss/index.scss'>
-  
+
 </style>
-  

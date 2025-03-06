@@ -23,8 +23,7 @@
   width: 1920px;
   height: 60px;
   background-color: transparent;
-  position: absolute;
-  top: 70px;
+  margin-top: 90px;
   z-index: 100;
 }
 
@@ -39,7 +38,7 @@
   height: 60px;
   background-color: transparent;
   border-radius: 30px;
-  focus-background-color: $gl-theme-btn-bg-focus-color;
+  focus-background-color: $theme-btn-focus-color;
 }
 
 .search-content-tab-item-text {
@@ -47,10 +46,10 @@
   background-color: transparent;
   margin-left: 24px;
   margin-right: 24px;
-  color: $text-normal-color;
+  color: $theme-text-normal-color;
   font-size: 36px;
-  focus-color: $text-focus-color;
-  select-color: $text-select-color;
+  focus-color: $theme-text-focus-color;
+  select-color: $theme-text-select-color;
 }
 
 .search-content-item-h {
@@ -63,7 +62,7 @@
   width: 410px;
   height: 230px;
   background-color: transparent;
-  border-radius: $gl-theme-img-border;
+  border-radius: $theme-img-border;
 }
 
 .search-content-item-v {
@@ -76,14 +75,14 @@
   width: 260px;
   height: 368px;
   background-color: transparent;
-  border-radius: $gl-theme-img-border;
+  border-radius: $theme-img-border;
 }
 
 .search-content-item-text {
   height: 40px;
   background-color: transparent;
   margin-top: 11px;
-  color: $text-normal-color;
+  color: rgba(255, 255, 255, 0.5);
   font-size: 30px;
   focus-color: white;
 }

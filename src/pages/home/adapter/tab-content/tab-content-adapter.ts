@@ -27,8 +27,10 @@ class TabsContent {
   sectionTotalHeight: Map<string, number> = new Map<string, number>()
   //存储二屏图
   tab2BackgroundUrls: Map<string, string> = new Map<string, string>()
-  // 首页4k列表第一页数据
-  home4KList : Array<any> = []
+  // 首页4k列表,短视频第一页数据
+  homeSectionCacheList : Map<string,Array<any>> = new Map<string, Array<any>>()
+  // 记录历史格子位置 {tanIndex: 1, itemIndex: 1}
+  historyItemPos: Array<any> = []
 }
 
 const tabsContent = new TabsContent()
@@ -51,11 +53,15 @@ export async function buildTabContentAdapter(tabContent: TabContent, pageNo: num
   const {
     firstSectionMarginTop,
     content4kId,
+    shortVideoId,
     disableScrollOnFirstScreen
   } = parseParameter(tabContent.customParams)
   //4K 视频
   if (content4kId && pageNo === 1) {
     return build4kTabPage(content4kId, tabPageIndex)
+  }
+  else if(shortVideoId && pageNo === 1){
+    return buildShortTabPage(shortVideoId,tabPageIndex)
   }
   if (!tabContent || !tabContent.sections || tabContent.sections.length === 0) {
     return {
@@ -89,7 +95,7 @@ export async function buildTabContentAdapter(tabContent: TabContent, pageNo: num
       //存储板块高度 用于判断是否展示底部提示
       saveSectionTotalHeight(sectionHeight, tabId)
       const firstSectionIndex: boolean = sectionIndex === 0 && isFirstPage
-      if (sectionType === SectionType.TYPE_SWIPER_PLAY) {
+      if (sectionType === SectionType.TYPE_SWIPER_PLAY && section.contentId) {
         //获取展示的板块高度
         section.style.height = buildSectionHeightBySectionType(section)
         const buildSectionData: QTWaterfallSection = await buildSmall4KSection(section, tabPageIndex, sectionIndex, firstSectionIndex, firstSectionMarginTop)
@@ -150,7 +156,11 @@ export function getSectionHeight(section: Section): number {
   //获取是否展示板块标题 flag
   const showTitle = section.showTitle
   if (showTitle) {
-    sectionHeight += TabContentConfig.sectionGap + TabContentConfig.sectionTitleHeightDefault
+    if (section.type === SectionType.TYPE_SWIPER_PLAY){//放映厅板块 需要展示标题的时候，不加间距高度
+      sectionHeight += TabContentConfig.sectionTitleHeightDefault
+    }else{
+      sectionHeight += TabContentConfig.sectionGap + TabContentConfig.sectionTitleHeightDefault
+    }
   }
   return sectionHeight
 }
@@ -214,6 +224,11 @@ export function parseParameter(parameter) {
             params.content4kId = param[j].value
           }
           break
+        case 'shortVideoId':
+          if (param[j].value) {
+            params.shortVideoId = param[j].value
+          }
+          break;
         default:
           if (param[j].value) {
             params[key] = param[j].value
@@ -247,7 +262,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
     for (const sectionItem of sectionItemList) {
       const sectionItemIndex: number = sectionItemList.indexOf(sectionItem)
       //封装格子数据
-      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type)
+      const qtWaterfallItem: QTWaterfallItem = buildSectionItem(sectionItem, showTitle, tabPageIndex, type, sectionItemIndex)
       //针对一行滚动格子设置decoration
       if (type === SectionType.TYPE_LINE_SCROLL) {
         qtWaterfallItem.decoration = {
@@ -308,7 +323,7 @@ export function buildSectionItemList(section: Section, sectionIndex: number, tab
  * @param tabPageIndex
  * @param sectionType
  */
-export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string): QTWaterfallItem {
+export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, tabPageIndex: number, sectionType: number | string, sectionItemIndex?: number): QTWaterfallItem {
   //根据是否展示板块标题和是否是一行滚动
   const posY = sectionItem.posY + (showTitle ? TabContentConfig.sectionItemGap : 0)
   if (sectionType === SectionType.TYPE_LINE_SCROLL) {
@@ -317,6 +332,7 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     sectionItem.posY = posY
   }
   let buildSectionItem: QTWaterfallItem
+  let historyItemFlag = false
   const sectionItemType: SectionItemType = sectionItem.type
   switch (sectionItemType) {
     case SectionItemType.TYPE_DEFAULT://无标题
@@ -332,6 +348,11 @@ export function buildSectionItem(sectionItem: SectionItem, showTitle: boolean, t
     case SectionItemType.TYPE_TEXT_HISTORY:
     case SectionItemType.TYPE_IMG_HISTORY:
       buildSectionItem = buildTextHistorySectionItem(sectionItem)
+      // 记录历史格子的位置
+      tabsContent.historyItemPos.map((item) => {
+        if(item.tabIndex == tabPageIndex) historyItemFlag = true
+      })
+      if(!historyItemFlag) tabsContent.historyItemPos.push({tabIndex: tabPageIndex,itemIndex: sectionItemIndex})
       break
     // case SectionItemType.TYPE_IMG_HISTORY:
     //   break
@@ -482,7 +503,7 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageInd
  */
 export function buildPlaceHolderSectionItem(sectionItem: SectionItem): QTWaterfallItem {
   return {
-    type: TabContentItemType.TYPE_ITEM_SECTION_PLACE_HOLDER,
+    type: TabContentItemType.TYPE_ITEM_SECTION_PLACEHOLDER,
     style: buildStyle(sectionItem),
     image: {
       style: {
@@ -498,8 +519,7 @@ export function buildTextHistorySectionItem(sectionItem: SectionItem):QTWaterfal
   return {
     type: TabContentItemType.TYPE_ITEM_HISTORY_TEXT,
     style: buildStyle(sectionItem),
-    gradientBackground: { colors: ['#fAff0000', '#99ffffff'],
-      cornerRadius: ThemeConfig.focusBorderCorner, orientation: 7 },
+
   }
 }
 
@@ -578,7 +598,7 @@ export function buildSmallSection(section: Section, sectionWaterfallItemList: Ar
     type: buildSectionType(section.type),
     title: section.showTitle ? section.title.text : '',
     titleStyle: buildSectionTitleStyle(section),
-    decoration: buildSmall4KSectionDecoration(isFirstSection, firstSectionMarginTop),
+    decoration: buildSectionDecoration(isFirstSection, firstSectionMarginTop),
     style: buildSectionStyle(section.style.height),
     listStyle:{width:1920,height:484},
     replaceChildStyle:{
@@ -619,27 +639,6 @@ export function buildSectionDecoration(isFirstSection: boolean, firstSectionMarg
   } else {
     decoration = {
       top: TabContentConfig.sectionItemGap
-    }
-  }
-  return decoration
-}
-
-/**
- * build 小 4K 板块间距
- * @param isFirstSection
- * @param firstSectionMarginTop
- */
-export function buildSmall4KSectionDecoration(isFirstSection: boolean, firstSectionMarginTop: number): QTListViewItemDecoration {
-  let decoration: QTListViewItemDecoration
-  if (isFirstSection) {
-    const offset = barsDataManager.barsData.itemList?.length > 1 ? 45 : TabContentConfig.firstSectionOffsetY
-    decoration = {
-      top: TabContentConfig.firstSectionTop + firstSectionMarginTop + offset
-    }
-  } else {
-    const top = TabContentConfig.sectionItemGap + 30
-    decoration = {
-      top: top
     }
   }
   return decoration
@@ -770,6 +769,7 @@ export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTab
   barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_4K
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  const cacheList = tabsContent.homeSectionCacheList.get(content4kId)
   const section: QTWaterfallSection = {
     _id: content4kId,
     type: TabContentItemType.TYPE_WATERFALL_SECTION_4K,
@@ -782,7 +782,49 @@ export function build4kTabPage(content4kId: string, tabPageIndex: number): QTTab
     },
     list4KSid: 'plate4K' + content4kId,
     content4kId,
-    itemList: tabsContent.home4KList.length > 0 ? tabsContent.home4KList : []
+    itemList: cacheList && cacheList?.length > 0 ? cacheList : []
+  }
+  const tabPage: QTTabPageData = {
+    useDiff: false,
+    isEndPage: true,
+    disableScrollOnFirstScreen: true,
+    data: [section]
+  }
+  return tabPage
+}
+
+/**
+ * 封装 短视频 板块数据
+ * @param shortVideoId
+ * @param tabPageIndex
+ */
+export function buildShortTabPage(shortVideoId:string,tabPageIndex:number): QTTabPageData{
+  barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
+  barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SHORT_SCREEN
+  barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
+  // TODO test data
+  // shortVideoId = "1849006805280256002"
+  const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
+  const section: QTWaterfallSection = {
+    _id: shortVideoId,
+    type: TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,
+    style: {
+      width: 556,
+      height: 800
+    },
+    shortList:{
+      style:{
+        width:556,
+        height:855
+      },
+      sid:'shortVideo'+shortVideoId,
+    },
+    itemList:cacheList && cacheList?.length > 0 ? cacheList : [],
+    decoration: {
+      top: TabContentConfig.firstSectionTop,
+      left: TabContentConfig.decorationLeftGap
+    },
+    shortVideoId,
   }
   const tabPage: QTTabPageData = {
     useDiff: false,
@@ -849,14 +891,55 @@ export function build4KSectionData(section4K: Array<Section4KItem>): Array<QTWat
   return waterfallItems
 }
 
+/**
+ * 封装 短视频 板块内容数据
+ * @param shortVideoData 原始内容数据
+ */
+export function buildShortVideoSectionData(shortVideoData: Array<Section4KItem>): Array<QTWaterfallItem>{
+  const waterfallItems: Array<QTWaterfallItem> = []
+  if (shortVideoData && shortVideoData.length > 0){
+    for (const shortItem of shortVideoData) {
+      const shortItemIndex: number = shortVideoData.indexOf(shortItem)
+      const item: QTWaterfallItem = {
+        type: TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN_ITEM,
+        name: TabContentConfig.shortVideoSectionItemName,
+        style:{
+          width: 540,
+          height:144,
+        },
+        decoration: {
+          top: shortItemIndex == 0 ? 8 : 10,
+          left:8,
+          bottom: 16
+        },
+        image: {
+          normal: shortItem.image
+        },
+        title:{
+          text: shortItem.title,
+          textFocus:"　 "+shortItem.title,
+          sub: shortItem.subTitle,
+        },
+        jumpParams: shortItem.jumpParams,
+        play: {
+          playData: shortItem.playData
+        }
+      }
+      waterfallItems.push(item)
+    }
+  }
+  return waterfallItems
+}
+
 export async function buildSmall4KSection(section: Section,tabPageIndex: number, sectionIndex: number,isFirstSection:boolean,firstSectionMarginTop:number):Promise<QTWaterfallSection>{
   let buildSection: QTWaterfallSection = {itemList:[],style:{},type:-1}
   barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
   barsDataManager.barsData.itemList[tabPageIndex].playType = HomePlayType.TYPE_SMALL_4K
   barsDataManager.barsData.itemList[tabPageIndex].sectionItemIndex = 0
   barsDataManager.barsData.itemList[tabPageIndex].sectionIndex = sectionIndex
-  // const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
-  const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  // todo 记得放开 contentId
+  const res: Array<QTWaterfallItem> = await homeManager.get4KSection(section.contentId + '', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
+  // const res: Array<QTWaterfallItem> = await homeManager.get4KSection('1849006805280256002', 10, TabContentItemType.TYPE_WATERFALL_SECTION_SMALL_4K)
   if (res && res.length > 0) {
     buildSection = buildSmallSection(section,res,isFirstSection,firstSectionMarginTop)
   }
