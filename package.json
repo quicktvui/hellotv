@@ -17,7 +17,7 @@
     "@extscreen/es3-component": "1.0.32",
     "@extscreen/es3-core": "1.1.24",
     "@extscreen/es3-player": "1.0.17",
-    "@extscreen/es3-player-manager": "^1.0.33",
+    "@extscreen/es3-player-manager": "1.0.41",
     "@extscreen/es3-router": "1.1.27",
     "@extscreen/es3-video-player": "1.0.35",
     "@extscreen/es3-vue": "0.0.14",

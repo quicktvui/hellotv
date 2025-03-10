@@ -1,0 +1,59 @@
+
+.short-video-section-root-css {
+  position: absolute;
+  background-color: transparent;
+}
+.short-video-section-list-css {
+  background-color: transparent;
+}
+
+.short-video-section-list-item-root-css{
+  background-color: rgba(0,0,0,0.45);
+  flex-direction: row;
+  focus-border-radius:$theme-img-border;
+  border-radius:$theme-img-border;
+}
+.short-video-section-list-item-img{
+  width: 256px;
+  height: 144px;
+  border-top-left-radius: $theme-img-border;
+  border-bottom-left-radius: $theme-img-border;
+  background-color: transparent;
+}
+.short-video-section-list-item-content-div{
+  width: 284px;
+  height: 144px;
+  background-color: transparent;
+}
+.short-video-section-list-item-text{
+  width: 284px;
+  height: 84px;
+  background-color: transparent;
+  position: absolute;
+  color:rgba(255,255,255,0.55);
+  select-color:white;
+  focus-color:white;
+  left: 0;
+  top: 0;
+}
+.short-video-section-list-item-play-mark{
+  position: absolute;
+  width: 42px;
+  height: 30px;
+  background-color: transparent;
+  top:20px;
+  left: 0;
+}
+.short-video-section-list-item-sub-title{
+  position: absolute;
+  width: 284px;
+  height: 30px;
+  top: 104px;
+  color: rgba(255,255,255,0.3);
+  select-color: white;
+  focus-color:white;
+  background-color: transparent;
+}
+
+
+

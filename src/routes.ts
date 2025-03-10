@@ -90,6 +90,11 @@ const routes = [
     name:'playTest',
     component: playTest
   },
+  {
+    path:'/activity',
+    name:'activity',
+    component: () => import('./pages/activity/index.vue')
+  }
 ]
 
 export default routes

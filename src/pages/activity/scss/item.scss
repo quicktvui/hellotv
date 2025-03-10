@@ -1,0 +1,67 @@
+.item-corner{
+  color: white;
+  padding: 4px 8px;
+  height: 36px;
+  margin: 4px;
+  z-index: 1000
+}
+.focus-change-img-root-css{
+  position: absolute;
+  background-color: transparent;
+}
+.focus-change-img-css{
+  position: absolute;
+  background-color: transparent;
+  border-radius: $theme-img-border;
+  z-index: 899;
+}
+
+%inner-out{
+  position: absolute;
+  background-color: transparent;
+}
+
+.inner-out-title-root-css{
+  @extend %inner-out;
+  overflow: hidden;
+  flex-direction: row-reverse;
+}
+
+.inner-out-title-img{
+  @extend %inner-out;
+  border-radius: $theme-img-border;
+  z-index: 899;
+}
+.inner-out-title-text{
+  @extend %inner-out;
+  height: 60px;
+  z-index: 999;
+}
+
+.no-title-item-root-css{
+  position: absolute;
+  background-color: transparent;
+  overflow: hidden;
+  flex-direction: row-reverse;
+}
+
+.no-title-item-img{
+  background-color: transparent;
+  z-index: 899;
+  position: absolute;
+  border-radius: $theme-img-border;
+}
+
+.placeholder-root-css{
+  position: absolute;
+  background-color: transparent;
+  display: flex;
+  z-index: 1;
+}
+
+.placeholder-img{
+  position: absolute;
+  background-color: transparent;
+  border-radius: $theme-img-border;
+  z-index: 899;
+}

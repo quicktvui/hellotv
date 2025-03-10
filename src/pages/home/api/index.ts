@@ -1,7 +1,7 @@
 import { QTTab, QTTabPageData, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import barsDataManager  from '../adapter/tab-bar/tab-bar-adapter'
 import {
-  build4KSectionData,
+  build4KSectionData, buildShortVideoSectionData,
   buildSmall4KSectionData
 } from '../adapter/tab-content/tab-content-adapter'
 import requestManager from '../../../tools/request'
@@ -90,6 +90,25 @@ class HomeManager implements HomeApi{
   getHomeRetention(): Promise<any> {
     const url = homeRetention + BuildConfig.packageName
     return requestManager.get(url)
+  }
+
+  getShortVideoSection(shortVideoId: string, type: number,pageNo:number,pageSize:number): Promise<Array<QTWaterfallItem>> {
+    const replacements = {
+      id:shortVideoId,
+      packageName:BuildConfig.packageName,
+    }
+    const url = replacePlaceholders(home4KUrl,replacements)
+    return requestManager.get(url).then((res:Array<Section4KItem>)=>{
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN){
+        return buildShortVideoSectionData(res)
+      }
+      return buildShortVideoSectionData([])
+    },()=>{
+      if (type === TabContentItemType.TYPE_WATERFALL_SECTION_SHORT_SCREEN){
+        return buildShortVideoSectionData([])
+      }
+      return buildShortVideoSectionData([])
+    })
   }
 }
 

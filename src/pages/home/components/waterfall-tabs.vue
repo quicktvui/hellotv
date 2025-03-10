@@ -59,19 +59,24 @@
         <!-- 带标题格子(图片上/图片下)-->
         <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_HAS_TITLE' />
         <!-- 占位格子-->
-        <place-holder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACE_HOLDER' />
+        <placeholder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACEHOLDER' />
         <!-- 焦点变图格子-->
         <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
         <!-- 小窗播放格子-->
         <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
         <!-- 历史记录格子-->
-        <history-text-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
+        <history-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
       </template>
       <template v-slot:waterfall-section>
         <!-- 4K 模板-->
         <world-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_4K' @loadMore='load4KData'
                           :getTabRef='getTabRef' />
+        <!-- 小 4K-->
         <small-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_SMALL_4K'/>
+        <!-- 短视频全屏背景播放-->
+        <short-video-section :type='TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN' @loadMore='loadShortData'
+                             :getTabRef='getTabRef'
+        />
 
       </template>
 
@@ -114,10 +119,11 @@ import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import CellPlayerItem from './tab-content/cell-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
-import HistoryTextItem from './tab-content/history-text-item.vue'
+import HistoryItem from './tab-content/history-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'
 import NoTitleItem from './tab-content/no-title-item.vue'
-import PlaceHolderItem from './tab-content/place-holder-item.vue'
+import ShortVideoSection from './tab-content/short-video/short-video-section.vue'
+import PlaceholderItem from './tab-content/placeholder-item.vue'
 import SmallFourSection from './tab-content/small-4k/small-four-section.vue'
 import WorldFourSection from './tab-content/world-4k/world-four-section.vue'
 
@@ -193,6 +199,9 @@ let delay4KFocusTimer: any = -1
 //小4K
 let small4KTimer: any = -1
 let small4KSetChildSIdTimer: any = -1
+//short
+let shortVideoTimer:any = -1
+
 //当前背景图地址
 let curBg = ''
 //当前首屏图地址
@@ -247,13 +256,12 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
         isMoreFront = false
       }, 2000)
       isMoreFront = true
-      if (playType === HomePlayType.TYPE_SHORT) {
+      if (playType === HomePlayType.TYPE_SHORT_SCREEN) {
         //列表恢复原位置
         //todo  记得来修改成动态的sid getPageSection bug修复后
-        // let listSID = sectionData!.listSID
-        // let listSID = "shortVideoListSID"
-        // VirtualView.call(listSID,'scrollToPosition',[0])
-        // VirtualView.call(listSID,'setSelectChildPosition',[0,true])
+        let listSID = sectionData!.shortList.sid
+        VirtualView.call(listSID,'scrollToPosition',[0])
+        VirtualView.call(listSID,'setSelectChildPosition',[0,true])
       } else if (playType === HomePlayType.TYPE_4K) {
         const _4KListSid = sectionData!.list4KSid
         //初始化位置
@@ -310,7 +318,7 @@ const onTabPageChanged = (pageIndex: number) => {
   curPlayerType = HomePlayType.TYPE_UNDEFINED
   clearTimeout(isMoreFrontTimer)
   //设置首屏图
-  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id, '0', '', true)
+  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id??'', '0', '', true)
 }
 /**
  * 吸顶开始
@@ -327,7 +335,7 @@ const onTabMoveToTopStart = () => {
     waterfallBgPlayerRef.value?.stop()
   }
   //设置二屏图
-  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
 }
 /**
  * 恢复吸顶结束
@@ -349,7 +357,7 @@ const onTabMoveToBottomEnd = () => {
   if (curFirstScreenBg) {
     setFirstScreenImg('', '1', curFirstScreenBg, true)
   } else {
-    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id)
+    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
   }
 
 }
@@ -411,6 +419,11 @@ const onTabPageItemFocused = (tabPageIndex: number, sectionIndex: number, sectio
     }else{
       is4kSectionItemFocused = false
     }
+    if (item.name === TabContentConfig.shortVideoSectionItemName){
+      if (recordPlayerData.tabPageIndex !== tabPageIndex || recordPlayerData.sectionItemIndex !== sectionItemIndex) {
+        dealShortFocused(tabPageIndex,sectionItemIndex,item)
+      }
+    }
     //背景播放
     if (curPlayerType === HomePlayType.TYPE_BG && sectionIndex === 0) {
       typeBgFocused(tabPageIndex, sectionIndex, sectionItemIndex, item)
@@ -470,6 +483,27 @@ const deal4KFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWat
     },300)
   }
 }
+/**
+ * short item 焦点
+ * @param tabPageIndex
+ * @param sectionItemIndex
+ * @param item
+ */
+const dealShortFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWaterfallItem)=>{
+  clearTimeout(shortVideoTimer)
+  waterfallBgPlayerRef?.value.pause()
+  curBgPlayData = item.play.playData
+  if (curBgPlayData && curBgPlayData.length > 0) {
+    const bgUrl = curBgPlayData[0].cover
+    waterfallBgPlayerRef?.value?.setBgImage(bgUrl)
+    recordPlayerData.tabPageIndex = tabPageIndex
+    recordPlayerData.sectionItemIndex = sectionItemIndex
+    waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
+    shortVideoTimer = setTimeout(()=>{
+      waterfallBgPlayerRef?.value?.play(curBgPlayData)
+    },300)
+  }
+}
 
 const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTWaterfallItem)=>{
   curBgPlayData = item.play.playData
@@ -515,7 +549,7 @@ const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTW
  * @param switchBg
  * @param isLoad
  */
-const setFirstScreenImg = (tabId: string, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
+const setFirstScreenImg = (tabId: string|null, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
   if (isSwitchBg === '1') {
     curFirstScreenBg = firstScreenBg
     setWTabBg(firstScreenBg, isLoad)
@@ -598,7 +632,7 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
     if (TabBarConfig.tab.id === curTab._id && pageNo === 0) {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
     } else {
-      getTabContent(curTab._id, pageIndex, pageNo + 1)
+      getTabContent(curTab._id??'', pageIndex, pageNo + 1)
     }
   }
 
@@ -615,7 +649,10 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
             index = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
           }
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
-          tabRef.value?.setPageData(tabPageIndex, tabPage)
+          //判断当前tab是否有历史格子
+          let historyItemPos: any = tabsContent.historyItemPos.filter((item) => item.tabIndex == tabPageIndex)
+          if(historyItemPos.length > 0) updateHistoryItem(tabPageIndex, tabPage, 1,historyItemPos[0])
+          else tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
           if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
             const sectionIndex = barsDataManager.barsData.itemList[tabPageIndex].sectionIndex
@@ -632,6 +669,50 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
     })
 }
 /**
+ * 更新历史格子的数据
+ * @param tabPageIndex
+ * @param tabPage
+ * @param type 1 build数据 2 更新
+ * @param historyItemPos 格子位置
+ */
+const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) => {
+  //历史格子默认配在第一个板块
+  if(type == 1){
+    let item = tabPage.data[0].itemList[historyItemPos.itemIndex]
+    //无历史
+    // item.historyList = [
+    //   {
+    //     type: 4001,
+    //     style: {width: item.style.width,height: item.style.height},
+    //     text: '暂无历史记录',
+    //   }
+    // ]
+    //有历史
+    item.historyList = [
+      {
+        type: 4002,
+        style: {width: item.style.width,height: 76},
+        text: '步步惊心步步惊心步步惊心',
+        progress: '70%',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+      {
+        type: 4003,
+        style: {width: item.style.width,height: 76},
+        text: '登录同步云端历史',
+      },
+      {
+        type: 4004,
+        style: {width: item.style.width,height: 1},
+      },
+    ]
+    tabRef.value?.setPageData(tabPageIndex, tabPage)
+  }
+}
+/**
  * 加载 4K 数据
  * @param tabPageIndex
  * @param content4kId
@@ -640,7 +721,8 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
   const world4kSection = await homeManager.get4KSection(content4kId,6,TabContentType.TYPE_WATERFALL_SECTION_4K)
 
   if (world4kSection && world4kSection.length > 0) {
-    if (tabsContent.home4KList.length < 1) tabsContent.home4KList = world4kSection
+    const cacheList = tabsContent.homeSectionCacheList.get(content4kId)
+    if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(content4kId,world4kSection)
     tabRef.value!.addPageItemList(tabPageIndex, 0, world4kSection)
     const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
     const section4kItem = world4kSection[0]
@@ -648,6 +730,36 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
       section4kItem?.play?.style?.width, section4kItem?.play?.style?.height, 253.5, TabContentConfig.firstSectionTop, section4kItem.play.playData)
   }
 }
+
+/**
+ * 加载 short 数据
+ * @param tabPageIndex
+ * @param shortVideoId
+ * @param pageNo
+ */
+const loadShortData = async (tabPageIndex: number, shortVideoId: string,pageNo:number) =>{
+  const shortVideoSection = await homeManager.getShortVideoSection(shortVideoId,TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,pageNo,30)
+  if (shortVideoSection && shortVideoSection.length > 0){
+    if (pageNo === 1){
+      const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
+      if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(shortVideoId,shortVideoSection)
+      tabRef.value!.addPageItemList(tabPageIndex, 0, shortVideoSection)
+      const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
+      const shortVideoItem = shortVideoSection[0]
+      buildRecordPlayerMap(tabPageIndex, 0, playType, 1920, 1080,
+        1920, 1080, 0, 0, shortVideoItem.play.playData)
+    }
+    else{
+      // todo 分页加载 看接口，当前接口无分页 有分页，放开下面三行加载代码
+      // const shortSection = tabRef.value?.getPageSection(tabPageIndex,0)
+      // const shortListSid = shortSection?.shortList?.sid
+      // VirtualView.call(shortListSid,'addListData',shortVideoSection)
+    }
+
+
+  }
+}
+
 const buildRecordPlayerMap = (tabPageIndex: number, sectionItemIndex: number, playType: HomePlayType, windowWidth: number, windowHeight: number, playerWidth: number, playerHeight: number, left: number, top: number, playerData: Array<IMediaList>): HomePlayData => {
   const obj: HomePlayData = {
     type: HomePlayType.TYPE_UNDEFINED,
@@ -689,7 +801,7 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
   if (isPlay) {
     const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
     if (playType !== HomePlayType.TYPE_UNDEFINED) {
-      if (playType === HomePlayType.TYPE_4K || playType === HomePlayType.TYPE_SHORT) {
+      if (playType === HomePlayType.TYPE_4K || playType === HomePlayType.TYPE_SHORT_SCREEN) {
         tabPage.bindingPlayer = 'bgPlayerReplaceChildSid'
         return
       } else if (playType === HomePlayType.TYPE_SMALL_4K) {
@@ -714,7 +826,7 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
         } else if (playType === HomePlayType.TYPE_CELL || playType === HomePlayType.TYPE_CELL_LIST) {
           buildRecordPlayerMap(
             tabPageIndex, sectionItemIndex, playType,
-            sectionItem.style.width, sectionItem.style.height,
+            sectionItem.style.width!, sectionItem.style.height!,
             sectionItem?.play?.style?.width, sectionItem?.play?.style?.height,
             0, 0, sectionItem.play.playData)
         }
@@ -771,6 +883,7 @@ const onESDestroy = () => {
   clearTimeout(bgTimer)
   clearTimeout(typeBgFocusTimer)
   clearTimeout(delay4KFocusTimer)
+  clearTimeout(shortVideoTimer)
   clearTimeout(small4KTimer)
   clearTimeout(resumePlayTimer)
   clearTimeout(small4KSetChildSIdTimer)
