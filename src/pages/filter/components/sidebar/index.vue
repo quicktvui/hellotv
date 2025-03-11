@@ -8,6 +8,7 @@
       class="filter-sidebar-list"
       ref="listRef"
       name="sidebarList"
+      :autoscroll="[$props.singleSelectPos, 432]"
       :singleSelectPosition="$props.singleSelectPos"
       :nextFocusName="{ up: 'topView', right: nextFocusNameRight }"
       @item-focused="onItemFocused"

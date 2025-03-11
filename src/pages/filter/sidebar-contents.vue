@@ -34,23 +34,28 @@ const router = useESRouter()
 
 // 筛选列表
 const sidebarRef = ref()
-const sidebarSinglePos = ref<number>(1)
+const sidebarSinglePos = ref<number>(-1)
 const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
 
-function onESCreate(params: { screenId: string }) {
-  params.screenId = "1848555233454727169"
-  loadFilters(params.screenId || '1848555233454727169')
+function onESCreate(params: { screenId: string; defaultSecondaryId?: string }) {
+  params.screenId = '1848555233454727169'
+  params.defaultSecondaryId = '1848554924032532482' // 默认选中的二级筛选项ID
+  loadFilters(params.screenId, params.defaultSecondaryId)
 }
 
-function loadFilters(primaryId: string) {
+function loadFilters(primaryId: string, defaultSecondaryId: string) {
   filterManager.getFilters(primaryId).then((filters) => {
     const { secondaries, tertiaries } = buildFilters(primaryId, filters)
+    // 设置左侧列表默认选中
+    const index = secondaries.findIndex((item) => item.id === defaultSecondaryId)
+    sidebarSinglePos.value = index !== -1 ? index : 1
+    lastPosition = sidebarSinglePos.value
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(primaryId, tertiaries)
+    contentRef.value?.init(primaryId, tertiaries, defaultSecondaryId)
   })
 }
 
@@ -63,6 +68,7 @@ function onListItemFocused(evt) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
+      sidebarSinglePos.value = lastPosition
       contentRef.value?.loadContents(evt.item.id, evt.item.type === SecondaryType.FILTER, evt.item.type === SecondaryType.TEXT)
     }, 300)
   }
