@@ -11,8 +11,9 @@ export const buildContents = (records: Records): Content[] => {
         itemSize: 266,
         id: item.id,
         title: item.title,
-        progress: `${Math.floor((item.viewedDuration / item.totalDuration) * 100)}%`,
+        progress: `看至 ${Math.floor((item.viewedDuration / item.totalDuration) * 100)}%`,
         image: item.coverH,
+        showDeleteCover: false,
         decoration: { left: 20, top: 20, right: 20, bottom: 20 }
       })
     })

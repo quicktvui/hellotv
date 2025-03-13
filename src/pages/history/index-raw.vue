@@ -4,30 +4,35 @@
     <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
       <!-- 顶部提示 -->
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
-
       <!-- 数据渲染 -->
-      <qt-ul class="history-sidebar" ref="sidebarRef" :data="sidebarData" :autofocusPosition="0">
-        <template #default="{ index, item }">
-          <qt-view class="history-sidebar-item" :type="1" :focusable="true" @focus="(e) => onSidebarItemFocus(e, index)">
-            <qt-text
-              class="history-sidebar-item-text"
-              :text="item.text"
-              gravity="center"
-              :showOnState="['normal', 'selected']"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-text>
-            <qt-text
-              class="history-sidebar-item-text"
-              :text="item.text"
-              gravity="center"
-              :showOnState="'focused'"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-text>
-          </qt-view>
-        </template>
-      </qt-ul>
+      <qt-list-view
+        class="history-sidebar-list"
+        ref="sidebarRef"
+        :listData="sidebarData"
+        :autofocusPosition="0"
+        :clipChildren="false"
+        @item-focused="onSidebarItemFocus"
+      >
+        <qt-view class="history-sidebar-list-item" :type="ContentType.Normal" :focusable="true" eventFocus eventClick>
+          <qt-text
+            class="history-sidebar-list-item-text"
+            text="${text}"
+            gravity="center"
+            :showOnState="['normal', 'selected']"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+          <qt-text
+            class="history-sidebar-list-item-text"
+            text="${text}"
+            gravity="center"
+            typeface="bold"
+            :showOnState="'focused'"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+        </qt-view>
+      </qt-list-view>
     </qt-view>
 
     <!-- 右侧列表 -->
@@ -51,10 +56,10 @@
       </qt-view>
 
       <!-- 数据渲染 -->
-      <qt-ul
-        class="history-content-ul"
-        ref="ulRef"
-        :data="contentData"
+      <qt-grid-view
+        class="history-content-grid"
+        ref="gridRef"
+        :listData="contentData"
         :useDiff="true"
         :spanCount="4"
         :clipChildren="false"
@@ -62,78 +67,73 @@
         :blockFocusDirections="['down']"
         :openPage="true"
         :listenBoundEvent="true"
-        @item-bind="onItemBind"
         :listenHasFocusChange="true"
         :loadMore="onContentloadMore"
+        @item-focused="onContentItemFocus"
+        @item-click="onContentItemClick"
         @scroll-state-changed="onScrollStateChanged"
       >
-        <template #default="{ index, item }">
-          <!-- 常规 -->
+        <!-- 常规 -->
+        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03" eventFocus eventClick>
+          <!-- 焦点状态下的删除样式 -->
           <qt-view
-            class="history-content-ul-item"
-            v-if="item.type === ContentType.Normal"
-            :focusable="true"
-            :focusScale="1.03"
-            @focus="onContentItemFocus"
-            @click="onContentItemClick(index)"
+            class="history-content-grid-item-delete"
+            style="background-color: transparent"
+            showIf="${showDeleteCover}"
+            :focusable="false"
+            :duplicateParentState="true"
           >
-            <!-- 焦点状态下的删除样式 -->
-            <qt-view
-              class="history-content-ul-item-delete"
-              v-if="isEditing"
+            <qt-view class="history-content-grid-item-delete" :showOnState="'focused'" :focusable="false" :duplicateParentState="true">
+              <qt-image style="width: 40px; height: 50px" :src="icDelete" :focusable="false"></qt-image>
+            </qt-view>
+          </qt-view>
+          <qt-image
+            style="width: 325px; height: 186px; background-color: transparent; border-radius: 16px"
+            src="${image}"
+            :enableFocusBorder="true"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-image>
+          <qt-view style="height: 40px; background-color: transparent; margin-top: 11px" :focusable="false" :duplicateParentState="true">
+            <qt-text
+              class="history-content-grid-item-title"
+              text="${title}"
+              gravity="center|start"
+              :showOnState="['normal', 'selected']"
+              :focusable="false"
+              :duplicateParentState="true"
+            ></qt-text>
+            <qt-text
+              class="history-content-grid-item-title"
+              text="${title}"
+              gravity="center|start"
               :showOnState="'focused'"
               :focusable="false"
               :duplicateParentState="true"
-            >
-              <qt-image style="width: 40px; height: 50px" :src="icDelete" :focusable="false"></qt-image>
-            </qt-view>
-            <qt-image
-              style="width: 325px; height: 186px; background-color: transparent; border-radius: 16px"
-              :src="item.image"
-              :enableFocusBorder="true"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-image>
-            <qt-view style="height: 40px; background-color: transparent; margin-top: 11px" :focusable="false" :duplicateParentState="true">
-              <qt-text
-                class="history-content-ul-item-title"
-                :text="item.title"
-                gravity="center|start"
-                :showOnState="['normal', 'selected']"
-                :focusable="false"
-                :duplicateParentState="true"
-              ></qt-text>
-              <qt-text
-                class="history-content-ul-item-title"
-                :text="item.title"
-                gravity="center|start"
-                :showOnState="'focused'"
-                :focusable="false"
-                :duplicateParentState="true"
-              ></qt-text>
-            </qt-view>
-            <qt-text class="history-content-ul-item-progress" :text="item.progress" gravity="center|start" :focusable="false"></qt-text>
-          </qt-view>
-          <!-- 到底提示 -->
-          <qt-view class="history-content-ul-item-end" v-if="item.type === ContentType.End" :focusable="false">
-            <qt-text
-              class="history-content-ul-item-end-text"
-              text="已经到底啦，按【返回键】回到顶部"
-              gravity="center"
-              :focusable="false"
             ></qt-text>
           </qt-view>
+          <qt-text class="history-content-grid-item-progress" text="${progress}" gravity="center|start" :focusable="false"></qt-text>
+        </qt-view>
+        <!-- 到底提示 -->
+        <template #footer>
+          <qt-text
+            class="history-content-grid-item-end-text"
+            :type="ContentType.End"
+            text="已经到底啦，按【返回键】回到顶部"
+            gravity="center"
+            :focusable="false"
+          ></qt-text>
         </template>
-      </qt-ul>
+      </qt-grid-view>
     </qt-view>
   </qt-view>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted } from 'vue'
-import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
-import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
+import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
 import { ContentType } from './adapter/interface'
 import historyManager from './api/index'
@@ -143,16 +143,15 @@ import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
 import config from './config'
 
-const toast = useESToast()
 const router = useESRouter()
 const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
 const sidebarRef = ref<QTIListView>()
-const ulRef = ref<QTIListView>()
-const sidebarData = ref<QTListViewItem[]>([])
-const contentData = ref<QTListViewItem[]>([])
+const sidebarData = qtRef<QTListViewItem[]>()
+const gridRef = ref<QTIListView>()
+const contentData = qtRef<QTListViewItem[]>([])
 const btnStyle = {
   width: `180px`,
   height: `60px`,
@@ -170,13 +169,19 @@ const textStyle = {
 let page = 1
 let stopPage = false
 
+watch(
+  () => isEditing.value,
+  (newVal) => {
+    updateGridItemShowDeleteCoverState(newVal)
+  }
+)
+
 onMounted(() => {
   eventBus.on('clearPageData', clearPageData)
   // 初始化左侧列表
   sidebarData.value = [
-    { type: 1, itemSize: 106, id: 1, text: '观看历史' },
-    { type: 1, itemSize: 106, id: 2, text: '我的收藏' },
-    { type: 1, itemSize: 106, id: 3, text: '已购内容' }
+    { type: 1, id: 1, text: '观看历史' },
+    { type: 1, id: 2, text: '我的收藏' }
   ]
 })
 
@@ -186,64 +191,64 @@ onUnmounted(() => {
 
 let lastIndex = -1
 let lastFocusName = ''
-function onSidebarItemFocus(evt, index) {
+function onSidebarItemFocus(evt) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
-
-    if (lastIndex !== index) {
+    if (lastIndex !== evt.index) {
       page = 1
       stopPage = false
-      lastIndex = index
+      lastIndex = evt.index
       isLoading.value = true
       // 右侧内容复原
-      ulRef.value?.scrollToTop()
+      gridRef.value?.scrollToTop()
+      gridRef.value?.setItemSelected(0, true)
       // 加载新数据
-      loadRecords(index)
+      loadRecords(lastIndex)
     }
   }
 }
 
+let lastGridItemIndex = -1
 function onContentItemFocus(evt) {
   if (evt.isFocused) {
+    qt.toast.showToast(`${evt.position}`)
     lastFocusName = 'content'
+    lastGridItemIndex = evt.position
+    // 更新节点删除遮罩状态
+    updateGridItemShowDeleteCoverState(isEditing.value)
   }
 }
 
-function onContentItemClick(index) {
+function onContentItemClick(evt) {
   if (isEditing.value) {
     historyManager
-      .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[index].id)
+      .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
-        contentData.value.splice(index, 1)
+        contentData.value.splice(evt.position, 1)
       })
       .catch(() => {
-        toast.showToast('删除失败')
+        qt.toast.showToast('删除失败')
       })
   } else {
-    launch.launchDetail(contentData.value[index].id)
+    launch.launchDetail(contentData.value[evt.position].id)
   }
 }
 
 let loadingDelayTimer: any = -1
 async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.ContentsLimit) {
-  console.log('ok->', menuIndex, page)
-  if (menuIndex === 2) {
-    contentData.value = []
+  const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
+  if (page === 1) {
+    contentData.value = buildContents(records)
   } else {
-    const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
-    if (page === 1) {
-      contentData.value = buildContents(records)
-    } else {
-      contentData.value = contentData.value.concat(buildContents(records))
-      // contentData.value.push(...buildContents(records))
-    }
-    // 到底提示
-    if (contentData.value.length > config.ContentsLimit) {
-      contentData.value.push(buildEndContent())
-    }
-    // 结束分页
-    stopPage = records.items.length < config.ContentsLimit
+    contentData.value.push(...buildContents(records))
   }
+  // 到底提示
+  if (contentData.value.length > config.ContentsLimit) {
+    contentData.value.push(buildEndContent())
+  }
+  // 结束分页
+  stopPage = records.items.length < config.ContentsLimit
+  // 暂无数据
   isEmpty.value = contentData.value.length === 0
 
   // 延迟关闭loading
@@ -254,7 +259,6 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 function onContentloadMore() {
   if (!stopPage) {
     loadRecords(lastIndex, ++page)
-    console.log(page, '32323444444444444444')
   }
 }
 
@@ -274,13 +278,28 @@ function onBtnClick(name: 'cancel' | 'clear') {
   }
 }
 
-function onItemBind() {}
+// 更新节点删除遮罩状态
+function updateGridItemShowDeleteCoverState(bool: boolean) {
+  // 检查 contentData 是否为空或 lastGridItemIndex 是否超出范围
+  if (!contentData.value || lastGridItemIndex < 0 || lastGridItemIndex >= contentData.value.length) {
+    qt.log.e('ok->', 'Invalid index or contentData not initialized.')
+  } else {
+    // 更新指定网格项的删除遮罩状态
+    contentData.value[lastGridItemIndex].showDeleteCover = bool
+  }
+}
 
+let clearTimer: any = -1
 function clearPageData() {
   isEmpty.value = true
   isEditing.value = false
   // 清空本地数据
   contentData.value = []
+  // 设置默认焦点
+  clearTimeout(clearTimer)
+  clearTimer = setTimeout(() => {
+    sidebarRef.value?.setItemFocused(lastIndex)
+  }, 200)
 }
 
 let oKCounter = 0
@@ -311,7 +330,7 @@ function onBackPressed() {
 
   // 右侧内容滚动状态检查
   if (offsetY > 0) {
-    ulRef.value?.scrollToTop()
+    gridRef.value?.scrollToFocused(0)
     return
   }
 
@@ -327,4 +346,4 @@ function onBackPressed() {
 defineExpose({ onKeyDown, onBackPressed })
 </script>
 
-<style scoped lang="scss" src="./scss/history.scss"></style>
+<style scoped lang="scss" src="./scss/history-raw.scss"></style>
