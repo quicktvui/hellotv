@@ -22,7 +22,7 @@
     "@extscreen/es3-video-player": "1.0.35",
     "@extscreen/es3-vue": "0.0.14",
     "@extscreen/es3-vue-style-parser": "0.0.8",
-    "@quicktvui/quicktvui3": "1.2.0-beta.13",
+    "@quicktvui/quicktvui3": "1.2.0-beta.18",
     "@vue/runtime-core": "^3.2.21",
     "core-js": "^3.8.3",
     "crypto-js": "^4.2.0",

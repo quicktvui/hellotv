@@ -1,25 +1,32 @@
 <template>
   <qt-view class="media-collapse-definition" :focusable="false">
     <span class="media-collapse-definition-title" :opacity="isCollapseExpand ? 1 : 0.5">清晰度</span>
-    <div class="media-collapse-definition-content" :clipChildren="false" :opacity="isCollapseExpand ? 1 : 0">
+    <qt-animation ref="animationRef">
+      <div class="media-collapse-definition-content" :clipChildren="false">
       <qt-list-view
         ref="definitionListViewRef" horizontal
         :autofocusPosition="selectedIndex"
         sid='collapse-item-definition'
-        v-show='isCollapseExpand'
         class="media-collapse-definition-list"
         @item-focused="onItemFocused"
         @item-click="onItemClicked">
         <media-collapse-list-item type="1"/>
       </qt-list-view>
-    </div>   
+    </div>
+    </qt-animation>
   </qt-view>
 </template>
-      
+
 <script setup lang='ts' name='media-collapse-definition'>
 import { ref } from 'vue'
 import { ESLogLevel, useESLog } from "@extscreen/es3-core"
-import { QTIListView, QTListViewItem} from '@quicktvui/quicktvui3'
+import {
+  QTAnimationPropertyName,
+  QTAnimationValueType,
+  QTIAnimation,
+  QTIListView,
+  QTListViewItem
+} from '@quicktvui/quicktvui3'
 import MediaCollapseListItem from "./media-collapse-list-item.vue";
   const TAG = 'media-collapse-definition'
   const log = useESLog()
@@ -79,17 +86,68 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
         definitionListViewRef.value?.updateItemRange(i,1,[item])
       }
     }
-  } 
+  }
   // CollapseItem 展示回调
-  const onCollapseItemExpand = (value: boolean) => {
+  const onCollapseItemExpand = (value: boolean, init: boolean) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
     }
     isCollapseExpand.value = value
+
+    let delay = init ? 0 : 300
+    if (value) {
+      show(delay)
+    } else {
+      dismiss(delay)
+    }
+
     // if (value) {
     //   setItemFocused(selectedIndex.value)
     // }
   }
+
+  const animationRef = ref<QTIAnimation>()
+  let alpha = 1
+  function show(delay) {
+    if (alpha == 1) {
+      return
+    }
+    animationRef.value?.objectAnimator2(
+      '1',
+      QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
+      QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
+      alpha,
+      1,
+      delay,
+      -1,
+      0,
+      false,
+      false
+    )
+    animationRef.value?.startAnimator('1')
+    alpha = 1
+  }
+
+  function dismiss(delay) {
+    if (alpha == 0) {
+      return
+    }
+    animationRef.value?.objectAnimator2(
+      '2',
+      QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
+      QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
+      alpha,
+      0,
+      delay,
+      -1,
+      0,
+      false,
+      false
+    )
+    animationRef.value?.startAnimator('2')
+    alpha = 0
+  }
+
   defineExpose({
     setListData,
     setItemFocused,
@@ -97,7 +155,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     onCollapseItemExpand
   })
 </script>
-      
+
 <style lang='scss' scoped>
 .media-collapse-definition{
   width: 1920px;
@@ -109,6 +167,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     font-size: 27px;
     color: white;
     margin-left: 90px;
+    z-index: 1000;
   }
   .media-collapse-definition-content{
     width: 1920px;
@@ -124,4 +183,3 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
   }
 }
 </style>
-        
