@@ -9,7 +9,7 @@
         class="history-sidebar-list"
         ref="sidebarRef"
         :listData="sidebarData"
-        :autofocusPosition="0"
+        :autofocusPosition="sidebarDefaultPos"
         :clipChildren="false"
         @item-focused="onSidebarItemFocus"
       >
@@ -130,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted, onUnmounted } from 'vue'
+import { ref, watch, onUnmounted } from 'vue'
 import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
@@ -150,6 +150,7 @@ const isEmpty = ref<boolean>(false)
 const isEditing = ref<boolean>(false)
 const sidebarRef = ref<QTIListView>()
 const sidebarData = qtRef<QTListViewItem[]>()
+const sidebarDefaultPos = ref<number>(0)
 const gridRef = ref<QTIListView>()
 const contentData = qtRef<QTListViewItem[]>([])
 const btnStyle = {
@@ -176,14 +177,16 @@ watch(
   }
 )
 
-onMounted(() => {
+function onESCreate({ menuIndex = 0 } = {}) {
   eventBus.on('clearPageData', clearPageData)
+  // 设置默认焦点
+  sidebarDefaultPos.value = menuIndex
   // 初始化左侧列表
   sidebarData.value = [
     { type: 1, id: 1, text: '观看历史' },
     { type: 1, id: 2, text: '我的收藏' }
   ]
-})
+}
 
 onUnmounted(() => {
   eventBus.off('clearPageData')
@@ -343,7 +346,7 @@ function onBackPressed() {
   router.back()
 }
 
-defineExpose({ onKeyDown, onBackPressed })
+defineExpose({ onESCreate, onKeyDown, onBackPressed })
 </script>
 
 <style scoped lang="scss" src="./scss/history-raw.scss"></style>
