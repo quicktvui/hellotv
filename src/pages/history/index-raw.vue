@@ -180,7 +180,7 @@ watch(
 function onESCreate({ menuIndex = 0 } = {}) {
   eventBus.on('clearPageData', clearPageData)
   // 设置默认焦点
-  sidebarDefaultPos.value = menuIndex
+  sidebarDefaultPos.value = Number(menuIndex)
   // 初始化左侧列表
   sidebarData.value = [
     { type: 1, id: 1, text: '观看历史' },
