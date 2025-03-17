@@ -40,10 +40,10 @@ export const buildFilters = function (
     case 2: // 两栏布局
       secondaries.push(
         ...[
-          { type: SecondaryType.TITLE, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
+          { type: SecondaryType.TITLE, id: 'NIL', name: primaries.find((item) => item.id === primaryId)?.name || '' },
           {
             type: SecondaryType.FILTER,
-            id: '',
+            id: 'NIL',
             name: '筛选',
             icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
           }
@@ -55,11 +55,11 @@ export const buildFilters = function (
         ...[
           {
             type: SecondaryType.FILTER_TITLE,
-            id: '',
+            id: 'NIL',
             name: '全部' + primaries.find((item) => item.id === primaryId)?.name || '',
             icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
           },
-          { type: SecondaryType.LINE, id: '', name: 'line' }
+          { type: SecondaryType.LINE, id: 'NIL', name: 'line' }
         ]
       )
       break

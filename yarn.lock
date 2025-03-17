@@ -1303,10 +1303,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-dynamic-import-plugin/-/es3-dynamic-import-plugin-0.0.5.tgz#1a469a07c5accbb6e44c2c717887cbb50f62dc0d"
   integrity sha512-tMG0Nrdo8Nmc5X51sfRmDfE9gw4MFH7Lu9rCT+J7w9DmS8OwFdiQ9XkYV1SyCKo50fJhCQPmtrDa9A8IAA22Yw==
 
-"@extscreen/es3-player-manager@^1.0.33":
-  version "1.0.39"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-player-manager/-/es3-player-manager-1.0.39.tgz#d4847890b75f4a0c1cbe4af8da2508249324d954"
-  integrity sha512-pImuaihH+5+KdpPIxCFKi0LhF+Axno2XwD4OgONzS6LmKBiji+pxQW3WB/pa43vx42bAuQCifxnqsa2vI6SwxA==
+"@extscreen/es3-player-manager@1.0.41":
+  version "1.0.41"
+  resolved "https://registry.npmmirror.com/@extscreen/es3-player-manager/-/es3-player-manager-1.0.41.tgz#c68a84bac98d6403eb9f70d9913328bd287d7d2e"
+  integrity sha512-tx1F40ydf/F3/Vr4SxzTi3DlgnuEEwQW64fyO9qSkG/1Zsu8T2bFWXEZwKjMkYK14XwvPXSHYr3TXVAALfqMgA==
 
 "@extscreen/es3-player@1.0.17":
   version "1.0.17"

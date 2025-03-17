@@ -150,11 +150,15 @@ let reqQuery: string = ''
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
-function init(primaryId: string, listData: Tertiary[]) {
+function init(primaryId: string, listData: Tertiary[], defaultSecondaryId?: string) {
   // 保存筛选数据
-  rawParams = { primaryId, listData }
+  rawParams = { primaryId, listData, defaultSecondaryId }
   // 加载筛选内容
-  loadContents(reqQuery, listData.length > 0)
+  if (defaultSecondaryId !== undefined && defaultSecondaryId != '') {
+    loadContents(defaultSecondaryId || '', false, true)
+  } else {
+    loadContents(reqQuery, listData.length > 0)
+  }
 }
 
 function onListItemFocused(evt) {

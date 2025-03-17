@@ -4,7 +4,7 @@ export enum ContentType {
   // 常规
   Normal = 1,
   // 到底提示
-  End = 1002
+  End = 1003
 }
 
 export interface Content {
@@ -14,5 +14,6 @@ export interface Content {
   title?: string
   progress?: string
   image?: string
+  showDeleteCover?: boolean
   decoration?: QTListViewItemDecoration
 }

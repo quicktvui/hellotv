@@ -72,7 +72,7 @@ const routes = [
     name: 'detail-full-screen',
     component: () => import('./pages/detail-full-screen/index.vue')
   },
-  { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
+  { name: 'history', path: '/history', component: () => import('./pages/history/index-raw.vue') },
   {
     name: 'confirm',
     path: '/confirm',
@@ -81,9 +81,9 @@ const routes = [
   },
   {
     path: '/exit-dialog',
-    name:'exit_dialog',
-    component: ()=> import('./pages/home/components/exit-dialog.vue'),
-    type:ESRouteType.ES_ROUTE_TYPE_DIALOG
+    name: 'exit_dialog',
+    component: () => import('./pages/home/components/exit-dialog.vue'),
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
   },
   {
     path:'/playTest',
