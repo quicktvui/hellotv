@@ -36,7 +36,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     'onCollapseItemFocused','onCollapseItemClicked'
   ])
   let itemDataList: Array<QTListViewItem>
-  const selectedIndex = ref<number>(0)
+  const selectedIndex = ref<number>(-1)
   const onItemFocused = (e) => {
     let focused = e.isFocused;
     if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -63,7 +63,7 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     if (!isCollapseExpand.value) {
       return
     }
-    // orderListViewRef.value?.setItemFocused(position)
+    orderListViewRef.value?.setItemFocused(position)
   }
   const setItemSelected = (position: number): void => {
     selectedIndex.value = position
@@ -103,7 +103,8 @@ import MediaCollapseListItem from "./media-collapse-list-item.vue";
     }
 
     if (value) {
-      setItemFocused(selectedIndex.value)
+      const focusDelay = delay +100
+      setTimeout(()=>{setItemFocused(selectedIndex.value)},focusDelay)
     }
   }
 
