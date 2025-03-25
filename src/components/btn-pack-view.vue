@@ -19,7 +19,7 @@
            :src='focusIcon' />
     </div>
     <!--    文字内容-->
-    <qt-text v-if='text' duplicateParentState typeface='bold' :font-size='fontSize' :text='text'
+    <qt-text v-if='text' duplicateParentState typeface='bold' :fontSize='fontSize' :text='text'
              :focusable='false' :select='true' :ellipsizeMode='3' :lines='1'
              gravity='centerVertical'
              :class='["text-css",{
