@@ -100,6 +100,8 @@
               text="${title}"
               gravity="center|start"
               :showOnState="['normal', 'selected']"
+              :lines="1"
+              :ellipsizeMode="4"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
@@ -108,11 +110,19 @@
               text="${title}"
               gravity="center|start"
               :showOnState="'focused'"
+              :lines="1"
+              :ellipsizeMode="4"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
           </qt-view>
-          <qt-text class="history-content-grid-item-progress" text="${progress}" gravity="center|start" :focusable="false"></qt-text>
+          <qt-text
+            class="history-content-grid-item-progress"
+            text="${progress}"
+            gravity="center|start"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
         </qt-view>
         <!-- 到底提示 -->
         <template #footer>
