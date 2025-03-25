@@ -16,6 +16,7 @@
         :padding="'0,40,0,0'"
         :singleSelectPosition="singleSelectPos"
         :blockFocusDirections="['down']"
+        :nextFocusRightSID="'--search-content-first--'"
         :openPage="true"
         :listenBoundEvent="true"
         :loadMore="onListLoadMore"

@@ -107,6 +107,9 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
     }))
   })
 
+  // 优化词条向右寻焦体验, 值需要全局唯一
+  contents[0].itemList[0].sid = '--search-content-first--'
+
   // 到底提示
   contents.push(buildEndSection())
 
