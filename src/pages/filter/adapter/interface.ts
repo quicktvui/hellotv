@@ -103,5 +103,6 @@ export interface GridContent {
   id: string
   title: string
   cover: string
+  score?: string
   jumpParams: any
 }
