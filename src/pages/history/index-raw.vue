@@ -51,7 +51,7 @@
 
       <!-- 暂无数据 -->
       <qt-view v-if="isEmpty" class="history-content-empty">
-        <qt-image style="width: 186px; height: 174px; margin-bottom: 35px" :src="icEmpty"></qt-image>
+        <qt-image style="width: 160px; height: 142px; margin-bottom: 25px" :src="icEmpty"></qt-image>
         <qt-text class="history-content-empty-text" text="暂无数据" gravity="center"></qt-text>
       </qt-view>
 
