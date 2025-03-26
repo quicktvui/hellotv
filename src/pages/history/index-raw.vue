@@ -265,6 +265,7 @@ function onContentItemClick(evt) {
       })
   } else {
     launch.launchDetail(contentData.value[evt.position].id)
+    isResume = true
   }
 }
 
@@ -290,6 +291,11 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
   loadingDelayTimer = setTimeout(() => {
     isLoading.value = false
     contentDeny.value = 1
+
+    // 重刷数据时主动设置焦点
+    if (isResume && lastFocusName === 'content') {
+      gridRef.value?.scrollToFocused(0)
+    }
   }, 300)
 }
 
@@ -358,6 +364,17 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   }
 }
 
+let isResume = false
+function onESResume() {
+  // 重刷数据
+  if (isResume) {
+    page = 1
+    stopPage = false
+    isLoading.value = true
+    loadRecords(lastIndex)
+  }
+}
+
 function onBackPressed() {
   // 编辑状态检查
   if (isEditing.value) {
@@ -380,7 +397,7 @@ function onBackPressed() {
   router.back()
 }
 
-defineExpose({ onESCreate, onKeyDown, onBackPressed })
+defineExpose({ onESCreate, onKeyDown, onESResume, onBackPressed })
 </script>
 
 <style scoped lang="scss" src="./scss/history-raw.scss"></style>
