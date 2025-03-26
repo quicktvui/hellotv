@@ -224,7 +224,6 @@ function onSidebarItemFocus(evt) {
 let lastGridItemIndex = -1
 function onContentItemFocus(evt) {
   if (evt.isFocused) {
-    qt.toast.showToast(`${evt.position}`)
     lastFocusName = 'content'
     lastGridItemIndex = evt.position
     // 更新节点删除遮罩状态
@@ -238,6 +237,11 @@ function onContentItemClick(evt) {
       .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
         contentData.value.splice(evt.position, 1)
+        // 全部删除完毕
+        if (contentData.value.length === 0) {
+          isEditing.value = false
+          isEmpty.value = true
+        }
       })
       .catch(() => {
         qt.toast.showToast('删除失败')
