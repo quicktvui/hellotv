@@ -3,7 +3,7 @@
     <!-- 焦点占位, 解决页面跳焦的问题 -->
     <qt-view class="history-focus-placeholder" :focusable="true"></qt-view>
     <!-- 左侧列表 -->
-    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
+    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1" :blockFocusDirections="['up']">
       <!-- 顶部提示 -->
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
       <!-- 数据渲染 -->
@@ -38,7 +38,7 @@
     </qt-view>
 
     <!-- 右侧列表 -->
-    <qt-view class="history-content" :clipChildren="true">
+    <qt-view class="history-content" :clipChildren="true" :descendantFocusability="contentDeny">
       <!-- 数据管理 -->
       <qt-view v-if="isEditing" class="history-content-btns">
         <qt-button text="取消" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('cancel')" />
@@ -164,6 +164,7 @@ const sidebarRef = ref<QTIListView>()
 const sidebarData = qtRef<QTListViewItem[]>()
 const sidebarDefaultPos = ref<number>(0)
 const gridRef = ref<QTIListView>()
+const contentDeny = ref<number>(1)
 const contentData = qtRef<QTListViewItem[]>([])
 const btnStyle = {
   width: `180px`,
@@ -206,20 +207,30 @@ onUnmounted(() => {
 
 let lastIndex = -1
 let lastFocusName = ''
+let sidebarTimer: any = -1
 function onSidebarItemFocus(evt) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
-    if (lastIndex !== evt.position) {
-      page = 1
-      stopPage = false
-      lastIndex = evt.position
-      isLoading.value = true
-      // 右侧内容复原
-      gridRef.value?.scrollToTop()
-      gridRef.value?.setItemSelected(0, true)
-      // 加载新数据
-      loadRecords(lastIndex)
-    }
+
+    // 屏蔽右侧焦点
+    contentDeny.value = 2
+
+    clearTimeout(sidebarTimer)
+    sidebarTimer = setTimeout(() => {
+      if (lastIndex !== evt.position) {
+        page = 1
+        stopPage = false
+        lastIndex = evt.position
+        isLoading.value = true
+        // 右侧内容复原
+        gridRef.value?.scrollToTop()
+        gridRef.value?.setItemSelected(0, true)
+        // 加载新数据
+        loadRecords(lastIndex)
+      } else {
+        contentDeny.value = 1
+      }
+    }, 300)
   }
 }
 
@@ -276,7 +287,10 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 
   // 延迟关闭loading
   clearTimeout(loadingDelayTimer)
-  loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+  loadingDelayTimer = setTimeout(() => {
+    isLoading.value = false
+    contentDeny.value = 1
+  }, 300)
 }
 
 function onContentloadMore() {
