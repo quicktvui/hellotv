@@ -17,7 +17,7 @@
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
-        <qt-view class="filter-main-contents">
+        <qt-view class="filter-main-contents" :descendantFocusability="gridDeny">
           <qt-grid-view
             class="filter-main-contents-grid"
             :style="{ width: contentWidth }"
@@ -135,6 +135,7 @@ const recordListRef = ref<QTIListView>()
 const showRecords = ref<boolean>(false)
 // 筛选结果
 const gridRef = ref<QTIGridView>()
+const gridDeny = ref<number>(1)
 const gridData = qtRef()
 const gridScrollY = ref<number>(0)
 const gridItemHWidth = ref<number>(cfgGridSpanCount.value === 5 ? 320 : 325)
@@ -174,6 +175,9 @@ function onListItemFocused(evt) {
 let lastParentPosition = 0
 let lastCurentPosition = 0
 function onListItemClick(evt) {
+  // 屏蔽内容区域焦点
+  gridDeny.value = 2
+
   // 点击相同条件不触发
   if (evt.parentPosition === lastParentPosition && evt.position === lastCurentPosition) {
     return
@@ -275,6 +279,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
       } else {
         emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
+        gridDeny.value = 1
         gridRef.value?.setItemSelected(0, true)
       }
     }, 300)
