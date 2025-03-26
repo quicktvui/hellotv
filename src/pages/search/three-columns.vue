@@ -10,10 +10,18 @@
           :inputText="inputText"
           @setLoading="setLoading"
           @updateFocusName="updateFocusName"
+          @updateFocusDeny="updateFocusDeny"
           @updateKeyword="updateKeyword"
         />
         <!-- 搜索内容区域 -->
-        <search-content ref="contentRef" :keyword="keyword" :triggerTask="triggerTask" @setLoading="setLoading" />
+        <search-content
+          ref="contentRef"
+          :descendantFocusability="contentDeny"
+          :keyword="keyword"
+          :triggerTask="triggerTask"
+          @setLoading="setLoading"
+          @updateFocusDeny="updateFocusDeny"
+        />
       </qt-view>
     </scroll-view>
     <!-- 搜索关键词、内容区域loading -->
@@ -48,6 +56,7 @@ const keywordRef = ref()
 const keyword = ref<string>('')
 // 内容
 const contentRef = ref()
+const contentDeny = ref<number>(1)
 const triggerTask = [
   {
     event: 'onFocusAcquired',
@@ -84,7 +93,12 @@ function updateKeyword(val: string) {
  * 当前焦点位置更新
  */
 function updateFocusName(val: string) {
+  contentDeny.value = 2
   curFocusName.value = val
+}
+
+function updateFocusDeny(bool: boolean) {
+  contentDeny.value = bool ? 2 : 1
 }
 
 /**

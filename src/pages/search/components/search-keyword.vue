@@ -67,7 +67,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['setLoading', 'updateFocusName', 'updateKeyword'])
+const emits = defineEmits(['setLoading', 'updateFocusName', 'updateFocusDeny', 'updateKeyword'])
 // 页面引用
 const title = ref<string>('热门搜索')
 const listRef = ref<QTIListView>()
@@ -149,6 +149,8 @@ function onListItemFocused(evt) {
     if (evt.isFocused && evt.position != lastFocusPos) {
       lastFocusPos = evt.position
       emits('updateKeyword', evt.item.text)
+    } else {
+      emits('updateFocusDeny', false)
     }
   }, 300)
 }
