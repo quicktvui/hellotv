@@ -1,5 +1,7 @@
 <template>
   <qt-view class="history" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
+    <!-- 焦点占位, 解决页面跳焦的问题 -->
+    <qt-view class="history-focus-placeholder" :focusable="true"></qt-view>
     <!-- 左侧列表 -->
     <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
       <!-- 顶部提示 -->
@@ -207,10 +209,10 @@ let lastFocusName = ''
 function onSidebarItemFocus(evt) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
-    if (lastIndex !== evt.index) {
+    if (lastIndex !== evt.position) {
       page = 1
       stopPage = false
-      lastIndex = evt.index
+      lastIndex = evt.position
       isLoading.value = true
       // 右侧内容复原
       gridRef.value?.scrollToTop()
