@@ -239,6 +239,10 @@ function onContentItemClick(evt) {
       .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
         contentData.value.splice(evt.position, 1)
+        // 等于13条删除到底提示
+        if (contentData.value.length === 13) {
+          contentData.value.splice(12, 1)
+        }
         // 全部删除完毕
         if (contentData.value.length === 0) {
           isEditing.value = false
@@ -262,7 +266,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
     contentData.value.push(...buildContents(records))
   }
   // 到底提示
-  if (contentData.value.length > config.ContentsLimit) {
+  if (contentData.value.length < config.ContentsLimit * page && contentData.value.length > 12) {
     contentData.value.push(buildEndContent())
   }
   // 结束分页
