@@ -10,6 +10,7 @@
       <qt-list-view
         class="history-sidebar-list"
         ref="sidebarRef"
+        sid="sidebar"
         :listData="sidebarData"
         :autofocusPosition="sidebarDefaultPos"
         :clipChildren="false"
@@ -38,9 +39,9 @@
     </qt-view>
 
     <!-- 右侧列表 -->
-    <qt-view class="history-content" :clipChildren="true" :descendantFocusability="contentDeny">
+    <qt-view class="history-content" :clipChildren="true" :descendantFocusability="contentDeny" :blockFocusDirections="['up']">
       <!-- 数据管理 -->
-      <qt-view v-if="isEditing" class="history-content-btns">
+      <qt-view v-if="isEditing" class="history-content-btns" sid="btns" :blockFocusDirections="['left']">
         <qt-button text="取消" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('cancel')" />
         <qt-button text="一键清空" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('clear')" />
       </qt-view>
@@ -66,7 +67,8 @@
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
-        :blockFocusDirections="['down']"
+        :nextFocusUpSID="'btns'"
+        :nextFocusLeftSID="'sidebar'"
         :openPage="true"
         :listenBoundEvent="true"
         :listenHasFocusChange="true"
@@ -379,6 +381,7 @@ function onBackPressed() {
   // 编辑状态检查
   if (isEditing.value) {
     isEditing.value = false
+    gridRef.value?.setItemFocused(0)
     return
   }
 
@@ -390,7 +393,7 @@ function onBackPressed() {
 
   // 左侧列表焦点
   if (lastFocusName !== 'sidebar') {
-    sidebarRef.value?.setItemFocused(0)
+    sidebarRef.value?.setItemFocused(lastIndex)
     return
   }
 
