@@ -246,6 +246,7 @@ function onContentItemFocus(evt) {
   }
 }
 
+let deleteTimer: any = -1
 function onContentItemClick(evt) {
   if (isEditing.value) {
     historyManager
@@ -254,7 +255,11 @@ function onContentItemClick(evt) {
         contentData.value.splice(evt.position, 1)
         // 等于13条删除到底提示
         if (contentData.value.length === 13) {
-          contentData.value.splice(12, 1)
+          // 连续删除需要加延迟
+          clearTimeout(deleteTimer)
+          deleteTimer = setTimeout(() => {
+            contentData.value.splice(12, 1)
+          }, 300)
         }
         // 全部删除完毕
         if (contentData.value.length === 0) {
