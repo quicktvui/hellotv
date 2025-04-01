@@ -265,6 +265,9 @@ function onContentItemClick(evt) {
         if (contentData.value.length === 0) {
           isEditing.value = false
           isEmpty.value = true
+          setTimeout(() => {
+            sidebarRef.value?.setItemFocused(lastIndex)
+          }, 300)
         }
       })
       .catch(() => {
