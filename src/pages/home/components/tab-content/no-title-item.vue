@@ -12,6 +12,7 @@
     <img class='no-title-item-img'
          flexStyle='${image.style}'
          :enableFocusBorder='true'
+         :enablePlaceholder="true"
          :duplicateParentState="true"
          :postDelay='100' :focusable='false' src='${image.normal}'
     />
