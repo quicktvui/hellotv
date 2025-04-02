@@ -320,9 +320,19 @@ function onScrollStateChanged(evt) {
   offsetY = evt.offsetY
 }
 
+let cancelTimer: any = -1
+function cancelEdit() {
+  isEditing.value = false
+  contentData.value.map((item) => (item.showDeleteCover = false))
+  clearTimeout(cancelTimer)
+  cancelTimer = setTimeout(() => {
+    gridRef.value?.setItemFocused(lastGridItemIndex)
+  }, 150)
+}
+
 function onBtnClick(name: 'cancel' | 'clear') {
   if (name === 'cancel') {
-    isEditing.value = false
+    cancelEdit()
   } else {
     router.push({
       name: 'confirm',
@@ -388,8 +398,7 @@ function onESResume() {
 function onBackPressed() {
   // 编辑状态检查
   if (isEditing.value) {
-    isEditing.value = false
-    gridRef.value?.setItemFocused(0)
+    cancelEdit()
     return
   }
 
