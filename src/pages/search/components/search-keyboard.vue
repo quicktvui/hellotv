@@ -19,6 +19,7 @@
       <qt-button
         class="search-keyboard-btn"
         text="清空"
+        nextFocusDownSID="keyboardGrid"
         :textStyle="textStyle"
         :icon="icClear"
         :focusIcon="icClearFocused"
@@ -27,6 +28,7 @@
       <qt-button
         class="search-keyboard-btn"
         text="退格"
+        nextFocusDownSID="keyboardGrid"
         :textStyle="textStyle"
         :icon="icBack"
         :focusIcon="icBackFocused"
@@ -37,7 +39,9 @@
     <qt-grid-view
       class="search-keyboard-grid"
       ref="gridRef"
+      sid="keyboardGrid"
       name="keyboardGrid"
+      :focusMemory="false"
       :spanCount="6"
       :autofocusPosition="14"
       :nextFocusName="{ right: 'keywordList' }"
