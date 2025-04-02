@@ -2,7 +2,7 @@
   <qt-view
     class="filter-sidebar"
     :gradientBackground="{ colors: ['#00000000', '#0DFFFFFF'], orientation: 0 }"
-    :blockFocusDirections="$props.blockFocusDir"
+    :blockFocusDirections="['right']"
   >
     <qt-list-view
       class="filter-sidebar-list"
