@@ -13,6 +13,7 @@
       @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
       @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+      @onTabPageItemFocused="onTabPageItemFocused"
     >
       <!-- Tab -->
       <template v-slot:tab-item>
@@ -135,6 +136,10 @@ function onTabMoveToTopStart() {
 
 function onTabMoveToBottomEnd() {
   showTips.value = true
+}
+
+function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
+  qt.toast.showToast(`${item.sid}`)
 }
 </script>
 

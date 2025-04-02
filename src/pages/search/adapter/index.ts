@@ -77,7 +77,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
       decoration: { left: 80, top: 40 },
       title: '',
       itemList: rawData.items.map((item, index) => ({
-        _id: `t1-${index}`,
+        // _id: `t1-${index}`,
         type: ContentType.HORIZONTAL,
         style: { width: 410, height: 276 },
         decoration: { right: 40, bottom: 40 },
@@ -97,7 +97,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
     title: '大家都在搜',
     titleStyle: { height: 50, fontSize: 40 },
     itemList: rawData.recommends!.map((item, index) => ({
-      _id: `t2-${index}`,
+      // _id: `t2-${index}`,
       type: ContentType.VERTICAL,
       style: { width: 260, height: 414 },
       decoration: { top: 40, right: 40 },
@@ -136,7 +136,7 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
       decoration: { left: 80, top: curPage === 1 ? 200 : 0 },
       title: '',
       itemList: rawData.items.map((item, index) => ({
-        _id: `ss-${index}`,
+        // _id: `ss-${index}`,
         type: ContentType.HORIZONTAL,
         style: { width: 410, height: 276 },
         decoration: { right: 40, bottom: 40 },
@@ -187,7 +187,7 @@ export const buildRecommends = function (rawData: Recommends): QTWaterfallSectio
       decoration: { left: 80, bottom: 40 },
       title: '',
       itemList: rawData.items.map((item, index) => ({
-        _id: `r1-${index}`,
+        // _id: `r1-${index}`,
         type: ContentType.VERTICAL,
         style: { width: 260, height: 414 },
         decoration: { top: 40, right: 40 },
