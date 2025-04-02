@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="search-content-item-v" sid="${sid}" :focusable="true" layout="${layout}" eventFocus eventClick>
+  <qt-view class="search-content-item-v" name="gridItem" :focusable="true" layout="${layout}" eventFocus eventClick>
     <qt-image
       class="search-content-item-img-v"
       src="${cover}"

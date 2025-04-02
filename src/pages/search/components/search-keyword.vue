@@ -14,7 +14,7 @@
         :padding="'0,55,0,0'"
         :singleSelectPosition="singleSelectPos"
         :blockFocusDirections="['down']"
-        :nextFocusRightSID="'--search-content-first--'"
+        :nextFocusName="{ right: 'gridItem' }"
         :openPage="true"
         :listenBoundEvent="true"
         :loadMore="onListLoadMore"
