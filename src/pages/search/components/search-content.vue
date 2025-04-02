@@ -125,6 +125,8 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number) {
 
 function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
   launch.launchDetail(item.id)
+  // 上报搜索历史
+  searchManager.addHistory(rawKeyword.value || '')
 }
 
 function onTabMoveToTopStart() {

@@ -155,7 +155,7 @@ async function loadSuggestions(page = 1) {
 
     clearTimeout(loadTimer)
     loadTimer = setTimeout(() => {
-      emits('updateKeyword', listData.length > 0 ? listData[0].text : '')
+      emits('updateKeyword', listData.length > 0 ? listData[1].text : '')
       emits('setLoading', false)
     }, 300)
   } catch (error) {
@@ -219,7 +219,9 @@ function onListItemFocused(evt) {
 }
 
 function onListItemClick(evt) {
-  // TODO: 请求接口清空搜索历史
+  // 清空搜索历史
+  searchManager.clearHistory()
+  // 清空本地历史
   listData.splice(0, historyLength)
   lastFocusPos = 0
 }
