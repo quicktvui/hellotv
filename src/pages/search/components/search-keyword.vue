@@ -155,7 +155,7 @@ async function loadSuggestions(page = 1) {
 
     clearTimeout(loadTimer)
     loadTimer = setTimeout(() => {
-      emits('updateKeyword', listData.length > 0 ? listData[1].text : '')
+      emits('updateKeyword', listData.length > 1 ? listData[1].text : '')
       emits('setLoading', false)
     }, 300)
   } catch (error) {
@@ -187,7 +187,7 @@ function resetAndInitialize(keywords) {
   listData = listRef.value?.init(keywords) || []
   listRef.value?.scrollToTop()
   listRef.value?.setItemSelected(singleSelectPos.value, true)
-  isEmpty.value = listData.length === 0
+  isEmpty.value = listData.length === 1
 }
 
 function onListLoadMore() {
