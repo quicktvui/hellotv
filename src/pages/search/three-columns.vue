@@ -87,6 +87,8 @@ function updateInput(val: string) {
  */
 function updateKeyword(val: string) {
   keyword.value = val
+  // 设置左侧键盘向右焦点方向
+  keyboardRef.value?.updateKeyboardFocusRight(val.length > 0 ? 'keywordList' : 'gridItem')
 }
 
 /**
@@ -104,7 +106,12 @@ function updateFocusDeny(bool: boolean) {
 /**
  * loading状态、位置控制
  */
-function setLoading(b: boolean): void {
+function setLoading(b: boolean, full: boolean): void {
+  if (full) {
+    isLoading.value = b
+    return
+  }
+
   if (b) {
     loadingLeft.value = 1152
     loadingWidth.value = 768

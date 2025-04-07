@@ -6,6 +6,34 @@
       <qt-text class="search-keyword-empty-text" text="为您推荐右边热门影片～" gravity="center" :focusable="false"></qt-text>
     </qt-view>
     <qt-view v-else>
+      <!-- 清空按钮 -->
+      <qt-view class="search-keyword-clear-btn" v-if="showClearBtn" :focusable="true" @click="onClearBtnClick">
+        <qt-view class="search-keyword-clear-btn-img" :focusable="false" :duplicateParentState="true">
+          <qt-image
+            class="search-keyword-clear-btn-img"
+            style="position: absolute"
+            :showOnState="['normal', 'selected']"
+            :src="icClearDark"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-image>
+          <qt-image
+            class="search-keyword-clear-btn-img"
+            style="position: absolute"
+            showOnState="focused"
+            :src="icClearFocused"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-image>
+        </qt-view>
+        <qt-text
+          class="search-keyword-clear-btn-text"
+          text="清空"
+          gravity="center"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+      </qt-view>
       <!-- 搜索词条 -->
       <qt-list-view
         class="search-keyword-list"
@@ -19,7 +47,6 @@
         :listenBoundEvent="true"
         :loadMore="onListLoadMore"
         @item-focused="onListItemFocused"
-        @item-click="onListItemClick"
       >
         <!-- 标题 -->
         <qt-view :type="KeywordType.TITLE" class="search-keyword-list-item-title" :focusable="false" eventFocus eventClick>
@@ -30,33 +57,6 @@
             typeface="bold"
             :focusable="false"
           ></qt-text>
-          <qt-view class="search-keyword-list-item-title-btn" showIf="${showClearBtn}" :focusable="true">
-            <qt-view class="search-keyword-list-item-title-btn-img" :focusable="false" :duplicateParentState="true">
-              <qt-image
-                class="search-keyword-list-item-title-btn-img"
-                style="position: absolute"
-                :showOnState="['normal', 'selected']"
-                :src="icClearDark"
-                :focusable="false"
-                :duplicateParentState="true"
-              ></qt-image>
-              <qt-image
-                class="search-keyword-list-item-title-btn-img"
-                style="position: absolute"
-                showOnState="focused"
-                :src="icClearFocused"
-                :focusable="false"
-                :duplicateParentState="true"
-              ></qt-image>
-            </qt-view>
-            <qt-text
-              class="search-keyword-list-item-title-btn-text"
-              text="清空"
-              gravity="center"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-text>
-          </qt-view>
         </qt-view>
         <!-- 普通文本 -->
         <qt-view :type="KeywordType.TEXT" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
@@ -108,6 +108,7 @@ const props = defineProps({
 const emits = defineEmits(['setLoading', 'updateFocusName', 'updateFocusDeny', 'updateKeyword'])
 // 页面引用
 const mode = ref<'hot' | 'guess' | 'all'>('hot')
+const showClearBtn = ref<boolean>(false)
 const listRef = ref<QTIListView>()
 const singleSelectPos = ref<number>(1)
 const isEmpty = ref<boolean>(false)
@@ -187,6 +188,7 @@ function resetAndInitialize(keywords) {
   listData = listRef.value?.init(keywords) || []
   listRef.value?.scrollToTop()
   listRef.value?.setItemSelected(singleSelectPos.value, true)
+  showClearBtn.value = history.length > 0
   isEmpty.value = listData.length === 1
 }
 
@@ -218,12 +220,18 @@ function onListItemFocused(evt) {
   }, 300)
 }
 
-function onListItemClick(evt) {
-  // 清空搜索历史
-  searchManager.clearHistory()
-  // 清空本地历史
-  listData.splice(0, historyLength)
-  lastFocusPos = 0
+function onClearBtnClick() {
+  emits('setLoading', true, true)
+  setTimeout(() => {
+    showClearBtn.value = false
+    // 清空搜索历史
+    searchManager.clearHistory()
+    // 清空本地历史
+    listData.splice(0, historyLength)
+    lastFocusPos = 0
+    // 重新设置焦点
+    listRef.value?.setItemFocused(1)
+  }, 300)
 }
 
 function onBackPressed() {

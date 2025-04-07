@@ -15,11 +15,10 @@
     <!-- 输入框底部横线 -->
     <qt-view class="search-keyboard-input-bottom"></qt-view>
     <!-- 按钮区域 -->
-    <qt-view class="search-keyboard-btns" :blockFocusDirections="['up']">
+    <qt-view class="search-keyboard-btns" :blockFocusDirections="['up', 'left']">
       <qt-button
         class="search-keyboard-btn"
         text="清空"
-        nextFocusDownSID="keyboardGrid"
         :textStyle="textStyle"
         :icon="icClear"
         :focusIcon="icClearFocused"
@@ -28,10 +27,10 @@
       <qt-button
         class="search-keyboard-btn"
         text="退格"
-        nextFocusDownSID="keyboardGrid"
         :textStyle="textStyle"
         :icon="icBack"
         :focusIcon="icBackFocused"
+        :nextFocusName="{ right: 'keywordList' }"
         @click="onBtnClick('back')"
       />
     </qt-view>
@@ -39,12 +38,11 @@
     <qt-grid-view
       class="search-keyboard-grid"
       ref="gridRef"
-      sid="keyboardGrid"
       name="keyboardGrid"
       :focusMemory="false"
       :spanCount="6"
       :autofocusPosition="14"
-      :nextFocusName="{ right: 'keywordList' }"
+      :nextFocusName="{ right: gridFocusNameRight }"
       :blockFocusDirections="['down']"
       @item-click="onGridItemClick"
     >
@@ -76,6 +74,7 @@ import icBackFocused from '../../../assets/search/ic_back_focused.png'
 const emits = defineEmits(['updateInput'])
 
 const gridRef = ref<QTIGridView>()
+const gridFocusNameRight = ref<string>('')
 const inputText = ref<string>('')
 const defaultText = {
   text: '输入片名的首字母或全拼搜索',
@@ -129,11 +128,16 @@ function onGridItemClick(evt) {
   inputText.value += evt.item.text
 }
 
+// 更新键盘向右焦点位置
+function updateKeyboardFocusRight(name: string) {
+  gridFocusNameRight.value = name
+}
+
 function onBackPressed() {
   gridRef.value?.setItemFocused(14)
 }
 
-defineExpose({ onBackPressed })
+defineExpose({ updateKeyboardFocusRight, onBackPressed })
 </script>
 
 <style scoped lang="scss" src="../scss/search-keyboard.scss"></style>
