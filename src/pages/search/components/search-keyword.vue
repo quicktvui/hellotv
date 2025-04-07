@@ -153,14 +153,9 @@ async function loadSuggestions(page = 1) {
         listRef.value?.stopPage()
       }
     }
-
-    clearTimeout(loadTimer)
-    loadTimer = setTimeout(() => {
-      emits('updateKeyword', listData.length > 1 ? listData[1].text : '')
-      emits('setLoading', false)
-    }, 300)
   } catch (error) {
     qt.log.e('ok->', 'Error loading suggestions:', error)
+  } finally {
     emits('setLoading', false)
   }
 }
@@ -190,6 +185,11 @@ function resetAndInitialize(keywords) {
   listRef.value?.setItemSelected(singleSelectPos.value, true)
   showClearBtn.value = history.length > 0
   isEmpty.value = listData.length === 1
+
+  clearTimeout(loadTimer)
+  loadTimer = setTimeout(() => {
+    emits('updateKeyword', listData.length > 1 ? listData[1].text : '')
+  }, 300)
 }
 
 function onListLoadMore() {
@@ -207,17 +207,17 @@ function onListItemFocused(evt) {
 
   if (evt.isFocused) {
     emits('updateFocusName', 'searchKeyword')
-  }
 
-  clearTimeout(listFocusTimer)
-  listFocusTimer = setTimeout(() => {
-    if (evt.isFocused && evt.position != lastFocusPos) {
-      lastFocusPos = evt.position
-      emits('updateKeyword', evt.item.text)
-    } else {
-      emits('updateFocusDeny', false)
-    }
-  }, 300)
+    clearTimeout(listFocusTimer)
+    listFocusTimer = setTimeout(() => {
+      if (evt.position != lastFocusPos) {
+        lastFocusPos = evt.position
+        emits('updateKeyword', evt.item.text)
+      } else {
+        emits('updateFocusDeny', false)
+      }
+    }, 300)
+  }
 }
 
 function onClearBtnClick() {
