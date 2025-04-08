@@ -14,7 +14,7 @@
         @onListItemFocused="onListItemFocused"
       />
       <!-- 筛选内容 -->
-      <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
+      <filter-content ref="contentRef" :descendantFocusability="contentDeny" @setNextFocusNameRight="setNextFocusNameRight" />
     </qt-view>
   </qt-view>
 </template>
@@ -38,6 +38,7 @@ const sidebarSinglePos = ref<number>(-1)
 const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
+const contentDeny = ref<1 | 2>(1)
 
 function onESCreate(params: { screenId: string; defaultSecondaryId?: string }) {
   params.screenId = '1848555233454727169'
@@ -75,7 +76,7 @@ function onListItemFocused(evt) {
 }
 
 function setNextFocusNameRight(s: string) {
-  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
+  contentDeny.value = s === '' ? 2 : 1
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

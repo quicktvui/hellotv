@@ -23,20 +23,58 @@
   font-size: 30px;
 }
 
-.search-keyword-title {
-  width: 518px;
+.search-keyword-clear-btn {
+  width: 128px;
+  height: 50px;
+  background-color: rgba(255, 255, 255, 0.06);
+  border-radius: 25px;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 75px;
+  right: 30px;
+  focus-background-color: $theme-btn-focus-color;
+}
+
+.search-keyword-clear-btn-img {
+  width: 18px;
+  height: 22px;
+  background-color: transparent;
+}
+
+.search-keyword-clear-btn-text {
+  width: 48px;
   height: 50px;
   background-color: transparent;
-  margin-top: 75px;
-  margin-left: 80px;
-  color: white;
-  font-size: 40px;
+  margin-left: 10px;
+  color: $theme-text-normal-color;
+  font-size: 24px;
+  focus-color: $theme-text-focus-color;
+  select-color: $theme-text-select-color;
 }
 
 .search-keyword-list {
   width: 518px;
-  height: 955px;
+  height: 1080px;
   background-color: transparent;
+}
+
+.search-keyword-list-item-title {
+  width: 518px;
+  height: 84px;
+  background-color: transparent;
+  justify-content: center;
+  border-radius: 8px;
+}
+
+.search-keyword-list-item-title-text {
+  width: 518px;
+  height: 50px;
+  background-color: transparent;
+  margin-left: 80px;
+  color: white;
+  font-size: 40px;
 }
 
 .search-keyword-list-item {
@@ -53,7 +91,7 @@
   position: absolute;
   left: 80px;
   color: $theme-text-normal-color;
-  font-size: 36px;
+  font-size: 32px;
   focus-color: $theme-text-focus-color;
   select-color: $theme-text-select-color;
 }

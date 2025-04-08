@@ -78,6 +78,21 @@
   border-radius: $theme-img-border;
 }
 
+.search-content-item-score {
+  background-color: transparent;
+  position: absolute;
+}
+
+.search-content-item-score-text {
+  width: 60px;
+  height: 30px;
+  background-color: transparent;
+  margin-left: 16px;
+  margin-top: 31px;
+  color: #ff5415;
+  font-size: 24px;
+}
+
 .search-content-item-text {
   height: 40px;
   background-color: transparent;

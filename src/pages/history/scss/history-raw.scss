@@ -5,6 +5,15 @@
   flex-direction: row;
 }
 
+.history-focus-placeholder {
+  width: 1px;
+  height: 1px;
+  background-color: transparent;
+  position: absolute;
+  top: 0px;
+  left: 0px;
+}
+
 .history-sidebar {
   width: 340px;
   height: 1080px;
@@ -138,6 +147,7 @@
   background-color: transparent;
   color: $theme-text-normal-color;
   font-size: 24px;
+  focus-color: white;
 }
 
 .history-content-grid-item-end-text {
