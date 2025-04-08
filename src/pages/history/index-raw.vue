@@ -1,13 +1,16 @@
 <template>
   <qt-view class="history" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
+    <!-- 焦点占位, 解决页面跳焦的问题 -->
+    <qt-view class="history-focus-placeholder" :focusable="true"></qt-view>
     <!-- 左侧列表 -->
-    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1">
+    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1" :blockFocusDirections="['up']">
       <!-- 顶部提示 -->
       <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
       <!-- 数据渲染 -->
       <qt-list-view
         class="history-sidebar-list"
         ref="sidebarRef"
+        sid="sidebar"
         :listData="sidebarData"
         :autofocusPosition="sidebarDefaultPos"
         :clipChildren="false"
@@ -36,9 +39,9 @@
     </qt-view>
 
     <!-- 右侧列表 -->
-    <qt-view class="history-content" :clipChildren="true">
+    <qt-view class="history-content" :clipChildren="true" :descendantFocusability="contentDeny" :blockFocusDirections="['up']">
       <!-- 数据管理 -->
-      <qt-view v-if="isEditing" class="history-content-btns">
+      <qt-view v-if="isEditing" class="history-content-btns" sid="btns" :blockFocusDirections="['left']">
         <qt-button text="取消" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('cancel')" />
         <qt-button text="一键清空" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('clear')" />
       </qt-view>
@@ -51,7 +54,7 @@
 
       <!-- 暂无数据 -->
       <qt-view v-if="isEmpty" class="history-content-empty">
-        <qt-image style="width: 186px; height: 174px; margin-bottom: 35px" :src="icEmpty"></qt-image>
+        <qt-image style="width: 160px; height: 142px; margin-bottom: 25px" :src="icEmpty"></qt-image>
         <qt-text class="history-content-empty-text" text="暂无数据" gravity="center"></qt-text>
       </qt-view>
 
@@ -64,7 +67,8 @@
         :spanCount="4"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
-        :blockFocusDirections="['down']"
+        :nextFocusUpSID="'btns'"
+        :nextFocusLeftSID="'sidebar'"
         :openPage="true"
         :listenBoundEvent="true"
         :listenHasFocusChange="true"
@@ -100,6 +104,8 @@
               text="${title}"
               gravity="center|start"
               :showOnState="['normal', 'selected']"
+              :lines="1"
+              :ellipsizeMode="4"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
@@ -108,11 +114,19 @@
               text="${title}"
               gravity="center|start"
               :showOnState="'focused'"
+              :lines="1"
+              :ellipsizeMode="4"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
           </qt-view>
-          <qt-text class="history-content-grid-item-progress" text="${progress}" gravity="center|start" :focusable="false"></qt-text>
+          <qt-text
+            class="history-content-grid-item-progress"
+            text="${progress}"
+            gravity="center|start"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
         </qt-view>
         <!-- 到底提示 -->
         <template #footer>
@@ -152,6 +166,7 @@ const sidebarRef = ref<QTIListView>()
 const sidebarData = qtRef<QTListViewItem[]>()
 const sidebarDefaultPos = ref<number>(0)
 const gridRef = ref<QTIListView>()
+const contentDeny = ref<number>(1)
 const contentData = qtRef<QTListViewItem[]>([])
 const btnStyle = {
   width: `180px`,
@@ -194,27 +209,36 @@ onUnmounted(() => {
 
 let lastIndex = -1
 let lastFocusName = ''
+let sidebarTimer: any = -1
 function onSidebarItemFocus(evt) {
   if (evt.isFocused) {
     lastFocusName = 'sidebar'
-    if (lastIndex !== evt.index) {
-      page = 1
-      stopPage = false
-      lastIndex = evt.index
-      isLoading.value = true
-      // 右侧内容复原
-      gridRef.value?.scrollToTop()
-      gridRef.value?.setItemSelected(0, true)
-      // 加载新数据
-      loadRecords(lastIndex)
-    }
+
+    // 屏蔽右侧焦点
+    contentDeny.value = 2
+
+    clearTimeout(sidebarTimer)
+    sidebarTimer = setTimeout(() => {
+      if (lastIndex !== evt.position) {
+        page = 1
+        stopPage = false
+        lastIndex = evt.position
+        isLoading.value = true
+        // 右侧内容复原
+        gridRef.value?.scrollToTop()
+        gridRef.value?.setItemSelected(0, true)
+        // 加载新数据
+        loadRecords(lastIndex)
+      } else {
+        contentDeny.value = 1
+      }
+    }, 300)
   }
 }
 
 let lastGridItemIndex = -1
 function onContentItemFocus(evt) {
   if (evt.isFocused) {
-    qt.toast.showToast(`${evt.position}`)
     lastFocusName = 'content'
     lastGridItemIndex = evt.position
     // 更新节点删除遮罩状态
@@ -222,18 +246,36 @@ function onContentItemFocus(evt) {
   }
 }
 
+let deleteTimer: any = -1
 function onContentItemClick(evt) {
   if (isEditing.value) {
     historyManager
       .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
         contentData.value.splice(evt.position, 1)
+        // 等于13条删除到底提示
+        if (contentData.value.length === 13) {
+          // 连续删除需要加延迟
+          clearTimeout(deleteTimer)
+          deleteTimer = setTimeout(() => {
+            contentData.value.splice(12, 1)
+          }, 300)
+        }
+        // 全部删除完毕
+        if (contentData.value.length === 0) {
+          isEditing.value = false
+          isEmpty.value = true
+          setTimeout(() => {
+            sidebarRef.value?.setItemFocused(lastIndex)
+          }, 300)
+        }
       })
       .catch(() => {
         qt.toast.showToast('删除失败')
       })
   } else {
     launch.launchDetail(contentData.value[evt.position].id)
+    isResume = true
   }
 }
 
@@ -246,7 +288,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
     contentData.value.push(...buildContents(records))
   }
   // 到底提示
-  if (contentData.value.length > config.ContentsLimit) {
+  if (contentData.value.length < config.ContentsLimit * page && contentData.value.length > 12) {
     contentData.value.push(buildEndContent())
   }
   // 结束分页
@@ -256,7 +298,15 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 
   // 延迟关闭loading
   clearTimeout(loadingDelayTimer)
-  loadingDelayTimer = setTimeout(() => (isLoading.value = false), 300)
+  loadingDelayTimer = setTimeout(() => {
+    isLoading.value = false
+    contentDeny.value = 1
+
+    // 重刷数据时主动设置焦点
+    if (isResume && lastFocusName === 'content') {
+      gridRef.value?.scrollToFocused(0)
+    }
+  }, 300)
 }
 
 function onContentloadMore() {
@@ -270,9 +320,19 @@ function onScrollStateChanged(evt) {
   offsetY = evt.offsetY
 }
 
+let cancelTimer: any = -1
+function cancelEdit() {
+  isEditing.value = false
+  contentData.value.map((item) => (item.showDeleteCover = false))
+  clearTimeout(cancelTimer)
+  cancelTimer = setTimeout(() => {
+    gridRef.value?.setItemFocused(lastGridItemIndex)
+  }, 150)
+}
+
 function onBtnClick(name: 'cancel' | 'clear') {
   if (name === 'cancel') {
-    isEditing.value = false
+    cancelEdit()
   } else {
     router.push({
       name: 'confirm',
@@ -324,10 +384,21 @@ function onKeyDown(keyEvent: ESKeyEvent) {
   }
 }
 
+let isResume = false
+function onESResume() {
+  // 重刷数据
+  if (isResume) {
+    page = 1
+    stopPage = false
+    isLoading.value = true
+    loadRecords(lastIndex)
+  }
+}
+
 function onBackPressed() {
   // 编辑状态检查
   if (isEditing.value) {
-    isEditing.value = false
+    cancelEdit()
     return
   }
 
@@ -339,14 +410,14 @@ function onBackPressed() {
 
   // 左侧列表焦点
   if (lastFocusName !== 'sidebar') {
-    sidebarRef.value?.setItemFocused(0)
+    sidebarRef.value?.setItemFocused(lastIndex)
     return
   }
 
   router.back()
 }
 
-defineExpose({ onESCreate, onKeyDown, onBackPressed })
+defineExpose({ onESCreate, onKeyDown, onESResume, onBackPressed })
 </script>
 
 <style scoped lang="scss" src="./scss/history-raw.scss"></style>

@@ -14,6 +14,7 @@
          :duplicateParentState="true"
          :focusable="false"
          :enableFocusBorder="true"
+         :enablePlaceholder="true"
          flexStyle="${image.style}"
          src="${image.normal}"/>
     <qt-text class='inner-out-title-text'

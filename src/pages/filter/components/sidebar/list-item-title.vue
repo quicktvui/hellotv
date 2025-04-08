@@ -6,6 +6,7 @@
       text="${name}"
       gravity="center"
       typeface="bold"
+      :focusable="false"
     ></qt-text>
   </qt-view>
 </template>

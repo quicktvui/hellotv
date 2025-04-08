@@ -55,7 +55,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['setLoading'])
+const emits = defineEmits(['setLoading', 'updateFocusDeny'])
 // 顶部提示
 const showTips = ref<boolean>(true)
 const lockTips = ref<boolean>(false)
@@ -115,13 +115,18 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number) {
     tabRef.value?.addPageData(pageIndex, tabPage, 0)
   }
 
-  // 延迟关闭上层loading
+  // 延迟更新上层状态
   clearTimeout(timer)
-  timer = setTimeout(() => emits('setLoading', false), 100)
+  timer = setTimeout(() => {
+    emits('setLoading', false)
+    emits('updateFocusDeny', false)
+  }, 100)
 }
 
 function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
   launch.launchDetail(item.id)
+  // 上报搜索历史
+  searchManager.addHistory(rawKeyword.value || '')
 }
 
 function onTabMoveToTopStart() {

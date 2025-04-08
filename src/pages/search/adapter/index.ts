@@ -83,7 +83,8 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
         decoration: { right: 40, bottom: 40 },
         id: item.id,
         title: item.title,
-        cover: item.image
+        cover: item.image,
+        score: item.score
       }))
     })
   }
@@ -103,7 +104,8 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
       decoration: { top: 40, right: 40 },
       id: item.id,
       title: item.title,
-      cover: item.image
+      cover: item.image,
+      score: item.score
     }))
   })
 
@@ -139,7 +141,8 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
         decoration: { right: 40, bottom: 40 },
         id: item.id,
         title: item.title,
-        cover: item.image
+        cover: item.image,
+        score: item.score
       }))
     }
 
@@ -190,7 +193,8 @@ export const buildRecommends = function (rawData: Recommends): QTWaterfallSectio
         decoration: { top: 40, right: 40 },
         id: item.id,
         title: item.title,
-        cover: item.image
+        cover: item.image,
+        score: item.score
       }))
     })
   }

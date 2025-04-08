@@ -18,6 +18,12 @@ class SearchManager implements SearchApi {
     )
   }
 
+  // 添加搜索历史
+  addHistory(keyword: string) {}
+
+  // 清空搜索历史
+  clearHistory() {}
+
   // 获取搜索内容
   getContents(query?: string, page: number = 1, limit: number = 10): Promise<Contents> {
     return requestManager.get(
