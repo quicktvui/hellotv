@@ -7,7 +7,7 @@
     </qt-view>
     <qt-view v-else>
       <!-- 清空按钮 -->
-      <qt-view class="search-keyword-clear-btn" v-if="showClearBtn" :focusable="true" @click="onClearBtnClick">
+      <qt-view class="search-keyword-clear-btn" name="clearBtn" v-if="showClearBtn" :focusable="true" @click="onClearBtnClick">
         <qt-view class="search-keyword-clear-btn-img" :focusable="false" :duplicateParentState="true">
           <qt-image
             class="search-keyword-clear-btn-img"
@@ -40,6 +40,9 @@
         ref="listRef"
         name="keywordList"
         :padding="'0,55,0,0'"
+        :scrollYGreaterReferenceValue="84"
+        :scrollYLesserReferenceValue="84"
+        :triggerTask="triggerTask"
         :singleSelectPosition="singleSelectPos"
         :blockFocusDirections="['down']"
         :nextFocusName="{ right: 'gridItem' }"
@@ -112,6 +115,21 @@ const showClearBtn = ref<boolean>(false)
 const listRef = ref<QTIListView>()
 const singleSelectPos = ref<number>(1)
 const isEmpty = ref<boolean>(false)
+// 控制清空按钮是否展示
+const triggerTask = [
+  {
+    event: 'onScrollYGreater',
+    target: 'clearBtn',
+    function: 'changeAlpha',
+    params: [0]
+  },
+  {
+    event: 'onScrollYLesser',
+    target: 'clearBtn',
+    function: 'changeAlpha',
+    params: [1]
+  }
+]
 // 局部变量
 let curPage = 0
 let pageSize = config.listKeywordsLimit
