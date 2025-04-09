@@ -3,7 +3,9 @@
     <!-- 焦点占位, 解决页面跳焦的问题 -->
     <qt-view class="filter-focus-placeholder" :focusable="true"></qt-view>
     <!-- 顶部按钮 -->
-    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" :blockFocusDirections="['left', 'up']" />
+    <qt-view style="background-color: transparent" :blockFocusDirections="['up', 'left']">
+      <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" />
+    </qt-view>
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表 -->

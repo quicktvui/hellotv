@@ -274,7 +274,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
     loadingTimer = setTimeout(() => {
       isLoading.value = false
       if (gridData.value.length === 0) {
-        emits('setNextFocusNameRight', resetFilters ? 'contentList' : '')
+        emits('setNextFocusNameRight', showConditions.value ? 'contentList' : '')
         isEmpty.value = true
       } else {
         emits('setNextFocusNameRight', 'contentGrid')

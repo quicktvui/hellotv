@@ -67,18 +67,13 @@ export const buildFilters = function (
   secondaries.push(...rawData.secondary.map((item) => ({ type: 9, ...item })))
 
   // 三级列表, 右侧筛选条件
-  const tertiaries: Tertiary[] = []
-  rawData.tertiary.forEach((item, index) => {
-    const tertiary = {
-      type: TertiaryType.LIST,
-      groupKey: item.groupKey,
-      groupName: item.groupName,
-      list: item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag })),
-      defaultSelectedPos: 0
-    }
-    tertiary.list.unshift({ type: ListItemType.TEXT, id: `t-${index}`, name: item.groupName })
-    tertiaries.push(tertiary)
-  })
+  const tertiaries: Tertiary[] = rawData.tertiary.map((item) => ({
+    type: TertiaryType.LIST,
+    groupKey: item.groupKey,
+    groupName: item.groupName,
+    list: [{ type: ListItemType.TEXT, name: item.groupName }, ...item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag }))],
+    defaultSelectedPos: 0
+  }))
 
   // 优化内容区域焦点首次向上体验, 值需要全局唯一
   tertiaries[tertiaries.length - 1].list[0].sid = '--sid--'
