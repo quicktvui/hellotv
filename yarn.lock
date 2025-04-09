@@ -1303,15 +1303,15 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-dynamic-import-plugin/-/es3-dynamic-import-plugin-0.0.5.tgz#1a469a07c5accbb6e44c2c717887cbb50f62dc0d"
   integrity sha512-tMG0Nrdo8Nmc5X51sfRmDfE9gw4MFH7Lu9rCT+J7w9DmS8OwFdiQ9XkYV1SyCKo50fJhCQPmtrDa9A8IAA22Yw==
 
-"@extscreen/es3-player-manager@1.0.41":
-  version "1.0.41"
-  resolved "https://registry.npmmirror.com/@extscreen/es3-player-manager/-/es3-player-manager-1.0.41.tgz#c68a84bac98d6403eb9f70d9913328bd287d7d2e"
-  integrity sha512-tx1F40ydf/F3/Vr4SxzTi3DlgnuEEwQW64fyO9qSkG/1Zsu8T2bFWXEZwKjMkYK14XwvPXSHYr3TXVAALfqMgA==
+"@extscreen/es3-player-manager@1.0.44":
+  version "1.0.44"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player-manager/-/es3-player-manager-1.0.44.tgz#090c1c9371246d6a8e9a10250bdb20a7ed014735"
+  integrity sha512-y7ndgkeF8NXtConYfowBXpt9ffnEd5428V7lOxh/6qDXpZwJkdQbi9sz9TIirwoSa7Bt5RlbdFMwOmL3lb0iIQ==
 
-"@extscreen/es3-player@1.0.17":
-  version "1.0.17"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-player/-/es3-player-1.0.17.tgz#fb86c4ff75b2a1d303d8aebf067dfda63c985bd8"
-  integrity sha512-FrKqhn6/M63ewPRbzlTyO8APXt5UKYBCvT46eoRKm6XNgCYSWTxIY87hu2J5E5AIMiag5stMihBy4r0UXeaEfA==
+"@extscreen/es3-player@1.0.25":
+  version "1.0.25"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player/-/es3-player-1.0.25.tgz#d55e1bdf46b9fb3ef3aee60e396fc7921861d411"
+  integrity sha512-DCjQHWPtL5IYwfQUXpuKN//6c9F2bcmcjdvTiuLxegAG+LrmRsWS7L252vQOHGkBNfzWda0pvA7YHrNjSLinxw==
 
 "@extscreen/es3-router@1.1.27":
   version "1.1.27"
@@ -1320,10 +1320,10 @@
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
-"@extscreen/es3-video-player@1.0.35":
-  version "1.0.35"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-video-player/-/es3-video-player-1.0.35.tgz#e3c571a1785820c43923649ae991969fdf001358"
-  integrity sha512-I1J5DgO/8HL9ocL0ca3Ksc9y6My8GBMAu/yHmPA9gGaGhbi93ybMbqgEPi0dtQMVqUIx99gRy4KW61nZXPHm3w==
+"@extscreen/es3-video-player@1.0.38":
+  version "1.0.38"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-video-player/-/es3-video-player-1.0.38.tgz#75b0cd4e3dfe8de7fa9e6113b97d2664202998a1"
+  integrity sha512-3iu6r7fgAtshYov4q0ZPVeTMySUYaEdo5otRFyyBGw228Q9UrToUtM+NtR/Vs4RJ6BAAyaE1KwPJXJaCPBUM0Q==
 
 "@extscreen/es3-vue-style-parser@0.0.8":
   version "0.0.8"

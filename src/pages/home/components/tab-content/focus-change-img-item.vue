@@ -15,6 +15,7 @@
          :postDelay='100'
          :focusable='false'
          :duplicateParentState='true'
+         :enablePlaceholder="true"
          :enableFocusBorder='false'
          src='${image.normal}' />
     <img class="focus-change-img-css"
