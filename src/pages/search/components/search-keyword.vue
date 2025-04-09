@@ -220,8 +220,11 @@ function onListItemFocused(evt) {
   }
 }
 
+let clearBtnTimer: any = -1
 function onClearBtnClick() {
   emits('setLoading', true, true)
+
+  clearTimeout(clearBtnTimer)
   setTimeout(() => {
     showClearBtn.value = false
     // 清空搜索历史
