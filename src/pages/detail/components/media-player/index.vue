@@ -1,9 +1,9 @@
 <template>
-  <qt-view 
-    name='media-player' 
-    class="media-player" 
-    ref='playerParent' 
-    sid='playerParent' 
+  <qt-view
+    name='media-player'
+    class="media-player"
+    ref='playerParent'
+    sid='playerParent'
     :focusable='false'>
     <!-- player-manager 播放管理器 -->
     <ESPlayerManager
@@ -16,7 +16,7 @@
       :floatWindowWidth="floatWindowWidth"
       :floatWindowHeight="floatWindowHeight"
       :initPlayerWindowType="1"
-      playerBackgroundColor="transparent"
+      playerBackgroundColor="black"
       :playMediaAuto="false"
       :focusable='false'
       :playerList="playerListRef"
@@ -33,14 +33,14 @@
       @onPlayerDurationChanged="onPlayerDurationChangedFn">
     </ESPlayerManager>
     <!-- 低端机播放器遮罩 -->
-  <qt-image 
-    name="playerLowMaskImg" 
-    :visible="playerMask" 
-    :class="playerMaskCss" 
+  <qt-image
+    name="playerLowMaskImg"
+    :visible="playerMask"
+    :class="playerMaskCss"
     :src="playerMaskImg" />
   </qt-view>
 </template>
-      
+
 <script setup lang='ts' name='MediaPlayer'>
 import { ref, markRaw, nextTick } from 'vue'
 import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
@@ -48,7 +48,7 @@ import { useESRouter } from '@extscreen/es3-router'
 import BuildConfig from "../../../../config/build-config";
 import detailManager from '../../api/index'
 import {
-  ESIPlayerManager, 
+  ESIPlayerManager,
   ESMediaItem,
   ESMediaItemList,
   ESPlayerManager,
@@ -60,15 +60,15 @@ import {
   ESPlayerPlayMode,
   ESPlayerWindowType,
   ESPlayerRate,
-  useESPlayerRateManager
-} from "@extscreen/es3-player"
+  useESPlayerRateManager, useESPlayerAspectRatioManager, ESPlayerAspectRatio
+} from '@extscreen/es3-player'
 import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import { IMedia, IMediaItem } from '../../adapter/interface'
 import MediaPlayerView from './media-player-view.vue'
 import MediaPlayerSmallView from './media-player-small-view.vue'
-import { 
-  buildMediaList, 
-  createESPlayerMediaSourceListInterceptor 
+import {
+  buildMediaList,
+  createESPlayerMediaSourceListInterceptor
 } from "../../adapter/media-player";
 
   const TAG = 'MediaSeriesView'
@@ -81,6 +81,7 @@ import {
   const log = useESLog()
   const router = useESRouter()
   const runtime = useESRuntime()
+  const aspectRatioManager = useESPlayerAspectRatioManager()
   let deviceId = runtime.getRuntimeDeviceId()??''
   let m: IMedia
   let playerParent = ref()
@@ -88,7 +89,7 @@ import {
   const floatWindowWidth = ref<number>(BuildConfig.isLowEndDev ? 0 : 502)
   const floatWindowHeight = ref<number>(BuildConfig.isLowEndDev ? 0 : 283)
   const playerViewList =  [
-    markRaw(MediaPlayerView), 
+    markRaw(MediaPlayerView),
     markRaw(MediaPlayerSmallView),
   ]
   playerViewList[0].name = 'media-player-view'
@@ -117,6 +118,7 @@ import {
       list: [],
       media: media
     }
+    // aspectRatioManager.setAspectRatio(ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FIT_PARENT)
     playerMaskImg.value = media.cover
     playerManager.value?.initialize()
     playModeManager.setPlayMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
@@ -182,9 +184,7 @@ import {
       playerMask.value = false
       isLoadLow.value = false
     }
-    nextTick(() => {
-      playerManager.value?.setFullWindow()
-    })
+    playerManager.value?.setFullWindow()
   }
   const setFloatWindow = () => {
     if (BuildConfig.isLowEndDev) {
@@ -195,9 +195,7 @@ import {
     }
     playerLeft.value = 1393
     playerTop.value = 25
-    nextTick(() => {
-      playerManager.value?.setFloatWindow()
-    })
+    playerManager.value?.setFloatWindow()
   }
   const setSmallWindow = () => {
     if (BuildConfig.isLowEndDev) {
@@ -211,9 +209,7 @@ import {
     }
     playerLeft.value = 80
     playerTop.value = top
-    nextTick(() => {
-      playerManager.value?.setSmallWindow()
-    })
+    playerManager.value?.setSmallWindow()
   }
   const getWindowType = (): ESPlayerWindowType => {
     return playerManager.value?.getWindowType() ?? ESPlayerWindowType.ES_PLAYER_WINDOW_TYPE_FULL
@@ -225,7 +221,7 @@ import {
     return playerManager.value?.getPlayingMediaIndex() ?? -1
   }
   const changeVisible = (visibility: boolean) => {
-    playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha', [visibility ? 1 : 0])
+    // playerParent.value?.dispatchFunctionBySid('playerParent', 'changeAlpha', [visibility ? 1 : 0])
   }
   const startProgressTimer = () => {
     stopProgressTimer()
@@ -345,7 +341,7 @@ import {
     onBackPressed,
   })
   </script>
-      
+
 <style lang='scss' scoped>
 .media-player{
   width: 1920px;
@@ -373,4 +369,3 @@ import {
   }
 }
 </style>
-        

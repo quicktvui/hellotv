@@ -17,7 +17,7 @@
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
-        <qt-view class="filter-main-contents" :descendantFocusability="gridDeny">
+        <qt-view class="filter-main-contents" :descendantFocusability="gridDeny" :blockFocusDirections="blockFocusDirectionsGrid">
           <qt-grid-view
             class="filter-main-contents-grid"
             :style="{ width: contentWidth }"
@@ -95,7 +95,7 @@
 </template>
 
 <script setup lang="ts" name="FilterContent">
-import { ref, nextTick } from 'vue'
+import { ref, nextTick, computed } from 'vue'
 import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
@@ -150,6 +150,10 @@ let rawParams: any = {}
 let reqQuery: string = ''
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
+
+const blockFocusDirectionsGrid = computed(()=>{
+  return config.layoutMode === 1 ? ['left','right', 'down'] : []
+})
 
 function init(primaryId: string, listData: Tertiary[], defaultSecondaryId?: string) {
   // 保存筛选数据

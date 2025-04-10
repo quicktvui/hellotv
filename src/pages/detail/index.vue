@@ -3,8 +3,8 @@
     <qt-waterfall
       ref="waterfallRef"
       class="detail-waterfall-css"
-      :scrollYLesserReferenceValue="30"
-      :scrollYGreaterReferenceValue="30"
+      :scrollYLesserReferenceValue="10"
+      :scrollYGreaterReferenceValue="10"
       :blockFocusDirections="['left', 'right']"
       :enablePlaceholder="false"
       :enableKeepFocus='false'

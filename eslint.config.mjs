@@ -13,13 +13,13 @@ import checkFile from 'eslint-plugin-check-file'
 export default [
 
   { files: ['**/*.{js,ts,vue}'] },
-  { 
+  {
     languageOptions: {
       globals:  {
         ...globals.node,
         qt: "readonly"
       }
-    } 
+    }
   },
   pluginJs.configs.recommended,
   ...tsEslint.configs.recommended,
@@ -68,7 +68,7 @@ export default [
       }], //注册组件名称引用要kebab-case 短横线+小写
       'vue/no-dupe-keys': ['error', { 'groups': [] }],//禁止props/ data/ methods/ 等使用重复名称
       'vue/attribute-hyphenation': ['error', 'never', { 'ignore': [] }],//自定义组件上使用带连字符的属性名称
-      'vue/max-attributes-per-line': ['error', { 'singleline': 5, 'multiline': 5 }],//每行允许写5个属性
+      'vue/max-attributes-per-line': ['warn', { 'singleline': 5, 'multiline': 5 }],//每行允许写5个属性
       // "vue/v-on-event-hyphenation":["error",'never',{"autofix": true,}],
       'vue/html-quotes': ['off', 'single', { 'avoidEscape': true }], //关闭单双引号限制，根据prettierrc规则控制
       'vue/match-component-file-name': ['off', { 'extensions': ['jsx'], 'shouldMatchCase': false }],
