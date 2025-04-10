@@ -1,6 +1,20 @@
-export const USER_TOKEN_KEY = "userTokenKey"
-export const USER_INFO_CHANGED_EVENT = "onUserInfoChanged"
+export const USER_TOKEN_KEY = 'userTokenKey'
+export const USER_INFO_CHANGED_EVENT = 'onUserInfoChanged'
+export const PAY_SUCCESS_EVENT = 'onPaySuccess'
+export const PAY_SUCCESS_ALL_EVENT = 'onUserPaySuccessUpdate'
+export const USER_INFO_ALL_CHANGED_EVENT = 'onUserLoginStatusChanged'
 type fn_user_changed = (user: UserInfo | null) => void
+type fn_pay_success = () => void
+
+export interface ShareUserInfo {
+  openId: string
+  nickname: string
+  headImage: string
+  sex: string
+  lastLonginMac: string
+  sourcePackageName: string
+  userToken: string
+}
 
 /**
  * 用户类
@@ -8,47 +22,31 @@ type fn_user_changed = (user: UserInfo | null) => void
 export interface UserInfo {
   userId?: string
   userToken?: string
-  nickName?: string
+  headImage?: string
+  nickname?: string
   userIcon?: string
+  needAuthPhone?: boolean
   [prop: string]: any
 }
 
-export interface LoginQrCode {
-  //二维码地址
-  qrCodeUrl: string
-  //标识
-  scene?: string
+export interface JumpPayParams {
+  fromId?: string
+  fromName?: string
+  //详情页传
+  assetId?: string
+  //详情页传
+  assetName?: string
+  //是否绘本  详情页传
+  isPicBook?: boolean
+  //内容聚合页传
+  productId?: string
+  //积分 是否直接关闭
+  isDirectFinish?: boolean
+  //积分 是否展示订购信息
+  isShowOrderBtn?: boolean
 }
 
 export interface UserChangeListener {
   onUserChanged?: fn_user_changed
-}
-
-export interface userApi {
-
-  /**
-   * 获取登录背景图片
-   */
-  getLoginBackground(): Promise<string>
-
-  /**
-   * 获取登录二维码
-   */
-  getLoginQrCode(params: any): Promise<LoginQrCode>
-
-  /**
-   * 根据二维码 scene获取用户信息
-   */
-  getUserInfoByScene(scene: string): Promise<UserInfo>
-
-  /**
-   * 根据 token 获取用户数据
-   * @param token
-   */
-  getUserInfoByToken(token: string): Promise<UserInfo>
-
-  /**
-   * 退出登录
-   */
-  loginOut(): Promise<string>
+  onPaySuccess?: fn_pay_success
 }

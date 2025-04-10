@@ -94,6 +94,21 @@ const routes = [
     path:'/activity',
     name:'activity',
     component: () => import('./pages/activity/index.vue')
+  },
+  {
+    name: 'my',
+    path: '/my',
+    component: () => import('./pages/my/index.vue')
+  },
+  {
+    path: '/device_info',
+    name: 'device_info',
+    component: () => import('./pages/device-info/index.vue')
+  },
+  {
+    path: '/load_web_view',
+    name: 'load_web_view',
+    component: () => import('./pages/webview/load-web-view.vue')
   }
 ]
 

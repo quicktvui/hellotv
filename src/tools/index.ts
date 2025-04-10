@@ -44,3 +44,15 @@ export function numberToChinese(num) {
 
   return result
 }
+
+export function isJSON(str) {
+  if (typeof str == 'string') {
+    try {
+      const obj = JSON.parse(str)
+      return !!(typeof obj == 'object' && obj)
+    } catch (e) {
+      qt.log.e('isJson', e)
+      return false
+    }
+  }
+}
