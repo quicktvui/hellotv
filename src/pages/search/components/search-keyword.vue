@@ -138,6 +138,7 @@ let historyLength = 0
 let lastFocusPos = singleSelectPos.value
 // 组件绑定数据
 let listData: QTListViewItem[] = []
+let watchTimer: any = -1
 let loadTimer: any = -1
 let listFocusTimer: any = -1
 
@@ -152,7 +153,10 @@ watch(
     lastFocusPos = singleSelectPos.value
     curPage = 0
     // 加载词条
-    loadSuggestions()
+    clearTimeout(watchTimer)
+    watchTimer = setTimeout(() => {
+      loadSuggestions()
+    }, 300)
   }
 )
 
