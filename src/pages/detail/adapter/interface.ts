@@ -102,6 +102,17 @@ export interface IMediaCollapseMediaSeriesView extends QTICollapseItem {
   setItemSelected(position: number): void
   release(): void
 }
+
+//获取收藏状态类型
+export interface ICollect {
+  platformId: string
+  metaId: string
+  assetLongId: string
+  assetLongTitle?: string
+  assetLongCoverH?: string
+  assetLongCoverV?: string
+}
+
 //api
 export interface DetailApi {
   /**

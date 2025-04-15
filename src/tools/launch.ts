@@ -47,7 +47,7 @@ class Launch {
    * @param item
    * @param isReplace
    */
-  launch(item: LaunchParams,isReplace:boolean=false): void {
+  launch(item: LaunchParams, isReplace: boolean = false): void {
     //防止同时触发多次跳转
     if (this.allowClick) return
     this.allowClick = true
@@ -65,7 +65,7 @@ class Launch {
       //快应用内部跳转
       case 1:
       case '1':
-        this.jumpType1(item,isReplace)
+        this.jumpType1(item, isReplace)
         break
       //三方应用跳转
       case 3:
@@ -102,13 +102,13 @@ class Launch {
    * @param item
    * @param isReplace
    */
-  jumpType1(item: LaunchParams,isReplace:boolean=false) {
+  jumpType1(item: LaunchParams, isReplace: boolean = false) {
     //{"options":{"name":"screen_main_view","params":{"screenId":"1764924767380697089","defaultSelectTabTag":"科普"}},"type":1}
     const options = item.options
     if (options && typeof options !== 'string') {
-      if (isReplace){
+      if (isReplace) {
         this.router.replace(<RouteLocationRaw>options).then(() => {})
-      }else{
+      } else {
         this.router.push(<RouteLocationRaw>options).then(() => {})
       }
     }
@@ -275,16 +275,32 @@ class Launch {
     })
   }
 
-  launchExitDialog(){
+  launchExitDialog() {
     this.router.push({
-      name:'exit_dialog',
+      name: 'exit_dialog'
     })
   }
-  launchBack(){
+  launchBack() {
     this.router.back()
   }
-  launchGo(){
+  launchGo() {
     this.router.go(-2)
+  }
+
+  launchHome() {
+    this.router.push({
+      name: 'home'
+    })
+  }
+
+  //拼接快应用scheme
+  buildScheme(esPackageName: string, from: string, url?: string, params?: object): string {
+    let scheme = `esapp://action/start?es_pkg=${esPackageName}&from=${from}&splash=-1`
+    if (url !== undefined && url !== null) {
+      const argsParams = { url, params }
+      scheme += `&args=${JSON.stringify(argsParams)}`
+    }
+    return scheme
   }
 }
 

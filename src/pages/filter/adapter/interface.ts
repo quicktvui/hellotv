@@ -79,7 +79,6 @@ export enum ListItemType {
  */
 export interface ListItem {
   type: ListItemType
-  id: string
   name: string
   sid?: string
 }

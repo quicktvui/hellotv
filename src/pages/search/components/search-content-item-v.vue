@@ -21,7 +21,7 @@
       class="search-content-item-text"
       style="width: 260px"
       text="${title}"
-      gravity="center"
+      gravity="center|start"
       :lines="1"
       :ellipsizeMode="4"
       :focusable="false"

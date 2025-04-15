@@ -78,8 +78,8 @@ const curFocusName = ref<string>('searchKeyboard')
  * 输入数据更新
  */
 function updateInput(val: string) {
-  inputText.value = val
   isLoading.value = true
+  inputText.value = val
 }
 
 /**
