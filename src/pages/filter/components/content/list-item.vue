@@ -5,6 +5,7 @@
     horizontal
     list="${list}"
     singleSelectPosition="${defaultSelectedPos}"
+    :horizontalFadingEdgeEnabled="true"
     :padding="'0,0,120,0'"
     :useDiff="true"
     :focusMemory="false"

@@ -87,21 +87,15 @@ export const buildFilters = function (
  * @returns
  */
 export const buildContents = function (rawData: Contents): GridContent[] {
-  const contents: GridContent[] = []
-
-  rawData.items.forEach((item) => {
-    contents.push({
-      type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
-      decoration: { right: 40, bottom: 40 },
-      id: item.id,
-      title: item.title,
-      cover: item.image,
-      score: item.score + '',
-      jumpParams: item.jumpParams
-    })
-  })
-
-  return contents
+  return rawData.items.map((item) => ({
+    type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
+    decoration: { top: 22, right: 40, bottom: 18 },
+    id: item.id,
+    title: item.title,
+    cover: item.image,
+    score: String(item.score),
+    jumpParams: item.jumpParams
+  }))
 }
 
 /**
