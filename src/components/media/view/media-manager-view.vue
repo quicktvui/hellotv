@@ -32,7 +32,7 @@
           class='media-manager-seekbar-css'
           ref='mediaManagerSeekBarRef'
           name='seekBar'
-          :color="{ startColor: '#FFFF', endColor: '#FFFFFF' }"
+          :color="{ startColor: '#FFFFFF', endColor: '#FFFFFF' }"
           :nextFocusName="{ down: 'mediaControlView',left: 'seekBar',right:'seekBar'}"
           :focusable='true'
           @onSeekStart='onSeekBarSeekStart'
