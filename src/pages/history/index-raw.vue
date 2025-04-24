@@ -78,7 +78,8 @@
         @scroll-state-changed="onScrollStateChanged"
       >
         <!-- 常规 -->
-        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03" eventFocus eventClick>
+        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03"
+                 eventFocus eventClick>
           <!-- 焦点状态下的删除样式 -->
           <qt-view
             class="history-content-grid-item-delete"

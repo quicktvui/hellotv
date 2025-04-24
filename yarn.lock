@@ -1234,10 +1234,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.32.tgz#433c0389f3a6e5f4a3ea7f806d8fe1fb14b1a2dc"
   integrity sha512-+5uxU0GYW5RkdIwua+AHkuuOxMDmL067QyRqxt8hUvlG5zDhh5OiCVA0kcrdiJvaVlOXQgedmEKWru6bq1lBCw==
 
-"@extscreen/es3-core@1.1.24":
-  version "1.1.24"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-1.1.24.tgz#51e32864fad945ca026ed2d4e0d88e7072708c30"
-  integrity sha512-kbP9wSdnSLCWx8Vl/L1kuXujDe/J795/FlwpoIkHtNozrnGzIaVonnM0B/amxB/C7Ka/gOy5XoJMBG6q5sgCRg==
+"@extscreen/es3-core@1.1.36":
+  version "1.1.36"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-core/-/es3-core-1.1.36.tgz#e03252204c5faf03c3a489748e33195c925aba9f"
+  integrity sha512-oFsKcKQ+h85aXwwB6PZ/5EB4J7C/GNrcpLkMwUZ1hQhSXGz6XPxGW4xdf1NFXm7MvKx/7QmPyDZQpaajCTTJ+A==
 
 "@extscreen/es3-debug-server@0.0.6":
   version "0.0.6"
