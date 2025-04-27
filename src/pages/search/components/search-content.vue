@@ -9,6 +9,7 @@
       tabPageClass="search-content-tab-page"
       :autoHandleBackKey="true"
       :contentNextFocus="{ left: 'keywordList' }"
+      :tabContentBlockFocusDirections="['up']"
       @onTabPageLoadData="onTabPageLoadData"
       @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
