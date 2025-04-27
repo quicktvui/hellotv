@@ -335,6 +335,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
   if (name === 'cancel') {
     cancelEdit()
   } else {
+    isResume = false
     router.push({
       name: 'confirm',
       params: { text: '清空之后什么都没有了哦～', btnL: '确定', btnR: '取消', menuIndex: lastIndex, clearHistory: true }
