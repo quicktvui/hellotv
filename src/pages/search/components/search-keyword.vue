@@ -80,6 +80,7 @@
             text="${text}"
             typeface="bold"
             gravity="center|start"
+            :horizontalFadingEdgeEnabled="true"
             :showOnState="['focused', 'selected']"
             :lines="1"
             :ellipsizeMode="3"

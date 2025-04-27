@@ -97,6 +97,7 @@ export const buildContents = function (rawData: Contents): QTWaterfallSection[] 
     decoration: { left: 80, top: contents.length === 1 ? 0 : 75, bottom: 40 },
     title: '大家都在搜',
     titleStyle: { height: 50, fontSize: 40 },
+    titleTypeface: 'bold',
     itemList: rawData.recommends!.map((item, index) => ({
       _id: `t2-${index}`,
       type: ContentType.VERTICAL,

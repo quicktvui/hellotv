@@ -90,7 +90,7 @@ function init(keyword: string) {
 
 let timer: any = -1
 async function onTabPageLoadData(pageIndex: number, pageNo: number) {
-  let tabPage: QTTabPageData = { data: [] }
+  let tabPage: QTTabPageData = { useDiff: true, data: [] }
   if (rawKeyword.value?.length === 0) {
     const recommends = await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit)
     tabPage.data = buildRecommends(recommends)
