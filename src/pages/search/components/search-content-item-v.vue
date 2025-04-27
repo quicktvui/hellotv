@@ -1,5 +1,12 @@
 <template>
-  <qt-view class="search-content-item-v" name="gridItem" :focusable="true" layout="${layout}" eventFocus eventClick>
+  <qt-view
+    class="search-content-item-v"
+    :focusable="true"
+    :focusScale="themeConfig.placeHolderFocusScale"
+    layout="${layout}"
+    eventFocus
+    eventClick
+  >
     <qt-image
       class="search-content-item-img-v"
       src="${cover}"

@@ -6,7 +6,7 @@
       <qt-text
         v-if="inputText.length > 0"
         class="search-keyboard-input-text"
-        style="color: white; font-size: 40px"
+        style="color: white; font-size: 40px; margin-top: -3px"
         :text="inputText"
         gravity="center|start"
       ></qt-text>
