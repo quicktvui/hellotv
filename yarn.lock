@@ -1681,10 +1681,10 @@
     "@parcel/watcher-win32-ia32" "2.5.0"
     "@parcel/watcher-win32-x64" "2.5.0"
 
-"@quicktvui/quicktvui3@1.2.0-beta.18":
-  version "1.2.0-beta.18"
-  resolved "https://registry.yarnpkg.com/@quicktvui/quicktvui3/-/quicktvui3-1.2.0-beta.18.tgz#96eb4e0f0fe1d198625db2e10ce21be3cc222e49"
-  integrity sha512-JOTzRXDm11lDFRXqDd2Q26WSVIEfzyy9y0hlQenTYPu0Eb3l2EhZJpv0LRtDa5NUP2YVYWP8O1X6/66cfnzdmg==
+"@quicktvui/quicktvui3@1.2.0-beta.28":
+  version "1.2.0-beta.28"
+  resolved "https://repo.huaweicloud.com/repository/npm/@quicktvui/quicktvui3/-/quicktvui3-1.2.0-beta.28.tgz#7c2939f5c5c17cb318dd619ad2bd99d11c453386"
+  integrity sha512-H4Vs+diC3qiCIrCAzAYkJhjNOXMWN2Y6lVrxTW7lPI7KReqeiKjjoJRBamWEP9QN9vC1vYpPpfBXhwbOXz7eAw==
 
 "@sideway/address@^4.1.5":
   version "4.1.5"
