@@ -7,7 +7,7 @@
 .filter-main-contents-grid-item-h-img {
   width: 320px;
   height: 180px;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 11px;
 }
 
@@ -31,7 +31,8 @@
 
 .filter-main-contents-grid-item-h-text {
   position: absolute;
-  width: 320px;
+  left: 16px;
+  width: 304px;
   height: 40px;
   background-color: transparent;
   font-size: 30px;
@@ -48,7 +49,7 @@
 .filter-main-contents-grid-item-v-img {
   width: 260px;
   height: 368px;
-  background-color: transparent;
+  background-color: rgba(255, 255, 255, 0.1);
   margin-bottom: 11px;
 }
 
@@ -72,7 +73,8 @@
 
 .filter-main-contents-grid-item-v-text {
   position: absolute;
-  width: 260px;
+  left: 14px;
+  width: 232px;
   height: 40px;
   background-color: transparent;
   font-size: 30px;

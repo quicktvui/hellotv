@@ -29,11 +29,13 @@
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
             :enablePlaceholder="true"
+            :fadingEdgeLength="100"
             :verticalFadingEdgeEnabled="true"
             :nextFocusName="{ left: 'sidebarList' }"
             :nextFocusUpSID="'--sid--'"
             :blockFocusDirections="['right', 'down']"
             :openPage="true"
+            :preloadNo="20"
             :listenBoundEvent="true"
             :listenHasFocusChange="true"
             :loadMore="onGridLoadMore"
@@ -47,9 +49,27 @@
               :width="gridItemHWidth"
               :height="gridItemHHeight"
               :imgHeight="gridItemHImgHeight"
+              :placeholderLayout="[-5, -5, gridItemHWidth, gridItemHImgHeight]"
             />
             <!-- 竖图 -->
-            <grid-item-v :type="GridContentType.VERTICAL" />
+            <grid-item-v :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
+            <!-- 分页样式 -->
+            <template #loading>
+              <qt-view
+                :style="{
+                  width: `${contentWidth - 150}px`,
+                  height: `100px`,
+                  backgroundColor: `transparent`,
+                  alignItems: `center`,
+                  justifyContent: `center`
+                }"
+                :type="1002"
+                :focusable="false"
+                :disablePlaceholder="true"
+              >
+                <qt-loading-view style="height: 40px; width: 40px" name="loading" color="rgba(255,255,255,0.3)" :focusable="false" />
+              </qt-view>
+            </template>
             <!-- 到底提示 -->
             <template #footer>
               <qt-text
@@ -58,6 +78,7 @@
                 text="已经到底啦，按【返回键】回到顶部"
                 gravity="center"
                 :focusable="false"
+                :disablePlaceholder="true"
               ></qt-text>
             </template>
           </qt-grid-view>

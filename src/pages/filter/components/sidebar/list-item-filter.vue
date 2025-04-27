@@ -1,7 +1,7 @@
 <template>
   <qt-view
     class="filter-sidebar-list-item"
-    style="flex-direction: row; align-items: center; justify-content: center"
+    style="flex-direction: row; align-items: center; justify-content: flex-end"
     :focusable="true"
     eventFocus
     eventClick

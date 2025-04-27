@@ -51,7 +51,7 @@ defineProps({
   },
   listItemTextGravity: {
     type: String,
-    default: 'center'
+    default: 'center|end'
   }
 })
 const emits = defineEmits(['onListItemFocused'])
