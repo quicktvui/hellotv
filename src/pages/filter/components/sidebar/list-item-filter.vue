@@ -38,7 +38,7 @@
         text="${name}"
         autoWidth
         gravity="center"
-        :showOnState="['normal', 'selected']"
+        :showOnState="'normal'"
         :focusable="false"
         :duplicateParentState="true"
       ></qt-text>
@@ -48,7 +48,7 @@
         autoWidth
         gravity="center"
         typeface="bold"
-        :showOnState="'focused'"
+        :showOnState="['focused', 'selected']"
         :focusable="false"
         :duplicateParentState="true"
       ></qt-text>
