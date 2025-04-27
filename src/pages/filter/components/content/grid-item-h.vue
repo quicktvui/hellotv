@@ -33,7 +33,7 @@
         text="${title}"
         :showOnState="['normal', 'selected']"
         :lines="1"
-        :ellipsizeMode="4"
+        :ellipsizeMode="2"
         :focusable="false"
         :duplicateParentState="true"
       ></qt-text>
@@ -44,7 +44,7 @@
         typeface="bold"
         :showOnState="'focused'"
         :lines="1"
-        :ellipsizeMode="4"
+        :ellipsizeMode="3"
         :focusable="false"
         :duplicateParentState="true"
       ></qt-text>

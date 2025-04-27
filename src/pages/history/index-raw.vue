@@ -21,7 +21,7 @@
             class="history-sidebar-list-item-text"
             text="${text}"
             gravity="center"
-            :showOnState="['normal', 'selected']"
+            :showOnState="'normal'"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -30,7 +30,7 @@
             text="${text}"
             gravity="center"
             typeface="bold"
-            :showOnState="'focused'"
+            :showOnState="['focused', 'selected']"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -78,8 +78,7 @@
         @scroll-state-changed="onScrollStateChanged"
       >
         <!-- 常规 -->
-        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03"
-                 eventFocus eventClick>
+        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03" eventFocus eventClick>
           <!-- 焦点状态下的删除样式 -->
           <qt-view
             class="history-content-grid-item-delete"
@@ -106,7 +105,7 @@
               gravity="center|start"
               :showOnState="['normal', 'selected']"
               :lines="1"
-              :ellipsizeMode="4"
+              :ellipsizeMode="2"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
@@ -114,9 +113,10 @@
               class="history-content-grid-item-title"
               text="${title}"
               gravity="center|start"
+              typeface="bold"
               :showOnState="'focused'"
               :lines="1"
-              :ellipsizeMode="4"
+              :ellipsizeMode="3"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>

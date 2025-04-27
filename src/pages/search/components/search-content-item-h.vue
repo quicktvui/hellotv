@@ -1,6 +1,5 @@
 <template>
-  <qt-view class="search-content-item-h" name="gridItem" :focusable="true" layout="${layout}"
-           eventFocus eventClick>
+  <qt-view class="search-content-item-h" name="gridItem" :focusable="true" layout="${layout}" eventFocus eventClick>
     <qt-image
       class="search-content-item-img-h"
       src="${cover}"
@@ -20,11 +19,25 @@
     </qt-view>
     <qt-text
       class="search-content-item-text"
-      style="width: 410px"
+      style="width: 386px; margin-top: 241px"
       text="${title}"
       gravity="center|start"
+      :showOnState="['normal', 'selected']"
       :lines="1"
-      :ellipsizeMode="4"
+      :ellipsizeMode="2"
+      :focusable="false"
+      :duplicateParentState="true"
+    ></qt-text>
+    <qt-text
+      class="search-content-item-text"
+      style="width: 386px; margin-top: 241px"
+      text="${title}"
+      typeface="bold"
+      gravity="center|start"
+      :horizontalFadingEdgeEnabled="true"
+      :showOnState="'focused'"
+      :lines="1"
+      :ellipsizeMode="3"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-text>

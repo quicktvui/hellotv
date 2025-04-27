@@ -68,9 +68,9 @@
             autoHeight
             text="${text}"
             gravity="center|start"
-            :showOnState="['normal', 'selected']"
+            :showOnState="'normal'"
             :lines="1"
-            :ellipsizeMode="4"
+            :ellipsizeMode="2"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -80,9 +80,9 @@
             text="${text}"
             typeface="bold"
             gravity="center|start"
-            showOnState="focused"
+            :showOnState="['focused', 'selected']"
             :lines="1"
-            :ellipsizeMode="4"
+            :ellipsizeMode="3"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
