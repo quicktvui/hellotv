@@ -191,10 +191,10 @@ function resetAndInitialize(keywords) {
 
   // 搜索历史
   const history = [
-    { type: KeywordType.TITLE, text: '搜索历史', showClearBtn: true },
-    { type: KeywordType.TEXT, text: '清清溪流' },
-    { type: KeywordType.TEXT, text: '反印度式浪漫' },
-    { type: KeywordType.TEXT, text: '小飞侠' }
+    // { type: KeywordType.TITLE, text: '搜索历史', showClearBtn: true },
+    // { type: KeywordType.TEXT, text: '清清溪流' },
+    // { type: KeywordType.TEXT, text: '反印度式浪漫' },
+    // { type: KeywordType.TEXT, text: '小飞侠' }
   ]
 
   // 记录历史条数

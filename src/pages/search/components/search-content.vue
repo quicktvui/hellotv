@@ -99,12 +99,16 @@ async function loadSearchData(pageIndex: number, page: number) {
 
     if (section.itemList.length > 0) {
       tabPage.data.push(section)
+    } else {
+      // 没有搜索结果时, 不展示顶部提示词
+      showTips.value = false
+      lockTips.value = true
     }
 
     if (section.itemList.length < config.gridContentsLimit) {
       // 请求大家都在搜
       const recommends = await searchManager.getHotRecommends(1, config.gridHotRecommendsLimit)
-      tabPage.data.push(buildRecommendSection(recommends, true))
+      tabPage.data.push(buildRecommendSection(recommends, true, showTips.value))
       tabPage.data.push(buildEndSection())
       // 停止分页
       tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
@@ -141,7 +145,7 @@ function onTabPageLoadData(pageIndex: number, pageNo: number) {
       .then((recommends) => {
         let tabPage: QTTabPageData = { useDiff: true, data: [] }
         if (recommends.items.length > 0) {
-          tabPage.data.push(buildRecommendSection(recommends, false))
+          tabPage.data.push(buildRecommendSection(recommends, false, showTips.value))
         }
         tabPage.data.push(buildEndSection())
         tabRef.value?.setPageData(pageIndex, tabPage)

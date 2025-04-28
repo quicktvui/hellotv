@@ -142,11 +142,11 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
  * @param rawData 原始数据
  * @returns
  */
-export const buildRecommendSection = (rawData: Recommends, isShowTitle: boolean): QTWaterfallSection => {
+export const buildRecommendSection = (rawData: Recommends, isShowTitle: boolean, isShowTips: boolean): QTWaterfallSection => {
   return {
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
     style: { width: 1920 },
-    decoration: { left: 80, top: isShowTitle ? 40 : 0, bottom: 40 },
+    decoration: { left: 80, top: isShowTitle && isShowTips ? 40 : isShowTitle && !isShowTips ? 65 : 0, bottom: 40 },
     title: isShowTitle ? '大家都在搜' : '',
     titleStyle: { height: 50, fontSize: 40 },
     titleTypeface: 'bold',
