@@ -65,55 +65,21 @@ export const buildTab = function (rawData?: Tab[]): QTTab {
  * @param rawData 原始数据
  * @returns
  */
-export const buildContents = function (rawData: Contents): QTWaterfallSection[] {
-  const contents: QTWaterfallSection[] = []
-
-  // 常规板块
-  if (rawData.items.length > 0) {
-    contents.push({
-      _id: 't1',
-      type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
-      style: { width: 1920 },
-      decoration: { left: 80, top: 40 },
-      title: '',
-      itemList: rawData.items.map((item, index) => ({
-        _id: `t1-${index}`,
-        type: ContentType.HORIZONTAL,
-        style: { width: 410, height: 276 },
-        decoration: { right: 40, bottom: 40 },
-        id: item.id,
-        title: item.title,
-        cover: item.image,
-        score: item.score.toFixed(1)
-      }))
-    })
-  }
-
-  // 相关推荐
-  contents.push({
-    _id: 't2',
+export const buildContentSection = (rawData: Contents): QTWaterfallSection => {
+  return {
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
     style: { width: 1920 },
-    decoration: { left: 80, top: contents.length === 1 ? 0 : 75, bottom: 40 },
-    title: '大家都在搜',
-    titleStyle: { height: 50, fontSize: 40 },
-    titleTypeface: 'bold',
-    itemList: rawData.recommends!.map((item, index) => ({
-      _id: `t2-${index}`,
-      type: ContentType.VERTICAL,
-      style: { width: 260, height: 414 },
-      decoration: { top: 40, right: 40 },
-      id: item.id,
+    decoration: { left: 80 },
+    title: '',
+    itemList: rawData.items.map((item) => ({
+      type: ContentType.HORIZONTAL,
+      style: { width: 410, height: 276 },
+      decoration: { right: 40, top: 40 },
       title: item.title,
       cover: item.image,
       score: item.score.toFixed(1)
     }))
-  })
-
-  // 到底提示
-  contents.push(buildEndSection())
-
-  return contents
+  }
 }
 
 /**
@@ -176,31 +142,24 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
  * @param rawData 原始数据
  * @returns
  */
-export const buildRecommends = function (rawData: Recommends): QTWaterfallSection[] {
-  const contents: QTWaterfallSection[] = []
-
-  // 常规板块
-  if (rawData.items.length > 0) {
-    contents.push({
-      _id: 'r1',
-      type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
-      style: { width: 1920 },
-      decoration: { left: 80, bottom: 40 },
-      title: '',
-      itemList: rawData.items.map((item, index) => ({
-        _id: `r1-${index}`,
-        type: ContentType.VERTICAL,
-        style: { width: 260, height: 414 },
-        decoration: { top: 40, right: 40 },
-        id: item.id,
-        title: item.title,
-        cover: item.image,
-        score: item.score.toFixed(1)
-      }))
-    })
+export const buildRecommendSection = (rawData: Recommends, isShowTitle: boolean): QTWaterfallSection => {
+  return {
+    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
+    style: { width: 1920 },
+    decoration: { left: 80, top: isShowTitle ? 40 : 0, bottom: 40 },
+    title: isShowTitle ? '大家都在搜' : '',
+    titleStyle: { height: 50, fontSize: 40 },
+    titleTypeface: 'bold',
+    itemList: rawData.items.map((item, index) => ({
+      type: ContentType.VERTICAL,
+      style: { width: 260, height: 414 },
+      decoration: { top: isShowTitle && index < 6 ? 40 : !isShowTitle && index < 6 ? 0 : 40, right: 40 },
+      id: item.id,
+      title: item.title,
+      cover: item.image,
+      score: item.score.toFixed(1)
+    }))
   }
-
-  return contents
 }
 
 /**

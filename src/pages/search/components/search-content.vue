@@ -7,9 +7,10 @@
       ref="tabRef"
       tabNavBarClass="search-content-tab"
       tabPageClass="search-content-tab-page"
+      :focusMemory="true"
       :autoHandleBackKey="true"
       :contentNextFocus="{ left: 'keywordList' }"
-      :tabContentBlockFocusDirections="['up']"
+      :tabContentBlockFocusDirections="['up', 'down']"
       @onTabPageLoadData="onTabPageLoadData"
       @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
@@ -42,7 +43,7 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import { buildTab, buildContents, buildRecommends, buildEndSection } from '../adapter/index'
+import { buildTab, buildEndSection, buildContentSection, buildRecommendSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
 import searchContentItemH from './search-content-item-h.vue'
 import searchContentItemV from './search-content-item-v.vue'
@@ -88,43 +89,77 @@ function init(keyword: string) {
   tabRef.value?.initPage({ width: 1920, height: 1080 })
 }
 
-let timer: any = -1
-async function onTabPageLoadData(pageIndex: number, pageNo: number) {
+// 加载关键词搜索和大家都在搜
+async function loadSearchData(pageIndex: number, page: number) {
   let tabPage: QTTabPageData = { useDiff: true, data: [] }
-  if (rawKeyword.value?.length === 0) {
-    const recommends = await searchManager.getHotRecommends(++pageNo, config.gridHotRecommendsLimit)
-    tabPage.data = buildRecommends(recommends)
-    // 停止分页
-    if (recommends.items.length < config.gridHotRecommendsLimit) {
+
+  try {
+    const contentsResult = await searchManager.getContents(rawKeyword.value, page, config.gridContentsLimit)
+    const section = buildContentSection(contentsResult)
+
+    if (section.itemList.length > 0) {
+      tabPage.data.push(section)
+    }
+
+    if (section.itemList.length < config.gridContentsLimit) {
+      // 请求大家都在搜
+      const recommends = await searchManager.getHotRecommends(1, config.gridHotRecommendsLimit)
+      tabPage.data.push(buildRecommendSection(recommends, true))
       tabPage.data.push(buildEndSection())
+      // 停止分页
       tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
     }
-  } else {
-    tabPage.data = buildContents(await searchManager.getContents(rawKeyword.value, ++pageNo))
-    // 没有搜索结果时, 不展示顶部提示词
-    if (tabPage.data.length === 2) {
-      showTips.value = false
-      lockTips.value = true
-    }
-    // 停止分页
-    tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
-  }
-  // 数据更新
-  if (pageNo === 1) {
-    tabRef.value?.setPageData(pageIndex, tabPage)
-  } else {
-    tabRef.value?.addPageData(pageIndex, tabPage, 0)
-  }
 
-  // 延迟更新上层状态
+    if (page === 1) {
+      // 列表第一个Item添加特殊标识
+      tabPage.data[0].itemList[0]._id = '--search-grid-first-item--'
+      tabRef.value?.setPageData(pageIndex, tabPage)
+    } else {
+      tabRef.value?.addPageData(pageIndex, tabPage, 0)
+    }
+  } catch (error) {
+    qt.log.e('error->loadSearchData', error)
+  } finally {
+    delayedUpdate()
+  }
+}
+
+// 延迟更新上层状态
+function delayedUpdate() {
   clearTimeout(timer)
   timer = setTimeout(() => {
     emits('setLoading', false)
     emits('updateFocusDeny', false)
-  }, 100)
+  }, 500)
+}
+
+let timer: any = -1
+function onTabPageLoadData(pageIndex: number, pageNo: number) {
+  if (rawKeyword.value?.length === 0) {
+    searchManager
+      .getHotRecommends(1, config.gridHotRecommendsLimit)
+      .then((recommends) => {
+        let tabPage: QTTabPageData = { useDiff: true, data: [] }
+        if (recommends.items.length > 0) {
+          tabPage.data.push(buildRecommendSection(recommends, false))
+        }
+        tabPage.data.push(buildEndSection())
+        tabRef.value?.setPageData(pageIndex, tabPage)
+        tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+      })
+      .catch((error) => {
+        qt.log.e('error->getContents for recommends', error)
+      })
+      .finally(() => {
+        delayedUpdate()
+      })
+  } else {
+    loadSearchData(pageIndex, ++pageNo)
+  }
 }
 
 function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {
+  // 跳转详情页
   launch.launchDetail(item.id)
   // 上报搜索历史
   searchManager.addHistory(rawKeyword.value || '')
