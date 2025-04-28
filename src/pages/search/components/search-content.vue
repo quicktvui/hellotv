@@ -12,6 +12,7 @@
       :contentNextFocus="{ left: 'keywordList' }"
       :tabContentBlockFocusDirections="['up', 'down']"
       @onTabPageLoadData="onTabPageLoadData"
+      @onTabPageItemFocused="onTabPageItemFocused"
       @onTabPageItemClick="onTabPageItemClick"
       @onTabMoveToTopStart="onTabMoveToTopStart"
       @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
@@ -57,7 +58,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['setLoading', 'updateFocusDeny'])
+const emits = defineEmits(['setLoading', 'updateFocusName', 'updateFocusDeny'])
 // 顶部提示
 const showTips = ref<boolean>(true)
 const lockTips = ref<boolean>(false)
@@ -159,6 +160,13 @@ function onTabPageLoadData(pageIndex: number, pageNo: number) {
       })
   } else {
     loadSearchData(pageIndex, ++pageNo)
+  }
+}
+
+function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
+  if (isFocused) {
+    qt.eventBus.emit('updateFocusRightSid', '')
+    emits('updateFocusName', 'searchContentItem')
   }
 }
 

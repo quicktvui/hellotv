@@ -45,7 +45,7 @@
         :triggerTask="triggerTask"
         :singleSelectPosition="singleSelectPos"
         :blockFocusDirections="['down']"
-        :nextFocusName="{ right: 'gridItem' }"
+        :nextFocusRightSID="focusRightSid"
         :openPage="true"
         :listenBoundEvent="true"
         :loadMore="onListLoadMore"
@@ -94,7 +94,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
 import { KeywordType } from '../adapter/interface'
@@ -115,6 +115,7 @@ const mode = ref<'hot' | 'guess' | 'all'>('hot')
 const showClearBtn = ref<boolean>(false)
 const listRef = ref<QTIListView>()
 const singleSelectPos = ref<number>(1)
+const focusRightSid = ref<string>('')
 const isEmpty = ref<boolean>(false)
 // 控制清空按钮是否展示
 const triggerTask = [
@@ -143,7 +144,18 @@ let watchTimer: any = -1
 let loadTimer: any = -1
 let listFocusTimer: any = -1
 
-onMounted(() => loadSuggestions())
+onMounted(() => {
+  // 监听事件
+  qt.eventBus.on('updateFocusRightSid', (sid: string) => {
+    focusRightSid.value = sid
+  })
+  // 加载数据
+  loadSuggestions()
+})
+
+onUnmounted(() => {
+  qt.eventBus.off('updateFocusRightSid')
+})
 
 watch(
   () => props.inputText,
@@ -235,6 +247,10 @@ function onListItemFocused(evt) {
     listFocusTimer = setTimeout(() => {
       if (evt.position != lastFocusPos) {
         lastFocusPos = evt.position
+
+        // 设置向右焦点位置
+        focusRightSid.value = '--search-grid-first-item--'
+
         emits('updateKeyword', evt.item.text)
       } else {
         emits('updateFocusDeny', false)
