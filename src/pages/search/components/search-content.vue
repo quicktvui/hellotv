@@ -9,6 +9,7 @@
       tabPageClass="search-content-tab-page"
       :focusMemory="true"
       :autoHandleBackKey="true"
+      :enablePlaceholder="themeConfig.placeHolderEnable"
       :contentNextFocus="{ left: 'keywordList' }"
       :tabContentBlockFocusDirections="['up', 'down']"
       @onTabPageLoadData="onTabPageLoadData"
@@ -56,6 +57,7 @@ import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildContentSections, buildRecommendSections, buildLoadingSection, buildEndSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
+import themeConfig from '../../../config/theme-config'
 import searchContentItemH from './search-content-item-h.vue'
 import searchContentItemV from './search-content-item-v.vue'
 import launch from '../../../tools/launch'

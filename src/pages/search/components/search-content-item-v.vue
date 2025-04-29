@@ -7,14 +7,17 @@
     eventFocus
     eventClick
   >
-    <qt-image
-      class="search-content-item-img-v"
-      src="${cover}"
-      :postDelay="100"
-      :enableFocusBorder="true"
-      :focusable="false"
-      :duplicateParentState="true"
-    ></qt-image>
+    <!-- 外层这个div的作用是模拟placeholder, 如果没有启动placeholder, 把背景色加到图片上, 有时会闪一下页面背景色 -->
+    <qt-view style="background-color: rgba(255, 255, 255, 0.1); border-radius: 16px" :focusable="false" :duplicateParentState="true">
+      <qt-image
+        class="search-content-item-img-v"
+        src="${cover}"
+        :postDelay="100"
+        :enableFocusBorder="true"
+        :focusable="false"
+        :duplicateParentState="true"
+      ></qt-image>
+    </qt-view>
     <!-- 评分 -->
     <qt-view
       class="search-content-item-score"
@@ -29,20 +32,8 @@
       style="width: 236px; top: 379px"
       text="${title}"
       gravity="center|start"
-      :showOnState="['normal', 'selected']"
-      :lines="1"
-      :ellipsizeMode="2"
-      :focusable="false"
-      :duplicateParentState="true"
-    ></qt-text>
-    <qt-text
-      class="search-content-item-text"
-      style="width: 236px; top: 379px"
-      text="${title}"
-      typeface="bold"
-      gravity="center|start"
+      :boldOnFocus="true"
       :horizontalFadingEdgeEnabled="true"
-      :showOnState="'focused'"
       :lines="1"
       :ellipsizeMode="3"
       :focusable="false"
