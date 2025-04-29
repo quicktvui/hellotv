@@ -28,7 +28,7 @@
             :padding="cfgGridItemMode === 1 ? '80,0,40,0' : '80,0,0,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
-            :enablePlaceholder="true"
+            :enablePlaceholder="themeConfig.placeHolderEnable"
             :fadingEdgeLength="100"
             :verticalFadingEdgeEnabled="true"
             :nextFocusName="{ left: 'sidebarList' }"
@@ -122,6 +122,7 @@ import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
 import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
+import themeConfig from '../../../../config/theme-config'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import ListItemRecord from './list-item-record.vue'
