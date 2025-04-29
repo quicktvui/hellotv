@@ -5,6 +5,7 @@
     horizontal
     list="${list}"
     singleSelectPosition="${defaultSelectedPos}"
+    :horizontalFadingEdgeEnabled="true"
     :padding="'0,0,120,0'"
     :useDiff="true"
     :focusMemory="false"
@@ -13,7 +14,8 @@
     :blockFocusDirections="['right']"
     @item-click="onListItemClick"
   >
-    <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" sid="${sid}" eventFocus eventClick>
+    <qt-view class="filter-main-conditions-list-row-item" :type="ListItemType.TEXT" :focusable="true" sid="${sid}"
+             eventFocus eventClick>
       <qt-view style="height: 40px; background-color: transparent" autoWidth :focusable="false" :duplicateParentState="true">
         <qt-text
           class="filter-main-conditions-list-row-item-text"

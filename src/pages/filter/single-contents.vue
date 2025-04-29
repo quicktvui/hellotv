@@ -24,13 +24,13 @@ const router = useESRouter()
 // 筛选内容
 const contentRef = ref()
 
-function onESCreate(params: { screenId: string }) {
-  loadFilters(params.screenId || '1848555233454727169')
+function onESCreate(params: { screenId: string; defaultTags?: string }) {
+  loadFilters('1848555233454727169', params.defaultTags || '不存在标签,美国,动作')
 }
 
-function loadFilters(primaryId: string) {
+function loadFilters(primaryId: string, defaultTags: string) {
   filterManager.getFilters(primaryId).then((filters) => {
-    const { tertiaries } = buildFilters(primaryId, filters)
+    const { tertiaries } = buildFilters(primaryId, filters, defaultTags.split(','))
     // 初始化三级列表
     contentRef.value?.init(primaryId, tertiaries)
   })

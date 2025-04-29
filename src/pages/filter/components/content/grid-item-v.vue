@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="filter-main-contents-grid-item-v" :focusable="true" eventFocus eventClick>
+  <qt-view class="filter-main-contents-grid-item-v" :focusable="true" :focusScale="themeConfig.placeHolderFocusScale" eventFocus eventClick>
     <!-- 封面 -->
     <qt-image
       class="filter-main-contents-grid-item-v-img"
@@ -19,21 +19,12 @@
       <qt-text
         class="filter-main-contents-grid-item-v-text"
         text="${title}"
-        :showOnState="['normal', 'selected']"
+        :boldOnFocus="true"
         :lines="1"
         :ellipsizeMode="4"
         :focusable="false"
         :duplicateParentState="true"
-      ></qt-text>
-      <qt-text
-        class="filter-main-contents-grid-item-v-text"
-        text="${title}"
-        typeface="bold"
-        :showOnState="'focused'"
-        :lines="1"
-        :ellipsizeMode="4"
-        :focusable="false"
-        :duplicateParentState="true"
+        :horizontalFadingEdgeEnabled="true"
       ></qt-text>
     </qt-view>
   </qt-view>

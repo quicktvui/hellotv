@@ -21,7 +21,7 @@
             class="history-sidebar-list-item-text"
             text="${text}"
             gravity="center"
-            :showOnState="['normal', 'selected']"
+            :showOnState="'normal'"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -30,7 +30,7 @@
             text="${text}"
             gravity="center"
             typeface="bold"
-            :showOnState="'focused'"
+            :showOnState="['focused', 'selected']"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -105,7 +105,7 @@
               gravity="center|start"
               :showOnState="['normal', 'selected']"
               :lines="1"
-              :ellipsizeMode="4"
+              :ellipsizeMode="2"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
@@ -113,9 +113,10 @@
               class="history-content-grid-item-title"
               text="${title}"
               gravity="center|start"
+              typeface="bold"
               :showOnState="'focused'"
               :lines="1"
-              :ellipsizeMode="4"
+              :ellipsizeMode="3"
               :focusable="false"
               :duplicateParentState="true"
             ></qt-text>
@@ -334,6 +335,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
   if (name === 'cancel') {
     cancelEdit()
   } else {
+    isResume = false
     router.push({
       name: 'confirm',
       params: { text: '清空之后什么都没有了哦～', btnL: '确定', btnR: '取消', menuIndex: lastIndex, clearHistory: true }

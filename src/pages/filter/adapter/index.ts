@@ -27,7 +27,8 @@ import icLeftSelected from '../../../assets/filter/ic_left_selected.png'
  */
 export const buildFilters = function (
   primaryId: string,
-  rawData: Filters
+  rawData: Filters,
+  defaultTags: string[]
 ): { primaries: Primary[]; secondaries: Secondary[]; tertiaries: Tertiary[] } {
   // 一级列表, 左侧扩展
   const primaries: Primary[] = rawData.primary.map((item) => ({ type: PrimaryType.TEXT, ...item }))
@@ -67,13 +68,18 @@ export const buildFilters = function (
   secondaries.push(...rawData.secondary.map((item) => ({ type: 9, ...item })))
 
   // 三级列表, 右侧筛选条件
-  const tertiaries: Tertiary[] = rawData.tertiary.map((item) => ({
-    type: TertiaryType.LIST,
-    groupKey: item.groupKey,
-    groupName: item.groupName,
-    list: [{ type: ListItemType.TEXT, name: item.groupName }, ...item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag }))],
-    defaultSelectedPos: 0
-  }))
+  const tertiaries: Tertiary[] = rawData.tertiary.map((item) => {
+    const tagNames = item.tags.map((tag) => tag.name)
+    const defaultTagIndex = tagNames.findIndex((tagName) => defaultTags.includes(tagName))
+
+    return {
+      type: TertiaryType.LIST,
+      groupKey: item.groupKey,
+      groupName: item.groupName,
+      list: [{ type: ListItemType.TEXT, name: item.groupName }, ...item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag }))],
+      defaultSelectedPos: defaultTagIndex !== -1 ? defaultTagIndex + 1 : 0
+    }
+  })
 
   // 优化内容区域焦点首次向上体验, 值需要全局唯一
   tertiaries[tertiaries.length - 1].list[0].sid = '--sid--'
@@ -87,21 +93,15 @@ export const buildFilters = function (
  * @returns
  */
 export const buildContents = function (rawData: Contents): GridContent[] {
-  const contents: GridContent[] = []
-
-  rawData.items.forEach((item) => {
-    contents.push({
-      type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
-      decoration: { right: 40, bottom: 40 },
-      id: item.id,
-      title: item.title,
-      cover: item.image,
-      score: item.score + '',
-      jumpParams: item.jumpParams
-    })
-  })
-
-  return contents
+  return rawData.items.map((item) => ({
+    type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
+    decoration: { top: 22, right: 40, bottom: 18 },
+    id: item.id,
+    title: item.title,
+    cover: item.image,
+    score: item.score.toFixed(1),
+    jumpParams: item.jumpParams
+  }))
 }
 
 /**

@@ -20,6 +20,7 @@
           :keyword="keyword"
           :triggerTask="triggerTask"
           @setLoading="setLoading"
+          @updateFocusName="updateFocusName"
           @updateFocusDeny="updateFocusDeny"
         />
       </qt-view>
@@ -95,7 +96,6 @@ function updateKeyword(val: string) {
  * 当前焦点位置更新
  */
 function updateFocusName(val: string) {
-  contentDeny.value = 2
   curFocusName.value = val
 }
 

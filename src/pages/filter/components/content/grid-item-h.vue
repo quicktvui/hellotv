@@ -3,6 +3,7 @@
     class="filter-main-contents-grid-item-h"
     :style="{ width: $props.width, height: $props.height }"
     :focusable="true"
+    :focusScale="themeConfig.placeHolderFocusScale"
     eventFocus
     eventClick
   >
@@ -31,22 +32,12 @@
         class="filter-main-contents-grid-item-h-text"
         :style="{ width: $props.width }"
         text="${title}"
-        :showOnState="['normal', 'selected']"
+        :boldOnFocus="true"
         :lines="1"
         :ellipsizeMode="4"
         :focusable="false"
         :duplicateParentState="true"
-      ></qt-text>
-      <qt-text
-        class="filter-main-contents-grid-item-h-text"
-        :style="{ width: $props.width }"
-        text="${title}"
-        typeface="bold"
-        :showOnState="'focused'"
-        :lines="1"
-        :ellipsizeMode="4"
-        :focusable="false"
-        :duplicateParentState="true"
+        :horizontalFadingEdgeEnabled="true"
       ></qt-text>
     </qt-view>
   </qt-view>

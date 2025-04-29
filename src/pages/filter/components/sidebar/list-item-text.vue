@@ -5,7 +5,7 @@
       text="${name}"
       :style="$props.textStyle"
       :gravity="$props.textGravity"
-      :showOnState="['normal', 'selected']"
+      :showOnState="'normal'"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-text>
@@ -15,7 +15,7 @@
       typeface="bold"
       :style="$props.textStyle"
       :gravity="$props.textGravity"
-      :showOnState="'focused'"
+      :showOnState="['focused', 'selected']"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-text>

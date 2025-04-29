@@ -1,5 +1,5 @@
 <template>
-  <qt-column 
+  <qt-column
     class="basic-section-root"
     :style="{ height: sectionHeight }"
     :scrollOverride="{ down: 0, up: -1080 }"
@@ -20,8 +20,8 @@
           @onIntroductionFocus="onIntroductionFocus">
         </media-introduction>
         <!-- 资源位 -->
-        <qt-view 
-          class="resource-placeholder" 
+        <qt-view
+          class="resource-placeholder"
           :focusable="true"
           v-if="isShowResourcePlaceholder"
           :focusScale="ThemeConfig.placeHolderFocusScale"
@@ -33,7 +33,7 @@
       </qt-column>
     </qt-row>
     <!-- 选集 -->
-    <media-series 
+    <media-series
       ref="mediaSeiresRef"
       nextFocusDownSID="releatedFirstId"
       :blockFocusDirections="['left','right']"
@@ -79,13 +79,13 @@ import config from './config';
   const menuRef = ref()
   const isCollected = ref(false)
   //播放器占位
-  const playerPlaceholderRef = ref() 
+  const playerPlaceholderRef = ref()
   const onPlayerPlaceholderFocus = (focused: boolean) => {
     emits("onPlayerPlaceholderFocus", focused)
   }
   const onPlayerPlaceholderClick = () => {emits("onPlayerPlaceholderClick")}
   //选集
-  const mediaSeiresRef = ref() 
+  const mediaSeiresRef = ref()
   const onMediaSeriesItemLoad = (page: number, data: Array<IMediaItem>) => {
     emits("onMediaSeriesItemLoad", page, data)
   }
@@ -100,7 +100,7 @@ import config from './config';
   }
   //**************************初始化入口**************************
   const init = async (media: IMedia) => {
-    if (media.mediaSeriesType && media.mediaSeriesType > -1) {
+    if (media.mediaSeriesType > -1 && media.episodes > 1) {
       switch (media.mediaSeriesType) {
         case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_NUMBER: //数字
           sectionHeight.value = 815
@@ -129,7 +129,7 @@ import config from './config';
   }
   const showPlayerPlaceholderImg = (value: boolean) => {
     playerPlaceholderRef.value?.showPlayerPlaceholderImg(value)
-  } 
+  }
   const scrollMediaSeriesTo = (position: number): void => {
     mediaSeiresRef.value?.scrollTo(position)
   }
@@ -198,9 +198,8 @@ import config from './config';
         }
       }
     }
-    
+
   }
-  
+
 }
 </style>
-  
