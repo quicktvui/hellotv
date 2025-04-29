@@ -84,6 +84,7 @@
 
       <!-- 数据渲染 -->
       <qt-grid-view
+        v-if="showGridView"
         class="history-raw-content-grid"
         ref="gridRef"
         :listData="contentData"
@@ -93,7 +94,10 @@
         :verticalFadingEdgeEnabled="true"
         :nextFocusUpSID="'btns'"
         :nextFocusLeftSID="'sidebar'"
+        :enableItemAnimator="false"
+        :refocusType="'KeepPosition'"
         :openPage="true"
+        :preloadNo="12"
         :listenBoundEvent="true"
         :listenHasFocusChange="true"
         :loadMore="onContentloadMore"
@@ -103,6 +107,17 @@
       >
         <!-- 常规 -->
         <grid-item-h :type="ContentType.Normal" :itemHeight="lastIndex === 0 ? 266 : 232"></grid-item-h>
+        <!-- 分页样式 -->
+        <template #loading>
+          <qt-view
+            style="width: 1460px; height: 100px; background-color: transparent; align-items: center; justify-content: center"
+            :type="1002"
+            :focusable="false"
+            :disablePlaceholder="true"
+          >
+            <qt-loading-view style="height: 40px; width: 40px" name="loading" color="rgba(255,255,255,0.3)" :focusable="false" />
+          </qt-view>
+        </template>
         <!-- 到底提示 -->
         <template #footer>
           <qt-text
@@ -111,6 +126,7 @@
             text="已经到底啦，按【返回键】回到顶部"
             gravity="center"
             :focusable="false"
+            :disablePlaceholder="true"
           ></qt-text>
         </template>
       </qt-grid-view>
@@ -141,6 +157,7 @@ const sidebarRef = ref<QTIListView>()
 const sidebarData = qtRef<QTListViewItem[]>()
 const sidebarDefaultPos = ref<number>(0)
 const gridRef = ref<QTIListView>()
+const showGridView = ref<boolean>(true)
 const contentDeny = ref<number>(1)
 const contentData = qtRef<QTListViewItem[]>([])
 const lastIndex = ref<number>(-1)
@@ -184,13 +201,16 @@ function onSidebarItemFocus(evt) {
       if (lastIndex.value !== evt.position) {
         page = 1
         stopPage = false
+        isResume = false
         lastIndex.value = evt.position
         isLoading.value = true
-        // 右侧内容复原
-        gridRef.value?.scrollToTop()
-        gridRef.value?.setItemSelected(0, true)
+        showGridView.value = false
+        contentData.value.splice(0)
         // 加载新数据
-        loadRecords(lastIndex.value)
+        setTimeout(() => {
+          showGridView.value = true
+          loadRecords(lastIndex.value)
+        }, 300)
       } else {
         contentDeny.value = 1
       }
@@ -209,35 +229,40 @@ function onContentItemFocus(evt) {
 }
 
 let deleteTimer: any = -1
+function checkAndHandleDeletion() {
+  // 等于13条删除到底提示
+  if (contentData.value.length === 13) {
+    clearTimeout(deleteTimer)
+    deleteTimer = setTimeout(() => {
+      contentData.value.splice(12, 1)
+    }, 300)
+  }
+
+  // 全部删除完毕
+  if (contentData.value.length === 0) {
+    isEditing.value = false
+    isEmpty.value = true
+    offsetY = 0
+    setTimeout(() => {
+      sidebarRef.value?.setItemFocused(lastIndex.value)
+    }, 300)
+  }
+}
+
 function onContentItemClick(evt) {
   if (isEditing.value) {
     historyManager
       .delRecords('xxx', lastIndex.value === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
         contentData.value.splice(evt.position, 1)
-        // 等于13条删除到底提示
-        if (contentData.value.length === 13) {
-          // 连续删除需要加延迟
-          clearTimeout(deleteTimer)
-          deleteTimer = setTimeout(() => {
-            contentData.value.splice(12, 1)
-          }, 300)
-        }
-        // 全部删除完毕
-        if (contentData.value.length === 0) {
-          isEditing.value = false
-          isEmpty.value = true
-          setTimeout(() => {
-            sidebarRef.value?.setItemFocused(lastIndex.value)
-          }, 300)
-        }
+        checkAndHandleDeletion()
       })
       .catch(() => {
         qt.toast.showToast('删除失败')
       })
   } else {
-    launch.launchDetail(contentData.value[evt.position].id)
     isResume = true
+    launch.launchDetail(contentData.value[evt.position].id)
   }
 }
 
@@ -249,12 +274,17 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
   } else {
     contentData.value.push(...buildContents(records))
   }
-  // 到底提示
-  if (contentData.value.length < config.ContentsLimit * page && contentData.value.length > 12) {
-    contentData.value.push(buildEndContent())
+
+  // 停止分页
+  if (contentData.value.length < config.ContentsLimit * page) {
+    gridRef.value?.stopPage()
+    stopPage = true
+    // 到底提示
+    if (contentData.value.length > 12) {
+      contentData.value.push(buildEndContent())
+    }
   }
-  // 结束分页
-  stopPage = records.items.length < config.ContentsLimit
+
   // 暂无数据
   isEmpty.value = contentData.value.length === 0
 
