@@ -36,6 +36,6 @@ export const buildEndContent = (): Content => {
     type: ContentType.End,
     itemSize: 100,
     id: '',
-    decoration: { bottom: 140 }
+    decoration: { bottom: 20 }
   }
 }

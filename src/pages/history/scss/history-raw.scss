@@ -1,11 +1,11 @@
-.history {
+.history-raw {
   width: 1920px;
   height: 1080px;
   background-color: transparent;
   flex-direction: row;
 }
 
-.history-focus-placeholder {
+.history-raw-focus-placeholder {
   width: 1px;
   height: 1px;
   background-color: transparent;
@@ -14,14 +14,14 @@
   left: 0px;
 }
 
-.history-sidebar {
+.history-raw-sidebar {
   width: 340px;
   height: 1080px;
   background-color: rgba(255, 255, 255, 0.03);
 }
 
-.history-sidebar-tips {
-  width: 340px;
+.history-raw-sidebar-tips {
+  width: 250px;
   height: 50px;
   background-color: transparent;
   margin-top: 75px;
@@ -30,13 +30,13 @@
   font-size: 40px;
 }
 
-.history-sidebar-list {
+.history-raw-sidebar-list {
   width: 340px;
   height: 1080px;
   background-color: transparent;
 }
 
-.history-sidebar-list-item {
+.history-raw-sidebar-list-item {
   width: 340px;
   height: 106px;
   background-color: transparent;
@@ -47,8 +47,8 @@
   focus-background-color: $theme-btn-focus-color;
 }
 
-.history-sidebar-list-item-text {
-  width: 320px;
+.history-raw-sidebar-list-item-text {
+  width: 160px;
   height: 106px;
   background-color: transparent;
   position: absolute;
@@ -58,13 +58,13 @@
   select-color: $theme-text-select-color;
 }
 
-.history-content {
+.history-raw-content {
   width: 1580px;
   height: 1080px;
   background-color: transparent;
 }
 
-.history-content-btns {
+.history-raw-content-btns {
   width: 1500px;
   height: 60px;
   background-color: transparent;
@@ -74,16 +74,36 @@
   justify-content: flex-end;
 }
 
-.history-content-tips {
+.history-raw-content-btns-item {
+  width: 180px;
+  height: 60px;
+  background-color: rgba(255, 255, 255, 0.06);
+  align-items: center;
+  justify-content: center;
+  focus-background-color: #ffffff;
+  border-radius: 30px;
+}
+
+.history-raw-content-btns-item-text {
+  position: absolute;
+  width: 180px;
+  height: 60px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.55);
+  focus-color: #13161b;
+  font-size: 30px;
+}
+
+.history-raw-content-tips {
   width: 1500px;
   height: 60px;
   background-color: transparent;
   margin-top: 40px;
   color: rgba(255, 255, 255, 0.55);
-  font-size: 30px;
+  font-size: 24px;
 }
 
-.history-content-loading {
+.history-raw-content-loading {
   width: 1580px;
   height: 1000px;
   background-color: transparent;
@@ -91,7 +111,7 @@
   justify-content: center;
 }
 
-.history-content-empty {
+.history-raw-content-empty {
   width: 1580px;
   height: 1000px;
   background-color: transparent;
@@ -99,7 +119,7 @@
   justify-content: center;
 }
 
-.history-content-empty-text {
+.history-raw-content-empty-text {
   width: 180px;
   height: 40px;
   background-color: transparent;
@@ -107,41 +127,43 @@
   font-size: 30px;
 }
 
-.history-content-grid {
+.history-raw-content-grid {
   width: 1460px;
-  height: 1080px;
+  height: 955px;
   background-color: transparent;
   margin-top: 25px;
   margin-left: 60px;
 }
 
-.history-content-grid-item {
+.history-raw-content-grid-item {
   width: 325px;
-  height: 266px;
   background-color: transparent;
 }
 
-.history-content-grid-item-delete {
-  width: 325px;
-  height: 186px;
+.history-raw-content-grid-item-delete {
+  width: 321px;
+  height: 182px;
   background-color: rgba(0, 0, 0, 0.65);
+  border-radius: 16px;
   align-items: center;
   justify-content: center;
   position: absolute;
+  top: 1px;
+  left: 1px;
   z-index: 100;
 }
 
-.history-content-grid-item-title {
+.history-raw-content-grid-item-title {
   width: 325px;
   height: 40px;
   background-color: transparent;
-  position: absolute;
+  margin-top: 11px;
   color: $theme-text-normal-color;
   font-size: 30px;
   focus-color: white;
 }
 
-.history-content-grid-item-progress {
+.history-raw-content-grid-item-progress {
   width: 325px;
   height: 34px;
   background-color: transparent;
@@ -150,8 +172,8 @@
   focus-color: white;
 }
 
-.history-content-grid-item-end-text {
-  width: 1580px;
+.history-raw-content-grid-item-end-text {
+  width: 1460px;
   height: 100px;
   background-color: transparent;
   color: rgba(255, 255, 255, 0.55);

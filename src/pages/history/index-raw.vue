@@ -1,14 +1,14 @@
 <template>
-  <qt-view class="history" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
+  <qt-view class="history-raw" :gradientBackground="{ colors: themeConfig.bgGradientColor, orientation: 4 }">
     <!-- 焦点占位, 解决页面跳焦的问题 -->
-    <qt-view class="history-focus-placeholder" :focusable="true"></qt-view>
+    <qt-view class="history-raw-focus-placeholder" :focusable="true"></qt-view>
     <!-- 左侧列表 -->
-    <qt-view class="history-sidebar" :descendantFocusability="isEditing ? 2 : 1" :blockFocusDirections="['up']">
+    <qt-view class="history-raw-sidebar" :descendantFocusability="isEditing ? 2 : 1" :blockFocusDirections="['up']">
       <!-- 顶部提示 -->
-      <qt-text class="history-sidebar-tips" text="全部记录" gravity="center" :focusable="false"></qt-text>
+      <qt-text class="history-raw-sidebar-tips" text="全部记录" gravity="center|end" typeface="bold" :focusable="false"></qt-text>
       <!-- 数据渲染 -->
       <qt-list-view
-        class="history-sidebar-list"
+        class="history-raw-sidebar-list"
         ref="sidebarRef"
         sid="sidebar"
         :listData="sidebarData"
@@ -16,19 +16,19 @@
         :clipChildren="false"
         @item-focused="onSidebarItemFocus"
       >
-        <qt-view class="history-sidebar-list-item" :type="ContentType.Normal" :focusable="true" eventFocus eventClick>
+        <qt-view class="history-raw-sidebar-list-item" :type="ContentType.Normal" :focusable="true" eventFocus eventClick>
           <qt-text
-            class="history-sidebar-list-item-text"
+            class="history-raw-sidebar-list-item-text"
             text="${text}"
-            gravity="center"
+            gravity="center|end"
             :showOnState="'normal'"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
           <qt-text
-            class="history-sidebar-list-item-text"
+            class="history-raw-sidebar-list-item-text"
             text="${text}"
-            gravity="center"
+            gravity="center|end"
             typeface="bold"
             :showOnState="['focused', 'selected']"
             :focusable="false"
@@ -39,28 +39,52 @@
     </qt-view>
 
     <!-- 右侧列表 -->
-    <qt-view class="history-content" :clipChildren="true" :descendantFocusability="contentDeny" :blockFocusDirections="['up']">
+    <qt-view class="history-raw-content" :clipChildren="true" :descendantFocusability="contentDeny" :blockFocusDirections="['up']">
       <!-- 数据管理 -->
-      <qt-view v-if="isEditing" class="history-content-btns" sid="btns" :blockFocusDirections="['left']">
-        <qt-button text="取消" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('cancel')" />
-        <qt-button text="一键清空" :style="btnStyle" :textStyle="textStyle" :focusScale="1" @click="onBtnClick('clear')" />
+      <qt-view v-if="isEditing" class="history-raw-content-btns" sid="btns" :blockFocusDirections="['left']">
+        <qt-view class="history-raw-content-btns-item" style="margin-right: 30px" :focusable="true" @click="onBtnClick('cancel')">
+          <qt-text
+            class="history-raw-content-btns-item-text"
+            text="取消"
+            gravity="center"
+            :ellipsizeMode="4"
+            :boldOnFocus="true"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+        </qt-view>
+        <qt-view class="history-raw-content-btns-item" :focusable="true" @click="onBtnClick('clear')">
+          <qt-text
+            class="history-raw-content-btns-item-text"
+            text="一键清空"
+            gravity="center"
+            :ellipsizeMode="4"
+            :boldOnFocus="true"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-text>
+        </qt-view>
       </qt-view>
-      <qt-text v-else class="history-content-tips" text="按【菜单键】或长按【OK键】管理记录" gravity="center|end"></qt-text>
+      <qt-text v-else class="history-raw-content-tips" text="按【菜单键】或长按【OK键】管理记录" gravity="center|end"></qt-text>
 
       <!-- 半屏loading -->
-      <qt-view v-if="isLoading" class="history-content-loading" :gradientBackground="{ colors: ['#1A2029', '#00040B'], orientation: 0 }">
+      <qt-view
+        v-if="isLoading"
+        class="history-raw-content-loading"
+        :gradientBackground="{ colors: ['#1A2029', '#00040B'], orientation: 0 }"
+      >
         <qt-loading-view style="height: 100px; width: 100px" color="rgba(21,122,252,0.3)" :focusable="false"></qt-loading-view>
       </qt-view>
 
       <!-- 暂无数据 -->
-      <qt-view v-if="isEmpty" class="history-content-empty">
+      <qt-view v-if="isEmpty" class="history-raw-content-empty">
         <qt-image style="width: 160px; height: 142px; margin-bottom: 25px" :src="icEmpty"></qt-image>
-        <qt-text class="history-content-empty-text" text="暂无数据" gravity="center"></qt-text>
+        <qt-text class="history-raw-content-empty-text" text="暂无数据" gravity="center"></qt-text>
       </qt-view>
 
       <!-- 数据渲染 -->
       <qt-grid-view
-        class="history-content-grid"
+        class="history-raw-content-grid"
         ref="gridRef"
         :listData="contentData"
         :useDiff="true"
@@ -78,61 +102,11 @@
         @scroll-state-changed="onScrollStateChanged"
       >
         <!-- 常规 -->
-        <qt-view class="history-content-grid-item" :type="ContentType.Normal" :focusable="true" :focusScale="1.03" eventFocus eventClick>
-          <!-- 焦点状态下的删除样式 -->
-          <qt-view
-            class="history-content-grid-item-delete"
-            style="background-color: transparent"
-            showIf="${showDeleteCover}"
-            :focusable="false"
-            :duplicateParentState="true"
-          >
-            <qt-view class="history-content-grid-item-delete" :showOnState="'focused'" :focusable="false" :duplicateParentState="true">
-              <qt-image style="width: 40px; height: 50px" :src="icDelete" :focusable="false"></qt-image>
-            </qt-view>
-          </qt-view>
-          <qt-image
-            style="width: 325px; height: 186px; background-color: transparent; border-radius: 16px"
-            src="${image}"
-            :enableFocusBorder="true"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-image>
-          <qt-view style="height: 40px; background-color: transparent; margin-top: 11px" :focusable="false" :duplicateParentState="true">
-            <qt-text
-              class="history-content-grid-item-title"
-              text="${title}"
-              gravity="center|start"
-              :showOnState="['normal', 'selected']"
-              :lines="1"
-              :ellipsizeMode="2"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-text>
-            <qt-text
-              class="history-content-grid-item-title"
-              text="${title}"
-              gravity="center|start"
-              typeface="bold"
-              :showOnState="'focused'"
-              :lines="1"
-              :ellipsizeMode="3"
-              :focusable="false"
-              :duplicateParentState="true"
-            ></qt-text>
-          </qt-view>
-          <qt-text
-            class="history-content-grid-item-progress"
-            text="${progress}"
-            gravity="center|start"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-text>
-        </qt-view>
+        <grid-item-h :type="ContentType.Normal" :itemHeight="lastIndex === 0 ? 266 : 232"></grid-item-h>
         <!-- 到底提示 -->
         <template #footer>
           <qt-text
-            class="history-content-grid-item-end-text"
+            class="history-raw-content-grid-item-end-text"
             :type="ContentType.End"
             text="已经到底啦，按【返回键】回到顶部"
             gravity="center"
@@ -151,10 +125,10 @@ import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
 import { ContentType } from './adapter/interface'
+import gridItemH from './components/grid-item-h.vue'
 import historyManager from './api/index'
 import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'
-import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
 import config from './config'
 
@@ -169,19 +143,7 @@ const sidebarDefaultPos = ref<number>(0)
 const gridRef = ref<QTIListView>()
 const contentDeny = ref<number>(1)
 const contentData = qtRef<QTListViewItem[]>([])
-const btnStyle = {
-  width: `180px`,
-  height: `60px`,
-  borderRadius: `34px`,
-  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-  focusBackgroundColor: '#FFFFFF',
-  marginLeft: '30px'
-}
-const textStyle = {
-  color: 'rgba(255, 255, 255, 0.55)',
-  fontSize: `30px`,
-  focusColor: '#13161B'
-}
+const lastIndex = ref<number>(-1)
 
 let page = 1
 let stopPage = false
@@ -208,7 +170,6 @@ onUnmounted(() => {
   eventBus.off('clearPageData')
 })
 
-let lastIndex = -1
 let lastFocusName = ''
 let sidebarTimer: any = -1
 function onSidebarItemFocus(evt) {
@@ -220,16 +181,16 @@ function onSidebarItemFocus(evt) {
 
     clearTimeout(sidebarTimer)
     sidebarTimer = setTimeout(() => {
-      if (lastIndex !== evt.position) {
+      if (lastIndex.value !== evt.position) {
         page = 1
         stopPage = false
-        lastIndex = evt.position
+        lastIndex.value = evt.position
         isLoading.value = true
         // 右侧内容复原
         gridRef.value?.scrollToTop()
         gridRef.value?.setItemSelected(0, true)
         // 加载新数据
-        loadRecords(lastIndex)
+        loadRecords(lastIndex.value)
       } else {
         contentDeny.value = 1
       }
@@ -251,7 +212,7 @@ let deleteTimer: any = -1
 function onContentItemClick(evt) {
   if (isEditing.value) {
     historyManager
-      .delRecords('xxx', lastIndex === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
+      .delRecords('xxx', lastIndex.value === 0 ? 'history' : 'favorite', contentData.value[evt.position].id)
       .then(() => {
         contentData.value.splice(evt.position, 1)
         // 等于13条删除到底提示
@@ -267,7 +228,7 @@ function onContentItemClick(evt) {
           isEditing.value = false
           isEmpty.value = true
           setTimeout(() => {
-            sidebarRef.value?.setItemFocused(lastIndex)
+            sidebarRef.value?.setItemFocused(lastIndex.value)
           }, 300)
         }
       })
@@ -312,7 +273,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 
 function onContentloadMore() {
   if (!stopPage) {
-    loadRecords(lastIndex, ++page)
+    loadRecords(lastIndex.value, ++page)
   }
 }
 
@@ -338,7 +299,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
     isResume = false
     router.push({
       name: 'confirm',
-      params: { text: '清空之后什么都没有了哦～', btnL: '确定', btnR: '取消', menuIndex: lastIndex, clearHistory: true }
+      params: { text: '清空之后什么都没有了哦～', btnL: '确定', btnR: '取消', menuIndex: lastIndex.value, clearHistory: true }
     })
   }
 }
@@ -363,7 +324,7 @@ function clearPageData() {
   // 设置默认焦点
   clearTimeout(clearTimer)
   clearTimer = setTimeout(() => {
-    sidebarRef.value?.setItemFocused(lastIndex)
+    sidebarRef.value?.setItemFocused(lastIndex.value)
   }, 200)
 }
 
@@ -393,7 +354,7 @@ function onESResume() {
     page = 1
     stopPage = false
     isLoading.value = true
-    loadRecords(lastIndex)
+    loadRecords(lastIndex.value)
   }
 }
 
@@ -412,7 +373,7 @@ function onBackPressed() {
 
   // 左侧列表焦点
   if (lastFocusName !== 'sidebar') {
-    sidebarRef.value?.setItemFocused(lastIndex)
+    sidebarRef.value?.setItemFocused(lastIndex.value)
     return
   }
 
