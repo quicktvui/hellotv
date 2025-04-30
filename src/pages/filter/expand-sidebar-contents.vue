@@ -73,18 +73,18 @@ const triggerTask = [
   }
 ]
 
-function onESCreate(params: { screenId: string; defaultSecondaryId?: string }) {
+function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
   params.screenId = '1848555233454727169'
   params.defaultSecondaryId = '' // 默认选中的二级筛选项ID
-  loadFilters(params.screenId, params.defaultSecondaryId, true)
+  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '美国,科幻', true)
 }
 
-function loadFilters(primaryId: string, defaultSecondaryId: string, initExpand?: boolean) {
+function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string, initExpand?: boolean) {
   filterManager.getFilters(primaryId).then((filters) => {
     // 设置焦点向右方向
     setExpandNextFocusNameRight('sidebarList')
 
-    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters, defaultTags.split(','))
     // 设置左侧列表默认选中
     const index = secondaries.findIndex((item) => item.id === defaultSecondaryId)
     sidebarSinglePos.value = index !== -1 ? index : 0
@@ -110,7 +110,7 @@ function onExtListItemFocused(evt) {
     extListTimer = setTimeout(() => {
       lastExtPosition = evt.position
       sidebarSinglePos.value = 0
-      loadFilters(evt.item.id, '')
+      loadFilters(evt.item.id, '', '')
     }, 300)
   }
 }
