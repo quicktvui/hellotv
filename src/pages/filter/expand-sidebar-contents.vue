@@ -26,7 +26,7 @@
           @onListItemFocused="onListItemFocused"
         />
         <!-- 筛选内容 -->
-        <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
+        <filter-content ref="contentRef" :descendantFocusability="contentDeny" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -57,6 +57,7 @@ const sidebarSinglePos = ref<number>(0)
 const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
+const contentDeny = ref<1 | 2>(1)
 
 const triggerTask = [
   {
@@ -76,7 +77,7 @@ const triggerTask = [
 function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
   params.screenId = '1848555233454727169'
   params.defaultSecondaryId = '' // 默认选中的二级筛选项ID
-  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '美国,科幻', true)
+  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '', true)
 }
 
 function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string, initExpand?: boolean) {
@@ -140,6 +141,7 @@ function setExpandNextFocusNameRight(s: string) {
 }
 
 function setNextFocusNameRight(s: string) {
+  contentDeny.value = s === '' ? 2 : 1
   sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }
