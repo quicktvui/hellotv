@@ -8,7 +8,6 @@
   width: 320px;
   height: 180px;
   background-color: rgba(255, 255, 255, 0.1);
-  margin-bottom: 11px;
 }
 
 .filter-main-contents-grid-item-h-score {
@@ -16,7 +15,7 @@
   height: 70px;
   background-color: transparent;
   position: absolute;
-  top: 110px;
+  top: 115px;
 }
 
 .filter-main-contents-grid-item-h-score-text {
@@ -30,11 +29,10 @@
 }
 
 .filter-main-contents-grid-item-h-text {
-  position: absolute;
-  left: 16px;
   width: 304px;
   height: 40px;
   background-color: transparent;
+  margin-top: 11px;
   font-size: 30px;
   color: rgba(255, 255, 255, 0.5);
   focus-color: #ffffff;
