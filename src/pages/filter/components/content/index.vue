@@ -3,7 +3,7 @@
     <scroll-view class="filter-main-scroll" ref="scrollRef" :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
       <qt-view v-show="!isLoading" style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
-        <qt-view v-if="showConditions" class="filter-main-conditions">
+        <qt-view v-if="showConditions" class="filter-main-conditions" :descendantFocusability="listDeny">
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
@@ -150,6 +150,7 @@ const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
+const listDeny = ref<number>(1)
 const listHeight = ref<number>(330)
 const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
@@ -186,7 +187,7 @@ function init(primaryId: string, listData: Tertiary[], defaultSecondaryId?: stri
 }
 
 function onListItemFocused(evt) {
-  if (evt.isFocused) {
+  if (evt.isFocused && gridScrollY.value !== 0) {
     emits('setNextFocusNameRight', 'contentList')
     showRecords.value = false
     gridScrollY.value = 0
@@ -227,6 +228,7 @@ function onGridItemFocused(evt) {
 
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
+      listDeny.value = 2
       if (gridScrollY.value === 0) {
         // 筛选记录
         const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { top: 10, right: 30 } }))
@@ -238,6 +240,7 @@ function onGridItemFocused(evt) {
         gridScrollY.value = 1
       }
     } else {
+      listDeny.value = 1
       showRecords.value = false
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
