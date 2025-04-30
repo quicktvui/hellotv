@@ -13,6 +13,7 @@
         ref="sidebarRef"
         :blockFocusDir="sidebarBlockFocusDir"
         :singleSelectPos="sidebarSinglePos"
+        :listItemTextGravity="'center|end'"
         @onListItemFocused="onListItemFocused"
       />
       <!-- 筛选内容 -->
