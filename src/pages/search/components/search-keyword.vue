@@ -63,8 +63,10 @@
         </qt-view>
         <!-- 普通文本 -->
         <qt-view :type="KeywordType.TEXT" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
+          <qt-view class="search-keyword-list-item-dot" gradientBackground="${gradientBackground}"></qt-view>
           <qt-text
             class="search-keyword-list-item-text"
+            flexStyle="${flexStyle}"
             autoHeight
             text="${text}"
             gravity="center|start"
@@ -76,6 +78,7 @@
           ></qt-text>
           <qt-text
             class="search-keyword-list-item-text"
+            flexStyle="${flexStyle}"
             autoHeight
             text="${text}"
             typeface="bold"
@@ -177,7 +180,7 @@ async function loadSuggestions(page = 1) {
   try {
     // 搜索词条
     const suggestions = await searchManager.getSuggestions(mode.value, props.inputText, page, pageSize)
-    const keywords = buildKeywords(suggestions, mode.value)
+    const keywords = buildKeywords(suggestions, mode.value, page)
 
     if (page === 1) {
       resetAndInitialize(keywords)

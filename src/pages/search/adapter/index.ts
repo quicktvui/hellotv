@@ -9,18 +9,34 @@ import config from '../config'
  * @param mode 数据模式, hot 热门搜索、guess 猜你想搜、all 返回所有
  * @returns
  */
-export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all'): Keyword[] {
+export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all', pageNo?: number): Keyword[] {
   const keywords: Keyword[] = []
 
   switch (mode) {
     case 'hot':
-      rawData.hotKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+      const colorMap = {
+        0: ['#F33628', '#F33628'],
+        1: ['#FC5E1B', '#FC5E1B'],
+        2: ['#FECB04', '#FECB04']
+      }
+
+      rawData.hotKeywords.forEach((item, index) => {
+        const colors = (pageNo === 1 && colorMap[index]) || ['#80FFFFFF', '#80FFFFFF']
+
+        keywords.push({
+          type: KeywordType.TEXT,
+          text: item.keyword,
+          flexStyle: { marginLeft: 106 },
+          gradientBackground: {
+            colors: colors,
+            cornerRadius: 50
+          }
+        })
       })
       break
     case 'guess':
       rawData.guessKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, flexStyle: { marginLeft: 80 } })
       })
       break
     case 'all':
