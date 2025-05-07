@@ -16,7 +16,7 @@
         :clipChildren="false"
         @item-focused="onSidebarItemFocus"
       >
-        <qt-view class="history-raw-sidebar-list-item" :type="ContentType.Normal" :focusable="true" eventFocus eventClick>
+        <qt-view class="history-raw-sidebar-list-item" :type="ContentType.HORIZONTAL" :focusable="true" eventFocus eventClick>
           <qt-text
             class="history-raw-sidebar-list-item-text"
             text="${text}"
@@ -89,7 +89,7 @@
         ref="gridRef"
         :listData="contentData"
         :useDiff="true"
-        :spanCount="4"
+        :spanCount="config.gridSpanCount"
         :clipChildren="false"
         :verticalFadingEdgeEnabled="true"
         :nextFocusUpSID="'btns'"
@@ -106,7 +106,8 @@
         @scroll-state-changed="onScrollStateChanged"
       >
         <!-- 常规 -->
-        <grid-item-h :type="ContentType.Normal" :itemHeight="lastIndex === 0 ? 266 : 232"></grid-item-h>
+        <grid-item-h :type="ContentType.HORIZONTAL" :itemHeight="lastIndex === 0 ? 266 : 232"></grid-item-h>
+        <grid-item-v :type="ContentType.VERTICAL" :itemHeight="lastIndex === 0 ? 448 : 414"></grid-item-v>
         <!-- 分页样式 -->
         <template #loading>
           <qt-view
@@ -142,6 +143,7 @@ import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
 import { ContentType } from './adapter/interface'
 import gridItemH from './components/grid-item-h.vue'
+import gridItemV from './components/grid-item-v.vue'
 import historyManager from './api/index'
 import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'
@@ -267,7 +269,7 @@ function onContentItemClick(evt) {
 }
 
 let loadingDelayTimer: any = -1
-async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.ContentsLimit) {
+async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.contentsLimit) {
   const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
   if (page === 1) {
     contentData.value = buildContents(records)
@@ -276,7 +278,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
   }
 
   // 停止分页
-  if (contentData.value.length < config.ContentsLimit * page) {
+  if (contentData.value.length < config.contentsLimit * page) {
     gridRef.value?.stopPage()
     stopPage = true
     // 到底提示

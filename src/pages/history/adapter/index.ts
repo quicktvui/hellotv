@@ -1,5 +1,6 @@
 import { Records, Item } from '../api/interface'
 import { Content, ContentType } from './interface'
+import config from '../config'
 
 export const calculateProgress = (item: Item): string => {
   if (!item.episode) {
@@ -10,7 +11,7 @@ export const calculateProgress = (item: Item): string => {
 
 export const buildContent = (item: Item): Content => {
   return {
-    type: ContentType.Normal,
+    type: config.gridItemMode === 1 ? ContentType.HORIZONTAL : ContentType.VERTICAL,
     itemSize: 266,
     id: item.id,
     title: item.title,
