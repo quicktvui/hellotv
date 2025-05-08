@@ -15,7 +15,8 @@ export interface Content {
   id: string
   title?: string
   progress?: string
-  image?: string
+  showProgress?: boolean
+  cover?: string
   showDeleteCover?: boolean
   decoration?: QTListViewItemDecoration
 }

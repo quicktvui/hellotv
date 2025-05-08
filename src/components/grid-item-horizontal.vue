@@ -7,6 +7,18 @@
     eventFocus
     eventClick
   >
+    <!-- 焦点状态下的删除样式 -->
+    <qt-view
+      showIf="${showDeleteCover}"
+      class="grid-item-delete"
+      style="background-color: transparent"
+      :focusable="false"
+      :duplicateParentState="true"
+    >
+      <qt-view class="grid-item-delete" :style="$props.imageStyle" :showOnState="'focused'" :focusable="false" :duplicateParentState="true">
+        <qt-image style="width: 40px; height: 50px" :src="icDelete" :focusable="false"></qt-image>
+      </qt-view>
+    </qt-view>
     <!-- 外层这个div的作用是模拟placeholder, 如果没有启动placeholder, 把背景色加到图片上, 有时会闪一下页面背景色 -->
     <qt-view style="background-color: rgba(255, 255, 255, 0.1); border-radius: 16px" :focusable="false" :duplicateParentState="true">
       <!-- 封面 -->
@@ -21,7 +33,13 @@
       ></qt-image>
     </qt-view>
     <!-- 评分 -->
-    <qt-view class="grid-item-h-score" :style="{ width: $props.style?.width }" :gradientBackground="scoreGradient" :focusable="false">
+    <qt-view
+      showIf="${showRating}"
+      class="grid-item-h-score"
+      :style="{ width: $props.style?.width }"
+      :gradientBackground="scoreGradient"
+      :focusable="false"
+    >
       <qt-text class="grid-item-h-score-text" text="${score}" :focusable="false"></qt-text>
     </qt-view>
     <!-- 标题 -->
@@ -37,11 +55,23 @@
       :duplicateParentState="true"
       :horizontalFadingEdgeEnabled="true"
     ></qt-text>
+    <!-- 播放进度 -->
+    <qt-text
+      showIf="${showProgress}"
+      class="grid-item-progress"
+      :style="{ width: $props.style?.width }"
+      text="${progress}"
+      gravity="center|start"
+      :paddingRect="[12, 0, 12, 0]"
+      :focusable="false"
+      :duplicateParentState="true"
+    ></qt-text>
   </qt-view>
 </template>
 
 <script setup lang="ts" name="GridItemH">
 import themeConfig from '../config/theme-config'
+import icDelete from '../assets/history/ic_delete.png'
 
 defineProps({
   style: {
@@ -74,6 +104,17 @@ const scoreGradient = {
   background-color: transparent;
 }
 
+.grid-item-delete {
+  background-color: rgba(0, 0, 0, 0.65);
+  border-radius: 16px;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  top: 0.01px;
+  left: 0.01px;
+  z-index: 100;
+}
+
 .grid-item-h-img {
   background-color: rgba(255, 255, 255, 0.1);
 }
@@ -99,8 +140,16 @@ const scoreGradient = {
   height: 40px;
   background-color: transparent;
   margin-top: 11px;
+  color: rgba(255, 255, 255, 0.55);
   font-size: 30px;
-  color: rgba(255, 255, 255, 0.5);
-  focus-color: #ffffff;
+  focus-color: white;
+}
+
+.grid-item-progress {
+  height: 34px;
+  background-color: transparent;
+  color: rgba(255, 255, 255, 0.35);
+  font-size: 24px;
+  focus-color: rgba(255, 255, 255, 0.75);
 }
 </style>

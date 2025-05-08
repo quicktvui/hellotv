@@ -106,7 +106,12 @@
         @scroll-state-changed="onScrollStateChanged"
       >
         <!-- 常规 -->
-        <grid-item-h :type="ContentType.HORIZONTAL" :itemHeight="lastIndex === 0 ? 266 : 232"></grid-item-h>
+        <grid-item-horizontal
+          :type="ContentType.HORIZONTAL"
+          :style="{ width: `325px`, height: lastIndex === 0 ? `266px` : `232px` }"
+          :imageStyle="{ width: `325px`, height: `186px`, borderRadius: `${themeConfig.focusBorderCorner}px` }"
+          :placeholderLayout="[-5, -5, 325, 186]"
+        />
         <grid-item-v :type="ContentType.VERTICAL" :itemHeight="lastIndex === 0 ? 448 : 414"></grid-item-v>
         <!-- 分页样式 -->
         <template #loading>
@@ -142,7 +147,7 @@ import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
 import { ContentType } from './adapter/interface'
-import gridItemH from './components/grid-item-h.vue'
+import gridItemHorizontal from '../../components/grid-item-horizontal.vue'
 import gridItemV from './components/grid-item-v.vue'
 import historyManager from './api/index'
 import launch from '../../tools/launch'

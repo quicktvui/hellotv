@@ -16,7 +16,8 @@ export const buildContent = (item: Item): Content => {
     id: item.id,
     title: item.title,
     progress: calculateProgress(item),
-    image: item.coverH,
+    showProgress: true,
+    cover: item.coverH,
     showDeleteCover: false,
     decoration: { left: 20, top: 20, right: 20, bottom: 20 }
   }
