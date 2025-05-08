@@ -44,15 +44,18 @@
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h
+            <grid-item-horizontal
               :type="GridContentType.HORIZONTAL"
-              :width="gridItemHWidth"
-              :height="gridItemHHeight"
-              :imgHeight="gridItemHImgHeight"
+              :style="{ width: `${gridItemHWidth}px`, height: `${gridItemHHeight}px` }"
+              :imageStyle="{
+                width: `${gridItemHWidth}px`,
+                height: `${gridItemHImgHeight}px`,
+                borderRadius: `${themeConfig.focusBorderCorner}px`
+              }"
               :placeholderLayout="[-5, -5, gridItemHWidth, gridItemHImgHeight]"
             />
             <!-- 竖图 -->
-            <grid-item-v :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
+            <grid-item-vertical :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
             <!-- 分页样式 -->
             <template #loading>
               <qt-view
@@ -126,8 +129,8 @@ import themeConfig from '../../../../config/theme-config'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import ListItemRecord from './list-item-record.vue'
-import GridItemH from './grid-item-h.vue'
-import GridItemV from './grid-item-v.vue'
+import GridItemHorizontal from '../../../../components/grid-item-horizontal.vue'
+import GridItemVertical from '../../../../components/grid-item-vertical.vue'
 import config from '../../config'
 import filterManager from '../../api/index'
 import launch from '../../../../tools/launch'
