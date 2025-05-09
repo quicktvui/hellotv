@@ -5,10 +5,12 @@
       tabNavBarClass="search-content-tabs"
       tabPageClass="search-content-tab-page"
       :autoHandleBackKey="true"
+      :enablePlaceholder="themeConfig.placeHolderEnable"
       :tabContentSwitchDelay="300"
       :tabContentResumeDelay="200"
       :contentNextFocus="{ left: 'keyboardGrid' }"
       @onTabPageLoadData="onTabPageLoadData"
+      @onTabPageItemFocused="onTabPageItemFocused"
       @onTabPageItemClick="onTabPageItemClick"
     >
       <!-- Tab -->
@@ -27,9 +29,14 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <search-content-item-h :type="ContentType.HORIZONTAL" />
+        <grid-item-horizontal
+          :type="ContentType.HORIZONTAL"
+          :style="{ width: `410px`, height: `276px` }"
+          :imageStyle="{ width: `410px`, height: `230px`, borderRadius: `${themeConfig.focusBorderCorner}px` }"
+          layout="${layout}"
+        />
         <!-- 竖图 -->
-        <search-content-item-v :type="ContentType.VERTICAL" />
+        <grid-item-vertical :type="ContentType.VERTICAL" layout="${layout}" />
       </template>
     </qt-tabs>
   </qt-view>
@@ -41,8 +48,9 @@ import { QTITab, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
 import { buildTab, buildTabContents } from '../adapter/index'
 import { ContentType } from '../adapter/interface'
 import { Tab } from '../api/interface'
-import searchContentItemH from './search-content-item-h.vue'
-import searchContentItemV from './search-content-item-v.vue'
+import themeConfig from '../../../config/theme-config'
+import gridItemHorizontal from '../../../components/grid-item-horizontal.vue'
+import gridItemVertical from '../../../components/grid-item-vertical.vue'
 import searchManager from '../api/index'
 import launch from '../../../tools/launch'
 import config from '../config'
@@ -53,7 +61,7 @@ const props = defineProps({
     default: ''
   }
 })
-const emits = defineEmits(['setLoading'])
+const emits = defineEmits(['setLoading', 'updateFocusName'])
 const tabRef = ref<QTITab>()
 // 关键词
 let rawKeyword: string = ''
@@ -101,6 +109,12 @@ async function onTabPageLoadData(pageIndex: number, pageNo: number) {
   // 延迟关闭上层loading
   clearTimeout(timer)
   timer = setTimeout(() => emits('setLoading', false), 100)
+}
+
+function onTabPageItemFocused(pageIndex: number, sectionIndex: number, itemIndex: number, isFocused: boolean, item: QTWaterfallItem) {
+  if (isFocused) {
+    emits('updateFocusName', 'searchContentItem')
+  }
 }
 
 function onTabPageItemClick(pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem) {

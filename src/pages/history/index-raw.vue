@@ -112,7 +112,7 @@
           :imageStyle="{ width: `325px`, height: `186px`, borderRadius: `${themeConfig.focusBorderCorner}px` }"
           :placeholderLayout="[-5, -5, 325, 186]"
         />
-        <grid-item-v :type="ContentType.VERTICAL" :itemHeight="lastIndex === 0 ? 448 : 414"></grid-item-v>
+        <grid-item-vertical :type="ContentType.VERTICAL" :style="{ width: `260px`, height: lastIndex === 0 ? `448px` : `414px` }" />
         <!-- 分页样式 -->
         <template #loading>
           <qt-view
@@ -148,7 +148,7 @@ import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
 import { ContentType } from './adapter/interface'
 import gridItemHorizontal from '../../components/grid-item-horizontal.vue'
-import gridItemV from './components/grid-item-v.vue'
+import gridItemVertical from '../../components/grid-item-vertical.vue'
 import historyManager from './api/index'
 import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'

@@ -103,7 +103,8 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
         id: item.id,
         title: item.title,
         cover: item.image,
-        score: item.score.toFixed(1)
+        score: item.score.toFixed(1),
+        showRating: true
       }))
     }
 
@@ -149,7 +150,8 @@ export const buildContentSections = function (rawData: Contents, spanCount: numb
       decoration: { right: 40, top: 40 },
       title: item.title,
       cover: item.image,
-      score: item.score.toFixed(1)
+      score: item.score.toFixed(1),
+      showRating: true
     }))
   }))
 }
@@ -183,7 +185,8 @@ export const buildRecommendSections = function (
       id: item.id,
       title: item.title,
       cover: item.image,
-      score: item.score.toFixed(1)
+      score: item.score.toFixed(1),
+      showRating: true
     }))
   }))
 }

@@ -34,9 +34,14 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <search-content-item-h :type="ContentType.HORIZONTAL" />
+        <grid-item-horizontal
+          :type="ContentType.HORIZONTAL"
+          :style="{ width: `410px`, height: `276px` }"
+          :imageStyle="{ width: `410px`, height: `230px`, borderRadius: `${themeConfig.focusBorderCorner}px` }"
+          layout="${layout}"
+        />
         <!-- 竖图 -->
-        <search-content-item-v :type="ContentType.VERTICAL" />
+        <grid-item-vertical :type="ContentType.VERTICAL" layout="${layout}" />
       </template>
       <!-- 分页加载中 -->
       <template v-slot:waterfall-section>
@@ -58,8 +63,8 @@ import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktv
 import { buildTab, buildContentSections, buildRecommendSections, buildLoadingSection, buildEndSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
 import themeConfig from '../../../config/theme-config'
-import searchContentItemH from './search-content-item-h.vue'
-import searchContentItemV from './search-content-item-v.vue'
+import gridItemHorizontal from '../../../components/grid-item-horizontal.vue'
+import gridItemVertical from '../../../components/grid-item-vertical.vue'
 import launch from '../../../tools/launch'
 import config from '../config'
 import searchManager from '../api/index'

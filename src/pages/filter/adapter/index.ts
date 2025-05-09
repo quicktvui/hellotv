@@ -100,6 +100,7 @@ export const buildContents = function (rawData: Contents): GridContent[] {
     title: item.title,
     cover: item.image,
     score: item.score.toFixed(1),
+    showRating: true,
     jumpParams: item.jumpParams
   }))
 }

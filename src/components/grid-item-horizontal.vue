@@ -10,12 +10,18 @@
     <!-- 焦点状态下的删除样式 -->
     <qt-view
       showIf="${showDeleteCover}"
-      class="grid-item-delete"
+      class="grid-item-h-delete"
       style="background-color: transparent"
       :focusable="false"
       :duplicateParentState="true"
     >
-      <qt-view class="grid-item-delete" :style="$props.imageStyle" :showOnState="'focused'" :focusable="false" :duplicateParentState="true">
+      <qt-view
+        class="grid-item-h-delete"
+        :style="$props.imageStyle"
+        :showOnState="'focused'"
+        :focusable="false"
+        :duplicateParentState="true"
+      >
         <qt-image style="width: 40px; height: 50px" :src="icDelete" :focusable="false"></qt-image>
       </qt-view>
     </qt-view>
@@ -36,7 +42,7 @@
     <qt-view
       showIf="${showRating}"
       class="grid-item-h-score"
-      :style="{ width: $props.style?.width }"
+      :style="{ width: $props.style?.width, top: `${$props.imageStyle?.height.replace('px', '') - 70}px` }"
       :gradientBackground="scoreGradient"
       :focusable="false"
     >
@@ -58,7 +64,7 @@
     <!-- 播放进度 -->
     <qt-text
       showIf="${showProgress}"
-      class="grid-item-progress"
+      class="grid-item-h-progress"
       :style="{ width: $props.style?.width }"
       text="${progress}"
       gravity="center|start"
@@ -104,7 +110,7 @@ const scoreGradient = {
   background-color: transparent;
 }
 
-.grid-item-delete {
+.grid-item-h-delete {
   background-color: rgba(0, 0, 0, 0.65);
   border-radius: 16px;
   align-items: center;
@@ -123,7 +129,6 @@ const scoreGradient = {
   height: 70px;
   background-color: transparent;
   position: absolute;
-  top: 115px;
 }
 
 .grid-item-h-score-text {
@@ -145,7 +150,7 @@ const scoreGradient = {
   focus-color: white;
 }
 
-.grid-item-progress {
+.grid-item-h-progress {
   height: 34px;
   background-color: transparent;
   color: rgba(255, 255, 255, 0.35);
