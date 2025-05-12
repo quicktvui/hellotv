@@ -1,10 +1,12 @@
 import { QTListViewItemDecoration } from '@quicktvui/quicktvui3'
 
 export enum ContentType {
-  // 常规
-  Normal = 1,
+  // 横图
+  HORIZONTAL = 1,
+  // 竖图
+  VERTICAL = 2,
   // 到底提示
-  End = 1002
+  End = 1003
 }
 
 export interface Content {
@@ -13,6 +15,8 @@ export interface Content {
   id: string
   title?: string
   progress?: string
-  image?: string
+  showProgress?: boolean
+  cover?: string
+  showDeleteCover?: boolean
   decoration?: QTListViewItemDecoration
 }

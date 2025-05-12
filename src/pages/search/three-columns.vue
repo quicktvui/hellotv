@@ -10,10 +10,19 @@
           :inputText="inputText"
           @setLoading="setLoading"
           @updateFocusName="updateFocusName"
+          @updateFocusDeny="updateFocusDeny"
           @updateKeyword="updateKeyword"
         />
         <!-- 搜索内容区域 -->
-        <search-content ref="contentRef" :keyword="keyword" :triggerTask="triggerTask" @setLoading="setLoading" />
+        <search-content
+          ref="contentRef"
+          :descendantFocusability="contentDeny"
+          :keyword="keyword"
+          :triggerTask="triggerTask"
+          @setLoading="setLoading"
+          @updateFocusName="updateFocusName"
+          @updateFocusDeny="updateFocusDeny"
+        />
       </qt-view>
     </scroll-view>
     <!-- 搜索关键词、内容区域loading -->
@@ -48,6 +57,7 @@ const keywordRef = ref()
 const keyword = ref<string>('')
 // 内容
 const contentRef = ref()
+const contentDeny = ref<number>(1)
 const triggerTask = [
   {
     event: 'onFocusAcquired',
@@ -69,8 +79,8 @@ const curFocusName = ref<string>('searchKeyboard')
  * 输入数据更新
  */
 function updateInput(val: string) {
-  inputText.value = val
   isLoading.value = true
+  inputText.value = val
 }
 
 /**
@@ -78,6 +88,8 @@ function updateInput(val: string) {
  */
 function updateKeyword(val: string) {
   keyword.value = val
+  // 设置左侧键盘向右焦点方向
+  keyboardRef.value?.updateKeyboardFocusRight(val.length > 0 ? 'keywordList' : 'gridItem')
 }
 
 /**
@@ -87,10 +99,19 @@ function updateFocusName(val: string) {
   curFocusName.value = val
 }
 
+function updateFocusDeny(bool: boolean) {
+  contentDeny.value = bool ? 2 : 1
+}
+
 /**
  * loading状态、位置控制
  */
-function setLoading(b: boolean): void {
+function setLoading(b: boolean, full: boolean): void {
+  if (full) {
+    isLoading.value = b
+    return
+  }
+
   if (b) {
     loadingLeft.value = 1152
     loadingWidth.value = 768

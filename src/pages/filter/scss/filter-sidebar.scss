@@ -15,6 +15,7 @@
   height: 106px;
   background-color: transparent;
   border-radius: 8px;
+  padding-right: 80px;
   focus-background-color: $theme-btn-focus-color;
 }
 
@@ -27,7 +28,7 @@
 
 .filter-sidebar-list-item-text {
   position: absolute;
-  width: 340px;
+  width: 260px;
   height: 106px;
   background-color: transparent;
   color: $theme-text-normal-color;
@@ -40,4 +41,5 @@
   width: 140px;
   height: 2px;
   background-color: #868686;
+  margin-left: 80px;
 }

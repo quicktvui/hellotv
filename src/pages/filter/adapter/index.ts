@@ -27,7 +27,8 @@ import icLeftSelected from '../../../assets/filter/ic_left_selected.png'
  */
 export const buildFilters = function (
   primaryId: string,
-  rawData: Filters
+  rawData: Filters,
+  defaultTags: string[]
 ): { primaries: Primary[]; secondaries: Secondary[]; tertiaries: Tertiary[] } {
   // 一级列表, 左侧扩展
   const primaries: Primary[] = rawData.primary.map((item) => ({ type: PrimaryType.TEXT, ...item }))
@@ -40,10 +41,10 @@ export const buildFilters = function (
     case 2: // 两栏布局
       secondaries.push(
         ...[
-          { type: SecondaryType.TITLE, id: '', name: primaries.find((item) => item.id === primaryId)?.name || '' },
+          { type: SecondaryType.TITLE, id: 'NIL', name: primaries.find((item) => item.id === primaryId)?.name || '' },
           {
             type: SecondaryType.FILTER,
-            id: '',
+            id: 'NIL',
             name: '筛选',
             icon: { normal: 'file://' + icFilterNormal, focused: 'file://' + icFilterFocused, selected: 'file://' + icFilterSelected }
           }
@@ -55,11 +56,11 @@ export const buildFilters = function (
         ...[
           {
             type: SecondaryType.FILTER_TITLE,
-            id: '',
+            id: 'NIL',
             name: '全部' + primaries.find((item) => item.id === primaryId)?.name || '',
             icon: { normal: 'file://' + icLeftNormal, focused: 'file://' + icLeftFocused, selected: 'file://' + icLeftSelected }
           },
-          { type: SecondaryType.LINE, id: '', name: 'line' }
+          { type: SecondaryType.LINE, id: 'NIL', name: 'line' }
         ]
       )
       break
@@ -67,17 +68,17 @@ export const buildFilters = function (
   secondaries.push(...rawData.secondary.map((item) => ({ type: 9, ...item })))
 
   // 三级列表, 右侧筛选条件
-  const tertiaries: Tertiary[] = []
-  rawData.tertiary.forEach((item, index) => {
-    const tertiary = {
+  const tertiaries: Tertiary[] = rawData.tertiary.map((item) => {
+    const tagNames = item.tags.map((tag) => tag.name)
+    const defaultTagIndex = tagNames.findIndex((tagName) => defaultTags.includes(tagName))
+
+    return {
       type: TertiaryType.LIST,
       groupKey: item.groupKey,
       groupName: item.groupName,
-      list: item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag })),
-      defaultSelectedPos: 0
+      list: [{ type: ListItemType.TEXT, name: item.groupName }, ...item.tags.map((tag) => ({ type: ListItemType.TEXT, ...tag }))],
+      defaultSelectedPos: defaultTagIndex !== -1 ? defaultTagIndex + 1 : 0
     }
-    tertiary.list.unshift({ type: ListItemType.TEXT, id: `t-${index}`, name: item.groupName })
-    tertiaries.push(tertiary)
   })
 
   // 优化内容区域焦点首次向上体验, 值需要全局唯一
@@ -92,20 +93,16 @@ export const buildFilters = function (
  * @returns
  */
 export const buildContents = function (rawData: Contents): GridContent[] {
-  const contents: GridContent[] = []
-
-  rawData.items.forEach((item) => {
-    contents.push({
-      type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
-      decoration: { right: 40, bottom: 40 },
-      id: item.id,
-      title: item.title,
-      cover: item.image,
-      jumpParams: item.jumpParams
-    })
-  })
-
-  return contents
+  return rawData.items.map((item) => ({
+    type: config.gridItemMode === 1 ? GridContentType.HORIZONTAL : GridContentType.VERTICAL,
+    decoration: { top: 22, right: 40, bottom: 18 },
+    id: item.id,
+    title: item.title,
+    cover: item.image,
+    score: item.score.toFixed(1),
+    showRating: true,
+    jumpParams: item.jumpParams
+  }))
 }
 
 /**

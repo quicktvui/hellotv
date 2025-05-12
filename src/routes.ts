@@ -74,7 +74,7 @@ const routes = [
     name: 'detail-full-screen',
     component: () => import('./pages/detail-full-screen/index.vue')
   },
-  { name: 'history', path: '/history', component: () => import('./pages/history/index.vue') },
+  { name: 'history', path: '/history', component: () => import('./pages/history/index-raw.vue') },
   {
     name: 'confirm',
     path: '/confirm',
@@ -83,9 +83,9 @@ const routes = [
   },
   {
     path: '/exit-dialog',
-    name:'exit_dialog',
-    component: ()=> import('./pages/home/components/exit-dialog.vue'),
-    type:ESRouteType.ES_ROUTE_TYPE_DIALOG
+    name: 'exit_dialog',
+    component: () => import('./pages/home/components/exit-dialog.vue'),
+    type: ESRouteType.ES_ROUTE_TYPE_DIALOG
   },
   {
     path: '/test',
@@ -93,19 +93,34 @@ const routes = [
     component: test
   },
   {
-    path:'/playTest',
-    name:'playTest',
+    path: '/playTest',
+    name: 'playTest',
     component: playTest
   },
   {
-    path:'/tabsTest',
-    name:'tabsTest',
+    path: '/tabsTest',
+    name: 'tabsTest',
     component: tabsTest
   },
   {
-    path:'/activity',
-    name:'activity',
+    path: '/activity',
+    name: 'activity',
     component: () => import('./pages/activity/index.vue')
+  },
+  {
+    name: 'my',
+    path: '/my',
+    component: () => import('./pages/my/index.vue')
+  },
+  {
+    path: '/device_info',
+    name: 'device_info',
+    component: () => import('./pages/device-info/index.vue')
+  },
+  {
+    path: '/load_web_view',
+    name: 'load_web_view',
+    component: () => import('./pages/webview/load-web-view.vue')
   }
 ]
 

@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="media-player-view-root" 
+  <qt-view class="media-player-view-root"
     name='mediaRoot' :focusable="false"
     :style="{ width: playerWidth, height: playerHeight }">
     <!-- media-player-view -->
@@ -33,10 +33,11 @@
               class="media-player-view-seekbar"
               ref="seekBarRef"
               name="seekBar"
-              :color="{ startColor: '#FF6699', endColor: '#FF6699' }"
+              :blockFocusDirections='["left","right","up"]'
+              :color="{ startColor: '#FFFFFF', endColor: '#FFFFFF' }"
               :nextFocusName="{ left: 'seekBar' }"
               :visible="isFullWindow && isProgressShowing"
-              :onProgressChanged="onSeekBarChanged"
+              @onSeekStart='onSeekBarSeekStart'
               @onSeekStop="onSeekBarSeekStop"
               @focus="onSeekbarFocusChanged"
               :focusable="true"/>
@@ -53,8 +54,8 @@
             @focus="onNextButtonFocusChanged">
             <div class="media-player-view-next-text-focus"
               showOnState="focused" duplicateParentState
-              :gradientBackground="{ 
-                colors: ThemeConfig.btnGradientFocusColor, 
+              :gradientBackground="{
+                colors: ThemeConfig.btnGradientFocusColor,
                 cornerRadius: 8, orientation: 6 }">
             </div>
             <qt-text class="media-player-view-next-text" gravity="center" typeface="bold"
@@ -101,18 +102,18 @@
       </qt-view>
     </qt-view>
     <!-- loading -->
-    <qt-view 
-      class="media-player-loading" 
-      :focusable="false" 
+    <qt-view
+      class="media-player-loading"
+      :focusable="false"
       ref="mediaPlayerLoadingRef"
       name='loadingRoot'
       :fillParent='true' v-show="showLoading"
       :style="{width:playerWidth, height:playerHeight}">
       <qt-loading-view :style="{width:100, height:100}"/>
-    </qt-view>  
+    </qt-view>
   </qt-view>
 </template>
-    
+
 <script setup lang='ts' name='MediaPlayerView'>
 import { ref, watch, onMounted, nextTick, onUnmounted} from 'vue'
 import { ESKeyCode, ESKeyEvent, ESLogLevel, toast, useESEventBus, useESLog } from "@extscreen/es3-core"
@@ -139,8 +140,8 @@ import {
   buildDefinitionList,
   buildPlayRateList,
   buildCollapseMenu,
-  getPlayModeIndex, 
-  getDefinitionIndex, 
+  getPlayModeIndex,
+  getDefinitionIndex,
   getPlayRateIndex
 } from "../../adapter/media-player";
 import playIcon from '../../../../assets/detail/ic_media_player_play.png'
@@ -155,7 +156,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   let player: ESIPlayerManager
   const log = useESLog()
   const eventBus = useESEventBus()
-  
+
   let media: IMedia
   let playingMediaItem: ESMediaItem
   const playerWidth = ref<number>(0)
@@ -168,7 +169,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   const viewState = ref<number>(1)
   let dismissTimer:any = -1
   const isMediaAuthError = ref<boolean>(false)
-  
+
   //-------------------------进度条----------------------------
   const isProgressShowing = ref<boolean>(false)
   let isPlayerPlaying = ref<boolean>(false)
@@ -205,16 +206,35 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   let decodeList: Array<ESPlayerDecode>
 
   //------------------进度条 callback-----------------------------------
-  const onSeekBarChanged = () => {}
-  const onSeekBarSeekStop = () => {}
+  const onSeekBarSeekStart = (progress) => {
+    isSeeking = true
+  }
+  const onSeekBarSeekStop = (progress) => {
+    isSeeking = false
+    if (player && progress >= 0) {
+      player.seekTo(progress)
+    }
+  }
   const onSeekbarFocusChanged = () => {}
   const onNextButtonClicked = () => {if (player) player.playNextMedia()}
   const onNextButtonFocusChanged = (e) => {
     nextButtonFocused = e.isFocused
     log.e(TAG, "onNextButtonFocusChanged nextButtonFocused" + nextButtonFocused)
   }
-  
+  const initSeekBar = ()=>{
+    seekBarRef.value?.setSeekBarMode(1);
+    seekBarRef.value?.setProgressHeight(12);
+    seekBarRef.value?.setProgressRadius(6);
+    seekBarRef.value?.setThumbWidth(60)
+    seekBarRef.value?.setThumbHeight(60)
+    seekBarRef.value?.setLeftThumbUrl('http://extcdn.hsrc.tv/extend_screen/images/default/ic_1905_thumb.png')
+    seekBarRef.value?.setLeftThumbInactivatedDrawable({
+      colors: ['#00000000', '#00000000'],
+      cornerRadius: 4
+    })
+  }
   onMounted(() => {
+    initSeekBar()
     eventBus.on('onMediaListItemLoad', onMediaListItemLoad)
   });
   onUnmounted(() => {
@@ -456,7 +476,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   const isEnabled = (): boolean => {return enabled;}
   const setPlayerManager = (value: ESIPlayerManager): void => {player = value}
   const getPlayerManager = (): ESIPlayerManager => {return player}
- 
+
   const onPlayerInterceptSuccess = (value: ESPlayerInterceptResult): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onPlayerInterceptSuccess----ccc---->>>>>", value)
@@ -570,7 +590,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
       log.e(TAG, "-------onPlayerPlayModeChanged-------->>>>>", mode)
     }
     setCollapseItemOrderSelected()
-  } 
+  }
   const onPlayerPlayMediaList = (playList: ESMediaItemList): void => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------onPlayerPlayMediaList------------->>>>', playList)
@@ -643,7 +663,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
           return true
         }
       case ESKeyCode.ES_KEYCODE_DPAD_LEFT:
-        break 
       case ESKeyCode.ES_KEYCODE_DPAD_RIGHT:
         if (isPlayerViewStateDismiss()) {
           setPlayerViewStateProgress()
@@ -651,7 +670,6 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
         }
         if (isPlayerViewStateProgress()) {
           if (isPlayerViewStateProgress() && seekBarRef.value?.isFocused()) {
-            isSeeking = true
             seekBarRef.value?.startSeek(keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_RIGHT)
           }
           return true
@@ -773,7 +791,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
     onBackPressed
   })
 </script>
-    
+
 <style lang='scss' scoped>
 .media-player-view-root{
   background-color: transparent;
@@ -908,4 +926,3 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   }
 }
 </style>
-      

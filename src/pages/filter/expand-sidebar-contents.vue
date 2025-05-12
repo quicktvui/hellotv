@@ -26,7 +26,7 @@
           @onListItemFocused="onListItemFocused"
         />
         <!-- 筛选内容 -->
-        <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
+        <filter-content ref="contentRef" :descendantFocusability="contentDeny" @setNextFocusNameRight="setNextFocusNameRight" />
       </qt-view>
     </scroll-view>
   </qt-view>
@@ -57,6 +57,7 @@ const sidebarSinglePos = ref<number>(0)
 const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
+const contentDeny = ref<1 | 2>(1)
 
 const triggerTask = [
   {
@@ -73,16 +74,22 @@ const triggerTask = [
   }
 ]
 
-function onESCreate(params: { screenId: string }) {
-  loadFilters(params.screenId || '1848555233454727169', true)
+function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
+  params.screenId = '1848555233454727169'
+  params.defaultSecondaryId = '' // 默认选中的二级筛选项ID
+  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '', true)
 }
 
-function loadFilters(primaryId: string, initExpand?: boolean) {
+function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string, initExpand?: boolean) {
   filterManager.getFilters(primaryId).then((filters) => {
     // 设置焦点向右方向
     setExpandNextFocusNameRight('sidebarList')
 
-    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { primaries, secondaries, tertiaries } = buildFilters(primaryId, filters, defaultTags.split(','))
+    // 设置左侧列表默认选中
+    const index = secondaries.findIndex((item) => item.id === defaultSecondaryId)
+    sidebarSinglePos.value = index !== -1 ? index : 0
+    lastPosition = sidebarSinglePos.value
     // 初始化一级列表
     if (initExpand) {
       expandRef.value?.init(primaries)
@@ -90,7 +97,7 @@ function loadFilters(primaryId: string, initExpand?: boolean) {
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(primaryId, tertiaries)
+    contentRef.value?.init(primaryId, tertiaries, defaultSecondaryId)
   })
 }
 
@@ -103,7 +110,8 @@ function onExtListItemFocused(evt) {
     clearTimeout(extListTimer)
     extListTimer = setTimeout(() => {
       lastExtPosition = evt.position
-      loadFilters(evt.item.id)
+      sidebarSinglePos.value = 0
+      loadFilters(evt.item.id, '', '')
     }, 300)
   }
 }
@@ -120,6 +128,7 @@ function onListItemFocused(evt) {
       clearTimeout(listTimer)
       listTimer = setTimeout(() => {
         lastPosition = evt.position
+        sidebarSinglePos.value = lastPosition
         contentRef.value?.loadContents(evt.item.id, expandAvailable.value, evt.item.type === SecondaryType.TEXT)
       }, 300)
     }
@@ -132,6 +141,7 @@ function setExpandNextFocusNameRight(s: string) {
 }
 
 function setNextFocusNameRight(s: string) {
+  contentDeny.value = s === '' ? 2 : 1
   sidebarBlockFocusDir.value = s === '' ? ['right'] : []
   sidebarRef.value?.setNextFocusNameRight(s)
 }

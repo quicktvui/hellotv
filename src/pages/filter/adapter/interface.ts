@@ -79,7 +79,6 @@ export enum ListItemType {
  */
 export interface ListItem {
   type: ListItemType
-  id: string
   name: string
   sid?: string
 }
@@ -103,5 +102,7 @@ export interface GridContent {
   id: string
   title: string
   cover: string
+  score?: string
+  showRating?: boolean
   jumpParams: any
 }

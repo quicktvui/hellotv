@@ -32,7 +32,7 @@
           class='media-manager-seekbar-css'
           ref='mediaManagerSeekBarRef'
           name='seekBar'
-          :color="{ startColor: '#FF6699', endColor: '#FF6699' }"
+          :color="{ startColor: '#FFFF', endColor: '#FFFFFF' }"
           :nextFocusName="{ down: 'mediaControlView',left: 'seekBar',right:'seekBar'}"
           :focusable='true'
           @onSeekStart='onSeekBarSeekStart'
@@ -196,7 +196,7 @@ const initSeekBar = () => {
   mediaManagerSeekBarRef.value?.setProgressRadius(9)
   mediaManagerSeekBarRef.value?.setThumbWidth(60)
   mediaManagerSeekBarRef.value?.setThumbHeight(60)
-  mediaManagerSeekBarRef.value?.setLeftThumbUrl('https://bilibilisx.huan.tv/upload/public/icon/ic_thumb.png')
+  mediaManagerSeekBarRef.value?.setLeftThumbUrl('http://extcdn.hsrc.tv/extend_screen/images/default/ic_1905_thumb.png')
   mediaManagerSeekBarRef.value?.setLeftThumbInactivatedDrawable({
     colors: ['#00000000', '#00000000'],
     cornerRadius: 4

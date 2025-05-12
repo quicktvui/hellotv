@@ -3,7 +3,9 @@
     <!-- 焦点占位, 解决页面跳焦的问题 -->
     <qt-view class="filter-focus-placeholder" :focusable="true"></qt-view>
     <!-- 顶部按钮 -->
-    <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" :blockFocusDirections="['left', 'up']" />
+    <qt-view style="background-color: transparent" :blockFocusDirections="['up', 'left']">
+      <top-view name="topView" :logoRight="true" :nextFocusName="{ down: 'sidebarList' }" />
+    </qt-view>
     <!-- 内容主体 -->
     <qt-view class="filter-body" :clipChildren="true">
       <!-- 筛选列表 -->
@@ -11,10 +13,11 @@
         ref="sidebarRef"
         :blockFocusDir="sidebarBlockFocusDir"
         :singleSelectPos="sidebarSinglePos"
+        :listItemTextGravity="'center|end'"
         @onListItemFocused="onListItemFocused"
       />
       <!-- 筛选内容 -->
-      <filter-content ref="contentRef" @setNextFocusNameRight="setNextFocusNameRight" />
+      <filter-content ref="contentRef" :descendantFocusability="contentDeny" @setNextFocusNameRight="setNextFocusNameRight" />
     </qt-view>
   </qt-view>
 </template>
@@ -34,23 +37,29 @@ const router = useESRouter()
 
 // 筛选列表
 const sidebarRef = ref()
-const sidebarSinglePos = ref<number>(1)
+const sidebarSinglePos = ref<number>(-1)
 const sidebarBlockFocusDir = ref()
 // 筛选内容
 const contentRef = ref()
+const contentDeny = ref<1 | 2>(1)
 
-function onESCreate(params: { screenId: string }) {
-  params.screenId = "1848555233454727169"
-  loadFilters(params.screenId || '1848555233454727169')
+function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
+  params.screenId = '1848555233454727169'
+  params.defaultSecondaryId = '1848554924032532482' // 默认选中的二级筛选项ID
+  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '')
 }
 
-function loadFilters(primaryId: string) {
+function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string) {
   filterManager.getFilters(primaryId).then((filters) => {
-    const { secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { secondaries, tertiaries } = buildFilters(primaryId, filters, defaultTags.split(','))
+    // 设置左侧列表默认选中
+    const index = secondaries.findIndex((item) => item.id === defaultSecondaryId)
+    sidebarSinglePos.value = index !== -1 ? index : 1
+    lastPosition = sidebarSinglePos.value
     // 初始化二级列表
     sidebarRef.value?.init(secondaries)
     // 初始化三级列表
-    contentRef.value?.init(primaryId, tertiaries)
+    contentRef.value?.init(primaryId, tertiaries, defaultSecondaryId)
   })
 }
 
@@ -63,13 +72,14 @@ function onListItemFocused(evt) {
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
       lastPosition = evt.position
+      sidebarSinglePos.value = lastPosition
       contentRef.value?.loadContents(evt.item.id, evt.item.type === SecondaryType.FILTER, evt.item.type === SecondaryType.TEXT)
     }, 300)
   }
 }
 
 function setNextFocusNameRight(s: string) {
-  sidebarBlockFocusDir.value = s === '' ? ['right'] : []
+  contentDeny.value = s === '' ? 2 : 1
   sidebarRef.value?.setNextFocusNameRight(s)
 }
 

@@ -4,8 +4,9 @@
       class="filter-sidebar-list-item-text"
       style="color: #ffffff; font-size: 40px"
       text="${name}"
-      gravity="center"
+      gravity="center|end"
       typeface="bold"
+      :focusable="false"
     ></qt-text>
   </qt-view>
 </template>

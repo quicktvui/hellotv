@@ -11,15 +11,14 @@ import checkFile from 'eslint-plugin-check-file'
  */
 
 export default [
-
   { files: ['**/*.{js,ts,vue}'] },
-  { 
+  {
     languageOptions: {
-      globals:  {
+      globals: {
         ...globals.node,
-        qt: "readonly"
+        qt: 'readonly'
       }
-    } 
+    }
   },
   pluginJs.configs.recommended,
   ...tsEslint.configs.recommended,
@@ -49,29 +48,32 @@ export default [
       'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'warn', // 允许使用 console
       'no-fallthrough': 'warn',
       'check-file/no-index': 'off',
-      'check-file/filename-naming-convention': [
-        'warn',
-        { 'src/*/**/*.{js,ts,vue,scss}': 'KEBAB_CASE' }
-      ],
-      'check-file/folder-naming-convention': [
-        'warn', { 'src/**/': 'KEBAB_CASE' }
-      ],
+      'check-file/filename-naming-convention': ['warn', { 'src/*/**/*.{js,ts,vue,scss}': 'KEBAB_CASE' }],
+      'check-file/folder-naming-convention': ['warn', { 'src/**/': 'KEBAB_CASE' }],
       '@typescript-eslint/no-explicit-any': 'off', // 允许使用 any 类型
-      '@typescript-eslint/no-unused-vars': ['warn', {
-        //忽略生命周期中的方法检测
-        'varsIgnorePattern': '^(onESCreate|onESStart|onESRestart|onESResume|onESPause|onESStop|onESDestroy|onBackPressed|onKeyDown|onKeyUp)$'
-      }], // 允许使用 any 类型
-      'vue/multi-word-component-names': ['error', { 'ignores': ['index'] }],//打开 Vue 组件名称多词规则
-      'vue/component-name-in-template-casing': ['error', 'kebab-case', {
-        'registeredComponentsOnly': true,
-        'ignores': ['ESPlayerManager']
-      }], //注册组件名称引用要kebab-case 短横线+小写
-      'vue/no-dupe-keys': ['error', { 'groups': [] }],//禁止props/ data/ methods/ 等使用重复名称
-      'vue/attribute-hyphenation': ['error', 'never', { 'ignore': [] }],//自定义组件上使用带连字符的属性名称
-      'vue/max-attributes-per-line': ['error', { 'singleline': 5, 'multiline': 5 }],//每行允许写5个属性
+      '@typescript-eslint/no-unused-vars': [
+        'warn',
+        {
+          //忽略生命周期中的方法检测
+          varsIgnorePattern:
+            '^(onESCreate|onESStart|onESRestart|onESResume|onESPause|onESStop|onESDestroy|onBackPressed|onKeyDown|onKeyUp)$'
+        }
+      ], // 允许使用 any 类型
+      'vue/multi-word-component-names': ['error', { ignores: ['index'] }], //打开 Vue 组件名称多词规则
+      'vue/component-name-in-template-casing': [
+        'error',
+        'kebab-case',
+        {
+          registeredComponentsOnly: true,
+          ignores: ['ESPlayerManager']
+        }
+      ], //注册组件名称引用要kebab-case 短横线+小写
+      'vue/no-dupe-keys': ['error', { groups: [] }], //禁止props/ data/ methods/ 等使用重复名称
+      'vue/attribute-hyphenation': ['error', 'never', { ignore: [] }], //自定义组件上使用带连字符的属性名称
+      'vue/max-attributes-per-line': ['warn', { singleline: 5, multiline: 5 }], //每行允许写5个属性
       // "vue/v-on-event-hyphenation":["error",'never',{"autofix": true,}],
-      'vue/html-quotes': ['off', 'single', { 'avoidEscape': true }], //关闭单双引号限制，根据prettierrc规则控制
-      'vue/match-component-file-name': ['off', { 'extensions': ['jsx'], 'shouldMatchCase': false }],
+      'vue/html-quotes': ['off', 'single', { avoidEscape: true }], //关闭单双引号限制，根据prettierrc规则控制
+      'vue/match-component-file-name': ['off', { extensions: ['jsx'], shouldMatchCase: false }],
       'vue/match-component-import-name': 'off'
     }
   }

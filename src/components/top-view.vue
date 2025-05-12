@@ -1,51 +1,49 @@
 <template>
-  <div :class='["top-view-root-css",{ "logo-right": logoRight, "logo-left": !logoRight }]'>
+  <div :class="['top-view-root-css', { 'logo-right': logoRight, 'logo-left': !logoRight }]">
     <!-- 搜索-->
     <btn-pack-view
-      v-if='!$slots.topBtnItem'
-      ref='topSearchBtnRef'
-      name='topSearchBtn'
-      style='width: 145px;height: 60px;margin-right: 10px;'
-      :nextFocusDownSID='downSid'
-      :focusScale='ThemeConfig.placeHolderFocusScale'
-      :focusable='true'
-      :iconLeft='true'
-      :normalIcon='ic_top_search_normal'
-      :focusIcon='ic_top_search_focused'
-      text='搜索'
-      @click='onClick'
-      @focus='onFocus'
+      v-if="!$slots.topBtnItem"
+      ref="topSearchBtnRef"
+      name="topSearchBtn"
+      style="width: 145px; height: 60px; margin-right: 10px"
+      :nextFocusDownSID="downSid"
+      :focusScale="ThemeConfig.placeHolderFocusScale"
+      :focusable="true"
+      :iconLeft="true"
+      :normalIcon="ic_top_search_normal"
+      :focusIcon="ic_top_search_focused"
+      text="搜索"
+      @click="onClick"
+      @focus="onFocus"
     />
     <!-- 个人中心-->
     <btn-pack-view
-      v-if='!$slots.topBtnItem'
-      ref='topMyBtnRef'
-      name='topMyBtn'
+      v-if="!$slots.topBtnItem"
+      ref="topMyBtnRef"
+      name="topMyBtn"
       sid="topMyBtnSid"
-      style='width: 200px;height: 60px;margin-left: 10px;margin-right: 10px;'
-      :textStyle='{width: "120px", height: "60px"}'
-      :focusScale='ThemeConfig.placeHolderFocusScale'
-      :focusable='true'
-      :iconLeft='true'
-      :normalIcon='ic_top_user_normal'
-      :focusIcon='ic_top_user_focused'
-      text='个人中心'
-      @click='onClick'
-      @focus='onFocus'
+      :blockFocusDirections="['right', 'top']"
+      style="width: 200px; height: 60px; margin-left: 10px; margin-right: 10px"
+      :nextFocusDownSID="downSid"
+      :textStyle="{ width: '120px', height: '60px' }"
+      :focusScale="ThemeConfig.placeHolderFocusScale"
+      :focusable="true"
+      :iconLeft="true"
+      :normalIcon="ic_top_user_normal"
+      :focusIcon="ic_top_user_focused"
+      text="个人中心"
+      @click="onClick"
+      @focus="onFocus"
     />
-    <slot name='topBtnItem'></slot>
-    <slot name='topOtherBtn'></slot>
+    <slot name="topBtnItem"></slot>
+    <slot name="topOtherBtn"></slot>
     <!-- logo-->
-    <img v-if='!$slots.topLogoItem' :src='ic_logo'
-         :class='["logo-default",{ "img-left": !logoRight, "img-right": logoRight }]'
-    />
-    <slot name='topLogoItem'></slot>
+    <img v-if="!$slots.topLogoItem" :src="ic_logo" :class="['logo-default', { 'img-left': !logoRight, 'img-right': logoRight }]" />
+    <slot name="topLogoItem"></slot>
   </div>
-
 </template>
 
-<script lang='ts' setup name='top-view'>
-
+<script lang="ts" setup name="top-view">
 import launch from '../tools/launch'
 import BtnPackView from './btn-pack-view.vue'
 import ic_top_search_normal from '../assets/top-view/ic_top_search_normal.png'
@@ -53,11 +51,9 @@ import ic_top_search_focused from '../assets/top-view/ic_top_search_focused.png'
 import ic_top_user_normal from '../assets/top-view/ic_top_user_normal.png'
 import ic_top_user_focused from '../assets/top-view/ic_top_user_focused.png'
 import ic_logo from '../assets/top-view/ic_logo.png'
-import ThemeConfig from "../config/theme-config"
+import ThemeConfig from '../config/theme-config'
 
-const emits = defineEmits([
-  'focus', 'click'
-])
+const emits = defineEmits(['focus', 'click'])
 defineProps({
   //logo右侧展示
   logoRight: {
@@ -80,7 +76,7 @@ const onClick = (e) => {
       launch.launchSearch()
       break
     //个人中心
-    case 'topMyBtnRef':
+    case 'topMyBtn':
       launch.launchMy()
       break
   }
@@ -101,8 +97,6 @@ const onFocus = (e) => {
 }
 
 defineExpose({})
-
 </script>
 
-<style lang='scss' src='./top-view.scss'>
-</style>
+<style lang="scss" src="./top-view.scss"></style>

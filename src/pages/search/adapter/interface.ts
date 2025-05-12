@@ -16,6 +16,8 @@ export enum KeywordType {
 export interface Keyword {
   type: KeywordType
   text: string
+  flexStyle?: {}
+  gradientBackground?: {}
   jumpId?: string
   decoration?: QTListViewItemDecoration
 }

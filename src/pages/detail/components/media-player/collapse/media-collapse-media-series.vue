@@ -1,45 +1,63 @@
 <template>
-  <qt-view class="media-collapse-media-series" :focusable="false">
+  <qt-view class="media-collapse-media-series"
+           :clipChildren="false"
+           :clipPadding="false"
+           :focusable="false">
     <span class="media-collapse-media-series-title" :opacity="isCollapseExpand ? 1 : 0.5">播放列表</span>
-    <qt-media-series
-      ref="mediaSeriesRef"
-      class="media-series"
+    <qt-animation
+      ref="animationRef"
       :clipChildren="false"
-      markColor="#00D9D9"
-      :focusable="false"
-      :visible="visible"
-      :textColors="{ color: ThemeConfig.textNormalColor, focusColor: ThemeConfig.textFocusColor,
-        selectColor: ThemeConfig.textSelectColor }"
-      :gradientBackground="{ colors: ThemeConfig.btnGradientNormalColor, cornerRadius: 8, orientation: 6 }"
-      :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
-      :commonParam="{itemGap: 32,contentWidth: 1760}"
-      @loadData="onLoadData"
-      @itemClick="onItemClick"
-      @itemFocused="onItemFocused"
-      @groupItemFocused="onGroupItemFocused">
-      <template v-slot:default>
-        <qt-view class="media-series-item" :focusable="true" :enableFocusBorder="true" :focusScale="1">
-          <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
-          <qt-view class="media-series-item-info" duplicateParentState>
-            <qt-text class="media-series-item-text" text="${text}" :lines="2" :ellipsizeMode="2"
-              :focusable="false" duplicateParentState :fontSize="26"></qt-text>
-            <qt-text class="media-series-item-duartion" text="${duartion}" :lines="2" :ellipsizeMode="2"
-              :focusable="false" duplicateParentState :fontSize="22"></qt-text>
-            <qt-view class="play_Mark" :focusable="false" :showOnState="['selected']" duplicateParentState>
-              <play-mark :style="{width:'18px',height:'20px'}" markColor="#ffffff"
-                :focusable="false" :showType="0" :roundCorner="1"/>
+      :clipPadding="false">
+      <qt-media-series
+        ref="mediaSeriesRef"
+        class="media-series"
+        :clipChildren="false"
+        :clipPadding="false"
+        markColor="#00D9D9"
+        :focusable="false"
+        :visible="visible"
+        :textColors="{ color: ThemeConfig.textNormalColor, focusColor: ThemeConfig.textFocusColor,
+          selectColor: ThemeConfig.textSelectColor }"
+        :gradientBackground="{ colors: ThemeConfig.btnGradientNormalColor, cornerRadius: 8, orientation: 6 }"
+        :gradientFocusFackground="{ colors: ThemeConfig.btnGradientFocusColor, cornerRadius: 8, orientation: 6 }"
+        :commonParam="{itemGap: 32,contentWidth: 1760}"
+        @loadData="onLoadData"
+        @itemClick="onItemClick"
+        @itemFocused="onItemFocused"
+        @groupItemFocused="onGroupItemFocused">
+        <template v-slot:default>
+          <qt-view class="media-series-item" :focusable="true"
+                   :clipChildren="false"
+                   :clipPadding="false"
+                   :enableFocusBorder="true" :focusScale="1">
+            <qt-image class="media-series-item-img" src="${cover}" :focusable="false"></qt-image>
+            <qt-view class="media-series-item-info" duplicateParentState>
+              <qt-text class="media-series-item-text" text="${text}" :lines="2" :ellipsizeMode="2"
+                :focusable="false" duplicateParentState :fontSize="26"></qt-text>
+              <qt-text class="media-series-item-duartion" text="${duartion}" :lines="2" :ellipsizeMode="2"
+                :focusable="false" duplicateParentState :fontSize="22"></qt-text>
+              <qt-view class="play_Mark" :focusable="false" :showOnState="['selected']" duplicateParentState>
+                <play-mark :style="{width:'18px',height:'20px'}" markColor="#ffffff"
+                  :focusable="false" :showType="0" :roundCorner="1"/>
+              </qt-view>
             </qt-view>
           </qt-view>
-        </qt-view>
-      </template>
-    </qt-media-series>
+        </template>
+      </qt-media-series>
+    </qt-animation>
   </qt-view>
 </template>
 
 <script setup lang='ts' name='media-collapse-media-series'>
 import { ref, nextTick} from 'vue'
 import { ESLogLevel, useESLog, useESEventBus } from "@extscreen/es3-core"
-import { QTIMediaSeries, QTMediaSeriesEvent} from '@quicktvui/quicktvui3'
+import {
+  QTAnimationPropertyName,
+  QTAnimationValueType,
+  QTIAnimation,
+  QTIMediaSeries,
+  QTMediaSeriesEvent
+} from '@quicktvui/quicktvui3'
 import ThemeConfig from "../../../../../config/theme-config";
 import {
   buildMediaSeriesType,
@@ -93,11 +111,19 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     })
   }
   // CollapseItem 展示回调
-  const onCollapseItemExpand = (value: boolean) => {
+  const onCollapseItemExpand = (value: boolean, init: boolean) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.e(TAG, "-------onCollapseItemExpand-----播放顺序--->>>>>", value)
     }
     isCollapseExpand.value = value
+
+    let delay = init ? 0 : 200
+    if (value) {
+      show(delay)
+    } else {
+      dismiss(delay)
+    }
+
     if (value) {
       if (!initialized) {
         focusTimer = setTimeout(() => {
@@ -156,6 +182,49 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     isCollapseExpand.value = false
     mediaSeriesRef.value?.release()
   }
+
+  const animationRef = ref<QTIAnimation>()
+  let alpha = 1
+  function show(delay) {
+    if (alpha == 1) {
+      return
+    }
+    animationRef.value?.objectAnimator2(
+      '1',
+      QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
+      QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
+      alpha,
+      1,
+      delay,
+      -1,
+      0,
+      false,
+      false
+    )
+    animationRef.value?.startAnimator('1')
+    alpha = 1
+  }
+
+  function dismiss(delay) {
+    if (alpha == 0) {
+      return
+    }
+    animationRef.value?.objectAnimator2(
+      '2',
+      QTAnimationValueType.QT_ANIMATION_VALUE_TYPE_FLOAT,
+      QTAnimationPropertyName.QT_ANIMATION_PROPERTY_NAME_ALPHA,
+      alpha,
+      0,
+      delay,
+      -1,
+      0,
+      false,
+      false
+    )
+    animationRef.value?.startAnimator('2')
+    alpha = 0
+  }
+
   defineExpose({
     init,
     setListData,
@@ -177,12 +246,13 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     font-size: 27px;
     color: white;
     margin-left: 90px;
+    z-index: 1000;
   }
   .media-series {
     width: 1920px;
     background-color: transparent;
     position: absolute;
-    top: 50;
+    top: 50px;
     .media-series-item{
       width: 434px;
       height: 137px;

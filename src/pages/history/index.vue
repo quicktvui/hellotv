@@ -71,7 +71,7 @@
           <!-- 常规 -->
           <qt-view
             class="history-content-ul-item"
-            v-if="item.type === 1"
+            v-if="item.type === ContentType.Normal"
             :focusable="true"
             :focusScale="1.03"
             @focus="onContentItemFocus"
@@ -112,15 +112,10 @@
                 :duplicateParentState="true"
               ></qt-text>
             </qt-view>
-            <qt-text
-              class="history-content-ul-item-progress"
-              :text="'看至 ' + item.progress"
-              gravity="center|start"
-              :focusable="false"
-            ></qt-text>
+            <qt-text class="history-content-ul-item-progress" :text="item.progress" gravity="center|start" :focusable="false"></qt-text>
           </qt-view>
           <!-- 到底提示 -->
-          <qt-view class="history-content-ul-item-end" v-if="item.type === 1002" :focusable="false">
+          <qt-view class="history-content-ul-item-end" v-if="item.type === ContentType.End" :focusable="false">
             <qt-text
               class="history-content-ul-item-end-text"
               text="已经到底啦，按【返回键】回到顶部"
@@ -140,13 +135,13 @@ import { ESKeyEvent, useESToast, useESEventBus } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
+import { ContentType } from './adapter/interface'
 import historyManager from './api/index'
 import launch from '../../tools/launch'
 import icEmpty from '../../assets/history/ic_empty.png'
 import icDelete from '../../assets/history/ic_delete.png'
 import themeConfig from '../../config/theme-config'
 import config from './config'
-import { Content, ContentType } from './adapter/interface'
 
 const toast = useESToast()
 const router = useESRouter()
@@ -259,7 +254,7 @@ async function loadRecords(menuIndex: number, page: number = 1, limit: number = 
 function onContentloadMore() {
   if (!stopPage) {
     loadRecords(lastIndex, ++page)
-    console.log(page,'32323444444444444444')
+    console.log(page, '32323444444444444444')
   }
 }
 
@@ -279,7 +274,7 @@ function onBtnClick(name: 'cancel' | 'clear') {
   }
 }
 
-function onItemBind () {}
+function onItemBind() {}
 
 function clearPageData() {
   isEmpty.value = true

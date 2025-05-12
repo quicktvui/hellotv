@@ -3,7 +3,7 @@
     <scroll-view class="filter-main-scroll" ref="scrollRef" :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
       <qt-view v-show="!isLoading" style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
-        <qt-view v-if="showConditions" class="filter-main-conditions">
+        <qt-view v-if="showConditions" class="filter-main-conditions" :descendantFocusability="listDeny">
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
@@ -17,7 +17,7 @@
           </qt-list-view>
         </qt-view>
         <!-- 筛选内容 -->
-        <qt-view class="filter-main-contents">
+        <qt-view class="filter-main-contents" :descendantFocusability="gridDeny">
           <qt-grid-view
             class="filter-main-contents-grid"
             :style="{ width: contentWidth }"
@@ -25,14 +25,17 @@
             name="contentGrid"
             :listData="gridData"
             :spanCount="cfgGridSpanCount"
-            :padding="cfgGridItemMode === 1 ? '80,17,40,0' : '80,17,0,0'"
+            :padding="cfgGridItemMode === 1 ? '80,0,40,0' : '80,0,0,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
-            :enablePlaceholder="true"
+            :enablePlaceholder="themeConfig.placeHolderEnable"
+            :fadingEdgeLength="100"
+            :verticalFadingEdgeEnabled="true"
             :nextFocusName="{ left: 'sidebarList' }"
             :nextFocusUpSID="'--sid--'"
             :blockFocusDirections="['right', 'down']"
             :openPage="true"
+            :preloadNo="20"
             :listenBoundEvent="true"
             :listenHasFocusChange="true"
             :loadMore="onGridLoadMore"
@@ -41,14 +44,35 @@
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h
+            <grid-item-horizontal
               :type="GridContentType.HORIZONTAL"
-              :width="gridItemHWidth"
-              :height="gridItemHHeight"
-              :imgHeight="gridItemHImgHeight"
+              :style="{ width: `${gridItemHWidth}px`, height: `${gridItemHHeight}px` }"
+              :imageStyle="{
+                width: `${gridItemHWidth}px`,
+                height: `${gridItemHImgHeight}px`,
+                borderRadius: `${themeConfig.focusBorderCorner}px`
+              }"
+              :placeholderLayout="[-5, -5, gridItemHWidth, gridItemHImgHeight]"
             />
             <!-- 竖图 -->
-            <grid-item-v :type="GridContentType.VERTICAL" />
+            <grid-item-vertical :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
+            <!-- 分页样式 -->
+            <template #loading>
+              <qt-view
+                :style="{
+                  width: `${contentWidth - 150}px`,
+                  height: `100px`,
+                  backgroundColor: `transparent`,
+                  alignItems: `center`,
+                  justifyContent: `center`
+                }"
+                :type="1002"
+                :focusable="false"
+                :disablePlaceholder="true"
+              >
+                <qt-loading-view style="height: 40px; width: 40px" name="loading" color="rgba(255,255,255,0.3)" :focusable="false" />
+              </qt-view>
+            </template>
             <!-- 到底提示 -->
             <template #footer>
               <qt-text
@@ -57,6 +81,7 @@
                 text="已经到底啦，按【返回键】回到顶部"
                 gravity="center"
                 :focusable="false"
+                :disablePlaceholder="true"
               ></qt-text>
             </template>
           </qt-grid-view>
@@ -100,11 +125,12 @@ import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
 import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
+import themeConfig from '../../../../config/theme-config'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import ListItemRecord from './list-item-record.vue'
-import GridItemH from './grid-item-h.vue'
-import GridItemV from './grid-item-v.vue'
+import GridItemHorizontal from '../../../../components/grid-item-horizontal.vue'
+import GridItemVertical from '../../../../components/grid-item-vertical.vue'
 import config from '../../config'
 import filterManager from '../../api/index'
 import launch from '../../../../tools/launch'
@@ -127,6 +153,7 @@ const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
+const listDeny = ref<number>(1)
 const listHeight = ref<number>(330)
 const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
@@ -135,6 +162,7 @@ const recordListRef = ref<QTIListView>()
 const showRecords = ref<boolean>(false)
 // 筛选结果
 const gridRef = ref<QTIGridView>()
+const gridDeny = ref<number>(1)
 const gridData = qtRef()
 const gridScrollY = ref<number>(0)
 const gridItemHWidth = ref<number>(cfgGridSpanCount.value === 5 ? 320 : 325)
@@ -150,15 +178,19 @@ let reqQuery: string = ''
 // 筛选条件
 let listDateRef: QTListViewItem[] = []
 
-function init(primaryId: string, listData: Tertiary[]) {
+function init(primaryId: string, listData: Tertiary[], defaultSecondaryId?: string) {
   // 保存筛选数据
-  rawParams = { primaryId, listData }
+  rawParams = { primaryId, listData, defaultSecondaryId }
   // 加载筛选内容
-  loadContents(reqQuery, listData.length > 0)
+  if (defaultSecondaryId !== undefined && defaultSecondaryId != '') {
+    loadContents(defaultSecondaryId || '', false, true)
+  } else {
+    loadContents(reqQuery, listData.length > 0)
+  }
 }
 
 function onListItemFocused(evt) {
-  if (evt.isFocused) {
+  if (evt.isFocused && gridScrollY.value !== 0) {
     emits('setNextFocusNameRight', 'contentList')
     showRecords.value = false
     gridScrollY.value = 0
@@ -170,6 +202,9 @@ function onListItemFocused(evt) {
 let lastParentPosition = 0
 let lastCurentPosition = 0
 function onListItemClick(evt) {
+  // 屏蔽内容区域焦点
+  gridDeny.value = 2
+
   // 点击相同条件不触发
   if (evt.parentPosition === lastParentPosition && evt.position === lastCurentPosition) {
     return
@@ -196,6 +231,7 @@ function onGridItemFocused(evt) {
 
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
+      listDeny.value = 2
       if (gridScrollY.value === 0) {
         // 筛选记录
         const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { top: 10, right: 30 } }))
@@ -207,6 +243,7 @@ function onGridItemFocused(evt) {
         gridScrollY.value = 1
       }
     } else {
+      listDeny.value = 1
       showRecords.value = false
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
@@ -266,11 +303,12 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
     loadingTimer = setTimeout(() => {
       isLoading.value = false
       if (gridData.value.length === 0) {
-        emits('setNextFocusNameRight', '')
+        emits('setNextFocusNameRight', showConditions.value ? 'contentList' : '')
         isEmpty.value = true
       } else {
         emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
+        gridDeny.value = 1
         gridRef.value?.setItemSelected(0, true)
       }
     }, 300)
