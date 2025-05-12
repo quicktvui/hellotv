@@ -324,7 +324,7 @@ function onGridLoadMore() {
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
       if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
-        gridData.value.push({ type: 1003, decoration: { bottom: showConditions.value && reqQuery.length > 0 ? 100 : 30 } })
+        gridData.value.push({ type: 1003, decoration: { top: 20, bottom: showConditions.value && reqQuery.length > 0 ? 100 : 40 } })
       }
       gridRef.value?.stopPage()
     }
