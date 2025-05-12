@@ -1,6 +1,6 @@
 import { replacePlaceholders } from '../../../tools/common'
 import { HistoryApi, Records } from './interface'
-import { DelHistoryRecordsUrl, historyRecordsUrl } from './request-url'
+import { DelHistoryRecordsUrl, generateRecordsUrl, historyRecordsUrl } from './request-url'
 import requestManager from '../../../tools/request'
 
 class HistoryManager implements HistoryApi {
@@ -24,6 +24,10 @@ class HistoryManager implements HistoryApi {
         recordId
       })
     )
+  }
+  // 生成数据
+  generateRecords(deviceId: string, type: 'history' | 'favorite'): Promise<any> {
+    return requestManager.post(generateRecordsUrl, { deviceId, recordType: type })
   }
 }
 

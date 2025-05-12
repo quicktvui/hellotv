@@ -277,9 +277,9 @@ let loadingDelayTimer: any = -1
 async function loadRecords(menuIndex: number, page: number = 1, limit: number = config.contentsLimit) {
   const records = await historyManager.getRecords('xxx', menuIndex === 0 ? 'history' : 'favorite', page, limit)
   if (page === 1) {
-    contentData.value = buildContents(records)
+    contentData.value = buildContents(records, lastIndex.value)
   } else {
-    contentData.value.push(...buildContents(records))
+    contentData.value.push(...buildContents(records, lastIndex.value))
   }
 
   // 停止分页
@@ -366,6 +366,7 @@ function clearPageData() {
 }
 
 let oKCounter = 0
+let leftCounter = 0
 function onKeyDown(keyEvent: ESKeyEvent) {
   if (lastFocusName === 'content') {
     switch (keyEvent.keyCode) {
@@ -381,6 +382,14 @@ function onKeyDown(keyEvent: ESKeyEvent) {
       default:
         oKCounter = 0
     }
+  } else if (lastFocusName === 'sidebar' && keyEvent.keyCode === 21) {
+    if ((leftCounter++, leftCounter > 10)) {
+      qt.toast.showToast('生成数据')
+      leftCounter = 0
+      historyManager.generateRecords('xxx', lastIndex.value === 0 ? 'history' : 'favorite')
+    }
+  } else {
+    leftCounter = 0
   }
 }
 
