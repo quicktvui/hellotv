@@ -10,7 +10,9 @@
     "dev": "tsx ./scripts/dev.ts",
     "pack": "tsx ./scripts/pack.ts",
     "build": "tsx ./scripts/build.ts",
-    "theme": "tsx ./build/build-flavor.ts"
+    "theme": "tsx ./build/build-flavor.ts",
+    "build-apk-debug": "tsx ./scripts/build-apk.ts Debug",
+    "build-apk-release": "tsx ./scripts/build-apk.ts Release"
   },
   "dependencies": {
     "@extscreen/es3-ad-player": "1.0.9",
