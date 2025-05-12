@@ -214,7 +214,7 @@ export const buildEndSection = function (): QTWaterfallSection {
     _id: 'e1',
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
     style: { width: 1920, height: 100 },
-    decoration: { bottom: 40 },
+    decoration: { top: 20, bottom: 40 },
     title: '已经到底啦，按【返回键】回到顶部',
     titleStyle: { fontSize: 28 },
     itemList: []
