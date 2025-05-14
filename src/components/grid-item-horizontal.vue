@@ -38,6 +38,16 @@
         :duplicateParentState="true"
       ></qt-image>
     </qt-view>
+    <!-- 角标 -->
+    <qt-text
+      showIf="${showCorner}"
+      class="grid-item-h-corner"
+      :style="{ top: 0, left: $props.style?.width.replace('px', '') - 75 }"
+      text="${corner}"
+      gravity="center"
+      :focusable="false"
+      :gradientBackground="{ colors: ['#73E59E', '#299B49'], orientation: 0, cornerRadii4: [0, 16, 0, 16] }"
+    ></qt-text>
     <!-- 评分 -->
     <qt-view
       showIf="${showRating}"
@@ -123,6 +133,15 @@ const scoreGradient = {
 
 .grid-item-h-img {
   background-color: rgba(255, 255, 255, 0.1);
+}
+
+.grid-item-h-corner {
+  width: 75px;
+  height: 35px;
+  background-color: transparent;
+  position: absolute;
+  color: white;
+  font-size: 24px;
 }
 
 .grid-item-h-score {

@@ -102,6 +102,8 @@ export interface GridContent {
   id: string
   title: string
   cover: string
+  corner?: string
+  showCorner?: boolean
   score?: string
   showRating?: boolean
   jumpParams: any

@@ -38,6 +38,16 @@
         :duplicateParentState="true"
       ></qt-image>
     </qt-view>
+    <!-- 角标 -->
+    <qt-text
+      showIf="${showCorner}"
+      class="grid-item-v-corner"
+      :style="{ top: 0, left: $props.style?.width.replace('px', '') - 75 }"
+      text="${corner}"
+      gravity="center"
+      :focusable="false"
+      :gradientBackground="{ colors: ['#73E59E', '#299B49'], orientation: 0, cornerRadii4: [0, 16, 0, 16] }"
+    ></qt-text>
     <!-- 评分 -->
     <qt-view showIf="${showRating}" class="grid-item-v-score" :gradientBackground="scoreGradient" :focusable="false">
       <qt-text class="grid-item-v-score-text" text="${score}" :focusable="false"></qt-text>
@@ -116,6 +126,15 @@ const scoreGradient = {
 
 .grid-item-v-img {
   background-color: transparent;
+}
+
+.grid-item-v-corner {
+  width: 75px;
+  height: 35px;
+  background-color: transparent;
+  position: absolute;
+  color: white;
+  font-size: 24px;
 }
 
 .grid-item-v-score {
