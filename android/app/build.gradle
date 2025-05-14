@@ -97,7 +97,7 @@ dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'androidx.appcompat:appcompat:1.0.0'
 
-    implementation 'com.extscreen.runtime:official:2.8.3.1'
+    implementation 'com.extscreen.runtime:official:2.9.5-rc08'
     implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
 
     if (INCLUDE_SO) {
@@ -122,15 +122,15 @@ task deleteRpkCacheTask(type: Delete) {
 
 import org.apache.tools.ant.taskdefs.condition.Os
 
-task buildVendor(type: Exec) {
-    if (Os.isFamily(Os.FAMILY_WINDOWS)) {
-        executable 'cmd'
-        args '/c', 'npm', 'run', 'vendor'
-    } else {
-        executable 'npm'
-        args 'run', 'vendor'
-    }
-}
+// task buildVendor(type: Exec) {
+//     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
+//         executable 'cmd'
+//         args '/c', 'npm', 'run', 'vendor'
+//     } else {
+//         executable 'npm'
+//         args 'run', 'vendor'
+//     }
+// }
 
 task buildVue(type: Exec) {
     if (Os.isFamily(Os.FAMILY_WINDOWS)) {
@@ -140,7 +140,7 @@ task buildVue(type: Exec) {
         executable 'npm'
         args 'run', 'build'
     }
-    dependsOn(buildVendor)
+//     dependsOn(buildVendor)
 }
 
 task writeConfigFile() {

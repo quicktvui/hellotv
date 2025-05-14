@@ -9,18 +9,34 @@ import config from '../config'
  * @param mode 数据模式, hot 热门搜索、guess 猜你想搜、all 返回所有
  * @returns
  */
-export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all'): Keyword[] {
+export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all', pageNo?: number): Keyword[] {
   const keywords: Keyword[] = []
 
   switch (mode) {
     case 'hot':
-      rawData.hotKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+      const colorMap = {
+        0: ['#F33628', '#F33628'],
+        1: ['#FC5E1B', '#FC5E1B'],
+        2: ['#FECB04', '#FECB04']
+      }
+
+      rawData.hotKeywords.forEach((item, index) => {
+        const colors = (pageNo === 1 && colorMap[index]) || ['#80FFFFFF', '#80FFFFFF']
+
+        keywords.push({
+          type: KeywordType.TEXT,
+          text: item.keyword,
+          flexStyle: { marginLeft: 106 },
+          gradientBackground: {
+            colors: colors,
+            cornerRadius: 50
+          }
+        })
       })
       break
     case 'guess':
       rawData.guessKeywords.forEach((item) => {
-        keywords.push({ type: KeywordType.TEXT, text: item.keyword })
+        keywords.push({ type: KeywordType.TEXT, text: item.keyword, flexStyle: { marginLeft: 80 } })
       })
       break
     case 'all':
@@ -61,28 +77,6 @@ export const buildTab = function (rawData?: Tab[]): QTTab {
 }
 
 /**
- * 构造搜索结果板块数据
- * @param rawData 原始数据
- * @returns
- */
-export const buildContentSection = (rawData: Contents): QTWaterfallSection => {
-  return {
-    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
-    style: { width: 1920 },
-    decoration: { left: 80 },
-    title: '',
-    itemList: rawData.items.map((item) => ({
-      type: ContentType.HORIZONTAL,
-      style: { width: 410, height: 276 },
-      decoration: { right: 40, top: 40 },
-      title: item.title,
-      cover: item.image,
-      score: item.score.toFixed(1)
-    }))
-  }
-}
-
-/**
  * 构建两栏布局Tab页面数据
  * @param rawData 原始数据
  * @param curPage 当前页码
@@ -109,7 +103,8 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
         id: item.id,
         title: item.title,
         cover: item.image,
-        score: item.score.toFixed(1)
+        score: item.score.toFixed(1),
+        showRating: true
       }))
     }
 
@@ -138,27 +133,75 @@ export const buildTabContents = function (rawData: Contents, curPage: number): Q
 }
 
 /**
- * 构造推荐内容板块数据
- * @param rawData 原始数据
+ * 构建搜索内容板块
+ * @param rawData 接口数据
+ * @param spanCount 每行展示个数, 也是每个板块Item个数, 优化页面速度, 将每行展示个数设为一个板块
  * @returns
  */
-export const buildRecommendSection = (rawData: Recommends, isShowTitle: boolean, isShowTips: boolean): QTWaterfallSection => {
-  return {
+export const buildContentSections = function (rawData: Contents, spanCount: number): QTWaterfallSection[] {
+  return Array.from({ length: Math.ceil(rawData.items.length / spanCount) }, (_, i) => ({
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
     style: { width: 1920 },
-    decoration: { left: 80, top: isShowTitle && isShowTips ? 40 : isShowTitle && !isShowTips ? 65 : 0, bottom: 40 },
-    title: isShowTitle ? '大家都在搜' : '',
-    titleStyle: { height: 50, fontSize: 40 },
+    decoration: { left: 80 },
+    title: '',
+    itemList: rawData.items.slice(i * spanCount, (i + 1) * spanCount).map((item) => ({
+      type: ContentType.HORIZONTAL,
+      style: { width: 410, height: 276 },
+      decoration: { right: 40, top: 40 },
+      title: item.title,
+      cover: item.image,
+      score: item.score.toFixed(1),
+      showRating: true
+    }))
+  }))
+}
+
+/**
+ * 构建搜索推荐板块
+ * @param rawData 接口数据
+ * @param spanCount 每行展示个数, 也是每个板块Item个数
+ * @param isShowTitle 是否展示板块标题
+ * @param isShowTips 是否展示搜索提示词
+ * @returns
+ */
+export const buildRecommendSections = function (
+  rawData: Recommends,
+  spanCount: number,
+  isShowTitle: boolean,
+  isShowTips: boolean
+): QTWaterfallSection[] {
+  // i 定位是否为第一个板块
+  return Array.from({ length: Math.ceil(rawData.items.length / spanCount) }, (_, i) => ({
+    type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_FLEX,
+    style: { width: 1920 },
+    decoration: { left: 80, top: !isShowTips && isShowTitle && i === 0 ? 65 : isShowTitle && isShowTips && i === 0 ? 40 : 0, bottom: 40 }, // 页面第一板块为推荐第一板块时, 顶部间距为65; 推荐第一板块为非页面第一个板块时, 顶部间距为40; 其余板块, 顶部间距为0
+    title: isShowTitle && i === 0 ? '大家都在搜' : '',
+    titleStyle: i === 0 ? { height: 50, fontSize: 40 } : {},
     titleTypeface: 'bold',
-    itemList: rawData.items.map((item, index) => ({
+    itemList: rawData.items.slice(i * spanCount, (i + 1) * spanCount).map((item) => ({
       type: ContentType.VERTICAL,
       style: { width: 260, height: 414 },
-      decoration: { top: isShowTitle && index < 6 ? 40 : !isShowTitle && index < 6 ? 0 : 40, right: 40 },
+      decoration: { right: 40, top: (!isShowTitle && i === 0) || i > 0 ? 0 : 40 }, // 第一个板块且不展示标题、或者不是第一个板块时, 顶部间距为0；第一个板块且展示标题时, 顶部间距为40
       id: item.id,
       title: item.title,
       cover: item.image,
-      score: item.score.toFixed(1)
+      score: item.score.toFixed(1),
+      showRating: true
     }))
+  }))
+}
+
+/**
+ * 构建加载中板块
+ * @returns
+ */
+export const buildLoadingSection = function (): QTWaterfallSection {
+  return {
+    type: -10008,
+    style: { width: 1920, height: 100 },
+    decoration: { top: 20, bottom: 20 },
+    title: '',
+    itemList: []
   }
 }
 
@@ -171,7 +214,7 @@ export const buildEndSection = function (): QTWaterfallSection {
     _id: 'e1',
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
     style: { width: 1920, height: 100 },
-    decoration: { bottom: 40 },
+    decoration: { top: 20, bottom: 40 },
     title: '已经到底啦，按【返回键】回到顶部',
     titleStyle: { fontSize: 28 },
     itemList: []

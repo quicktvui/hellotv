@@ -3,7 +3,7 @@
     <scroll-view class="filter-main-scroll" ref="scrollRef" :focusable="false" :onScrollEnable="true" makeChildVisibleType="none">
       <qt-view v-show="!isLoading" style="background-color: transparent" :clipChildren="true">
         <!-- 筛选条件 -->
-        <qt-view v-if="showConditions" class="filter-main-conditions">
+        <qt-view v-if="showConditions" class="filter-main-conditions" :descendantFocusability="listDeny">
           <qt-list-view
             class="filter-main-conditions-list"
             :style="{ height: listHeight }"
@@ -28,7 +28,7 @@
             :padding="cfgGridItemMode === 1 ? '80,0,40,0' : '80,0,0,0'"
             :clipChildren="false"
             :autofocusPosition="isInit ? 0 : -1"
-            :enablePlaceholder="true"
+            :enablePlaceholder="themeConfig.placeHolderEnable"
             :fadingEdgeLength="100"
             :verticalFadingEdgeEnabled="true"
             :nextFocusName="{ left: 'sidebarList' }"
@@ -44,15 +44,18 @@
             @scroll-state-changed="onGridScrollStateChanged"
           >
             <!-- 横图 -->
-            <grid-item-h
+            <grid-item-horizontal
               :type="GridContentType.HORIZONTAL"
-              :width="gridItemHWidth"
-              :height="gridItemHHeight"
-              :imgHeight="gridItemHImgHeight"
+              :style="{ width: `${gridItemHWidth}px`, height: `${gridItemHHeight}px` }"
+              :imageStyle="{
+                width: `${gridItemHWidth}px`,
+                height: `${gridItemHImgHeight}px`,
+                borderRadius: `${themeConfig.focusBorderCorner}px`
+              }"
               :placeholderLayout="[-5, -5, gridItemHWidth, gridItemHImgHeight]"
             />
             <!-- 竖图 -->
-            <grid-item-v :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
+            <grid-item-vertical :type="GridContentType.VERTICAL" :placeholderLayout="[-5, -5, 260, 368]" />
             <!-- 分页样式 -->
             <template #loading>
               <qt-view
@@ -122,11 +125,12 @@ import { ESIScrollView } from '@extscreen/es3-component'
 import { qtRef, QTIListView, QTListViewItem, QTIGridView } from '@quicktvui/quicktvui3'
 import { buildContents, getContentsQuery, shouldAddEndSection } from '../../adapter/index'
 import { Tertiary, TertiaryType, GridContentType } from '../../adapter/interface'
+import themeConfig from '../../../../config/theme-config'
 import icEmpty from '../../../../assets/filter/ic_empty.png'
 import ListItem from './list-item.vue'
 import ListItemRecord from './list-item-record.vue'
-import GridItemH from './grid-item-h.vue'
-import GridItemV from './grid-item-v.vue'
+import GridItemHorizontal from '../../../../components/grid-item-horizontal.vue'
+import GridItemVertical from '../../../../components/grid-item-vertical.vue'
 import config from '../../config'
 import filterManager from '../../api/index'
 import launch from '../../../../tools/launch'
@@ -149,6 +153,7 @@ const isLoading = ref<boolean>(false)
 const isEmpty = ref<boolean>(false)
 // 筛选条件
 const listRef = ref<QTIListView>()
+const listDeny = ref<number>(1)
 const listHeight = ref<number>(330)
 const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
@@ -189,7 +194,7 @@ function init(primaryId: string, listData: Tertiary[], defaultSecondaryId?: stri
 }
 
 function onListItemFocused(evt) {
-  if (evt.isFocused) {
+  if (evt.isFocused && gridScrollY.value !== 0) {
     emits('setNextFocusNameRight', 'contentList')
     showRecords.value = false
     gridScrollY.value = 0
@@ -230,6 +235,7 @@ function onGridItemFocused(evt) {
 
     isInit.value = false
     if (evt.position >= cfgGridSpanCount.value) {
+      listDeny.value = 2
       if (gridScrollY.value === 0) {
         // 筛选记录
         const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { top: 10, right: 30 } }))
@@ -241,6 +247,7 @@ function onGridItemFocused(evt) {
         gridScrollY.value = 1
       }
     } else {
+      listDeny.value = 1
       showRecords.value = false
       scrollRef.value?.scrollToWithOptions(0, 0, 300)
       gridScrollY.value = 0
@@ -321,7 +328,7 @@ function onGridLoadMore() {
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
       if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
-        gridData.value.push({ type: 1003, decoration: { bottom: showConditions.value && reqQuery.length > 0 ? 100 : 30 } })
+        gridData.value.push({ type: 1003, decoration: { top: 20, bottom: showConditions.value && reqQuery.length > 0 ? 100 : 40 } })
       }
       gridRef.value?.stopPage()
     }

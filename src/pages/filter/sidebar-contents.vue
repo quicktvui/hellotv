@@ -13,6 +13,7 @@
         ref="sidebarRef"
         :blockFocusDir="sidebarBlockFocusDir"
         :singleSelectPos="sidebarSinglePos"
+        :listItemTextGravity="'center|end'"
         @onListItemFocused="onListItemFocused"
       />
       <!-- 筛选内容 -->
@@ -42,15 +43,15 @@ const sidebarBlockFocusDir = ref()
 const contentRef = ref()
 const contentDeny = ref<1 | 2>(1)
 
-function onESCreate(params: { screenId: string; defaultSecondaryId?: string }) {
+function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
   params.screenId = '1848555233454727169'
   params.defaultSecondaryId = '1848554924032532482' // 默认选中的二级筛选项ID
-  loadFilters(params.screenId, params.defaultSecondaryId)
+  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '')
 }
 
-function loadFilters(primaryId: string, defaultSecondaryId: string) {
+function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string) {
   filterManager.getFilters(primaryId).then((filters) => {
-    const { secondaries, tertiaries } = buildFilters(primaryId, filters)
+    const { secondaries, tertiaries } = buildFilters(primaryId, filters, defaultTags.split(','))
     // 设置左侧列表默认选中
     const index = secondaries.findIndex((item) => item.id === defaultSecondaryId)
     sidebarSinglePos.value = index !== -1 ? index : 1

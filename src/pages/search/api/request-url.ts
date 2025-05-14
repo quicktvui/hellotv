@@ -1,5 +1,6 @@
 import BuildConfig from '../../../config/build-config'
 
+export const searchHistoryUrl = BuildConfig.requestBaseUrl + '/search/history'
 export const searchSuggestionsUrl =
   BuildConfig.requestBaseUrl + '/search/suggestions?packageName=${packageName}&type=${type}&keyword=${keyword}&page=${page}&limit=${limit}'
 export const searchContentsUrl =

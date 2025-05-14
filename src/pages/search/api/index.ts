@@ -1,6 +1,13 @@
 import requestManager from '../../../tools/request'
 import { Contents, Recommends, SearchApi, Suggestions, Tab } from './interface'
-import { searchSuggestionsUrl, searchContentsUrl, searchHotRecommendUrl, searchTabsUrl, searchTabContentsUrl } from './request-url'
+import {
+  searchSuggestionsUrl,
+  searchContentsUrl,
+  searchHotRecommendUrl,
+  searchTabsUrl,
+  searchTabContentsUrl,
+  searchHistoryUrl
+} from './request-url'
 import { replacePlaceholders } from '../../../tools/common'
 import config from '../../../config/build-config'
 
@@ -19,10 +26,14 @@ class SearchManager implements SearchApi {
   }
 
   // 添加搜索历史
-  addHistory(keyword: string) {}
+  addHistory(keyword: string) {
+    return requestManager.post(searchHistoryUrl, { query: keyword })
+  }
 
   // 清空搜索历史
-  clearHistory() {}
+  clearHistory() {
+    return requestManager.delete(searchHistoryUrl)
+  }
 
   // 获取搜索内容
   getContents(query?: string, page: number = 1, limit: number = 10): Promise<Contents> {

@@ -99,7 +99,10 @@ export const buildContents = function (rawData: Contents): GridContent[] {
     id: item.id,
     title: item.title,
     cover: item.image,
+    corner: '免费',
+    showCorner: true,
     score: item.score.toFixed(1),
+    showRating: true,
     jumpParams: item.jumpParams
   }))
 }

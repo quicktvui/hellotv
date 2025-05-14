@@ -9,6 +9,7 @@
       tabPageClass="search-content-tab-page"
       :focusMemory="true"
       :autoHandleBackKey="true"
+      :enablePlaceholder="themeConfig.placeHolderEnable"
       :contentNextFocus="{ left: 'keywordList' }"
       :tabContentBlockFocusDirections="['up', 'down']"
       @onTabPageLoadData="onTabPageLoadData"
@@ -33,9 +34,24 @@
       <!-- Content -->
       <template v-slot:waterfall-item>
         <!-- 横图 -->
-        <search-content-item-h :type="ContentType.HORIZONTAL" />
+        <grid-item-horizontal
+          :type="ContentType.HORIZONTAL"
+          :style="{ width: `410px`, height: `276px` }"
+          :imageStyle="{ width: `410px`, height: `230px`, borderRadius: `${themeConfig.focusBorderCorner}px` }"
+          layout="${layout}"
+        />
         <!-- 竖图 -->
-        <search-content-item-v :type="ContentType.VERTICAL" />
+        <grid-item-vertical :type="ContentType.VERTICAL" layout="${layout}" />
+      </template>
+      <!-- 分页加载中 -->
+      <template v-slot:waterfall-section>
+        <qt-view
+          style="width: 1920px; height: 100px; background-color: transparent; align-items: center; justify-content: center"
+          :type="-10008"
+          :focusable="false"
+        >
+          <qt-loading-view style="height: 40px; width: 40px" name="loading" color="rgba(255,255,255,0.3)" :focusable="false" />
+        </qt-view>
       </template>
     </qt-tabs>
   </qt-view>
@@ -44,10 +60,11 @@
 <script setup lang="ts">
 import { ref, watch } from 'vue'
 import { QTITab, QTTabPageData, QTTabPageState, QTWaterfallItem } from '@quicktvui/quicktvui3'
-import { buildTab, buildEndSection, buildContentSection, buildRecommendSection } from '../adapter/index'
+import { buildTab, buildContentSections, buildRecommendSections, buildLoadingSection, buildEndSection } from '../adapter/index'
 import { TabItemType, ContentType } from '../adapter/interface'
-import searchContentItemH from './search-content-item-h.vue'
-import searchContentItemV from './search-content-item-v.vue'
+import themeConfig from '../../../config/theme-config'
+import gridItemHorizontal from '../../../components/grid-item-horizontal.vue'
+import gridItemVertical from '../../../components/grid-item-vertical.vue'
 import launch from '../../../tools/launch'
 import config from '../config'
 import searchManager from '../api/index'
@@ -93,26 +110,33 @@ function init(keyword: string) {
 // 加载关键词搜索和大家都在搜
 async function loadSearchData(pageIndex: number, page: number) {
   let tabPage: QTTabPageData = { useDiff: true, data: [] }
+  let stopPage = false
 
   try {
     const contentsResult = await searchManager.getContents(rawKeyword.value, page, config.gridContentsLimit)
-    const section = buildContentSection(contentsResult)
+    const sections = buildContentSections(contentsResult, 4)
 
-    if (section.itemList.length > 0) {
-      tabPage.data.push(section)
+    if (contentsResult.items.length > 0) {
+      tabPage.data.push(...sections)
     } else {
       // 没有搜索结果时, 不展示顶部提示词
       showTips.value = false
       lockTips.value = true
     }
 
-    if (section.itemList.length < config.gridContentsLimit) {
+    if (contentsResult.items.length < config.gridContentsLimit) {
+      stopPage = true
       // 请求大家都在搜
       const recommends = await searchManager.getHotRecommends(1, config.gridHotRecommendsLimit)
-      tabPage.data.push(buildRecommendSection(recommends, true, showTips.value))
+      tabPage.data.push(...buildRecommendSections(recommends, 6, true, showTips.value))
       tabPage.data.push(buildEndSection())
       // 停止分页
       tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
+    }
+
+    // 添加加载中
+    if (!stopPage) {
+      tabPage.data.push(buildLoadingSection())
     }
 
     if (page === 1) {
@@ -120,7 +144,7 @@ async function loadSearchData(pageIndex: number, page: number) {
       tabPage.data[0].itemList[0]._id = '--search-grid-first-item--'
       tabRef.value?.setPageData(pageIndex, tabPage)
     } else {
-      tabRef.value?.addPageData(pageIndex, tabPage, 0)
+      tabRef.value?.addPageData(pageIndex, tabPage, 1)
     }
   } catch (error) {
     qt.log.e('error->loadSearchData', error)
@@ -146,7 +170,7 @@ function onTabPageLoadData(pageIndex: number, pageNo: number) {
       .then((recommends) => {
         let tabPage: QTTabPageData = { useDiff: true, data: [] }
         if (recommends.items.length > 0) {
-          tabPage.data.push(buildRecommendSection(recommends, false, showTips.value))
+          tabPage.data.push(...buildRecommendSections(recommends, 6, false, showTips.value))
         }
         tabPage.data.push(buildEndSection())
         tabRef.value?.setPageData(pageIndex, tabPage)
