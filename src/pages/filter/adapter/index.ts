@@ -84,6 +84,9 @@ export const buildFilters = function (
   // 优化内容区域焦点首次向上体验, 值需要全局唯一
   tertiaries[tertiaries.length - 1].list[0].sid = '--sid--'
 
+  // 优化最后一组筛选条件向下焦点
+  tertiaries[tertiaries.length - 1].list.map((item) => (item.nextFocusName = { down: 'contentGrid' }))
+
   return { primaries, secondaries, tertiaries }
 }
 
