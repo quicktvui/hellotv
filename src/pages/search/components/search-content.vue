@@ -41,7 +41,7 @@
           layout="${layout}"
         />
         <!-- 竖图 -->
-        <grid-item-vertical :type="ContentType.VERTICAL" layout="${layout}" />
+        <grid-item-vertical :type="ContentType.VERTICAL" name="gridItem" layout="${layout}" />
       </template>
       <!-- 分页加载中 -->
       <template v-slot:waterfall-section>
