@@ -305,6 +305,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
       if (gridData.value.length === 0) {
         emits('setNextFocusNameRight', showConditions.value ? 'contentList' : '')
         isEmpty.value = true
+        gridDeny.value = 2
       } else {
         emits('setNextFocusNameRight', 'contentGrid')
         isEmpty.value = false
