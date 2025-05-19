@@ -157,6 +157,7 @@ const listDeny = ref<number>(1)
 const listHeight = ref<number>(330)
 const listRowHeight = ref<number>(66)
 const showConditions = ref<boolean>(false)
+const showConditionsFlag = ref<boolean>(false) // showConditions 加延迟后导致更新不及时, 新增变量记录及时状态
 // 筛选条件记录
 const recordListRef = ref<QTIListView>()
 const showRecords = ref<boolean>(false)
@@ -236,7 +237,7 @@ function onGridItemFocused(evt) {
         // 筛选记录
         const records = getContentsQuery(rawParams.listData).map((item) => ({ type: 1, text: item, decoration: { top: 10, right: 30 } }))
         if (records.length > 0) {
-          showRecords.value = true
+          showRecords.value = showConditions.value
           recordListRef.value?.init(records)
         }
         scrollRef.value?.scrollToWithOptions(0, listHeight.value - (showRecords.value ? listRowHeight.value : 0), 300)
@@ -277,6 +278,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
     listHeight.value = rawParams.listData.length * listRowHeight.value
     // 初始化筛选条件
     showConditions.value = false
+    showConditionsFlag.value = true
     clearTimeout(ininConditionTimer)
     ininConditionTimer = setTimeout(() => {
       showConditions.value = true
@@ -288,6 +290,7 @@ function loadContents(query: string, resetFilters?: boolean, hideFilters?: boole
     listHeight.value = 0
     isLoading.value = true
     showConditions.value = false
+    showConditionsFlag.value = false
   }
 
   // 重置页码
@@ -324,8 +327,8 @@ function onGridLoadMore() {
     gridData.value.push(...data)
     // 停止分页
     if (data.length < cfgGridContentLimit.value) {
-      if (shouldAddEndSection(showConditions.value, gridData.value.length)) {
-        gridData.value.push({ type: 1003, decoration: { top: 20, bottom: showConditions.value && reqQuery.length > 0 ? 100 : 40 } })
+      if (shouldAddEndSection(showConditionsFlag.value, gridData.value.length)) {
+        gridData.value.push({ type: 1003, decoration: { top: 20, bottom: showConditionsFlag.value && reqQuery.length > 0 ? 100 : 40 } })
       }
       gridRef.value?.stopPage()
     }
