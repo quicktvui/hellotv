@@ -81,7 +81,7 @@ export interface ListItem {
   type: ListItemType
   name: string
   sid?: string
-  nextFocusName?: {}
+  nextFocusName?: object
 }
 
 /**

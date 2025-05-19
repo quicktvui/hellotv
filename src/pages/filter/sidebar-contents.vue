@@ -65,12 +65,17 @@ function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags:
 
 let lastPosition = sidebarSinglePos.value
 let listTimer: any = -1
+let locked = false
 function onListItemFocused(evt) {
   if (evt.isFocused && evt.position != lastPosition) {
+    // 禁止解锁
+    locked = true
     // 禁止焦点向右
     setNextFocusNameRight('')
     clearTimeout(listTimer)
     listTimer = setTimeout(() => {
+      // 允许解锁
+      locked = false
       lastPosition = evt.position
       sidebarSinglePos.value = lastPosition
       contentRef.value?.loadContents(evt.item.id, evt.item.type === SecondaryType.FILTER, evt.item.type === SecondaryType.TEXT)
@@ -79,8 +84,14 @@ function onListItemFocused(evt) {
 }
 
 function setNextFocusNameRight(s: string) {
-  contentDeny.value = s === '' ? 2 : 1
-  sidebarRef.value?.setNextFocusNameRight(s)
+  // 解锁条件
+  if (!locked && s !== '') {
+    contentDeny.value = 1
+    sidebarRef.value?.setNextFocusNameRight(s)
+  } else {
+    contentDeny.value = 2
+    sidebarRef.value?.setNextFocusNameRight('')
+  }
 }
 
 function onBackPressed() {
