@@ -101,7 +101,7 @@ import {
   QTWaterfallItem,
   VirtualView
 } from '@quicktvui/quicktvui3'
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import homeManager from '../api/index'
 import ic_4k_logo from '../../../assets/home/ic_4k_logo.png'
 import BgAnimation from '../../../components/bg-animation.vue'
@@ -668,6 +668,64 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
       toast.showToast('加载数据失败，稍后重试！')
     })
 }
+
+// 构建历史格子数据
+const buildHistoryItem = async (item) => {
+  // 获取历史记录
+  const data = await homeManager.getRecords('xxx', 'history', 1, 2)
+  if (data.items.length === 0) {
+    //无历史
+    item.historyList = [
+      {
+        type: 4001,
+        style: { width: item.style.width, height: item.style.height },
+        text: '暂无历史记录'
+      }
+    ]
+  } else {
+    // 有历史
+    item.historyList = []
+
+    // 文字模式
+    data.items.forEach((_item) => {
+      const percentage = Math.floor((item.viewedDuration / item.totalDuration) * 100)
+
+      item.historyList.push(
+        {
+          type: 4002,
+          style: { width: item.style.width, height: 76 },
+          text: _item.title,
+          progress: item.totalDuration > 0 && percentage > 0 ? `${percentage}%` : '< 1%',
+          jumpParams: { type: 1, options: { name: 'detail', params: { mediaId: _item.id, startPosition: _item.viewedDuration } } }
+        },
+        {
+          type: 4004,
+          style: { width: item.style.width, height: 1 }
+        }
+      )
+    })
+
+    // 图片模式
+    // item.historyList.push({
+    //   type: 4005,
+    //   style: { width: 410, height: 161 },
+    //   cover: 'https://extcdn.hsrc.tv/channelzero_image/2022/10/25/97a8b741-2475-46d1-81ee-e6611cad0390.jpg?imageMogr2/interlace/0|imageMogr2/gravity/center/crop/336x198"',
+    //   text: '禁忌女孩',
+    //   progress: '观看 70%',
+    //   jumpParams: { type: 1, options: { name: 'detail', params: { mediaId: 'xxx', startPosition: 0 } } }
+    // })
+
+    item.historyList.push(
+      {
+        type: 4003,
+        style: { width: item.style.width, height: 76 },
+        text: '全部历史记录',
+        jumpParams: { type: 1, options: { name: 'history', params: {} } }
+      }
+    )
+  }
+}
+
 /**
  * 更新历史格子的数据
  * @param tabPageIndex
@@ -677,41 +735,13 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
  */
 const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) => {
   //历史格子默认配在第一个板块
-  if(type == 1){
+  if (type == 1) {
     let item = tabPage.data[0].itemList[historyItemPos.itemIndex]
-    //无历史
-    // item.historyList = [
-    //   {
-    //     type: 4001,
-    //     style: {width: item.style.width,height: item.style.height},
-    //     text: '暂无历史记录',
-    //   }
-    // ]
-    //有历史
-    item.historyList = [
-      {
-        type: 4002,
-        style: {width: item.style.width,height: 76},
-        text: '步步惊心步步惊心步步惊心',
-        progress: '70%',
-      },
-      {
-        type: 4004,
-        style: {width: item.style.width,height: 1},
-      },
-      {
-        type: 4003,
-        style: {width: item.style.width,height: 76},
-        text: '登录同步云端历史',
-      },
-      {
-        type: 4004,
-        style: {width: item.style.width,height: 1},
-      },
-    ]
+    await buildHistoryItem(item)
     tabRef.value?.setPageData(tabPageIndex, tabPage)
   }
 }
+
 /**
  * 加载 4K 数据
  * @param tabPageIndex
@@ -863,6 +893,22 @@ const onESStop = () => {
 const onESResume = () => {
   if (isOnEsStop) {
     isOnEsStop = false
+
+    // 更新历史格子数据
+    if (curTabPageIndex === 1) {
+      //判断当前tab是否有历史格子
+      let historyItemPos: any = tabsContent.historyItemPos.filter((item) => item.tabIndex === curTabPageIndex)
+      if (historyItemPos.length > 0) {
+        let pageItem = tabRef.value?.getPageItem(curTabPageIndex, 0, historyItemPos[0].itemIndex)
+        if (pageItem) {
+          nextTick(async () => {
+            await buildHistoryItem(pageItem)
+            tabRef.value?.updatePageItem(curTabPageIndex, 0, historyItemPos[0].itemIndex, pageItem)
+          })
+        }
+      }
+    }
+
     if (curPlayerType !== HomePlayType.TYPE_UNDEFINED && !isCeiling) {
       waterfallBgPlayerRef?.value.setBgImage('', true)
       waterfallBgPlayerRef.value?.setPlayState(PlayerState.STATE_WAIT)
