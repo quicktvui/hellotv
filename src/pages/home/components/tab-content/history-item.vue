@@ -10,6 +10,7 @@
       :clipChildren="false" 
       :focusable="false"  
       class="h-list" 
+      :refocusType="'KeepPosition'"
       :skipRequestFocus="true" 
       :resetOnDetach="true" 
       :endHintEnabled="false" 

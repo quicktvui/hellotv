@@ -679,7 +679,8 @@ const buildHistoryItem = async (item) => {
       {
         type: 4001,
         style: { width: item.style.width, height: item.style.height },
-        text: '暂无历史记录'
+        text: '暂无历史记录',
+        jumpParams: { type: 1, options: { name: 'history', params: {} } }
       }
     ]
   } else {
