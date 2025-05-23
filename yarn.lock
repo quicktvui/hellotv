@@ -4008,7 +4008,7 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-execa@^5.0.0:
+execa@^5.0.0, execa@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/execa/-/execa-5.1.1.tgz#f80ad9cbf4298f7bd1d4c9555c21e93741c411dd"
   integrity sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==
@@ -6783,6 +6783,14 @@ shell-quote@^1.8.1:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.2.tgz#d2d83e057959d53ec261311e9e9b8f51dcb2934a"
   integrity sha512-AzqKpGKjrj7EM6rKVQEPpB288oCfnrEIuyoT9cyF4nmGa7V8Zk6f7RRqYisX8X9m+Q7bd632aZW4ky7EhbQztA==
+
+shelljs@^0.10.0:
+  version "0.10.0"
+  resolved "https://repo.huaweicloud.com/repository/npm/shelljs/-/shelljs-0.10.0.tgz#e3bbae99b0f3f0cc5dce05b46a346fae2090e883"
+  integrity sha512-Jex+xw5Mg2qMZL3qnzXIfaxEtBaC4n7xifqaqtrZDdlheR70OGkydrPJWT0V1cA1k3nanC86x9FwAmQl6w3Klw==
+  dependencies:
+    execa "^5.1.1"
+    fast-glob "^3.3.2"
 
 side-channel-list@^1.0.0:
   version "1.0.0"
