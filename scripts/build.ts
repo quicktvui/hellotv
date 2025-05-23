@@ -2,6 +2,7 @@
 const fs = require('fs')
 const path = require('path')
 const run = require('./process')
+const { execSync } = require('child_process')
 
 async function build() {
   // 删除 dist/android 目录
@@ -25,8 +26,8 @@ async function build() {
   // 打包 Android 资源
   await run(`webpack --config ./scripts/quicktvui-webpack.android.ts`)
 
-  // 生成 Android.zip, TODO: 命令执行成功, 但是没有生成 zip 文件
-  // await run(`cd ${androidDir} && zip -r ../android.zip *`)
+  // 生成 Android.zip
+  execSync(`cd ${androidDir} && zip -q -r ../android.zip .`)
 }
 
 build().catch((e) => {
