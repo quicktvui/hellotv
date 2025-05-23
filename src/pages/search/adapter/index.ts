@@ -12,14 +12,14 @@ import config from '../config'
 export const buildKeywords = function (rawData: Suggestions, mode: 'hot' | 'guess' | 'all', pageNo?: number): Keyword[] {
   const keywords: Keyword[] = []
 
+  const colorMap = {
+    0: ['#F33628', '#F33628'],
+    1: ['#FC5E1B', '#FC5E1B'],
+    2: ['#FECB04', '#FECB04']
+  }
+
   switch (mode) {
     case 'hot':
-      const colorMap = {
-        0: ['#F33628', '#F33628'],
-        1: ['#FC5E1B', '#FC5E1B'],
-        2: ['#FECB04', '#FECB04']
-      }
-
       rawData.hotKeywords.forEach((item, index) => {
         const colors = (pageNo === 1 && colorMap[index]) || ['#80FFFFFF', '#80FFFFFF']
 
