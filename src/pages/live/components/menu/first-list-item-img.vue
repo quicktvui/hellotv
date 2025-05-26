@@ -1,6 +1,6 @@
 <template>
   <qt-view class="menu-body-list-item" :type="1" :focusable="true" eventFocus>
-    <qt-image class="menu-body-list-item-img" :src="icService" :focusable="false"></qt-image>
+    <qt-image class="menu-body-list-item-img" :src="icService" :postDelay="100" :focusable="false"></qt-image>
   </qt-view>
 </template>
 
