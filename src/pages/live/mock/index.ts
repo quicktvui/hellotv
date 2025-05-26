@@ -7,7 +7,7 @@ export const mockMediaList = [
     nextProgram: '边水往事08',
     mediaSourceList: {
       index: 0,
-      list: [{ uri: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/06/004d30f9-1d06-4ee4-9d96-bb5fdb14f52f.mp4' }]
+      list: [{ uri: 'https://extcdn.hsrc.tv/channelzero/2024/02/06/004d30f9-1d06-4ee4-9d96-bb5fdb14f52f.mp4' }]
     }
   },
   {
@@ -18,7 +18,7 @@ export const mockMediaList = [
     nextProgram: '大明王朝1566(28)',
     mediaSourceList: {
       index: 0,
-      list: [{ uri: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/01/29/6f0a3144-7f22-4f9d-9691-cc7f2263e2fd.mp4' }]
+      list: [{ uri: 'https://extcdn.hsrc.tv/channelzero/2024/01/29/6f0a3144-7f22-4f9d-9691-cc7f2263e2fd.mp4' }]
     }
   },
   {
@@ -29,9 +29,7 @@ export const mockMediaList = [
     nextProgram: '新闻联播',
     mediaSourceList: {
       index: 0,
-      list: [
-        { uri: 'http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2022/10/27/d4e29cbf-5b15-4523-b9c8-80f18fa76275.mp4' }
-      ]
+      list: [{ uri: 'https://extcdn.hsrc.tv/data_center/videos/SHORT/DEFAULT/2022/10/27/d4e29cbf-5b15-4523-b9c8-80f18fa76275.mp4' }]
     }
   },
   {
@@ -42,9 +40,7 @@ export const mockMediaList = [
     nextProgram: '大头儿子小头爸爸',
     mediaSourceList: {
       index: 0,
-      list: [
-        { uri: 'http://qcloudcdn.a311.ottcn.com/data_center/videos/SHORT/DEFAULT/2023/09/17/22edb94d-8ffc-4736-a633-3f9e38c096e8.mp4' }
-      ]
+      list: [{ uri: 'https://extcdn.hsrc.tv/data_center/videos/SHORT/DEFAULT/2023/09/17/22edb94d-8ffc-4736-a633-3f9e38c096e8.mp4' }]
     }
   },
   {
@@ -55,7 +51,7 @@ export const mockMediaList = [
     nextProgram: '家有喜事2022',
     mediaSourceList: {
       index: 0,
-      list: [{ uri: 'http://qcloudcdn.a311.ottcn.com/channelzero/2024/02/05/a87f2fd0-579c-4d4e-9bb7-4183f6bd3604.mp4' }]
+      list: [{ uri: 'https://extcdn.hsrc.tv/channelzero/2024/02/05/a87f2fd0-579c-4d4e-9bb7-4183f6bd3604.mp4' }]
     }
   }
 ]
