@@ -12,6 +12,8 @@ export interface SearchApi {
 }
 
 export interface Suggestions {
+  // 搜索历史
+  searchHistory: string[] | null
   // 热门搜索
   hotKeywords: {
     id: string

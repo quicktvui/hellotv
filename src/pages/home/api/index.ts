@@ -16,6 +16,8 @@ import {
 import { HomeApi } from './interface'
 import BuildConfig from '../../../config/build-config'
 import {replacePlaceholders} from '../../../tools/common'
+import { Records } from '../../history/api/interface'
+import { historyRecordsUrl } from '../../history/api/request-url'
 
 class HomeManager implements HomeApi{
 
@@ -109,6 +111,19 @@ class HomeManager implements HomeApi{
       }
       return buildShortVideoSectionData([])
     })
+  }
+
+  // 获取历史/收藏列表
+  getRecords(deviceId: string, type: 'history' | 'favorite', page?: number, limit?: number): Promise<Records> {
+    return requestManager.get(
+      replacePlaceholders(historyRecordsUrl, {
+        deviceId,
+        type,
+        page,
+        limit,
+        sort: 'desc'
+      })
+    )
   }
 }
 

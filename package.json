@@ -1,7 +1,7 @@
 {
   "name": "@quicktvui/hellotv",
   "appName": "hellotv",
-  "version": "0.0.1",
+  "version": "1.0.5",
   "main": "./src/main.ts",
   "icon": "./src/assets/logo.png",
   "private": true,
@@ -10,16 +10,18 @@
     "dev": "tsx ./scripts/dev.ts",
     "pack": "tsx ./scripts/pack.ts",
     "build": "tsx ./scripts/build.ts",
-    "theme": "tsx ./build/build-flavor.ts"
+    "theme": "tsx ./build/build-flavor.ts",
+    "build-apk-debug": "tsx ./scripts/build-apk.ts Debug",
+    "build-apk-release": "tsx ./scripts/build-apk.ts Release"
   },
   "dependencies": {
     "@extscreen/es3-ad-player": "1.0.9",
     "@extscreen/es3-component": "1.0.32",
     "@extscreen/es3-core": "1.1.36",
-    "@extscreen/es3-player": "1.0.25",
+    "@extscreen/es3-player": "1.0.26",
     "@extscreen/es3-player-manager": "1.0.46",
     "@extscreen/es3-router": "1.1.29",
-    "@extscreen/es3-video-player": "1.0.41",
+    "@extscreen/es3-video-player": "1.0.42",
     "@extscreen/es3-vue": "0.0.14",
     "@extscreen/es3-vue-style-parser": "0.0.8",
     "@quicktvui/quicktvui3": "1.2.0-beta.28",
@@ -27,6 +29,7 @@
     "core-js": "^3.8.3",
     "crypto-js": "^4.2.0",
     "lodash": "^4.17.21",
+    "shelljs": "^0.10.0",
     "treer": "^1.0.4",
     "typescript": "5.6.3",
     "vue": "^3.4.21",

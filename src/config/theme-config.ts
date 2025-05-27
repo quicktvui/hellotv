@@ -1,4 +1,6 @@
-import PrivateThemeConfig from "./private-theme-config"
+import BuildConfig from './build-config'
+import PrivateThemeConfig from './private-theme-config'
+
 export default {
   //渐进色设置
   //全局背景色
@@ -40,9 +42,8 @@ export default {
   //全局焦点边框向内移动距离
   focusBorderInsetValue: -5,
 
-  //是否展示焦点内边框 默认展示
-  focusInnerBorderEnable: true,
-  //设置放大倍数
-  placeHolderFocusScale: 1.05,
-
+  // 是否展示占位图
+  placeHolderEnable: BuildConfig.isLowEndDev,
+  // 设置放大倍数
+  placeHolderFocusScale: 1.05
 }

@@ -1308,10 +1308,10 @@
   resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player-manager/-/es3-player-manager-1.0.46.tgz#48d02c23d6ed6e92a2943c481ac02d5cc91200bc"
   integrity sha512-YdCJW0uF8ukdmWb1++XRFQWHtC4wjbgcLPKbfKSntGoNGZ9/s2gELQgGxDLO5lwsckLQszpImF7v4um29NvqCA==
 
-"@extscreen/es3-player@1.0.25":
-  version "1.0.25"
-  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player/-/es3-player-1.0.25.tgz#d55e1bdf46b9fb3ef3aee60e396fc7921861d411"
-  integrity sha512-DCjQHWPtL5IYwfQUXpuKN//6c9F2bcmcjdvTiuLxegAG+LrmRsWS7L252vQOHGkBNfzWda0pvA7YHrNjSLinxw==
+"@extscreen/es3-player@1.0.26":
+  version "1.0.26"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player/-/es3-player-1.0.26.tgz#34918089938d03573672188bb7fedbc5fe6c8fd8"
+  integrity sha512-pE1vlDnSlJRoZZS6/ag8F0M77LRW+ujK/5QgUiNM+Cx3huJt3Dx4jWSwzMRNwwf8RA2hQ/rm98bIML03rDJc2w==
 
 "@extscreen/es3-router@1.1.29":
   version "1.1.29"
@@ -1320,10 +1320,10 @@
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
-"@extscreen/es3-video-player@1.0.41":
-  version "1.0.41"
-  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-video-player/-/es3-video-player-1.0.41.tgz#c50d43c9a82eeeefec9602aeed4cb34b5576c114"
-  integrity sha512-woYZcdjwNpHQJVpmZ8ABi7cGXjVIjF9Zl1dGTuZZ1I2CydJQCOU6IRaC9Lr7c8r+sSa3t2qZrTo+VPf+IXUbqw==
+"@extscreen/es3-video-player@1.0.42":
+  version "1.0.42"
+  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-video-player/-/es3-video-player-1.0.42.tgz#f645b2b4bcfe2c9e05507ab424e50357e037ec24"
+  integrity sha512-JZjzYYl5Gdc5bhfflbS2T5PINsCtN5MPUY9peEaSue9v5UnrSZcNpAswPC4teHiKNIAZHgQFKqms9n6mKIlcxg==
 
 "@extscreen/es3-vue-style-parser@0.0.8":
   version "0.0.8"
@@ -4008,7 +4008,7 @@ execa@^1.0.0:
     signal-exit "^3.0.0"
     strip-eof "^1.0.0"
 
-execa@^5.0.0:
+execa@^5.0.0, execa@^5.1.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/execa/-/execa-5.1.1.tgz#f80ad9cbf4298f7bd1d4c9555c21e93741c411dd"
   integrity sha512-8uSpZZocAZRBAPIEINJj3Lo9HyGitllczc27Eh5YYojjMFMn8yHMDMaUHE2Jqfq05D/wucwI4JGURyXt1vchyg==
@@ -6783,6 +6783,14 @@ shell-quote@^1.8.1:
   version "1.8.2"
   resolved "https://registry.yarnpkg.com/shell-quote/-/shell-quote-1.8.2.tgz#d2d83e057959d53ec261311e9e9b8f51dcb2934a"
   integrity sha512-AzqKpGKjrj7EM6rKVQEPpB288oCfnrEIuyoT9cyF4nmGa7V8Zk6f7RRqYisX8X9m+Q7bd632aZW4ky7EhbQztA==
+
+shelljs@^0.10.0:
+  version "0.10.0"
+  resolved "https://repo.huaweicloud.com/repository/npm/shelljs/-/shelljs-0.10.0.tgz#e3bbae99b0f3f0cc5dce05b46a346fae2090e883"
+  integrity sha512-Jex+xw5Mg2qMZL3qnzXIfaxEtBaC4n7xifqaqtrZDdlheR70OGkydrPJWT0V1cA1k3nanC86x9FwAmQl6w3Klw==
+  dependencies:
+    execa "^5.1.1"
+    fast-glob "^3.3.2"
 
 side-channel-list@^1.0.0:
   version "1.0.0"

@@ -81,15 +81,22 @@
   width: 518px;
   height: 84px;
   background-color: transparent;
-  justify-content: center;
+  flex-direction: row;
+  align-items: center;
   border-radius: 8px;
   focus-background-color: $theme-btn-focus-color;
 }
 
+.search-keyword-list-item-dot {
+  width: 8px;
+  height: 8px;
+  background-color: transparent;
+  margin-left: 80px;
+}
+
 .search-keyword-list-item-text {
-  width: 358px;
   position: absolute;
-  left: 80px;
+  width: 332px;
   color: $theme-text-normal-color;
   font-size: 32px;
   focus-color: $theme-text-focus-color;

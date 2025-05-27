@@ -81,6 +81,7 @@ export interface ListItem {
   type: ListItemType
   name: string
   sid?: string
+  nextFocusName?: object
 }
 
 /**
@@ -102,6 +103,9 @@ export interface GridContent {
   id: string
   title: string
   cover: string
+  corner?: string
+  showCorner?: boolean
   score?: string
+  showRating?: boolean
   jumpParams: any
 }

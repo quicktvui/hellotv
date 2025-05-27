@@ -45,7 +45,7 @@
         :triggerTask="triggerTask"
         :singleSelectPosition="singleSelectPos"
         :blockFocusDirections="['down']"
-        :nextFocusName="{ right: 'gridItem' }"
+        :nextFocusRightSID="focusRightSid"
         :openPage="true"
         :listenBoundEvent="true"
         :loadMore="onListLoadMore"
@@ -63,26 +63,30 @@
         </qt-view>
         <!-- 普通文本 -->
         <qt-view :type="KeywordType.TEXT" class="search-keyword-list-item" :focusable="true" eventFocus eventClick>
+          <qt-view class="search-keyword-list-item-dot" gradientBackground="${gradientBackground}"></qt-view>
           <qt-text
             class="search-keyword-list-item-text"
+            flexStyle="${flexStyle}"
             autoHeight
             text="${text}"
             gravity="center|start"
-            :showOnState="['normal', 'selected']"
+            :showOnState="'normal'"
             :lines="1"
-            :ellipsizeMode="4"
+            :ellipsizeMode="2"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
           <qt-text
             class="search-keyword-list-item-text"
+            flexStyle="${flexStyle}"
             autoHeight
             text="${text}"
             typeface="bold"
             gravity="center|start"
-            showOnState="focused"
+            :horizontalFadingEdgeEnabled="true"
+            :showOnState="['focused', 'selected']"
             :lines="1"
-            :ellipsizeMode="4"
+            :ellipsizeMode="3"
             :focusable="false"
             :duplicateParentState="true"
           ></qt-text>
@@ -93,7 +97,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, onUnmounted } from 'vue'
 import { QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildKeywords } from '../adapter/index'
 import { KeywordType } from '../adapter/interface'
@@ -114,6 +118,7 @@ const mode = ref<'hot' | 'guess' | 'all'>('hot')
 const showClearBtn = ref<boolean>(false)
 const listRef = ref<QTIListView>()
 const singleSelectPos = ref<number>(1)
+const focusRightSid = ref<string>('')
 const isEmpty = ref<boolean>(false)
 // 控制清空按钮是否展示
 const triggerTask = [
@@ -142,7 +147,18 @@ let watchTimer: any = -1
 let loadTimer: any = -1
 let listFocusTimer: any = -1
 
-onMounted(() => loadSuggestions())
+onMounted(() => {
+  // 监听事件
+  qt.eventBus.on('updateFocusRightSid', (sid: string) => {
+    focusRightSid.value = sid
+  })
+  // 加载数据
+  loadSuggestions()
+})
+
+onUnmounted(() => {
+  qt.eventBus.off('updateFocusRightSid')
+})
 
 watch(
   () => props.inputText,
@@ -164,10 +180,13 @@ async function loadSuggestions(page = 1) {
   try {
     // 搜索词条
     const suggestions = await searchManager.getSuggestions(mode.value, props.inputText, page, pageSize)
-    const keywords = buildKeywords(suggestions, mode.value)
+    const keywords = buildKeywords(suggestions, mode.value, page)
 
     if (page === 1) {
-      resetAndInitialize(keywords)
+      resetAndInitialize(
+        keywords,
+        suggestions.searchHistory?.map((item) => ({ keyword: item }))
+      )
     } else {
       if (keywords.length > 0) {
         listData.push(...keywords)
@@ -182,25 +201,29 @@ async function loadSuggestions(page = 1) {
   }
 }
 
-function resetAndInitialize(keywords) {
+function resetAndInitialize(keywords, history) {
   curPage = 1
 
   // 添加标题
   keywords.unshift({ type: KeywordType.TITLE, text: mode.value === 'hot' ? '热门搜索' : '猜你想搜' })
 
   // 搜索历史
-  const history = [
-    { type: KeywordType.TITLE, text: '搜索历史', showClearBtn: true },
-    { type: KeywordType.TEXT, text: '清清溪流' },
-    { type: KeywordType.TEXT, text: '反印度式浪漫' },
-    { type: KeywordType.TEXT, text: '小飞侠' }
-  ]
+  if (history.length > 0) {
+    let historyData = [{ type: KeywordType.TITLE, text: '搜索历史', showClearBtn: true }]
+    historyData.push(
+      ...history.slice(0, 6).map((item) => ({
+        type: KeywordType.TEXT,
+        text: item.keyword,
+        flexStyle: { marginLeft: 80 }
+      }))
+    )
 
-  // 记录历史条数
-  historyLength = history.length
+    // 记录历史条数
+    historyLength = historyData.length
 
-  // 添加搜索历史
-  keywords.unshift(...history)
+    // 添加搜索历史
+    keywords.unshift(...historyData)
+  }
 
   listData = listRef.value?.init(keywords) || []
   listRef.value?.scrollToTop()
@@ -234,6 +257,10 @@ function onListItemFocused(evt) {
     listFocusTimer = setTimeout(() => {
       if (evt.position != lastFocusPos) {
         lastFocusPos = evt.position
+
+        // 设置向右焦点位置
+        focusRightSid.value = '--search-grid-first-item--'
+
         emits('updateKeyword', evt.item.text)
       } else {
         emits('updateFocusDeny', false)

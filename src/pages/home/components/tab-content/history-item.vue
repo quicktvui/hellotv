@@ -10,6 +10,7 @@
       :clipChildren="false" 
       :focusable="false"  
       class="h-list" 
+      :refocusType="'KeepPosition'"
       :skipRequestFocus="true" 
       :resetOnDetach="true" 
       :endHintEnabled="false" 
@@ -18,8 +19,8 @@
       <qt-view :type="4001" class='no-history-item' flexStyle='${style}'
         eventClick eventFocus :focusable="true" :enableFocusBorder="true"
         :focusScale="ThemeConfig.placeHolderFocusScale" :clipChildren="false" >
-        <img :src="bg_history_item" :focusable="false">
-        <qt-text class='no-history-item-title' text='历史记录' :fontSize='36' />
+        <img class="no-history-item-img" :src="bg_history_item" :focusable="false" />
+        <qt-text class='no-history-item-title' text='历史记录' typeface="bold" :fontSize='36' />
         <qt-text class='no-history-item-text' text='${text}' :fontSIze='28'/>
       </qt-view>
       <!-- 历史 item -->
@@ -33,7 +34,7 @@
             :showOnState="['normal','selected']"
             class="history-item-text" duplicateParentState/>
           <qt-text :focusable="false" text="${text}" :lines="1" :maxLines="1"
-            :ellipsizeMode="2" :fontSize="30" gravity="start|center"
+            :ellipsizeMode="4" :horizontalFadingEdgeEnabled="true" :fontSize="30" gravity="start|center"
             typeface="bold" showOnState="focused" style="color:#13161B;"
             class="history-item-text" duplicateParentState/>
         </div>
@@ -67,6 +68,29 @@
       <div :type="4004" class="history-item-line" :focusable="false" 
         flexStyle="${style}" :clipChildren="false">
       </div>
+      <!-- 历史图片样式 -->
+      <qt-view :type="4005" style="background-color: transparent" flexStyle="${style}" :clipChildren="false" :focusable="true"
+        :focusScale="ThemeConfig.placeHolderFocusScale" :enableFocusBorder="true" eventFocus eventClick>
+        <qt-image
+          style="width: 410px; height: 161px; background-color: transparent; border-top-left-radius: 16px; border-top-right-radius: 16px; position: absolute;"
+          src="${cover}"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-image
+          style="width: 410px; height: 161px; background-color: transparent; border-radius: 16px; position: absolute;"
+          src="${cover}"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-text class="history-image-item-text" text="${text}" gravity="center|start" typeface="bold"
+          :focusable="false"
+          :ellipsizeMode="4"
+          :duplicateParentState="true"></qt-text>
+        <qt-text class="history-image-item-progress" text="${progress}" gravity="center|start" :focusable="false"></qt-text>
+      </qt-view>
     </qt-list-view>
   </div>
 </template>
@@ -88,16 +112,7 @@ defineExpose({})
   .h-list{
     background-color: transparent;
     .no-history-item{
-      background-color: rgba(255,255,255,0.06);
-      border-radius: $theme-img-border;
-      .img{
-        position: absolute;
-        left: 269px;
-        top: 116px;
-        width: 139px;
-        height: 115px;
-        border-bottom-right-radius: $theme-img-border;
-      }
+      background-color: transparent;
       .no-history-item-title{
         margin-top: 26px;
         margin-left: 36px;
@@ -115,12 +130,21 @@ defineExpose({})
         background-color: transparent;
       }
     }
+    .no-history-item-img {
+        position: absolute;
+        left: 269px;
+        top: 116px;
+        width: 139px;
+        height: 115px;
+        border-bottom-right-radius: $theme-img-border;
+    }
     .history-item{
       flex-direction: row;
       background-color: transparent;
+      border-radius: $theme-img-border;
       padding-left: 20px;
       padding-right: 20px;  
-      focus-background-color: #fff;
+      focus-background-color: rgba(255,255,255,0.95);
       .history-item-text-box{
         width: 280px;
         height: 76px;
@@ -143,9 +167,10 @@ defineExpose({})
     .history-login-item{
       flex-direction: row;
       background-color: transparent;
+      border-radius: $theme-img-border;
       padding-left: 20px;
       padding-right: 20px;  
-      focus-background-color: #fff;
+      focus-background-color: rgba(255,255,255,0.95);
       align-items: center;
       .history-login-item-text-box{
         width: 280px;
@@ -172,6 +197,28 @@ defineExpose({})
     }
     .history-item-line{
       background-color: rgba(255,255,255,0.1);
+    }
+
+    .history-image-item-text {
+       width: 200px;
+       height: 40px;
+       background-color: transparent;
+       position: absolute;
+       top: 41px;
+       left: 20px;
+       font-size: 30px;
+       color: white;
+    }
+
+    .history-image-item-progress {
+       width: 200px;
+       height: 34px;
+       background-color: transparent;
+       position: absolute;
+       top: 86px;
+       left: 20px;
+       font-size: 24px;
+       color: rgba(255, 255, 255, 0.55);
     }
   }
 }

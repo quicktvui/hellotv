@@ -5,9 +5,15 @@
         <!-- 键盘区域 -->
         <search-keyboard ref="keyboardRef" @updateInput="updateInput" />
         <!-- 搜索关键词 -->
-        <search-keyword-grid v-if="inputText.length === 0" @setLoading="setLoading" />
+        <search-keyword-grid v-if="inputText.length === 0" :blockFocusDirections="['up', 'down', 'right']" @setLoading="setLoading" />
         <!-- 搜索内容区域 -->
-        <search-content-tabs ref="contentRef" :triggerTask="triggerTask" :keyword="inputText" @setLoading="setLoading" />
+        <search-content-tabs
+          ref="contentRef"
+          :triggerTask="triggerTask"
+          :keyword="inputText"
+          @setLoading="setLoading"
+          @updateFocusName="updateFocusName"
+        />
       </qt-view>
     </scroll-view>
     <!-- 搜索内容区域loading -->

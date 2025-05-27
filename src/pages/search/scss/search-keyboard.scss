@@ -40,14 +40,14 @@
   width: 466px;
   height: 60px;
   background-color: transparent;
-  margin-top: 25px;
+  margin-top: 35px;
   flex-direction: row;
   justify-content: space-between;
 }
 
 .search-keyboard-grid {
   width: 530px;
-  height: 530px;
+  height: 590px;
   background-color: transparent;
   margin-top: 40px;
 }
@@ -63,14 +63,29 @@
 }
 
 .search-keyboard-grid-item-text {
+  position: absolute;
   color: white;
   font-size: 40px;
   focus-color: $theme-text-focus-color;
 }
+
 .search-keyboard-btn {
   width: 160px;
   height: 60px;
-  borderRadius: 30px;
-  backgroundColor: transparent;
-  focus-background-color:$theme-btn-focus-color;
+  background-color: transparent;
+  border-radius: 30px;
+  align-items: center;
+  flex-direction: row;
+  justify-content: center;
+  focus-background-color: $theme-btn-focus-color;
+}
+
+.search-keyboard-btn-text {
+  position: absolute;
+  width: 60px;
+  height: 40px;
+  right: 30px;
+  color: white;
+  font-size: 30px;
+  focus-color: $theme-text-focus-color;
 }

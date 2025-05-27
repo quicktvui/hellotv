@@ -1,4 +1,6 @@
 import BuildConfig from '../../../config/build-config'
 
-export const historyRecordsUrl = BuildConfig.requestBaseUrl + '/records?id=${deviceId}&type=${type}&page=${page}&limit=${limit}'
+export const historyRecordsUrl =
+  BuildConfig.requestBaseUrl + '/records?id=${deviceId}&type=${type}&page=${page}&limit=${limit}&sort=${sort}'
 export const DelHistoryRecordsUrl = BuildConfig.requestBaseUrl + '/records/${deviceId}?recordId=${recordId}&recordType=${type}'
+export const generateRecordsUrl = BuildConfig.requestBaseUrl + '/records/generate'

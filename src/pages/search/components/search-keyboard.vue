@@ -6,7 +6,7 @@
       <qt-text
         v-if="inputText.length > 0"
         class="search-keyboard-input-text"
-        style="color: white; font-size: 40px"
+        style="color: white; font-size: 40px; margin-top: -3px"
         :text="inputText"
         gravity="center|start"
       ></qt-text>
@@ -16,23 +16,68 @@
     <qt-view class="search-keyboard-input-bottom"></qt-view>
     <!-- 按钮区域 -->
     <qt-view class="search-keyboard-btns" :blockFocusDirections="['up', 'left']">
-      <qt-button
-        class="search-keyboard-btn"
-        text="清空"
-        :textStyle="textStyle"
-        :icon="icClear"
-        :focusIcon="icClearFocused"
-        @click="onBtnClick('clear')"
-      />
-      <qt-button
-        class="search-keyboard-btn"
-        text="退格"
-        :textStyle="textStyle"
-        :icon="icBack"
-        :focusIcon="icBackFocused"
-        :nextFocusName="{ right: 'keywordList' }"
-        @click="onBtnClick('back')"
-      />
+      <qt-view class="search-keyboard-btn" :focusable="true" @click="onBtnClick('clear')">
+        <qt-image
+          style="width: 30px; height: 30px; background-color: transparent; position: absolute; left: 30px"
+          :src="icClear"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-image
+          style="width: 30px; height: 30px; background-color: transparent; position: absolute; left: 30px"
+          :src="icClearFocused"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-text
+          class="search-keyboard-btn-text"
+          text="清空"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="search-keyboard-btn-text"
+          text="清空"
+          typeface="bold"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+      </qt-view>
+      <qt-view class="search-keyboard-btn" :nextFocusName="{ right: 'keywordList' }" :focusable="true" @click="onBtnClick('back')">
+        <qt-image
+          style="width: 30px; height: 30px; background-color: transparent; position: absolute; left: 30px"
+          :src="icBack"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-image
+          style="width: 30px; height: 30px; background-color: transparent; position: absolute; left: 30px"
+          :src="icBackFocused"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-image>
+        <qt-text
+          class="search-keyboard-btn-text"
+          text="退格"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="search-keyboard-btn-text"
+          text="退格"
+          typeface="bold"
+          :showOnState="'focused'"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+      </qt-view>
     </qt-view>
     <!-- 键盘区域 -->
     <qt-grid-view
@@ -53,6 +98,18 @@
           autoHeight
           text="${text}"
           gravity="center"
+          :showOnState="['normal', 'selected']"
+          :focusable="false"
+          :duplicateParentState="true"
+        ></qt-text>
+        <qt-text
+          class="search-keyboard-grid-item-text"
+          autoWidth
+          autoHeight
+          text="${text}"
+          typeface="bold"
+          gravity="center"
+          :showOnState="'focused'"
           :focusable="false"
           :duplicateParentState="true"
         ></qt-text>
@@ -84,21 +141,15 @@ const defaultText = {
   ]
 }
 
-const textStyle = {
-  color: '#FFFFFF',
-  fontSize: `30px`,
-  focusColor: ThemeConfig.textFocusColor
-}
-
 onMounted(() => {
   const keyboardItems: QTListViewItem[] = []
   // 输出 A-Z
   for (let i = 65; i <= 90; i++) {
-    keyboardItems.push({ type: 1, text: String.fromCharCode(i) })
+    keyboardItems.push({ type: 1, text: String.fromCharCode(i), decoration: { top: 2, bottom: 2 } })
   }
   // 输出 0-9
   for (let i = 48; i <= 57; i++) {
-    keyboardItems.push({ type: 1, text: String.fromCharCode(i) })
+    keyboardItems.push({ type: 1, text: String.fromCharCode(i), decoration: { top: 2, bottom: 2 } })
   }
   // 初始化键盘
   gridRef.value?.init(keyboardItems)
