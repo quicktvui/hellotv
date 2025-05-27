@@ -50,7 +50,7 @@ module.exports = {
   },
   plugins: [
     new VueLoaderPlugin(),
-    new watchPlugin(),
+    new watchPlugin({}),
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('development'),

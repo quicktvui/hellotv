@@ -8,7 +8,7 @@ class WebpackLifeWatchPlugin {
   apply(compiler) {
     compiler.hooks.done.tap('WebpackLifeWatchPlugin', (compiler) => {
       setTimeout(() => {
-        this.broadcast()
+        this.broadcast().then(r => {})
       }, 2000)
     })
   }

@@ -3,6 +3,7 @@ const { spawn } = require('child_process')
 const run = (command, cwd) => {
   return new Promise((resolve, reject) => {
     const [cmd, ...args] = command.split(' ')
+    console.log("-----Command------>>>>>",`${cmd} args ${args}`)
     const app = spawn(cmd, args, {
       cwd,
       stdio: ['inherit', 'inherit', 'pipe'], // Capture stderr separately
@@ -22,9 +23,7 @@ const run = (command, cwd) => {
       if (code === 0) {
         resolve({})
       } else {
-        console.error(`Command failed. \n Command: ${command} \n Code: ${code}`)
-        console.error(`Error output: ${errorOutput}`)
-        reject(new Error(`Command failed with code ${code}`))
+        reject(new Error(`Command failed. \n Command: ${command} \n Code: ${code} \n Error output: ${errorOutput}` ))
       }
     })
     process.on('exit', onProcessExit)
