@@ -1,106 +1,98 @@
 <template>
-  <div class='waterfall-tabs-root-css' :clipChildren='false' :clipPadding='false'>
+  <div class="waterfall-tabs-root-css" :clipChildren="false" :clipPadding="false">
     <!--    背景图-->
-    <bg-animation ref='waterfallBgRef' style='position: absolute' :focusable='false' />
+    <bg-animation ref="waterfallBgRef" style="position: absolute" :focusable="false" />
     <!--    4k图标-->
-    <bg-animation ref='waterfallLogo4kRef' class='waterfall-tabs-4k-logo'
-                  :bgStyle='{width:"240px",height:"84px"}' :focusable='false'
-                  :transitionTime='200' />
+    <bg-animation
+      ref="waterfallLogo4kRef"
+      class="waterfall-tabs-4k-logo"
+      :bgStyle="{ width: '240px', height: '84px' }"
+      :focusable="false"
+      :transitionTime="200"
+    />
     <!-- 背景播放及小窗播放组件 -->
-    <bg-player class='waterfall-tabs-bg-player' ref='waterfallBgPlayerRef' :clipChildren='false'
-               sid='waterfallBgPlayerSid' />
+    <bg-player class="waterfall-tabs-bg-player" ref="waterfallBgPlayerRef" :clipChildren="false" sid="waterfallBgPlayerSid" />
     <!--顶部按钮组-->
-    <div ref='waterfallTopRef' name='waterfallTopView' sid='waterfallTopSid'
-         class='waterfall-top-view' :clipChildren='false'
-         :blockFocusDirections='["left", "right", "up"]'>
-      <slot name='topView' />
+    <div
+      ref="waterfallTopRef"
+      name="waterfallTopView"
+      sid="waterfallTopSid"
+      class="waterfall-top-view"
+      :clipChildren="false"
+      :blockFocusDirections="['left', 'right', 'up']"
+    >
+      <slot name="topView" />
     </div>
     <qt-tabs
-      ref='tabRef'
-      sid='homeTabsSid'
-      tabNavBarSid='tabNavBarSid'
-      nextFocusUpSID='topMyBtnSid'
-      class='waterfall-qt-tabs-css'
-      tabNavBarClass='waterfall-tab-bar-css'
-      tabPageClass='waterfall-content-css'
-      :tabContentBlockFocusDirections='["left", "right", "down", "top"]'
-      :autoHandleBackKey='true'
-      :useDiff=false
-      :horizontalFadingEdgeEnabled='true'
+      ref="tabRef"
+      sid="homeTabsSid"
+      tabNavBarSid="tabNavBarSid"
+      nextFocusUpSID="topMyBtnSid"
+      class="waterfall-qt-tabs-css"
+      tabNavBarClass="waterfall-tab-bar-css"
+      tabPageClass="waterfall-content-css"
+      :tabContentBlockFocusDirections="['left', 'right', 'down', 'top']"
+      :autoHandleBackKey="true"
+      :useDiff="false"
+      :horizontalFadingEdgeEnabled="true"
       :customPool="{ name: 'home' }"
       :customItemPool="{ name: 'homeItems' }"
-      :fadingEdgeLength='400'
-      :outOfDateTime='5 * 60 * 1000'
-      :tabContentSwitchDelay='100'
-      :tabContentResumeDelay='300'
-      :resumePlayerTaskDelay='1000'
-      :triggerTask='tabsTriggerTask'
-      :qtTabSectionEnable='qtTabSectionEnable'
-      @onTabClick='onTabClick'
-      @onTabEvent='onTabEvent'
-      @onTabPageChanged='onTabPageChanged'
-      @onTabMoveToTopStart='onTabMoveToTopStart'
-      @onTabMoveToBottomEnd='onTabMoveToBottomEnd'
-      @onTabPageItemClick='onTabPageItemClick'
-      @onTabPageItemFocused='onTabPageItemFocused'
-      @onTabPageLoadData='onTabPageLoadData'>
-<!--      @onTabPageSectionAttached='onTabPageSectionAttached'-->
+      :fadingEdgeLength="400"
+      :outOfDateTime="5 * 60 * 1000"
+      :tabContentSwitchDelay="100"
+      :tabContentResumeDelay="300"
+      :resumePlayerTaskDelay="1000"
+      :triggerTask="tabsTriggerTask"
+      :qtTabSectionEnable="qtTabSectionEnable"
+      @onTabClick="onTabClick"
+      @onTabEvent="onTabEvent"
+      @onTabPageChanged="onTabPageChanged"
+      @onTabMoveToTopStart="onTabMoveToTopStart"
+      @onTabMoveToBottomEnd="onTabMoveToBottomEnd"
+      @onTabPageItemClick="onTabPageItemClick"
+      @onTabPageItemFocused="onTabPageItemFocused"
+      @onTabPageLoadData="onTabPageLoadData"
+    >
+      <!--      @onTabPageSectionAttached='onTabPageSectionAttached'-->
       <template v-slot:tab-item>
         <!--文字Tab导航-->
-        <bar-text-item :type='TabBarItemType.BAR_TEXT_TYPE' />
+        <bar-text-item :type="TabBarItemType.BAR_TEXT_TYPE" />
         <!--图片Tab导航-->
-        <bar-img-item :type='TabBarItemType.BAR_IMG_TYPE' />
+        <bar-img-item :type="TabBarItemType.BAR_IMG_TYPE" />
         <!--文字 带角标Tab导航-->
-        <!-- <bar-text-item :type='TabBarItemType.BAR_CORNER_TYPE' :showCorner='true' cornerRight/>-->
+        <bar-text-item :type="TabBarItemType.BAR_CORNER_TYPE" :showCorner="true" cornerRight />
       </template>
       <template v-slot:waterfall-shared-item>
         <!-- 带边框无标题格子-->
-        <no-title-item :type='TabContentType.TYPE_ITEM_SECTION_NO_TITLE' />
+        <no-title-item :type="TabContentType.TYPE_ITEM_SECTION_NO_TITLE" />
         <!-- 带标题格子(图片上/图片下)-->
-        <inner-out-title-item :type='TabContentType.TYPE_ITEM_SECTION_HAS_TITLE' />
+        <inner-out-title-item :type="TabContentType.TYPE_ITEM_SECTION_HAS_TITLE" />
         <!-- 占位格子-->
-        <placeholder-item :type='TabContentType.TYPE_ITEM_SECTION_PLACEHOLDER' />
+        <placeholder-item :type="TabContentType.TYPE_ITEM_SECTION_PLACEHOLDER" />
         <!-- 焦点变图格子-->
-        <focus-change-img-item :type='TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG' />
+        <focus-change-img-item :type="TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG" />
         <!-- 小窗播放格子-->
-        <cell-player-item :type='TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER' />
+        <cell-player-item :type="TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER" />
         <!-- 历史记录格子-->
-        <history-item :type='TabContentType.TYPE_ITEM_HISTORY_TEXT'/>
+        <history-item :type="TabContentType.TYPE_ITEM_HISTORY_TEXT" />
       </template>
       <template v-slot:waterfall-section>
         <!-- 4K 模板-->
-        <world-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_4K' @loadMore='load4KData'
-                          :getTabRef='getTabRef' />
+        <world-four-section :type="TabContentType.TYPE_WATERFALL_SECTION_4K" @loadMore="load4KData" :getTabRef="getTabRef" />
         <!-- 小 4K-->
-        <small-four-section :type='TabContentType.TYPE_WATERFALL_SECTION_SMALL_4K'/>
+        <small-four-section :type="TabContentType.TYPE_WATERFALL_SECTION_SMALL_4K" />
         <!-- 短视频全屏背景播放-->
-        <short-video-section :type='TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN' @loadMore='loadShortData'
-                             :getTabRef='getTabRef'
-        />
-
+        <short-video-section :type="TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN" @loadMore="loadShortData" :getTabRef="getTabRef" />
       </template>
-
     </qt-tabs>
-
-
   </div>
-
 </template>
 
-<script lang='ts' setup name='waterfall-tabs'>
-
+<script lang="ts" setup name="waterfall-tabs">
 import { ESKeyCode, ESKeyEvent, ESLogLevel, useESLog, useESToast } from '@extscreen/es3-core'
 
 import { EventBus, Native } from '@extscreen/es3-vue'
-import {
-  QTITab,
-  QTTab,
-  QTTabItem,
-  QTTabPageData,
-  QTTabPageState,
-  QTWaterfallItem,
-  VirtualView
-} from '@quicktvui/quicktvui3'
+import { QTITab, QTTab, QTTabItem, QTTabPageData, QTTabPageState, QTWaterfallItem, VirtualView } from '@quicktvui/quicktvui3'
 import { ref, nextTick } from 'vue'
 import homeManager from '../api/index'
 import ic_4k_logo from '../../../assets/home/ic_4k_logo.png'
@@ -200,7 +192,7 @@ let delay4KFocusTimer: any = -1
 let small4KTimer: any = -1
 let small4KSetChildSIdTimer: any = -1
 //short
-let shortVideoTimer:any = -1
+let shortVideoTimer: any = -1
 
 //当前背景图地址
 let curBg = ''
@@ -219,7 +211,7 @@ let isOnEsStop = false
 let is4kSectionItemFocused = false
 //当前 4K sid
 let cur4KSid = ''
-let isSwitchTabSmall4KFlag:boolean = false
+let isSwitchTabSmall4KFlag: boolean = false
 const getTabRef = () => {
   return tabRef.value!
 }
@@ -260,8 +252,8 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
         //列表恢复原位置
         //todo  记得来修改成动态的sid getPageSection bug修复后
         let listSID = sectionData!.shortList.sid
-        VirtualView.call(listSID,'scrollToPosition',[0])
-        VirtualView.call(listSID,'setSelectChildPosition',[0,true])
+        VirtualView.call(listSID, 'scrollToPosition', [0])
+        VirtualView.call(listSID, 'setSelectChildPosition', [0, true])
       } else if (playType === HomePlayType.TYPE_4K) {
         const _4KListSid = sectionData!.list4KSid
         //初始化位置
@@ -275,8 +267,8 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
       const firstBgUrl = sectionData.itemList[0]?.imageFocusBackground
       setFirstScreenImg('', '1', firstBgUrl, true)
     }
-  }else if (eventName === "onTabFocusChange"){
-    if (curPlayerType === HomePlayType.TYPE_SMALL_4K && waterfallBgPlayerRef){
+  } else if (eventName === 'onTabFocusChange') {
+    if (curPlayerType === HomePlayType.TYPE_SMALL_4K && waterfallBgPlayerRef) {
       waterfallBgPlayerRef.value?.pause()
       waterfallBgPlayerRef.value?.stop()
     }
@@ -291,8 +283,8 @@ const doBgPlayItem = (hpd: HomePlayData) => {
   curPlayerType = hpd.type
   waterfallBgPlayerRef.value?.setPlayState(PlayerState.STATE_WAIT)
   if (curPlayerType === HomePlayType.TYPE_4K) {
-    cur4KSid =  curBgPlayData[0].sid
-    VirtualView.call(cur4KSid,'changeVisibility',[`visible`])
+    cur4KSid = curBgPlayData[0].sid
+    VirtualView.call(cur4KSid, 'changeVisibility', [`visible`])
   }
   waterfallBgPlayerRef.value?.initPlay(hpd)
 }
@@ -304,8 +296,8 @@ const doBgPlayItem = (hpd: HomePlayData) => {
 const onTabPageChanged = (pageIndex: number) => {
   //隐藏播放器
   VirtualView.call('waterfallBgPlayerSid', 'changeAlpha', [0])
-  if (cur4KSid){
-    VirtualView.call(cur4KSid,'changeVisibility',[`visible`])
+  if (cur4KSid) {
+    VirtualView.call(cur4KSid, 'changeVisibility', [`visible`])
   }
   isSwitchTabSmall4KFlag = true
   isMoreFront = false
@@ -318,7 +310,7 @@ const onTabPageChanged = (pageIndex: number) => {
   curPlayerType = HomePlayType.TYPE_UNDEFINED
   clearTimeout(isMoreFrontTimer)
   //设置首屏图
-  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id??'', '0', '', true)
+  setFirstScreenImg(barsDataManager.barsData.itemList[pageIndex]._id ?? '', '0', '', true)
 }
 /**
  * 吸顶开始
@@ -335,7 +327,7 @@ const onTabMoveToTopStart = () => {
     waterfallBgPlayerRef.value?.stop()
   }
   //设置二屏图
-  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
+  set2ScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id ?? '')
 }
 /**
  * 恢复吸顶结束
@@ -357,9 +349,8 @@ const onTabMoveToBottomEnd = () => {
   if (curFirstScreenBg) {
     setFirstScreenImg('', '1', curFirstScreenBg, true)
   } else {
-    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id??'')
+    setFirstScreenImg(barsDataManager.barsData.itemList[curTabPageIndex]._id ?? '')
   }
-
 }
 /**
  * 格子item 点击事件
@@ -370,12 +361,11 @@ const onTabMoveToBottomEnd = () => {
  * @param e
  */
 const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem, e) => {
-
   launch.launch(item.jumpParams)
 
   //4K内容跳转的时候 将图片设置回来
-  if (cur4KSid){
-    VirtualView.call(cur4KSid,'changeVisibility',[`visible`])
+  if (cur4KSid) {
+    VirtualView.call(cur4KSid, 'changeVisibility', [`visible`])
   }
 }
 /**
@@ -386,16 +376,21 @@ const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: 
  * @param isFocused
  * @param item
  */
-const onTabPageItemFocused = (tabPageIndex: number, sectionIndex: number, sectionItemIndex: number, isFocused: boolean, item: QTWaterfallItem) => {
-
+const onTabPageItemFocused = (
+  tabPageIndex: number,
+  sectionIndex: number,
+  sectionItemIndex: number,
+  isFocused: boolean,
+  item: QTWaterfallItem
+) => {
   if (isFocused) {
     //小 4K 的版块判断必须在第一个放 主要是 else 里面的逻辑需要首次加入
-    if (item.name === TabContentConfig.worldSmall4kSectionItemName){
+    if (item.name === TabContentConfig.worldSmall4kSectionItemName) {
       sectionItemIndex = sectionItemIndex - 1000000000
-      dealSmall4KFocused(tabPageIndex,sectionItemIndex,item)
+      dealSmall4KFocused(tabPageIndex, sectionItemIndex, item)
       return
-    }else{
-      if (curPlayerType === HomePlayType.TYPE_SMALL_4K && waterfallBgPlayerRef){
+    } else {
+      if (curPlayerType === HomePlayType.TYPE_SMALL_4K && waterfallBgPlayerRef) {
         clearTimeout(small4KTimer)
         clearTimeout(small4KSetChildSIdTimer)
         waterfallBgPlayerRef.value.pause()
@@ -403,25 +398,25 @@ const onTabPageItemFocused = (tabPageIndex: number, sectionIndex: number, sectio
       }
     }
     //4K 判断
-    if (item.name === TabContentConfig.world4kSectionItemName){
+    if (item.name === TabContentConfig.world4kSectionItemName) {
       //首次隐藏顶部按钮，展示 4K logo
-      if (!is4kSectionItemFocused){
+      if (!is4kSectionItemFocused) {
         waterfallLogo4kRef.value?.setImg(ic_4k_logo)
-        VirtualView.call("tabNavBarSid",'changeAlpha',[0])
-        VirtualView.call("waterfallTopSid",'changeVisibility',[`invisible`])
+        VirtualView.call('tabNavBarSid', 'changeAlpha', [0])
+        VirtualView.call('waterfallTopSid', 'changeVisibility', [`invisible`])
       }
       is4kSectionItemFocused = true
       sectionItemIndex = sectionItemIndex - 1000000000
       if (recordPlayerData.tabPageIndex !== tabPageIndex || recordPlayerData.sectionItemIndex !== sectionItemIndex) {
-        deal4KFocused(tabPageIndex,sectionItemIndex,item)
+        deal4KFocused(tabPageIndex, sectionItemIndex, item)
       }
       return
-    }else{
+    } else {
       is4kSectionItemFocused = false
     }
-    if (item.name === TabContentConfig.shortVideoSectionItemName){
+    if (item.name === TabContentConfig.shortVideoSectionItemName) {
       if (recordPlayerData.tabPageIndex !== tabPageIndex || recordPlayerData.sectionItemIndex !== sectionItemIndex) {
-        dealShortFocused(tabPageIndex,sectionItemIndex,item)
+        dealShortFocused(tabPageIndex, sectionItemIndex, item)
       }
     }
     //背景播放
@@ -464,10 +459,10 @@ const typeBgFocused = (tabPageIndex: number, sectionIndex: number, sectionItemIn
  * @param sectionItemIndex
  * @param item
  */
-const deal4KFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWaterfallItem)=>{
+const deal4KFocused = (tabPageIndex: number, sectionItemIndex: number, item: QTWaterfallItem) => {
   clearTimeout(delay4KFocusTimer)
   waterfallBgPlayerRef?.value.pause()
-  VirtualView.call(TabContentConfig.homeBgPlaySid,'changeAlpha',[0])
+  VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [0])
   curBgPlayData = item.play.playData
   if (curBgPlayData && curBgPlayData.length > 0) {
     const beforeSid = curBgPlayData[0].beforeSid
@@ -478,9 +473,9 @@ const deal4KFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWat
     recordPlayerData.tabPageIndex = tabPageIndex
     recordPlayerData.sectionItemIndex = sectionItemIndex
     waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
-    delay4KFocusTimer = setTimeout(()=>{
+    delay4KFocusTimer = setTimeout(() => {
       waterfallBgPlayerRef?.value?.play(curBgPlayData)
-    },300)
+    }, 300)
   }
 }
 /**
@@ -489,7 +484,7 @@ const deal4KFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWat
  * @param sectionItemIndex
  * @param item
  */
-const dealShortFocused = (tabPageIndex: number,sectionItemIndex: number,item: QTWaterfallItem)=>{
+const dealShortFocused = (tabPageIndex: number, sectionItemIndex: number, item: QTWaterfallItem) => {
   clearTimeout(shortVideoTimer)
   waterfallBgPlayerRef?.value.pause()
   curBgPlayData = item.play.playData
@@ -499,31 +494,31 @@ const dealShortFocused = (tabPageIndex: number,sectionItemIndex: number,item: QT
     recordPlayerData.tabPageIndex = tabPageIndex
     recordPlayerData.sectionItemIndex = sectionItemIndex
     waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
-    shortVideoTimer = setTimeout(()=>{
+    shortVideoTimer = setTimeout(() => {
       waterfallBgPlayerRef?.value?.play(curBgPlayData)
-    },300)
+    }, 300)
   }
 }
 
-const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTWaterfallItem)=>{
+const dealSmall4KFocused = (tabPageIndex: number, sectionItemIndex: number, item: QTWaterfallItem) => {
   curBgPlayData = item.play.playData
   clearTimeout(small4KTimer)
   clearTimeout(small4KSetChildSIdTimer)
   waterfallBgPlayerRef.value.pause()
-  VirtualView.call("waterfallBgPlayerSid",'changeAlpha',[1])
-  VirtualView.call(TabContentConfig.homeBgPlaySid,'changeAlpha',[0])
-  small4KTimer = setTimeout(()=>{
+  VirtualView.call('waterfallBgPlayerSid', 'changeAlpha', [1])
+  VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [0])
+  small4KTimer = setTimeout(() => {
     waterfallBgPlayerRef.value?.setPlayState(PlayerState.STATE_WAIT)
     waterfallBgPlayerRef?.value.setBgImage('', false)
     curPlayerType = HomePlayType.TYPE_SMALL_4K
-    if (!waterfallBgPlayerRef.value.playerWindowInit || isSwitchTabSmall4KFlag){
-      if (curBgPlayData){
+    if (!waterfallBgPlayerRef.value.playerWindowInit || isSwitchTabSmall4KFlag) {
+      if (curBgPlayData) {
         const obj: HomePlayData = {
           type: HomePlayType.TYPE_SMALL_4K,
           windowWidth: <number>item.style?.width,
-          windowHeight:<number>item.style?.height,
+          windowHeight: <number>item.style?.height,
           playerWidth: item.play.style.width,
-          playerHeight: item.play.style.height ,
+          playerHeight: item.play.style.height,
           playerLeft: 0,
           playerTop: 0,
           playerData: item.play.playData
@@ -531,15 +526,14 @@ const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTW
         doBgPlayItem(obj)
       }
       isSwitchTabSmall4KFlag = false
-    }else{
+    } else {
       waterfallBgPlayerRef.value.play(curBgPlayData)
     }
-  },300)
-  small4KSetChildSIdTimer = setTimeout(()=>{
-    VirtualView.call("sectionSmall4kReplaceChildSid","setChildSID",[TabContentConfig.homeBgPlaySid])
-    VirtualView.call("bg-player",'changeAlpha',[1])
-  },800)
-
+  }, 300)
+  small4KSetChildSIdTimer = setTimeout(() => {
+    VirtualView.call('sectionSmall4kReplaceChildSid', 'setChildSID', [TabContentConfig.homeBgPlaySid])
+    VirtualView.call('bg-player', 'changeAlpha', [1])
+  }, 800)
 }
 
 /**
@@ -549,12 +543,12 @@ const dealSmall4KFocused = (tabPageIndex:number,sectionItemIndex:number,item:QTW
  * @param switchBg
  * @param isLoad
  */
-const setFirstScreenImg = (tabId: string|null, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
+const setFirstScreenImg = (tabId: string | null, isSwitchBg: string = '0', firstScreenBg: string = '', isLoad: boolean = false) => {
   if (isSwitchBg === '1') {
     curFirstScreenBg = firstScreenBg
     setWTabBg(firstScreenBg, isLoad)
   } else {
-    const bg = getFirstBg(tabId)
+    const bg = getFirstBg(tabId || '')
     setWTabBg(bg, isLoad)
   }
 }
@@ -603,7 +597,7 @@ const setWTabBg = (bg: string, isLoad: boolean = false) => {
  */
 const getTabList = () => {
   homeManager.getTabList().then((tabList: any) => {
-    const tab:QTTab = buildTabBarAdapter(tabList)
+    const tab: QTTab = buildTabBarAdapter(tabList)
     //关闭启动界面
     try {
       Native.callNative('EsNativeModule', 'unSuspendLoadingView')
@@ -632,14 +626,13 @@ const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
     if (TabBarConfig.tab.id === curTab._id && pageNo === 0) {
       getTabContent(curTab._id, pageIndex, pageNo + 1)
     } else {
-      getTabContent(curTab._id??'', pageIndex, pageNo + 1)
+      getTabContent(curTab._id ?? '', pageIndex, pageNo + 1)
     }
   }
-
 }
 const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
-  homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit)
-    .then(async (tabContent: any) => {
+  homeManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit).then(
+    async (tabContent: any) => {
       const tabPage: QTTabPageData = await buildTabContentAdapter(tabContent, pageNo, tabId, tabPageIndex)
       if (tabPage.data.length > 0) {
         if (pageNo <= 1) {
@@ -651,7 +644,7 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
           buildPlayerData(tabPageIndex, tabPage.data[index].itemList, tabPage)
           //判断当前tab是否有历史格子
           let historyItemPos: any = tabsContent.historyItemPos.filter((item) => item.tabIndex == tabPageIndex)
-          if(historyItemPos.length > 0) updateHistoryItem(tabPageIndex, tabPage, 1,historyItemPos[0])
+          if (historyItemPos.length > 0) updateHistoryItem(tabPageIndex, tabPage, 1, historyItemPos[0])
           else tabRef.value?.setPageData(tabPageIndex, tabPage)
         } else {
           if (barsDataManager.barsData.itemList[tabPageIndex].playType === HomePlayType.TYPE_SMALL_4K) {
@@ -664,9 +657,11 @@ const getTabContent = (tabId: string, tabPageIndex: number, pageNo: number) => {
       if (tabPage.isLoadPageEnd || tabPage.data.length === 0) {
         tabRef.value?.setPageState(tabPageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
       }
-    }, () => {
+    },
+    () => {
       toast.showToast('加载数据失败，稍后重试！')
-    })
+    }
+  )
 }
 
 // 构建历史格子数据
@@ -716,14 +711,12 @@ const buildHistoryItem = async (item) => {
     //   jumpParams: { type: 1, options: { name: 'detail', params: { mediaId: 'xxx', startPosition: 0 } } }
     // })
 
-    item.historyList.push(
-      {
-        type: 4003,
-        style: { width: item.style.width, height: 76 },
-        text: '全部历史记录',
-        jumpParams: { type: 1, options: { name: 'history', params: {} } }
-      }
-    )
+    item.historyList.push({
+      type: 4003,
+      style: { width: item.style.width, height: 76 },
+      text: '全部历史记录',
+      jumpParams: { type: 1, options: { name: 'history', params: {} } }
+    })
   }
 }
 
@@ -749,16 +742,26 @@ const updateHistoryItem = async (tabPageIndex, tabPage, type, historyItemPos) =>
  * @param content4kId
  */
 const load4KData = async (tabPageIndex: number, content4kId: string) => {
-  const world4kSection = await homeManager.get4KSection(content4kId,6,TabContentType.TYPE_WATERFALL_SECTION_4K)
+  const world4kSection = await homeManager.get4KSection(content4kId, 6, TabContentType.TYPE_WATERFALL_SECTION_4K)
 
   if (world4kSection && world4kSection.length > 0) {
     const cacheList = tabsContent.homeSectionCacheList.get(content4kId)
-    if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(content4kId,world4kSection)
+    if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(content4kId, world4kSection)
     tabRef.value!.addPageItemList(tabPageIndex, 0, world4kSection)
     const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
     const section4kItem = world4kSection[0]
-    buildRecordPlayerMap(tabPageIndex, 0, playType, <number>section4kItem?.style?.width, <number>section4kItem?.style?.height,
-      section4kItem?.play?.style?.width, section4kItem?.play?.style?.height, 253.5, TabContentConfig.firstSectionTop, section4kItem.play.playData)
+    buildRecordPlayerMap(
+      tabPageIndex,
+      0,
+      playType,
+      <number>section4kItem?.style?.width,
+      <number>section4kItem?.style?.height,
+      section4kItem?.play?.style?.width,
+      section4kItem?.play?.style?.height,
+      253.5,
+      TabContentConfig.firstSectionTop,
+      section4kItem.play.playData
+    )
   }
 }
 
@@ -768,30 +771,42 @@ const load4KData = async (tabPageIndex: number, content4kId: string) => {
  * @param shortVideoId
  * @param pageNo
  */
-const loadShortData = async (tabPageIndex: number, shortVideoId: string,pageNo:number) =>{
-  const shortVideoSection = await homeManager.getShortVideoSection(shortVideoId,TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,pageNo,30)
-  if (shortVideoSection && shortVideoSection.length > 0){
-    if (pageNo === 1){
+const loadShortData = async (tabPageIndex: number, shortVideoId: string, pageNo: number) => {
+  const shortVideoSection = await homeManager.getShortVideoSection(
+    shortVideoId,
+    TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN,
+    pageNo,
+    30
+  )
+  if (shortVideoSection && shortVideoSection.length > 0) {
+    if (pageNo === 1) {
       const cacheList = tabsContent.homeSectionCacheList.get(shortVideoId)
-      if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(shortVideoId,shortVideoSection)
+      if (!cacheList || cacheList.length < 1) tabsContent.homeSectionCacheList.set(shortVideoId, shortVideoSection)
       tabRef.value!.addPageItemList(tabPageIndex, 0, shortVideoSection)
       const playType = barsDataManager.barsData.itemList[tabPageIndex].playType
       const shortVideoItem = shortVideoSection[0]
-      buildRecordPlayerMap(tabPageIndex, 0, playType, 1920, 1080,
-        1920, 1080, 0, 0, shortVideoItem.play.playData)
-    }
-    else{
+      buildRecordPlayerMap(tabPageIndex, 0, playType, 1920, 1080, 1920, 1080, 0, 0, shortVideoItem.play.playData)
+    } else {
       // todo 分页加载 看接口，当前接口无分页 有分页，放开下面三行加载代码
       // const shortSection = tabRef.value?.getPageSection(tabPageIndex,0)
       // const shortListSid = shortSection?.shortList?.sid
       // VirtualView.call(shortListSid,'addListData',shortVideoSection)
     }
-
-
   }
 }
 
-const buildRecordPlayerMap = (tabPageIndex: number, sectionItemIndex: number, playType: HomePlayType, windowWidth: number, windowHeight: number, playerWidth: number, playerHeight: number, left: number, top: number, playerData: Array<IMediaList>): HomePlayData => {
+const buildRecordPlayerMap = (
+  tabPageIndex: number,
+  sectionItemIndex: number,
+  playType: HomePlayType,
+  windowWidth: number,
+  windowHeight: number,
+  playerWidth: number,
+  playerHeight: number,
+  left: number,
+  top: number,
+  playerData: Array<IMediaList>
+): HomePlayData => {
   const obj: HomePlayData = {
     type: HomePlayType.TYPE_UNDEFINED,
     windowWidth: 0,
@@ -849,25 +864,27 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
           tabPage.bindingPlayer = sectionItem.play.sid
         }
         if (playType === HomePlayType.TYPE_BG) {
-          buildRecordPlayerMap(
-            tabPageIndex, sectionItemIndex, playType,
-            1920, 1080,
-            1920, 1080,
-            0, 0, sectionItem.play.playData)
+          buildRecordPlayerMap(tabPageIndex, sectionItemIndex, playType, 1920, 1080, 1920, 1080, 0, 0, sectionItem.play.playData)
         } else if (playType === HomePlayType.TYPE_CELL || playType === HomePlayType.TYPE_CELL_LIST) {
           buildRecordPlayerMap(
-            tabPageIndex, sectionItemIndex, playType,
-            sectionItem.style.width!, sectionItem.style.height!,
-            sectionItem?.play?.style?.width, sectionItem?.play?.style?.height,
-            0, 0, sectionItem.play.playData)
+            tabPageIndex,
+            sectionItemIndex,
+            playType,
+            sectionItem.style.width!,
+            sectionItem.style.height!,
+            sectionItem?.play?.style?.width,
+            sectionItem?.play?.style?.height,
+            0,
+            0,
+            sectionItem.play.playData
+          )
         }
       }
     }
   }
-
 }
 const onESCreate = () => {
-  EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn);
+  EventBus.$on('DispatchKeyEvent', dispatchKeyEventFn)
   getTabList()
 }
 
@@ -875,8 +892,8 @@ const onESPause = () => {
   if (curPlayerType !== HomePlayType.TYPE_UNDEFINED) {
     waterfallBgPlayerRef?.value.pause()
   }
-  if (cur4KSid){
-    VirtualView.call(cur4KSid,'changeVisibility',[`visible`])
+  if (cur4KSid) {
+    VirtualView.call(cur4KSid, 'changeVisibility', [`visible`])
   }
 }
 
@@ -919,7 +936,6 @@ const onESResume = () => {
           waterfallBgPlayerRef?.value.play(curBgPlayData)
         }
       }, 401)
-
     }
   }
 }
@@ -934,30 +950,28 @@ const onESDestroy = () => {
   clearTimeout(small4KTimer)
   clearTimeout(resumePlayTimer)
   clearTimeout(small4KSetChildSIdTimer)
-  EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn);
+  EventBus.$off('DispatchKeyEvent', dispatchKeyEventFn)
 }
-const dispatchKeyEventFn = (keyEvent:ESKeyEvent) =>{
-  if (curPlayerType === HomePlayType.TYPE_4K && is4kSectionItemFocused){
-    if (keyEvent && keyEvent.action === 1
-      && (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_BACK || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_UP) ) {
-      VirtualView.call("tabNavBarSid",'changeAlpha',[1])
+const dispatchKeyEventFn = (keyEvent: ESKeyEvent) => {
+  if (curPlayerType === HomePlayType.TYPE_4K && is4kSectionItemFocused) {
+    if (
+      keyEvent &&
+      keyEvent.action === 1 &&
+      (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_BACK || keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_UP)
+    ) {
+      VirtualView.call('tabNavBarSid', 'changeAlpha', [1])
       waterfallLogo4kRef.value?.clearImg()
-      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_UP){
-        VirtualView.call("waterfallTopSid",'changeVisibility',[`visible`])
+      if (keyEvent.keyCode === ESKeyCode.ES_KEYCODE_DPAD_UP) {
+        VirtualView.call('waterfallTopSid', 'changeVisibility', [`visible`])
       }
       is4kSectionItemFocused = false
     }
   }
-
 }
-const onKeyDown = (keyEvent: ESKeyEvent) => {
+const onKeyDown = (keyEvent: ESKeyEvent) => {}
 
-}
-
-const onKeyUp = (keyEvent: ESKeyEvent) => {
-
-}
-const onBackPressed = ():boolean => {
+const onKeyUp = (keyEvent: ESKeyEvent) => {}
+const onBackPressed = (): boolean => {
   return false
 }
 defineExpose({
@@ -970,8 +984,6 @@ defineExpose({
   onKeyUp,
   onBackPressed
 })
-
 </script>
 
-<style lang='scss' src='../scss/waterfall-tabs.scss'>
-</style>
+<style lang="scss" src="../scss/waterfall-tabs.scss"></style>

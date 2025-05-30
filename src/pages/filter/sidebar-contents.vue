@@ -45,8 +45,8 @@ const contentDeny = ref<1 | 2>(1)
 
 function onESCreate(params: { screenId: string; defaultSecondaryId?: string; defaultTags?: string }) {
   params.screenId = '1848555233454727169'
-  params.defaultSecondaryId = '1848554924032532482' // 默认选中的二级筛选项ID
-  loadFilters(params.screenId, params.defaultSecondaryId, params.defaultTags || '')
+  // params.defaultSecondaryId = '1848554924032532482' // 默认选中的二级筛选项ID
+  loadFilters(params.screenId, params.defaultSecondaryId || '', params.defaultTags || '')
 }
 
 function loadFilters(primaryId: string, defaultSecondaryId: string, defaultTags: string) {
