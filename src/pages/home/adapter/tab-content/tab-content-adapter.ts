@@ -776,7 +776,7 @@ function buildCorner(sectionItem: SectionItem) {
  * 底部
  * @param sectionId 板块id
  */
-export function buildEndSection(sectionId: string, decoration?: {}): QTWaterfallSection {
+export function buildEndSection(sectionId: string, decoration?: object): QTWaterfallSection {
   return {
     _id: sectionId,
     type: QTWaterfallSectionType.QT_WATERFALL_SECTION_TYPE_END,
