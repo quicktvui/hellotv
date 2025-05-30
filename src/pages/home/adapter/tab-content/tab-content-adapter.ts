@@ -94,7 +94,7 @@ export async function buildTabContentAdapter(
         sectionList.push(buildSectionData)
       } else {
         // build section列表数据
-        const res = buildSectionItemList(section, sectionIndex, tabPageIndex)
+        const res = buildSectionItemList(section, sectionIndex, tabPageIndex, pageNo)
         const sectionWaterfallItemList: Array<QTWaterfallItem> = res.buildSectionItemList
         const isFocusScrollTarget: boolean = res.isFocusScrollTarget
         //获取展示的板块高度
@@ -253,7 +253,8 @@ export function parseParameter(parameter) {
 export function buildSectionItemList(
   section: Section,
   sectionIndex: number,
-  tabPageIndex: number
+  tabPageIndex: number,
+  pageNo: number
 ): { buildSectionItemList: Array<QTWaterfallItem>; isFocusScrollTarget: boolean } {
   //定义封装后的数据
   const buildSectionItemList: Array<QTWaterfallItem> = []
@@ -279,7 +280,7 @@ export function buildSectionItemList(
           top: section.showTitle ? TabContentConfig.sectionItemGap : 0
         }
       }
-      if (sectionIndex === 0) {
+      if (sectionIndex === 0 && pageNo === 1) {
         //检测第一个板块中是否有播放器
         const sectionItemType = sectionItem.type
         if (
