@@ -1,120 +1,70 @@
 <template>
-  <div class="bg-player-root-css" :clipChildren="false">
+  <div class='bg-player-root-css' :clipChildren='false'>
     <qt-replace-child
-      class="bg-player-replace-child"
-      sid="bgPlayerReplaceChildSid"
-      :markChildSID="TabContentConfig.homeBgPlaySid"
-      :replaceOnVisibilityChanged="false"
-      :focusable="false"
-      :clipChildren="false"
-    >
+      class='bg-player-replace-child'
+      sid='bgPlayerReplaceChildSid'
+      :markChildSID='TabContentConfig.homeBgPlaySid'
+      :replaceOnVisibilityChanged='false'
+      :focusable='false' :clipChildren='false'>
     </qt-replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class="bg-player-parent-css" sid="TabContentConfig.homeBgPlaySid">
-      <div
-        class="bg-player-window"
-        v-if="playerWindowInit"
-        :sid="TabContentConfig.homeBgPlaySid"
-        :style="{ width: `${playerWindowWidth}px`, height: `${playerWindowHeight}px` }"
-        :fillParent="true"
-        :clipChildren="false"
-        :focusable="false"
-      >
+    <div class='bg-player-parent-css'>
+      <div class='bg-player-window' v-if='playerWindowInit' :sid='TabContentConfig.homeBgPlaySid'
+           :style='{width:`${playerWindowWidth}px`,height:`${playerWindowHeight}px`}'
+           :fillParent='true'
+           :clipChildren='false'
+           :focusable='false'>
         <media-player-view
-          class="bg-player-view"
-          ref="bgPlayerViewRef"
-          :clipChildren="false"
-          :playerLeft="playerLeft"
-          :playerTop="playerTop"
-          :isShowPlayerController="false"
-          @onPlayerPlayMedia="onPlayerPlayMedia"
-          @onPlayerPlaying="onPlayerPlaying"
-          @onPlayerCompleted="onPlayerCompleted"
-          @onPlayerError="onPlayerError"
+          class='bg-player-view'
+          ref='bgPlayerViewRef'
+          :clipChildren='false'
+          :playerLeft='playerLeft'
+          :playerTop='playerTop'
+          :isShowPlayerController='false'
+          @onPlayerPlayMedia='onPlayerPlayMedia'
+          @onPlayerPlaying='onPlayerPlaying'
+          @onPlayerCompleted='onPlayerCompleted'
+          @onPlayerError='onPlayerError'
         />
+
       </div>
     </div>
     <!-- 背景图-->
-    <bg-animation
-      class="bg-player-background-img"
-      :bgStyle="{ width: playerWidth, height: playerHeight, left: playerLeft, top: playerTop }"
-      ref="bgPlayerBackgroundImgRef"
-      :visible="bgPlayerType !== HomePlayType.TYPE_4K"
-      :focusable="false"
-    />
+    <bg-animation class='bg-player-background-img'
+                  :bgStyle='{width:playerWidth,height:playerHeight,left:playerLeft,top:playerTop}'
+                  ref='bgPlayerBackgroundImgRef'
+                  :visible='bgPlayerType!==HomePlayType.TYPE_4K'
+                  :focusable='false' />
     <!-- 全屏背景遮罩-->
-    <div
-      class="bg-player-mask"
-      v-if="!isShowShadow"
-      :visible="bgPlayerType === HomePlayType.TYPE_BG"
-      :bgStyle="{ width: playerWidth, height: playerHeight, left: playerLeft, top: playerTop }"
-      :focusable="false"
-    />
+    <div class='bg-player-mask' v-if='!isShowShadow'
+         :visible='bgPlayerType===HomePlayType.TYPE_BG'
+         :bgStyle='{width:playerWidth,height:playerHeight,left:playerLeft,top:playerTop}'
+         :focusable='false' />
     <!-- 背景阴影 -->
-    <img
-      class="bg-player-shadow"
-      v-if="isShowShadow && playerWidth && playerHeight"
-      :style="{ width: playerWidth + 'px', height: playerHeight + 'px', left: playerLeft, top: playerTop }"
-      :focusable="false"
-      :src="bg_shadow"
+    <img class='bg-player-shadow' v-if='isShowShadow && playerWidth && playerHeight'
+         :style="{width:playerWidth + 'px',height:playerHeight + 'px',left: playerLeft,top: playerTop}"
+         :focusable='false'
+         :src='bg_shadow'
     />
-
-    <!-- 小窗列表 -->
-    <qt-view
-      class="bg-player-list"
-      :style="{ width: `${playerWindowWidth}px`, height: `${playerWindowHeight}px` }"
-      :visible="bgPlayerType === HomePlayType.TYPE_CELL_LIST"
-      :clipChildren="true"
-    >
-      <!-- 加载中 -->
-      <qt-view class="bg-player-list-loading" :visible="curPlayState !== PlayerState.STATE_PLAYING" :focusable="false">
-        <qt-loading-view style="width: 100px; height: 100px" color="#ffffff" :focusable="false" />
-        <qt-text class="bg-player-list-loading-text" text="加载中..." gravity="center" :focusable="false"></qt-text>
-      </qt-view>
-
-      <qt-list-view
-        style="width: 403px; height: 510px; background-color: transparent; margin-left: 907px"
-        ref="cellListRef"
-        :listData="cellListData"
-        :singleSelectPosition="curPlayIndex"
-        :autoscroll="[curPlayIndex, playerWindowHeight / 2]"
-        :verticalFadingEdgeEnabled="true"
-      >
-        <!-- 文字 -->
-        <bg-player-cell-list-item-text :type="1" />
-        <!-- 图片 -->
-        <bg-player-cell-list-item-img :type="2" :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }" />
-        <bg-player-cell-list-item-img
-          :type="3"
-          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
-          :imgStyle="{ borderTopRightRadius: `16px` }"
-        />
-        <bg-player-cell-list-item-img
-          :type="4"
-          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
-          :imgStyle="{ borderBottomRightRadius: `16px` }"
-        />
-      </qt-list-view>
-    </qt-view>
   </div>
+
 </template>
 
-<script lang="ts" setup name="bg-player">
+<script lang='ts' setup name='bg-player'>
 import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
 import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
-import { qtRef, QTIListView, QTListViewItem, VirtualView } from '@quicktvui/quicktvui3'
+import { VirtualView } from '@quicktvui/quicktvui3'
 import { onMounted, ref } from 'vue'
-import bgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
-import bgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
 import bg_shadow from '../../../../assets/home/bg_shadow.png'
 import BgAnimation from '../../../../components/bg-animation.vue'
 import { IMediaList } from '../../../../components/media/build-data/media-imp'
 import MediaPlayerView from '../../../../components/media/view/media-player-view.vue'
-import BuildConfig from '../../../../config/build-config'
+import BuildConfig from '../../../../config/build-config.ts'
 import { createHomePlayerInterceptor } from '../../adapter/media/create-home-player-interceptor'
-import { HomePlayData, HomePlayType, PlayerState } from '../../adapter/media/home-media-imp'
-import TabContentConfig from '../../adapter/tab-content/tab-content-config'
+import { HomePlayData, HomePlayType, PlayerState } from '../../adapter/media/home-media-imp.ts'
+import TabContentConfig from '../../adapter/tab-content/tab-content-config.ts'
+
 
 const esEventBus = useESEventBus()
 const bgPlayerBackgroundImgRef = ref()
@@ -136,12 +86,6 @@ const bgPlayerType = ref(HomePlayType.TYPE_UNDEFINED)
 const playerInterceptor = createHomePlayerInterceptor()
 //是否显示边框阴影
 const isShowShadow = ref(false)
-//小窗列表播放
-const curPlayIndex = ref(0)
-const cellListRef = ref<QTIListView>()
-const cellListData = qtRef<QTListViewItem[]>()
-const cellListItemWidth = ref(0)
-const cellListItemHeight = ref(0)
 //播放状态
 let curPlayState = PlayerState.STATE_WAIT
 //生命周期
@@ -153,9 +97,9 @@ let dismissCoverTimer: any = -1
 //当前已经加载的背景图
 let curCover = ''
 /********** 4K ************/
-let beforeSid = ''
-let sid = ''
-let nextSid = ''
+let beforeSid = ""
+let sid = ""
+let nextSid = ""
 
 onMounted(() => {
   esEventBus.on('bg-player-life-cycle', updateLifeCycle)
@@ -190,38 +134,9 @@ const initPlay = (playInfo: HomePlayData) => {
   //获取播放数据
   const playerData = playInfo.playerData
   if (playerData && playerData.length > 0) {
-    // 小窗列表数据
-    if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
-      // 小窗类型, 1 文字、2 图片
-      let cellMode = 1
-      // 小窗列表Item尺寸
-      cellListItemWidth.value = 403
-      cellListItemHeight.value = cellMode === 1 ? 116 : 160
-      cellListData.value = playerData.map((item, index) => {
-        return cellMode === 1
-          ? {
-              type: 1,
-              text: item.title,
-              gradientBackground: {
-                colors: ['#ffffff', '#ffffff'],
-                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
-              }
-            }
-          : {
-              type: index === 0 ? 3 : index === playerData.length - 1 ? 4 : 2, // TODO: 让底层支持 flexStyle: { borderTopRightRadius、borderBottomRightRadius }
-              cover: item.cover,
-              gradientBackground: {
-                colors: ['#8C000000', '#8C000000'],
-                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
-              }
-            }
-      })
-    } else {
-      //设置背景
-      const cover = playerData[0].cover || ''
-      setBgImage(cover)
-    }
-
+    //设置背景
+    const cover = playerData[0].cover
+    setBgImage(cover)
     //准备播放数据
     let delayToPlay = 400
     if (!playerWindowInit.value) {
@@ -237,6 +152,7 @@ const initPlay = (playInfo: HomePlayData) => {
       }
     }, delayToPlay)
   }
+
 }
 /**
  * 重置数据
@@ -249,7 +165,8 @@ const resetPlayingData = () => {
   }
 }
 const clearPlayTimer = () => {
-  if (delayInitPlayTimer) clearTimeout(delayInitPlayTimer)
+  if (delayInitPlayTimer)
+    clearTimeout(delayInitPlayTimer)
 }
 /**
  * 解析播放尺寸数据
@@ -294,13 +211,7 @@ const play = (playerData: Array<IMediaList>, isSetWindowChange: boolean = false)
   //低端机 且 非全屏播放 不播
   if (BuildConfig.isLowEndDev && bgPlayerType.value !== HomePlayType.TYPE_BG) return
   bgPlayerViewRef.value?.resetMediaList()
-  const list = bgPlayerViewRef.value?.initPlayData(
-    playerData,
-    bgPlayerType.value === HomePlayType.TYPE_CELL_LIST
-      ? ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP
-      : ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT,
-    [playerInterceptor]
-  )
+  const list = bgPlayerViewRef.value?.initPlayData(playerData, ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT, [playerInterceptor])
   clearTimeout(delayPlayTimer)
   delayPlayTimer = setTimeout(() => {
     bgPlayerViewRef.value.playMediaList(list)
@@ -331,15 +242,18 @@ const stop = () => {
   curPlayState = PlayerState.STATE_STOP
 }
 const resume = () => {
-  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG) bgPlayerViewRef.value?.resume()
+  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG)
+    bgPlayerViewRef.value?.resume()
   curPlayState = PlayerState.STATE_RESUME
 }
 const reset = () => {
-  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG) bgPlayerViewRef.value?.reset()
+  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG)
+    bgPlayerViewRef.value?.reset()
   curPlayState = PlayerState.STATE_RESET
 }
 const release = () => {
-  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG) bgPlayerViewRef.value?.release()
+  if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG)
+    bgPlayerViewRef.value?.release()
   curPlayState = PlayerState.STATE_RELEASE
 }
 const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
@@ -348,13 +262,8 @@ const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
     beforeSid = mediaItem.beforeSid
     sid = mediaItem.sid
     nextSid = mediaItem.nextSid
-    change4KVisible(beforeSid, 'visible')
-    change4KVisible(nextSid, 'visible')
-  }
-
-  // 小窗列表播放逻辑
-  if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
-    curPlayIndex.value = mediaItem.index
+    change4KVisible(beforeSid,'visible')
+    change4KVisible(nextSid,'visible')
   }
 }
 const onPlayerPlaying = () => {
@@ -369,25 +278,26 @@ const onPlayerPlaying = () => {
   requestDismissCover(600)
 }
 
-const onPlayerCompleted = () => {}
+const onPlayerCompleted = () => {
+
+}
 const onPlayerError = () => {
   pause()
   stop()
 }
-const change4KVisible = (sid: string, visible: string) => {
-  VirtualView.call(sid, 'changeVisibility', [`${visible}`])
+const change4KVisible=(sid:string,visible:string)=>{
+  VirtualView.call(sid,'changeVisibility',[`${visible}`])
 }
 const requestDismissCover = (delay = 1000) => {
   if (bgPlayerType.value === HomePlayType.TYPE_4K) {
-    change4KVisible(sid, 'invisible')
-    VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [1])
+    change4KVisible(sid,"invisible")
+    VirtualView.call(TabContentConfig.homeBgPlaySid,'changeAlpha',[1])
   }
   clearTimeout(dismissCoverTimer)
   dismissCoverTimer = setTimeout(() => {
     bgPlayerBackgroundImgRef.value?.clearImg()
   }, delay)
 }
-
 const destroy = () => {
   clearPlayTimer()
   pause()
@@ -424,6 +334,9 @@ defineExpose({
   changeShadow,
   destroy
 })
+
 </script>
 
-<style lang="scss" src="../../scss/bg-player.scss"></style>
+<style lang='scss' src='../../scss/bg-player.scss'>
+
+</style>
