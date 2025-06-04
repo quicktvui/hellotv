@@ -58,14 +58,22 @@
       :focusable="false"
       :src="bg_shadow"
     />
+
     <!-- 小窗列表 -->
     <qt-view
-      style="background-color: transparent; position: absolute; top: 215px; right: 530px"
+      class="bg-player-list"
+      :style="{ width: `${playerWindowWidth}px`, height: `${playerWindowHeight}px` }"
       :visible="bgPlayerType === HomePlayType.TYPE_CELL_LIST"
       :clipChildren="true"
     >
+      <!-- 加载中 -->
+      <qt-view class="bg-player-list-loading" :visible="curPlayState !== PlayerState.STATE_PLAYING" :focusable="false">
+        <qt-loading-view style="width: 100px; height: 100px" color="#ffffff" :focusable="false" />
+        <qt-text class="bg-player-list-loading-text" text="加载中..." gravity="center" :focusable="false"></qt-text>
+      </qt-view>
+
       <qt-list-view
-        style="width: 403px; height: 510px; background-color: transparent"
+        style="width: 403px; height: 510px; background-color: transparent; margin-left: 907px"
         :listData="cellListData"
         :verticalFadingEdgeEnabled="true"
         @item-click="onItemClick"
