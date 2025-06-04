@@ -75,12 +75,23 @@
       <qt-list-view
         style="width: 403px; height: 510px; background-color: transparent; margin-left: 907px"
         :listData="cellListData"
+        :singleSelectPosition="0"
         :verticalFadingEdgeEnabled="true"
         @item-click="onItemClick"
         @item-focused="onItemFocus"
       >
         <!-- 文字 -->
         <qt-view class="bg-player-list-item" :type="1" :focusable="true" :enableFocusBorder="true" eventClick eventFocus>
+          <qt-view
+            style="width: 403px; height: 116px; background-color: transparent; position: absolute"
+            :gradientBackground="{
+              colors: ['#ffffff', '#ffffff'],
+              cornerRadii4: [0, 16, 0, 0]
+            }"
+            :showOnState="['focused', 'selected']"
+            :focusable="false"
+            :duplicateParentState="true"
+          ></qt-view>
           <qt-text
             class="bg-player-list-item-text"
             text="${text}"
