@@ -386,8 +386,9 @@ export function buildSectionItem(
     case SectionItemType.TYPE_SMALL_PLAY: //小窗播放
       buildSectionItem = buildSmallPlayerSectionItem(sectionItem, tabPageIndex)
       break
-    // case SectionItemType.TYPE_SMALL_LIST_PLAY:
-    //   break
+    case SectionItemType.TYPE_SMALL_LIST_PLAY: // 小窗列表播放
+      buildSectionItem = buildSmallListPlayerSectionItem(sectionItem, tabPageIndex)
+      break
     default: //默认--无标题格子
       buildSectionItem = buildNoTitleSectionItem(sectionItem)
       break
@@ -518,6 +519,33 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageInd
       playData: sectionItem.playData
     },
     jumpParams: sectionItem.jumpParams
+  }
+}
+
+/**
+ * 封装小窗列表播放格子数据
+ * @param sectionItem 格子数据
+ * @param tabPageIndex tab 导航 index
+ */
+export function buildSmallListPlayerSectionItem(sectionItem: SectionItem, tabPageIndex: number): QTWaterfallItem {
+  return {
+    type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER_LIST,
+    style: buildStyle(sectionItem),
+    image: {
+      style: {
+        width: sectionItem.width,
+        height: sectionItem.height
+      },
+      normal: sectionItem.image
+    },
+    play: {
+      style: {
+        width: 907,
+        height: 510
+      },
+      sid: 'cellSid' + sectionItem.id + 'tabIndex' + tabPageIndex,
+      playData: sectionItem.playData
+    }
   }
 }
 

@@ -73,6 +73,8 @@
         <focus-change-img-item :type="TabContentType.TYPE_ITEM_SECTION_FOCUS_CHANGE_IMG" />
         <!-- 小窗播放格子-->
         <cell-player-item :type="TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER" />
+        <!-- 小窗列表播放格子 -->
+        <cell-list-player-item :type="TabContentType.TYPE_ITEM_SECTION_CELL_PLAYER_LIST" />
         <!-- 历史记录格子-->
         <history-item :type="TabContentType.TYPE_ITEM_HISTORY_TEXT" />
       </template>
@@ -110,6 +112,7 @@ import BgPlayer from './media/bg-player.vue'
 import BarImgItem from './nav-bar/bar-img-item.vue'
 import BarTextItem from './nav-bar/bar-text-item.vue'
 import CellPlayerItem from './tab-content/cell-player-item.vue'
+import CellListPlayerItem from './tab-content/cell-list-player-item.vue'
 import FocusChangeImgItem from './tab-content/focus-change-img-item.vue'
 import HistoryItem from './tab-content/history-item.vue'
 import InnerOutTitleItem from './tab-content/inner-out-title-item.vue'

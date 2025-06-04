@@ -1,5 +1,4 @@
-
-.bg-player-root-css{
+.bg-player-root-css {
   position: absolute;
   width: 1920px;
   height: 1080px;
@@ -8,14 +7,14 @@
   align-items: center;
 }
 
-.bg-player-replace-child{
+.bg-player-replace-child {
   position: absolute;
   width: 1920px;
   height: 1080px;
   background-color: transparent;
 }
 
-.bg-player-parent-css{
+.bg-player-parent-css {
   position: absolute;
   width: 1920px;
   height: 1080px;
@@ -23,7 +22,7 @@
   justify-content: center;
   align-items: center;
 }
-.bg-player-window{
+.bg-player-window {
   position: absolute;
   left: 0;
   top: 0;
@@ -31,21 +30,41 @@
   flex-direction: row;
   background-color: transparent;
 }
-.bg-player-view{
+.bg-player-view {
   position: absolute;
   align-items: center;
   background-color: transparent;
 }
-.bg-player-background-img{
+.bg-player-background-img {
   position: absolute;
   border-radius: 0;
   background-color: transparent;
 }
-.bg-player-mask{
+.bg-player-mask {
   position: absolute;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
-.bg-player-shadow{
+.bg-player-shadow {
   position: absolute;
   background-color: transparent;
+}
+
+.bg-player-list-item {
+  width: 403px;
+  height: 116px;
+  background-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+  focus-background-color: rgba(255, 255, 255, 0.9);
+}
+
+.bg-player-list-item-text {
+  width: 403px;
+  height: 116px;
+  background-color: transparent;
+  font-size: 28px;
+  line-height: 36px;
+  color: rgba(255, 255, 255, 0.55);
+  focus-color: #13161b;
 }
