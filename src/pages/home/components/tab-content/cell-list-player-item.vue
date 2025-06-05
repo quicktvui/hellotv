@@ -1,19 +1,11 @@
 <template>
-  <tv-item
-    class="cell-player-item-root-css"
-    layout="${layout}"
-    flexStyle="${style}"
-    :focusable="true"
-    :clipChildren="false"
-    eventClick
-    eventFocus
-  >
+  <tv-item class="cell-player-item-root-css" layout="${layout}" flexStyle="${style}" :focusable="false" :clipChildren="false">
     <qt-replace-child
-      class="cell-player-item-replace"
+      style="background-color: transparent"
       flexStyle="${play.style}"
       sid="${play.sid}"
-      :postDelay="300"
       eventReceiverSID="homeTabsSid"
+      :postDelay="300"
       :focusable="false"
       :clipChildren="false"
       :replaceOnVisibilityChanged="false"

@@ -74,36 +74,26 @@
 
       <qt-list-view
         style="width: 403px; height: 510px; background-color: transparent; margin-left: 907px"
+        ref="cellListRef"
         :listData="cellListData"
-        :singleSelectPosition="0"
+        :singleSelectPosition="curPlayIndex"
+        :autoscroll="[curPlayIndex, playerWindowHeight / 2]"
         :verticalFadingEdgeEnabled="true"
-        @item-click="onItemClick"
-        @item-focused="onItemFocus"
       >
         <!-- 文字 -->
-        <qt-view class="bg-player-list-item" :type="1" :focusable="true" :enableFocusBorder="true" eventClick eventFocus>
-          <qt-view
-            style="width: 403px; height: 116px; background-color: transparent; position: absolute"
-            :gradientBackground="{
-              colors: ['#ffffff', '#ffffff'],
-              cornerRadii4: [0, 16, 0, 0]
-            }"
-            :showOnState="['focused', 'selected']"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-view>
-          <qt-text
-            class="bg-player-list-item-text"
-            text="${text}"
-            gravity="center|start"
-            :paddingRect="[20, 0, 20, 0]"
-            :boldOnFocus="true"
-            :lines="2"
-            :ellipsizeMode="4"
-            :focusable="false"
-            :duplicateParentState="true"
-          ></qt-text>
-        </qt-view>
+        <bg-player-cell-list-item-text :type="1" />
+        <!-- 图片 -->
+        <bg-player-cell-list-item-img :type="2" :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }" />
+        <bg-player-cell-list-item-img
+          :type="3"
+          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
+          :imgStyle="{ borderTopRightRadius: `16px` }"
+        />
+        <bg-player-cell-list-item-img
+          :type="4"
+          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
+          :imgStyle="{ borderBottomRightRadius: `16px` }"
+        />
       </qt-list-view>
     </qt-view>
   </div>
@@ -113,8 +103,10 @@
 import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
 import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
-import { qtRef, QTListViewItem, VirtualView } from '@quicktvui/quicktvui3'
+import { qtRef, QTIListView, QTListViewItem, VirtualView } from '@quicktvui/quicktvui3'
 import { onMounted, ref } from 'vue'
+import bgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
+import bgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
 import bg_shadow from '../../../../assets/home/bg_shadow.png'
 import BgAnimation from '../../../../components/bg-animation.vue'
 import { IMediaList } from '../../../../components/media/build-data/media-imp'
@@ -144,8 +136,12 @@ const bgPlayerType = ref(HomePlayType.TYPE_UNDEFINED)
 const playerInterceptor = createHomePlayerInterceptor()
 //是否显示边框阴影
 const isShowShadow = ref(false)
-//小窗列表数据
+//小窗列表播放
+const curPlayIndex = ref(0)
+const cellListRef = ref<QTIListView>()
 const cellListData = qtRef<QTListViewItem[]>()
+const cellListItemWidth = ref(0)
+const cellListItemHeight = ref(0)
 //播放状态
 let curPlayState = PlayerState.STATE_WAIT
 //生命周期
@@ -196,13 +192,30 @@ const initPlay = (playInfo: HomePlayData) => {
   if (playerData && playerData.length > 0) {
     // 小窗列表数据
     if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
-      cellListData.value = playerData.map((item) => {
-        return {
-          type: 1,
-          text: item.title
-        }
+      // 小窗类型, 1 文字、2 图片
+      let cellMode = 1
+      // 小窗列表Item尺寸
+      cellListItemWidth.value = 403
+      cellListItemHeight.value = cellMode === 1 ? 116 : 160
+      cellListData.value = playerData.map((item, index) => {
+        return cellMode === 1
+          ? {
+              type: 1,
+              text: item.title,
+              gradientBackground: {
+                colors: ['#ffffff', '#ffffff'],
+                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
+              }
+            }
+          : {
+              type: index === 0 ? 3 : index === playerData.length - 1 ? 4 : 2, // TODO: 让底层支持 flexStyle: { borderTopRightRadius、borderBottomRightRadius }
+              cover: item.cover,
+              gradientBackground: {
+                colors: ['#8C000000', '#8C000000'],
+                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
+              }
+            }
       })
-      qt.log.e('ok->cellListData', cellListData.value)
     } else {
       //设置背景
       const cover = playerData[0].cover || ''
@@ -281,7 +294,13 @@ const play = (playerData: Array<IMediaList>, isSetWindowChange: boolean = false)
   //低端机 且 非全屏播放 不播
   if (BuildConfig.isLowEndDev && bgPlayerType.value !== HomePlayType.TYPE_BG) return
   bgPlayerViewRef.value?.resetMediaList()
-  const list = bgPlayerViewRef.value?.initPlayData(playerData, ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT, [playerInterceptor])
+  const list = bgPlayerViewRef.value?.initPlayData(
+    playerData,
+    bgPlayerType.value === HomePlayType.TYPE_CELL_LIST
+      ? ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP
+      : ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT,
+    [playerInterceptor]
+  )
   clearTimeout(delayPlayTimer)
   delayPlayTimer = setTimeout(() => {
     bgPlayerViewRef.value.playMediaList(list)
@@ -332,6 +351,11 @@ const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
     change4KVisible(beforeSid, 'visible')
     change4KVisible(nextSid, 'visible')
   }
+
+  // 小窗列表播放逻辑
+  if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
+    curPlayIndex.value = mediaItem.index
+  }
 }
 const onPlayerPlaying = () => {
   clearTimeout(dismissCoverTimer)
@@ -362,14 +386,6 @@ const requestDismissCover = (delay = 1000) => {
   dismissCoverTimer = setTimeout(() => {
     bgPlayerBackgroundImgRef.value?.clearImg()
   }, delay)
-}
-
-const onItemClick = (item: any) => {
-  qt.log.e('ok->bgPlayer-onItemClick', item)
-}
-
-const onItemFocus = (item: any) => {
-  qt.log.e('ok->bgPlayer-onItemFocus', item)
 }
 
 const destroy = () => {

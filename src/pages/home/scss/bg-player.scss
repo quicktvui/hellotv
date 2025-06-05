@@ -88,9 +88,33 @@
   width: 403px;
   height: 116px;
   background-color: transparent;
+  position: absolute;
   font-size: 28px;
   line-height: 36px;
   color: rgba(255, 255, 255, 0.55);
   focus-color: #13161b;
   select-color: #13161b;
+}
+
+.bg-player-list-item-img-bg {
+  width: 403px;
+  height: 160px;
+  background-color: transparent;
+  position: absolute;
+  z-index: 200;
+}
+
+.bg-player-list-item-img {
+  width: 403px;
+  height: 160px;
+  background-color: transparent;
+}
+
+.bg-player-list-item-play-icon {
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  position: absolute;
+  top: 100px;
+  right: 10px;
 }
