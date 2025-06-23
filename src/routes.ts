@@ -1,6 +1,6 @@
 import { ESRouteType } from '@extscreen/es3-router'
 import home from './pages/home/index.vue'
-// import detail from './pages/detail/index.vue'
+import live from './pages/live/index.vue'
 import test from './pages/m-test.vue'
 import playTest from './pages/play-test.vue'
 import tabsTest from './pages/tabs-test.vue'
@@ -121,6 +121,11 @@ const routes = [
     path: '/load_web_view',
     name: 'load_web_view',
     component: () => import('./pages/webview/load-web-view.vue')
+  },
+  {
+    path: '/live',
+    name: 'live',
+    component: live
   }
 ]
 
