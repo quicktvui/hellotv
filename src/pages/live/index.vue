@@ -1,11 +1,17 @@
 <template>
   <qt-view class="live">
     <!-- 全屏播放 -->
-    <player ref="playerRef" @closeMenu="closeMenu" />
-    <!-- 占位填充 -->
-    <qt-view style="width: 1920px; height: 1080px; background-color: transparent"></qt-view>
+    <player-live ref="playerRef" @closeMenu="closeMenu" />
     <!-- 频道列表 -->
-    <channelMenu v-show="showMenu" ref="menuRef" @loadPrograms="loadPrograms" @playMediaByIndex="playMediaByIndex" @closeMenu="closeMenu" />
+    <channel-menu
+      v-show="showMenu"
+      ref="menuRef"
+      @loadPrograms="loadPrograms"
+      @playMediaByIndex="playMediaByIndex"
+      @closeMenu="closeMenu"
+    />
+    <!-- 占位填充 -->
+    <qt-view style="width: 1920px; height: 1080px; background-color: transparent" :focusable="false"></qt-view>
   </qt-view>
 </template>
 
@@ -14,7 +20,7 @@ import { onMounted, ref } from 'vue'
 import { ESKeyEvent, ESKeyCode, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { mockMediaList, mockCategories, mockChannels, mockPrograms } from './mock/index'
-import player from './components/player/index.vue'
+import playerLive from './components/player/index.vue'
 import channelMenu from './components/menu/index.vue'
 
 const toast = useESToast()
@@ -24,7 +30,7 @@ const menuRef = ref()
 const showMenu = ref(false)
 
 onMounted(() => {
-  playerRef.value.init({ mediaList: mockMediaList })
+  playerRef.value?.init({ mediaList: mockMediaList })
   menuRef.value?.init({ categories: mockCategories, channels: mockChannels })
 })
 
