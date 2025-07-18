@@ -142,7 +142,7 @@
 
 <script setup lang="ts">
 import { ref, watch, onUnmounted } from 'vue'
-import { ESKeyEvent, useESEventBus } from '@extscreen/es3-core'
+import { ESKeyEvent, useESEventBus, useESToast } from '@extscreen/es3-core'
 import { useESRouter } from '@extscreen/es3-router'
 import { qtRef, QTIListView, QTListViewItem } from '@quicktvui/quicktvui3'
 import { buildContents, buildEndContent } from './adapter/index'
@@ -155,6 +155,7 @@ import icEmpty from '../../assets/history/ic_empty.png'
 import themeConfig from '../../config/theme-config'
 import config from './config'
 
+const toast = useESToast()
 const router = useESRouter()
 const eventBus = useESEventBus()
 const isLoading = ref<boolean>(false)
@@ -265,7 +266,7 @@ function onContentItemClick(evt) {
         checkAndHandleDeletion()
       })
       .catch(() => {
-        qt.toast.showToast('删除失败')
+        toast.showToast('删除失败')
       })
   } else {
     isResume = true
@@ -384,7 +385,7 @@ function onKeyDown(keyEvent: ESKeyEvent) {
     }
   } else if (lastFocusName === 'sidebar' && keyEvent.keyCode === 21) {
     if ((leftCounter++, leftCounter > 10)) {
-      qt.toast.showToast('生成数据')
+      toast.showToast('生成数据')
       leftCounter = 0
       historyManager.generateRecords('xxx', lastIndex.value === 0 ? 'history' : 'favorite')
     }

@@ -6,7 +6,7 @@ const { VueLoaderPlugin } = require('vue-loader')
 const watchPlugin = require('./webpack-watch.ts')
 
 const pkg = require('../package.json')
-let cssLoader = '@hippy/vue-css-loader'
+let cssLoader = "@extscreen/es3-vue-css-loader";
 
 module.exports = {
   mode: 'development',

@@ -26,7 +26,9 @@ import { dPageheight, dPageWidth, IBlockItemData, myDataManager2, transCenterSec
 import userManager from '../../api/user/user-manager'
 import { UserChangeListener, UserInfo } from '../../api/user/impl-user'
 import { QTIWaterfall } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTIWaterfall'
+import { useESToast } from '@extscreen/es3-core'
 
+const toast = useESToast()
 const isLoading = ref(true)
 const lastClickSid = ref('')
 const bg = ref<any>({ colors: ['#FF1C222B', '#FF00040B'] })
@@ -50,7 +52,7 @@ const contentData = qtRef<QTWaterfallSection[]>()
 
 const onItemClick = (pageId, sectionId, item: IBlockItemData) => {
   if (item.jumpParams.options === '') {
-    qt.toast.showToast('跳转页面')
+    toast.showToast('跳转页面')
   } else {
     myDataManager2.routerLaunch(item)
     lastClickSid.value = item._id
