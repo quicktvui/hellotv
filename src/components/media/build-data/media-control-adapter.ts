@@ -1,9 +1,4 @@
-import {
-  ESIPlayerInterceptor, ESMediaSource,
-  ESPlayerDefinition,
-  ESPlayerPlayMode,
-  ESPlayerRate
-} from '@extscreen/es3-player'
+import { ESIPlayerInterceptor, ESMediaSource, ESPlayerDefinition, ESPlayerPlayMode, ESPlayerRate } from '@extscreen/es3-player'
 import { ESMediaItem, ESMediaItemList } from '@extscreen/es3-player-manager'
 import { Native } from '@extscreen/es3-vue'
 import { QTListViewItem } from '@quicktvui/quicktvui3'
@@ -51,8 +46,8 @@ export function s_to_hs(s) {
   h += ''
   s += ''
   //如果只有一位数，前面增加一个0
-  h = (h.length == 1) ? '0' + h : h
-  s = (s.length == 1) ? '0' + s : s
+  h = h.length == 1 ? '0' + h : h
+  s = s.length == 1 ? '0' + s : s
   return h + ':' + s
 }
 
@@ -65,8 +60,8 @@ export const initDefaultMenuList = (): Array<IMediaMenu> => [
     type: 2,
     nameFlag: PlayMenuNameFlag.EPISODES,
     icon: {
-      normal: 'file://'+xuanJiNormal,
-      focused: 'file://'+xuanJiFocused
+      normal: 'file://' + xuanJiNormal,
+      focused: 'file://' + xuanJiFocused
     },
     name: '选集',
     decoration: { right: 30 },
@@ -74,12 +69,14 @@ export const initDefaultMenuList = (): Array<IMediaMenu> => [
   },
   { type: 1, nameFlag: PlayMenuNameFlag.RATE, name: '倍速 1.0x', decoration: { right: 30 } },
   {
-    type: 2, nameFlag: PlayMenuNameFlag.SETTING,
+    type: 2,
+    nameFlag: PlayMenuNameFlag.SETTING,
     icon: {
-      normal: 'file://'+settingNormal,
-      focused: 'file://'+settingFocused
+      normal: 'file://' + settingNormal,
+      focused: 'file://' + settingFocused
     },
-    name: '设置', style: { width: 170, height: 72 }
+    name: '设置',
+    style: { width: 170, height: 72 }
   }
 ]
 
@@ -281,7 +278,11 @@ export function buildPlayData(playData: Array<IMediaList>, interceptors?: Array<
   return playList
 }
 
-export function buildMediaItemList(startIndex: number = 0, playDatas: Array<IMediaList>, interceptors?: Array<ESIPlayerInterceptor>): Array<ESMediaItem> {
+export function buildMediaItemList(
+  startIndex: number = 0,
+  playDatas: Array<IMediaList>,
+  interceptors?: Array<ESIPlayerInterceptor>
+): Array<ESMediaItem> {
   const itemList: Array<ESMediaItem> = []
   if (playDatas && playDatas.length > 0) {
     playDatas.map((item, index) => {
@@ -297,6 +298,7 @@ function buildItem(item: IMediaList, index: number, interceptors?: Array<ESIPlay
   const isRequestUrl = item?.isRequestUrl
   let mediaItem_0: ESMediaItem
   const all = {
+    playerType: item.playerType || 1, // 播放器类型
     id: item.id,
     type: item.type,
     beforeSid: item?.beforeSid,

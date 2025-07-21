@@ -1,7 +1,7 @@
 <template>
-  <div class='activity-root-css' 
-    ref='activityRef' 
-    :clipChildren='false' 
+  <div class='activity-root-css'
+    ref='activityRef'
+    :clipChildren='false'
     :clipPadding='false'>
     <!-- 背景图 -->
     <bg-animation ref='waterfallBgRef' style='position: absolute' :focusable='false' />
@@ -42,7 +42,7 @@
 <script setup lang='ts' name='index'>
 import { ref } from 'vue'
 import { useESRouter } from '@extscreen/es3-router'
-import {  ESKeyEvent} from '@extscreen/es3-core'
+import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
 import {QTITab,QTTabPageData,QTTabPageState,QTWaterfallItem,} from '@quicktvui/quicktvui3'
 import ActivityManager from './api/index'
 import {buildTab, buildTabContentAdapter} from './adapter/index'
@@ -54,6 +54,7 @@ import InnerOutTitleItem from './components/item/inner-out-title-item.vue'
 import PlaceholderItem  from './components/item/placeholder-item.vue'
 import FocusChangeImgItem  from './components/item/focus-change-img-item.vue'
 
+  const toast = useESToast()
   const router = useESRouter()
   const activityRef = ref()
   const waterfallBgRef = ref()
@@ -87,7 +88,7 @@ import FocusChangeImgItem  from './components/item/focus-change-img-item.vue'
   const onESCreate = (params) => {
     tabRef.value?.initTab(buildTab())
   }
-  
+
   const onTabPageLoadData = (pageIndex: number, pageNo: number) => {
     let tabId = '35d2f5pg'
     ActivityManager.getTabContent(tabId, pageNo, TabContentConfig.sectionLoadLimit)
@@ -104,7 +105,7 @@ import FocusChangeImgItem  from './components/item/focus-change-img-item.vue'
         tabRef.value?.setPageState(pageIndex, QTTabPageState.QT_TAB_PAGE_STATE_COMPLETE)
       }
     }, () => {
-      qt.toast.showToast('加载数据失败，稍后重试！')
+      toast.showToast('加载数据失败，稍后重试！')
     })
   }
   const onTabPageItemClick = (pageIndex: number, sectionIndex: number, itemIndex: number, item: QTWaterfallItem, e) => {

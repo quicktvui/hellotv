@@ -1,5 +1,4 @@
-
-.bg-player-root-css{
+.bg-player-root-css {
   position: absolute;
   width: 1920px;
   height: 1080px;
@@ -8,14 +7,14 @@
   align-items: center;
 }
 
-.bg-player-replace-child{
+.bg-player-replace-child {
   position: absolute;
   width: 1920px;
   height: 1080px;
   background-color: transparent;
 }
 
-.bg-player-parent-css{
+.bg-player-parent-css {
   position: absolute;
   width: 1920px;
   height: 1080px;
@@ -23,7 +22,7 @@
   justify-content: center;
   align-items: center;
 }
-.bg-player-window{
+.bg-player-window {
   position: absolute;
   left: 0;
   top: 0;
@@ -31,21 +30,91 @@
   flex-direction: row;
   background-color: transparent;
 }
-.bg-player-view{
+.bg-player-view {
   position: absolute;
   align-items: center;
   background-color: transparent;
 }
-.bg-player-background-img{
+.bg-player-background-img {
   position: absolute;
   border-radius: 0;
   background-color: transparent;
 }
-.bg-player-mask{
+.bg-player-mask {
   position: absolute;
-  background-color: rgba(0,0,0,0.5);
+  background-color: rgba(0, 0, 0, 0.5);
 }
-.bg-player-shadow{
+.bg-player-shadow {
   position: absolute;
   background-color: transparent;
+}
+
+.bg-player-list {
+  background-color: transparent;
+  border-radius: 16px;
+  position: absolute;
+  top: 219px;
+  left: 80px;
+}
+
+.bg-player-list-loading {
+  width: 907px;
+  height: 510px;
+  background-color: transparent;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-player-list-loading-text {
+  width: 200px;
+  height: 46px;
+  background-color: transparent;
+  margin-top: 25px;
+  font-size: 36px;
+  color: rgba(255, 255, 255, 0.55);
+}
+
+.bg-player-list-item {
+  width: 403px;
+  height: 116px;
+  background-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+.bg-player-list-item-text {
+  width: 403px;
+  height: 116px;
+  background-color: transparent;
+  position: absolute;
+  font-size: 28px;
+  line-height: 36px;
+  color: rgba(255, 255, 255, 0.55);
+  focus-color: #13161b;
+  select-color: #13161b;
+}
+
+.bg-player-list-item-img-bg {
+  width: 403px;
+  height: 160px;
+  background-color: transparent;
+  position: absolute;
+  z-index: 200;
+}
+
+.bg-player-list-item-img {
+  width: 403px;
+  height: 160px;
+  background-color: transparent;
+}
+
+.bg-player-list-item-play-icon {
+  width: 50px;
+  height: 50px;
+  background-color: transparent;
+  position: absolute;
+  top: 100px;
+  right: 10px;
 }

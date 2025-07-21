@@ -293,6 +293,12 @@ class Launch {
     })
   }
 
+  launchLive() {
+    this.router.push({
+      name: 'live'
+    })
+  }
+
   //拼接快应用scheme
   buildScheme(esPackageName: string, from: string, url?: string, params?: object): string {
     let scheme = `esapp://action/start?es_pkg=${esPackageName}&from=${from}&splash=-1`

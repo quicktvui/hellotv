@@ -22,7 +22,7 @@
       ref="topMyBtnRef"
       name="topMyBtn"
       sid="topMyBtnSid"
-      :blockFocusDirections="['right', 'top']"
+      :blockFocusDirections="['top']"
       style="width: 200px; height: 60px; margin-left: 10px; margin-right: 10px"
       :nextFocusDownSID="downSid"
       :textStyle="{ width: '120px', height: '60px' }"
