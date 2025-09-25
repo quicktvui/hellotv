@@ -3,7 +3,7 @@
     name='mediaRoot' :focusable="false"
     :style="{ width: playerWidth, height: playerHeight }">
     <!-- media-player-view -->
-    <qt-view  class="media-player-view" v-show="isFullWindow" :focusable="false">
+    <qt-view  class="media-player-view" :visible="isFullWindow" :focusable="false">
       <!-- 顶部条 -->
       <qt-view class="media-player-view-title"
         v-if="isFullWindow && isTitleBarShowing"
@@ -12,17 +12,17 @@
           :focusable="false" :fontSize="30" :text="mediaTitle"/>
       </qt-view>
       <!-- 底部进度条 -->
-      <qt-view class="media-player-view-bottom" v-show="isFullWindow && isProgressShowing">
+      <qt-view class="media-player-view-bottom" :visible="isFullWindow && isProgressShowing">
         <!-- 进度条背景渐变 -->
         <qt-view class="media-player-view-bottom-bg"
           v-if="isFullWindow && isProgressShowing"
           :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
         <!-- 底部进度条 -->
-        <qt-column class="media-player-view-state-progress" v-show="isProgressShowing">
+        <qt-column class="media-player-view-state-progress" :visible="isProgressShowing">
           <!-- 播放状态 -->
-          <img v-show="!isPlayerPlaying" :focusable="false" :src="playIcon"
+          <img :visible="!isPlayerPlaying" :focusable="false" :src="playIcon"
             duplicateParentState postDelay="100" />
-          <img v-show="isPlayerPlaying" :focusable="false" :src="pauseIcon"
+          <img :visible="isPlayerPlaying" :focusable="false" :src="pauseIcon"
             duplicateParentState postDelay="100" />
           <!-- 播放进度 -->
           <qt-row class="media-player-view-progress" :autofocus="true">
@@ -49,7 +49,7 @@
           <div class="media-player-view-next" :focusable="true" name="nextButton"
             :nextFocusName="{up: 'seekBar',down: 'nextButton',
               right: 'nextButton',left: 'nextButton'}"
-            v-show="mediaSeriesVisible"
+            :visible="mediaSeriesVisible"
             @click="onNextButtonClicked"
             @focus="onNextButtonFocusChanged">
             <div class="media-player-view-next-text-focus"
@@ -64,12 +64,12 @@
         </qt-column>
       </qt-view>
       <!-- 底部菜单 -->
-      <qt-view v-show="isFullWindow && isMenuShowing" class="media-player-view-menu">
+      <qt-view :visible="isFullWindow && isMenuShowing" class="media-player-view-menu">
         <qt-view v-if="isFullWindow && isMenuShowing"
           class="media-player-view-menu-bg" :gradientBackground="{ colors: ['#00000000', '#E6000000'] }"/>
         <!-- 折叠面板 -->
         <qt-collapse ref="mediaCollapseRef"
-          v-show="isFullWindow && isMenuShowing"
+          :visible="isFullWindow && isMenuShowing"
           v-if="mediaCollapseMenuInit"
           class="media-player-collapse">
           <media-collapse-order
@@ -107,7 +107,7 @@
       :focusable="false"
       ref="mediaPlayerLoadingRef"
       name='loadingRoot'
-      :fillParent='true' v-show="showLoading"
+      :fillParent='true' :visible="showLoading"
       :style="{width:playerWidth, height:playerHeight}">
       <qt-loading-view :style="{width:100, height:100}"/>
     </qt-view>
