@@ -4,7 +4,7 @@
     :clipChildren="false"
     :clipPadding="false"
     :focusable="false"
-    v-show="visible">
+    :visible="visible">
     <!-- 选集标题 -->
     <div class="media-series-title" :focusable="false">
       <qt-text class="media-series-title-text" :focusable="false" :fontSize="40" text="选集"/>
