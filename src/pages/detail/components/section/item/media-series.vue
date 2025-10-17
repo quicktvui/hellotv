@@ -83,6 +83,9 @@ import detailManager from '../../../api/index'
       buildMediaSeriesStyleType(),
       buildMediaSeriesData(media)
     )
+    if(!visible.value){
+      getMediaList(m.episodesId, 0)
+    }
   }
   onMounted(() => {
     eventbus.on('onMediaSeriesLoadData', onMediaSeriesLoadData)
