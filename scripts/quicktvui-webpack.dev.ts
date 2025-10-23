@@ -139,7 +139,8 @@ module.exports = {
     alias: (() => {
       const aliases = {
         src: path.resolve('./src'),
-        quicktvui: path.resolve('../dist/quicktvui')
+        // quicktvui: path.resolve('../dist/quicktvui')
+        // '@quicktvui/quicktvui3': path.resolve('./packages/quicktvui/packages/quicktvui'),
       }
       return aliases
     })()

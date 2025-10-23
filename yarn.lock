@@ -2026,10 +2026,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-ad-player/-/es3-ad-player-1.0.9.tgz#32e6329c06abacb717b4c6e36f4050f575f6bb9b"
   integrity sha512-8+n6MwzeDGi9x6/bdK5A2YWpbU4mkQoUnjxTaJr12B5An/pskD7qFsaompYhnHiai9zXGmiExZkiw8FxUGm5zw==
 
-"@extscreen/es3-component@1.0.37-beta.2":
-  version "1.0.37-beta.2"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.37-beta.2.tgz#a8ca28bbd958cafd941ee9cc96127f16ecacd999"
-  integrity sha512-yYoEBy6m5rNCNACcp7hZNj5VMnyDs/m9TJ9eO40RjryaVYJfY1TsV8QdUZDW23qmH6NTdgpN0P9fxnQNUIlJCg==
+"@extscreen/es3-component@3.0.0-alpha.1":
+  version "3.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-3.0.0-alpha.1.tgz#458d4f07c43dc81047ecfbf5e1b1b1d02c7642af"
+  integrity sha512-qrrwGE6lk5HkZVAhieIqWKj9iWXxsFvoeTjc0DDzbPfCSdg24eH9VxlCEBdd6/VwiugrVbmHy3NJcD3jjK0NWg==
 
 "@extscreen/es3-core@3.0.0-alpha.1":
   version "3.0.0-alpha.1"
@@ -2604,10 +2604,10 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
-"@quicktvui/quicktvui3@1.2.0-beta.64":
-  version "1.2.0-beta.64"
-  resolved "https://registry.yarnpkg.com/@quicktvui/quicktvui3/-/quicktvui3-1.2.0-beta.64.tgz#b6cc93f6999e1d1f206e4ed382133dc8acacf467"
-  integrity sha512-azvYUhP9kOHwtIqEfiBJ/KTy7UO9HOvtwIzOEsnj9bGeORv4PCeShZcdxWD6Xg+dBlnAtMkV42fCcHIKf3l0wQ==
+"@quicktvui/quicktvui3@3.0.0-alpha.4":
+  version "3.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@quicktvui/quicktvui3/-/quicktvui3-3.0.0-alpha.4.tgz#f74c35981e010051a56e0de1d5e5095f85fa42ef"
+  integrity sha512-8R0T6Euibs3zTvDSuDE16XZb7qddxkOCFkIRlsfYdph4Kn/Pq57a5b4qKshKbKXtfcPhRf/p6yEUOFbIVQD1Uw==
 
 "@rollup/plugin-alias@^3.1.9":
   version "3.1.9"

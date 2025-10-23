@@ -16,7 +16,7 @@
   },
   "dependencies": {
     "@extscreen/es3-ad-player": "1.0.9",
-    "@extscreen/es3-component": "1.0.37-beta.2",
+    "@extscreen/es3-component": "3.0.0-alpha.1",
     "@extscreen/es3-core": "3.0.0-alpha.1",
     "@extscreen/es3-player": "1.0.26",
     "@extscreen/es3-player-manager": "1.0.46",
@@ -24,7 +24,7 @@
     "@extscreen/es3-video-player": "1.0.42",
     "@extscreen/es3-vue": "3.0.0-alpha.4",
     "@extscreen/es3-vue-style-parser": "3.0.0-alpha.1",
-    "@quicktvui/quicktvui3": "1.2.0-beta.64",
+    "@quicktvui/quicktvui3": "3.0.0-alpha.4",
     "@vue/runtime-core": "^3.5.15",
     "@vue/shared": "^3.5.15",
     "core-js": "^3.8.3",
