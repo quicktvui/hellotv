@@ -12,17 +12,6 @@
     />
     <!-- 背景播放及小窗播放组件 -->
     <bg-player class="waterfall-tabs-bg-player" ref="waterfallBgPlayerRef" :clipChildren="false" sid="waterfallBgPlayerSid" />
-    <!--顶部按钮组-->
-    <div
-      ref="waterfallTopRef"
-      name="waterfallTopView"
-      sid="waterfallTopSid"
-      class="waterfall-top-view"
-      :clipChildren="false"
-      :blockFocusDirections="['left', 'right', 'up']"
-    >
-      <slot name="topView" />
-    </div>
     <qt-tabs
       ref="tabRef"
       sid="homeTabsSid"
@@ -87,6 +76,18 @@
         <short-video-section :type="TabContentType.TYPE_WATERFALL_SECTION_SHORT_SCREEN" @loadMore="loadShortData" :getTabRef="getTabRef" />
       </template>
     </qt-tabs>
+    <!--顶部按钮组-->
+    <div
+      ref="waterfallTopRef"
+      name="waterfallTopView"
+      sid="waterfallTopSid"
+      class="waterfall-top-view"
+      :clipChildren="false"
+      style='z-index: 1000'
+      :blockFocusDirections="['left', 'right', 'up']"
+    >
+      <slot name="topView" />
+    </div>
   </div>
 </template>
 
