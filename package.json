@@ -24,7 +24,7 @@
     "@extscreen/es3-video-player": "3.0.0-alpha.1",
     "@extscreen/es3-vue": "3.0.0-alpha.4",
     "@extscreen/es3-vue-style-parser": "3.0.0-alpha.1",
-    "@quicktvui/quicktvui3": "3.0.0-alpha.4",
+    "@quicktvui/quicktvui3": "3.0.0-alpha.5",
     "@vue/runtime-core": "^3.5.15",
     "@vue/shared": "^3.5.15",
     "core-js": "^3.8.3",
