@@ -123,6 +123,7 @@
     "rollup-plugin-typescript2": "^0.35.0",
     "rollup-plugin-vue": "^6.0.0",
     "rollup-plugin-vue2": "^0.8.1",
+    "archiver": "^7.0.1",
     "scope-loader": "^1.0.3",
     "shelljs": "^0.8.5",
     "signale": "^1.4.0",
