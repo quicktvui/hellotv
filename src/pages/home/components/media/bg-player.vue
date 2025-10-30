@@ -10,7 +10,7 @@
     >
     </qt-replace-child>
     <!--  此div的作用是让bg_player在一开始的时候不显示，否则如果瀑布流首屏配置了播放器，就会先闪现在左上角一下-->
-    <div class="bg-player-parent-css" sid="TabContentConfig.homeBgPlaySid">
+    <div class="bg-player-parent-css">
       <div
         class="bg-player-window"
         v-if="playerWindowInit"
@@ -105,8 +105,8 @@ import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
 import { qtRef, QTIListView, QTListViewItem, VirtualView } from '@quicktvui/quicktvui3'
 import { onMounted, ref } from 'vue'
-import bgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
-import bgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
+import BgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
+import BgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
 import bg_shadow from '../../../../assets/home/bg_shadow.png'
 import BgAnimation from '../../../../components/bg-animation.vue'
 import { IMediaList } from '../../../../components/media/build-data/media-imp'

@@ -2026,15 +2026,15 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-ad-player/-/es3-ad-player-1.0.9.tgz#32e6329c06abacb717b4c6e36f4050f575f6bb9b"
   integrity sha512-8+n6MwzeDGi9x6/bdK5A2YWpbU4mkQoUnjxTaJr12B5An/pskD7qFsaompYhnHiai9zXGmiExZkiw8FxUGm5zw==
 
-"@extscreen/es3-component@1.0.35":
-  version "1.0.35"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.35.tgz#4d2f64f6a0a9ab2a396fdf093098388149f21ce6"
-  integrity sha512-raOfJI5a0dzV47CSZsL7DXmKaLyCcYVbFwm5ZxEum93VCJrHLxK6IZU9TdvP2hXUd12OTarvdAMNPuUO4UdoZA==
+"@extscreen/es3-component@1.0.37-beta.2":
+  version "1.0.37-beta.2"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-1.0.37-beta.2.tgz#a8ca28bbd958cafd941ee9cc96127f16ecacd999"
+  integrity sha512-yYoEBy6m5rNCNACcp7hZNj5VMnyDs/m9TJ9eO40RjryaVYJfY1TsV8QdUZDW23qmH6NTdgpN0P9fxnQNUIlJCg==
 
-"@extscreen/es3-core@1.2.4":
-  version "1.2.4"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-1.2.4.tgz#d8dfbb92b84c7324c262fe464e37d1f445364d7e"
-  integrity sha512-bdZOfXEs94jx64L2fQnGphGaH4i8SWUHbTaCzAND67EpURbRgCXmTbXvC0xwD8Cfgx18h8CDYrD3evigAAiLeA==
+"@extscreen/es3-core@1.2.6":
+  version "1.2.6"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-1.2.6.tgz#9161e95c99f77cf9f0d6e312931e582d4d4c1130"
+  integrity sha512-2r+fAPMqUgC37zYVfXTAmicj3eP9c3v0NfZ2er+hSfnDyvghy2Riil0KawprX/HaA7G2S55sU+7GghemxpcdHA==
 
 "@extscreen/es3-debug-server@0.0.6":
   version "0.0.6"
@@ -2110,10 +2110,10 @@
   resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player/-/es3-player-1.0.26.tgz#34918089938d03573672188bb7fedbc5fe6c8fd8"
   integrity sha512-pE1vlDnSlJRoZZS6/ag8F0M77LRW+ujK/5QgUiNM+Cx3huJt3Dx4jWSwzMRNwwf8RA2hQ/rm98bIML03rDJc2w==
 
-"@extscreen/es3-router@1.2.1":
-  version "1.2.1"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.2.1.tgz#cec81e3c7d65d445010743d74c038ac4da81ab5e"
-  integrity sha512-iLSPoIO4xF5jXkyGDBNmuv0ZCNEOLHFsPkmT7LOkchXm0HinoLd86ateyFOsEdl7NWZ8y0Kg8NRL5jNxSP8Xkg==
+"@extscreen/es3-router@1.2.3":
+  version "1.2.3"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-router/-/es3-router-1.2.3.tgz#e997c2b0ad0a6da857c400b5c31a0ff59d417dff"
+  integrity sha512-cw4ByNjDiBEacT7KAUKsHBnXKD40zZPoUO9zVw0xsmjhGbqrYn3mqy1hgajwsuHFfOuylmgRVCLhW4RRlaE/Og==
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
@@ -2136,10 +2136,10 @@
   dependencies:
     "@vue/shared" "^3.2.21"
 
-"@extscreen/es3-vue@2.0.5":
-  version "2.0.5"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-vue/-/es3-vue-2.0.5.tgz#9f9f01124b544041ba7a2d286a8de9e42a862153"
-  integrity sha512-jOsrJvEy+SZTcdgMf/XDNnwA9hkNQ5YMdAcp5wtF991FbXjxpRcA/lN6xT3MBkFXqbrdZg1XKndA0HF20T3Fdw==
+"@extscreen/es3-vue@2.0.11":
+  version "2.0.11"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-vue/-/es3-vue-2.0.11.tgz#d2a3d77590bde4332ebd9f6afc7286b126cd388e"
+  integrity sha512-jtOkSfJUVlmSMVuB617x24wvaqSAKK1AlnwKXft1H0EE1YRPvE/XrJEedI+47ln9fiHmetB8rmfZsmHi+EUvQg==
 
 "@hapi/bourne@^3.0.0":
   version "3.0.0"
@@ -2604,10 +2604,10 @@
     "@parcel/watcher-win32-ia32" "2.5.1"
     "@parcel/watcher-win32-x64" "2.5.1"
 
-"@quicktvui/quicktvui3@1.2.0-beta.28":
-  version "1.2.0-beta.28"
-  resolved "https://repo.huaweicloud.com/repository/npm/@quicktvui/quicktvui3/-/quicktvui3-1.2.0-beta.28.tgz#7c2939f5c5c17cb318dd619ad2bd99d11c453386"
-  integrity sha512-H4Vs+diC3qiCIrCAzAYkJhjNOXMWN2Y6lVrxTW7lPI7KReqeiKjjoJRBamWEP9QN9vC1vYpPpfBXhwbOXz7eAw==
+"@quicktvui/quicktvui3@1.2.0-beta.64":
+  version "1.2.0-beta.64"
+  resolved "https://registry.yarnpkg.com/@quicktvui/quicktvui3/-/quicktvui3-1.2.0-beta.64.tgz#b6cc93f6999e1d1f206e4ed382133dc8acacf467"
+  integrity sha512-azvYUhP9kOHwtIqEfiBJ/KTy7UO9HOvtwIzOEsnj9bGeORv4PCeShZcdxWD6Xg+dBlnAtMkV42fCcHIKf3l0wQ==
 
 "@rollup/plugin-alias@^3.1.9":
   version "3.1.9"
