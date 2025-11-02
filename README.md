@@ -4,20 +4,26 @@
 [![vue version](https://img.shields.io/badge/@quicktvui/quicktvui3-latest-green.svg)](https://www.npmjs.com/package/@quicktvui/quicktvui3?activeTab=versions)
 
 HelloTV是基于 [QuickTVUI](http://v3.quicktvui.com/zh/) 框架的视频点播直播应用，面向使用遥控器交互的安卓大屏设备。
-项目目的是让开发者通过对本项目源码的简单修改，快速实现一些TV端常见的功能页面，从而加速开发进度。如果使用者并不具备编程能力，可以参考“HelloTV-Case”项目，简单修改该项目配置文件就可以快速实现一个标准化的视频类应用。
+项目目的是让开发者通过对本项目源码的简单修改，快速实现一些TV端常见的功能页面，从而加速开发进度。如果使用者并不具备编程能力，可以参考[HelloTV-Case](https://github.com/quicktvui/HelloTV-Case)项目，简单修改该项目配置文件就可以快速实现一个标准化的视频类应用。
 点播页面包括瀑布流首页、内容列表、筛选、搜索、详情、历史、收藏、登录等，直播页面包括多级列表页、播放详情页等。
 以下是一些页面效果：
 
 瀑布流首页
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/bgplay.png)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/9a62dd70-e787-4d5f-8294-d2acd79c23bf.jpeg)
+![iamge](http://extcdn.hsrc.tv/data_center/files/2024/08/06/915c577d-fde4-4f75-91d4-ef54b63a7ccb.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/d2b2be9a-2b87-4db9-b36a-8e317a97a7f0.jpg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/7ca82a38-b3d1-4a21-8bbb-52b1f42b1f4c.jpg)
+![](http://extcdn.hsrc.tv/data_center/files/2024/08/06/d7fe27d2-6112-4350-8881-8cb4f7d5ca30.jpg)
 搜索
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/search.png)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/9204f370-3230-4f56-b7df-c4da1283fd89.jpeg)
 筛选
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/filter.png)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/3c860f27-cefe-47a9-b3ea-c9bbe761e2e2.jpeg)
 详情页
-![image](https://extcdn.hsrc.tv/extend_screen/images/example_app/detail.png)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/c2c6d9e0-ca8a-4ff1-a5ce-e639395ad33f.jpeg)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/08/06/faa9e1c4-c427-421b-a8ae-ac9562e26662.jpg)
 内容编辑页
-![image](doc/edit.png)
+![image](http://extcdn.hsrc.tv/data_center/files/2024/07/10/fc811902-d468-4828-b030-0f7561c1816b.jpeg
+)
 <!-- [![Build Status](https://travis-ci.org/your-username/your-project.svg?branch=master)](https://travis-ci.org/your-username/your-project) -->
 <!-- [![npm version](https://badge.fury.io/js/your-package.svg)](https://badge.fury.io/js/your-package) -->
 
@@ -90,9 +96,17 @@ npm run build-apk-release
 
 开发中
 - [ ] 内容编辑页
+- [ ] 短视频浏览页
+- [ ] 仿B站排行榜页
+- [ ] 仿B站详情页
 
-计划中
-- [ ] 短视频浏览
+![]()
+
+### 本次更新
+* 首页
+  * [x] 仿B站首页
+  * [x] 仿B站4K专区
+
 
 ## 关于QuickTVUI
 QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快应用开发框架，旨在解决大屏开发困难、更新困难等疑难问题。  
@@ -118,4 +132,4 @@ QuickTVUI是基于[Hippy](https://github.com/Tencent/Hippy)框架实现的TV快�
 
 如果您有任何问题或疑问，请通过以下方式联系我们：
 
-- 邮箱：zhaopeng1@huan.tv
+- 邮箱：quicktvui@163.com
