@@ -26,7 +26,6 @@
     "@extscreen/es3-vue-style-parser": "0.0.8",
     "@quicktvui/quicktvui3": "1.2.0-beta.28",
     "@vue/runtime-core": "^3.2.21",
-    "@vue/shared": "^3.5.15",
     "core-js": "^3.8.3",
     "crypto-js": "^4.2.0",
     "lodash": "^4.17.21",
