@@ -49,22 +49,6 @@
   background-color: transparent;
 }
 
-.bg-player-list {
-  background-color: transparent;
-  border-radius: 16px;
-  position: absolute;
-  top: 219px;
-  left: 80px;
-}
-
-.bg-player-list-loading {
-  width: 907px;
-  height: 510px;
-  background-color: transparent;
-  position: absolute;
-  align-items: center;
-  justify-content: center;
-}
 
 .bg-player-list-loading-text {
   width: 200px;
@@ -76,8 +60,6 @@
 }
 
 .bg-player-list-item {
-  width: 403px;
-  height: 116px;
   background-color: transparent;
   border-bottom-style: solid;
   border-bottom-width: 1px;
@@ -85,15 +67,12 @@
 }
 
 .bg-player-list-item-text {
-  width: 403px;
-  height: 116px;
   background-color: transparent;
   position: absolute;
-  font-size: 28px;
   line-height: 36px;
   color: rgba(255, 255, 255, 0.55);
   focus-color: #13161b;
-  select-color: #13161b;
+  select-color: #FFFFFF;
 }
 
 .bg-player-list-item-img-bg {

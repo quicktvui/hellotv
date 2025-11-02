@@ -44,6 +44,8 @@ export default {
 
   // 是否展示占位图
   placeHolderEnable: BuildConfig.isLowEndDev,
+  //是否展示焦点内边框 默认展示
+  focusInnerBorderEnable: true,
   // 设置放大倍数
   placeHolderFocusScale: 1.05
 }

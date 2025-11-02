@@ -1,3 +1,5 @@
+import { CellListItemType } from '../media/home-media-imp'
+
 export default {
   //首页播放器sid
   homeBgPlaySid: 'bg-player',
@@ -5,6 +7,8 @@ export default {
   world4kSectionItemName:'home-4k-list-section-item',
   worldSmall4kSectionItemName:'home-small-4k-list-section-item',
   shortVideoSectionItemName:'short-video-section-item',
+  cellListSectionItemName:'cell-list-section-item',
+  cellListItemType:CellListItemType.TYPE_TEXT,
   //首页内容请求数量
   sectionLoadLimit: 10,
   //板块间距

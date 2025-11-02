@@ -59,43 +59,6 @@
       :src="bg_shadow"
     />
 
-    <!-- 小窗列表 -->
-    <qt-view
-      class="bg-player-list"
-      :style="{ width: `${playerWindowWidth}px`, height: `${playerWindowHeight}px` }"
-      :visible="bgPlayerType === HomePlayType.TYPE_CELL_LIST"
-      :clipChildren="true"
-    >
-      <!-- 加载中 -->
-      <qt-view class="bg-player-list-loading" :visible="curPlayState !== PlayerState.STATE_PLAYING" :focusable="false">
-        <qt-loading-view style="width: 100px; height: 100px" color="#ffffff" :focusable="false" />
-        <qt-text class="bg-player-list-loading-text" text="加载中..." gravity="center" :focusable="false"></qt-text>
-      </qt-view>
-
-      <qt-list-view
-        style="width: 403px; height: 510px; background-color: transparent; margin-left: 907px"
-        ref="cellListRef"
-        :listData="cellListData"
-        :singleSelectPosition="curPlayIndex"
-        :autoscroll="[curPlayIndex, playerWindowHeight / 2]"
-        :verticalFadingEdgeEnabled="true"
-      >
-        <!-- 文字 -->
-        <bg-player-cell-list-item-text :type="1" />
-        <!-- 图片 -->
-        <bg-player-cell-list-item-img :type="2" :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }" />
-        <bg-player-cell-list-item-img
-          :type="3"
-          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
-          :imgStyle="{ borderTopRightRadius: `16px` }"
-        />
-        <bg-player-cell-list-item-img
-          :type="4"
-          :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"
-          :imgStyle="{ borderBottomRightRadius: `16px` }"
-        />
-      </qt-list-view>
-    </qt-view>
   </div>
 </template>
 
@@ -105,17 +68,22 @@ import { ESPlayerPlayMode } from '@extscreen/es3-player'
 import { ESMediaItem } from '@extscreen/es3-player-manager'
 import { qtRef, QTIListView, QTListViewItem, VirtualView } from '@quicktvui/quicktvui3'
 import { onMounted, ref } from 'vue'
-import BgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
-import BgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
+import BgPlayerCellListItemText from '../tab-content/bg-player-cell-list-item-text.vue'
+import BgPlayerCellListItemImg from '../tab-content/bg-player-cell-list-item-img.vue'
 import bg_shadow from '../../../../assets/home/bg_shadow.png'
 import BgAnimation from '../../../../components/bg-animation.vue'
 import { IMediaList } from '../../../../components/media/build-data/media-imp'
 import MediaPlayerView from '../../../../components/media/view/media-player-view.vue'
 import BuildConfig from '../../../../config/build-config'
 import { createHomePlayerInterceptor } from '../../adapter/media/create-home-player-interceptor'
-import { HomePlayData, HomePlayType, PlayerState } from '../../adapter/media/home-media-imp'
+import {
+  HomePlayData,
+  HomePlayType,
+  PlayerState
+} from '../../adapter/media/home-media-imp'
 import TabContentConfig from '../../adapter/tab-content/tab-content-config'
 
+const emits = defineEmits(['setCellListIndex'])
 const esEventBus = useESEventBus()
 const bgPlayerBackgroundImgRef = ref()
 const bgPlayerViewRef = ref()
@@ -136,12 +104,7 @@ const bgPlayerType = ref(HomePlayType.TYPE_UNDEFINED)
 const playerInterceptor = createHomePlayerInterceptor()
 //是否显示边框阴影
 const isShowShadow = ref(false)
-//小窗列表播放
-const curPlayIndex = ref(0)
-const cellListRef = ref<QTIListView>()
-const cellListData = qtRef<QTListViewItem[]>()
-const cellListItemWidth = ref(0)
-const cellListItemHeight = ref(0)
+
 //播放状态
 let curPlayState = PlayerState.STATE_WAIT
 //生命周期
@@ -156,6 +119,9 @@ let curCover = ''
 let beforeSid = ''
 let sid = ''
 let nextSid = ''
+
+/********小窗列表**************/
+let cellListIndex = 0
 
 onMounted(() => {
   esEventBus.on('bg-player-life-cycle', updateLifeCycle)
@@ -190,38 +156,9 @@ const initPlay = (playInfo: HomePlayData) => {
   //获取播放数据
   const playerData = playInfo.playerData
   if (playerData && playerData.length > 0) {
-    // 小窗列表数据
-    if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
-      // 小窗类型, 1 文字、2 图片
-      let cellMode = 1
-      // 小窗列表Item尺寸
-      cellListItemWidth.value = 403
-      cellListItemHeight.value = cellMode === 1 ? 116 : 160
-      cellListData.value = playerData.map((item, index) => {
-        return cellMode === 1
-          ? {
-              type: 1,
-              text: item.title,
-              gradientBackground: {
-                colors: ['#ffffff', '#ffffff'],
-                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
-              }
-            }
-          : {
-              type: index === 0 ? 3 : index === playerData.length - 1 ? 4 : 2, // TODO: 让底层支持 flexStyle: { borderTopRightRadius、borderBottomRightRadius }
-              cover: item.cover,
-              gradientBackground: {
-                colors: ['#8C000000', '#8C000000'],
-                cornerRadii4: [0, index === 0 ? 16 : 0, index === playerData.length - 1 ? 16 : 0, 0]
-              }
-            }
-      })
-    } else {
       //设置背景
       const cover = playerData[0].cover || ''
       setBgImage(cover)
-    }
-
     //准备播放数据
     let delayToPlay = 400
     if (!playerWindowInit.value) {
@@ -233,7 +170,7 @@ const initPlay = (playInfo: HomePlayData) => {
         return
       }
       if (lifeCycle !== 'onESStop') {
-        play(playerData, true)
+        play(playerData,0, true)
       }
     }, delayToPlay)
   }
@@ -270,8 +207,10 @@ const decodePlayInfo = (playInfo: HomePlayData) => {
  * @param isLoadCur
  */
 const setBgImage = (bgImg: string, isLoadCur: boolean = false) => {
-  if (bgPlayerType.value === HomePlayType.TYPE_4K || bgPlayerType.value === HomePlayType.TYPE_CELL) {
-    //4k和小窗图片在格子上设置
+  if (bgPlayerType.value === HomePlayType.TYPE_4K
+    || bgPlayerType.value === HomePlayType.TYPE_CELL
+    || bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
+    //4k和小窗，小窗列表图片在格子上设置
     bgPlayerBackgroundImgRef.value.clearImg()
     return
   }
@@ -290,12 +229,13 @@ const setBgImage = (bgImg: string, isLoadCur: boolean = false) => {
   }
 }
 
-const play = (playerData: Array<IMediaList>, isSetWindowChange: boolean = false) => {
+const play = (playerData: Array<IMediaList>,index:number=0, isSetWindowChange: boolean = false) => {
   //低端机 且 非全屏播放 不播
   if (BuildConfig.isLowEndDev && bgPlayerType.value !== HomePlayType.TYPE_BG) return
   bgPlayerViewRef.value?.resetMediaList()
   const list = bgPlayerViewRef.value?.initPlayData(
     playerData,
+    index,
     bgPlayerType.value === HomePlayType.TYPE_CELL_LIST
       ? ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP
       : ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_REPEAT,
@@ -313,6 +253,9 @@ const play = (playerData: Array<IMediaList>, isSetWindowChange: boolean = false)
       bgPlayerViewRef.value?.setSmallWindow()
     }
   }
+}
+const playByIndex = (index)=>{
+  bgPlayerViewRef.value?.playMediaItemByIndex(index)
 }
 const start = () => {
   if (!BuildConfig.isLowEndDev || bgPlayerType.value == HomePlayType.TYPE_BG) bgPlayerViewRef.value?.start(0)
@@ -351,10 +294,14 @@ const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
     change4KVisible(beforeSid, 'visible')
     change4KVisible(nextSid, 'visible')
   }
-
-  // 小窗列表播放逻辑
-  if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST) {
-    curPlayIndex.value = mediaItem.index
+  if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST){
+    cellListIndex = mediaItem.index
+    emits('setCellListIndex',cellListIndex)
+    VirtualView.call('cellPlayerListSid', 'setSelectChildPosition', [cellListIndex,true])
+    if (cellListIndex > 2){
+      const y = 510 / 2 - 58
+      VirtualView.call('cellPlayerListSid', 'scrollToIndex', [0,cellListIndex,false,0,y])
+    }
   }
 }
 const onPlayerPlaying = () => {
@@ -369,7 +316,15 @@ const onPlayerPlaying = () => {
   requestDismissCover(600)
 }
 
-const onPlayerCompleted = () => {}
+const onPlayerCompleted = () => {
+  if (bgPlayerType.value === HomePlayType.TYPE_CELL_LIST){
+    //设置背景图片
+  }
+}
+
+const cellListPlayNext = ()=>{
+  bgPlayerViewRef.value?.playNextMediaItem()
+}
 const onPlayerError = () => {
   pause()
   stop()
@@ -380,6 +335,9 @@ const change4KVisible = (sid: string, visible: string) => {
 const requestDismissCover = (delay = 1000) => {
   if (bgPlayerType.value === HomePlayType.TYPE_4K) {
     change4KVisible(sid, 'invisible')
+    VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [1])
+  }
+  if (bgPlayerType.value ===HomePlayType.TYPE_CELL_LIST){
     VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [1])
   }
   clearTimeout(dismissCoverTimer)
@@ -410,6 +368,7 @@ defineExpose({
   playerWindowInit,
   initPlay,
   play,
+  playByIndex,
   start,
   pause,
   stop,
