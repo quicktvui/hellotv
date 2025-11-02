@@ -12,13 +12,13 @@
           :focusable="false" :fontSize="30" :text="mediaTitle"/>
       </qt-view>
       <!-- 底部进度条 -->
-      <qt-view class="media-player-view-bottom" :visible="isFullWindow && isProgressShowing">
+      <qt-view class="media-player-view-bottom" v-if="isFullWindow && isProgressShowing">
         <!-- 进度条背景渐变 -->
         <qt-view class="media-player-view-bottom-bg"
           v-if="isFullWindow && isProgressShowing"
           :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
         <!-- 底部进度条 -->
-        <qt-column class="media-player-view-state-progress" :visible="isProgressShowing">
+        <qt-column class="media-player-view-state-progress" v-show="isProgressShowing">
           <!-- 播放状态 -->
           <img :visible="!isPlayerPlaying" :focusable="false" :src="playIcon"
             duplicateParentState postDelay="100" />
