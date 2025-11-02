@@ -124,9 +124,9 @@ export default defineComponent({
       const mRef: any = playerManager.value?.getPlayerView('media-manager-view')
       return mRef.isViewShow()
     }
-    const initPlayData = (playData: Array<IMediaList>, playMode?: ESPlayerPlayMode, interceptors?: Array<ESIPlayerInterceptor>): ESMediaItemList => {
+    const initPlayData = (playData: Array<IMediaList>,index:number=0, playMode?: ESPlayerPlayMode, interceptors?: Array<ESIPlayerInterceptor>): ESMediaItemList => {
       playInterceptors = interceptors
-      const list: ESMediaItemList = buildPlayData(playData, interceptors)
+      const list: ESMediaItemList = buildPlayData(playData,index, interceptors)
       if (playMode) {
         setPlayMediaListMode(playMode)
       } else {
@@ -226,6 +226,10 @@ export default defineComponent({
 
     const playMediaItemByIndex = (index: number) => {
       playerManager.value?.playMediaByIndex(index)
+    }
+
+    const playNextMediaItem = ()=>{
+      playerManager.value?.playNextMedia()
     }
 
     const getPlayingMediaIndex = (): number => {
@@ -335,6 +339,7 @@ export default defineComponent({
       initPlayData,
       initialize,
       playMediaItemByIndex,
+      playNextMediaItem,
       playMediaItemById,
       setFullWindow,
       setSmallWindow,

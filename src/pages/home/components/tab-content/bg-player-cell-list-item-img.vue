@@ -32,4 +32,4 @@ defineProps({
 })
 </script>
 
-<style lang="scss" src="../../scss/bg-player.scss"></style>
+<style lang="scss" src='../../scss/bg-player.scss'></style>
