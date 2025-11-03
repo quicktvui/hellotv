@@ -1,19 +1,27 @@
 <template>
-  <qt-view class="bg-player-list-item" :style="$props.style" :type="2" :focusable="true" eventClick eventFocus>
+  <qt-view class="bg-player-cell-list-item" flexStyle="${itemStyle}" name='${name}'
+           :focusable="true" eventClick eventFocus>
+    <qt-image class="bg-player-cell-list-item-img" flexStyle="${itemStyle}"
+              :style="$props.imgStyle"
+              src="${cover}" :focusable="false"></qt-image>
     <qt-view
-      class="bg-player-list-item-img-bg"
+      class="bg-player-cell-list-item-img-bg"
+      flexStyle='${itemStyle}'
       gradientBackground="${gradientBackground}"
-      :showOnState="'normal'"
+      :showOnState="['normal','selected']"
       :focusable="false"
       :duplicateParentState="true"
     ></qt-view>
-    <qt-image class="bg-player-list-item-img" :style="$props.imgStyle" src="${cover}" :focusable="false"></qt-image>
-    <qt-image
-      style="width: 50px; height: 50px; background-color: transparent; position: absolute; top: 100px; right: 10px"
-      :src="icPlay"
-      :showOnState="['selected', 'focused']"
+
+    <qt-view
+      style="background-color: transparent; position: absolute; z-index: 1000"
+      flexStyle='${markStyle}'
+      :showOnState="['focused', 'selected']"
       :focusable="false"
-    ></qt-image>
+      :duplicateParentState="true"
+    >
+      <play-mark style="width: 33px; height: 24px;" :markColor="'#FF0000'" :gap="3" :focusable="false" />
+    </qt-view>
   </qt-view>
 </template>
 
@@ -21,10 +29,6 @@
 import icPlay from '../../../../assets/home/ic_play.png'
 
 defineProps({
-  style: {
-    type: Object,
-    default: () => ({})
-  },
   imgStyle: {
     type: Object,
     default: () => ({})
@@ -32,4 +36,4 @@ defineProps({
 })
 </script>
 
-<style lang="scss" src='../../scss/bg-player.scss'></style>
+<style lang="scss" src='../../scss/bg-player-cell-list-item.scss'></style>

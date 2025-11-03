@@ -269,6 +269,11 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
         //初始化位置
         VirtualView.call(_4KListSid, 'scrollToPositionWithOffsetInfiniteMode', [0, 253, false])
         VirtualView.call(_4KListSid, 'setSelectChildPosition', [1000000000, true])
+      } else if(playType === HomePlayType.TYPE_CELL_LIST){
+        const url = obj.playerData[0].cover
+        VirtualView.call('cellPlayerListBgSid', 'setSrc', [url])
+        VirtualView.call('cellPlayerListSid', 'scrollToPositionWithOffset', [0, 0, false])
+        VirtualView.call('cellPlayerListSid', 'setSelectChildPosition', [0,true])
       }
       recordPlayerData.tabPageIndex = tabPageIndex
       recordPlayerData.sectionItemIndex = obj.sectionItemIndex

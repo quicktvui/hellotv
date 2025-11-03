@@ -36,28 +36,27 @@
       :verticalFadingEdgeEnabled="true">
       <!-- 文字-->
       <bg-player-cell-list-item-text :type='86'/>
-      <!--          <bg-player-cell-list-item-img-->
-      <!--            :type="82"-->
-      <!--            :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"-->
-      <!--            :imgStyle="{ borderTopRightRadius: `16px` }"-->
-      <!--          />-->
-
-      <!--          <bg-player-cell-list-item-img-->
-      <!--            :type="83"-->
-      <!--            :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }" />-->
-
-      <!--          <bg-player-cell-list-item-img-->
-      <!--            :type="84"-->
-      <!--            :style="{ width: `${cellListItemWidth}px`, height: `${cellListItemHeight}px` }"-->
-      <!--            :imgStyle="{ borderBottomRightRadius: `16px` }"-->
+      <bg-player-cell-list-item-img
+        :type="82"
+        :imgStyle="{ borderTopRightRadius: `${borderRadius}px` }"
+      />
+      <bg-player-cell-list-item-img
+        :type="83" />
+      <bg-player-cell-list-item-img
+        :type="84"
+        :imgStyle="{ borderBottomRightRadius: `${borderRadius}px` }"/>
 
     </qt-list-view>
   </tv-item>
 </template>
 
 <script lang="ts" setup name="cell-list-player-item">
+import { ref } from 'vue'
 import TabContentConfig from '../../adapter/tab-content/tab-content-config'
+import BgPlayerCellListItemImg from './bg-player-cell-list-item-img.vue'
 import BgPlayerCellListItemText from './bg-player-cell-list-item-text.vue'
+import ThemeConfig from '../../../../config/theme-config.ts'
+const borderRadius = ref(ThemeConfig.focusBorderCorner)
 defineExpose({})
 </script>
 

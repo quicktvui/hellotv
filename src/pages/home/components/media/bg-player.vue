@@ -77,6 +77,7 @@ import MediaPlayerView from '../../../../components/media/view/media-player-view
 import BuildConfig from '../../../../config/build-config'
 import { createHomePlayerInterceptor } from '../../adapter/media/create-home-player-interceptor'
 import {
+  CellListItemType,
   HomePlayData,
   HomePlayType,
   PlayerState
@@ -299,7 +300,9 @@ const onPlayerPlayMedia = (mediaItem: ESMediaItem) => {
     emits('setCellListIndex',cellListIndex)
     VirtualView.call('cellPlayerListSid', 'setSelectChildPosition', [cellListIndex,true])
     if (cellListIndex > 2){
-      const y = 510 / 2 - 58
+      const cellMode = TabContentConfig.cellListItemType
+      const offset = cellMode === CellListItemType.TYPE_TEXT ? 58 : 80
+      const y = 510 / 2 - offset
       VirtualView.call('cellPlayerListSid', 'scrollToIndex', [0,cellListIndex,false,0,y])
     }
   }
@@ -339,6 +342,7 @@ const requestDismissCover = (delay = 1000) => {
   }
   if (bgPlayerType.value ===HomePlayType.TYPE_CELL_LIST){
     VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [1])
+    VirtualView.call('cellPlayerListBgSid', 'setSrc', [''])
   }
   clearTimeout(dismissCoverTimer)
   dismissCoverTimer = setTimeout(() => {
