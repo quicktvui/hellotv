@@ -545,7 +545,6 @@ export function buildSmallListPlayerSectionItem(sectionItem: SectionItem, tabPag
         imgUrl: item.cover,
         text:item.title,
         textFocus:'　'+item.title,
-        index,
         itemStyle:{
           width:410,
           height:itemHeight
@@ -562,6 +561,12 @@ export function buildSmallListPlayerSectionItem(sectionItem: SectionItem, tabPag
         itemStyle:{
           width:410,
           height:itemHeight
+        },
+        markStyle:{
+          width:42,
+          height:42,
+          marginTop:itemHeight - 36,
+          marginLeft:410 - 42
         },
         gradientBackground: {
           colors: ['#8C000000', '#8C000000'],

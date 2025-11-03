@@ -1,0 +1,24 @@
+.bg-player-cell-list-item {
+  background-color: transparent;
+  border-bottom-style: solid;
+  border-bottom-width: 1px;
+  border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+.bg-player-cell-list-item-text {
+  background-color: transparent;
+  position: absolute;
+  line-height: 36px;
+  color: rgba(255, 255, 255, 0.55);
+  focus-color: #13161b;
+  select-color: #FFFFFF;
+}
+
+.bg-player-cell-list-item-img-bg {
+  background-color: transparent;
+  position: absolute;
+  z-index: 200;
+}
+
+.bg-player-cell-list-item-img {
+  background-color: transparent;
+}

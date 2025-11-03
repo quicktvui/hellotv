@@ -1,5 +1,5 @@
 <template>
-  <qt-view class="bg-player-list-item"
+  <qt-view class="bg-player-cell-list-item"
            flexStyle="${itemStyle}"
            name='${name}'
            :focusable="true"
@@ -14,7 +14,7 @@
       :duplicateParentState="true"
     ></qt-view>
     <qt-text
-      class="bg-player-list-item-text"
+      class="bg-player-cell-list-item-text"
       flexStyle='${itemStyle}'
       :focusable="false"
       :showOnState="['normal']"
@@ -27,7 +27,7 @@
       :duplicateParentState="true"
     ></qt-text>
     <qt-text
-      class="bg-player-list-item-text"
+      class="bg-player-cell-list-item-text"
       flexStyle='${itemStyle}'
       :showOnState="['focused', 'selected']"
       :focusable="false"
@@ -51,4 +51,4 @@
   </qt-view>
 </template>
 
-<style lang="scss" src='../../scss/bg-player-cell-list-item-text.scss'></style>
+<style lang="scss" src='../../scss/bg-player-cell-list-item.scss'></style>
