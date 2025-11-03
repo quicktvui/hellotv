@@ -22,7 +22,7 @@
     "@extscreen/es3-player-manager": "1.0.46",
     "@extscreen/es3-router": "1.2.3",
     "@extscreen/es3-video-player": "1.0.42",
-    "@extscreen/es3-vue": "2.0.12",
+    "@extscreen/es3-vue": "2.0.14",
     "@extscreen/es3-vue-style-parser": "2.0.1",
     "@quicktvui/quicktvui3": "1.2.0-beta.64",
     "@vue/runtime-core": "^3.2.21",
