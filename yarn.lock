@@ -2031,10 +2031,10 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-component/-/es3-component-3.0.0-alpha.1.tgz#458d4f07c43dc81047ecfbf5e1b1b1d02c7642af"
   integrity sha512-qrrwGE6lk5HkZVAhieIqWKj9iWXxsFvoeTjc0DDzbPfCSdg24eH9VxlCEBdd6/VwiugrVbmHy3NJcD3jjK0NWg==
 
-"@extscreen/es3-core@3.0.0-alpha.1":
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-3.0.0-alpha.1.tgz#7cab8857a2ffbb4b1c0eefbf0b4905ebdec91319"
-  integrity sha512-HCP0g1dANwLUp4sLEWOLptbUVMvw3e+HXoqacxsfz2382rHS5UzJ4t6sZiSKmZ4AWSiHJSqSH/kOIcHOjTLmNA==
+"@extscreen/es3-core@3.0.0-alpha.4":
+  version "3.0.0-alpha.4"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-core/-/es3-core-3.0.0-alpha.4.tgz#d39b984f09aa259e31500751bfdf6ae573fd5cda"
+  integrity sha512-g10NNBOxg+eCYyu6Hdmquh2rG7KaG6DKG88Fj+gri0NcursPfzOykThnQD/TWKlpPkSfgZD1i6ZsimX1CC7OOA==
 
 "@extscreen/es3-debug-server@0.0.6":
   version "0.0.6"
