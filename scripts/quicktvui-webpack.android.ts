@@ -23,7 +23,7 @@ module.exports = {
     assetModuleFilename: '[hash][ext][query]',
     // CDN path can be configured to load children bundles from remote server
     // publicPath: 'https://xxx/hippy/hippyVueNextDemo/',
-    publicPath: './'
+    publicPath: ''
   },
   optimization: {
     moduleIds: 'named',
