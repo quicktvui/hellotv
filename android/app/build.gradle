@@ -99,6 +99,7 @@ dependencies {
 
     implementation 'com.extscreen.runtime:official:2.9.5-rc08'
     implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
+    implementation 'com.extscreen.sdk:entry:1.0.2'
 
     if (INCLUDE_SO) {
         implementation 'eskit.sdk.support.so:hp-v1-armeabi-v7a:1.0.1'
