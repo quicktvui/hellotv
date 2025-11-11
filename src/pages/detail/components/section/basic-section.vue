@@ -100,7 +100,6 @@ import config from './config';
   }
   //**************************初始化入口**************************
   const init = async (media: IMedia) => {
-    console.log('===1===BASIC=====SECTION INIT======>>>>', media)
     if (media.mediaSeriesType > -1 && media.episodes > 1) {
       switch (media.mediaSeriesType) {
         case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_NUMBER: //数字
