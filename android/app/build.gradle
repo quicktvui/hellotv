@@ -18,6 +18,7 @@ ext {
     // 2 从指定路径加载
     // 3 从url加载(适合url不变，只更新rpk包)
     // 4 从指定源服务器加载
+    // 5 从官方管理后台加载(需联系开发者注册后台账号)
 
     RPK_PACKAGE = "es.hellotv"              // rpk包名(会按照这个包名进行本地版本管理)
 
@@ -169,6 +170,8 @@ task writeConfigFile() {
                 break
             case 4:
                 repo = REPOSITORY_HOST
+                break
+            case 5:
                 break
             default:
                 throw new RuntimeException("unsupport LOAD_TYPE ${LOAD_TYPE}")

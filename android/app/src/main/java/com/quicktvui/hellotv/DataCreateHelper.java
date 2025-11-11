@@ -41,6 +41,8 @@ public class DataCreateHelper {
                 }
                 data.setAppLoadUri(cfg.rpkLoadUri);
                 break;
+            case 5:
+                break;
             default:
                 throw new RuntimeException("not support LOAD_TYPE " + cfg.loadType);
         }
