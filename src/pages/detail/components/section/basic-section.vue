@@ -100,6 +100,7 @@ import config from './config';
   }
   //**************************初始化入口**************************
   const init = async (media: IMedia) => {
+    console.log('===1===BASIC=====SECTION INIT======>>>>', media)
     if (media.mediaSeriesType > -1 && media.episodes > 1) {
       switch (media.mediaSeriesType) {
         case IMediaSeriesType.MEDIA_ITEM_LIST_TYPE_NUMBER: //数字
@@ -118,10 +119,11 @@ import config from './config';
     } else {
       sectionHeight.value = 550
     }
-    let devicedId = runtime.getRuntimeDeviceId()??''
-    await detailManager.getRecordData(media.id,devicedId,'favorite').then((res) => {
-      isCollected.value = res && res.id ? true : false
-    })
+    //TODO
+    // let devicedId = runtime.getRuntimeDeviceId()??''
+    // await detailManager.getRecordData(media.id,devicedId,'favorite').then((res) => {
+    //   isCollected.value = res && res.id ? true : false
+    // })
     mediaIntroductionRef.value?.init(media)
     playerPlaceholderRef.value?.init(media)
     menuRef.value?.init(media)
