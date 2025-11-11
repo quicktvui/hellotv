@@ -109,7 +109,7 @@ dependencies {
         implementation 'eskit.sdk.support.so:ijk-player-arm64-v8a:1.0.0'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'eskit.sdk.support:player-manager:3.1.4-beta3'
     implementation "com.extscreen:hippy4tv-support:1.11.185-beta"
     implementation 'eskit.sdk.support:ui-support:2.1.85'

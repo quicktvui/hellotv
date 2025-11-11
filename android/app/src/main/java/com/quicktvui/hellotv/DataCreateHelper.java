@@ -14,9 +14,8 @@ import eskit.sdk.core.EsData;
  */
 public class DataCreateHelper {
 
-    public static EsData createWithConfig() {
+    public static EsData createWithConfig(Config cfg) {
 
-        Config cfg = App.sConfig;
         if (TextUtils.isEmpty(cfg.rpkPackage)) {
             ToastUtils.showLong("需要设置 rpk_package");
             return null;

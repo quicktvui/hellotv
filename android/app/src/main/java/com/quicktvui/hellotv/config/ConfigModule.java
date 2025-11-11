@@ -25,7 +25,7 @@ public class ConfigModule implements IEsModule {
 
     public void readConfig(EsPromise promise) {
         PromiseHolder callback = PromiseHolder.create(promise);
-        Config config = App.sConfig;
+        Config config = (App.sConfigLoadResult != null && App.sConfigLoadResult.success) ? App.sConfigLoadResult.config : null;
         if (config != null) {
             try {
                 EsMap configMap = new EsMap();
