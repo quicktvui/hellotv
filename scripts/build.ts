@@ -31,28 +31,28 @@ async function zipDirectory(sourceDir, outPath) {
 }
 
 async function build() {
-  const androidDir = path.resolve('./dist/android/')
-  const androidZipFile = path.resolve('./dist/android.zip')
+  const bundleDir = path.resolve('./dist/bundle/')
+  const bundleZipFile = path.resolve('./dist/bundle.zip')
 
-  // 删除 dist/android 目录
-  await removeDir(androidDir)
+  // 删除 dist/bundle 目录
+  await removeDir(bundleDir)
 
-  // 创建 dist/android 目录
-  fs.mkdirSync(androidDir, { recursive: true })
+  // 创建 dist/bundle 目录
+  fs.mkdirSync(bundleDir, { recursive: true })
 
-  // 删除 dist/android.zip 文件
-  await removeFile(androidZipFile)
+  // 删除 dist/bundle.zip 文件
+  await removeFile(bundleZipFile)
 
   // 构建 flavor
   await run('tsx ./build/build-flavor.ts')
 
-  // 打包 Android 资源
-  await run('webpack --config ./scripts/quicktvui-webpack.android.ts')
+  // 打包 bundle 资源
+  await run('webpack --config ./scripts/quicktvui-webpack.prod.ts')
 
-  // 生成 Android.zip
-  await zipDirectory(androidDir, androidZipFile)
+  // 生成 bundle.zip
+  await zipDirectory(bundleDir, bundleZipFile)
 
-  console.log('✅ Android.zip 已生成:', androidZipFile)
+  console.log('✅ bundle.zip 已生成:', bundleZipFile)
 }
 
 // 仅在直接执行该文件时运行

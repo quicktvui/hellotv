@@ -16,8 +16,8 @@ module.exports = {
     index: [path.resolve(pkg.main)]
   },
   output: {
-    filename: `[name].${platform}.js`,
-    path: path.resolve(`./dist/${platform}/`),
+    filename: `[name].js`,
+    path: path.resolve(`./dist/bundle/`),
     strictModuleExceptionHandling: true,
     globalObject: '(0, eval)("this")',
     assetModuleFilename: '[hash][ext][query]',
@@ -61,7 +61,7 @@ module.exports = {
           test: /[\\/]node_modules[\\/]/,
           priority: -10,
           reuseExistingChunk: true,
-          filename: 'vendor.android.js'
+          filename: 'vendor.js'
         },
         default: {
           minChunks: 2,
