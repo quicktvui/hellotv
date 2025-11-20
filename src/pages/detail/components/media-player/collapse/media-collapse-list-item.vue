@@ -1,5 +1,5 @@
 <template>
-  <qt-view 
+  <qt-view
     class="media-collapse-list-item"
     :clipChildren="false"
     :enableFocusBorder="false"
@@ -9,7 +9,7 @@
     :focusable=true>
     <div class="media-collapse-list-item-focus-bg"
       showOnState="focused" duplicateParentState
-      :gradientBackground="{ orientation: 6, colors: ['#fffffff', '#ffffff'], cornerRadius: 8 }">
+      :gradientBackground="{ orientation: 6, colors: ['#ffffff', '#ffffff'], cornerRadius: 8 }">
     </div>
     <div class="media-collapse-list-item-content" :duplicateParentState="true">
       <div class="media-collapse-list-item-img" :duplicateParentState="true" flexStyle="${iconStyle}">
@@ -17,18 +17,18 @@
         <img duplicateParentState :src="mediaListItemNormal" showOnState="focused"/>
         <img duplicateParentState :src="mediaListItemNormal" showOnState="selected"/>
       </div>
-      <qt-text class="media-collapse-list-item-text" :focusable="false" 
-        gravity="center" text="${text}" autoWidth :ellipsizeMode="3" 
+      <qt-text class="media-collapse-list-item-text" :focusable="false"
+        gravity="center" text="${text}" autoWidth :ellipsizeMode="3"
         :duplicateParentState="true" :fontSize="30"/>
     </div>
   </qt-view>
 </template>
-      
+
 <script setup lang='ts' name='media-collapse-list-item'>
 import mediaListItemSelected from "../../../../../assets/detail/ic_media_list_item_selected.png"
 import mediaListItemNormal from "../../../../../assets/detail/ic_media_list_item_normal.png"
 </script>
-      
+
 <style lang='scss' scoped>
 .media-collapse-list-item{
   border-radius: 8px;
@@ -76,4 +76,3 @@ import mediaListItemNormal from "../../../../../assets/detail/ic_media_list_item
   }
 }
 </style>
-        

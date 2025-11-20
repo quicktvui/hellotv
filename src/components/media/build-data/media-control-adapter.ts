@@ -264,9 +264,9 @@ export function getCurDefinitionIndex(definition: ESPlayerDefinition, definition
   return getCurIndex(definition, definitionList)
 }
 
-export function buildPlayData(playData: Array<IMediaList>, interceptors?: Array<ESIPlayerInterceptor>): ESMediaItemList {
+export function buildPlayData(playData: Array<IMediaList>,index:number=0, interceptors?: Array<ESIPlayerInterceptor>): ESMediaItemList {
   const playList: ESMediaItemList = {
-    index: 0,
+    index: index,
     list: []
   }
   if (playData && playData.length > 0) {

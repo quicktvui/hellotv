@@ -1,6 +1,7 @@
 package com.quicktvui.hellotv;
 
 import android.os.Bundle;
+import android.os.Handler;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,20 +16,26 @@ import eskit.sdk.core.EsManager;
  */
 public class MainActivity extends AppCompatActivity {
 
+    private Handler mHandler = new Handler();
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        App.sExecutor.execute(WORK_START_APP);
+        startApp();
     }
 
-    private final Runnable WORK_START_APP = () -> {
-        if (App.sConfig == null) {
+    private void startApp() {
+        if (App.sConfigLoadResult == null) {
+            mHandler.postDelayed(this::startApp, 200);
+            return;
+        }
+        if (!App.sConfigLoadResult.success) {
             finish();
             return;
         }
 
         // 第一步 设置启动参数
-        EsData data = DataCreateHelper.createWithConfig();
+        EsData data = DataCreateHelper.createWithConfig(App.sConfigLoadResult.config);
 
         if (data == null) {
             finish();
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
 
         // 第二步 启动
         EsManager.get().start(data);
-    };
+    }
 
     @Override
     protected void onStop() {

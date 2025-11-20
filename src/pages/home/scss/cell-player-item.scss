@@ -3,6 +3,14 @@
   background-color: rgba(0,0,0,0.1);
   border-radius: $theme-img-border;
 }
+.cell-player-list-item-bg{
+  position:absolute;
+  top:0.1px;
+  left:0.1px;
+  border-top-left-radius: $theme-img-border;
+  border-bottom-left-radius: $theme-img-border;
+  background-color: transparent;
+}
 .cell-player-item-bg{
   position:absolute;
   top:-0.1px;

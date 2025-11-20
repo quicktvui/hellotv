@@ -11,7 +11,9 @@
       :transitionTime="200"
     />
     <!-- 背景播放及小窗播放组件 -->
-    <bg-player class="waterfall-tabs-bg-player" ref="waterfallBgPlayerRef" :clipChildren="false" sid="waterfallBgPlayerSid" />
+    <bg-player class="waterfall-tabs-bg-player" ref="waterfallBgPlayerRef"
+               :clipChildren="false" sid="waterfallBgPlayerSid"
+               @setCellListIndex='setCellListIndex'/>
     <qt-tabs
       ref="tabRef"
       sid="homeTabsSid"
@@ -197,6 +199,10 @@ let small4KTimer: any = -1
 let small4KSetChildSIdTimer: any = -1
 //short
 let shortVideoTimer: any = -1
+//小窗列表
+let cellListTimer:any = -1
+//小窗列表当前 index
+let curCellListItemIndex:number = 0
 
 //当前背景图地址
 let curBg = ''
@@ -263,6 +269,11 @@ const onTabEvent = (tabIndex: number, eventName: string, params: any) => {
         //初始化位置
         VirtualView.call(_4KListSid, 'scrollToPositionWithOffsetInfiniteMode', [0, 253, false])
         VirtualView.call(_4KListSid, 'setSelectChildPosition', [1000000000, true])
+      } else if(playType === HomePlayType.TYPE_CELL_LIST){
+        const url = obj.playerData[0].cover
+        VirtualView.call('cellPlayerListBgSid', 'setSrc', [url])
+        VirtualView.call('cellPlayerListSid', 'scrollToPositionWithOffset', [0, 0, false])
+        VirtualView.call('cellPlayerListSid', 'setSelectChildPosition', [0,true])
       }
       recordPlayerData.tabPageIndex = tabPageIndex
       recordPlayerData.sectionItemIndex = obj.sectionItemIndex
@@ -346,7 +357,12 @@ const onTabMoveToBottomEnd = () => {
     }
     waterfallBgPlayerRef.value?.setPlayState(PlayerState.STATE_WAIT)
     setTimeout(() => {
-      waterfallBgPlayerRef?.value.play(curBgPlayData)
+      if (curPlayerType === HomePlayType.TYPE_CELL_LIST){
+        waterfallBgPlayerRef?.value.playByIndex(curCellListItemIndex)
+      }else{
+        waterfallBgPlayerRef?.value.play(curBgPlayData)
+      }
+
     }, 400)
   }
   //设置首屏图
@@ -423,6 +439,11 @@ const onTabPageItemFocused = (
         dealShortFocused(tabPageIndex, sectionItemIndex, item)
       }
     }
+    if (item.name === TabContentConfig.cellListSectionItemName){
+      if (recordPlayerData.tabPageIndex !== tabPageIndex || recordPlayerData.sectionItemIndex !== sectionItemIndex){
+        dealCellListFocus(tabPageIndex,sectionItemIndex,item)
+      }
+    }
     //背景播放
     if (curPlayerType === HomePlayType.TYPE_BG && sectionIndex === 0) {
       typeBgFocused(tabPageIndex, sectionIndex, sectionItemIndex, item)
@@ -482,6 +503,26 @@ const deal4KFocused = (tabPageIndex: number, sectionItemIndex: number, item: QTW
     }, 300)
   }
 }
+const setCellListIndex = (index)=>{
+  curCellListItemIndex = index
+  recordPlayerData.sectionItemIndex = index
+}
+const dealCellListFocus = (tabPageIndex: number, sectionItemIndex: number, item: QTWaterfallItem)=>{
+  clearTimeout(cellListTimer)
+  waterfallBgPlayerRef?.value.pause()
+  curCellListItemIndex = sectionItemIndex
+  recordPlayerData.tabPageIndex = tabPageIndex
+  recordPlayerData.sectionItemIndex = sectionItemIndex
+  const url = item.imgUrl
+  VirtualView.call('cellPlayerListBgSid', 'setSrc', [url])
+  //此处只能隐藏播放器
+  VirtualView.call(TabContentConfig.homeBgPlaySid, 'changeAlpha', [0])
+  waterfallBgPlayerRef?.value?.setPlayState(PlayerState.STATE_WAIT)
+  cellListTimer = setTimeout(() => {
+    waterfallBgPlayerRef?.value?.playByIndex(curCellListItemIndex)
+  }, 300)
+}
+
 /**
  * short item 焦点
  * @param tabPageIndex
@@ -870,12 +911,14 @@ const buildPlayerData = (tabPageIndex: number, sectionItemList: Array<QTWaterfal
         if (playType === HomePlayType.TYPE_BG) {
           buildRecordPlayerMap(tabPageIndex, sectionItemIndex, playType, 1920, 1080, 1920, 1080, 0, 0, sectionItem.play.playData)
         } else if (playType === HomePlayType.TYPE_CELL || playType === HomePlayType.TYPE_CELL_LIST) {
+          const windowWidth = playType === HomePlayType.TYPE_CELL ?  sectionItem.style.width! : sectionItem?.play?.style?.width
+          const windowHeight = playType === HomePlayType.TYPE_CELL ? sectionItem.style.height! : sectionItem?.play?.style?.height
           buildRecordPlayerMap(
             tabPageIndex,
             sectionItemIndex,
             playType,
-            sectionItem.style.width!,
-            sectionItem.style.height!,
+            windowWidth,
+            windowHeight,
             sectionItem?.play?.style?.width,
             sectionItem?.play?.style?.height,
             0,
@@ -937,7 +980,11 @@ const onESResume = () => {
       clearTimeout(resumePlayTimer)
       resumePlayTimer = setTimeout(() => {
         if (curBgPlayData) {
-          waterfallBgPlayerRef?.value.play(curBgPlayData)
+          if (curPlayerType === HomePlayType.TYPE_CELL_LIST){
+            waterfallBgPlayerRef?.value.play(curBgPlayData,curCellListItemIndex)
+          }else{
+            waterfallBgPlayerRef?.value.play(curBgPlayData)
+          }
         }
       }, 401)
     }

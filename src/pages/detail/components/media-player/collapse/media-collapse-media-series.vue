@@ -86,7 +86,7 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-------initMedia-start----->>>>', media)
     }
-    if(media.episodes > 1) visible.value = true
+    if(media.episodes >= 1) visible.value = true
     mediaSeriesRef.value?.setInitData(
       buildMediaSeriesType(media.mediaSeriesType),
       buildMediaSeriesGroup(),

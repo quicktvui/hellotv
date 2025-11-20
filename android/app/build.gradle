@@ -18,6 +18,7 @@ ext {
     // 2 从指定路径加载
     // 3 从url加载(适合url不变，只更新rpk包)
     // 4 从指定源服务器加载
+    // 5 从官方管理后台加载(需联系开发者注册后台账号)
 
     RPK_PACKAGE = "es.hellotv"              // rpk包名(会按照这个包名进行本地版本管理)
 
@@ -99,6 +100,7 @@ dependencies {
 
     implementation 'com.extscreen.runtime:official:2.9.5-rc08'
     implementation 'eskit.sdk.support:video-cache-support:0.0.3-SNAPSHOT'
+    implementation 'com.extscreen.sdk:entry:1.0.2'
 
     if (INCLUDE_SO) {
         implementation 'eskit.sdk.support.so:hp-v1-armeabi-v7a:1.0.1'
@@ -108,7 +110,7 @@ dependencies {
         implementation 'eskit.sdk.support.so:ijk-player-arm64-v8a:1.0.0'
     }
 
-    implementation 'com.github.bumptech.glide:glide:4.9.0'
+    implementation 'com.github.bumptech.glide:glide:4.13.2'
     implementation 'eskit.sdk.support:player-manager:3.1.4-beta3'
     implementation "com.extscreen:hippy4tv-support:1.11.185-beta"
     implementation 'eskit.sdk.support:ui-support:2.1.85'
@@ -168,6 +170,8 @@ task writeConfigFile() {
                 break
             case 4:
                 repo = REPOSITORY_HOST
+                break
+            case 5:
                 break
             default:
                 throw new RuntimeException("unsupport LOAD_TYPE ${LOAD_TYPE}")
