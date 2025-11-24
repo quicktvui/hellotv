@@ -1,19 +1,20 @@
 <template>
-  <div class='history-item-root-css' 
-    eventClick eventFocus 
+  <div class='history-item-root-css'
+    eventClick eventFocus
     :focusable="false"
     :enablePlaceholder="true"
-    :clipChildren="false" 
-    flexStyle='${style}' 
+    :clipChildren="false"
+    flexStyle='${style}'
+       gradientBackground="${gradientBackground}"
     layout='${layout}'>
-    <qt-list-view list="${historyList}" 
-      :clipChildren="false" 
-      :focusable="false"  
-      class="h-list" 
+    <qt-list-view list="${historyList}"
+      :clipChildren="false"
+      :focusable="false"
+      class="h-list"
       :refocusType="'KeepPosition'"
-      :skipRequestFocus="true" 
-      :resetOnDetach="true" 
-      :endHintEnabled="false" 
+      :skipRequestFocus="true"
+      :resetOnDetach="true"
+      :endHintEnabled="false"
       flexStyle="${style}" >
       <!-- 无历史 item-->
       <qt-view :type="4001" class='no-history-item' flexStyle='${style}'
@@ -24,9 +25,9 @@
         <qt-text class='no-history-item-text' text='${text}' :fontSIze='28'/>
       </qt-view>
       <!-- 历史 item -->
-      <qt-view :type="4002" name="history-item" class="history-item" 
+      <qt-view :type="4002" name="history-item" class="history-item"
         :focusable="true" flexStyle="${style}"
-        :clipChildren="false" eventClick eventFocus :enableFocusBorder="true" 
+        :clipChildren="false" eventClick eventFocus :enableFocusBorder="true"
         :focusScale="ThemeConfig.placeHolderFocusScale">
         <div duplicateParentState class="history-item-text-box" :focusable="false" >
           <qt-text :focusable="false" text="${text}" :lines="1" :maxLines="1"
@@ -39,13 +40,13 @@
             class="history-item-text" duplicateParentState/>
         </div>
         <qt-text :focusable="false" text="${progress}" :lines="1" :maxLines="1"
-          :ellipsizeMode="2" :fontSize="24" gravity="end|center" 
+          :ellipsizeMode="2" :fontSize="24" gravity="end|center"
           class="history-item-progress" duplicateParentState/>
       </qt-view>
       <!-- 历史 login-item -->
-      <qt-view :type="4003" name="history-login-item" class="history-login-item" 
+      <qt-view :type="4003" name="history-login-item" class="history-login-item"
         :focusable="true" flexStyle="${style}"
-        :clipChildren="false" eventClick eventFocus :enableFocusBorder="true" 
+        :clipChildren="false" eventClick eventFocus :enableFocusBorder="true"
         :focusScale="ThemeConfig.placeHolderFocusScale">
         <div duplicateParentState class="history-login-item-text-box" :focusable="false" >
           <qt-text :focusable="false" text="${text}" :lines="1" :maxLines="1"
@@ -58,14 +59,14 @@
             class="history-login-item-text" duplicateParentState/>
         </div>
         <div duplicateParentState class="history-login-item-icon">
-          <img :src="ic_arrow_normal" :focusable="false" :showOnState="['normal','selected']" 
+          <img :src="ic_arrow_normal" :focusable="false" :showOnState="['normal','selected']"
              duplicateParentState>
-          <img :src="ic_arrow_focused" :focusable="false" showOnState="focused" 
+          <img :src="ic_arrow_focused" :focusable="false" showOnState="focused"
              duplicateParentState>
         </div>
       </qt-view>
       <!-- line -->
-      <div :type="4004" class="history-item-line" :focusable="false" 
+      <div :type="4004" class="history-item-line" :focusable="false"
         flexStyle="${style}" :clipChildren="false">
       </div>
       <!-- 历史图片样式 -->
@@ -107,12 +108,13 @@ defineExpose({})
 
 <style lang='scss' scoped>
 .history-item-root-css{
-  background-color: rgba(255,255,255,0.06);
+  background-color: transparent;
   border-radius: $theme-img-border;
   .h-list{
     background-color: transparent;
     .no-history-item{
-      background-color: transparent;
+      background-color: rgba(255,255,255,0.06);
+      border-radius: $theme-img-border;
       .no-history-item-title{
         margin-top: 26px;
         margin-left: 36px;
@@ -143,7 +145,7 @@ defineExpose({})
       background-color: transparent;
       border-radius: $theme-img-border;
       padding-left: 20px;
-      padding-right: 20px;  
+      padding-right: 20px;
       focus-background-color: rgba(255,255,255,0.95);
       .history-item-text-box{
         width: 280px;
@@ -169,7 +171,7 @@ defineExpose({})
       background-color: transparent;
       border-radius: $theme-img-border;
       padding-left: 20px;
-      padding-right: 20px;  
+      padding-right: 20px;
       focus-background-color: rgba(255,255,255,0.95);
       align-items: center;
       .history-login-item-text-box{
@@ -185,12 +187,13 @@ defineExpose({})
       }
       .history-login-item-icon{
         width: 13px;
-        height: 22px;
+        height: 76px;
         background-color: transparent;
         margin-left: 75px;
         img{
           width: 13px;
           height: 22px;
+          margin-top: 27px;
           position: absolute;
         }
       }

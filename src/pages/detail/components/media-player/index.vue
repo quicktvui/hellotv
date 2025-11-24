@@ -1,9 +1,9 @@
 <template>
-  <qt-view 
-    name='media-player' 
-    class="media-player" 
-    ref='playerParent' 
-    sid='playerParent' 
+  <qt-view
+    name='media-player'
+    class="media-player"
+    ref='playerParent'
+    sid='playerParent'
     :focusable='false'>
     <!-- player-manager 播放管理器 -->
     <ESPlayerManager
@@ -33,14 +33,14 @@
       @onPlayerDurationChanged="onPlayerDurationChangedFn">
     </ESPlayerManager>
     <!-- 低端机播放器遮罩 -->
-  <qt-image 
-    name="playerLowMaskImg" 
-    :visible="playerMask" 
-    :class="playerMaskCss" 
+  <qt-image
+    name="playerLowMaskImg"
+    :visible="playerMask"
+    :class="playerMaskCss"
     :src="playerMaskImg" />
   </qt-view>
 </template>
-      
+
 <script setup lang='ts' name='MediaPlayer'>
 import { ref, markRaw, nextTick } from 'vue'
 import { ESLogLevel, useESLog, ESKeyEvent, useESRuntime } from "@extscreen/es3-core";
@@ -48,7 +48,7 @@ import { useESRouter } from '@extscreen/es3-router'
 import BuildConfig from "../../../../config/build-config";
 import detailManager from '../../api/index'
 import {
-  ESIPlayerManager, 
+  ESIPlayerManager,
   ESMediaItem,
   ESMediaItemList,
   ESPlayerManager,
@@ -66,9 +66,9 @@ import { ESVideoPlayer } from "@extscreen/es3-video-player";
 import { IMedia, IMediaItem } from '../../adapter/interface'
 import MediaPlayerView from './media-player-view.vue'
 import MediaPlayerSmallView from './media-player-small-view.vue'
-import { 
-  buildMediaList, 
-  createESPlayerMediaSourceListInterceptor 
+import {
+  buildMediaList,
+  createESPlayerMediaSourceListInterceptor
 } from "../../adapter/media-player";
 
   const TAG = 'MediaSeriesView'
@@ -88,11 +88,11 @@ import {
   const floatWindowWidth = ref<number>(BuildConfig.isLowEndDev ? 0 : 502)
   const floatWindowHeight = ref<number>(BuildConfig.isLowEndDev ? 0 : 283)
   const playerViewList =  [
-    markRaw(MediaPlayerView), 
+    markRaw(MediaPlayerView),
     markRaw(MediaPlayerSmallView),
   ]
   playerViewList[0].name = 'media-player-view'
-  const interceptor = createESPlayerMediaSourceListInterceptor(detailManager)
+  const interceptor = createESPlayerMediaSourceListInterceptor()
   const playerManager = ref<ESIPlayerManager>()
   const playerList = [markRaw(ESVideoPlayer)]
   const playerListRef = ref(playerList)
@@ -126,12 +126,9 @@ import {
     //播放器数据
     const mediaItemList = buildMediaList(page, mediaList, [interceptor], m)
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.d(TAG, '-----------addMediaItemList------------->>>>', page, mediaList)
-    }
-    if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------buildMediaItemList------XXXXX------->>>>', page, mediaList, mediaItemList)
     }
-    playerManager.value?.addMediaToIndex(page * 10, mediaItemList)
+    playerManager.value?.addMediaToIndex((page-1) * 10, mediaItemList)
   }
   const playMediaItemById = (id: string) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {
@@ -345,7 +342,7 @@ import {
     onBackPressed,
   })
   </script>
-      
+
 <style lang='scss' scoped>
 .media-player{
   width: 1920px;
@@ -360,8 +357,9 @@ import {
     height: 500px;
     background-color: transparent;
     position: absolute;
-    top: 90px;
-    left: 90px;
+    border-radius: 10px;
+    top: 135px;
+    left: 80px;
   }
   .media-player-mask-float-css {
     width: 502px;
@@ -373,4 +371,3 @@ import {
   }
 }
 </style>
-        

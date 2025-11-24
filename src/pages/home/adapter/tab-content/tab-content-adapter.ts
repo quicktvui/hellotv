@@ -3,7 +3,7 @@ import { QTListViewItemDecoration } from '@quicktvui/quicktvui3/dist/src/list-vi
 import { QTWaterfallFlexStyle } from '@quicktvui/quicktvui3/dist/src/waterfall/core/QTWaterfallFlexStyle'
 import homeManager from '../../api'
 import ThemeConfig from '../../../../config/theme-config'
-import { HomePlayType } from '../media/home-media-imp'
+import { CellListItemType, HomePlayType } from '../media/home-media-imp'
 import barsDataManager from '../tab-bar/tab-bar-adapter'
 import TabContentConfig from './tab-content-config'
 import { PlayType, Section, Section4KItem, SectionItem, SectionItemType, SectionType, TabContent } from './tab-content-imp'
@@ -289,7 +289,7 @@ export function buildSectionItemList(
         ) {
           isFirstSetPlay = false
           isFocusScrollTarget = true
-          //保存小窗播放数据
+          //保存小窗播放/小窗播放列表数据
           barsDataManager.barsData.itemList[tabPageIndex].isPlay = true
           const playType = sectionItemType === SectionItemType.TYPE_SMALL_PLAY ? HomePlayType.TYPE_CELL : HomePlayType.TYPE_CELL_LIST
           barsDataManager.barsData.itemList[tabPageIndex].playType = playType
@@ -369,8 +369,8 @@ export function buildSectionItem(
     case SectionItemType.TYPE_PLACE_HOLDER: //占位格子
       buildSectionItem = buildPlaceHolderSectionItem(sectionItem)
       break
-    case SectionItemType.TYPE_TEXT_HISTORY:
-    case SectionItemType.TYPE_IMG_HISTORY:
+    case SectionItemType.TYPE_TEXT_HISTORY://文字历史格子
+    case SectionItemType.TYPE_IMG_HISTORY://图片历史格子
       buildSectionItem = buildTextHistorySectionItem(sectionItem)
       // 记录历史格子的位置
       tabsContent.historyItemPos.map((item) => {
@@ -378,8 +378,6 @@ export function buildSectionItem(
       })
       if (!historyItemFlag) tabsContent.historyItemPos.push({ tabIndex: tabPageIndex, itemIndex: sectionItemIndex })
       break
-    // case SectionItemType.TYPE_IMG_HISTORY:
-    //   break
     case SectionItemType.TYPE_FOCUS_CHANGE_IMG: //焦点换图格子
       buildSectionItem = buildFocusChangeImgSectionItem(sectionItem)
       break
@@ -528,22 +526,78 @@ export function buildSmallPlayerSectionItem(sectionItem: SectionItem, tabPageInd
  * @param tabPageIndex tab 导航 index
  */
 export function buildSmallListPlayerSectionItem(sectionItem: SectionItem, tabPageIndex: number): QTWaterfallItem {
+  const playData = sectionItem.playData
+  if (!playData) {
+    return {
+      type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER_LIST,
+      style: buildStyle(sectionItem),
+    }
+  }
+  const length = playData.length
+  const cellMode = TabContentConfig.cellListItemType
+  //设置小窗列表item 高度 ， 文字高度 116， 图片高度 160
+  const itemHeight = cellMode === CellListItemType.TYPE_TEXT ? 116 : 160
+  const buildPlayData = playData?.map((item,index)=>{
+    return cellMode === CellListItemType.TYPE_TEXT ?
+      {
+        type:86,
+        name:TabContentConfig.cellListSectionItemName,
+        imgUrl: item.cover,
+        text:item.title,
+        textFocus:'　'+item.title,
+        itemStyle:{
+          width:410,
+          height:itemHeight
+        },
+        gradientBackground: {
+          colors: ['#ffffff', '#ffffff'],
+          cornerRadii4: [0, index === 0 ? 16 : 0, index === length - 1 ? 16 : 0, 0]
+        },
+      } : {
+        type: index === 0 ? 82 : index === length - 1 ? 84 : 83, // TODO: 让底层支持 flexStyle: { borderTopRightRadius、borderBottomRightRadius }
+        name:TabContentConfig.cellListSectionItemName,
+        imgUrl:item.cover,
+        cover: item.cover,
+        itemStyle:{
+          width:410,
+          height:itemHeight
+        },
+        markStyle:{
+          width:42,
+          height:42,
+          marginTop:itemHeight - 36,
+          marginLeft:410 - 42
+        },
+        gradientBackground: {
+          colors: ['#8C000000', '#8C000000'],
+          cornerRadii4: [0, index === 0 ? 16 : 0, index === length - 1 ? 16 : 0, 0]
+        }
+      }
+  })
   return {
     type: TabContentItemType.TYPE_ITEM_SECTION_CELL_PLAYER_LIST,
     style: buildStyle(sectionItem),
     image: {
       style: {
-        width: sectionItem.width,
-        height: sectionItem.height
+        width: sectionItem.width - 410,
+        height: sectionItem.height,
       },
-      normal: sectionItem.image
+      normal: sectionItem.playData[0].cover,
+      sid:'cellPlayerListBgSid',
     },
+    listStyle:{
+      width: 410,
+      height:sectionItem.height,
+      marginLeft:sectionItem.width - 410
+    },
+    cellListSid:'cellPlayerListSid',
     play: {
       style: {
-        width: 907,
-        height: 510
+        width: sectionItem.width - 410,
+        height: sectionItem.height
       },
       sid: 'cellSid' + sectionItem.id + 'tabIndex' + tabPageIndex,
+      buildPlayData,
       playData: sectionItem.playData
     }
   }

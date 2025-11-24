@@ -1,0 +1,1 @@
+package com.quicktvui.hellotv.config;/** * <br> * * <br> */public class ConfigLoadResult {    public boolean success;    public Config config;    public ConfigLoadResult(boolean success, Config config) {        this.success = success;        this.config = config;    }}

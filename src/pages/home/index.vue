@@ -6,13 +6,20 @@
           <template #topOtherBtn>
             <div style="flex-direction: row">
               <btn-pack-view
-                style="width: 145px; height: 60px; margin-right: 10px"
+                style="width: 145px; height: 60px;"
                 text="直播"
                 :focusable="true"
                 :iconLeft="true"
                 :normalIcon="icLiveBroadcast"
                 :focusIcon="icLiveBroadcastFocused"
                 @click="liveClick"
+              />
+              <btn-pack-view
+                style="width: 160px; height: 60px;margin-left: 10px"
+                :textStyle="{ width: '120px', height: '60px' }"
+                text="全屏播放"
+                :focusable="true"
+                @click="playScreen"
               />
               <div class="home-resource-root" :focusScale="ThemeConfig.placeHolderFocusScale" :focusable="true" @click="resourceClick">
                 <img class="home-resource-img" :src="resourceImg" />
@@ -28,6 +35,7 @@
 <script setup lang="ts" name="index">
 import { ESKeyEvent } from '@extscreen/es3-core'
 import { ref } from 'vue'
+import BtnPackView from '../../components/btn-pack-view.vue'
 import TopView from '../../components/top-view.vue'
 import launch from '../../tools/launch'
 import { TopResource } from './adapter/exit/home-exit-imp'
@@ -78,6 +86,9 @@ const onBackPressed = () => {
 
 const liveClick = () => {
   launch.launchLive()
+}
+const playScreen = ()=>{
+  launch.launchDetailFull()
 }
 
 const resourceClick = () => {

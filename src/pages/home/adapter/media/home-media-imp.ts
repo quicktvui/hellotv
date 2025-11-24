@@ -20,6 +20,15 @@ export enum HomePlayType{
 }
 
 /**
+ * 小窗列表Item 类型
+ */
+export enum CellListItemType{
+  //文字类型
+  TYPE_TEXT = 1,
+  //图片类型
+  TYPE_IMG = 2
+}
+/**
  * 播放状态
  */
 export enum PlayerState{

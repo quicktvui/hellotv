@@ -34,7 +34,7 @@
     "treer": "^1.0.4",
     "typescript": "5.6.3",
     "vue": "^3.5.15",
-    "vue-tsc": "^1.6.5"
+    "vue-tsc": "^2.0.11"
   },
   "devDependencies": {
     "@babel/core": "^7.12.16",

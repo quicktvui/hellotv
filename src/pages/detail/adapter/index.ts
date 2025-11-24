@@ -80,16 +80,16 @@ function buildEndSection(): QTWaterfallSection {
     title: '已经到底啦，按【返回键】回到顶部',
     titleStyle: {
       width: 1920,
-      height: 200,
+      height: 180,
       marginLeft: 90,
-      marginTop: 40,
-      marginBottom: 40,
+      marginTop: 50,
+      // marginBottom: 40,
       fontSize: 30
     },
     itemList: [],
     style: {
       width: 1920,
-      height: 200
+      height: 120
     }
   }
 }
@@ -97,7 +97,7 @@ function buildEndSection(): QTWaterfallSection {
 //相关推荐
 export function buildRecommendSection(media: IMedia): QTWaterfallSection {
   let upOffset = 0
-  let downOffset = 800
+  let downOffset = 660
   if (media.episodes > 1) {
     upOffset = -50
     downOffset = 1000
