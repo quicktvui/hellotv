@@ -275,6 +275,13 @@ class Launch {
     })
   }
 
+  launchDetailFull(){
+    this.router.push({
+      name:'fullPlay',
+      params:{}
+    })
+  }
+
   launchExitDialog() {
     this.router.push({
       name: 'exit_dialog'

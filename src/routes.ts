@@ -4,6 +4,7 @@ import live from './pages/live/index.vue'
 import test from './pages/m-test.vue'
 import playTest from './pages/play-test.vue'
 import tabsTest from './pages/tabs-test.vue'
+import fullPlay from './pages/detail-full-player/index.vue'
 
 // 筛选布局模式选择
 import filterConfig from './pages/filter/config'
@@ -126,7 +127,13 @@ const routes = [
     path: '/live',
     name: 'live',
     component: live
-  }
+  },
+  {
+    path: '/fullPlay',
+    name: 'fullPlay',
+    component: fullPlay
+  },
+
 ]
 
 export default routes
