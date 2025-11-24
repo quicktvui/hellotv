@@ -2100,15 +2100,15 @@
   resolved "https://registry.yarnpkg.com/@extscreen/es3-dynamic-import-plugin/-/es3-dynamic-import-plugin-0.0.5.tgz#1a469a07c5accbb6e44c2c717887cbb50f62dc0d"
   integrity sha512-tMG0Nrdo8Nmc5X51sfRmDfE9gw4MFH7Lu9rCT+J7w9DmS8OwFdiQ9XkYV1SyCKo50fJhCQPmtrDa9A8IAA22Yw==
 
-"@extscreen/es3-player-manager@1.0.46":
-  version "1.0.46"
-  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player-manager/-/es3-player-manager-1.0.46.tgz#48d02c23d6ed6e92a2943c481ac02d5cc91200bc"
-  integrity sha512-YdCJW0uF8ukdmWb1++XRFQWHtC4wjbgcLPKbfKSntGoNGZ9/s2gELQgGxDLO5lwsckLQszpImF7v4um29NvqCA==
+"@extscreen/es3-player-manager@1.0.50":
+  version "1.0.50"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-player-manager/-/es3-player-manager-1.0.50.tgz#ac7565c9491a6631bbea09252f2b1e4ce39d1f4e"
+  integrity sha512-FpPMbKQRmxVZjVZGRi5UdLhuRXbil5PtgqzBBfUv6xl6CsCD6pZ8durewfAyTYcPLKDVDsWnkmZWVKhtJrpttg==
 
-"@extscreen/es3-player@1.0.26":
-  version "1.0.26"
-  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-player/-/es3-player-1.0.26.tgz#34918089938d03573672188bb7fedbc5fe6c8fd8"
-  integrity sha512-pE1vlDnSlJRoZZS6/ag8F0M77LRW+ujK/5QgUiNM+Cx3huJt3Dx4jWSwzMRNwwf8RA2hQ/rm98bIML03rDJc2w==
+"@extscreen/es3-player@3.0.0-alpha.1":
+  version "3.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-player/-/es3-player-3.0.0-alpha.1.tgz#1a4a7789f1c7c284576a21c9ea3e55a6b361360f"
+  integrity sha512-zYk2ssJZQue1/1zZs0GbZGvoGzZWlEGFou2XqyamM/MSMdsB1kFYt6jtSkj4dqUhVeGsModA1i7iJ6pvNiWU2g==
 
 "@extscreen/es3-router@3.0.0-alpha.1":
   version "3.0.0-alpha.1"
@@ -2117,10 +2117,10 @@
   dependencies:
     "@vue/devtools-api" "^6.5.0"
 
-"@extscreen/es3-video-player@1.0.42":
-  version "1.0.42"
-  resolved "https://repo.huaweicloud.com/repository/npm/@extscreen/es3-video-player/-/es3-video-player-1.0.42.tgz#f645b2b4bcfe2c9e05507ab424e50357e037ec24"
-  integrity sha512-JZjzYYl5Gdc5bhfflbS2T5PINsCtN5MPUY9peEaSue9v5UnrSZcNpAswPC4teHiKNIAZHgQFKqms9n6mKIlcxg==
+"@extscreen/es3-video-player@3.0.0-alpha.1":
+  version "3.0.0-alpha.1"
+  resolved "https://registry.yarnpkg.com/@extscreen/es3-video-player/-/es3-video-player-3.0.0-alpha.1.tgz#69ae94055558dfc29f4f8260b08f994e42325f2a"
+  integrity sha512-aD+Ln6gMmXbfDDQKz5Cs9pvvZFzKGOVS2Q92I6NaGeo47moAwpR2UMCh18Za1mEwmEbchAYKV/lHKwefnM1Msg==
 
 "@extscreen/es3-vue-css-loader@3.0.0-alpha.1":
   version "3.0.0-alpha.1"
