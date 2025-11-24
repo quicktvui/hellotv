@@ -108,6 +108,7 @@ import { HomePlayData, HomePlayType, PlayerState } from '../adapter/media/home-m
 import barsDataManager, { buildTabBarAdapter } from '../adapter/tab-bar/tab-bar-adapter'
 import TabBarConfig from '../adapter/tab-bar/tab-bar-config'
 import TabBarItemType from '../adapter/tab-bar/tab-bar-item-type'
+import ThemeConfig from '../../../config/theme-config.ts'
 import tabsContent, { buildTabContentAdapter } from '../adapter/tab-content/tab-content-adapter'
 import TabContentConfig from '../adapter/tab-content/tab-content-config'
 import TabContentType from '../adapter/tab-content/tab-content-item-type'
