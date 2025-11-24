@@ -726,7 +726,7 @@ const buildHistoryItem = async (item) => {
   } else {
     // 有历史
     item.historyList = []
-
+    item.gradientBackground = {colors: ['#0FFFFFFF', '#0FFFFFFF'], orientation: 6, cornerRadius: ThemeConfig.focusBorderCorner}
     // 文字模式
     data.items.forEach((_item) => {
       const percentage = Math.floor((item.viewedDuration / item.totalDuration) * 100)
