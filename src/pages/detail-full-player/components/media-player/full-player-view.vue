@@ -164,6 +164,12 @@ export default defineComponent({
     const onPlayerError = (error: ESPlayerError): void => {
       context.emit('onPlayerError', error)
     }
+
+    const releasePlayer = () => {
+      playerManager.value?.stop()
+      playerManager.value?.release()
+    }
+
     const onKeyDown = (keyEvent: ESKeyEvent): boolean => {
       if (playerManager.value) {
         return playerManager.value!.onKeyDown(keyEvent)
@@ -198,7 +204,7 @@ export default defineComponent({
       onPlayerProgressChanged,
       onPlayerDurationChanged,
       onPlayerError,
-
+      releasePlayer
     }
   }
 })

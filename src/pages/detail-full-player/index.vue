@@ -30,6 +30,10 @@ const onESCreate = (params)=>{
   getDetail()
 }
 
+const onESDestroy = () => {
+  fullPlayerViewRef.value?.releasePlayer()
+}
+
 const getDetail = ( )=>{
   detailManager.getMediaDetail(mediaId.value)
     .then(async (res: IMedia) => {
@@ -86,7 +90,7 @@ const onKeyUp = (keyEvent: ESKeyEvent): boolean => {
   }
   return false
 }
-defineExpose({onESCreate,onKeyDown,onKeyUp})
+defineExpose({onESCreate,onESDestroy,onKeyDown,onKeyUp})
 
 </script>
 
