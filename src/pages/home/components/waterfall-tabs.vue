@@ -13,19 +13,7 @@
     <!-- 背景播放及小窗播放组件 -->
     <bg-player class="waterfall-tabs-bg-player" ref="waterfallBgPlayerRef"
                :clipChildren="false" sid="waterfallBgPlayerSid"
-               @setCellListIndex='setCellListIndex'
-    />
-    <!--顶部按钮组-->
-    <div
-      ref="waterfallTopRef"
-      name="waterfallTopView"
-      sid="waterfallTopSid"
-      class="waterfall-top-view"
-      :clipChildren="false"
-      :blockFocusDirections="['left', 'right', 'up']"
-    >
-      <slot name="topView" />
-    </div>
+               @setCellListIndex='setCellListIndex'/>
     <qt-tabs
       ref="tabRef"
       sid="homeTabsSid"
