@@ -756,10 +756,10 @@ const buildHistoryItem = async (item) => {
     //   progress: '观看 70%',
     //   jumpParams: { type: 1, options: { name: 'detail', params: { mediaId: 'xxx', startPosition: 0 } } }
     // })
-
+    const mHeight = data.items > 1 ? 76 : 152
     item.historyList.push({
       type: 4003,
-      style: { width: item.style.width, height: 76 },
+      style: { width: item.style.width, height: mHeight },
       text: '全部历史记录',
       jumpParams: { type: 1, options: { name: 'history', params: {} } }
     })
