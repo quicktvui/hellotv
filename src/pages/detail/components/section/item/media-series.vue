@@ -84,7 +84,7 @@ import detailManager from '../../../api/index'
       buildMediaSeriesData(media)
     )
     if(!visible.value){
-      getMediaList(m.episodesId, 0)
+      getMediaList(m.episodesId, 1)
     }
   }
   onMounted(() => {
@@ -94,6 +94,7 @@ import detailManager from '../../../api/index'
     eventbus.off('onMediaSeriesLoadData', onMediaSeriesLoadData)
   });
   const onMediaSeriesLoadData = (page: number) => {
+    page = page || 1
     getMediaList(m.episodesId, page)
   }
   const getMediaList = (episodesId: string, pageNo: number) => {
@@ -107,7 +108,7 @@ import detailManager from '../../../api/index'
         if (log.isLoggable(ESLogLevel.DEBUG)) {
           log.d(TAG, "-------getMediaList----success------>>>>>", pageNo, mediaList)
         }
-        mediaSeriesRef.value?.setPageData(pageNo, buildMediaSeriesList(mediaList))
+        mediaSeriesRef.value?.setPageData(pageNo-1, buildMediaSeriesList(mediaList))
         setSelected(0)
         emits("onMediaSeriesItemLoad", pageNo, mediaList)
       }, error => {
@@ -117,7 +118,7 @@ import detailManager from '../../../api/index'
       })
   }
   const onLoadData = (event: QTMediaSeriesEvent) => {
-    const page = event.page ?? 1
+    const page = event.page || 1
     getMediaList(m.episodesId, page)
   }
   const onItemClick = (event: QTMediaSeriesEvent) => {

@@ -92,7 +92,7 @@ import {
     markRaw(MediaPlayerSmallView),
   ]
   playerViewList[0].name = 'media-player-view'
-  const interceptor = createESPlayerMediaSourceListInterceptor(detailManager)
+  const interceptor = createESPlayerMediaSourceListInterceptor()
   const playerManager = ref<ESIPlayerManager>()
   const playerList = [markRaw(ESVideoPlayer)]
   const playerListRef = ref(playerList)
@@ -126,12 +126,9 @@ import {
     //播放器数据
     const mediaItemList = buildMediaList(page, mediaList, [interceptor], m)
     if (log.isLoggable(ESLogLevel.DEBUG)) {
-      log.d(TAG, '-----------addMediaItemList------------->>>>', page, mediaList)
-    }
-    if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, '-----------buildMediaItemList------XXXXX------->>>>', page, mediaList, mediaItemList)
     }
-    playerManager.value?.addMediaToIndex(page * 10, mediaItemList)
+    playerManager.value?.addMediaToIndex((page-1) * 10, mediaItemList)
   }
   const playMediaItemById = (id: string) => {
     if (log.isLoggable(ESLogLevel.DEBUG)) {

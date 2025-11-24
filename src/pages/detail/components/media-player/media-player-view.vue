@@ -20,10 +20,13 @@
         <!-- 底部进度条 -->
         <qt-column class="media-player-view-state-progress" v-show="isProgressShowing">
           <!-- 播放状态 -->
-          <img :visible="!isPlayerPlaying" :focusable="false" :src="playIcon"
-            duplicateParentState postDelay="100" />
-          <img :visible="isPlayerPlaying" :focusable="false" :src="pauseIcon"
-            duplicateParentState postDelay="100" />
+          <div class='media-player-view-img'>
+            <img :visible="!isPlayerPlaying" :focusable="false" :src="playIcon"
+                  postDelay="100" />
+            <img :visible="isPlayerPlaying" :focusable="false" :src="pauseIcon"
+                  postDelay="100" />
+          </div>
+
           <!-- 播放进度 -->
           <qt-row class="media-player-view-progress" :autofocus="true">
             <qt-text class="media-player-view-progress-text" :focusable="false"
@@ -262,21 +265,19 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
   )
   const initCollapseMenu = () => {mediaCollapseMenuInit.value = true}
   const onMediaListItemLoad = (page: number, mediaList: Array<IMediaItem>) => {
-    console.log(mediaList,'1wqeqeeeeeeeeeeeeeeeeeeee')
     if (mediaCollapseMenuInit.value) {
       nextTick(() => {
-        mediaCollapseMediaSeriesRef.value?.setListData(page, mediaList)
+        mediaCollapseMediaSeriesRef.value?.setListData((page-1), mediaList)
       })
     } else {
-      dataMap.set(page, mediaList)
-      console.log(dataMap,'11wqeqeeeeeeeeeeeeeeeeeeee')
+      dataMap.set((page-1), mediaList)
     }
   }
   //播放顺序
   const initCollapseOrderMenu = () => {
     if (mediaCollapseMenuInit.value) {
       nextTick(() => {
-        if (playModeList != null && playModeList != undefined && playModeList.length > 0) {
+        if (playModeList && playModeList.length > 0) {
           let data = buildPlayModeList(playModeList)
           if(!mediaListVisible.value)  data.pop()
           mediaCollapseOrderRef.value?.setListData(data)
@@ -835,11 +836,16 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
         align-items: flex-start;
         justify-content: flex-end;
         background-color: transparent;
-        >img {
+        .media-player-view-img{
           width: 80px;
           height: 80px;
           margin-left: 90px;
           margin-bottom: 14px;
+          >img {
+            position:absolute;
+            width: 80px;
+            height: 80px;
+          }
         }
         .media-player-view-progress {
           width: 1740px;

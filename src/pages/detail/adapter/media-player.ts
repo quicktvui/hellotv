@@ -1,3 +1,4 @@
+import detailManager from '../api'
 import { IMediaItem, IMediaUrl } from "./interface";
 import { isTrySee } from "./index";
 import { ESMediaItem } from "@extscreen/es3-player-manager";
@@ -29,16 +30,16 @@ export function buildMediaList(page: number, mediaList: Array<IMediaItem>, media
   return itemList
 }
 export function buildMediaItem(page: number, index: number, mediaItem: IMediaItem, mediaItemInterceptors: Array<ESIPlayerInterceptor>, media?: any): ESMediaItem {
-  const mediaIndex = Number(page * 10) + Number(index)
+  const mediaIndex = Number((page-1) * 10) + Number(index)
   return {
     id: mediaItem.id,
     index: mediaIndex,
     title: mediaItem.title,
     interceptors: mediaItemInterceptors,
     analyzeParams: {
-    //   platformId: media.platformId,
+      //   platformId: media.platformId,
       metaId: media.id,
-    //   assetLongId: mediaItem.rawData.assetLongId,
+      //   assetLongId: mediaItem.rawData.assetLongId,
       episodeId: mediaItem.id,
       episode: mediaItem.episode,
       assetLongTitle: media.title,
@@ -88,10 +89,9 @@ export function buildMediaSource(mediaUrl: IMediaUrl): ESMediaSource {
   }
 }
 //media-player Interceptor 鉴权 + 请求播放地址
-export function createESPlayerMediaSourceListInterceptor(detailManager: DetailApi): ESIPlayerInterceptor {
+export function createESPlayerMediaSourceListInterceptor(): ESIPlayerInterceptor {
   function intercept(...params: Array<any>): Promise<ESPlayerInterceptResult> {
     const mediaItem = params[0] as ESMediaItem
-    console.log(mediaItem,'mediaItemmediaItemmediaItem')
     return new Promise<ESPlayerInterceptResult>((resolve, reject) => {
       if(mediaItem.vipType == '0' || (mediaItem.vipType != '0' && isTrySee)){
         detailManager.getPlayUrl(mediaItem.id + "",'2').then((res) => {

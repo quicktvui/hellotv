@@ -160,7 +160,7 @@ import { IMedia, IMediaItem } from '../../../adapter/interface'
     if (log.isLoggable(ESLogLevel.DEBUG)) {
       log.d(TAG, "---选集---onLoadData------>>>>")
     }
-    const page = event.page ?? 10
+    const page = event.page || 1
     eventbus.emit('onMediaSeriesLoadData', page)
   }
   const onItemFocused = (event: QTMediaSeriesEvent) => {
