@@ -34,7 +34,7 @@
     <qt-view
       class="recommend-item-score"
       :focusable="false"
-      :gradientBackground="{ colors: ['#00000000', '#E5000000'], cornerRadii4: [0, 0, 9, 9] }"
+      :gradientBackground="{ colors: ['#00000000', '#E5000000'], cornerRadii4: [0, 0, 16, 16] ,orientation:0}"
     >
       <qt-text class="recommend-item-score-text" :fontSize="24" :paddingRect="[15, 0, 0, 6]" text="${score}" :focusable="false" />
     </qt-view>
@@ -108,6 +108,7 @@ import ThemeConfig from '../../../config/theme-config'
     background-color: transparent;
     z-index: 1000;
     height: 65px;
+    width: 260px;
     position: absolute;
     left: 0;
     bottom: 54px;
