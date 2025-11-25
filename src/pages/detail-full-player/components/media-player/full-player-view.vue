@@ -24,7 +24,7 @@
 </template>
 
 <script lang='ts'>
-import { ESKeyEvent } from '@extscreen/es3-core'
+import { ESKeyEvent, useESToast } from '@extscreen/es3-core'
 import {
   ESPlayerDecode, ESPlayerError,
   ESPlayerInterceptError,
@@ -80,6 +80,7 @@ export default defineComponent({
     'onPlayerError'
   ],
   setup(props, context) {
+    const toast = useESToast()
     const playerManager = ref<ESIPlayerManager>()
     const playerList = [markRaw(ESVideoPlayer)]
     const playerListRef = ref(playerList)
@@ -95,7 +96,8 @@ export default defineComponent({
         list: [],
         media: media
       }
-      playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
+      // playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_LOOP)
+      playerManager.value?.setPlayMediaListMode(ESPlayerPlayMode.ES_PLAYER_PLAY_MODE_ONCE)
       playerManager.value?.playMediaList(playList)
     }
 
@@ -116,13 +118,15 @@ export default defineComponent({
     const onPlayerPlaying = () => {
       startProgressTimer()
       context.emit('onPlayerPlaying')
+
+      // toast.showLongToast('onPlayerPlaying')
     }
     const startProgressTimer = () => {
       stopProgressTimer()
       progressTimer = setInterval(() => {
-        playerManager.value?.getDuration()
         playerManager.value?.getCurrentPosition()
       }, 1000)
+      playerManager.value?.getDuration()
     }
     const stopProgressTimer = () => {
       if (progressTimer) {

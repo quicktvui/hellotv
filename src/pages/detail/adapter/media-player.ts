@@ -85,7 +85,8 @@ export function buildMediaSource(mediaUrl: IMediaUrl): ESMediaSource {
 
   return {
     uri: mediaUrl.playUrl,
-    definition: definition
+    definition: definition,
+    looping: true
   }
 }
 //media-player Interceptor 鉴权 + 请求播放地址

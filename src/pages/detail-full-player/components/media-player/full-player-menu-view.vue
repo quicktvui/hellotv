@@ -9,7 +9,7 @@
                :focusable="false" :fontSize="30" :text="mediaTitle"/>
     </qt-view>
     <!-- 底部进度条 -->
-    <qt-view class='full-player-menu-view-bottom' :visible='isProgressShowing'>
+    <qt-view class='full-player-menu-view-bottom' :visible='true'>
       <!-- 进度条背景渐变 -->
       <qt-view class="full-player-menu-view-bottom-bg"
                :gradientBackground="{ colors: ['#00000000', '#E6000000'] }" />
@@ -35,28 +35,29 @@
             @onSeekStart='onSeekBarSeekStart'
             @onSeekStop="onSeekBarSeekStop"
             @focus="onSeekbarFocusChanged"
+            @onSeekChanged='onSeekBarSeekStop'
           />
           <qt-text class="full-player-menu-progress-text" :focusable="false"
                    gravity="center" :fontSize="30" :text="duration"/>
         </div>
 <!--        下一个按钮-->
-        <div class='full-player-menu-next'
-             :nextFocusName="{up: 'seekBar',down: 'nextButton',
-              right: 'nextButton',left: 'nextButton'}"
-             :focusable="true" name="nextButton"
-             :visible="mediaSeriesVisible"
-             @click="onNextButtonClicked"
-             @focus="onNextButtonFocusChanged"
-        >
-          <div class="full-player-menu-next-text-focus" :focusable="false"
-               showOnState="focused" duplicateParentState
-               :gradientBackground="{
-                colors: ThemeConfig.btnGradientFocusColor,
-                cornerRadius: 8, orientation: 6 }">
-          </div>
-          <qt-text class="full-player-menu-next-text" gravity="center" typeface="bold" :focusable="false"
-                   duplicateParentState :fontSize="30" text="下一个" />
-        </div>
+<!--        <div class='full-player-menu-next'-->
+<!--             :nextFocusName="{up: 'seekBar',down: 'nextButton',-->
+<!--              right: 'nextButton',left: 'nextButton'}"-->
+<!--             :focusable="true" name="nextButton"-->
+<!--             :visible="mediaSeriesVisible"-->
+<!--             @click="onNextButtonClicked"-->
+<!--             @focus="onNextButtonFocusChanged"-->
+<!--        >-->
+<!--          <div class="full-player-menu-next-text-focus" :focusable="false"-->
+<!--               showOnState="focused" duplicateParentState-->
+<!--               :gradientBackground="{-->
+<!--                colors: ThemeConfig.btnGradientFocusColor,-->
+<!--                cornerRadius: 8, orientation: 6 }">-->
+<!--          </div>-->
+<!--          <qt-text class="full-player-menu-next-text" gravity="center" typeface="bold" :focusable="false"-->
+<!--                   duplicateParentState :fontSize="30" text="下一个" />-->
+<!--        </div>-->
       </div>
 
     </qt-view>
@@ -104,27 +105,33 @@
 </template>
 
 <script lang='ts' setup>
-import { ESKeyCode, ESKeyEvent, ESLogLevel, useESEventBus } from '@extscreen/es3-core'
-import { ESPlayerDefinition, ESPlayerPlayMode, ESPlayerRate } from '@extscreen/es3-player'
+import { ESKeyCode, ESKeyEvent, useESEventBus, useESToast } from '@extscreen/es3-core'
+import {
+  ESPlayerAspectRatio,
+  ESPlayerDefinition,
+  ESPlayerPlayMode,
+  ESPlayerRate
+} from '@extscreen/es3-player'
 import { ESIPlayerManager, ESMediaItem } from '@extscreen/es3-player-manager'
 import { QTCollapse, QTICollapse, QTISeekBar, QTListViewItem } from '@quicktvui/quicktvui3'
 import { nextTick, onMounted, onUnmounted, ref, watch } from 'vue'
 import BuildConfig from '../../../../config/build-config'
-import ThemeConfig from "../../../../config/theme-config";
 import playIcon from '../../../../assets/detail/ic_media_player_play.png'
 import pauseIcon from '../../../../assets/detail/ic_media_player_pause.png'
-import {
-  IMediaViewState, s_to_hs
-} from '../../../../components/media/build-data/media-control-adapter'
+import { s_to_hs } from '../../../../components/media/build-data/media-control-adapter'
 import {
   IMediaCollapseItemListView,
   IMediaCollapseMediaSeriesView,
-  IMediaItem, IMediaPlayerViewState
+  IMediaItem,
+  IMediaPlayerViewState
 } from '../../../detail/adapter/interface'
 import {
-  buildCollapseMenu, buildDefinitionList,
-  buildPlayModeList, buildPlayRateList, getDefinitionIndex,
-  getPlayModeIndex, getPlayRateIndex
+  buildCollapseMenu,
+  buildPlayModeList,
+  buildPlayRateList,
+  getDefinitionIndex,
+  getPlayModeIndex,
+  getPlayRateIndex
 } from '../../../detail/adapter/media-player'
 import MediaCollapseDefinition
   from '../../../detail/components/media-player/collapse/media-collapse-definition.vue'
@@ -167,6 +174,8 @@ const isMenuShowing = ref<boolean>(false)
 const mediaCollapseMenuInit = ref<boolean>(false)
 const viewState = ref<number>(1)
 
+const toast = useESToast()
+
 //当前视频总时长
 let curDuration = 0
 let collapse: QTCollapse
@@ -204,8 +213,8 @@ const initSeekBar = ()=>{
   seekBarRef.value?.setSeekBarMode(1);
   seekBarRef.value?.setProgressHeight(12);
   seekBarRef.value?.setProgressRadius(6);
-  seekBarRef.value?.setThumbWidth(60)
-  seekBarRef.value?.setThumbHeight(60)
+  seekBarRef.value?.setThumbWidth(20)
+  seekBarRef.value?.setThumbHeight(20)
   seekBarRef.value?.setLeftThumbUrl('http://extcdn.hsrc.tv/extend_screen/images/default/ic_1905_thumb.png')
   seekBarRef.value?.setLeftThumbInactivatedDrawable({
     colors: ['#00000000', '#00000000'],
@@ -294,6 +303,84 @@ const onSeekBarSeekStop = (progress) => {
   isSeeking = false
   if (playerManager && progress >= 0) {
     playerManager.seekTo(progress)
+  }
+
+  // testPlayerSize()
+}
+
+const testPlayerSize = () => {
+  if (playerManager) {
+    playerManager.setSize(500, 300)
+  }
+}
+
+let aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FIT_PARENT
+const testAspectRatio = () => {
+  if (playerManager) {
+
+    if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FIT_PARENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FILL_PARENT
+    } else if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FILL_PARENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_WRAP_CONTENT
+    } else if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_WRAP_CONTENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_MATCH_PARENT
+    } else if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_MATCH_PARENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_16_9_FIT_PARENT
+    } else if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_16_9_FIT_PARENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_4_3_FIT_PARENT
+    } else if (aspectRatio == ESPlayerAspectRatio.ES_PLAYER_AR_4_3_FIT_PARENT){
+      aspectRatio = ESPlayerAspectRatio.ES_PLAYER_AR_ASPECT_FIT_PARENT
+    }
+
+    toast.showLongToast(`当前视频显示模式${aspectRatio}`)
+
+    playerManager.setAspectRatio(aspectRatio)
+  }
+}
+
+let volume = 1.0
+const testVolume = () => {
+  if (playerManager) {
+    playerManager.setVolume(volume)
+    toast.showLongToast(`当前音量${volume}`)
+    if (volume == 1.0){
+      volume = 0.8
+    } else if (volume == 0.8){
+      volume = 0.5
+    } else if (volume == 0.5){
+      volume = 0.0
+    } else if (volume == 0.0){
+      volume = 1.0
+    }
+  }
+}
+
+let speed = ESPlayerRate.ES_PLAYER_RATE_1;
+const testSpeed = () => {
+  if (playerManager) {
+    if (speed == ESPlayerRate.ES_PLAYER_RATE_1){
+      speed = ESPlayerRate.ES_PLAYER_RATE_1_5
+    } else if (speed == ESPlayerRate.ES_PLAYER_RATE_1_5){
+      speed = ESPlayerRate.ES_PLAYER_RATE_2
+    } else if (speed == ESPlayerRate.ES_PLAYER_RATE_2){
+      speed = ESPlayerRate.ES_PLAYER_RATE_0_5
+    } else if (speed == ESPlayerRate.ES_PLAYER_RATE_0_5){
+      speed = ESPlayerRate.ES_PLAYER_RATE_1
+    }
+    playerManager.setPlayRate(speed)
+    toast.showLongToast(`当前播放速率${speed}`)
+  }
+}
+
+let isPause = false
+const testPause = () => {
+  if (playerManager) {
+    if (isPause){
+      playerManager.start(0);
+    } else {
+      playerManager.pause();
+    }
+    isPause = !isPause
   }
 }
 /**
@@ -504,6 +591,7 @@ const onPlayerDurationChanged = (d: number): void => {
   curDuration = d
   seekBarRef.value?.setMaxProgress(d)
   duration.value = s_to_hs(Math.floor(d / 1000))
+  // toast.showLongToast('onPlayerDurationChanged ' + duration.value)
 }
 const setCollapseItemMediaListSelected = (index)=>{
   if (index > -1){
@@ -611,7 +699,7 @@ defineExpose({
 }
 .full-player-menu-view-bottom{
   width: 1920px;
-  height: 700px;
+  height: 100px;
   background-color: transparent;
   position: absolute;
   bottom: 0;
@@ -620,7 +708,7 @@ defineExpose({
   justify-content: flex-end;
   .full-player-menu-view-bottom-bg {
     width: 1920px;
-    height: 700px;
+    height: 100px;
     background-color: transparent;
     position: absolute;
     bottom: 0;
