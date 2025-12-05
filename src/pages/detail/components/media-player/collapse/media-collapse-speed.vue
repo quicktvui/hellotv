@@ -5,7 +5,7 @@
       <div class="media-collapse-speed-content" :clipChildren="false">
         <qt-list-view
           ref="speedListViewRef" horizontal
-          :autofocusPosition="selectedIndex"
+          :selectChildPosition="selectedIndex"
           sid='collapse-item-speed'
           class="media-collapse-speed-list"
           @item-focused="onItemFocused"

@@ -5,7 +5,7 @@
       <div class="media-collapse-order-content" :clipChildren="false">
         <qt-list-view
           ref="orderListViewRef" horizontal
-          :autofocusPosition="selectedIndex"
+          :selectChildPosition="selectedIndex"
           sid='collapse-item-order'
           class="media-collapse-order-list"
           @item-focused="onItemFocused"

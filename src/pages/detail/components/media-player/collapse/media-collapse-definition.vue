@@ -5,7 +5,7 @@
       <div class="media-collapse-definition-content" :clipChildren="false">
       <qt-list-view
         ref="definitionListViewRef" horizontal
-        :autofocusPosition="selectedIndex"
+        :selectChildPosition="selectedIndex"
         sid='collapse-item-definition'
         class="media-collapse-definition-list"
         @item-focused="onItemFocused"

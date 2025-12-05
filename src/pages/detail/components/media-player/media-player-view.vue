@@ -74,6 +74,7 @@
         <qt-collapse ref="mediaCollapseRef"
           :visible="isFullWindow && isMenuShowing"
           v-if="mediaCollapseMenuInit"
+          :descendantFocusability="isFullWindow && isMenuShowing?1:2"
           class="media-player-collapse">
           <media-collapse-order
             ref="mediaCollapseOrderRef"
@@ -270,6 +271,7 @@ import MediaCollapseMediaSeries from './collapse/media-collapse-media-series.vue
         mediaCollapseMediaSeriesRef.value?.setListData((page-1), mediaList)
       })
     } else {
+      initCollapseMenu()
       dataMap.set((page-1), mediaList)
     }
   }
